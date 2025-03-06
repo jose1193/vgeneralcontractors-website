@@ -755,6 +755,50 @@
         </div>
     </section>
 
+    <!-- Certifications Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Certification Card -->
+                <div
+                    class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="flex justify-center mb-6">
+                        <img src="{{ asset('assets/img/v-constructor-certificated-02.png') }}" alt="Certification"
+                            class="h-24 w-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Certified Excellence</h3>
+                    <p class="text-gray-600 text-center">Our team holds industry-leading certifications, ensuring the
+                        highest standards of roofing expertise.</p>
+                </div>
+
+                <!-- Financial Options Card -->
+                <div
+                    class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="flex justify-center mb-6">
+                        <img src="{{ asset('assets/img/v-constructor-financial-02.png') }}" alt="Financial Options"
+                            class="h-24 w-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Flexible Financing</h3>
+                    <p class="text-gray-600 text-center">If you want to finance your roofing project, we can help you
+                        find a suitable option for your needs. Getting an affordable monthly payment is easier than you
+                        may think.</p>
+                </div>
+
+                <!-- Warranty Card -->
+                <div
+                    class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="flex justify-center mb-6">
+                        <img src="{{ asset('assets/img/v-constructor-roof-02-warranty.png') }}" alt="Warranty"
+                            class="h-24 w-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">GAF Certified Warranty</h3>
+                    <p class="text-gray-600 text-center">GAF certified roofing companies can provide some of the best
+                        warranties in the market. You will be amazed by how great our warranties are.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Floating Call Button (único) -->
     <a href="tel:+13466920757"
         class="fixed bottom-6 right-6 bg-yellow-500 text-white p-4 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300 z-50">
