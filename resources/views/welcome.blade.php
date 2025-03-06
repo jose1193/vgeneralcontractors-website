@@ -18,22 +18,40 @@
 
 <body class="bg-gray-100 font-sans">
     <!-- Header remains the same -->
-    <header class="bg-white shadow-md">
+    <header x-data="{ isScrolled: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
+        :class="{ 'bg-white shadow-md': isScrolled, 'bg-transparent': !isScrolled }"
+        class="fixed w-full top-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
                 <img src="{{ asset('assets/logo/logo3.png') }}" alt="DHLuxury Logo" class="h-10">
-                <span class="ml-2 text-xl font-bold text-gray-800"></span>
+                <span class="ml-2 text-xl font-bold"
+                    :class="{ 'text-gray-800': isScrolled, 'text-white': !isScrolled }"></span>
             </div>
             <nav class="hidden md:flex space-x-6">
                 <a href="#"
-                    class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-gray-900 after:transition-all after:duration-300">Home</a>
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !
+                            isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Home</a>
                 <a href="#"
-                    class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-gray-900 after:transition-all after:duration-300">About
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !
+                            isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">About
                     Us</a>
                 <!-- Services Dropdown -->
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" @click.away="open = false"
-                        class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out flex items-center">
+                        :class="{
+                            'text-gray-700 hover:text-gray-900': isScrolled,
+                            'text-yellow-400 hover:text-yellow-300': !
+                                isScrolled
+                        }"
+                        class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
                         Services
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
@@ -61,13 +79,28 @@
                     </div>
                 </div>
                 <a href="#"
-                    class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-gray-900 after:transition-all after:duration-300">Roof
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !
+                            isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Roof
                     Insurance Claims</a>
                 <a href="#"
-                    class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-gray-900 after:transition-all after:duration-300">Virtual
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !
+                            isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Virtual
                     Remodeler</a>
                 <a href="#"
-                    class="text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-gray-900 after:transition-all after:duration-300">Contact-Appointment</a>
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !
+                            isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Contact-Appointment</a>
             </nav>
             <!-- Fixed Phone Button -->
             <a href="tel:+13466920757" class="inline-flex items-center">
@@ -153,8 +186,10 @@
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-900">Serving <span class="text-yellow-500">Major Texas
                         Cities</span></h2>
-                <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Our expert roofing services are available throughout
-                    Houston, Dallas, and surrounding areas. We understand the unique roofing needs of Texas homes.</p>
+                <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Our expert roofing services are available
+                    throughout
+                    Houston, Dallas, and surrounding areas. We understand the unique roofing needs of Texas homes.
+                </p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
@@ -169,7 +204,8 @@
                         class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-white">
                         <h3 class="text-3xl font-bold mb-2">Houston</h3>
                         <p class="mb-4">Houston's climate demands durable roofing solutions that can withstand
-                            intense heat, humidity, and occasional severe storms. Our specialized Houston team delivers
+                            intense heat, humidity, and occasional severe storms. Our specialized Houston team
+                            delivers
                             roofing systems designed specifically for Gulf Coast weather conditions.</p>
                         <a href="tel:+13466920757"
                             class="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 w-fit">
@@ -194,7 +230,8 @@
                         <h3 class="text-3xl font-bold mb-2">Dallas</h3>
                         <p class="mb-4">Dallas homeowners face unique challenges from hail storms and extreme
                             temperature fluctuations. Our Dallas roofing specialists are trained to provide
-                            impact-resistant solutions that protect your home year-round while enhancing curb appeal.
+                            impact-resistant solutions that protect your home year-round while enhancing curb
+                            appeal.
                         </p>
                         <a href="tel:+13466920757"
                             class="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 w-fit">
@@ -233,13 +270,19 @@
                     <div class="mb-6">
                         <span class="text-yellow-500 font-semibold">About Us</span>
                         <h2 class="text-3xl font-bold mt-2 mb-4">We're Committed To Roofing Excellence</h2>
-                        <p class="text-gray-600 mb-6">With years of experience in the roofing industry, we've built our
-                            reputation on quality workmanship, exceptional customer service, and attention to detail.
+                        <p class="text-gray-600 mb-6">With years of experience in the roofing industry, we've built
+                            our
+                            reputation on quality workmanship, exceptional customer service, and attention to
+                            detail.
                             Our commitment to excellence shows in every project we undertake.</p>
-                        <p class="text-gray-600 mb-6">Our vision is to be recognized by 2030 as the leading company in
-                            specialized roofing services, achieving the highest quality standards through our dedication
-                            to innovation and client satisfaction. We offer our clients the most advanced services in
-                            technical advice, premium roofing products, and guaranteed workmanship that stands the test
+                        <p class="text-gray-600 mb-6">Our vision is to be recognized by 2030 as the leading company
+                            in
+                            specialized roofing services, achieving the highest quality standards through our
+                            dedication
+                            to innovation and client satisfaction. We offer our clients the most advanced services
+                            in
+                            technical advice, premium roofing products, and guaranteed workmanship that stands the
+                            test
                             of time.</p>
                     </div>
 
@@ -260,7 +303,8 @@
                                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                                 </svg>
                             </div>
-                            <span class="text-gray-700 font-medium">Professional And Experienced Human Resources</span>
+                            <span class="text-gray-700 font-medium">Professional And Experienced Human
+                                Resources</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="bg-yellow-500 rounded-full p-1">
@@ -312,7 +356,8 @@
                     <div class="space-y-6">
                         <h3 class="text-3xl font-bold text-gray-900">We're Committed To Roofing Excellence</h3>
                         <p class="text-gray-600 mb-6">At V General Contractors, we pride ourselves on delivering
-                            exceptional roofing solutions with unmatched craftsmanship and attention to detail. Our team
+                            exceptional roofing solutions with unmatched craftsmanship and attention to detail. Our
+                            team
                             of
                             certified professionals is dedicated to protecting your home with quality materials and
                             superior
@@ -340,7 +385,8 @@
                             </button>
                             <div x-show="openItems['roof-replacement']" x-collapse x-cloak
                                 class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                                We can install a roof built to last for 50+ years for you – no more roof worries! Best
+                                We can install a roof built to last for 50+ years for you – no more roof worries!
+                                Best
                                 installation – we are GAF Master Elite Certified.
                             </div>
                         </div>
@@ -419,8 +465,7 @@
                             </button>
                             <div x-show="openItems['hail-damage']" x-collapse x-cloak
                                 class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                                Hail damage can be very complicated and mistaken for other problems. It takes
-                                experienced experts to properly diagnose and fix hail damage.
+                                Specialized repair services for hail-damaged roofs with insurance claim assistance.
                             </div>
                         </div>
                     </div>
@@ -446,9 +491,13 @@
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
                         <!-- Primera imagen -->
+                        <div class="absolute inset-0 bg-black/40"></div>
                         <img src="{{ asset('assets/img/new-roof-1.jpg') }}" alt="New Roof Service"
                             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
                         <!-- Segunda imagen (visible en hover) -->
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
                         <img src="{{ asset('assets/img/new-roof-2.jpg') }}" alt="New Roof Service Result"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     </div>
@@ -457,7 +506,8 @@
                             <h3 class="text-2xl font-bold mb-2">New Roof Installation</h3>
                             <p
                                 class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                Expert installation of high-quality roofing systems with industry-leading warranties.
+                                Expert installation of high-quality roofing systems with industry-leading
+                                warranties.
                             </p>
                             <x-primary-button class="inline-flex items-center">
                                 Read More
@@ -471,8 +521,12 @@
                 <div
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
+                        <div class="absolute inset-0 bg-black/40"></div>
                         <img src="{{ asset('assets/img/repair-1.jpg') }}" alt="Roof Repair Service"
                             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
                         <img src="{{ asset('assets/img/repair-2.jpg') }}" alt="Roof Repair Result"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     </div>
@@ -495,8 +549,12 @@
                 <div
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
+                        <div class="absolute inset-0 bg-black/40"></div>
                         <img src="{{ asset('assets/img/storm-1.jpg') }}" alt="Storm Damage Service"
                             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
                         <img src="{{ asset('assets/img/storm-2.jpg') }}" alt="Storm Damage Repair"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     </div>
@@ -519,8 +577,12 @@
                 <div
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
+                        <div class="absolute inset-0 bg-black/40"></div>
                         <img src="{{ asset('assets/img/hail-1.jpg') }}" alt="Hail Damage Repair"
                             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        </div>
                         <img src="{{ asset('assets/img/hail-2.jpg') }}" alt="Hail Damage Assessment"
                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     </div>
@@ -533,7 +595,11 @@
                             </p>
                             <x-primary-button class="inline-flex items-center">
                                 Read More
-
+                                <svg class="w-4 h-4 ml-2 -mt-0.5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
                             </x-primary-button>
                         </div>
                     </div>
@@ -564,50 +630,11 @@
                                     </svg>
                                 </div>
                             </div>
-                            <h2 class="title-font font-semibold text-2xl text-gray-900">Latest Roofing Technology</h2>
-                            <p class="mt-2 text-gray-600">State-of-the-art equipment for superior results</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                    <div
-                        class="px-4 py-6 transform transition duration-500 hover:scale-110 hover:shadow-xl rounded-lg bg-white h-full flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-center">
-                                <div
-                                    class="w-24 h-24 mb-3 bg-yellow-100 rounded-full flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <h2 class="title-font font-semibold text-2xl text-gray-900">Insurance Claims Management
+                            <h2 class="title-font font-semibold text-2xl text-gray-900">
+                                Latest Roofing Technology
                             </h2>
-                            <p class="mt-2 text-gray-600">Expert assistance with your insurance claims process</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                    <div
-                        class="px-4 py-6 transform transition duration-500 hover:scale-110 hover:shadow-xl rounded-lg bg-white h-full flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-center">
-                                <div
-                                    class="w-24 h-24 mb-3 bg-yellow-100 rounded-full flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <h2 class="title-font font-semibold text-2xl text-gray-900">Time Efficiency</h2>
-                            <p class="mt-2 text-gray-600">Quick turnaround without compromising quality</p>
+                            <p class="mt-2 text-gray-600">State-of-the-art equipment for
+                                superior results</p>
                         </div>
                     </div>
                 </div>
@@ -627,10 +654,102 @@
                                     </svg>
                                 </div>
                             </div>
-                            <h2 class="title-font font-semibold text-2xl text-gray-900">Industry Expertise</h2>
-                            <p class="mt-2 text-gray-600">Years of specialized roofing experience</p>
+                            <h2 class="title-font font-semibold text-2xl text-gray-900">
+                                Insurance Claims Management
+                            </h2>
+                            <p class="mt-2 text-gray-600">Expert assistance with your
+                                insurance claims process</p>
                         </div>
                     </div>
+                </div>
+
+                <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                    <div
+                        class="px-4 py-6 transform transition duration-500 hover:scale-110 hover:shadow-xl rounded-lg bg-white h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-center">
+                                <div
+                                    class="w-24 h-24 mb-3 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 class="title-font font-semibold text-2xl text-gray-900">
+                                Time Efficiency</h2>
+                            <p class="mt-2 text-gray-600">Quick turnaround without
+                                compromising quality</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                    <div
+                        class="px-4 py-6 transform transition duration-500 hover:scale-110 hover:shadow-xl rounded-lg bg-white h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-center">
+                                <div
+                                    class="w-24 h-24 mb-3 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 class="title-font font-semibold text-2xl text-gray-900">
+                                Industry Expertise</h2>
+                            <p class="mt-2 text-gray-600">Years of specialized roofing
+                                experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Promocional Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="text-yellow-500 font-semibold">Watch Our Story</span>
+                <h2 class="text-4xl font-bold mt-2 mb-4 text-white">See How We <span class="text-yellow-500">Transform
+                        Homes</span></h2>
+                <p class="text-gray-300 max-w-3xl mx-auto">Experience our commitment to quality and excellence through
+                    our work. Watch how we protect and enhance homes across Texas.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto relative rounded-xl overflow-hidden shadow-2xl">
+                <!-- Video Container -->
+                <div class="aspect-w-16 aspect-h-9">
+                    <video class="w-full h-full object-cover" controls preload="metadata"
+                        poster="{{ asset('assets/video/thumbnail.jpg') }}">
+                        <source src="{{ asset('assets/video/VIDEO_VGENERALCONTRACTORS.COM_1080p.mp4') }}"
+                            type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Call to Action bajo el video -->
+            <div class="text-center mt-12">
+                <p class="text-gray-300 text-lg mb-6">Ready to transform your roof? Get your free inspection today!</p>
+                <div class="flex justify-center gap-4">
+                    <x-primary-button class="text-lg px-8 py-4">
+                        Schedule Free Inspection
+                    </x-primary-button>
+                    <a href="tel:+13466920757"
+                        class="inline-flex items-center bg-transparent border-2 border-yellow-500 text-yellow-500 px-8 py-4 rounded hover:bg-yellow-500 hover:text-white transition-all duration-300">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        Call (346) 692-0757
+                    </a>
                 </div>
             </div>
         </div>
@@ -642,7 +761,6 @@
         <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
     </a>
 </body>
 
