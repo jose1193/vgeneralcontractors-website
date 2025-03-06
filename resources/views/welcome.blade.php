@@ -799,6 +799,59 @@
         </div>
     </section>
 
+    <!-- Certifications Carousel -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto" x-data="{
+                currentSlide: 0,
+                slides: [
+                    '{{ asset('assets/img/logo-google-verified-business.gif') }}',
+                    '{{ asset('assets/img/gaf-certified.jpg') }}',
+                    '{{ asset('assets/img/gaf-system-plus.png') }}'
+                ]
+            }" x-init="setInterval(() => { currentSlide = currentSlide === 2 ? 0 : currentSlide + 1 }, 3000)">
+
+                <div class="relative h-40 overflow-hidden rounded-lg">
+                    <!-- Slides -->
+                    <template x-for="(slide, index) in slides" :key="index">
+                        <div x-show="currentSlide === index" x-transition:enter="transition transform duration-500"
+                            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transition transform duration-500"
+                            x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+                            class="absolute inset-0 flex justify-center items-center">
+                            <img :src="slide" :alt="'Certification ' + (index + 1)"
+                                class="h-32 object-contain">
+                        </div>
+                    </template>
+
+                    <!-- Navigation Buttons -->
+                    <button @click="currentSlide = currentSlide === 0 ? slides.length - 1 : currentSlide - 1"
+                        class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-r hover:bg-black/50 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button @click="currentSlide = currentSlide === slides.length - 1 ? 0 : currentSlide + 1"
+                        class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-l hover:bg-black/50 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                        <template x-for="(slide, index) in slides" :key="index">
+                            <button @click="currentSlide = index"
+                                :class="{ 'bg-yellow-500': currentSlide === index, 'bg-gray-300': currentSlide !== index }"
+                                class="w-3 h-3 rounded-full transition-colors duration-300"></button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Floating Call Button (único) -->
     <a href="tel:+13466920757"
         class="fixed bottom-6 right-6 bg-yellow-500 text-white p-4 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300 z-50">
