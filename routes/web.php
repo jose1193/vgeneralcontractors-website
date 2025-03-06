@@ -3,9 +3,69 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users;
 use App\Livewire\EmailDatas;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Google Authentication Routes
+Route::get('/google-auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+})->name('google.login');
+
+Route::get('/google-auth/callback', function () {
+    try {
+        $googleUser = Socialite::driver('google')->user();
+        
+        // Generate a username from the name
+        $randomNumber = rand(100, 999);
+        $nameWithoutSpaces = strtolower(str_replace(' ', '', $googleUser->name));
+        $username = $nameWithoutSpaces . $randomNumber;
+        
+        // Check if user exists with the same email address
+        $existingUser = User::where('email', $googleUser->email)->first();
+        
+        if ($existingUser) {
+            // If user exists but email isn't verified, set verification to now
+            if (!$existingUser->email_verified_at) {
+                $existingUser->email_verified_at = now();
+                $existingUser->save();
+            }
+            
+            // Log in the existing user
+            Auth::login($existingUser);
+            return redirect('/dashboard');
+        } else {
+            // Create a new user
+            $user = User::create([
+                'uuid' => Str::uuid()->toString(),
+                'name' => $googleUser->name,
+                'username' => $username,
+                'email' => $googleUser->email,
+                'email_verified_at' => now(),
+                'password' => bcrypt(Str::random(16)),
+                'terms_and_conditions' => true,
+            ]);
+            
+            // Assign default role if you're using Spatie Permission
+            if (class_exists('\Spatie\Permission\Models\Role')) {
+                $defaultRole = \Spatie\Permission\Models\Role::where('name', 'User')->first();
+                if ($defaultRole) {
+                    $user->assignRole($defaultRole);
+                }
+            }
+            
+            // Log in the newly created user
+            Auth::login($user);
+            return redirect('/dashboard');
+        }
+    } catch (\Exception $e) {
+        return redirect('/')->with('error', 'Error al autenticar con Google: ' . $e->getMessage());
+    }
 });
 
 Route::middleware([

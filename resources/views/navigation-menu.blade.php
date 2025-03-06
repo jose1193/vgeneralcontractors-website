@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                        <x-application-mark />
                     </a>
                 </div>
 
@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
-                        {{ __('Usuarios') }}
+                        {{ __('Users') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('email-datas') }}" :active="request()->routeIs('email-datas')">
                         {{ __('Emails') }}
