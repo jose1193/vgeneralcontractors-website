@@ -89,4 +89,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    /**
+     * Get the email data created by the user.
+     */
+    public function emailData(): HasMany
+    {
+        return $this->hasMany(EmailData::class);
+    }
 }
