@@ -429,6 +429,119 @@
         </div>
     </section>
 
+    <!-- Service Cards Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <span class="text-yellow-500 font-semibold">Our Solutions</span>
+                <h2 class="text-4xl font-bold mt-2 mb-4">Comprehensive <span class="text-yellow-500">Roofing
+                        Services</span></h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Discover our full range of professional roofing services
+                    designed to protect and enhance your property.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- New Roof Card -->
+                <div
+                    class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="relative h-[300px] w-full">
+                        <!-- Primera imagen -->
+                        <img src="{{ asset('assets/img/new-roof-1.jpg') }}" alt="New Roof Service"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <!-- Segunda imagen (visible en hover) -->
+                        <img src="{{ asset('assets/img/new-roof-2.jpg') }}" alt="New Roof Service Result"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                        <div class="absolute bottom-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold mb-2">New Roof Installation</h3>
+                            <p
+                                class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                Expert installation of high-quality roofing systems with industry-leading warranties.
+                            </p>
+                            <x-primary-button class="inline-flex items-center">
+                                Read More
+
+                            </x-primary-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roof Repair Card -->
+                <div
+                    class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="relative h-[300px] w-full">
+                        <img src="{{ asset('assets/img/repair-1.jpg') }}" alt="Roof Repair Service"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/repair-2.jpg') }}" alt="Roof Repair Result"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                        <div class="absolute bottom-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold mb-2">Roof Repair</h3>
+                            <p
+                                class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                Quick and reliable repairs to fix leaks, damage, and maintain your roof's integrity.
+                            </p>
+                            <x-primary-button class="inline-flex items-center">
+                                Read More
+
+                            </x-primary-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storm Damage Card -->
+                <div
+                    class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="relative h-[300px] w-full">
+                        <img src="{{ asset('assets/img/storm-1.jpg') }}" alt="Storm Damage Service"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/storm-2.jpg') }}" alt="Storm Damage Repair"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                        <div class="absolute bottom-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold mb-2">Storm Damage Repair</h3>
+                            <p
+                                class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                Emergency repairs and restoration services for storm-damaged roofs.
+                            </p>
+                            <x-primary-button class="inline-flex items-center">
+                                Read More
+
+                            </x-primary-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hail Damage Card -->
+                <div
+                    class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="relative h-[300px] w-full">
+                        <img src="{{ asset('assets/img/hail-1.jpg') }}" alt="Hail Damage Repair"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/hail-2.jpg') }}" alt="Hail Damage Assessment"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                        <div class="absolute bottom-0 p-6 text-white">
+                            <h3 class="text-2xl font-bold mb-2">Hail Damage Repair</h3>
+                            <p
+                                class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                Specialized repair services for hail-damaged roofs with insurance claim assistance.
+                            </p>
+                            <x-primary-button class="inline-flex items-center">
+                                Read More
+
+                            </x-primary-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Why Us Section -->
     <div class="flex justify-center mt-10 py-5 ">
         <h2 class="text-4xl font-bold text-gray-900">Why Choose <span class="text-yellow-500">Us?</span></h2>
