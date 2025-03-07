@@ -11,7 +11,11 @@ use Illuminate\Support\Str;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
 
 // Google Authentication Routes
 Route::get('/google-auth/redirect', function () {
