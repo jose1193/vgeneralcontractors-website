@@ -11,9 +11,46 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+
+        /* Fade In Animation */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, visibility;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
     </style>
     <!-- Add Alpine.js -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- Intersection Observer for Fade In -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-section').forEach((section) => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -23,7 +60,7 @@
         class="fixed w-full top-0 z-40 transition-all duration-300">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <img :src="isScrolled ? '{{ asset('assets/logo/logo3.png') }}' : '{{ asset('assets/logo/logo4-white.png') }}'"
+                <img :src="isScrolled ? '{{ asset('assets/logo/logo3.webp') }}' : '{{ asset('assets/logo/logo4-white.webp') }}'"
                     alt="V General Contractors Logo" class="h-10 transition-all duration-300">
                 <span class="ml-2 text-xl font-bold"
                     :class="{ 'text-gray-800': isScrolled, 'text-white': !isScrolled }"></span>
@@ -149,7 +186,7 @@
             <div class="p-6 space-y-4">
                 <!-- Logo centered at top -->
                 <div class="flex justify-center mb-8">
-                    <img src="{{ asset('assets/logo/logo3.png') }}" alt="V General Contractors Logo" class="h-12">
+                    <img src="{{ asset('assets/logo/logo3.webp') }}" alt="V General Contractors Logo" class="h-12">
                 </div>
 
                 <!-- Navigation items -->
@@ -219,29 +256,33 @@
     </header>
 
     <!-- Hero Section with Background Slider -->
-    <section class="relative h-[600px] flex items-center overflow-hidden">
+    <section class="relative h-[600px] flex items-center overflow-hidden fade-in-section">
         <!-- Background Slider -->
         <div x-data="{ currentSlide: 0 }" x-init="setInterval(() => currentSlide = currentSlide === 3 ? 0 : currentSlide + 1, 5000)" class="absolute inset-0">
             <div class="relative h-full">
                 <div class="absolute inset-0 transition-opacity duration-1000"
                     :class="{ 'opacity-100': currentSlide === 0, 'opacity-0': currentSlide !== 0 }">
-                    <img src="{{ asset('assets/img/hero-1.jpg') }}" class="w-full h-full object-cover"
-                        alt="Aerial view of suburban houses with high-quality shingle roofs">
+                    <img src="{{ asset('assets/img/hero-1.webp') }}"
+                        alt="Professional roofing contractors working on residential property in Texas"
+                        class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
                 </div>
                 <div class="absolute inset-0 transition-opacity duration-1000"
                     :class="{ 'opacity-100': currentSlide === 1, 'opacity-0': currentSlide !== 1 }">
-                    <img src="{{ asset('assets/img/hero-2.jpg') }}" class="w-full h-full object-cover"
-                        alt="Close-up of modern roofing installation">
+                    <img src="{{ asset('assets/img/hero-2.webp') }}"
+                        alt="High-quality shingle installation on modern Texas home"
+                        class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
                 </div>
                 <div class="absolute inset-0 transition-opacity duration-1000"
                     :class="{ 'opacity-100': currentSlide === 2, 'opacity-0': currentSlide !== 2 }">
-                    <img src="{{ asset('assets/img/hero-3.jpg') }}" class="w-full h-full object-cover"
-                        alt="Professional roofers at work">
+                    <img src="{{ asset('assets/img/hero-3.webp') }}"
+                        alt="Expert roofing team performing professional installation"
+                        class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
                 </div>
                 <div class="absolute inset-0 transition-opacity duration-1000"
                     :class="{ 'opacity-100': currentSlide === 3, 'opacity-0': currentSlide !== 3 }">
-                    <img src="{{ asset('assets/img/hero-4.jpg') }}" class="w-full h-full object-cover"
-                        alt="Beautiful finished roofing project">
+                    <img src="{{ asset('assets/img/hero-4.webp') }}"
+                        alt="Completed roofing project showcasing superior craftsmanship"
+                        class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-black/70"></div>
             </div>
@@ -252,14 +293,15 @@
             <div class="text-white md:w-1/2">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">Quality Roofing Every Single Time</h1>
                 <p class="text-lg mb-6">Transform your home with our expert roofing services! <a
-                        href="tel:+13466920757"
-                        class="text-yellow-400 font-semibold hover:text-yellow-300 underline">Get a FREE inspection
+                        href="tel:+13466920757" class="text-yellow-400 font-semibold hover:text-yellow-300">Get a FREE
+                        inspection
                         today</a> and discover how we can protect your investment with top-quality materials and
                     professional installation. Proudly serving Houston, Dallas, and all surrounding areas.</p>
-                <div class="flex space-x-4">
-                    <x-primary-button>Book A Free Inspection</x-primary-button>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <x-primary-button class="w-full sm:w-auto text-center justify-center">Book A Free
+                        Inspection</x-primary-button>
                     <button
-                        class="border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black">Explore
+                        class="w-full sm:w-auto text-center justify-center border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black">Explore
                         Our Services</button>
                 </div>
                 <div class="flex items-center mt-6">
@@ -283,7 +325,7 @@
     </section>
 
     <!-- City Locations Section -->
-    <section class="py-12 bg-gray-50">
+    <section class="py-12 bg-gray-50 fade-in-section">
         <div class="container mx-auto px-4">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-900">Serving <span class="text-yellow-500">Major Texas
@@ -299,8 +341,10 @@
                 <div class="relative rounded-lg overflow-hidden shadow-lg group">
                     <div class="h-80 bg-gray-300">
                         <!-- Replace with your Houston image -->
-                        <img src="{{ asset('assets/img/houston.jpg') }}" alt="Houston Skyline"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="{{ asset('assets/img/houston.webp') }}"
+                            alt="Houston skyline featuring modern residential roofing projects"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            width="800" height="600" loading="lazy">
                     </div>
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-white">
@@ -324,8 +368,10 @@
                 <div class="relative rounded-lg overflow-hidden shadow-lg group">
                     <div class="h-80 bg-gray-300">
                         <!-- Replace with your Dallas image -->
-                        <img src="{{ asset('assets/img/dallas.jpg') }}" alt="Dallas Skyline"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="{{ asset('assets/img/dallas.webp') }}"
+                            alt="Dallas urban landscape with premium roofing installations"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            width="800" height="600" loading="lazy">
                     </div>
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-white">
@@ -350,20 +396,27 @@
     </section>
 
     <!-- About Us Section -->
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white fade-in-section">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row gap-8">
                 <!-- Left Side: Image Grid -->
                 <div class="hidden md:block md:w-1/2">
                     <div class="grid grid-cols-2 gap-4">
-                        <img src="{{ asset('assets/img/about-1.jpg') }}" alt="Roofing Installation"
-                            class="w-full h-64 object-cover rounded-lg">
-                        <img src="{{ asset('assets/img/about-2.jpg') }}" alt="Roof Inspection"
-                            class="w-full h-64 object-cover rounded-lg">
-                        <img src="{{ asset('assets/img/about-3.jpg') }}" alt="Roofing Team"
-                            class="w-full h-64 object-cover rounded-lg">
-                        <img src="{{ asset('assets/img/about-4.jpg') }}" alt="Completed Project"
-                            class="w-full h-64 object-cover rounded-lg">
+                        <img src="{{ asset('assets/img/about-1.webp') }}"
+                            alt="Professional roofing installation process by V General Contractors"
+                            class="w-full h-64 object-cover rounded-lg" width="600" height="400"
+                            loading="lazy">
+                        <img src="{{ asset('assets/img/about-2.webp') }}"
+                            alt="Detailed roof inspection being performed by certified experts"
+                            class="w-full h-64 object-cover rounded-lg" width="600" height="400"
+                            loading="lazy">
+                        <img src="{{ asset('assets/img/about-3.webp') }}" alt="Our experienced roofing team at work"
+                            class="w-full h-64 object-cover rounded-lg" width="600" height="400"
+                            loading="lazy">
+                        <img src="{{ asset('assets/img/about-4.webp') }}"
+                            alt="Recently completed roofing project showcasing quality workmanship"
+                            class="w-full h-64 object-cover rounded-lg" width="600" height="400"
+                            loading="lazy">
                     </div>
                 </div>
 
@@ -433,7 +486,7 @@
     </section>
 
     <!-- Services Section -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-gray-50 fade-in-section">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <span class="text-yellow-500 font-semibold">Our Services</span>
@@ -448,8 +501,10 @@
                 <!-- Left Side: Single Image -->
                 <div class="w-full md:w-1/2">
                     <div class="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
-                        <img src="{{ asset('assets/img/services-roofing.jpg') }}" alt="Roofing Services"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        <img src="{{ asset('assets/img/services-roofing.webp') }}"
+                            alt="Comprehensive roofing services demonstration"
+                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                            width="800" height="600" loading="lazy">
                     </div>
                 </div>
 
@@ -577,7 +632,7 @@
     </section>
 
     <!-- Service Cards Section -->
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white fade-in-section">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <span class="text-yellow-500 font-semibold">Our Solutions</span>
@@ -593,13 +648,17 @@
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
                         <div class="absolute inset-0 bg-black/40"></div>
-                        <img src="{{ asset('assets/img/new-roof-1.jpg') }}" alt="New Roof Service"
-                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/new-roof-1.webp') }}"
+                            alt="New roof installation process in progress"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                            width="600" height="400" loading="lazy">
                         <div
                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         </div>
-                        <img src="{{ asset('assets/img/new-roof-2.jpg') }}" alt="New Roof Service Result"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <img src="{{ asset('assets/img/new-roof-2.webp') }}"
+                            alt="Completed new roof installation showing superior quality"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            width="600" height="400" loading="lazy">
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                         <div class="absolute bottom-0 p-6 text-white">
@@ -629,13 +688,17 @@
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
                         <div class="absolute inset-0 bg-black/40"></div>
-                        <img src="{{ asset('assets/img/repair-1.jpg') }}" alt="Roof Repair Service"
-                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/repair-1.webp') }}"
+                            alt="Professional roof repair service in action"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                            width="600" height="400" loading="lazy">
                         <div
                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         </div>
-                        <img src="{{ asset('assets/img/repair-2.jpg') }}" alt="Roof Repair Result"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <img src="{{ asset('assets/img/repair-2.webp') }}"
+                            alt="Successfully completed roof repair project"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            width="600" height="400" loading="lazy">
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                         <div class="absolute bottom-0 p-6 text-white">
@@ -664,13 +727,17 @@
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
                         <div class="absolute inset-0 bg-black/40"></div>
-                        <img src="{{ asset('assets/img/storm-1.jpg') }}" alt="Storm Damage Service"
-                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/storm-1.webp') }}"
+                            alt="Storm damage assessment on residential roof"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                            width="600" height="400" loading="lazy">
                         <div
                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         </div>
-                        <img src="{{ asset('assets/img/storm-2.jpg') }}" alt="Storm Damage Repair"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <img src="{{ asset('assets/img/storm-2.webp') }}"
+                            alt="Storm damage repair completion showing restored roof"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            width="600" height="400" loading="lazy">
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                         <div class="absolute bottom-0 p-6 text-white">
@@ -699,13 +766,17 @@
                     class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="relative h-[300px] w-full">
                         <div class="absolute inset-0 bg-black/40"></div>
-                        <img src="{{ asset('assets/img/hail-1.jpg') }}" alt="Hail Damage Repair"
-                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
+                        <img src="{{ asset('assets/img/hail-1.webp') }}"
+                            alt="Hail damage inspection and assessment process"
+                            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                            width="600" height="400" loading="lazy">
                         <div
                             class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         </div>
-                        <img src="{{ asset('assets/img/hail-2.jpg') }}" alt="Hail Damage Assessment"
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <img src="{{ asset('assets/img/hail-2.webp') }}"
+                            alt="Completed hail damage repair showcasing durability"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            width="600" height="400" loading="lazy">
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                         <div class="absolute bottom-0 p-6 text-white">
@@ -840,8 +911,8 @@
         </div>
     </section>
 
-    <!-- Video Promocional Section -->
-    <section class="py-16 bg-gray-900">
+    <!-- Video Section - Optimized -->
+    <section class="py-16 bg-gray-900 fade-in-section">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <span class="text-yellow-500 font-semibold">Watch Our Story</span>
@@ -852,10 +923,11 @@
             </div>
 
             <div class="max-w-4xl mx-auto relative rounded-xl overflow-hidden shadow-2xl">
-                <!-- Video Container -->
                 <div class="aspect-w-16 aspect-h-9">
                     <video class="w-full h-full object-cover" controls preload="metadata"
-                        poster="{{ asset('assets/video/thumbnail.jpg') }}">
+                        poster="{{ asset('assets/video/thumbnail.webp') }}" loading="lazy">
+                        <source src="{{ asset('assets/video/VIDEO_VGENERALCONTRACTORS.COM_1080p.webm') }}"
+                            type="video/webm">
                         <source src="{{ asset('assets/video/VIDEO_VGENERALCONTRACTORS.COM_1080p.mp4') }}"
                             type="video/mp4">
                         Your browser does not support the video tag.
@@ -891,8 +963,9 @@
                 <div
                     class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="flex justify-center mb-6">
-                        <img src="{{ asset('assets/img/v-constructor-certificated-02.png') }}" alt="Certification"
-                            class="h-24 w-auto">
+                        <img src="{{ asset('assets/img/v-constructor-certificated-02.webp') }}"
+                            alt="V General Contractors Professional Certification Badge" class="h-24 w-auto"
+                            width="200" height="96" loading="lazy">
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Certified Excellence</h3>
                     <p class="text-gray-600 text-center">Our team holds industry-leading certifications, ensuring the
@@ -903,8 +976,9 @@
                 <div
                     class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="flex justify-center mb-6">
-                        <img src="{{ asset('assets/img/v-constructor-financial-02.png') }}" alt="Financial Options"
-                            class="h-24 w-auto">
+                        <img src="{{ asset('assets/img/v-constructor-financial-02.webp') }}"
+                            alt="Flexible Financial Options Available at V General Contractors" class="h-24 w-auto"
+                            width="200" height="96" loading="lazy">
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Flexible Financing</h3>
                     <p class="text-gray-600 text-center">If you want to finance your roofing project, we can help you
@@ -916,8 +990,9 @@
                 <div
                     class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                     <div class="flex justify-center mb-6">
-                        <img src="{{ asset('assets/img/v-constructor-roof-02-warranty.png') }}" alt="Warranty"
-                            class="h-24 w-auto">
+                        <img src="{{ asset('assets/img/v-constructor-roof-02-warranty.webp') }}"
+                            alt="GAF Certified Warranty Program Badge" class="h-24 w-auto" width="200"
+                            height="96" loading="lazy">
                     </div>
                     <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">GAF Certified Warranty</h3>
                     <p class="text-gray-600 text-center">GAF certified roofing companies can provide some of the best
@@ -933,9 +1008,9 @@
             <div class="max-w-4xl mx-auto" x-data="{
                 currentSlide: 0,
                 slides: [
-                    '{{ asset('assets/img/logo-google-verified-business.gif') }}',
-                    '{{ asset('assets/img/gaf-certified.jpg') }}',
-                    '{{ asset('assets/img/gaf-system-plus.png') }}'
+                    '{{ asset('assets/img/logo-google-verified-business.webp') }}',
+                    '{{ asset('assets/img/gaf-certified.webp') }}',
+                    '{{ asset('assets/img/gaf-system-plus.webp') }}'
                 ]
             }" x-init="setInterval(() => { currentSlide = currentSlide === 2 ? 0 : currentSlide + 1 }, 3000)">
 
@@ -982,7 +1057,7 @@
 
     <!-- Parallax Financing Section -->
     <section class="relative py-32 bg-fixed bg-center bg-cover"
-        style="background-image: url('{{ asset('assets/img/bg-financial-1024x690.jpg') }}');">
+        style="background-image: url('{{ asset('assets/img/bg-financial-1024x690.webp') }}');">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-black/50"></div>
 
@@ -1037,8 +1112,10 @@
                 <!-- article - start -->
                 <a href="#"
                     class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                    <img src="{{ asset('assets/img/blog-1.jpg') }}" loading="lazy" alt="Roofing Materials Guide"
-                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                    <img src="{{ asset('assets/img/blog-1.webp') }}"
+                        alt="Guide to selecting the best roofing materials for Texas weather"
+                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                        width="600" height="400" loading="lazy">
                     <div
                         class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
                     </div>
@@ -1054,8 +1131,10 @@
                 <!-- article - start -->
                 <a href="#"
                     class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                    <img src="{{ asset('assets/img/blog-2.jpg') }}" loading="lazy" alt="Storm Damage Prevention"
-                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                    <img src="{{ asset('assets/img/blog-2.webp') }}"
+                        alt="Comprehensive guide to preparing your roof for storm season"
+                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                        width="600" height="400" loading="lazy">
                     <div
                         class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
                     </div>
@@ -1071,8 +1150,10 @@
                 <!-- article - start -->
                 <a href="#"
                     class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                    <img src="{{ asset('assets/img/blog-3.jpg') }}" loading="lazy" alt="Energy Efficient Roofing"
-                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                    <img src="{{ asset('assets/img/blog-3.webp') }}"
+                        alt="Energy-efficient roofing solutions for Texas homes"
+                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                        width="600" height="400" loading="lazy">
                     <div
                         class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
                     </div>
@@ -1088,8 +1169,10 @@
                 <!-- article - start -->
                 <a href="#"
                     class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                    <img src="{{ asset('assets/img/blog-4.jpg') }}" loading="lazy" alt="Roof Maintenance Tips"
-                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                    <img src="{{ asset('assets/img/blog-4.webp') }}"
+                        alt="Essential roof maintenance tips for homeowners"
+                        class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                        width="600" height="400" loading="lazy">
                     <div
                         class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
                     </div>
