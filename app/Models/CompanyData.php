@@ -12,6 +12,7 @@ class CompanyData extends Model
 
     protected $fillable = [
         'uuid',
+        'name',
         'company_name',
         'signature_path',
         'email',

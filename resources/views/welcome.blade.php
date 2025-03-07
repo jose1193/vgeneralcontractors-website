@@ -184,6 +184,7 @@
     <x-about-us />
     <x-services />
     <x-service-cards />
+    <x-contact-form />
     <x-why-us />
     <x-video-section />
     <x-certifications />

@@ -45,6 +45,17 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString()
         ]);
         $adminUser->assignRole($adminRole);
+
+        // SECOND ADMIN
+        $adminUser2 = User::factory()->create([
+            'name' => 'Argenis Gonzalez',
+            'email' => 'josegonzalezcr2794@gmail.com',
+            'username' => 'argenis692',
+            'password' => bcrypt('argenis01='),
+            'uuid' => Uuid::uuid4()->toString()
+        ]);
+        $adminUser2->assignRole($adminRole);
+        // END SECOND ADMIN
         // END MANAGER ADMIN
 
         // MANAGER USER
@@ -88,6 +99,7 @@ class DatabaseSeeder extends Seeder
     // COMPANY DATA
     $companyData = [
         'company_name' => 'V General Contractors',
+        'name' => 'Victor Lara',
         'signature_path' => '/signatures/acme_signature.png',
         'phone' => '+13466155393',
         'email' => 'info@vgeneralcontractors.com',
@@ -106,10 +118,11 @@ class DatabaseSeeder extends Seeder
     $companySignature = [
         [
             'company_name' => 'V General Contractors',
+            'name' => 'Argenis Gonzalez',
             'signature_path' => '/signatures/acme_signature.png',
-            'phone' => '+13466920757',
-            'email' => 'info@vgeneralcontractors.com',
-            'address' => '1302 Waugh Dr # 810 Houston TX 77019',
+            'phone' => '+351963490414',
+            'email' => 'josegonzalezcr2794@gmail.com',
+            'address' => '',
             'website' => 'https://vgeneralcontractors.com',
             'latitude' => 29.75516,
             'longitude' => -95.3984135,

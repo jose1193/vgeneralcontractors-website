@@ -79,4 +79,7 @@ Route::middleware([
     
     Route::get('/users', Users::class)->name('users');
     Route::get('/email-datas', EmailDatas::class)->name('email-datas');
+    Route::get('/company-data', function () {
+        return view('company-data');
+    })->name('company-data');
 });
