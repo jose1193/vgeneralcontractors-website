@@ -24,13 +24,13 @@
 
         <nav class="hidden md:flex space-x-6">
             <!-- Your existing desktop navigation -->
-            <a href="#"
+            <a href="{{ route('home') }}"
                 :class="{
                     'text-gray-700 hover:text-gray-900': isScrolled,
                     'text-yellow-400 hover:text-yellow-300': !isScrolled
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Home</a>
-            <a href="#"
+            <a href="{{ route('about') }}"
                 :class="{
                     'text-gray-700 hover:text-gray-900': isScrolled,
                     'text-yellow-400 hover:text-yellow-300': !
@@ -54,20 +54,17 @@
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <a href="#"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Residential
-                        Roofing</a>
-                    <a href="#"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Commercial
-                        Roofing</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">New
+                    <a href="{{ route('new-roof') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">New
                         Roof</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Roof
+                    <a href="{{ route('roof-repair') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Roof
                         Repair</a>
-                    <a href="#"
+                    <a href="{{ route('storm-damage') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Storm
                         Damage</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Hail
+                    <a href="{{ route('hail-damage') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Hail
                         Damage</a>
                 </div>
             </div>
@@ -153,16 +150,16 @@
                     </svg>
                 </button>
                 <div x-show="isOpen" class="pl-4">
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Residential
-                        Roofing</a>
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Commercial
-                        Roofing</a>
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">New Roof</a>
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Roof
+                    <a href="{{ route('new-roof') }}"
+                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">New Roof</a>
+                    <a href="{{ route('roof-repair') }}"
+                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Roof
                         Repair</a>
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Storm
+                    <a href="{{ route('storm-damage') }}"
+                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Storm
                         Damage</a>
-                    <a href="#" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Hail
+                    <a href="{{ route('hail-damage') }}"
+                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Hail
                         Damage</a>
                 </div>
             </div>

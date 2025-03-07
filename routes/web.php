@@ -86,3 +86,19 @@ Route::middleware([
     Route::get('/email-datas', EmailDatas::class)->name('email-datas');
     Route::get('/company-data', CompanyData::class)->name('company-data');
 });
+
+Route::get('/new-roof', function () {
+    return view('services.new-roof');
+})->name('new-roof');
+
+Route::get('/roof-repair', function () {
+    return view('services.roof-repair');
+})->name('roof-repair');
+
+Route::get('/storm-damage', function () {
+    return view('services.storm-damage');
+})->name('storm-damage');
+
+Route::get('/hail-damage', function () {
+    return view('services.hail-damage');
+})->name('hail-damage');
