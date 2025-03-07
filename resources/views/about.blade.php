@@ -1,83 +1,20 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.main')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title', 'About Us')
 
-    <!-- Alpine.js (moved to top for proper initialization) -->
-    <script defer src="https://unpkg.com/alpinejs@3.13.5/dist/cdn.min.js"></script>
-
-    <title>About Us - V General Contractors</title>
-
-    <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Animation Styles -->
+@push('styles')
     <style>
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            visibility: hidden;
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            will-change: opacity, visibility;
-        }
-
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
-
-        .image-zoom {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .image-zoom:hover {
-            transform: scale(1.05);
-        }
-
-        /* Enhanced animations for the about content image */
-        .about-image {
-            transition: all 0.5s ease-in-out;
-        }
-
-        .about-image:hover {
-            transform: scale(1.03);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        /* Estilos específicos de la página About */
+        .hero-section {
+            margin-top: -5rem;
+            /* Ajuste para compensar el navbar */
         }
     </style>
+@endpush
 
-    <!-- Intersection Observer for Fade In -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-in-section').forEach((section) => {
-                observer.observe(section);
-            });
-        });
-    </script>
-</head>
-
-<body class="bg-gray-100">
-    <x-navbar />
-
+@section('content')
     <!-- Hero Section with Image Overlay -->
-    <div class="relative h-[500px] w-full -mt-20">
+    <div class="relative h-[500px] w-full hero-section">
         <!-- Background Image -->
         <img src="{{ asset('assets/img/about.webp') }}" alt="About V General Contractors"
             class="absolute inset-0 w-full h-full object-cover">
@@ -89,8 +26,7 @@
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
                 <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">About Us</h1>
-                <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Your Trusted Partner in Commercial &
-                    Residential
+                <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Your Trusted Partner in Commercial & Residential
                     Roofing Solutions</p>
 
                 <!-- Breadcrumb Navigation -->
@@ -153,8 +89,4 @@
             </div>
         </div>
     </main>
-
-    <x-footer />
-</body>
-
-</html>
+@endsection
