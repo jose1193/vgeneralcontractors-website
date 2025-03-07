@@ -11,6 +11,8 @@ class CompanyData extends Component
 {
     use WithPagination;
 
+    protected $layout = 'components.layouts.app';
+
     public $company_name, $name, $signature_path, $email, $phone, $address, $website, $latitude, $longitude;
     public $isOpen = false;
     public $modalTitle = 'Create Company Data';

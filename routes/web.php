@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users;
 use App\Livewire\EmailDatas;
+use App\Livewire\CompanyData;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -79,7 +80,5 @@ Route::middleware([
     
     Route::get('/users', Users::class)->name('users');
     Route::get('/email-datas', EmailDatas::class)->name('email-datas');
-    Route::get('/company-data', function () {
-        return view('company-data');
-    })->name('company-data');
+    Route::get('/company-data', CompanyData::class)->name('company-data');
 });
