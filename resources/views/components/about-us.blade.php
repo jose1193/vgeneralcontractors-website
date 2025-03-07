@@ -7,15 +7,19 @@
                 <div class="grid grid-cols-2 gap-4">
                     <img src="{{ asset('assets/img/about-1.webp') }}"
                         alt="Professional roofing installation process by V General Contractors"
-                        class="w-full h-64 object-cover rounded-lg" width="600" height="400" loading="lazy">
+                        class="w-full h-64 object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                        width="600" height="400" loading="lazy">
                     <img src="{{ asset('assets/img/about-2.webp') }}"
                         alt="Detailed roof inspection being performed by certified experts"
-                        class="w-full h-64 object-cover rounded-lg" width="600" height="400" loading="lazy">
+                        class="w-full h-64 object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                        width="600" height="400" loading="lazy">
                     <img src="{{ asset('assets/img/about-3.webp') }}" alt="Our experienced roofing team at work"
-                        class="w-full h-64 object-cover rounded-lg" width="600" height="400" loading="lazy">
+                        class="w-full h-64 object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                        width="600" height="400" loading="lazy">
                     <img src="{{ asset('assets/img/about-4.webp') }}"
                         alt="Recently completed roofing project showcasing quality workmanship"
-                        class="w-full h-64 object-cover rounded-lg" width="600" height="400" loading="lazy">
+                        class="w-full h-64 object-cover rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                        width="600" height="400" loading="lazy">
                 </div>
             </div>
 

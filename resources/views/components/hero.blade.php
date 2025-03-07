@@ -1,5 +1,5 @@
 <!-- Hero Section with Background Slider -->
-<section class="relative h-[600px] flex items-center overflow-hidden fade-in-section">
+<section class="relative h-[600px] md:h-[700px] flex items-center overflow-hidden fade-in-section pt-16 md:pt-24">
     <!-- Background Slider -->
     <div x-data="{ currentSlide: 0 }" x-init="setInterval(() => currentSlide = currentSlide === 3 ? 0 : currentSlide + 1, 5000)" class="absolute inset-0">
         <div class="relative h-full">
@@ -34,10 +34,13 @@
     <!-- Content -->
     <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
         <div class="text-white md:w-1/2">
-            <h1 class="text-5xl font-bold text-white mb-6">Professional Commercial & Residential Roofing Services
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">Professional
+                Commercial & Residential Roofing Services
                 in Texas</h1>
-            <h2 class="text-3xl text-yellow-400 mb-4">Expert Roofing Solutions for Businesses and Homes</h2>
-            <p class="text-xl text-white mb-8">GAF certified contractors providing superior roofing services in
+            <h2 class="text-xl sm:text-2xl md:text-3xl text-yellow-400 mb-3 md:mb-4">Expert Roofing Solutions for
+                Businesses and Homes</h2>
+            <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8">GAF certified contractors providing
+                superior roofing services in
                 Houston, Dallas, and across Texas. Specializing in commercial installations, repairs, and storm
                 damage restoration.</p>
             <div class="flex flex-col sm:flex-row gap-4">
