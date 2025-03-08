@@ -1,4 +1,3 @@
-<!-- Header Section -->
 <header x-data="{ isScrolled: false, isDrawerOpen: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
     :class="{ 'bg-white shadow-md': isScrolled, 'bg-transparent': !isScrolled }"
     class="fixed w-full top-0 z-40 transition-all duration-300">
@@ -23,21 +22,24 @@
         </button>
 
         <nav class="hidden md:flex space-x-6">
-            <!-- Your existing desktop navigation -->
             <a href="{{ route('home') }}"
                 :class="{
-                    'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    'text-white': !isScrolled && '{{ request()->routeIs('home') }}',
+                    'text-yellow-400': isScrolled && '{{ request()->routeIs('home') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('home') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('home') }}'
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Home</a>
+
             <a href="{{ route('about') }}"
                 :class="{
-                    'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !
-                        isScrolled
+                    'text-white': !isScrolled && '{{ request()->routeIs('about') }}',
+                    'text-yellow-400': isScrolled && '{{ request()->routeIs('about') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('about') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('about') }}'
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">About
-                Us</a>
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">About Us</a>
+
             <!-- Services Dropdown -->
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" @click.away="open = false"
@@ -82,32 +84,36 @@
                     <a href="{{ route('financing') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Financing</a>
                     <a href="{{ route('virtual-remodeler') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Virtual
-                        Remodeler</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Virtual Remodeler</a>
                     <a href="{{ route('insurance-claims') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Insurance
-                        Claims</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Insurance Claims</a>
                 </div>
             </div>
 
             <a href="{{ route('warranties') }}"
                 :class="{
-                    'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    'text-white': !isScrolled && '{{ request()->routeIs('warranties') }}',
+                    'text-yellow-400': isScrolled && '{{ request()->routeIs('warranties') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('warranties') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('warranties') }}'
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Warranties</a>
 
             <a href="{{ route('portfolio') }}"
                 :class="{
-                    'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    'text-white': !isScrolled && '{{ request()->routeIs('portfolio') }}',
+                    'text-yellow-400': isScrolled && '{{ request()->routeIs('portfolio') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('portfolio') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('portfolio') }}'
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Portfolio</a>
 
             <a href="{{ route('faqs') }}"
                 :class="{
-                    'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    'text-white': !isScrolled && '{{ request()->routeIs('faqs') }}',
+                    'text-yellow-400': isScrolled && '{{ request()->routeIs('faqs') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('faqs') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('faqs') }}'
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">FAQs</a>
 
@@ -126,8 +132,7 @@
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
-                        Appointment</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule Appointment</a>
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
@@ -171,13 +176,18 @@
 
             <!-- Navigation items -->
             <a href="{{ route('home') }}"
-                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Home
-            </a>
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('home') }}',
+                    'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('home') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">Home</a>
+
             <a href="{{ route('about') }}"
-                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                About Us
-            </a>
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('about') }}',
+                    'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('about') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">About Us</a>
 
             <!-- Services Dropdown in Drawer -->
             <div x-data="{ isOpen: false }" class="relative">
@@ -186,37 +196,57 @@
                     <span>Services</span>
                     <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': isOpen }"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 <div x-show="isOpen" class="pl-4">
                     <a href="{{ route('new-roof') }}"
-                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">New Roof</a>
+                        :class="{
+                            'text-yellow-400': '{{ request()->routeIs('new-roof') }}',
+                            'text-gray-700 hover:bg-gray-100': !'{{ request()->routeIs('new-roof') }}'
+                        }"
+                        class="block py-2 px-4 rounded">New Roof</a>
                     <a href="{{ route('roof-repair') }}"
-                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Roof
-                        Repair</a>
+                        :class="{
+                            'text-yellow-400': '{{ request()->routeIs('roof-repair') }}',
+                            'text-gray-700 hover:bg-gray-100': !'{{ request()->routeIs('roof-repair') }}'
+                        }"
+                        class="block py-2 px-4 rounded">Roof Repair</a>
                     <a href="{{ route('storm-damage') }}"
-                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Storm
-                        Damage</a>
+                        :class="{
+                            'text-yellow-400': '{{ request()->routeIs('storm-damage') }}',
+                            'text-gray-700 hover:bg-gray-100': !'{{ request()->routeIs('storm-damage') }}'
+                        }"
+                        class="block py-2 px-4 rounded">Storm Damage</a>
                     <a href="{{ route('hail-damage') }}"
-                        class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">Hail
-                        Damage</a>
+                        :class="{
+                            'text-yellow-400': '{{ request()->routeIs('hail-damage') }}',
+                            'text-gray-700 hover:bg-gray-100': !'{{ request()->routeIs('hail-damage') }}'
+                        }"
+                        class="block py-2 px-4 rounded">Hail Damage</a>
                 </div>
             </div>
 
             <a href="{{ route('warranties') }}"
-                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Warranties
-            </a>
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('warranties') }}',
+                    'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('warranties') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">Warranties</a>
+
             <a href="{{ route('products') }}"
-                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Products
-            </a>
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('products') }}',
+                    'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('products') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">Products</a>
+
             <a href="{{ route('faqs') }}"
-                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                FAQs
-            </a>
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('faqs') }}',
+                    'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('faqs') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">FAQs</a>
 
             <!-- Contact Dropdown -->
             <div x-data="{ open: false }" class="relative">
@@ -228,14 +258,12 @@
                     class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
                     Contact
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
-                        Appointment</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule Appointment</a>
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
