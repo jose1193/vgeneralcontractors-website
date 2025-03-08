@@ -25,7 +25,7 @@
 @push('styles')
     <style>
         .hero-section {
-            margin-top: -5rem;
+            margin-top: -2rem;
         }
     </style>
 @endpush
@@ -43,12 +43,13 @@
         <!-- Content -->
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Roof Repair Services</h1>
-                <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Professional Repairs for All Types of Roofs in
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">Roof Repair Services</h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Professional Repairs for
+                    All Types of Roofs in
                     Houston, Dallas and Surrounding Areas</p>
 
                 <!-- Breadcrumb Navigation -->
-                <nav class="px-4 md:px-8">
+                <nav class="px-4 md:px-8 mt-8">
                     <div class="mx-auto">
                         <ol class="flex items-center justify-center space-x-2 text-white">
                             <li>
@@ -72,8 +73,9 @@
                 <!-- Text Content Column -->
                 <div class="space-y-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Expert Roof Repair Services</h2>
-                        <p class="text-lg text-gray-600">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Expert Roof Repair
+                            Services</h2>
+                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             Our roofing repair services are performed by experienced and certified professionals who undergo
                             rigorous training to provide the highest standards of service. <strong>We work with CERTIFIED
                                 public adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the most value
@@ -82,9 +84,10 @@
                     </div>
 
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-semibold text-gray-900">We will evaluate if the roof of your home needs to
+                        <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">We will evaluate if the roof
+                            of your home needs to
                             be repaired. There could be different reasons to justify a repair, such as:</h3>
-                        <ul class="space-y-2 text-gray-600">
+                        <ul class="space-y-2 text-base sm:text-lg md:text-xl text-gray-600">
                             <li class="flex items-start">
                                 <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -128,7 +131,7 @@
                         </ul>
                     </div>
 
-                    <p class="text-lg text-gray-600">
+                    <p class="text-base sm:text-lg md:text-xl text-gray-600">
                         At <strong>V General Contractors</strong>, we will guide you to make the most assertive decision so
                         that you can obtain a roof with the highest security guaranteed to last for many years.
                     </p>

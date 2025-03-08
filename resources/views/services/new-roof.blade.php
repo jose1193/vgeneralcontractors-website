@@ -18,7 +18,7 @@
 @push('styles')
     <style>
         .hero-section {
-            margin-top: -5rem;
+            margin-top: -2rem;
         }
     </style>
 @endpush
@@ -36,12 +36,14 @@
         <!-- Content -->
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">New Roof Installation</h1>
-                <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Premium Roofing Solutions in Houston, Dallas and
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">New Roof Installation
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Premium Roofing Solutions
+                    in Houston, Dallas and
                     Surrounding Areas</p>
 
                 <!-- Breadcrumb Navigation -->
-                <nav class="px-4 md:px-8">
+                <nav class="px-4 md:px-8 mt-8">
                     <div class="mx-auto">
                         <ol class="flex items-center justify-center space-x-2 text-white">
                             <li>
@@ -65,8 +67,9 @@
                 <!-- Text Content Column -->
                 <div class="space-y-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Expert New Roof Installation</h2>
-                        <p class="text-lg text-gray-600">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Expert New Roof
+                            Installation</h2>
+                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             At <strong>V General Contractors</strong>, we're proud to be Houston and Dallas's trusted choice
                             for new roof installations. <strong>We work with CERTIFIED public adjusters to MAXIMIZE your
                                 insurance claim</strong> if your roof replacement is due to storm or hail damage. Our
@@ -77,8 +80,8 @@
                     </div>
 
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-semibold text-gray-900">Why Choose Us:</h3>
-                        <ul class="space-y-2 text-gray-600">
+                        <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">Why Choose Us:</h3>
+                        <ul class="space-y-2 text-base sm:text-lg md:text-xl text-gray-600">
                             <li class="flex items-start">
                                 <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">

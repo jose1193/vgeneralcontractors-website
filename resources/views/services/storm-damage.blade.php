@@ -25,7 +25,7 @@
 @push('styles')
     <style>
         .hero-section {
-            margin-top: -5rem;
+            margin-top: -2rem;
         }
     </style>
 @endpush
@@ -43,12 +43,14 @@
         <!-- Content -->
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Emergency Storm Damage Repair</h1>
-                <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Fast Response Storm Damage Solutions in Houston,
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">Emergency Storm Damage
+                    Repair</h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Fast Response Storm Damage
+                    Solutions in Houston,
                     Dallas and Surrounding Areas</p>
 
                 <!-- Breadcrumb Navigation -->
-                <nav class="px-4 md:px-8">
+                <nav class="px-4 md:px-8 mt-8">
                     <div class="mx-auto">
                         <ol class="flex items-center justify-center space-x-2 text-white">
                             <li>
@@ -75,7 +77,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <p class="ml-3 text-lg font-medium text-yellow-700">
+                    <p class="ml-3 text-base sm:text-lg md:text-xl font-medium text-yellow-700">
                         Emergency Storm Damage? Call us now at <a href="tel:+13466920757"
                             class="font-bold hover:text-yellow-800">(346) 692-0757</a>
                     </p>
@@ -92,8 +94,9 @@
                 <!-- Text Content Column -->
                 <div class="space-y-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Professional Storm Damage Repair</h2>
-                        <p class="text-lg text-gray-600">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Professional Storm Damage
+                            Repair</h2>
+                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             We know how inconvenient it is for a roof to be damaged by a storm, as even a small amount of
                             damage can allow water to penetrate your roof and leak to your home. <strong>We work with
                                 CERTIFIED public adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the
@@ -104,14 +107,14 @@
                     </div>
 
                     <div class="space-y-4">
-                        <p class="text-lg text-gray-600">
+                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             The correct way to find out if your home's roof has suffered storm damage and resolve the
                             problem efficiently is to contact <strong>V General Contractors</strong>, a knowledgeable
                             <strong>Houston</strong> and <strong>Dallas</strong> roofing company that performs storm-damaged
                             roof repairs on a regular basis.
                         </p>
 
-                        <p class="text-lg text-gray-600">
+                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             Once we have evaluated your roof, we will proceed to generate a repair plan that will restore
                             your home's safety as if the storm had never happened. Similar to how referat schreiben lassen
                             can simplify the process of creating a detailed and structured report, our approach ensures that
@@ -121,8 +124,9 @@
 
                     <!-- Call to Action Box -->
                     <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm Damage Repair?</h3>
-                        <ul class="space-y-3">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm
+                            Damage Repair?</h3>
+                        <ul class="space-y-3 text-base sm:text-lg md:text-xl">
                             <li class="flex items-start">
                                 <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -170,9 +174,10 @@
 
         <!-- Hail Damage Section -->
         <div class="mt-12 bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Professional Hail Damage Assessment</h2>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6">Professional Hail Damage Assessment
+            </h2>
             <div class="prose max-w-none mb-8">
-                <p class="text-lg text-gray-600">
+                <p class="text-base sm:text-lg md:text-xl text-gray-600">
                     To determine with certainty if the roof of your home was damaged by hail, a professional evaluation by a
                     qualified roofing expert is required. Similarly, in academic work, identifying gaps in research or
                     structuring a compelling argument can be as challenging as spotting hail damage. In such cases, a
@@ -183,7 +188,8 @@
             </div>
 
             <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-900 mb-6">The process that will be carried out to guarantee and
+                <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-6">The process that will be
+                    carried out to guarantee and
                     justify your investment is the following:</h3>
 
                 <!-- Tabs Section -->
@@ -208,7 +214,7 @@
                         <div x-show="activeTab === 'assessment'" class="space-y-4">
                             <div class="bg-gray-50 p-6 rounded-lg">
                                 <h4 class="text-xl font-semibold text-gray-900 mb-4">1) Damage assessment</h4>
-                                <p class="text-lg text-gray-600">
+                                <p class="text-base sm:text-lg md:text-xl text-gray-600">
                                     We can determine if damage has been produced by hail and document it properly.
                                 </p>
                             </div>
@@ -219,7 +225,7 @@
                             <div class="bg-gray-50 p-6 rounded-lg">
                                 <h4 class="text-xl font-semibold text-gray-900 mb-4">2) Based on the damage evaluation, we
                                     will repair or replace your roof.</h4>
-                                <p class="text-lg text-gray-600">
+                                <p class="text-base sm:text-lg md:text-xl text-gray-600">
                                     After getting your insurance claim cleared, we will proceed to repair the roof of your
                                     home, restoring it as if hail damage had never occurred. If the hail damage is severe
                                     enough to require a complete roof replacement, we will review your roofing options,
