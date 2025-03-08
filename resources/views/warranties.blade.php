@@ -69,20 +69,20 @@
     <!-- Main Content -->
     <div class="relative py-24">
         <div class="container mx-auto px-4">
-            <div class="flex flex-wrap justify-center warranty-container space-y-12">
+            <div class="flex flex-wrap items-center justify-center warranty-container">
                 <!-- Warranty Image 1 -->
                 <div class="w-full md:w-1/2 px-4 mb-12">
-                    <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image h-full">
                         <img src="{{ asset('assets/img/warranty1.webp') }}" alt="Roofing Warranty Coverage"
-                            class="w-full h-auto object-contain">
+                            class="w-full h-full object-contain">
                     </div>
                 </div>
 
                 <!-- Warranty Image 2 -->
                 <div class="w-full md:w-1/2 px-4 mb-12">
-                    <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image h-full">
                         <img src="{{ asset('assets/img/warranty2.webp') }}" alt="Warranty Certificate"
-                            class="w-full h-auto object-contain">
+                            class="w-full h-full object-contain">
                     </div>
                 </div>
             </div>
