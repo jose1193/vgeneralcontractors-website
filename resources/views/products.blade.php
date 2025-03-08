@@ -11,6 +11,9 @@
 
 @push('styles')
     <style>
+        .hero-section {
+            margin-top: -2rem;
+        }
         .product-image {
             transition: all 0.5s ease-in-out;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -28,16 +31,43 @@
 @endpush
 
 @section('content')
-    <div class="relative pt-16 pb-32 flex content-center items-center justify-center">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap items-center mt-32">
-                <div class="w-full px-4 text-center">
-                    <h1 class="text-4xl font-semibold text-gray-900">Our Products</h1>
-                    <p class="mt-4 text-lg text-gray-600">Premium Roofing Materials for Every Project</p>
-                </div>
-            </div>
+    <!-- Hero Section with Image Overlay -->
+    <div class="relative h-[500px] w-full hero-section">
+        <!-- Background Image -->
+        <img src="{{ asset('assets/img/products-hero.webp') }}" alt="Roofing Products Houston Dallas"
+            class="absolute inset-0 w-full h-full object-cover">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 product-container">
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 h-full flex items-center justify-center">
+            <div class="text-center">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">Our Products</h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Premium Roofing Materials for Every Project</p>
+
+                <!-- Breadcrumb Navigation -->
+                <nav class="px-4 md:px-8 mt-8">
+                    <div class="mx-auto">
+                        <ol class="flex items-center justify-center space-x-2 text-white">
+                            <li>
+                                <a href="{{ route('home') }}" class="hover:text-yellow-500 transition-colors">Home</a>
+                            </li>
+                            <li>
+                                <span class="mx-2">/</span>
+                            </li>
+                            <li class="text-yellow-500 font-medium">Products</li>
+                        </ol>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative py-24">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 product-container">
                 @foreach (range(1, 9) as $index)
                     <div class="relative overflow-hidden rounded-lg product-image">
                         <img src="{{ asset('assets/img/product' . $index . '.webp') }}"

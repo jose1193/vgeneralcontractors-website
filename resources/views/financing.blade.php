@@ -81,10 +81,9 @@
 
                         <div class="text-center">
                             <p class="text-lg font-medium mb-4">Ready to discuss your financing options?</p>
-                            <a href="#contact-form"
-                                class="inline-block bg-yellow-500 text-white font-bold px-8 py-3 rounded-lg hover:bg-yellow-600 transition duration-300">
+                            <x-primary-button href="#contact-form">
                                 Contact Us Today
-                            </a>
+                            </x-primary-button>
                         </div>
                     </div>
                 </div>
