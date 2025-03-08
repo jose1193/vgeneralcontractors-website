@@ -43,54 +43,95 @@
                 <button @click="open = !open" @click.away="open = false"
                     :class="{
                         'text-gray-700 hover:text-gray-900': isScrolled,
-                        'text-yellow-400 hover:text-yellow-300': !
-                            isScrolled
+                        'text-yellow-400 hover:text-yellow-300': !isScrolled
                     }"
                     class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
                     Services
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <a href="{{ route('new-roof') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">New
-                        Roof</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">New Roof</a>
                     <a href="{{ route('roof-repair') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Roof
-                        Repair</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Roof Repair</a>
                     <a href="{{ route('storm-damage') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Storm
-                        Damage</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Storm Damage</a>
                     <a href="{{ route('hail-damage') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Hail
-                        Damage</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Hail Damage</a>
                 </div>
             </div>
-            <a href="#"
+
+            <!-- Resources Dropdown -->
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" @click.away="open = false"
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
+                    Resources
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <a href="{{ route('products') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Products</a>
+                    <a href="{{ route('financing') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Financing</a>
+                    <a href="{{ route('virtual-remodeler') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Virtual
+                        Remodeler</a>
+                    <a href="{{ route('insurance-claims') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Insurance
+                        Claims</a>
+                </div>
+            </div>
+
+            <a href="{{ route('warranties') }}"
                 :class="{
                     'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !
-                        isScrolled
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Roof
-                Insurance Claims</a>
-            <a href="#"
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Warranties</a>
+
+            <a href="{{ route('portfolio') }}"
                 :class="{
                     'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !
-                        isScrolled
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Virtual
-                Remodeler</a>
-            <a href="#"
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Portfolio</a>
+
+            <a href="{{ route('faqs') }}"
                 :class="{
                     'text-gray-700 hover:text-gray-900': isScrolled,
-                    'text-yellow-400 hover:text-yellow-300': !
-                        isScrolled
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Contact-Appointment</a>
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">FAQs</a>
+
+            <!-- Contact Dropdown -->
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" @click.away="open = false"
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
+                    Contact
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <a href="#contact-form"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
+                        Appointment</a>
+                    <a href="{{ route('contact-support') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
+                </div>
+            </div>
         </nav>
 
         <!-- Fixed Phone Button -->
@@ -129,11 +170,11 @@
             </div>
 
             <!-- Navigation items -->
-            <a href="#"
+            <a href="{{ route('home') }}"
                 class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
                 Home
             </a>
-            <a href="#"
+            <a href="{{ route('about') }}"
                 class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
                 About Us
             </a>
@@ -164,18 +205,41 @@
                 </div>
             </div>
 
-            <a href="#"
+            <a href="{{ route('warranties') }}"
                 class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Roof Insurance Claims
+                Warranties
             </a>
-            <a href="#"
+            <a href="{{ route('products') }}"
                 class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Virtual Remodeler
+                Products
             </a>
-            <a href="#"
+            <a href="{{ route('faqs') }}"
                 class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 text-gray-800 font-semibold">
-                Contact-Appointment
+                FAQs
             </a>
+
+            <!-- Contact Dropdown -->
+            <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open" @click.away="open = false"
+                    :class="{
+                        'text-gray-700 hover:text-gray-900': isScrolled,
+                        'text-yellow-400 hover:text-yellow-300': !isScrolled
+                    }"
+                    class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
+                    Contact
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                        </path>
+                    </svg>
+                </button>
+                <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <a href="#contact-form"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
+                        Appointment</a>
+                    <a href="{{ route('contact-support') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
+                </div>
+            </div>
 
             <!-- Mobile Call Button -->
             <div class="mt-6 px-4">

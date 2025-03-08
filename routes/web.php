@@ -102,3 +102,35 @@ Route::get('/storm-damage', function () {
 Route::get('/hail-damage', function () {
     return view('services.hail-damage');
 })->name('hail-damage');
+
+Route::get('/warranties', function () {
+    return view('warranties');
+})->name('warranties');
+
+Route::get('/products', function () {
+    return view('products');
+})->name('products');
+
+Route::get('/financing', function () {
+    return view('financing');
+})->name('financing');
+
+Route::get('/virtual-remodeler', function () {
+    return view('virtual-remodeler');
+})->name('virtual-remodeler');
+
+Route::get('/insurance-claims', function () {
+    return view('insurance-claims');
+})->name('insurance-claims');
+
+Route::get('/portfolio', function () {
+    return view('portfolio');
+})->name('portfolio');
+
+Route::get('/faqs', function () {
+    return view('faqs');
+})->name('faqs');
+
+Route::get('/contact-support', function () {
+    return view('contact-support');
+})->name('contact-support');
