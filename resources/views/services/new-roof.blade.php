@@ -4,12 +4,12 @@
 
 @section('meta')
     <meta name="description"
-        content="Expert new roof installation services in Houston, Dallas and surrounding areas. Professional team, quality materials, and long-term warranty. Get your free estimate today!">
+        content="Expert new roof installation services in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term warranty. Get your free estimate today!">
     <meta name="keywords"
-        content="new roof installation, roof replacement, residential roofing, Houston roofing, Dallas roofing, roofing contractor, professional roofer, roof warranty">
+        content="new roof installation, roof replacement, residential roofing, Houston roofing, Dallas roofing, roofing contractor, professional roofer, roof warranty, certified public adjusters, insurance claims, insurance claim maximization">
     <meta property="og:title" content="Professional New Roof Installation in Houston & Dallas | V General Contractors">
     <meta property="og:description"
-        content="Expert new roof installation services in Houston, Dallas and surrounding areas. Professional team, quality materials, and long-term warranty.">
+        content="Expert new roof installation services in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term warranty.">
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/new-roof') }}">
@@ -68,7 +68,9 @@
                         <h2 class="text-3xl font-bold text-gray-900 mb-4">Expert New Roof Installation</h2>
                         <p class="text-lg text-gray-600">
                             At <strong>V General Contractors</strong>, we're proud to be Houston and Dallas's trusted choice
-                            for new roof installations. Our commitment to excellence and family-focused service ensures your
+                            for new roof installations. <strong>We work with CERTIFIED public adjusters to MAXIMIZE your
+                                insurance claim</strong> if your roof replacement is due to storm or hail damage. Our
+                            commitment to excellence and family-focused service ensures your
                             new roof will be installed with the highest quality standards and backed by our comprehensive
                             warranty.
                         </p>
@@ -108,6 +110,14 @@
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 Free, No-Obligation Estimates
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Insurance Claim Assistance with Certified Public Adjusters
                             </li>
                         </ul>
                     </div>

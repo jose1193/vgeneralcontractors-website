@@ -1,16 +1,23 @@
 @extends('layouts.main')
 
-@section('title', 'Professional Roof Repair Services in Houston & Dallas | V General Contractors')
+@section('title', 'Professional Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors')
 
 @section('meta')
     <meta name="description"
-        content="Expert roof repair services in Houston, Dallas and surrounding areas. Professional team, certified experts, and comprehensive solutions for all types of roof damage.">
+        content="Expert roof repair services in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. Certified professionals for storm damage, hail damage, aging roofs, and warranty claims. GAF certified contractors with 50-year durability guarantee.">
     <meta name="keywords"
-        content="roof repair, roof maintenance, storm damage repair, hail damage repair, Houston roofing, Dallas roofing, roofing contractor, professional roofer">
-    <meta property="og:title" content="Professional Roof Repair Services in Houston & Dallas | V General Contractors">
+        content="roof repair Houston, roof repair Dallas, surrounding areas roofing, storm damage repair, hail damage repair, roof maintenance, GAF certified contractor, professional roofer, roofing services Texas, emergency roof repair, warranty roof repair, certified public adjusters, insurance claims, insurance claim maximization">
+    <meta property="og:title"
+        content="Professional Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors">
     <meta property="og:description"
-        content="Expert roof repair services in Houston, Dallas and surrounding areas. Professional team, certified experts, and comprehensive solutions.">
+        content="Expert roof repair services by GAF certified contractors in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. Specializing in storm damage, hail damage, and comprehensive roof repairs with long-term guarantees.">
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="V General Contractors">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Professional Roof Repair Services - V General Contractors">
+    <meta name="twitter:description"
+        content="Expert roof repair services in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. GAF certified contractors specializing in storm and hail damage repairs.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/roof-repair') }}">
 @endsection
@@ -38,7 +45,7 @@
             <div class="text-center">
                 <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Roof Repair Services</h1>
                 <p class="text-xl text-white max-w-2xl mx-auto px-4 mb-8">Professional Repairs for All Types of Roofs in
-                    Houston & Dallas</p>
+                    Houston, Dallas and Surrounding Areas</p>
 
                 <!-- Breadcrumb Navigation -->
                 <nav class="px-4 md:px-8">
@@ -68,9 +75,9 @@
                         <h2 class="text-3xl font-bold text-gray-900 mb-4">Expert Roof Repair Services</h2>
                         <p class="text-lg text-gray-600">
                             Our roofing repair services are performed by experienced and certified professionals who undergo
-                            rigorous training similar to that required for bachelorarbeit schreiben lassen, where experts
-                            provide the highest standards of bachelor's writing help. Our insurance ensures that all our
-                            clients are protected.
+                            rigorous training to provide the highest standards of service. <strong>We work with CERTIFIED
+                                public adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the most value
+                            from your coverage. Our comprehensive insurance ensures that all our clients are protected.
                         </p>
                     </div>
 
@@ -109,6 +116,14 @@
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 A roof repair based on a warranty claim or defective materials
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Insurance claim assessment and maximization
                             </li>
                         </ul>
                     </div>
@@ -167,7 +182,7 @@
                             </p>
 
                             <h3 class="text-xl font-semibold text-gray-900 mt-6">How does our roof replacement work in
-                                Houston?</h3>
+                                Houston, Dallas and surrounding areas?</h3>
                             <ul class="space-y-4 text-gray-600">
                                 <li class="flex items-start">
                                     <span class="font-bold mr-2">1.</span>
