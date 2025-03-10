@@ -27,7 +27,7 @@
                         intense heat, humidity, and occasional severe storms. Our specialized Houston team
                         delivers
                         roofing systems designed specifically for Gulf Coast weather conditions.</p>
-                    <a href="tel:+13466920757"
+                    <a href="tel: {{ $companyData->phone }}"
                         class="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 w-fit">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +55,7 @@
                         impact-resistant solutions that protect your home year-round while enhancing curb
                         appeal.
                     </p>
-                    <a href="tel:+13466920757"
+                    <a href="tel: {{ $companyData->phone }}"
                         class="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 w-fit">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

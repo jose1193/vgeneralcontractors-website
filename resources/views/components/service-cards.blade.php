@@ -40,9 +40,8 @@
                             Expert installation of high-quality roofing systems with industry-leading
                             warranties.
                         </p>
-                        <x-primary-button class="inline-flex items-center">
+                        <x-primary-button href="{{ route('new-roof') }}" class="inline-flex items-center">
                             Read More
-
                         </x-primary-button>
                     </div>
                 </div>
@@ -76,9 +75,8 @@
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Quick and reliable repairs to fix leaks, damage, and maintain your roof's integrity.
                         </p>
-                        <x-primary-button class="inline-flex items-center">
+                        <x-primary-button href="{{ route('roof-repair') }}" class="inline-flex items-center">
                             Read More
-
                         </x-primary-button>
                     </div>
                 </div>
@@ -113,9 +111,8 @@
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Emergency repairs and restoration services for storm-damaged roofs.
                         </p>
-                        <x-primary-button class="inline-flex items-center">
+                        <x-primary-button href="{{ route('storm-damage') }}" class="inline-flex items-center">
                             Read More
-
                         </x-primary-button>
                     </div>
                 </div>
@@ -126,7 +123,8 @@
                 class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <div class="relative h-[300px] w-full">
                     <div class="absolute inset-0 bg-black/40"></div>
-                    <img src="{{ asset('assets/img/hail-1.webp') }}" alt="Hail damage inspection and assessment process"
+                    <img src="{{ asset('assets/img/hail-1.webp') }}"
+                        alt="Hail damage inspection and assessment process"
                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
                         width="600" height="400" loading="lazy">
                     <div
@@ -151,13 +149,8 @@
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Specialized repair services for hail-damaged roofs with insurance claim assistance.
                         </p>
-                        <x-primary-button class="inline-flex items-center">
+                        <x-primary-button href="{{ route('hail-damage') }}" class="inline-flex items-center">
                             Read More
-                            <svg class="w-4 h-4 ml-2 -mt-0.5" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5l7 7-7 7"></path>
-                            </svg>
                         </x-primary-button>
                     </div>
                 </div>

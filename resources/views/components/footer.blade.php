@@ -1,5 +1,8 @@
 <!-- Footer Section -->
 <div x-data="{ showAppointmentModal: false }">
+    @php
+        use App\Helpers\PhoneHelper;
+    @endphp
     <footer class="bg-gray-900 text-white pt-16 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
@@ -23,7 +26,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
-                            <span class="text-sm sm:text-base md:text-lg">{{ $companyData->phone }}</span>
+                            <span
+                                class="text-sm sm:text-base md:text-lg">{{ PhoneHelper::format($companyData->phone) }}</span>
                         </p>
                         <p class="flex items-center justify-center md:justify-start">
                             <svg class="w-5 h-5 mr-2 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor"

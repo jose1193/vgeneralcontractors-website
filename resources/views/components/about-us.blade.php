@@ -75,7 +75,7 @@
                     </div>
                 </div>
 
-                <a href="#"
+                <a href="{{ route('about') }}"
                     class="inline-flex items-center gap-2 mt-8 text-yellow-500 font-semibold hover:text-yellow-600 transition-colors duration-300">
                     Our Story
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
