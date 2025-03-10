@@ -1,7 +1,7 @@
 @php
     use App\Helpers\PhoneHelper;
 @endphp
-<header x-data="{ isScrolled: false, isDrawerOpen: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
+<header x-data="{ isScrolled: false, isDrawerOpen: false, showAppointmentModal: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
     :class="{ 'bg-white shadow-md': isScrolled, 'bg-transparent': !isScrolled }"
     class="fixed w-full top-0 z-40 transition-all duration-300">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -137,9 +137,11 @@
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
-                        Appointment</a>
+                    <button @click="showAppointmentModal = true; open = false"
+                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">
+                        Schedule Appointment
+                    </button>
+
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
@@ -271,9 +273,12 @@
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
-                        Appointment</a>
+                    <button @click="showAppointmentModal = true; open = false"
+                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">
+                        Schedule Appointment
+                    </button>
+                    <a href="{{ route('contact-form') }}"
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Contact Form</a>
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
@@ -291,6 +296,30 @@
                         <span> {{ PhoneHelper::format($companyData->phone) }}</span>
                     </button>
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div x-show="showAppointmentModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showAppointmentModal = false">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <!-- Modal panel -->
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+                x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                @click.away="showAppointmentModal = false">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <livewire:appointment-form />
+                </div>
             </div>
         </div>
     </div>

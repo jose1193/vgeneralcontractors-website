@@ -27,21 +27,23 @@
             <div class="md:w-1/2">
                 <div class="mb-6">
                     <span class="text-yellow-500 font-semibold">About Us</span>
-                    <h2 class="text-3xl font-bold mt-2 mb-4">We're Committed To Roofing Excellence</h2>
-                    <p class="text-gray-600 mb-6">With years of experience in the roofing industry, we've built
-                        our
-                        reputation on quality workmanship, exceptional customer service, and attention to
-                        detail.
-                        Our commitment to excellence shows in every project we undertake.</p>
-                    <p class="text-gray-600 mb-6">Our vision is to be recognized by 2030 as the leading company
-                        in
-                        specialized roofing services, achieving the highest quality standards through our
-                        dedication
-                        to innovation and client satisfaction. We offer our clients the most advanced services
-                        in
-                        technical advice, premium roofing products, and guaranteed workmanship that stands the
-                        test
-                        of time.</p>
+                    <h2 class="text-3xl font-bold mt-2 mb-4">Your Trusted Roofing Partner in Texas</h2>
+                    <p class="text-gray-600 mb-6">With years of experience serving <strong>Houston, Dallas, and
+                            surrounding areas</strong>,
+                        we've built our reputation on three core principles: <strong>exceptional craftsmanship</strong>,
+                        <strong>superior customer service</strong>, and <strong>maximum insurance claim
+                            assistance</strong>.
+                        We work exclusively with <strong>CERTIFIED public adjusters</strong> to ensure you receive the
+                        full compensation you deserve for your roofing claims.
+                    </p>
+                    <p class="text-gray-600 mb-6">Our vision is to be recognized by 2030 as the leading roofing company
+                        in Texas,
+                        delivering <strong>FREE professional inspections</strong>, providing comprehensive
+                        <strong>insurance claim documentation</strong>,
+                        and offering the most advanced roofing solutions. We take pride in helping our clients navigate
+                        the entire
+                        insurance claim process while ensuring your roof receives the quality care it deserves.
+                    </p>
                 </div>
 
                 <div class="space-y-4">
@@ -52,7 +54,8 @@
                                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                             </svg>
                         </div>
-                        <span class="text-gray-700 font-medium">100+ Customers Have Worked With Us</span>
+                        <span class="text-gray-700 font-medium"><strong>FREE</strong> Professional Roof
+                            Inspections</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="bg-yellow-500 rounded-full p-1">
@@ -61,8 +64,8 @@
                                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                             </svg>
                         </div>
-                        <span class="text-gray-700 font-medium">Professional And Experienced Human
-                            Resources</span>
+                        <span class="text-gray-700 font-medium">Work with <strong>CERTIFIED Public
+                                Adjusters</strong></span>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="bg-yellow-500 rounded-full p-1">
@@ -71,13 +74,14 @@
                                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                             </svg>
                         </div>
-                        <span class="text-gray-700 font-medium">Provide The Best Roof Services</span>
+                        <span class="text-gray-700 font-medium"><strong>Expert Insurance Claim</strong> Documentation &
+                            Support</span>
                     </div>
                 </div>
 
                 <a href="{{ route('about') }}"
                     class="inline-flex items-center gap-2 mt-8 text-yellow-500 font-semibold hover:text-yellow-600 transition-colors duration-300">
-                    Our Story
+                    Learn More About Our Expertise
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -17,6 +17,12 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+Route::get('/contact-support', function () {
+    return view('contact-support');
+})->name('contact-support');
+
+Route::get('/contact-form', App\Livewire\ContactSupport::class)->name('contact-form');
+
 // Google Authentication Routes
 Route::get('/google-auth/redirect', function () {
     return Socialite::driver('google')->redirect();
@@ -131,6 +137,14 @@ Route::get('/faqs', function () {
     return view('faqs');
 })->name('faqs');
 
-Route::get('/contact-support', function () {
-    return view('contact-support');
-})->name('contact-support');
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+})->name('privacy-policy');
+
+Route::get('/cookies-policy', function () {
+    return view('cookies-policy');
+})->name('cookies-policy');
+
+Route::get('/terms-and-conditions', function () {
+    return view('terms-and-conditions');
+})->name('terms-and-conditions');

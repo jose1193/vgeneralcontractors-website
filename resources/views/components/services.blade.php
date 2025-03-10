@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
             <span class="text-yellow-500 font-semibold">Our Services</span>
-            <h2 class="text-4xl font-bold mt-2 mb-4">Professional <span class="text-yellow-500">Roofing
-                    Services</span></h2>
-            <p class="text-gray-600 max-w-3xl mx-auto">We provide comprehensive roofing solutions for both
-                residential
-                and commercial properties, ensuring quality and durability in every project.</p>
+            <h2 class="text-4xl font-bold mt-2 mb-4">Expert <span class="text-yellow-500">Roofing Solutions</span></h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">We provide comprehensive roofing solutions in <strong>Houston,
+                    Dallas, and surrounding areas</strong>.
+                Our team works with <strong>CERTIFIED public adjusters</strong> to ensure maximum insurance claim
+                coverage for your roofing needs.</p>
         </div>
 
         <div class="flex flex-col md:flex-row gap-8 items-start">
@@ -15,7 +15,7 @@
             <div class="w-full md:w-1/2">
                 <div class="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
                     <img src="{{ asset('assets/img/services-roofing.webp') }}"
-                        alt="Comprehensive roofing services demonstration"
+                        alt="Professional roofing services with insurance claim support"
                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                         width="800" height="600" loading="lazy">
                 </div>
@@ -24,14 +24,13 @@
             <!-- Right Side: Services List with Expand/Collapse -->
             <div class="w-full md:w-1/2" x-data="{ openItems: {} }" x-init="openItems = { 'roof-replacement': false, 'roof-restoration': false, 'storm-damage': false, 'hail-damage': false }">
                 <div class="space-y-6">
-                    <h3 class="text-3xl font-bold text-gray-900">We're Committed To Roofing Excellence</h3>
-                    <p class="text-gray-600 mb-6">At V General Contractors, we pride ourselves on delivering
-                        exceptional roofing solutions with unmatched craftsmanship and attention to detail. Our
-                        team
-                        of
-                        certified professionals is dedicated to protecting your home with quality materials and
-                        superior
-                        installation techniques.</p>
+                    <h3 class="text-3xl font-bold text-gray-900">Comprehensive Roofing Solutions</h3>
+                    <p class="text-gray-600 mb-6">At V General Contractors, we specialize in providing <strong>FREE
+                            professional inspections</strong>
+                        and working with <strong>CERTIFIED public adjusters</strong> to maximize your insurance claims.
+                        Our expert team handles
+                        complete <strong>insurance claim documentation</strong> and guides you through the entire
+                        process.</p>
 
                     <!-- Service 1: Roof Replacement -->
                     <div class="border-b border-gray-200">
@@ -39,7 +38,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">01</span>
-                            <h4 class="text-xl font-semibold text-gray-900">Roof Replacement</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Professional Roof Replacement</h4>
                             <svg x-show="!openItems['roof-replacement']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,19 +54,19 @@
                         </button>
                         <div x-show="openItems['roof-replacement']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            We can install a roof built to last for 50+ years for you – no more roof worries!
-                            Best
-                            installation – we are GAF Master Elite Certified.
+                            Expert installation with <strong>50+ year durability guarantee</strong>. As <strong>GAF
+                                Master Elite Certified</strong> contractors,
+                            we ensure top-quality materials and installation, backed by comprehensive warranties.
                         </div>
                     </div>
 
-                    <!-- Service 2: Roof Restoration -->
+                    <!-- Service 2: Insurance Claims -->
                     <div class="border-b border-gray-200">
                         <button @click="openItems['roof-restoration'] = !openItems['roof-restoration']"
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">02</span>
-                            <h4 class="text-xl font-semibold text-gray-900">Roof Restoration</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Insurance Claim Assistance</h4>
                             <svg x-show="!openItems['roof-restoration']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,7 +82,9 @@
                         </button>
                         <div x-show="openItems['roof-restoration']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            Leaking roof? Concerned that your roof is older and may need an inspection?
+                            We work with <strong>CERTIFIED public adjusters</strong> to handle your insurance claims.
+                            Our team provides detailed
+                            documentation and expert guidance throughout the entire claim process.
                         </div>
                     </div>
 
@@ -93,7 +94,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">03</span>
-                            <h4 class="text-xl font-semibold text-gray-900">Storm Damage</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Storm Damage Repair</h4>
                             <svg x-show="!openItems['storm-damage']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +110,9 @@
                         </button>
                         <div x-show="openItems['storm-damage']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            Storm damage requires a skilled assessment to make sure nothing is missed.
+                            <strong>FREE comprehensive inspection</strong> after storms. Our experts document all damage
+                            thoroughly
+                            for insurance claims and provide emergency repair services when needed.
                         </div>
                     </div>
 
@@ -119,7 +122,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">04</span>
-                            <h4 class="text-xl font-semibold text-gray-900">Hail Damage</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Hail Damage Expertise</h4>
                             <svg x-show="!openItems['hail-damage']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,7 +138,9 @@
                         </button>
                         <div x-show="openItems['hail-damage']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            Specialized repair services for hail-damaged roofs with insurance claim assistance.
+                            Specialized in hail damage assessment and repair. We provide <strong>detailed documentation
+                                for insurance claims</strong>
+                            and work with <strong>CERTIFIED adjusters</strong> to maximize your claim.
                         </div>
                     </div>
                 </div>

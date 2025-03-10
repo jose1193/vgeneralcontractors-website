@@ -25,6 +25,8 @@
 
     <x-footer />
 
+    @include('cookie-consent::index')
+
     <!-- Additional Body Scripts -->
     @stack('body-scripts')
 </body>

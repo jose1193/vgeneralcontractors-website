@@ -26,8 +26,10 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
-                            <span
-                                class="text-sm sm:text-base md:text-lg">{{ PhoneHelper::format($companyData->phone) }}</span>
+                            <a href="tel:{{ $companyData->phone }}"
+                                class="text-sm sm:text-base md:text-lg hover:text-yellow-500 transition-colors">
+                                {{ PhoneHelper::format($companyData->phone) }}
+                            </a>
                         </p>
                         <p class="flex items-center justify-center md:justify-start">
                             <svg class="w-5 h-5 mr-2 text-yellow-500 flex-shrink-0" fill="none" stroke="currentColor"
@@ -53,27 +55,26 @@
                 <div class="text-center md:text-left">
                     <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
-                        <li><a href="#"
+                        <li><a href="{{ route('about') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">About
                                 Us</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{ route('portfolio') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Portfolio</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{ route('new-roof') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">New
                                 Roof</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{ route('roof-repair') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Roof
                                 Repair</a></li>
-                        <li><a href="#"
+                        <li><a href="{{ route('storm-damage') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Storm
                                 Damage</a></li>
-                        <li><a href="#"
+                        <li><a href="{{ route('hail-damage') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Hail
                                 Damage</a></li>
-
                     </ul>
                 </div>
 
@@ -81,25 +82,24 @@
                 <div class="text-center md:text-left">
                     <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Legal & Help</h4>
                     <ul class="space-y-2">
-                        <li><a href="#"
+                        <li><a href="{{ route('faqs') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">FAQs</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{ route('privacy-policy') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Privacy
                                 Policy</a></li>
-                        <li><a href="#"
+                        <li><a href="{{ route('terms-and-conditions') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Terms &
                                 Conditions</a></li>
-                        <li><a href="#"
+                        <li><a href="{{ route('cookies-policy') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Cookie
                                 Policy</a></li>
                         <li><a href="#"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Sitemap</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{ route('contact-support') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Contact
                                 Support</a></li>
-
                     </ul>
                 </div>
 
