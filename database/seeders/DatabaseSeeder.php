@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
     // COMPANY DATA
     $companyData = [
         'company_name' => 'V General Contractors',
-        'name' => 'Victor Lara',
+        
         'signature_path' => '/signatures/acme_signature.png',
         'phone' => '+13466155393',
         'email' => 'info@vgeneralcontractors.com',
@@ -114,26 +114,7 @@ class DatabaseSeeder extends Seeder
     CompanyData::create($companyData);
     // END COMPANY DATA
 
-    // SIGNATURE COMPANY
-    $companySignature = [
-        [
-            'company_name' => 'V General Contractors',
-            'name' => 'Argenis Gonzalez',
-            'signature_path' => '/signatures/acme_signature.png',
-            'phone' => '+351963490414',
-            'email' => 'josegonzalezcr2794@gmail.com',
-            'address' => '',
-            'website' => 'https://vgeneralcontractors.com',
-            'latitude' => 29.75516,
-            'longitude' => -95.3984135,
-            'user_id' => 1, 
-        ]
-    ];
-
-    foreach ($companySignature as $companyData) {
-        $companyData['uuid'] = Uuid::uuid4()->toString();
-        CompanyData::create($companyData);
-    }
+    
     // END COMPANY SIGNATURE
 
     // EMAIL DATA
@@ -141,21 +122,21 @@ class DatabaseSeeder extends Seeder
         [
             'description' => 'Correo para colecciones y pagos',
             'email' => 'collections@vgeneralcontractors.com',
-            'phone' => '+13466155393',
+            'phone' => '+17133646240',
             'type' => 'collections',
             'user_id' => $adminUser->id,
         ],
         [
             'description' => 'Correo para información general',
             'email' => 'info@vgeneralcontractors.com',
-            'phone' => '+13466155393',
+            'phone' => '+13466920757',
             'type' => 'info',
             'user_id' => $adminUser->id,
         ],
         [
             'description' => 'Correo para citas y agendamiento',
             'email' => 'appointment@vgeneralcontractors.com',
-            'phone' => '+13466155393',
+            'phone' => '+13466920757',
             'type' => 'appointment',
             'user_id' => $adminUser->id,
         ]
