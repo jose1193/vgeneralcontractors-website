@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\PhoneHelper;
+@endphp
 <header x-data="{ isScrolled: false, isDrawerOpen: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
     :class="{ 'bg-white shadow-md': isScrolled, 'bg-transparent': !isScrolled }"
     class="fixed w-full top-0 z-40 transition-all duration-300">
@@ -38,7 +41,8 @@
                     'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('about') }}',
                     'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('about') }}'
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">About Us</a>
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">About
+                Us</a>
 
             <!-- Services Dropdown -->
             <div x-data="{ open: false }" class="relative">
@@ -84,9 +88,11 @@
                     <a href="{{ route('financing') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Financing</a>
                     <a href="{{ route('virtual-remodeler') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Virtual Remodeler</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Virtual
+                        Remodeler</a>
                     <a href="{{ route('insurance-claims') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Insurance Claims</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Insurance
+                        Claims</a>
                 </div>
             </div>
 
@@ -132,7 +138,8 @@
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule Appointment</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
+                        Appointment</a>
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
@@ -140,7 +147,7 @@
         </nav>
 
         <!-- Fixed Phone Button -->
-        <a href="tel:+13466920757" class="hidden md:inline-flex items-center">
+        <a href="tel:{{ $companyData->phone }}" class="hidden md:inline-flex items-center">
             <button
                 class="bg-yellow-500 text-white text-xs font-bold px-4 py-2 rounded hover:bg-yellow-600 flex items-center space-x-2 transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-95">
                 <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" fill="none"
@@ -148,7 +155,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span>(346) 692-0757</span>
+                <span>{{ PhoneHelper::format($companyData->phone) }}</span>
             </button>
         </a>
     </div>
@@ -196,7 +203,8 @@
                     <span>Services</span>
                     <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': isOpen }"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                        </path>
                     </svg>
                 </button>
                 <div x-show="isOpen" class="pl-4">
@@ -258,12 +266,14 @@
                     class="font-semibold transition-colors duration-300 ease-in-out flex items-center">
                     Contact
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                        </path>
                     </svg>
                 </button>
                 <div x-show="open" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <a href="#contact-form"
-                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule Appointment</a>
+                        class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Schedule
+                        Appointment</a>
                     <a href="{{ route('contact-support') }}"
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
@@ -271,14 +281,14 @@
 
             <!-- Mobile Call Button -->
             <div class="mt-6 px-4">
-                <a href="tel:+13466920757" class="block w-full">
+                <a href="tel:{{ $companyData->phone }}" class="block w-full">
                     <button
                         class="w-full bg-yellow-500 text-white text-sm font-bold px-4 py-3 rounded hover:bg-yellow-600 flex items-center justify-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        <span>(346) 692-0757</span>
+                        <span> {{ PhoneHelper::format($companyData->phone) }}</span>
                     </button>
                 </a>
             </div>

@@ -1,5 +1,5 @@
 <!-- Parallax Financing Section -->
-<section class="relative py-32 bg-fixed bg-center bg-cover fade-in-section"
+<section class="relative py-24 bg-fixed bg-center bg-cover fade-in-section"
     style="background-image: url('{{ asset('assets/img/bg-financial-1024x690.webp') }}');">
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/50"></div>
@@ -8,17 +8,17 @@
     <div class="relative container mx-auto px-4 text-center">
         <div class="max-w-2xl mx-auto">
             <h2 class="text-4xl font-bold text-white mb-6">Financing</h2>
-            <p class="text-xl text-gray-100 mb-8">If you want to finance your roofing project, we can help you find
+            <p class="text-xl text-gray-100 mb-2">If you want to finance your roofing project, we can help you find
                 a suitable option for your needs.</p>
             <p class="text-xl text-gray-100 mb-8">Getting an affordable monthly payment is easier than you may
                 think.</p>
-            <x-primary-button class="inline-flex items-center">
-                Read More
-            </x-primary-button>
+
         </div>
     </div>
 </section>
-
+@php
+    use App\Helpers\PhoneHelper;
+@endphp
 <!-- Call Us Now Section -->
 <section class="bg-yellow-500 py-12">
     <div class="container mx-auto px-4">
@@ -31,7 +31,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                (346) 692-0757
+                {{ PhoneHelper::format($companyData->phone) }}
             </a>
         </div>
     </div>

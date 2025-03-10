@@ -101,7 +101,7 @@ class DatabaseSeeder extends Seeder
         'company_name' => 'V General Contractors',
         
         'signature_path' => '/signatures/acme_signature.png',
-        'phone' => '+13466155393',
+        'phone' => '+13466920757',
         'email' => 'info@vgeneralcontractors.com',
         'address' => '1302 Waugh Dr # 810 Houston TX 77019',
         'website' => 'https://vgeneralcontractors.com',
