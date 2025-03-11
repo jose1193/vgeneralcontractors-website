@@ -1,9 +1,32 @@
 <div>
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         @if (session()->has('message'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                 role="alert">
                 <span class="block sm:inline">{{ session('message') }}</span>
+                <button @click="show = false" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                </button>
+            </div>
+        @endif
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <button @click="show = false" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                </button>
             </div>
         @endif
 
@@ -26,21 +49,27 @@
                         class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                 </div>
 
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 overflow-x-auto block md:table">
                     <thead>
                         <tr>
+                            <th
+                                class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Nro</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Company Name</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Contact</th>
+                                CEO</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Email</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Phone</th>
+                            <th
+                                class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Address</th>
                             <th
                                 class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Actions</th>
@@ -50,12 +79,17 @@
                         @forelse($companies as $company)
                             <tr>
                                 <td class="px-6 py-4 whitespace-no-wrap text-center">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
+                                        {{ $loop->iteration }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                                         {{ $company->company_name }}
                                     </div>
                                 </td>
                                 <td
-                                    class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                                    class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center capitalize">
                                     {{ $company->name }}
                                 </td>
                                 <td
@@ -67,31 +101,37 @@
                                     <a href="tel:{{ $company->phone }}">
                                         {{ \App\Helpers\PhoneHelper::format($company->phone) }}</a>
                                 </td>
+                                <td
+                                    class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center capitalize">
+                                    {{ $company->address }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
-                                    <button wire:click="edit({{ $company->id }})"
-                                        class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-600 mr-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <button wire:click="delete({{ $company->id }})"
-                                        class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-600"
-                                        onclick="return confirm('Are you sure you want to delete this company?')">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
+                                    <div class="inline-flex items-center justify-center space-x-4">
+                                        <button wire:click="edit({{ $company->id }})"
+                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-600 p-1">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                        <button
+                                            @click="$dispatch('confirmDelete', { id: {{ $company->id }}, name: '{{ addslashes($company->name) }}', company_name: '{{ addslashes($company->company_name) }}' })"
+                                            class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-600 p-1">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="px-6 py-4 text-center" colspan="5">No companies available</td>
+                                <td class="px-6 py-4 text-center" colspan="7">No companies available</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -106,149 +146,148 @@
 
     <!-- Modal Form -->
     @if ($isOpen)
-        <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed z-50 inset-0 overflow-y-auto ease-out duration-400">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Background overlay -->
                 <div class="fixed inset-0 transition-opacity">
                     <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
                 </div>
 
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-
+                <!-- Modal panel -->
                 <div
-                    class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <form>
+                    class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full md:w-3/4 sm:w-full">
+                    <form wire:key="company-form">
+                        <!-- Modal header -->
+                        <div class="bg-gray-900 px-4 py-3 sm:px-6 flex items-center justify-between">
+                            <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">
+                                {{ $modalTitle }}
+                            </h3>
+                            <button wire:click="closeModal()" type="button"
+                                class="text-white hover:text-gray-200 focus:outline-none">
+                                <span class="sr-only">Close</span>
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Modal body -->
                         <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <!-- Close button -->
-                            <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
-                                <button wire:click="closeModal()" type="button"
-                                    class="text-white hover:text-gray-200 focus:outline-none">
-                                    <span class="sr-only">Close</span>
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div class="sm:flex sm:items-start">
-                                <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                    <div
-                                        class="bg-gray-900 -mx-4 -mt-5 sm:-mx-6 sm:-mt-6 px-4 py-4 sm:px-6 rounded-t-lg">
-                                        <h3 class="text-lg leading-6 font-medium text-white text-center"
-                                            id="modal-title">
-                                            {{ $modalTitle }}
-                                        </h3>
-                                    </div>
-
-                                    <div class="mt-6 space-y-4" x-data="formValidation()">
-                                        <div class="mb-4">
-                                            <label for="company_name"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Company
-                                                Name:</label>
-                                            <input type="text" x-model="form.company_name"
-                                                @input="validateField('company_name')" wire:model="company_name"
-                                                id="company_name"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.company_name" x-text="errors.company_name"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('company_name')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="name"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
-                                            <input type="text" x-model="form.name" @input="validateField('name')"
-                                                wire:model="name" id="name"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.name" x-text="errors.name"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('name')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="email"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email:</label>
-                                            <input type="email" x-model="form.email"
-                                                @input="validateField('email')" wire:model="email" id="email"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.email" x-text="errors.email"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('email')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="phone"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Phone:</label>
-                                            <input type="text" x-model="form.phone" @input="formatPhone($event)"
-                                                wire:model="phone" id="phone"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.phone" x-text="errors.phone"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('phone')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="address"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Address:</label>
-                                            <input type="text" x-model="form.address"
-                                                @input="validateField('address')" wire:model="address" id="address"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.address" x-text="errors.address"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('address')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="website"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Website:</label>
-                                            <input type="url" x-model="form.website"
-                                                @input="validateField('website')" wire:model="website" id="website"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.website" x-text="errors.website"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('website')
-                                                <span class="text-red-500">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="latitude"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Latitude:</label>
-                                            <input type="text" x-model="form.latitude"
-                                                @input="validateField('latitude')" wire:model="latitude"
-                                                id="latitude"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.latitude" x-text="errors.latitude"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="longitude"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Longitude:</label>
-                                            <input type="text" x-model="form.longitude"
-                                                @input="validateField('longitude')" wire:model="longitude"
-                                                id="longitude"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.longitude" x-text="errors.longitude"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                        </div>
-                                    </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation()">
+                                <div class="mb-4">
+                                    <label for="company_name"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Company
+                                        Name:</label>
+                                    <input type="text" x-model="form.company_name"
+                                        @input="validateField('company_name'); $event.target.value = $event.target.value.toUpperCase()"
+                                        wire:model="company_name" id="company_name"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase">
+                                    <span x-show="errors.company_name" x-text="errors.company_name"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('company_name')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="name"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
+                                    <input type="text" x-model="form.name"
+                                        @input="validateField('name'); $event.target.value = $event.target.value.toUpperCase()"
+                                        wire:model="name" id="name"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase">
+                                    <span x-show="errors.name" x-text="errors.name"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('name')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="email"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email:</label>
+                                    <input type="email" x-model="form.email" @input="validateField('email')"
+                                        wire:model="email" id="email"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.email" x-text="errors.email"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('email')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="phone"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Phone:</label>
+                                    <input type="text" x-model="form.phone" @input="formatPhone($event)"
+                                        wire:model="phone" id="phone"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.phone" x-text="errors.phone"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('phone')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="address"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Address:</label>
+                                    <input type="text" x-model="form.address"
+                                        @input="validateField('address'); $event.target.value = $event.target.value.toUpperCase()"
+                                        wire:model="address" id="address"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase">
+                                    <span x-show="errors.address" x-text="errors.address"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('address')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="website"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Website:</label>
+                                    <input type="url" x-model="form.website" @input="validateField('website')"
+                                        wire:model="website" id="website" placeholder="https://www.example.com"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.website" x-text="errors.website"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    <span class="text-xs text-gray-500 mt-1">Enter URL starting with https:// or
+                                        www.</span>
+                                    @error('website')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <input type="hidden" x-model="form.latitude" wire:model="latitude" id="latitude">
+                                <input type="hidden" x-model="form.longitude" wire:model="longitude"
+                                    id="longitude">
                             </div>
                         </div>
 
+                        <!-- Modal footer -->
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button
-                                @click.prevent="validateForm(); if(!Object.keys(errors).find(key => errors[key])) { $wire.store(); }"
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                Save
+                            <button type="button" wire:click="store" x-data="{}"
+                                x-on:click="$wire.isSubmitting = true"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
+                                :class="{ 'opacity-50 cursor-not-allowed': $wire.isSubmitting }"
+                                :disabled="$wire.isSubmitting">
+                                <svg wire:loading wire:target="store"
+                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span wire:loading.remove wire:target="store">Save</span>
+                                <span wire:loading wire:target="store">Saving...</span>
                             </button>
-                            <button wire:click="closeModal()" type="button"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            <button wire:click="closeModal()" type="button" wire:loading.attr="disabled"
+                                wire:target="store"
+                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
+                                wire:loading.class="opacity-50 cursor-not-allowed" wire:target="store">
                                 Cancel
                             </button>
                         </div>
@@ -259,34 +298,38 @@
     @endif
 
     <!-- Delete Confirmation Modal -->
-    <div class="fixed inset-0 z-50 overflow-y-auto" style="display: none" x-data="{ show: false, company: null }" x-show="show"
-        x-on:delete-confirmation.window="show = true; company = $event.detail">
+    <div x-data="{ showDeleteModal: false, companyToDelete: null, isDeleting: false }" x-init="window.addEventListener('confirmDelete', event => {
+        showDeleteModal = true;
+        companyToDelete = event.detail;
+    });
+    window.addEventListener('companyDeleted', () => {
+        showDeleteModal = false;
+        isDeleting = false;
+        companyToDelete = null;
+    });" x-show="showDeleteModal" x-cloak
+        class="fixed inset-0 overflow-y-auto z-50">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!-- Background overlay -->
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" x-show="showDeleteModal"
+                @click="showDeleteModal = false; companyToDelete = null;">
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <!-- This element is to trick the browser into centering the modal contents. -->
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
             <!-- Modal panel -->
-            <div
-                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <!-- Header -->
-                <div class="bg-red-600 px-4 py-3 sm:px-6 flex justify-between items-center">
-                    <div class="flex-grow text-center">
-                        <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">
-                            Confirm Delete
-                        </h3>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full md:w-3/4 sm:w-full"
+                x-show="showDeleteModal">
+                <div class="bg-red-600 px-4 py-3">
+                    <div class="flex items-center justify-center">
+                        <h3 class="text-lg font-medium text-white text-center" id="modal-title">Confirm Delete</h3>
+                        <button @click="showDeleteModal = false; companyToDelete = null;"
+                            class="absolute right-4 text-white hover:text-gray-200">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <button @click="show = false" class="text-white hover:text-gray-200">
-                        <span class="sr-only">Close</span>
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
                 </div>
 
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -301,7 +344,8 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg leading-6 font-medium text-gray-900"
-                                x-text="'Delete Company: ' + (company ? company.company_name : '')"></h3>
+                                x-text="'Delete Company: ' + (companyToDelete ? companyToDelete.name + ' - ' + companyToDelete.company_name : '')">
+                            </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">Are you sure you want to delete this company? This
                                     action cannot be undone.</p>
@@ -311,18 +355,55 @@
                 </div>
 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button @click="$wire.delete(company.id); show = false;" type="button"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Delete
+                    <button type="button"
+                        @click="if(!isDeleting && companyToDelete) {
+                        isDeleting = true;
+                        $wire.call('deleteCompany', companyToDelete.id).then((response) => {
+                            if (response.success) {
+                                showDeleteModal = false;
+                                companyToDelete = null;
+                            }
+                            isDeleting = false;
+                        }).catch((error) => {
+                            isDeleting = false;
+                            console.error('Error deleting company:', error);
+                        });
+                    }"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
+                        :class="{ 'opacity-50 cursor-not-allowed': isDeleting }" :disabled="isDeleting">
+                        <svg x-show="isDeleting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        <span x-text="isDeleting ? 'Deleting...' : 'Delete'"></span>
                     </button>
-                    <button @click="show = false" type="button"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" @click="showDeleteModal = false; companyToDelete = null;"
+                        :disabled="isDeleting"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
+                        :class="{ 'opacity-50 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* Add responsive table styles */
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+    </style>
 
     <script>
         function formValidation() {
@@ -422,6 +503,15 @@
                                 this.errors.website = 'Website is required';
                                 return false;
                             } else if (!/^(http|https):\/\/[^ "]+$/.test(this.form.website)) {
+                                if (this.form.website.startsWith('www.')) {
+                                    this.form.website = 'https://' + this.form.website;
+                                    this.$wire.set('website', this.form.website);
+                                    return true;
+                                } else if (!/^www\./i.test(this.form.website) && !/^https?:\/\//i.test(this.form.website)) {
+                                    this.form.website = 'https://' + this.form.website;
+                                    this.$wire.set('website', this.form.website);
+                                    return true;
+                                }
                                 this.errors.website = 'Please enter a valid URL (include http:// or https://)';
                                 return false;
                             }
@@ -477,13 +567,5 @@
                 }
             };
         }
-
-        document.addEventListener('livewire:initialized', () => {
-            @this.on('confirmDelete', (companyData) => {
-                window.dispatchEvent(new CustomEvent('delete-confirmation', {
-                    detail: companyData
-                }));
-            });
-        });
     </script>
 </div>

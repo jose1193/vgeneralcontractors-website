@@ -98,7 +98,7 @@ class DatabaseSeeder extends Seeder
     // COMPANY DATA
     $companyData = [
         'company_name' => 'V General Contractors',
-        
+        'name' => 'Victor Lara',
         'signature_path' => '/signatures/acme_signature.png',
         'phone' => '+13466920757',
         'email' => 'info@vgeneralcontractors.com',

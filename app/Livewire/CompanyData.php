@@ -18,6 +18,9 @@ class CompanyData extends Component
     public $modalTitle = 'Create Company Data';
     public $companyId;
     public $search = '';
+    public $isSubmitting = false;
+
+    protected $listeners = [];
 
     public function render()
     {
@@ -59,38 +62,68 @@ class CompanyData extends Component
         $this->latitude = '';
         $this->longitude = '';
         $this->companyId = '';
+        $this->isSubmitting = false;
     }
 
     public function store()
     {
+        $this->isSubmitting = true;
+        
         $this->validate([
             'company_name' => 'required',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
-            'website' => 'required|url'
+            'website' => 'required|url',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric'
         ]);
 
-        CompanyDataModel::updateOrCreate(['id' => $this->companyId], [
-            'uuid' => $this->companyId ? null : Uuid::uuid4()->toString(),
-            'company_name' => $this->company_name,
-            'name' => $this->name,
-            'signature_path' => $this->signature_path,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'website' => $this->website,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-            'user_id' => auth()->id()
-        ]);
+        try {
+            // Formatear el número de teléfono
+            $phone = preg_replace('/[^0-9]/', '', $this->phone);
+            $phone = '+1' . $phone;
+            
+            // Format website URL if needed
+            $website = $this->website;
+            if (!empty($website)) {
+                // If website doesn't start with http:// or https://, add https://
+                if (!preg_match('/^https?:\/\//i', $website)) {
+                    // If it starts with www., add https:// before it
+                    if (preg_match('/^www\./i', $website)) {
+                        $website = 'https://' . $website;
+                    } else {
+                        // Otherwise, add https://www.
+                        $website = 'https://' . $website;
+                    }
+                }
+            }
 
-        session()->flash('message', 
-            $this->companyId ? 'Company Data Updated Successfully.' : 'Company Data Created Successfully.');
+            CompanyDataModel::updateOrCreate(['id' => $this->companyId], [
+                'uuid' => $this->companyId ? null : Uuid::uuid4()->toString(),
+                'company_name' => strtoupper($this->company_name),
+                'name' => strtoupper($this->name),
+                'signature_path' => $this->signature_path,
+                'email' => $this->email,
+                'phone' => $phone,
+                'address' => strtoupper($this->address),
+                'website' => $website,
+                'latitude' => $this->latitude ?: null,
+                'longitude' => $this->longitude ?: null,
+                'user_id' => auth()->id()
+            ]);
 
-        $this->closeModal();
-        $this->resetInputFields();
+            session()->flash('message', 
+                $this->companyId ? 'Company Data Updated Successfully.' : 'Company Data Created Successfully.');
+
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error saving company data: ' . $e->getMessage());
+        } finally {
+            $this->isSubmitting = false;
+        }
     }
 
     public function edit($id)
@@ -106,14 +139,21 @@ class CompanyData extends Component
         $this->website = $company->website;
         $this->latitude = $company->latitude;
         $this->longitude = $company->longitude;
-        
         $this->modalTitle = 'Edit Company Data';
         $this->openModal();
     }
 
-    public function delete($id)
-    {
-        CompanyDataModel::find($id)->delete();
-        session()->flash('message', 'Company Data Deleted Successfully.');
+    public function deleteCompany($id)
+{
+    try {
+        $company = CompanyDataModel::findOrFail($id);
+        $company->delete();
+        session()->flash('message', 'Company deleted successfully.');
+        $this->dispatch('companyDeleted');
+        return ['success' => true];
+    } catch (\Exception $e) {
+        session()->flash('error', 'Error deleting company: ' . $e->getMessage());
+        return ['success' => false, 'error' => $e->getMessage()];
     }
+}
 }
