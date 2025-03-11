@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\CompanyDataController;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +25,20 @@ class AppServiceProvider extends ServiceProvider
     {
         // Inicializar el controlador de datos de la compañía
         $companyDataController = new CompanyDataController();
+
+        // Monitoreo de jobs
+        Queue::before(function (JobProcessing $event) {
+            \Log::info('Processing job', [
+                'job' => get_class($event->job->payload()['data']['command']),
+                'queue' => $event->job->getQueue()
+            ]);
+        });
+
+        Queue::after(function (JobProcessed $event) {
+            \Log::info('Job processed', [
+                'job' => get_class($event->job->payload()['data']['command']),
+                'queue' => $event->job->getQueue()
+            ]);
+        });
     }
 }

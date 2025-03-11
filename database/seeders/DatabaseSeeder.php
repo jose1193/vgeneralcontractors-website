@@ -41,7 +41,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'info@vgeneralcontractors.com',
             'username' => 'vgeneralcontractors',
             'password' => bcrypt('info01='),
-            'uuid' => Uuid::uuid4()->toString()
+            'uuid' => Uuid::uuid4()->toString(),
+            'terms_and_conditions' => true
         ]);
         $adminUser->assignRole($adminRole);
 
@@ -69,8 +70,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@user.com',
             'username' => 'user01',
-            'password' => bcrypt('user01='),
-            'uuid' => Uuid::uuid4()->toString()
+            'password' => bcrypt('example123='),
+            'uuid' => Uuid::uuid4()->toString(),
+            'terms_and_conditions' => true
         ]);
         $userUser->assignRole($userRole);
         // END MANAGER USER

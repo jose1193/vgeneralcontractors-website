@@ -8,6 +8,8 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCredentialsMail;
 
 class Users extends Component
 {
@@ -96,96 +98,221 @@ class Users extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->modalTitle = 'Crear Usuario';
+        $this->modalTitle = 'Create User';
         $this->modalAction = 'store';
         $this->openModal();
     }
 
     public function store()
     {
-        $this->validate();
+        try {
+            $this->validate([
+                'name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => ['required', 'string', 'email', 'max:255', 
+                    Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
+            ]);
 
-        User::create([
-            'uuid' => Str::uuid(),
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'username' => $this->username,
-            'date_of_birth' => $this->date_of_birth,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'country' => $this->country,
-            'gender' => $this->gender,
-            'terms_and_conditions' => $this->terms_and_conditions,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-        ]);
+            // Generate username from name and last_name
+            $baseUsername = strtolower($this->name) . strtolower(substr($this->last_name, 0, 1));
+            $username = $this->generateUniqueUsername($baseUsername);
+            
+            // Generate random password
+            $randomPassword = Str::random(12);
 
-        session()->flash('message', 'Usuario creado exitosamente.');
-        $this->closeModal();
-        $this->resetInputFields();
+            $data = [
+                'uuid' => Str::uuid(),
+                'name' => ucwords(strtolower($this->name)),
+                'last_name' => ucwords(strtolower($this->last_name)),
+                'username' => $username,
+                'date_of_birth' => $this->date_of_birth,
+                'email' => $this->email,
+                'password' => Hash::make($randomPassword),
+                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+                'address' => strtoupper($this->address),
+                'zip_code' => $this->zip_code,
+                'city' => $this->city,
+                'country' => $this->country,
+                'gender' => $this->gender,
+                'terms_and_conditions' => true,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+            ];
+
+            $user = User::create($data);
+
+            // Enviar correo usando queue
+            Mail::to($user->email)->queue(new UserCredentialsMail($user, $randomPassword));
+
+            session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
+            \Log::error('Error creating user', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error creating user: ' . $e->getMessage());
+        }
     }
 
-    public function edit($uuid)
+    /**
+     * Generate a unique username
+     * 
+     * @param string $baseUsername
+     * @return string
+     */
+    private function generateUniqueUsername($baseUsername)
     {
-        $user = User::where('uuid', $uuid)->firstOrFail();
+        $username = $baseUsername;
+        $isUnique = false;
+        $attempts = 0;
         
-        $this->uuid = $user->uuid;
-        $this->name = $user->name;
-        $this->last_name = $user->last_name;
-        $this->username = $user->username;
-        $this->date_of_birth = $user->date_of_birth;
-        $this->email = $user->email;
-        $this->phone = $user->phone;
-        $this->address = $user->address;
-        $this->zip_code = $user->zip_code;
-        $this->city = $user->city;
-        $this->country = $user->country;
-        $this->gender = $user->gender;
-        $this->terms_and_conditions = $user->terms_and_conditions;
-        $this->latitude = $user->latitude;
-        $this->longitude = $user->longitude;
+        while (!$isUnique && $attempts < 10) {
+            // Add 3 random numbers
+            $randomNumbers = rand(100, 999);
+            $username = $baseUsername . $randomNumbers;
+            
+            // Check if username exists
+            $exists = User::where('username', $username)->exists();
+            
+            if (!$exists) {
+                $isUnique = true;
+            }
+            
+            $attempts++;
+        }
         
-        $this->modalTitle = 'Editar Usuario';
-        $this->modalAction = 'update';
-        $this->openModal();
+        // If we couldn't generate a unique username after 10 attempts,
+        // add more random characters
+        if (!$isUnique) {
+            $username = $baseUsername . Str::random(5);
+        }
+        
+        return $username;
     }
 
     public function update()
     {
-        $this->validate();
+        try {
+            $this->validate([
+                'name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($this->uuid, 'uuid')],
+                'password' => 'nullable|min:8|confirmed',
+                // ... otras validaciones
+            ]);
 
-        $user = User::where('uuid', $this->uuid)->firstOrFail();
-        
-        $data = [
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'username' => $this->username,
-            'date_of_birth' => $this->date_of_birth,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'country' => $this->country,
-            'gender' => $this->gender,
-            'terms_and_conditions' => $this->terms_and_conditions,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-        ];
-        
-        if ($this->password) {
-            $data['password'] = Hash::make($this->password);
+            \Log::info('Attempting to update user', [
+                'uuid' => $this->uuid
+            ]);
+
+            $user = User::where('uuid', $this->uuid)->firstOrFail();
+            
+            $data = [
+                'name' => ucwords(strtolower($this->name)),
+                'last_name' => ucwords(strtolower($this->last_name)),
+                'username' => $user->username, // Keep existing username on update
+                'date_of_birth' => $this->date_of_birth,
+                'email' => $this->email,
+                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+                'address' => strtoupper($this->address),
+                'zip_code' => $this->zip_code,
+                'city' => $this->city,
+                'country' => $this->country,
+                'gender' => $this->gender,
+                'terms_and_conditions' => true,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+            ];
+
+            if ($this->password) {
+                $data['password'] = Hash::make($this->password);
+            }
+
+            $user->update($data);
+
+            \Log::info('User updated successfully', [
+                'uuid' => $this->uuid
+            ]);
+
+            session()->flash('message', 'User Updated Successfully.');
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
+        } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
+            \Log::error('Error updating user', [
+                'uuid' => $this->uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error updating user: ' . $e->getMessage());
+            session()->flash('error', 'Error saving user data: ' . $e->getMessage());
         }
-        
-        $user->update($data);
+    }
 
-        session()->flash('message', 'Usuario actualizado exitosamente.');
-        $this->closeModal();
-        $this->resetInputFields();
+    public function edit($uuid)
+    {
+        try {
+            \Log::info('Attempting to edit user', ['uuid' => $uuid]);
+            
+            $user = User::where('uuid', $uuid)->firstOrFail();
+            
+            $this->uuid = $user->uuid;
+            $this->name = $user->name;
+            $this->last_name = $user->last_name;
+            $this->username = $user->username;
+            $this->date_of_birth = $user->date_of_birth;
+            $this->email = $user->email;
+            
+            // Formatear el teléfono
+            $rawPhone = preg_replace('/[^0-9]/', '', $user->phone);
+            if (strlen($rawPhone) >= 10) {
+                $rawPhone = substr($rawPhone, -10);
+                $this->phone = sprintf("(%s) %s - %s",
+                    substr($rawPhone, 0, 3),
+                    substr($rawPhone, 3, 3),
+                    substr($rawPhone, 6)
+                );
+            } else {
+                $this->phone = $user->phone;
+            }
+            
+            $this->address = $user->address;
+            $this->zip_code = $user->zip_code;
+            $this->city = $user->city;
+            $this->country = $user->country;
+            $this->gender = $user->gender;
+            $this->terms_and_conditions = $user->terms_and_conditions;
+            $this->latitude = $user->latitude;
+            $this->longitude = $user->longitude;
+            
+            $this->modalTitle = 'Edit User';
+            $this->modalAction = 'update';
+            
+            $this->openModal();
+            
+            // Make sure to dispatch this event AFTER all properties are set
+            $this->dispatch('user-edit');
+            
+            \Log::info('User data loaded for editing', [
+                'uuid' => $uuid
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error loading user for edit', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error loading user data: ' . $e->getMessage());
+        }
     }
 
     public function confirmDelete($uuid)

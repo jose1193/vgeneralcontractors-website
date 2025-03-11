@@ -1,9 +1,32 @@
 <div>
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         @if (session()->has('message'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                 role="alert">
                 <span class="block sm:inline">{{ session('message') }}</span>
+                <button @click="show = false" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                </button>
+            </div>
+        @endif
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <button @click="show = false" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                </button>
             </div>
         @endif
 
@@ -118,246 +141,213 @@
     </div>
 
     <!-- Modal Form -->
-    <div class="fixed inset-0 z-10 overflow-y-auto ease-out duration-400"
-        style="display: {{ $isOpen ? 'block' : 'none' }}">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
+    @if ($isOpen)
+        <div class="fixed z-50 inset-0 overflow-y-auto ease-out duration-400">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- Background overlay -->
+                <div class="fixed inset-0 transition-opacity">
+                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
 
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                <form>
-                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <!-- Close button -->
-                        <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
-                            <button wire:click="closeModal()" type="button"
-                                class="text-white hover:text-gray-200 focus:outline-none">
-                                <span class="sr-only">Close</span>
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </button>
+                <!-- Modal panel -->
+                <div
+                    class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full md:w-3/4 sm:w-full">
+                    <form wire:key="user-form-{{ $uuid ?? 'create' }}">
+                        <!-- Modal header -->
+                        <div class="bg-gray-900 px-4 py-3 sm:px-6">
+                            <div class="flex items-center justify-center relative">
+                                <h3 class="text-lg leading-6 font-medium text-white text-center" id="modal-title">
+                                    {{ $modalTitle }}
+                                </h3>
+                                <button wire:click="closeModal()" type="button"
+                                    class="absolute right-0 text-white hover:text-gray-200 focus:outline-none">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                <div class="bg-gray-900 -mx-4 -mt-5 sm:-mx-6 sm:-mt-6 px-4 py-4 sm:px-6 rounded-t-lg">
-                                    <h3 class="text-lg leading-6 font-medium text-white text-center"
-                                        id="modal-headline">
-                                        {{ $modalTitle }}
-                                    </h3>
+                        <!-- Modal body -->
+                        <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation()">
+                                <!-- Campos del formulario -->
+                                <div class="mb-4">
+                                    <label for="name"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
+                                    <input type="text" x-model="form.name"
+                                        @input="
+                                            let words = $event.target.value.toLowerCase().split(' ');
+                                            words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+                                            $event.target.value = words.join(' ');
+                                            validateField('name');
+                                        "
+                                        wire:model="name" id="name"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.name" x-text="errors.name"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('name')
+                                        <span class="text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
-                                <div class="mt-6 space-y-4" x-data="formValidation()">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="mb-4">
-                                            <label for="name"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
-                                            <input type="text" x-model="form.name" @input="validateField('name')"
-                                                wire:model="name" id="name"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.name" x-text="errors.name"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('name')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="last_name"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Last
+                                        Name:</label>
+                                    <input type="text" x-model="form.last_name"
+                                        @input="validateField('last_name')" wire:model="last_name" id="last_name"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.last_name" x-text="errors.last_name"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('last_name')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="last_name"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Last
-                                                Name:</label>
-                                            <input type="text" x-model="form.last_name"
-                                                @input="validateField('last_name')" wire:model="last_name"
-                                                id="last_name"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.last_name" x-text="errors.last_name"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('last_name')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4" style="display: none;">
+                                    <label for="username"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Username:</label>
+                                    <input type="text" x-model="form.username" @input="validateField('username')"
+                                        wire:model="username" id="username"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.username" x-text="errors.username"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('username')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="username"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Username:</label>
-                                            <input type="text" x-model="form.username"
-                                                @input="validateField('username')" wire:model="username"
-                                                id="username"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.username" x-text="errors.username"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('username')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <input type="hidden" wire:model="date_of_birth" id="date_of_birth">
 
-                                        <div class="mb-4">
-                                            <label for="date_of_birth"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Date
-                                                of Birth:</label>
-                                            <input type="date" x-model="form.date_of_birth"
-                                                @input="validateField('date_of_birth')" wire:model="date_of_birth"
-                                                id="date_of_birth"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.date_of_birth" x-text="errors.date_of_birth"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('date_of_birth')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="email"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email:</label>
+                                    <input type="email" x-model="form.email" @input="validateField('email')"
+                                        wire:model="email" id="email"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.email" x-text="errors.email"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('email')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="email"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Email:</label>
-                                            <input type="email" x-model="form.email"
-                                                @input="validateField('email')" wire:model="email" id="email"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.email" x-text="errors.email"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('email')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="phone"
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Phone:</label>
+                                    <input type="text" x-model="form.phone" @input="formatPhone($event)"
+                                        wire:model="phone" id="phone"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <span x-show="errors.phone" x-text="errors.phone"
+                                        class="text-red-500 text-xs mt-1"></span>
+                                    @error('phone')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="phone"
-                                                class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Phone:</label>
-                                            <input type="text" x-model="form.phone" @input="formatPhone($event)"
-                                                wire:model="phone" id="phone"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            <span x-show="errors.phone" x-text="errors.phone"
-                                                class="text-red-500 text-xs mt-1"></span>
-                                            @error('phone')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="address"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Address:</label>
+                                    <input type="text" wire:model="address" id="address"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    @error('address')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="password"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
-                                            <input type="password" wire:model="password" id="password"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            @error('password')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="zip_code" class="block text-gray-700 text-sm font-bold mb-2">Zip
+                                        Code:</label>
+                                    <input type="text" wire:model="zip_code" id="zip_code"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    @error('zip_code')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="password_confirmation"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Confirm
-                                                Password:</label>
-                                            <input type="password" wire:model="password_confirmation"
-                                                id="password_confirmation"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="city"
+                                        class="block text-gray-700 text-sm font-bold mb-2">City:</label>
+                                    <input type="text" wire:model="city" id="city"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    @error('city')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="address"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Address:</label>
-                                            <input type="text" wire:model="address" id="address"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            @error('address')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="country"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Country:</label>
+                                    <input type="text" wire:model="country" id="country"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    @error('country')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="zip_code"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Zip
-                                                Code:</label>
-                                            <input type="text" wire:model="zip_code" id="zip_code"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            @error('zip_code')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4">
+                                    <label for="gender"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Gender:</label>
+                                    <select wire:model="gender" id="gender"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                        <option value="">Select</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    @error('gender')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="city"
-                                                class="block text-gray-700 text-sm font-bold mb-2">City:</label>
-                                            <input type="text" wire:model="city" id="city"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            @error('city')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="mb-4" style="display: none;">
+                                    <input type="hidden" wire:model="latitude" id="latitude">
+                                    @error('latitude')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                        <div class="mb-4">
-                                            <label for="country"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Country:</label>
-                                            <input type="text" wire:model="country" id="country"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                            @error('country')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-4">
-                                            <label for="gender"
-                                                class="block text-gray-700 text-sm font-bold mb-2">Gender:</label>
-                                            <select wire:model="gender" id="gender"
-                                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                                <option value="">Select</option>
-                                                <option value="male">Male</option>
-                                                <option value="female">Female</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                            @error('gender')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-4" style="display: none;">
-                                            <input type="hidden" wire:model="latitude" id="latitude">
-                                            @error('latitude')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-4" style="display: none;">
-                                            <input type="hidden" wire:model="longitude" id="longitude">
-                                            @error('longitude')
-                                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="flex items-center">
-                                            <input type="checkbox" wire:model="terms_and_conditions"
-                                                class="form-checkbox">
-                                            <span class="ml-2 text-gray-700 text-sm">Accept Terms and Conditions</span>
-                                        </label>
-                                        @error('terms_and_conditions')
-                                            <span class="text-red-500 text-xs">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="mb-4" style="display: none;">
+                                    <input type="hidden" wire:model="longitude" id="longitude">
+                                    @error('longitude')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button
-                            @click.prevent="validateForm(); if(!Object.keys(errors).find(key => errors[key])) { $wire.{{ $modalAction }}(); }"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Save
-                        </button>
-                        <button wire:click="closeModal()" type="button"
-                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
+                        <!-- Modal footer -->
+                        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button type="button" wire:click="{{ $modalAction }}" x-data="{ isSubmitting: false }"
+                                x-on:click="if(validateForm()) { isSubmitting = true }"
+                                @validation-failed.window="isSubmitting = false"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
+                                :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }" :disabled="isSubmitting">
+                                <svg wire:loading wire:target="store,update"
+                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                <span wire:loading.remove wire:target="store,update">Save</span>
+                                <span wire:loading wire:target="store,update">Saving...</span>
+                            </button>
+                            <button wire:click="closeModal()" type="button"
+                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <!-- Delete Confirmation Modal -->
     <div class="fixed inset-0 z-50 overflow-y-auto" style="display: none" x-data="{ show: false, user: null }" x-show="show"
@@ -433,6 +423,14 @@
                     detail: userData
                 }));
             });
+
+            // Listen for user-edit event
+            @this.on('user-edit', () => {
+                // This will ensure the form is properly initialized with the user data
+                Alpine.store('formData', {
+                    refreshData: true
+                });
+            });
         });
     </script>
 
@@ -446,9 +444,11 @@
                     date_of_birth: '',
                     email: '',
                     phone: '',
-                    password: '',
-                    password_confirmation: '',
-                    // Add the rest of your form fields here
+                    address: '',
+                    zip_code: '',
+                    city: '',
+                    country: '',
+                    gender: '',
                 },
                 errors: {
                     name: '',
@@ -457,9 +457,11 @@
                     date_of_birth: '',
                     email: '',
                     phone: '',
-                    password: '',
-                    password_confirmation: '',
-                    // Add the rest of your form fields here
+                    address: '',
+                    zip_code: '',
+                    city: '',
+                    country: '',
+                    gender: '',
                 },
                 formatPhone(e) {
                     if (e.inputType === 'deleteContentBackward') {
@@ -531,18 +533,33 @@
                                 return false;
                             }
                             return true;
-                        case 'password':
-                            // Only validate if this is a new user or if password is being changed
-                            if (this.form.password) {
-                                if (this.form.password.length < 8) {
-                                    this.errors.password = 'Password must be at least 8 characters';
-                                    return false;
-                                }
+                        case 'address':
+                            if (!this.form.address) {
+                                this.errors.address = 'Address is required';
+                                return false;
                             }
                             return true;
-                        case 'password_confirmation':
-                            if (this.form.password && this.form.password !== this.form.password_confirmation) {
-                                this.errors.password_confirmation = 'Passwords do not match';
+                        case 'zip_code':
+                            if (!this.form.zip_code) {
+                                this.errors.zip_code = 'Zip code is required';
+                                return false;
+                            }
+                            return true;
+                        case 'city':
+                            if (!this.form.city) {
+                                this.errors.city = 'City is required';
+                                return false;
+                            }
+                            return true;
+                        case 'country':
+                            if (!this.form.country) {
+                                this.errors.country = 'Country is required';
+                                return false;
+                            }
+                            return true;
+                        case 'gender':
+                            if (!this.form.gender) {
+                                this.errors.gender = 'Gender is required';
                                 return false;
                             }
                             return true;
@@ -554,28 +571,29 @@
 
                     if (!this.validateField('name')) isValid = false;
                     if (!this.validateField('last_name')) isValid = false;
-                    if (!this.validateField('username')) isValid = false;
+                    // Don't validate username on edit since it's hidden and auto-generated
+                    if (this.$wire.modalAction === 'store' && !this.validateField('username')) isValid = false;
                     if (!this.validateField('email')) isValid = false;
-
-                    // Only validate password for new users
-                    if (this.form.password || !this.$wire.get('uuid')) {
-                        if (!this.validateField('password')) isValid = false;
-                        if (!this.validateField('password_confirmation')) isValid = false;
-                    }
 
                     this.validateField('phone');
                     this.validateField('date_of_birth');
+                    this.validateField('address');
+                    this.validateField('zip_code');
+                    this.validateField('city');
+                    this.validateField('country');
+                    this.validateField('gender');
 
                     return isValid;
                 },
                 init() {
                     // Initialize form values from Livewire component
-                    this.form.name = this.$wire.get('name') || '';
-                    this.form.last_name = this.$wire.get('last_name') || '';
-                    this.form.username = this.$wire.get('username') || '';
-                    this.form.date_of_birth = this.$wire.get('date_of_birth') || '';
-                    this.form.email = this.$wire.get('email') || '';
-                    this.form.phone = this.$wire.get('phone') || '';
+                    this.updateFormValues();
+
+                    // Listen for Livewire events
+                    this.$wire.on('user-edit', () => {
+                        // Update form values when user-edit event is triggered
+                        this.updateFormValues();
+                    });
 
                     // Setup watchers for validation
                     this.$watch('form.name', value => this.validateField('name'));
@@ -584,11 +602,24 @@
                     this.$watch('form.date_of_birth', value => this.validateField('date_of_birth'));
                     this.$watch('form.email', value => this.validateField('email'));
                     this.$watch('form.phone', value => this.validateField('phone'));
-                    this.$watch('form.password', value => {
-                        this.validateField('password');
-                        this.validateField('password_confirmation');
-                    });
-                    this.$watch('form.password_confirmation', value => this.validateField('password_confirmation'));
+                    this.$watch('form.address', value => this.validateField('address'));
+                    this.$watch('form.zip_code', value => this.validateField('zip_code'));
+                    this.$watch('form.city', value => this.validateField('city'));
+                    this.$watch('form.country', value => this.validateField('country'));
+                    this.$watch('form.gender', value => this.validateField('gender'));
+                },
+                updateFormValues() {
+                    this.form.name = this.$wire.get('name') || '';
+                    this.form.last_name = this.$wire.get('last_name') || '';
+                    this.form.username = this.$wire.get('username') || '';
+                    this.form.date_of_birth = this.$wire.get('date_of_birth') || '';
+                    this.form.email = this.$wire.get('email') || '';
+                    this.form.phone = this.$wire.get('phone') || '';
+                    this.form.address = this.$wire.get('address') || '';
+                    this.form.zip_code = this.$wire.get('zip_code') || '';
+                    this.form.city = this.$wire.get('city') || '';
+                    this.form.country = this.$wire.get('country') || '';
+                    this.form.gender = this.$wire.get('gender') || '';
                 }
             };
         }

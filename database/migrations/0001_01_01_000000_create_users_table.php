@@ -29,7 +29,8 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->double('latitude', 10, 6)->nullable(); 
-            $table->double('longitude', 10, 6)->nullable(); 
+            $table->double('longitude', 10, 6)->nullable();
+            $table->boolean('terms_and_conditions')->default(false); 
             $table->foreignId('current_team_id')->nullable();
             $table->softDeletes();
             $table->rememberToken();
