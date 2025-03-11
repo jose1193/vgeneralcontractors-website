@@ -156,20 +156,22 @@
                 <!-- Modal panel -->
                 <div
                     class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full md:w-3/4 sm:w-full">
-                    <form wire:key="company-form">
-                        <!-- Modal header -->
-                        <div class="bg-gray-900 px-4 py-3 sm:px-6 flex items-center justify-between">
-                            <h3 class="text-lg leading-6 font-medium text-white" id="modal-title">
-                                {{ $modalTitle }}
-                            </h3>
-                            <button wire:click="closeModal()" type="button"
-                                class="text-white hover:text-gray-200 focus:outline-none">
-                                <span class="sr-only">Close</span>
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                    <form wire:key="company-form-{{ $companyId ?? 'create' }}">
+                        <!-- Modal header - Actualizado para centrar -->
+                        <div class="bg-gray-900 px-4 py-3 sm:px-6">
+                            <div class="flex items-center justify-center relative">
+                                <h3 class="text-lg leading-6 font-medium text-white text-center" id="modal-title">
+                                    {{ $modalTitle }}
+                                </h3>
+                                <button wire:click="closeModal()" type="button"
+                                    class="absolute right-0 text-white hover:text-gray-200 focus:outline-none">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Modal body -->
@@ -180,9 +182,14 @@
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Company
                                         Name:</label>
                                     <input type="text" x-model="form.company_name"
-                                        @input="validateField('company_name'); $event.target.value = $event.target.value.toUpperCase()"
+                                        @input="
+                                            let words = $event.target.value.toLowerCase().split(' ');
+                                            words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+                                            $event.target.value = words.join(' ');
+                                            validateField('company_name');
+                                        "
                                         wire:model="company_name" id="company_name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase">
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     <span x-show="errors.company_name" x-text="errors.company_name"
                                         class="text-red-500 text-xs mt-1"></span>
                                     @error('company_name')
@@ -194,9 +201,14 @@
                                     <label for="name"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
                                     <input type="text" x-model="form.name"
-                                        @input="validateField('name'); $event.target.value = $event.target.value.toUpperCase()"
+                                        @input="
+                                            let words = $event.target.value.toLowerCase().split(' ');
+                                            words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+                                            $event.target.value = words.join(' ');
+                                            validateField('name');
+                                        "
                                         wire:model="name" id="name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase">
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     <span x-show="errors.name" x-text="errors.name"
                                         class="text-red-500 text-xs mt-1"></span>
                                     @error('name')
@@ -267,11 +279,10 @@
 
                         <!-- Modal footer -->
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="button" wire:click="store" x-data="{}"
-                                x-on:click="$wire.isSubmitting = true"
+                            <button type="button" wire:click="store" x-data="{ isSubmitting: false }"
+                                x-on:click="isSubmitting = true" @validation-failed.window="isSubmitting = false"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
-                                :class="{ 'opacity-50 cursor-not-allowed': $wire.isSubmitting }"
-                                :disabled="$wire.isSubmitting">
+                                :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }" :disabled="isSubmitting">
                                 <svg wire:loading wire:target="store"
                                     class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -555,6 +566,17 @@
                     this.form.website = this.$wire.get('website') || '';
                     this.form.latitude = this.$wire.get('latitude') || '';
                     this.form.longitude = this.$wire.get('longitude') || '';
+
+                    this.$wire.on('company-edit', () => {
+                        this.form.company_name = this.$wire.get('company_name') || '';
+                        this.form.name = this.$wire.get('name') || '';
+                        this.form.email = this.$wire.get('email') || '';
+                        this.form.phone = this.$wire.get('phone') || '';
+                        this.form.address = this.$wire.get('address') || '';
+                        this.form.website = this.$wire.get('website') || '';
+                        this.form.latitude = this.$wire.get('latitude') || '';
+                        this.form.longitude = this.$wire.get('longitude') || '';
+                    });
 
                     this.$watch('form.company_name', value => this.validateField('company_name'));
                     this.$watch('form.name', value => this.validateField('name'));
