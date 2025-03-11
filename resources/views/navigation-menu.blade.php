@@ -24,6 +24,12 @@
                     <x-nav-link href="{{ route('email-datas') }}" :active="request()->routeIs('email-datas')">
                         {{ __('Emails') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('service-categories') }}" :active="request()->routeIs('service-categories')">
+                        {{ __('Service Categories') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
+                        {{ __('Portfolio') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -161,6 +167,21 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('company-data') }}" :active="request()->routeIs('company-data')">
+                {{ __('Company Data') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                {{ __('Users') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('email-datas') }}" :active="request()->routeIs('email-datas')">
+                {{ __('Emails') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('service-categories') }}" :active="request()->routeIs('service-categories')">
+                {{ __('Service Categories') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
+                {{ __('Portfolio') }}
             </x-responsive-nav-link>
         </div>
 

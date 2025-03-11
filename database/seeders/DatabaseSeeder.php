@@ -11,10 +11,9 @@ use App\Models\MainCategories;
 use App\Models\BlogCategory;
 use Ramsey\Uuid\Uuid;
 use App\Models\CompanyData;
-
-
-
-
+use App\Models\StatuOptions;
+use App\Models\ServiceCategory;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -38,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $adminRole->syncPermissions($permissions);
 
         $adminUser = User::factory()->create([
-            'name' => 'Victor  Lara',
+            'name' => 'Victor Lara',
             'email' => 'info@vgeneralcontractors.com',
             'username' => 'vgeneralcontractors',
             'password' => bcrypt('info01='),
@@ -147,5 +146,111 @@ class DatabaseSeeder extends Seeder
         \App\Models\EmailData::create($emailData);
     }
     // END EMAIL DATA
+
+    // Project Types
+    $projectTypes = [
+        [
+            'name' => 'Roof Repair',
+            'description' => 'Services for fixing damaged or worn roofing components.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Roof Installation',
+            'description' => 'Complete roof installation and replacement services.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Roof Maintenance',
+            'description' => 'Preventive maintenance and regular roof inspections.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Mitigation',
+            'description' => 'Water damage mitigation and prevention services.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Tarp Installation',
+            'description' => 'Emergency roof covering with tarp to prevent further damage.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Retarp Service',
+            'description' => 'Replacement or adjustment of existing roof tarps.',
+            'status' => 'active'
+        ],
+        [
+            'name' => 'Mold Remediation',
+            'description' => 'Treatment and removal of mold caused by roof leaks.',
+            'status' => 'active'
+        ]
+    ];
+
+    foreach ($projectTypes as $type) {
+        \App\Models\ProjectType::create([
+            'uuid' => (string) Str::uuid(),
+            'name' => $type['name'],
+            'description' => $type['description'],
+            'status' => $type['status']
+        ]);
+    }
+
+    // Service Categories - Updated to match project types
+    $serviceCategories = [
+        [
+            'name' => 'Roof Repair',
+            'type' => 'Roof Repair',
+            'description' => 'Professional roof repair services for all types of damage',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'New Roof Installation',
+            'type' => 'New Roof',
+            'description' => 'Complete new roof installation services',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'Storm Damage Repair',
+            'type' => 'Storm Damage',
+            'description' => 'Emergency storm damage repair and assessment',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'Mold Remediation',
+            'type' => 'Mold Remediation',
+            'description' => 'Professional mold removal and remediation services',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'Water Damage Mitigation',
+            'type' => 'Mitigation',
+            'description' => 'Quick response water damage mitigation services',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'Tarp Services',
+            'type' => 'Tarp',
+            'description' => 'Initial emergency roof tarping protection',
+            'status' => 'active',
+        ],
+        [
+            'name' => 'ReTarp Services',
+            'type' => 'ReTarp',
+            'description' => 'Roof re-tarping and tarp maintenance services',
+            'status' => 'active',
+        ]
+    ];
+
+    foreach ($serviceCategories as $category) {
+        ServiceCategory::create([
+            'uuid' => (string) Str::uuid(),
+            'name' => $category['name'],
+            'slug' => Str::slug($category['name']),
+            'type' => $category['type'],
+            'description' => $category['description'],
+            'status' => $category['status'],
+            'user_id' => $adminUser->id,
+        ]);
+    }
     }
 }

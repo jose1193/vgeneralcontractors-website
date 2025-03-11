@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'V General Contractors') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/favicon_io/apple-touch-icon.png') }}">
@@ -15,18 +15,20 @@
     <link rel="manifest" href="{{ asset('assets/favicon_io/site.webmanifest') }}">
 
     <!-- Fonts -->
-    <!-- Local Roboto Font -->
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Styles -->
     @livewireStyles
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -56,7 +58,25 @@
     @stack('modals')
 
     @livewireScripts
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <script>
+        window.addEventListener('notify', event => {
+            const type = event.detail.type;
+            const message = event.detail.message;
+
+            // You can implement your own notification system here
+            alert(message);
+        });
+
+        window.addEventListener('confirm-delete', event => {
+            if (confirm(event.detail.message)) {
+                Livewire.dispatch('delete', {
+                    id: event.detail.id
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

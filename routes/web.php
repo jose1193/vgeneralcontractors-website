@@ -88,9 +88,25 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     
-    Route::get('/users', Users::class)->name('users');
-    Route::get('/email-datas', EmailDatas::class)->name('email-datas');
-    Route::get('/company-data', CompanyData::class)->name('company-data');
+    Route::get('/users', function () {
+        return view('users');
+    })->name('users');
+
+    Route::get('/email-datas', function () {
+        return view('email-datas');
+    })->name('email-datas');
+
+    Route::get('/company-data', function () {
+        return view('company-data');
+    })->name('company-data');
+
+    Route::get('/service-categories', function () {
+        return view('service-categories');
+    })->name('service-categories');
+
+    Route::get('/portfolios', function () {
+        return view('portfolios');
+    })->name('portfolios');
 });
 
 Route::get('/new-roof', function () {
