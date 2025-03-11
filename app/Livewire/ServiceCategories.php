@@ -12,62 +12,79 @@ class ServiceCategories extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
+    public $editId;
     public $name = '';
     public $type = '';
     public $description = '';
     public $status = 'active';
-    public $search = '';
-    public $showModal = false;
-    public $isEditing = false;
-    public $editId;
     
-    protected $paginationTheme = 'tailwind';
-
-    protected $rules = [
-        'name' => 'required|min:3',
-        'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
-        'description' => 'required|min:10',
-        'status' => 'required|in:active,inactive',
-    ];
+    public $isOpen = false;
+    public $modalTitle = 'Create Category';
+    public $modalAction = 'store';
+    public $search = '';
+    public $perPage = 10;
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $isSubmitting = false;
 
     protected $listeners = [
-        'refreshComponent' => '$refresh',
-        'delete' => 'deleteConfirmed'
+        'refreshComponent' => '$refresh'
     ];
 
-    public function updatedSearch()
+    protected function rules()
     {
-        $this->resetPage();
+        return [
+            'name' => 'required|min:3',
+            'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
+            'description' => 'nullable|min:10',
+            'status' => 'required|in:active,inactive',
+        ];
     }
 
-    public function updated($field)
+    public function render()
     {
-        $this->validateOnly($field);
+        $searchTerm = '%' . $this->search . '%';
+        $categories = ServiceCategory::where('name', 'like', $searchTerm)
+            ->orWhere('type', 'like', $searchTerm)
+            ->orWhere('description', 'like', $searchTerm)
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate($this->perPage);
+
+        return view('livewire.service-categories', [
+            'categories' => $categories
+        ]);
     }
 
-    public function openModal()
+    public function sort($field)
     {
-        $this->resetValidation();
-        $this->reset(['name', 'type', 'description', 'isEditing', 'editId']);
-        $this->status = 'active';
-        $this->showModal = true;
-        $this->dispatch('open-modal');
-    }
-
-    public function closeModal()
-    {
-        $this->showModal = false;
-        $this->dispatch('close-modal');
-        $this->resetValidation();
-        $this->reset(['name', 'type', 'description', 'isEditing', 'editId']);
-        $this->status = 'active';
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
     }
 
     public function create()
     {
-        $this->validate();
+        $this->resetInputFields();
+        $this->modalTitle = 'Create Category';
+        $this->modalAction = 'store';
+        $this->openModal();
+    }
 
+    public function store()
+    {
         try {
+            $this->validate();
+
+            \Log::info('Attempting to save service category', [
+                'name' => $this->name,
+                'action' => 'create'
+            ]);
+
             ServiceCategory::create([
                 'uuid' => Str::uuid(),
                 'name' => $this->name,
@@ -78,35 +95,82 @@ class ServiceCategories extends Component
                 'user_id' => auth()->id(),
             ]);
 
+            \Log::info('Service category saved successfully', [
+                'name' => $this->name
+            ]);
+
             session()->flash('message', 'Category created successfully.');
             $this->closeModal();
-            $this->dispatch('refreshComponent');
-            $this->dispatchBrowserEvent('notification');
+            $this->resetInputFields();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
         } catch (\Exception $e) {
-            session()->flash('error', 'Error creating category: ' . $e->getMessage());
-            $this->dispatchBrowserEvent('notification');
+            $this->dispatch('validation-failed');
+            \Log::error('Error saving service category', [
+                'name' => $this->name,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error saving category: ' . $e->getMessage());
         }
     }
 
     public function edit($id)
     {
-        $category = ServiceCategory::findOrFail($id);
-        $this->editId = $id;
-        $this->name = $category->name;
-        $this->type = $category->type;
-        $this->description = $category->description;
-        $this->status = $category->status;
-        $this->isEditing = true;
-        $this->showModal = true;
-        $this->dispatchBrowserEvent('open-modal');
+        try {
+            \Log::info('Attempting to edit category', ['id' => $id]);
+            
+            $category = ServiceCategory::findOrFail($id);
+            
+            $this->editId = $id;
+            $this->name = $category->name;
+            $this->type = $category->type;
+            $this->description = $category->description ?? '';
+            $this->status = $category->status;
+            
+            $this->modalTitle = 'Edit Category';
+            $this->modalAction = 'update';
+            
+            // Asegurarse de que el modal se abra
+            $this->isOpen = true;
+            
+            // Inicializar los valores del formulario Alpine
+            $this->dispatch('category-edit', [
+                'name' => $this->name,
+                'type' => $this->type,
+                'description' => $this->description,
+                'status' => $this->status
+            ]);
+            
+            \Log::info('Category data loaded for editing', [
+                'id' => $id, 
+                'name' => $category->name
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error loading category for edit', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error loading category data: ' . $e->getMessage());
+        }
     }
 
     public function update()
     {
-        $this->validate();
-
         try {
+            $this->validate();
+
+            \Log::info('Attempting to update service category', [
+                'id' => $this->editId,
+                'name' => $this->name
+            ]);
+
             $category = ServiceCategory::findOrFail($this->editId);
+            
             $category->update([
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
@@ -115,50 +179,71 @@ class ServiceCategories extends Component
                 'status' => $this->status,
             ]);
 
+            \Log::info('Service category updated successfully', [
+                'id' => $this->editId,
+                'name' => $this->name
+            ]);
+
             session()->flash('message', 'Category updated successfully.');
             $this->closeModal();
-            $this->dispatch('refreshComponent');
-            $this->dispatchBrowserEvent('notification');
+            $this->resetInputFields();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
         } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
+            \Log::error('Error updating service category', [
+                'id' => $this->editId,
+                'name' => $this->name,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             session()->flash('error', 'Error updating category: ' . $e->getMessage());
-            $this->dispatchBrowserEvent('notification');
         }
     }
 
     public function delete($id)
     {
-        $this->dispatchBrowserEvent('confirm-delete', [
-            'id' => $id,
-            'message' => 'Are you sure you want to delete this category?'
-        ]);
-    }
-
-    public function deleteConfirmed($data)
-    {
         try {
-            ServiceCategory::findOrFail($data['id'])->delete();
+            \Log::info('Attempting to delete category', ['id' => $id]);
+            
+            $category = ServiceCategory::findOrFail($id);
+            $category->delete();
+            
+            \Log::info('Category deleted successfully', ['id' => $id]);
+            
             session()->flash('message', 'Category deleted successfully.');
-            $this->dispatch('refreshComponent');
+            $this->dispatch('categoryDeleted');
+            return ['success' => true];
         } catch (\Exception $e) {
-            session()->flash('error', 'Error deleting category. Please try again.');
+            \Log::error('Error deleting category', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error deleting category: ' . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    public function render()
+    public function openModal()
     {
-        $categories = ServiceCategory::query()
-            ->when($this->search, function($query) {
-                $query->where(function($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('type', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $this->isOpen = true;
+    }
 
-        return view('livewire.service-categories', [
-            'categories' => $categories
+    public function closeModal()
+    {
+        $this->isOpen = false;
+    }
+
+    private function resetInputFields()
+    {
+        $this->reset([
+            'editId', 'name', 'type', 'description', 'status', 'isSubmitting'
         ]);
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 } 

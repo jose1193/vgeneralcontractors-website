@@ -12,6 +12,8 @@ class EmailDatas extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public $uuid;
     public $description;
     public $email;
@@ -20,14 +22,17 @@ class EmailDatas extends Component
     public $user_id;
 
     public $isOpen = false;
-    public $modalTitle = 'Crear Email';
+    public $modalTitle = 'Create Email';
     public $modalAction = 'store';
     public $search = '';
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
+    public $isSubmitting = false;
 
-    protected $listeners = ['delete', 'closeModal'];
+    protected $listeners = [
+        'refreshComponent' => '$refresh'
+    ];
 
     protected function rules()
     {
@@ -36,20 +41,19 @@ class EmailDatas extends Component
             'email' => ['required', 'email', 'max:255', 
                 Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid')],
             'phone' => 'nullable|string|max:20',
-            'type' => 'nullable|string|max:50',
+            'type' => 'required|string|max:50',
             'user_id' => 'required|exists:users,id',
         ];
     }
 
     public function render()
     {
-        $emailDatas = EmailData::where(function ($query) {
-            $query->where('description', 'like', '%' . $this->search . '%')
-                ->orWhere('email', 'like', '%' . $this->search . '%')
-                ->orWhere('type', 'like', '%' . $this->search . '%');
-        })
-        ->orderBy($this->sortField, $this->sortDirection)
-        ->paginate($this->perPage);
+        $searchTerm = '%' . $this->search . '%';
+        $emailDatas = EmailData::where('description', 'like', $searchTerm)
+            ->orWhere('email', 'like', $searchTerm)
+            ->orWhere('type', 'like', $searchTerm)
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate($this->perPage);
 
         return view('livewire.email-datas', [
             'emailDatas' => $emailDatas
@@ -69,7 +73,7 @@ class EmailDatas extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->modalTitle = 'Crear Email';
+        $this->modalTitle = 'Create Email';
         $this->modalAction = 'store';
         $this->user_id = auth()->id(); // Asignar el usuario actual por defecto
         $this->openModal();
@@ -77,66 +81,187 @@ class EmailDatas extends Component
 
     public function store()
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        EmailData::create([
-            'uuid' => Uuid::uuid4()->toString(),
-            'description' => $this->description,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'type' => $this->type,
-            'user_id' => $this->user_id,
-        ]);
+            \Log::info('Attempting to save email data', [
+                'uuid' => $this->uuid,
+                'email' => $this->email,
+                'action' => $this->uuid ? 'update' : 'create'
+            ]);
 
-        session()->flash('message', 'Email creado exitosamente.');
-        $this->closeModal();
-        $this->resetInputFields();
+            // Format phone if provided
+            $phone = null;
+            if (!empty($this->phone)) {
+                $phone = preg_replace('/[^0-9]/', '', $this->phone);
+                $phone = '+1' . $phone;
+            }
+
+            EmailData::create([
+                'uuid' => Uuid::uuid4()->toString(),
+                'description' => $this->description,
+                'email' => $this->email,
+                'phone' => $phone,
+                'type' => $this->type,
+                'user_id' => $this->user_id,
+            ]);
+
+            \Log::info('Email data saved successfully', [
+                'email' => $this->email
+            ]);
+
+            session()->flash('message', 'Email created successfully.');
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
+        } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
+            \Log::error('Error saving email data', [
+                'email' => $this->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error saving email data: ' . $e->getMessage());
+        }
     }
 
     public function edit($uuid)
     {
-        $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
-        
-        $this->uuid = $emailData->uuid;
-        $this->description = $emailData->description;
-        $this->email = $emailData->email;
-        $this->phone = $emailData->phone;
-        $this->type = $emailData->type;
-        $this->user_id = $emailData->user_id;
-        
-        $this->modalTitle = 'Editar Email';
-        $this->modalAction = 'update';
-        $this->openModal();
+        try {
+            \Log::info('Attempting to edit email', ['uuid' => $uuid]);
+            
+            $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
+            
+            $this->uuid = $emailData->uuid;
+            $this->description = $emailData->description;
+            $this->email = $emailData->email;
+            
+            // Format phone for display if exists
+            if ($emailData->phone) {
+                $rawPhone = preg_replace('/[^0-9]/', '', $emailData->phone);
+                if (strlen($rawPhone) >= 10) {
+                    $rawPhone = substr($rawPhone, -10);
+                    $this->phone = sprintf("(%s) %s - %s",
+                        substr($rawPhone, 0, 3),
+                        substr($rawPhone, 3, 3),
+                        substr($rawPhone, 6)
+                    );
+                } else {
+                    $this->phone = $emailData->phone;
+                }
+            } else {
+                $this->phone = '';
+            }
+            
+            $this->type = $emailData->type;
+            $this->user_id = $emailData->user_id;
+            
+            $this->modalTitle = 'Edit Email';
+            $this->modalAction = 'update';
+            
+            $this->openModal();
+            
+            // Importante: Inicializar los valores del formulario Alpine
+            $this->dispatch('email-edit', [
+                'description' => $this->description,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'type' => $this->type,
+                'user_id' => $this->user_id
+            ]);
+            
+            \Log::info('Email data loaded for editing', [
+                'uuid' => $uuid, 
+                'email' => $emailData->email
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error loading email for edit', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error loading email data: ' . $e->getMessage());
+        }
     }
 
     public function update()
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        $emailData = EmailData::where('uuid', $this->uuid)->firstOrFail();
-        
-        $emailData->update([
-            'description' => $this->description,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'type' => $this->type,
-            'user_id' => $this->user_id,
-        ]);
+            \Log::info('Attempting to update email data', [
+                'uuid' => $this->uuid,
+                'email' => $this->email
+            ]);
 
-        session()->flash('message', 'Email actualizado exitosamente.');
-        $this->closeModal();
-        $this->resetInputFields();
-    }
+            $emailData = EmailData::where('uuid', $this->uuid)->firstOrFail();
+            
+            // Format phone if provided
+            $phone = null;
+            if (!empty($this->phone)) {
+                $phone = preg_replace('/[^0-9]/', '', $this->phone);
+                $phone = '+1' . $phone;
+            }
+            
+            $emailData->update([
+                'description' => $this->description,
+                'email' => $this->email,
+                'phone' => $phone,
+                'type' => $this->type,
+                'user_id' => $this->user_id,
+            ]);
 
-    public function confirmDelete($uuid)
-    {
-        $this->dispatch('confirmDelete', $uuid);
+            \Log::info('Email data updated successfully', [
+                'uuid' => $this->uuid,
+                'email' => $this->email
+            ]);
+
+            session()->flash('message', 'Email updated successfully.');
+            $this->closeModal();
+            $this->resetInputFields();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
+        } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
+            \Log::error('Error updating email data', [
+                'uuid' => $this->uuid,
+                'email' => $this->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error updating email data: ' . $e->getMessage());
+        }
     }
 
     public function delete($uuid)
     {
-        EmailData::where('uuid', $uuid)->delete();
-        session()->flash('message', 'Email eliminado exitosamente.');
+        try {
+            \Log::info('Attempting to delete email', ['uuid' => $uuid]);
+            
+            $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
+            $emailData->delete();
+            
+            \Log::info('Email deleted successfully', ['uuid' => $uuid]);
+            
+            session()->flash('message', 'Email deleted successfully.');
+            $this->dispatch('emailDeleted');
+            return ['success' => true];
+        } catch (\Exception $e) {
+            \Log::error('Error deleting email', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error deleting email: ' . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 
     public function openModal()
@@ -152,7 +277,7 @@ class EmailDatas extends Component
     private function resetInputFields()
     {
         $this->reset([
-            'uuid', 'description', 'email', 'phone', 'type', 'user_id'
+            'uuid', 'description', 'email', 'phone', 'type', 'user_id', 'isSubmitting'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
