@@ -196,8 +196,8 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
-                                        {{ $user->created_at->format('m/d/Y h:i A') }}
+                                    <td class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                                        {{ $user->created_at->format('F d, Y h:i A') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
                                         <div class="inline-flex items-center justify-center space-x-4">
@@ -328,7 +328,7 @@
                                 <!-- Información Personal -->
                                 <div class="mb-4">
                                     <label for="name"
-                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">First Name:</label>
                                     <input type="text" x-model="form.name"
                                         @input="
                                             let words = $event.target.value.toLowerCase().split(' ');
@@ -338,7 +338,7 @@
                                         "
                                         id="name"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        :class="{ 'border-red-500': errors.name }" placeholder="Enter name">
+                                        :class="{ 'border-red-500': errors.name }" placeholder="Enter first name">
                                     @error('name')
                                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                                     @enderror
