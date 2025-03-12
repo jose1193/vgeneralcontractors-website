@@ -59,9 +59,9 @@
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                                     wire:click="sort('name')">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center justify-center">
                                         NAME
                                         @if ($sortField === 'name')
                                             @if ($sortDirection === 'asc')
@@ -81,9 +81,9 @@
                                     </div>
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                                     wire:click="sort('email')">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center justify-center">
                                         EMAIL
                                         @if ($sortField === 'email')
                                             @if ($sortDirection === 'asc')
@@ -103,9 +103,9 @@
                                     </div>
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                                     wire:click="sort('username')">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center justify-center">
                                         USERNAME
                                         @if ($sortField === 'username')
                                             @if ($sortDirection === 'asc')
@@ -125,9 +125,9 @@
                                     </div>
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                                     wire:click="sort('phone')">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center justify-center">
                                         PHONE
                                         @if ($sortField === 'phone')
                                             @if ($sortDirection === 'asc')
@@ -147,9 +147,9 @@
                                     </div>
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                                     wire:click="sort('created_at')">
-                                    <div class="flex items-center">
+                                    <div class="flex items-center justify-center">
                                         CREATED AT
                                         @if ($sortField === 'created_at')
                                             @if ($sortDirection === 'asc')
@@ -177,26 +177,26 @@
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                             @forelse ($users as $user)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                             {{ $user->name }} {{ $user->last_name }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100">{{ $user->email }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100">{{ $user->username }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100">
                                             <a href="tel:{{ $user->phone }}">
                                                 {{ \App\Helpers\PhoneHelper::format($user->phone) }}
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         {{ $user->created_at->format('m/d/Y h:i A') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
