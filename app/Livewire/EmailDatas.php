@@ -7,6 +7,7 @@ use App\Models\EmailData;
 use Livewire\WithPagination;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class EmailDatas extends Component
 {
@@ -49,11 +50,16 @@ class EmailDatas extends Component
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
-        $emailDatas = EmailData::where('description', 'like', $searchTerm)
-            ->orWhere('email', 'like', $searchTerm)
-            ->orWhere('type', 'like', $searchTerm)
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate($this->perPage);
+        
+        $cacheKey = 'email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $this->page;
+        
+        $emailDatas = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
+            return EmailData::where('description', 'like', $searchTerm)
+                ->orWhere('email', 'like', $searchTerm)
+                ->orWhere('type', 'like', $searchTerm)
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate($this->perPage);
+        });
 
         return view('livewire.email-datas', [
             'emailDatas' => $emailDatas
@@ -105,6 +111,9 @@ class EmailDatas extends Component
                 'type' => $this->type,
                 'user_id' => $this->user_id,
             ]);
+
+            // Clear cache
+            $this->clearCache();
 
             \Log::info('Email data saved successfully', [
                 'email' => $this->email
@@ -215,6 +224,9 @@ class EmailDatas extends Component
                 'user_id' => $this->user_id,
             ]);
 
+            // Clear cache
+            $this->clearCache();
+
             \Log::info('Email data updated successfully', [
                 'uuid' => $this->uuid,
                 'email' => $this->email
@@ -246,6 +258,9 @@ class EmailDatas extends Component
             
             $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
             $emailData->delete();
+            
+            // Clear cache
+            $this->clearCache();
             
             \Log::info('Email deleted successfully', ['uuid' => $uuid]);
             
@@ -281,5 +296,25 @@ class EmailDatas extends Component
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+    
+    private function clearCache()
+    {
+        // Clear all email-related caches using tags
+        Cache::tags(['email_datas'])->flush();
+        
+        // Clear any other related caches
+        $searchPatterns = [
+            'email_datas_*',
+        ];
+        
+        foreach ($searchPatterns as $pattern) {
+            $keys = Cache::get($pattern);
+            if (is_array($keys)) {
+                foreach ($keys as $key) {
+                    Cache::forget($key);
+                }
+            }
+        }
     }
 } 

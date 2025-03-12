@@ -34,6 +34,7 @@ class User extends Authenticatable
         'address',   
         'zip_code',
         'city',
+        'state',
         'country',
         'gender',
         'profile_photo_path',

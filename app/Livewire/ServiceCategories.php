@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\ServiceCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class ServiceCategories extends Component
 {
@@ -29,14 +30,29 @@ class ServiceCategories extends Component
     public $sortDirection = 'desc';
     public $isSubmitting = false;
 
+    // Añade esta propiedad para validación en tiempo real
+    protected $validationAttributes = [
+        'name' => 'name',
+        'type' => 'type',
+        'description' => 'description',
+        'status' => 'status'
+    ];
+
     protected $listeners = [
         'refreshComponent' => '$refresh'
     ];
 
     protected function rules()
     {
+        $nameRule = 'required|min:3|unique:service_categories,name';
+        
+        // For edit mode, ignore the current record
+        if ($this->editId) {
+            $nameRule .= ',' . $this->editId;
+        }
+        
         return [
-            'name' => 'required|min:3',
+            'name' => $nameRule,
             'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
             'description' => 'nullable|min:10',
             'status' => 'required|in:active,inactive',
@@ -46,11 +62,25 @@ class ServiceCategories extends Component
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
-        $categories = ServiceCategory::where('name', 'like', $searchTerm)
-            ->orWhere('type', 'like', $searchTerm)
-            ->orWhere('description', 'like', $searchTerm)
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate($this->perPage);
+        
+        // Get the current page from the URL
+        $currentPage = request()->query('page', 1);
+        
+        $cacheKey = 'service_categories_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage;
+        
+        // Clear cache when changing perPage to ensure fresh results
+        if (session()->has('perPage_changed')) {
+            Cache::forget($cacheKey);
+            session()->forget('perPage_changed');
+        }
+        
+        $categories = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
+            return ServiceCategory::where('name', 'like', $searchTerm)
+                ->orWhere('type', 'like', $searchTerm)
+                ->orWhere('description', 'like', $searchTerm)
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate($this->perPage);
+        });
 
         return view('livewire.service-categories', [
             'categories' => $categories
@@ -78,22 +108,36 @@ class ServiceCategories extends Component
     public function store()
     {
         try {
-            $this->validate();
+            $this->validate([
+                'name' => 'required|min:3|unique:service_categories,name',
+                'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
+                'description' => 'nullable|min:10',
+                'status' => 'required|in:active,inactive',
+            ]);
 
             \Log::info('Attempting to save service category', [
                 'name' => $this->name,
                 'action' => 'create'
             ]);
 
-            ServiceCategory::create([
+            // Generate base slug
+            $baseSlug = Str::slug($this->name);
+            
+            // Check if slug exists and make it unique if needed
+            $slug = $this->generateUniqueSlug($baseSlug);
+
+            $category = ServiceCategory::create([
                 'uuid' => Str::uuid(),
                 'name' => $this->name,
-                'slug' => Str::slug($this->name),
+                'slug' => $slug,
                 'type' => $this->type,
                 'description' => $this->description,
                 'status' => $this->status,
                 'user_id' => auth()->id(),
             ]);
+
+            // Clear cache
+            $this->clearCache();
 
             \Log::info('Service category saved successfully', [
                 'name' => $this->name
@@ -102,6 +146,9 @@ class ServiceCategories extends Component
             session()->flash('message', 'Category created successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            
+            // Replace the full page reload with a component refresh
+            $this->dispatch('refreshComponent');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -124,6 +171,7 @@ class ServiceCategories extends Component
             
             $category = ServiceCategory::findOrFail($id);
             
+            // Set the Livewire properties
             $this->editId = $id;
             $this->name = $category->name;
             $this->type = $category->type;
@@ -133,11 +181,12 @@ class ServiceCategories extends Component
             $this->modalTitle = 'Edit Category';
             $this->modalAction = 'update';
             
-            // Asegurarse de que el modal se abra
-            $this->isOpen = true;
+            // Make sure the modal opens
+            $this->openModal();
             
-            // Inicializar los valores del formulario Alpine
+            // Dispatch event to update Alpine.js state
             $this->dispatch('category-edit', [
+                'id' => $id,
                 'name' => $this->name,
                 'type' => $this->type,
                 'description' => $this->description,
@@ -146,7 +195,13 @@ class ServiceCategories extends Component
             
             \Log::info('Category data loaded for editing', [
                 'id' => $id, 
-                'name' => $category->name
+                'name' => $category->name,
+                'data' => [
+                    'name' => $this->name,
+                    'type' => $this->type,
+                    'description' => $this->description,
+                    'status' => $this->status
+                ]
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading category for edit', [
@@ -162,7 +217,12 @@ class ServiceCategories extends Component
     public function update()
     {
         try {
-            $this->validate();
+            $this->validate([
+                'name' => 'required|min:3|unique:service_categories,name,'.$this->editId,
+                'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
+                'description' => 'nullable|min:10',
+                'status' => 'required|in:active,inactive',
+            ]);
 
             \Log::info('Attempting to update service category', [
                 'id' => $this->editId,
@@ -171,13 +231,26 @@ class ServiceCategories extends Component
 
             $category = ServiceCategory::findOrFail($this->editId);
             
+            // Generate base slug
+            $baseSlug = Str::slug($this->name);
+            
+            // If name changed, check if new slug exists and make it unique if needed
+            if ($category->name !== $this->name) {
+                $slug = $this->generateUniqueSlug($baseSlug, $category->id);
+            } else {
+                $slug = $category->slug;
+            }
+            
             $category->update([
                 'name' => $this->name,
-                'slug' => Str::slug($this->name),
+                'slug' => $slug,
                 'type' => $this->type,
                 'description' => $this->description,
                 'status' => $this->status,
             ]);
+
+            // Clear cache
+            $this->clearCache();
 
             \Log::info('Service category updated successfully', [
                 'id' => $this->editId,
@@ -187,6 +260,9 @@ class ServiceCategories extends Component
             session()->flash('message', 'Category updated successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            
+            // At the end, use dispatch instead of refresh-categories
+            $this->dispatch('refreshComponent');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -210,6 +286,9 @@ class ServiceCategories extends Component
             
             $category = ServiceCategory::findOrFail($id);
             $category->delete();
+            
+            // Clear cache
+            $this->clearCache();
             
             \Log::info('Category deleted successfully', ['id' => $id]);
             
@@ -245,5 +324,97 @@ class ServiceCategories extends Component
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+    
+    private function clearCache()
+    {
+        try {
+            // Try to use tags if supported
+            if (method_exists(Cache::getStore(), 'tags')) {
+                Cache::tags(['service_categories'])->flush();
+            }
+            
+            // Clear specific cache keys (works with any driver)
+            Cache::forget('service_categories_list');
+            
+            // Clear any other related caches
+            $searchPatterns = [
+                'service_categories_*',
+                'portfolios_*', // Clear portfolio caches as they depend on categories
+            ];
+            
+            // For file/database cache, we need to manually clear keys that match patterns
+            // This is a simplified approach - in production you might want to use a more robust solution
+            $currentPage = request()->query('page', 1);
+            for ($i = 1; $i <= max(1, $currentPage + 5); $i++) {
+                Cache::forget('service_categories_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $i);
+            }
+            
+            // Clear portfolio cache keys
+            Cache::forget('portfolios_list');
+            Cache::forget('service_categories_list');
+            Cache::forget('project_types_list');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error clearing cache', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+
+    /**
+     * Generate a unique slug
+     * 
+     * @param string $baseSlug
+     * @param int|null $ignoreId
+     * @return string
+     */
+    private function generateUniqueSlug($baseSlug, $ignoreId = null)
+    {
+        $slug = $baseSlug;
+        $counter = 1;
+        
+        // Check if slug exists
+        while (true) {
+            $query = ServiceCategory::where('slug', $slug);
+            
+            // Ignore current category when updating
+            if ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            }
+            
+            $exists = $query->exists();
+            
+            if (!$exists) {
+                break;
+            }
+            
+            // Add counter to slug
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        return $slug;
+    }
+
+    // Add this method to handle perPage changes
+    public function updatedPerPage()
+    {
+        // Mark that perPage was changed to clear cache on next render
+        session()->put('perPage_changed', true);
+        $this->resetPage(); // Reset to first page when changing items per page
+    }
+
+    // Añade este método para validación en tiempo real del campo nombre
+    public function updatedName()
+    {
+        $nameRule = 'required|min:3|unique:service_categories,name';
+        
+        if ($this->editId) {
+            $nameRule .= ',' . $this->editId;
+        }
+        
+        $this->validateOnly('name', ['name' => $nameRule]);
     }
 } 

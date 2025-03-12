@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\CompanyData as CompanyDataModel;
 use Livewire\WithPagination;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Cache;
 
 class CompanyData extends Component
 {
@@ -19,6 +20,9 @@ class CompanyData extends Component
     public $companyId;
     public $search = '';
     public $isSubmitting = false;
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $perPage = 10;
 
     protected $listeners = [
         'refreshComponent' => '$refresh'
@@ -27,13 +31,30 @@ class CompanyData extends Component
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
-        return view('livewire.company-data', [
-            'companies' => CompanyDataModel::where('company_name', 'like', $searchTerm)
+        
+        $cacheKey = 'companies_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage;
+        
+        $companies = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
+            return CompanyDataModel::where('company_name', 'like', $searchTerm)
                 ->orWhere('name', 'like', $searchTerm)
                 ->orWhere('email', 'like', $searchTerm)
-                ->orderBy('created_at', 'desc')
-                ->paginate(10)
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate($this->perPage);
+        });
+        
+        return view('livewire.company-data', [
+            'companies' => $companies
         ]);
+    }
+
+    public function sort($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
     }
 
     public function create()
@@ -126,6 +147,9 @@ class CompanyData extends Component
                 $data
             );
 
+            // Clear cache
+            $this->clearCache();
+
             \Log::info('Company data saved successfully', [
                 'company_id' => $this->companyId,
                 'company_name' => $this->company_name
@@ -209,6 +233,9 @@ class CompanyData extends Component
             $company = CompanyDataModel::findOrFail($id);
             $company->delete();
             
+            // Clear cache
+            $this->clearCache();
+            
             \Log::info('Company deleted successfully', ['id' => $id]);
             
             session()->flash('message', 'Company deleted successfully.');
@@ -224,5 +251,13 @@ class CompanyData extends Component
             session()->flash('error', 'Error deleting company: ' . $e->getMessage());
             return ['success' => false, 'error' => $e->getMessage()];
         }
+    }
+    
+    private function clearCache()
+    {
+        // Clear specific cache keys
+        $searchTerm = '%' . $this->search . '%';
+        $cacheKey = 'companies_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage;
+        Cache::forget($cacheKey);
     }
 }

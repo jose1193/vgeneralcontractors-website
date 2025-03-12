@@ -1,7 +1,7 @@
 <div>
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         @if (session()->has('message'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)"
                 class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                 role="alert">
                 <span class="block sm:inline">{{ session('message') }}</span>
@@ -49,6 +49,20 @@
                         class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                 </div>
 
+                <div class="mb-4 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <span class="mr-2 text-sm text-gray-600 dark:text-gray-400">Show</span>
+                        <select wire:model.live="perPage"
+                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">entries</span>
+                    </div>
+                </div>
+
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 overflow-x-auto block md:table">
                     <thead>
                         <tr>
@@ -70,6 +84,13 @@
                                 wire:click="sort('status')">
                                 Status
                                 @if ($sortField === 'status')
+                                    <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-center text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer"
+                                wire:click="sort('created_at')">
+                                Created At
+                                @if ($sortField === 'created_at')
                                     <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                                 @endif
                             </th>
@@ -114,6 +135,10 @@
                                         </span>
                                     @endif
                                 </td>
+                                <td
+                                    class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                                    {{ $category->created_at->format('Y-m-d H:i') }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
                                     <div class="inline-flex items-center justify-center space-x-4">
                                         <button wire:click="edit({{ $category->id }})"
@@ -140,7 +165,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="px-6 py-4 text-center" colspan="4">No categories available</td>
+                                <td class="px-6 py-4 text-center" colspan="5">No categories available</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -165,7 +190,16 @@
                 <!-- Modal panel -->
                 <div
                     class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full md:w-3/4 sm:w-full">
-                    <form wire:key="category-form-{{ $editId ?? 'create' }}">
+                    <form wire:key="category-form-{{ now() }}" x-data="formValidation()"
+                        x-init="$nextTick(() => {
+                            form = {
+                                name: @js($name),
+                                type: @js($type),
+                                description: @js($description),
+                                status: @js($status)
+                            };
+                        });">
+
                         <!-- Modal header -->
                         <div class="bg-gray-900 px-4 py-3 sm:px-6">
                             <div class="flex items-center justify-center relative">
@@ -185,28 +219,12 @@
 
                         <!-- Modal body -->
                         <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation()"
-                                x-init="// Inicializar con los valores actuales
-                                form.name = '{{ addslashes($name) }}';
-                                form.type = '{{ $type }}';
-                                form.description = '{{ addslashes($description) }}';
-                                form.status = '{{ $status }}';
-                                
-                                // Escuchar eventos de edición
-                                $wire.on('category-edit', (data) => {
-                                    console.log('Received category-edit event', data);
-                                    if (data) {
-                                        form.name = data.name || '';
-                                        form.type = data.type || '';
-                                        form.description = data.description || '';
-                                        form.status = data.status || 'active';
-                                    }
-                                });">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="mb-4">
                                     <label for="name"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Name:</label>
-                                    <input type="text" x-model="form.name" @input="validateField('name')"
-                                        wire:model="name" id="name"
+                                    <input type="text" x-model="form.name"
+                                        @input="validateField('name'); $wire.set('name', form.name)" id="name"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     <span x-show="errors.name" x-text="errors.name"
                                         class="text-red-500 text-xs mt-1"></span>
@@ -218,8 +236,8 @@
                                 <div class="mb-4">
                                     <label for="type"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Type:</label>
-                                    <select x-model="form.type" @change="validateField('type')" wire:model="type"
-                                        id="type"
+                                    <select x-model="form.type"
+                                        @change="validateField('type'); $wire.set('type', form.type)" id="type"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                         <option value="">Select</option>
                                         <option value="Roof Repair">Roof Repair</option>
@@ -242,8 +260,8 @@
                                 <div class="mb-4 md:col-span-2">
                                     <label for="description"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Description:</label>
-                                    <textarea x-model="form.description" @input="validateField('description')" wire:model="description" id="description"
-                                        rows="3"
+                                    <textarea x-model="form.description" @input="validateField('description'); $wire.set('description', form.description)"
+                                        id="description" rows="3"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                                     <span x-show="errors.description" x-text="errors.description"
                                         class="text-red-500 text-xs mt-1"></span>
@@ -256,7 +274,7 @@
                                     <label for="status"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Status:</label>
                                     <select x-model="form.status" @change="validateField('status')"
-                                        wire:model="status" id="status"
+                                        wire:model.live="status" id="status"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                         <option value="">Select</option>
                                         <option value="active">Active</option>
@@ -273,8 +291,10 @@
 
                         <!-- Modal footer -->
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="button" wire:click="{{ $modalAction }}" x-data="{ isSubmitting: false }"
-                                x-on:click="isSubmitting = true" @validation-failed.window="isSubmitting = false"
+                            <button type="button" wire:click="{{ $modalAction }}" wire:loading.attr="disabled"
+                                wire:target="{{ $modalAction }}" wire:loading.class="opacity-50 cursor-not-allowed"
+                                x-data="{ isSubmitting: false }" x-on:click="isSubmitting = true"
+                                @validation-failed.window="isSubmitting = false" x-init="$wire.on('refreshComponent', () => { isSubmitting = false });"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
                                 :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }" :disabled="isSubmitting">
                                 <svg wire:loading wire:target="{{ $modalAction }}"
@@ -290,9 +310,10 @@
                                 <span wire:loading wire:target="{{ $modalAction }}">Saving...</span>
                             </button>
                             <button wire:click="closeModal()" type="button" wire:loading.attr="disabled"
-                                wire:target="{{ $modalAction }}"
+                                wire:target="{{ $modalAction }}" wire:loading.class="opacity-50 cursor-not-allowed"
+                                :disabled="isSubmitting"
                                 class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
-                                wire:loading.class="opacity-50 cursor-not-allowed" wire:target="{{ $modalAction }}">
+                                :class="{ 'opacity-50 cursor-not-allowed': isSubmitting }">
                                 Cancel
                             </button>
                         </div>
@@ -416,7 +437,7 @@
                     name: '',
                     type: '',
                     description: '',
-                    status: ''
+                    status: 'active'
                 },
                 errors: {
                     name: '',
@@ -468,12 +489,19 @@
 
                     return isValid;
                 },
-                init() {
-                    // Inicializamos las validaciones
-                    this.$watch('form.name', value => this.validateField('name'));
-                    this.$watch('form.type', value => this.validateField('type'));
-                    this.$watch('form.description', value => this.validateField('description'));
-                    this.$watch('form.status', value => this.validateField('status'));
+                syncToLivewire() {
+                    // Sync Alpine.js form values to Livewire properties
+                    @this.set('name', this.form.name);
+                    @this.set('type', this.form.type);
+                    @this.set('description', this.form.description);
+                    @this.set('status', this.form.status);
+                },
+                syncFromLivewire() {
+                    // Sync Livewire properties to Alpine.js form values
+                    this.form.name = @this.get('name');
+                    this.form.type = @this.get('type');
+                    this.form.description = @this.get('description');
+                    this.form.status = @this.get('status');
                 }
             }
         }

@@ -24,6 +24,8 @@ class CompanyData extends Model
         'longitude'
     ];
 
+    protected $table = 'company_data';
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
