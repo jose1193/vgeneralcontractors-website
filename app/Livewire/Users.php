@@ -420,7 +420,31 @@ class Users extends Component
     public function delete($uuid)
     {
         try {
-            User::where('uuid', $uuid)->delete();
+            \Log::info('Attempting to delete user', ['uuid' => $uuid]);
+            
+            // Find the user first to log details
+            $user = User::where('uuid', $uuid)->first();
+            
+            if (!$user) {
+                \Log::warning('User not found for deletion', ['uuid' => $uuid]);
+                session()->flash('error', 'User not found.');
+                return;
+            }
+            
+            \Log::info('Found user to delete', [
+                'uuid' => $uuid,
+                'name' => $user->name,
+                'email' => $user->email,
+                'id' => $user->id
+            ]);
+            
+            // Perform the deletion
+            $deleted = User::where('uuid', $uuid)->delete();
+            
+            \Log::info('User deletion result', [
+                'uuid' => $uuid,
+                'deleted' => $deleted ? 'success' : 'failed'
+            ]);
             
             // Clear cache
             $this->clearCache();
@@ -430,7 +454,8 @@ class Users extends Component
         } catch (\Exception $e) {
             \Log::error('Error deleting user', [
                 'uuid' => $uuid,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             
             session()->flash('error', 'Error deleting user: ' . $e->getMessage());

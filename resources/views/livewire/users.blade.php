@@ -48,9 +48,23 @@
                 </div>
 
                 <!-- Search box -->
-                <div class="mb-4">
-                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search users..."
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div class="mb-4 flex flex-col gap-4">
+                    <div class="w-full">
+                        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search users..."
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="flex justify-start">
+                        <div class="flex items-center">
+                            <label for="perPage" class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show entries:</label>
+                            <select id="perPage" wire:model.live="perPage" class="shadow border rounded py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline min-w-[80px]">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Users table -->
@@ -237,8 +251,13 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-4">
-                    {{ $users->links() }}
+                <div class="mt-4 flex justify-between items-center">
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} entries
+                    </div>
+                    <div>
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -541,14 +560,14 @@
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button type="submit"
                                 x-on:click="
-                                    if (!isSubmitting && validateForm()) {
-                                        isSubmitting = true;
-                                        $wire.{{ $modalAction }}().then(() => {
-                                            isSubmitting = false;
-                                        }).catch(() => {
-                                            isSubmitting = false;
-                                        });
-                                    }
+                                if (!isSubmitting && validateForm()) {
+                                    isSubmitting = true;
+                                    $wire.{{ $modalAction }}().then(() => {
+                                        isSubmitting = false;
+                                    }).catch(() => {
+                                        isSubmitting = false;
+                                    });
+                                }
                                 "
                                 @validation-failed.window="isSubmitting = false"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm transition-opacity duration-200"
