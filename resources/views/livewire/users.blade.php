@@ -505,12 +505,14 @@
                                 <div class="mb-4">
                                     <label for="phone"
                                         class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Phone:</label>
-                                    <input type="tel" x-model="form.phone"
-                                        @input="formatPhone($event); validatePhone($event.target.value);"
-                                        @blur="checkPhoneAvailability($event.target.value)" id="phone"
+                                    <input type="tel" x-model="form.phone" @input="formatPhone($event);"
+                                        @blur="validatePhone($event.target.value); checkPhoneAvailability($event.target.value);"
+                                        id="phone"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         :class="{ 'border-red-500': errors.phone }"
                                         placeholder="Enter phone (XXX) XXX-XXXX">
+                                    <div class="text-red-500 text-xs mt-1" x-show="errors.phone"
+                                        x-text="errors.phone"></div>
                                     @error('phone')
                                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                                     @enderror
@@ -1094,7 +1096,10 @@
                 },
                 validatePhone(phone) {
                     this.errors.phone = '';
-                    if (phone && !/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
+                    if (!phone) return true; // Phone is optional
+
+                    // Check for complete phone number format
+                    if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
                         this.errors.phone = 'Please enter a valid phone number format: (XXX) XXX-XXXX';
                         return false;
                     }
