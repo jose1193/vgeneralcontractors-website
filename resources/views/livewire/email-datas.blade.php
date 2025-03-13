@@ -405,7 +405,7 @@
                     
                         clearErrors();
                     });">
-                    <form wire:submit.prevent="save">
+                    <form wire:submit.prevent="{{ $modalAction === 'update' ? 'update' : 'store' }}">
                         <!-- Modal header -->
                         <div class="bg-gray-900 px-4 py-3 sm:px-6">
                             <div class="flex items-center justify-center relative">
@@ -554,22 +554,7 @@
                                 x-on:click.prevent="
                                 if (!isSubmitting && validateForm()) {
                                     isSubmitting = true;
-                                    $wire.set('modalAction', modalAction);
-                                    if (modalAction === 'update') {
-                                        $wire.update().then(() => {
-                                            isSubmitting = false;
-                                        }).catch(() => {
-                                            isSubmitting = false;
-                                        });
-                                    } else {
-                                        $wire.store().then(() => {
-                                            isSubmitting = false;
-                                        }).catch(() => {
-                                            isSubmitting = false;
-                                        });
-                                    }
-                                }
-                                "
+                                }"
                                 @validation-failed.window="isSubmitting = false" :disabled="isSubmitting"
                                 :class="{ 'opacity-75 cursor-not-allowed': isSubmitting }"
                                 class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
@@ -785,7 +770,11 @@
                 },
 
                 syncToLivewire() {
-                    this.$wire.save();
+                    if (this.modalAction === 'update') {
+                        this.$wire.update();
+                    } else {
+                        this.$wire.store();
+                    }
                 }
             };
         }
