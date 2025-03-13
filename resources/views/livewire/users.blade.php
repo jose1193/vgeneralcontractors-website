@@ -647,7 +647,7 @@
                                 }
                                 "
                                 @validation-failed.window="isSubmitting = false"
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
+                                class="sm:w-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
                                 <svg x-show="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -661,7 +661,7 @@
                                 <span x-show="isSubmitting">Saving...</span>
                             </button>
                             <button type="button" wire:click="closeModal"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-10 sm:w-auto sm:text-sm mr-3">
                                 Cancel
                             </button>
                         </div>
@@ -884,8 +884,7 @@
     </div>
 
     <!-- Keyboard shortcuts help -->
-    <div id="keyboard-shortcuts"
-        class="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center hidden"
+    <div id="keyboard-shortcuts" class="fixed inset-0 bg-black bg-opacity-60 z-50 items-center justify-center hidden"
         x-data="{ show: false }" x-show="show" x-on:keydown.escape.window="show = false">
         <div class="bg-white rounded-lg p-8 max-w-2xl w-full">
             <h2 class="text-xl font-bold mb-4">Keyboard Shortcuts</h2>
