@@ -7,10 +7,16 @@ use App\Models\CompanyData as CompanyDataModel;
 use Livewire\WithPagination;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Cache;
+use App\Traits\CompanyValidation;
+use App\Traits\CompanyCache;
+use App\Traits\CompanyDataFormatter;
 
 class CompanyData extends Component
 {
     use WithPagination;
+    use CompanyValidation;
+    use CompanyCache;
+    use CompanyDataFormatter;
 
     protected $paginationTheme = 'tailwind';
 
@@ -32,7 +38,8 @@ class CompanyData extends Component
     {
         $searchTerm = '%' . $this->search . '%';
         
-        $cacheKey = 'companies_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage;
+        // Use the cache key generator from the trait
+        $cacheKey = $this->generateCompanyCacheKey();
         
         $companies = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
             return CompanyDataModel::where('company_name', 'like', $searchTerm)
@@ -91,16 +98,8 @@ class CompanyData extends Component
     public function store()
     {
         try {
-            $this->validate([
-                'company_name' => 'required',
-                'name' => 'required',
-                'email' => 'required|email',
-                'phone' => 'required',
-                'address' => 'required',
-                'website' => 'required|url',
-                'latitude' => 'nullable|numeric',
-                'longitude' => 'nullable|numeric'
-            ]);
+            // Use validation trait
+            $this->validate($this->getCompanyValidationRules());
 
             \Log::info('Attempting to save company data', [
                 'company_id' => $this->companyId,
@@ -108,47 +107,35 @@ class CompanyData extends Component
                 'action' => $this->companyId ? 'update' : 'create'
             ]);
 
-            // Formatear el número de teléfono
-            $phone = preg_replace('/[^0-9]/', '', $this->phone);
-            $phone = '+1' . $phone;
-            
-            // Format website URL if needed
-            $website = $this->website;
-            if (!empty($website)) {
-                if (!preg_match('/^https?:\/\//i', $website)) {
-                    if (preg_match('/^www\./i', $website)) {
-                        $website = 'https://' . $website;
-                    } else {
-                        $website = 'https://' . $website;
-                    }
-                }
-            }
-
+            // Prepare data
             $data = [
-                'company_name' => ucwords(strtolower($this->company_name)),
-                'name' => ucwords(strtolower($this->name)),
+                'company_name' => $this->company_name,
+                'name' => $this->name,
                 'signature_path' => $this->signature_path,
                 'email' => $this->email,
-                'phone' => $phone,
-                'address' => strtoupper($this->address),
-                'website' => $website,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'website' => $this->website,
                 'latitude' => $this->latitude ?: null,
                 'longitude' => $this->longitude ?: null,
                 'user_id' => auth()->id()
             ];
 
-            // Solo agregar UUID si es una nueva creación
+            // Add UUID if creating a new company
             if (!$this->companyId) {
                 $data['uuid'] = Uuid::uuid4()->toString();
             }
 
+            // Format data using trait
+            $formattedData = $this->formatCompanyData($data);
+            
             CompanyDataModel::updateOrCreate(
                 ['id' => $this->companyId],
-                $data
+                $formattedData
             );
 
-            // Clear cache
-            $this->clearCache();
+            // Clear cache using trait
+            $this->clearCompanyCache();
 
             \Log::info('Company data saved successfully', [
                 'company_id' => $this->companyId,
@@ -188,18 +175,8 @@ class CompanyData extends Component
             $this->signature_path = $company->signature_path;
             $this->email = $company->email;
             
-            // Formatear el teléfono para mostrar en el formato (XXX) XXX - XXXX
-            $rawPhone = preg_replace('/[^0-9]/', '', $company->phone);
-            if (strlen($rawPhone) >= 10) {
-                $rawPhone = substr($rawPhone, -10);
-                $this->phone = sprintf("(%s) %s - %s",
-                    substr($rawPhone, 0, 3),
-                    substr($rawPhone, 3, 3),
-                    substr($rawPhone, 6)
-                );
-            } else {
-                $this->phone = $company->phone;
-            }
+            // Format phone using trait method
+            $this->phone = $this->formatPhoneForDisplay($company->phone);
             
             $this->address = $company->address;
             $this->website = $company->website;
@@ -233,8 +210,8 @@ class CompanyData extends Component
             $company = CompanyDataModel::findOrFail($id);
             $company->delete();
             
-            // Clear cache
-            $this->clearCache();
+            // Clear cache using trait
+            $this->clearCompanyCache();
             
             \Log::info('Company deleted successfully', ['id' => $id]);
             
@@ -252,12 +229,49 @@ class CompanyData extends Component
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-    
-    private function clearCache()
+
+    public function restore($id)
     {
-        // Clear specific cache keys
-        $searchTerm = '%' . $this->search . '%';
-        $cacheKey = 'companies_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage;
-        Cache::forget($cacheKey);
+        try {
+            \Log::info('Attempting to restore company', ['id' => $id]);
+            
+            // Find the company with trashed records
+            $company = CompanyDataModel::withTrashed()->findOrFail($id);
+            
+            if (!$company) {
+                \Log::warning('Company not found for restoration', ['id' => $id]);
+                session()->flash('error', 'Company not found.');
+                return ['success' => false, 'error' => 'Company not found.'];
+            }
+            
+            \Log::info('Found company to restore', [
+                'id' => $id,
+                'company_name' => $company->company_name
+            ]);
+            
+            // Perform the restoration
+            $restored = $company->restore();
+            
+            \Log::info('Company restoration result', [
+                'id' => $id,
+                'restored' => $restored ? 'success' : 'failed'
+            ]);
+            
+            // Clear cache using trait
+            $this->clearCompanyCache();
+            
+            session()->flash('message', 'Company restored successfully.');
+            $this->dispatch('companyRestored');
+            return ['success' => true];
+        } catch (\Exception $e) {
+            \Log::error('Error restoring company', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error restoring company: ' . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 }
