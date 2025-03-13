@@ -286,7 +286,6 @@ class EmailDatas extends Component
         try {
             \Log::info('Attempting to delete email', ['uuid' => $uuid]);
             
-            // Find the email first to log details
             $emailData = EmailData::where('uuid', $uuid)->first();
             
             if (!$emailData) {
@@ -295,21 +294,9 @@ class EmailDatas extends Component
                 return;
             }
             
-            \Log::info('Found email to delete', [
-                'uuid' => $uuid,
-                'email' => $emailData->email,
-                'id' => $emailData->id
-            ]);
-            
-            // Perform the deletion
             $deleted = $emailData->delete();
             
-            \Log::info('Email deletion result', [
-                'uuid' => $uuid,
-                'deleted' => $deleted ? 'success' : 'failed'
-            ]);
-            
-            // Clear cache using the trait
+            // Clear cache
             $this->clearEmailCache();
             
             session()->flash('message', 'Email deleted successfully.');
@@ -355,7 +342,7 @@ class EmailDatas extends Component
             
             // Clear cache using the trait
             $this->clearEmailCache();
-            
+
             session()->flash('message', 'Email restored successfully.');
             $this->dispatch('emailRestored');
         } catch (\Exception $e) {
