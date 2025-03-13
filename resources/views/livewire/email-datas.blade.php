@@ -200,9 +200,89 @@
                                             {{ $emailData->email }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $emailData->type }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-center capitalize">
+                                        <div class="text-sm">
+                                            @if ($emailData->type === 'collections' || $emailData->type === 'Collections')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @elseif($emailData->type === 'info' || $emailData->type === 'Info')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @elseif($emailData->type === 'appointment' || $emailData->type === 'Appointment')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @elseif($emailData->type === 'personal' || $emailData->type === 'Personal')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-orange-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @elseif($emailData->type === 'work' || $emailData->type === 'Work')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
+                                                            clip-rule="evenodd"></path>
+                                                        <path
+                                                            d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z">
+                                                        </path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @elseif($emailData->type === 'business' || $emailData->type === 'Business')
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-indigo-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-500 text-white">
+                                                    <svg class="h-3 w-3 mr-1" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                                                            clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    {{ $emailData->type }}
+                                                </span>
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -384,6 +464,9 @@
                                             <option value="Personal">Personal</option>
                                             <option value="Work">Work</option>
                                             <option value="Business">Business</option>
+                                            <option value="Collections">Collections</option>
+                                            <option value="Info">Info</option>
+                                            <option value="Appointment">Appointment</option>
                                             <option value="Other">Other</option>
                                         </select>
                                         <div class="text-red-500 text-xs mt-1" x-show="errors.type"
@@ -479,7 +562,7 @@
                                 }
                                 "
                                 @validation-failed.window="isSubmitting = false"
-                                class="sm:w-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
+                                class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
                                 <svg x-show="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -492,7 +575,7 @@
                                 <span x-show="isSubmitting">Saving...</span>
                             </button>
                             <button type="button" wire:click="closeModal"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-10 sm:w-auto sm:text-sm mr-3">
+                                class="hidden sm:inline-flex mt-3 w-full sm:w-auto justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-10 sm:text-sm mr-3">
                                 Cancel
                             </button>
                         </div>
