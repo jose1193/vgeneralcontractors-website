@@ -124,21 +124,21 @@ class DatabaseSeeder extends Seeder
             'description' => 'Correo para colecciones y pagos',
             'email' => 'collections@vgeneralcontractors.com',
             'phone' => '+17133646240',
-            'type' => 'collections',
+            'type' => 'Collections',
             'user_id' => $adminUser->id,
         ],
         [
             'description' => 'Correo para información general',
             'email' => 'info@vgeneralcontractors.com',
             'phone' => '+13466920757',
-            'type' => 'info',
+            'type' => 'Info',
             'user_id' => $adminUser->id,
         ],
         [
             'description' => 'Correo para citas y agendamiento',
             'email' => 'appointment@vgeneralcontractors.com',
             'phone' => '+13466920757',
-            'type' => 'appointment',
+            'type' => 'Appointment',
             'user_id' => $adminUser->id,
         ]
     ];
