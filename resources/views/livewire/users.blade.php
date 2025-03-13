@@ -228,7 +228,7 @@
                                             </button>
                                             <!-- Delete button -->
                                             <button
-                                                @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {id: '{{ $user->uuid }}', name: '{{ $user->name }} {{ $user->last_name }}'}}))"
+                                                @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $user->uuid }}', name: '{{ $user->name }} {{ $user->last_name }}'}}))"
                                                 class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 focus:outline-none">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -669,7 +669,7 @@
                     <button type="button"
                         x-on:click="
                         isDeleting = true;
-                        @this.delete(userToDelete.id).then(() => {
+                        @this.delete(userToDelete.uuid).then(() => {
                             showDeleteModal = false;
                             isDeleting = false;
                         }).catch(error => {

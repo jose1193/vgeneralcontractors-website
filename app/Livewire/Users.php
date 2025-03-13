@@ -438,8 +438,8 @@ class Users extends Component
                 'id' => $user->id
             ]);
             
-            // Perform the deletion
-            $deleted = User::where('uuid', $uuid)->delete();
+            // Perform the deletion - using the model instance directly to ensure proper deletion
+            $deleted = $user->delete();
             
             \Log::info('User deletion result', [
                 'uuid' => $uuid,
