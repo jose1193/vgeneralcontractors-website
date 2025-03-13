@@ -37,6 +37,7 @@ class Users extends Component
     public $longitude;
     public $send_password_reset = false;
     public $state;
+    public $showDeleted = false;
 
     public $isOpen = false;
     public $modalTitle = 'Create User';
@@ -47,14 +48,15 @@ class Users extends Component
     public $sortDirection = 'desc';
     public $page = 1;
 
-    protected $listeners = ['delete', 'closeModal', 'refreshComponent' => '$refresh'];
+    protected $listeners = ['delete', 'restore', 'closeModal', 'refreshComponent' => '$refresh'];
 
     protected $queryString = [
         'search' => ['except' => ''],
         'page' => ['except' => 1],
         'sortField' => ['except' => 'created_at'],
         'sortDirection' => ['except' => 'desc'],
-        'perPage' => ['except' => 10]
+        'perPage' => ['except' => 10],
+        'showDeleted' => ['except' => false]
     ];
 
     protected function rules()
@@ -93,7 +95,14 @@ class Users extends Component
     {
         $searchTerm = '%' . $this->search . '%';
         
-        $query = User::where(function ($query) use ($searchTerm) {
+        $query = User::query();
+        
+        // Include trashed users if showDeleted is true
+        if ($this->showDeleted) {
+            $query->withTrashed();
+        }
+        
+        $query->where(function ($query) use ($searchTerm) {
             $query->where('name', 'like', $searchTerm)
                 ->orWhere('last_name', 'like', $searchTerm)
                 ->orWhere('email', 'like', $searchTerm)
@@ -106,7 +115,7 @@ class Users extends Component
         $currentPage = request()->query('page', 1);
         
         // Cache the results for this specific page
-        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage;
+        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
         
         $users = Cache::remember($cacheKey, 300, function () use ($query) {
             return $query->paginate($this->perPage);
@@ -462,6 +471,51 @@ class Users extends Component
         }
     }
 
+    public function restore($uuid)
+    {
+        try {
+            \Log::info('Attempting to restore user', ['uuid' => $uuid]);
+            
+            // Find the user first to log details
+            $user = User::withTrashed()->where('uuid', $uuid)->first();
+            
+            if (!$user) {
+                \Log::warning('User not found for restoration', ['uuid' => $uuid]);
+                session()->flash('error', 'User not found.');
+                return;
+            }
+            
+            \Log::info('Found user to restore', [
+                'uuid' => $uuid,
+                'name' => $user->name,
+                'email' => $user->email,
+                'id' => $user->id
+            ]);
+            
+            // Perform the restoration
+            $restored = $user->restore();
+            
+            \Log::info('User restoration result', [
+                'uuid' => $uuid,
+                'restored' => $restored ? 'success' : 'failed'
+            ]);
+            
+            // Clear cache
+            $this->clearCache();
+            
+            session()->flash('message', 'User restored successfully.');
+            $this->dispatch('userRestored');
+        } catch (\Exception $e) {
+            \Log::error('Error restoring user', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error restoring user: ' . $e->getMessage());
+        }
+    }
+
     public function openModal()
     {
         $this->isOpen = true;
@@ -514,15 +568,16 @@ class Users extends Component
         $searchTerm = '%' . $this->search . '%';
         
         // Clear cache for the current page
-        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage;
+        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
+        
         Cache::forget($cacheKey);
         
         // Clear count cache
         Cache::forget('users_count_' . $this->search);
         
         // Clear cache for adjacent pages to ensure proper pagination updates
-        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage - 1));
-        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage + 1));
+        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage - 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
+        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage + 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
     }
 
     /**
@@ -675,5 +730,12 @@ class Users extends Component
                 return $query->where('uuid', '!=', $this->uuid);
             })
             ->exists();
+    }
+
+    public function toggleShowDeleted()
+    {
+        $this->showDeleted = !$this->showDeleted;
+        $this->resetPage();
+        $this->clearCache();
     }
 }
