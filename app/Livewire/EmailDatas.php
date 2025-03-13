@@ -29,10 +29,20 @@ class EmailDatas extends Component
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $isSubmitting = false;
+    public $showDeleted = false;
+    public $page = 1;
 
     protected $listeners = [
-        'refreshComponent' => '$refresh'
+        'delete', 'restore', 'closeModal', 'refreshComponent' => '$refresh'
+    ];
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+        'sortField' => ['except' => 'created_at'],
+        'sortDirection' => ['except' => 'desc'],
+        'perPage' => ['except' => 10],
+        'showDeleted' => ['except' => false]
     ];
 
     protected function rules()
@@ -41,24 +51,56 @@ class EmailDatas extends Component
             'description' => 'nullable|string',
             'email' => ['required', 'email', 'max:255', 
                 Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid')],
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', 'max:20',
+                Rule::unique('email_data', 'phone')->ignore($this->uuid, 'uuid')],
             'type' => 'required|string|max:50',
             'user_id' => 'required|exists:users,id',
         ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'email.required' => 'Email is required',
+            'email.email' => 'Please enter a valid email address',
+            'email.unique' => 'This email is already taken',
+            'phone.unique' => 'This Phone is already taken',
+            'type.required' => 'Type is required',
+        ];
+    }
+
+    public function mount()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
         
-        $cacheKey = 'email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $this->page;
+        $query = EmailData::query();
         
-        $emailDatas = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
-            return EmailData::where('description', 'like', $searchTerm)
+        // Include trashed emails if showDeleted is true
+        if ($this->showDeleted) {
+            $query->withTrashed();
+        }
+        
+        $query->where(function ($query) use ($searchTerm) {
+            $query->where('description', 'like', $searchTerm)
                 ->orWhere('email', 'like', $searchTerm)
                 ->orWhere('type', 'like', $searchTerm)
-                ->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
+                ->orWhere('phone', 'like', $searchTerm);
+        })
+        ->orderBy($this->sortField, $this->sortDirection);
+        
+        // Get the current page from the request
+        $currentPage = request()->query('page', 1);
+        
+        // Cache the results for this specific page
+        $cacheKey = 'email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
+        
+        $emailDatas = Cache::remember($cacheKey, 300, function () use ($query) {
+            return $query->paginate($this->perPage);
         });
 
         return view('livewire.email-datas', [
@@ -88,19 +130,22 @@ class EmailDatas extends Component
     public function store()
     {
         try {
-            $this->validate();
+            $this->validate([
+                'email' => ['required', 'email', 'max:255', 
+                    Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid')],
+                'phone' => ['nullable', 'string', 'max:20',
+                    Rule::unique('email_data', 'phone')->ignore($this->uuid, 'uuid')],
+            ]);
 
             \Log::info('Attempting to save email data', [
-                'uuid' => $this->uuid,
                 'email' => $this->email,
-                'action' => $this->uuid ? 'update' : 'create'
+                'action' => 'create'
             ]);
 
             // Format phone if provided
             $phone = null;
             if (!empty($this->phone)) {
-                $phone = preg_replace('/[^0-9]/', '', $this->phone);
-                $phone = '+1' . $phone;
+                $phone = $this->formatPhone($this->phone);
             }
 
             EmailData::create([
@@ -122,6 +167,7 @@ class EmailDatas extends Component
             session()->flash('message', 'Email created successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            $this->dispatch('refreshComponent');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -200,7 +246,12 @@ class EmailDatas extends Component
     public function update()
     {
         try {
-            $this->validate();
+            $this->validate([
+                'email' => ['required', 'email', 'max:255', 
+                    Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid')],
+                'phone' => ['nullable', 'string', 'max:20',
+                    Rule::unique('email_data', 'phone')->ignore($this->uuid, 'uuid')],
+            ]);
 
             \Log::info('Attempting to update email data', [
                 'uuid' => $this->uuid,
@@ -212,8 +263,7 @@ class EmailDatas extends Component
             // Format phone if provided
             $phone = null;
             if (!empty($this->phone)) {
-                $phone = preg_replace('/[^0-9]/', '', $this->phone);
-                $phone = '+1' . $phone;
+                $phone = $this->formatPhone($this->phone);
             }
             
             $emailData->update([
@@ -235,6 +285,7 @@ class EmailDatas extends Component
             session()->flash('message', 'Email updated successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            $this->dispatch('refreshComponent');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -266,7 +317,6 @@ class EmailDatas extends Component
             
             session()->flash('message', 'Email deleted successfully.');
             $this->dispatch('emailDeleted');
-            return ['success' => true];
         } catch (\Exception $e) {
             \Log::error('Error deleting email', [
                 'uuid' => $uuid,
@@ -275,7 +325,6 @@ class EmailDatas extends Component
             ]);
             
             session()->flash('error', 'Error deleting email: ' . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -300,21 +349,185 @@ class EmailDatas extends Component
     
     private function clearCache()
     {
-        // Clear all email-related caches using tags
-        Cache::tags(['email_datas'])->flush();
+        // Get the current page
+        $currentPage = request()->query('page', 1);
         
-        // Clear any other related caches
-        $searchPatterns = [
-            'email_datas_*',
-        ];
+        // Get search term for cache keys
+        $searchTerm = '%' . $this->search . '%';
         
-        foreach ($searchPatterns as $pattern) {
-            $keys = Cache::get($pattern);
-            if (is_array($keys)) {
-                foreach ($keys as $key) {
-                    Cache::forget($key);
-                }
+        // Clear cache for the current page
+        $cacheKey = 'email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
+        
+        Cache::forget($cacheKey);
+        
+        // Clear count cache
+        Cache::forget('email_datas_count_' . $this->search);
+        
+        // Clear cache for adjacent pages to ensure proper pagination updates
+        Cache::forget('email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage - 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
+        Cache::forget('email_datas_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage + 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
+    }
+
+    private function formatPhone($phone)
+    {
+        if (empty($phone)) {
+            return null;
+        }
+        return '+1' . preg_replace('/[^0-9]/', '', $phone);
+    }
+
+    public function restore($uuid)
+    {
+        try {
+            \Log::info('Attempting to restore email', ['uuid' => $uuid]);
+            
+            // Find the email first to log details
+            $emailData = EmailData::withTrashed()->where('uuid', $uuid)->first();
+            
+            if (!$emailData) {
+                \Log::warning('Email not found for restoration', ['uuid' => $uuid]);
+                session()->flash('error', 'Email not found.');
+                return;
+            }
+            
+            \Log::info('Found email to restore', [
+                'uuid' => $uuid,
+                'email' => $emailData->email,
+                'id' => $emailData->id
+            ]);
+            
+            // Perform the restoration
+            $restored = $emailData->restore();
+            
+            \Log::info('Email restoration result', [
+                'uuid' => $uuid,
+                'restored' => $restored ? 'success' : 'failed'
+            ]);
+            
+            // Clear cache
+            $this->clearCache();
+            
+            session()->flash('message', 'Email restored successfully.');
+            $this->dispatch('emailRestored');
+        } catch (\Exception $e) {
+            \Log::error('Error restoring email', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error restoring email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Check if an email already exists in the database
+     * 
+     * @param string $email
+     * @return bool
+     */
+    public function checkEmailExists($email)
+    {
+        if (empty($email)) {
+            return false;
+        }
+
+        // If we're in update mode and the email hasn't changed, it's valid
+        if ($this->modalAction === 'update' && $this->uuid) {
+            $emailData = EmailData::where('uuid', $this->uuid)->first();
+            if ($emailData && $emailData->email === $email) {
+                return false;
             }
         }
+
+        // Check if email exists for any other email data
+        return EmailData::where('email', $email)
+            ->when($this->uuid, function ($query) {
+                return $query->where('uuid', '!=', $this->uuid);
+            })
+            ->exists();
+    }
+
+    /**
+     * Check if a phone already exists in the database
+     * 
+     * @param string $phone
+     * @return bool
+     */
+    public function checkPhoneExists($phone)
+    {
+        if (empty($phone)) {
+            return false;
+        }
+
+        // Format phone for comparison
+        $formattedPhone = '+1' . preg_replace('/[^0-9]/', '', $phone);
+
+        // If we're in update mode and the phone hasn't changed, it's valid
+        if ($this->modalAction === 'update' && $this->uuid) {
+            $emailData = EmailData::where('uuid', $this->uuid)->first();
+            if ($emailData && $emailData->phone === $formattedPhone) {
+                return false;
+            }
+        }
+
+        // Check if phone exists for any other email data
+        return EmailData::where('phone', $formattedPhone)
+            ->when($this->uuid, function ($query) {
+                return $query->where('uuid', '!=', $this->uuid);
+            })
+            ->exists();
+    }
+
+    // Add this method for real-time email validation
+    public function updatedEmail()
+    {
+        $emailRule = ['required', 'email', 'max:255'];
+        
+        if ($this->uuid) {
+            $emailRule[] = Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid');
+        } else {
+            $emailRule[] = Rule::unique('email_data', 'email');
+        }
+        
+        $this->validateOnly('email', ['email' => $emailRule]);
+    }
+
+    // Add this method for real-time phone validation
+    public function updatedPhone()
+    {
+        if (empty($this->phone)) {
+            return;
+        }
+        
+        $phoneRule = ['nullable', 'string', 'max:20'];
+        
+        if ($this->uuid) {
+            $phoneRule[] = Rule::unique('email_data', 'phone')->ignore($this->uuid, 'uuid');
+        } else {
+            $phoneRule[] = Rule::unique('email_data', 'phone');
+        }
+        
+        $this->validateOnly('phone', ['phone' => $phoneRule]);
+    }
+
+    // Add this method for real-time search updates
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updating($name, $value)
+    {
+        if ($name === 'search') {
+            $this->resetPage();
+        }
+    }
+
+    public function toggleShowDeleted()
+    {
+        $this->showDeleted = !$this->showDeleted;
+        $this->resetPage();
+        $this->clearCache();
     }
 } 
