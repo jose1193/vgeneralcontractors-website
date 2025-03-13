@@ -12,10 +12,18 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCredentialsMail;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\SendUserCredentialsEmail;
+use App\Traits\UserValidation;
+use App\Traits\UserCache;
+use App\Traits\KeyboardShortcuts;
+use App\Traits\UserDataFormatter;
 
 class Users extends Component
 {
     use WithPagination;
+    use UserValidation;
+    use UserCache;
+    use KeyboardShortcuts;
+    use UserDataFormatter;
 
     public $uuid;
     public $name;
@@ -59,42 +67,43 @@ class Users extends Component
         'showDeleted' => ['except' => false]
     ];
 
+    protected $significantDataChange = false;
+
     protected function rules()
     {
-        return [
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'username' => ['required', 'string', 'min:7', 'max:255', 'regex:/^.*[0-9].*[0-9].*$/',
-                Rule::unique('users', 'username')->ignore($this->uuid, 'uuid')],
-            'date_of_birth' => 'nullable|date',
-            'email' => ['required', 'string', 'email', 'max:255', 
-                Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
-            'password' => $this->modalAction === 'store' 
-                ? 'required|string|min:8|confirmed' 
-                : 'nullable|string|min:8|confirmed',
-            'phone' => ['nullable', 'string', 'max:20',
-                Rule::unique('users', 'phone')->ignore($this->uuid, 'uuid')],
-            'address' => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
-            'city' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'gender' => 'nullable|string|in:male,female,other',
-            'terms_and_conditions' => 'boolean',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'state' => 'nullable|string|max:100',
-        ];
+        return $this->getUserValidationRules();
     }
 
     public function mount()
     {
         $this->resetPage();
+        $this->mountKeyboardShortcuts();
     }
 
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
         
+        // Use a cache key generator from UserCache trait
+        $cacheKey = $this->generateUserCacheKey();
+        
+        $users = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
+            return $this->getUsersQuery($searchTerm)->paginate($this->perPage);
+        });
+
+        return view('livewire.users', [
+            'users' => $users
+        ]);
+    }
+    
+    /**
+     * Build the users query with appropriate filters
+     * 
+     * @param string $searchTerm Search term with wildcards
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getUsersQuery($searchTerm)
+    {
         $query = User::query();
         
         // Include trashed users if showDeleted is true
@@ -111,19 +120,7 @@ class Users extends Component
         })
         ->orderBy($this->sortField, $this->sortDirection);
         
-        // Get the current page from the request
-        $currentPage = request()->query('page', 1);
-        
-        // Cache the results for this specific page
-        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
-        
-        $users = Cache::remember($cacheKey, 300, function () use ($query) {
-            return $query->paginate($this->perPage);
-        });
-
-        return view('livewire.users', [
-            'users' => $users
-        ]);
+        return $query;
     }
 
     public function sort($field)
@@ -147,14 +144,8 @@ class Users extends Component
     public function store()
     {
         try {
-            $this->validate([
-                'name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 
-                    Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
-                'phone' => ['nullable', 'string', 'max:20',
-                    Rule::unique('users', 'phone')->ignore($this->uuid, 'uuid')],
-            ]);
+            // Use validation trait
+            $this->validate($this->getCreateValidationRules());
 
             \Log::info('Storing user with data:', [
                 'name' => $this->name,
@@ -163,49 +154,45 @@ class Users extends Component
                 'phone' => $this->phone
             ]);
 
-            // Capitalize name, last_name and address
-            $name = ucwords(strtolower($this->name));
-            $lastName = ucwords(strtolower($this->last_name));
-            $address = ucwords(strtolower($this->address));
-
             // Generate username from name and last_name
-            $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $name)) . 
-                           strtolower(substr(preg_replace('/[^a-zA-Z0-9]/', '', $lastName), 0, 1));
+            $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $this->name)) . 
+                           strtolower(substr(preg_replace('/[^a-zA-Z0-9]/', '', $this->last_name), 0, 1));
             $username = $this->generateUniqueUsername($baseUsername);
             
             // Generate random password
             $randomPassword = Str::random(12);
 
-            // Format phone number
-            $phone = '';
-            if ($this->phone) {
-                $phone = '+1' . preg_replace('/[^0-9]/', '', $this->phone);
-            }
-
+            // Prepare user data
             $data = [
                 'uuid' => Str::uuid(),
-                'name' => $name,
-                'last_name' => $lastName,
+                'name' => $this->name,
+                'last_name' => $this->last_name,
                 'username' => $username,
                 'date_of_birth' => $this->date_of_birth,
                 'email' => $this->email,
-                'password' => Hash::make($randomPassword),
-                'phone' => $phone,
-                'address' => $address,
+                'password' => $randomPassword, // Will be hashed in formatUserData
+                'phone' => $this->phone,
+                'address' => $this->address,
                 'zip_code' => $this->zip_code,
-                'city' => ucwords(strtolower($this->city)),
-                'country' => ucwords(strtolower($this->country)),
+                'city' => $this->city,
+                'country' => $this->country,
                 'gender' => $this->gender,
                 'terms_and_conditions' => true,
                 'latitude' => null,
                 'longitude' => null,
-                'state' => ucwords(strtolower($this->state)),
+                'state' => $this->state,
             ];
 
-            $user = User::create($data);
-
-            // Clear cache
-            $this->clearCache();
+            // Format data and create user
+            $formattedData = $this->formatUserData($data);
+            $formattedData['password'] = Hash::make($randomPassword); // Hash the password
+            
+            $user = User::create($formattedData);
+            
+            $this->significantDataChange = true;
+            
+            // Clear cache using the trait
+            $this->clearUserCache();
 
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
@@ -214,6 +201,7 @@ class Users extends Component
             $this->closeModal();
             $this->resetInputFields();
             $this->dispatch('refreshComponent');
+            $this->dispatch('user-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -224,6 +212,7 @@ class Users extends Component
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error creating user: ' . $e->getMessage());
+            $this->dispatch('user-created-error');
         }
     }
 
@@ -290,19 +279,7 @@ class Users extends Component
             $this->date_of_birth = $user->date_of_birth;
             
             // Format phone number for display
-            if ($user->phone) {
-                $rawPhone = preg_replace('/[^0-9]/', '', $user->phone);
-                if (strlen($rawPhone) >= 10) {
-                    $rawPhone = substr($rawPhone, -10);
-                    $this->phone = sprintf("(%s) %s-%s",
-                        substr($rawPhone, 0, 3),
-                        substr($rawPhone, 3, 3),
-                        substr($rawPhone, 6)
-                    );
-                } else {
-                    $this->phone = $user->phone;
-                }
-            }
+            $this->phone = $this->formatPhoneForDisplay($user->phone);
             
             $this->address = $user->address;
             $this->zip_code = $user->zip_code;
@@ -344,50 +321,40 @@ class Users extends Component
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error loading user data: ' . $e->getMessage());
+            $this->dispatch('user-edit-error');
         }
     }
 
     public function update()
     {
         try {
-            $this->validate([
-                'name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 
-                    Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
-                'username' => ['required', 'string', 'min:7', 'max:255', 'regex:/^.*[0-9].*[0-9].*$/',
-                    Rule::unique('users', 'username')->ignore($this->uuid, 'uuid')],
-                'date_of_birth' => 'nullable|date',
-                'phone' => ['nullable', 'string', 'max:20',
-                    Rule::unique('users', 'phone')->ignore($this->uuid, 'uuid')],
-                'address' => 'nullable|string|max:255',
-                'zip_code' => 'nullable|string|max:20',
-                'city' => 'nullable|string|max:100',
-                'country' => 'nullable|string|max:100',
-                'gender' => 'nullable|string|in:male,female,other',
-            ]);
+            // Use validation trait
+            $this->validate($this->getUpdateValidationRules());
 
             $user = User::where('uuid', $this->uuid)->firstOrFail();
 
             $data = [
-                'name' => ucwords(strtolower($this->name)),
-                'last_name' => ucwords(strtolower($this->last_name)),
+                'name' => $this->name,
+                'last_name' => $this->last_name,
                 'username' => $this->username,
                 'email' => $this->email,
                 'date_of_birth' => $this->date_of_birth,
-                'phone' => $this->formatPhone($this->phone),
-                'address' => strtoupper($this->address),
+                'phone' => $this->phone,
+                'address' => $this->address,
                 'zip_code' => $this->zip_code,
-                'city' => ucwords(strtolower($this->city)),
-                'country' => ucwords(strtolower($this->country)),
+                'city' => $this->city,
+                'country' => $this->country,
                 'gender' => $this->gender,
-                'state' => ucwords(strtolower($this->state)),
+                'state' => $this->state,
             ];
+
+            // Format data
+            $formattedData = $this->formatUserData($data);
 
             // Only update password if provided or reset requested
             if ($this->password || $this->send_password_reset) {
                 $newPassword = $this->password ?: Str::random(12);
-                $data['password'] = Hash::make($newPassword);
+                $formattedData['password'] = Hash::make($newPassword);
 
                 // Send password reset email
                 if ($this->send_password_reset) {
@@ -395,15 +362,19 @@ class Users extends Component
                 }
             }
 
-            $user->update($data);
+            $user->update($formattedData);
+            
+            // Set flag for cache clearing
+            $this->significantDataChange = true;
 
             // Clear cache
-            $this->clearCache();
+            $this->clearUserCache();
 
             session()->flash('message', 'User Updated Successfully.');
             $this->closeModal();
             $this->resetInputFields();
             $this->dispatch('refreshComponent');
+            $this->dispatch('user-updated-success');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
@@ -415,15 +386,8 @@ class Users extends Component
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error updating user: ' . $e->getMessage());
+            $this->dispatch('user-updated-error');
         }
-    }
-
-    private function formatPhone($phone)
-    {
-        if (empty($phone)) {
-            return null;
-        }
-        return '+1' . preg_replace('/[^0-9]/', '', $phone);
     }
 
     public function delete($uuid)
@@ -456,7 +420,7 @@ class Users extends Component
             ]);
             
             // Clear cache
-            $this->clearCache();
+            $this->clearUserCache();
             
             session()->flash('message', 'User deleted successfully.');
             $this->dispatch('userDeleted');
@@ -501,7 +465,7 @@ class Users extends Component
             ]);
             
             // Clear cache
-            $this->clearCache();
+            $this->clearUserCache();
             
             session()->flash('message', 'User restored successfully.');
             $this->dispatch('userRestored');
@@ -561,23 +525,8 @@ class Users extends Component
 
     private function clearCache()
     {
-        // Get the current page
-        $currentPage = request()->query('page', 1);
-        
-        // Get search term for cache keys
-        $searchTerm = '%' . $this->search . '%';
-        
-        // Clear cache for the current page
-        $cacheKey = 'users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage . '_' . ($this->showDeleted ? 'with_deleted' : 'active');
-        
-        Cache::forget($cacheKey);
-        
-        // Clear count cache
-        Cache::forget('users_count_' . $this->search);
-        
-        // Clear cache for adjacent pages to ensure proper pagination updates
-        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage - 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
-        Cache::forget('users_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . ($currentPage + 1) . '_' . ($this->showDeleted ? 'with_deleted' : 'active'));
+        // Use trait method instead
+        $this->clearUserCache();
     }
 
     /**
@@ -736,6 +685,6 @@ class Users extends Component
     {
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
-        $this->clearCache();
+        $this->clearUserCache();
     }
 }

@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -96,5 +97,41 @@ class User extends Authenticatable
     public function emailData(): HasMany
     {
         return $this->hasMany(EmailData::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // Clear cache on user model changes
+        static::saved(function ($user) {
+            self::clearUserCache();
+        });
+        
+        static::deleted(function ($user) {
+            self::clearUserCache();
+        });
+        
+        static::restored(function ($user) {
+            self::clearUserCache();
+        });
+    }
+    
+    /**
+     * Clear cache related to users
+     */
+    public static function clearUserCache()
+    {
+        // Clear common prefixed keys
+        $cacheKeys = Cache::get('user_cache_keys', []);
+        foreach ($cacheKeys as $key) {
+            Cache::forget($key);
+        }
+        
+        // Reset the list
+        Cache::put('user_cache_keys', [], 86400);
     }
 }

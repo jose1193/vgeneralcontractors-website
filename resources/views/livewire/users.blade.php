@@ -35,7 +35,8 @@
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
             <div class="p-6">
                 <!-- Add user button -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
+                <div
+                    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
                     <div class="w-full md:w-1/3">
                         <label for="search" class="sr-only">Search</label>
                         <div class="relative">
@@ -52,16 +53,18 @@
                                 placeholder="Search" type="search">
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
+                    <div
+                        class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show deleted users -->
                         <div class="flex items-center w-full sm:w-auto justify-between sm:justify-start">
                             <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Inactive Users</span>
-                            <button type="button" wire:click="toggleShowDeleted" 
+                            <button type="button" wire:click="toggleShowDeleted"
                                 class="{{ $showDeleted ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700' }} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                <span class="{{ $showDeleted ? 'translate-x-5' : 'translate-x-0' }} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                                <span
+                                    class="{{ $showDeleted ? 'translate-x-5' : 'translate-x-0' }} pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
                             </button>
                         </div>
-                        
+
                         <!-- Per page dropdown with better spacing -->
                         <div class="w-full sm:w-32">
                             <select wire:model.live="perPage"
@@ -72,7 +75,7 @@
                                 <option value="100">100 per page</option>
                             </select>
                         </div>
-                        
+
                         <div class="w-full sm:w-auto">
                             <button wire:click="openModal"
                                 class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600">
@@ -252,16 +255,19 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                                    <td
+                                        class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         {{ $user->created_at->format('F d, Y h:i A') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm text-center">
-                                        @if($user->deleted_at)
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                        @if ($user->deleted_at)
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
                                                 Inactive
                                             </span>
                                         @else
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
                                                 Active
                                             </span>
                                         @endif
@@ -279,16 +285,16 @@
                                                     </path>
                                                 </svg>
                                             </button>
-                                            
-                                            @if($user->deleted_at)
+
+                                            @if ($user->deleted_at)
                                                 <!-- Restore button -->
                                                 <button
                                                     @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $user->uuid }}', name: '{{ $user->name }} {{ $user->last_name }}'}}))"
                                                     class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 focus:outline-none">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" 
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" 
-                                                            stroke-width="2" 
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
                                                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                                         </path>
                                                     </svg>
@@ -322,7 +328,8 @@
                 <!-- Pagination -->
                 <div class="mt-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
                     <div class="text-sm text-gray-700 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left">
-                        Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} entries
+                        Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of
+                        {{ $users->total() }} entries
                     </div>
                     <div class="w-full sm:w-auto flex justify-center sm:justify-end">
                         {{ $users->links() }}
@@ -416,7 +423,8 @@
                                 <!-- Información Personal -->
                                 <div class="mb-4">
                                     <label for="name"
-                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">First Name:</label>
+                                        class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">First
+                                        Name:</label>
                                     <input type="text" x-model="form.name"
                                         @input="
                                             let words = $event.target.value.toLowerCase().split(' ');
@@ -745,14 +753,13 @@
                             isDeleting = false;
                         });"
                         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                        :disabled="isDeleting"
-                        :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
+                        :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         <span x-show="!isDeleting">Delete</span>
                         <span x-show="isDeleting" class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor"
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                 </path>
@@ -762,8 +769,7 @@
                     </button>
                     <button type="button" @click="showDeleteModal = false; userToDelete = null;"
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        :disabled="isDeleting"
-                        :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
+                        :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
                 </div>
@@ -853,14 +859,13 @@
                             isRestoring = false;
                         });"
                         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-                        :disabled="isRestoring"
-                        :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
+                        :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         <span x-show="!isRestoring">Restore</span>
                         <span x-show="isRestoring" class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor"
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                 </path>
@@ -870,11 +875,44 @@
                     </button>
                     <button type="button" @click="showRestoreModal = false; userToRestore = null;"
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        :disabled="isRestoring"
-                        :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
+                        :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         Cancel
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard shortcuts help -->
+    <div id="keyboard-shortcuts"
+        class="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center hidden"
+        x-data="{ show: false }" x-show="show" x-on:keydown.escape.window="show = false">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full">
+            <h2 class="text-xl font-bold mb-4">Keyboard Shortcuts</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-center">
+                    <span class="px-2 py-1 border rounded mr-3 text-sm font-mono bg-gray-100">n</span>
+                    <span>Create new user</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="px-2 py-1 border rounded mr-3 text-sm font-mono bg-gray-100">f</span>
+                    <span>Focus search box</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="px-2 py-1 border rounded mr-3 text-sm font-mono bg-gray-100">Esc</span>
+                    <span>Close modal or clear search</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="px-2 py-1 border rounded mr-3 text-sm font-mono bg-gray-100">Del</span>
+                    <span>Delete selected user</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="px-2 py-1 border rounded mr-3 text-sm font-mono bg-gray-100">r</span>
+                    <span>Toggle show deleted users</span>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button @click="show = false" class="px-4 py-2 bg-gray-200 rounded">Close</button>
             </div>
         </div>
     </div>
