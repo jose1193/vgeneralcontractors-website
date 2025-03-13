@@ -551,17 +551,27 @@
                         <!-- Modal footer -->
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button type="submit"
-                                x-on:click="
+                                x-on:click.prevent="
                                 if (!isSubmitting && validateForm()) {
                                     isSubmitting = true;
-                                    $wire.save().then(() => {
-                                        isSubmitting = false;
-                                    }).catch(() => {
-                                        isSubmitting = false;
-                                    });
+                                    $wire.set('modalAction', modalAction);
+                                    if (modalAction === 'update') {
+                                        $wire.update().then(() => {
+                                            isSubmitting = false;
+                                        }).catch(() => {
+                                            isSubmitting = false;
+                                        });
+                                    } else {
+                                        $wire.store().then(() => {
+                                            isSubmitting = false;
+                                        }).catch(() => {
+                                            isSubmitting = false;
+                                        });
+                                    }
                                 }
                                 "
-                                @validation-failed.window="isSubmitting = false"
+                                @validation-failed.window="isSubmitting = false" :disabled="isSubmitting"
+                                :class="{ 'opacity-75 cursor-not-allowed': isSubmitting }"
                                 class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
                                 <svg x-show="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
