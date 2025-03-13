@@ -266,7 +266,7 @@
                                                     <svg class="h-3 w-3 mr-1" fill="currentColor"
                                                         viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd"
-                                                            d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
+                                                            d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 002 2h-2a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
                                                             clip-rule="evenodd"></path>
                                                     </svg>
                                                     {{ $emailData->type }}
@@ -287,7 +287,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $emailData->phone }}
+                                            {{ $this->formatPhoneForDisplay($emailData->phone) }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
