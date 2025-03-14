@@ -12,7 +12,11 @@ trait EmailDataFormatter
         if (!empty($formattedData['phone'])) {
             $numbers = preg_replace('/[^0-9]/', '', $formattedData['phone']);
             if (strlen($numbers) === 10) {
-                $formattedData['phone'] = '(' . substr($numbers, 0, 3) . ') ' . substr($numbers, 3, 3) . '-' . substr($numbers, 6, 4);
+                // Format as +1 followed by 10 digits
+                $formattedData['phone'] = '+1' . $numbers;
+            } elseif (strlen($numbers) === 11 && substr($numbers, 0, 1) === '1') {
+                // Already has country code, just add the + sign
+                $formattedData['phone'] = '+' . $numbers;
             }
         }
 
@@ -24,7 +28,7 @@ trait EmailDataFormatter
         if (empty($phone)) return '';
         $numbers = preg_replace('/[^0-9]/', '', $phone);
 
-        // Handle numbers with country code
+        // If number starts with country code, remove it for display
         if (strlen($numbers) === 11 && str_starts_with($numbers, '1')) {
             $numbers = substr($numbers, 1);
         }

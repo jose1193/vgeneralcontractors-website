@@ -372,9 +372,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         :class="{ 'border-red-500': errors.company_name }" placeholder="Enter company name">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.company_name" x-text="errors.company_name"></div>
-                                    @error('company_name')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4">
@@ -391,9 +389,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         :class="{ 'border-red-500': errors.name }" placeholder="Enter CEO name">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.name" x-text="errors.name"></div>
-                                    @error('name')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                    
                                 </div>
 
                                 <div class="mb-4">
@@ -404,9 +400,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         :class="{ 'border-red-500': errors.email }" placeholder="Enter email">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.email" x-text="errors.email"></div>
-                                    @error('email')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                    
                                 </div>
 
                                 <div class="mb-4">
@@ -417,9 +411,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                         :class="{ 'border-red-500': errors.phone }" placeholder="Enter phone (XXX) XXX-XXXX">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.phone" x-text="errors.phone"></div>
-                                    @error('phone')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                    
                                 </div>
 
                                 <div class="mb-4">
@@ -430,9 +422,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline uppercase"
                                         :class="{ 'border-red-500': errors.address }" placeholder="Enter address">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.address" x-text="errors.address"></div>
-                                    @error('address')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4">
@@ -444,9 +434,7 @@
                                         :class="{ 'border-red-500': errors.website }" placeholder="https://www.example.com">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.website" x-text="errors.website"></div>
                                     <span class="text-xs text-gray-500 mt-1">Enter URL starting with https:// or www.</span>
-                                    @error('website')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                    
                                 </div>
 
                                 <input type="hidden" x-model="form.latitude" wire:model="latitude" id="latitude">
@@ -477,8 +465,7 @@
                                 <span x-show="isSubmitting">Saving...</span>
                             </button>
                             <button type="button" wire:click="closeModal"
-                                class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                x-bind:disabled="isSubmitting">
+                                class="mr-3 hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600">
                                 Cancel
                             </button>
                         </div>
@@ -669,7 +656,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showRestoreModal = false; companyToRestore = null;"
-                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="mr-3 hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         Cancel
                     </button>

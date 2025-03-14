@@ -207,7 +207,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100">
                                             <a href="tel:{{ $emailData->phone }}">
-                                                {{ $emailData->phone ?? 'N/A' }}
+                                                {{ \App\Helpers\PhoneHelper::format($emailData->phone) ?? 'N/A' }}
                                             </a>
                                         </div>
                                     </td>
@@ -397,9 +397,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.description }" placeholder="Enter description">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.description" x-text="errors.description"></div>
-                                    @error('description')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4">
@@ -410,9 +408,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.email }" placeholder="Enter email">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.email" x-text="errors.email"></div>
-                                    @error('email')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4">
@@ -423,9 +419,7 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.phone }" placeholder="Enter phone (XXX) XXX-XXXX">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.phone" x-text="errors.phone"></div>
-                                    @error('phone')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4">
@@ -445,9 +439,7 @@
                                        
                                     </select>
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.type" x-text="errors.type"></div>
-                                    @error('type')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
 
                                 <div class="mb-4 col-span-1 md:col-span-2">
@@ -462,9 +454,7 @@
                                         @endforeach
                                     </select>
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.user_id" x-text="errors.user_id"></div>
-                                    @error('user_id')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+                                   
                                 </div>
                             </div>
                         </div>
@@ -592,7 +582,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showDeleteModal = false; emailToDelete = null;"
-                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
                         :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
@@ -687,7 +677,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showRestoreModal = false; emailToRestore = null;"
-                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="mr-3 hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         Cancel
                     </button>
