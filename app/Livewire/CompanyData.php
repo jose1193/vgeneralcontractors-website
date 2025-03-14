@@ -33,6 +33,7 @@ class CompanyData extends Component
     public $modalAction = 'store';
     public $isSubmitting = false;
     public $showDeleted = false; // New property to toggle deleted records
+    public $hasExistingCompany = false;
 
     protected $listeners = [
         'delete' => 'deleteCompany',
@@ -70,6 +71,8 @@ class CompanyData extends Component
         $companies = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
             return $this->getCompaniesQuery($searchTerm)->paginate($this->perPage);
         });
+
+        $this->hasExistingCompany = CompanyDataModel::exists();
 
         return view('livewire.company-data', [
             'companies' => $companies
@@ -118,6 +121,18 @@ class CompanyData extends Component
         
         try {
             $this->validate($this->getCreateValidationRules());
+
+            // Check if company already exists
+            $existingCompany = CompanyDataModel::where('company_name', $this->company_name)
+                ->orWhere('email', $this->email)
+                ->first();
+
+            if ($existingCompany) {
+                $this->isSubmitting = false;
+                session()->flash('error', 'A company with this name or email already exists.');
+                $this->dispatch('company-created-error');
+                return;
+            }
 
             \Log::info('Storing company data', [
                 'company_name' => $this->company_name,
