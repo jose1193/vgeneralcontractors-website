@@ -92,6 +92,9 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    NRO
+                                </th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" wire:click="sort('description')">
                                     <div class="flex items-center justify-center">
                                         DESCRIPTION
@@ -194,8 +197,13 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
-                            @forelse ($emailDatas as $emailData)
+                            @forelse ($emailDatas as $index => $emailData)
                                 <tr class="{{ $emailData->trashed() ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="text-sm text-gray-900 dark:text-gray-100">
+                                            {{ $index + 1 }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100 capitalize">
                                             {{ $emailData->description ?? 'N/A' }}
@@ -318,7 +326,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td class="px-6 py-4 text-center" colspan="7">No emails available</td>
+                                    <td class="px-6 py-4 text-center" colspan="8">No emails available</td>
                                 </tr>
                             @endforelse
                         </tbody>

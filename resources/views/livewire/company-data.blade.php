@@ -92,6 +92,9 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    NRO
+                                </th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" wire:click="sort('company_name')">
                                     <div class="flex items-center justify-center">
                                         COMPANY NAME
@@ -210,8 +213,13 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
-                            @forelse ($companies as $company)
+                            @forelse ($companies as $index => $company)
                                 <tr class="{{ $company->trashed() ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="text-sm text-gray-900 dark:text-gray-100">
+                                            {{ $index + 1 }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
                                             {{ $company->company_name }}
@@ -278,7 +286,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td class="px-6 py-4 text-center" colspan="8">No companies available</td>
+                                    <td class="px-6 py-4 text-center" colspan="9">No companies available</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -561,7 +569,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showDeleteModal = false; companyToDelete = null;"
-                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
