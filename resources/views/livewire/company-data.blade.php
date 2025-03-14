@@ -60,12 +60,18 @@
                             <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Inactive Companies</span>
                             <button type="button" wire:click="toggleShowDeleted"
                                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2  focus:ring-blue-500 focus:ring-offset-2"
-                                :class="{ 'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }}, 'bg-gray-200 dark:bg-gray-700':
-                                        !{{ $showDeleted ? 'true' : 'false' }} }">
+                                :class="{
+                                    'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }},
+                                    'bg-gray-200 dark:bg-gray-700':
+                                        !{{ $showDeleted ? 'true' : 'false' }}
+                                }">
                                 <span
                                     class="pointer-events-none  h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center"
-                                    :class="{ 'translate-x-5': {{ $showDeleted ? 'true' : 'false' }}, 'translate-x-0': !
-                                            {{ $showDeleted ? 'true' : 'false' }} }">
+                                    :class="{
+                                        'translate-x-5': {{ $showDeleted ? 'true' : 'false' }},
+                                        'translate-x-0': !
+                                            {{ $showDeleted ? 'true' : 'false' }}
+                                    }">
                                     <svg x-show="{{ $showDeleted ? 'true' : 'false' }}" class="h-4 w-4 text-blue-600"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">

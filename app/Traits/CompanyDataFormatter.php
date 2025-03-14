@@ -65,7 +65,7 @@ trait CompanyDataFormatter
         $rawPhone = preg_replace('/[^0-9]/', '', $phone);
         if (strlen($rawPhone) >= 10) {
             $rawPhone = substr($rawPhone, -10);
-            return sprintf("(%s) %s - %s",
+            return sprintf("(%s) %s-%s",
                 substr($rawPhone, 0, 3),
                 substr($rawPhone, 3, 3),
                 substr($rawPhone, 6)
