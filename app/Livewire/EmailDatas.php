@@ -390,19 +390,32 @@ class EmailDatas extends Component
         $this->clearEmailCache();
     }
 
-    public function formatPhoneForDisplay($phone)
+    public function updatedSearch()
     {
-        if (empty($phone)) return '';
-        $numbers = preg_replace('/[^0-9]/', '', $phone);
-        
-        // Handle numbers with country code
-        if (strlen($numbers) === 11 && str_starts_with($numbers, '1')) {
-            $numbers = substr($numbers, 1);
-        }
-        
-        if (strlen($numbers) === 10) {
-            return '(' . substr($numbers, 0, 3) . ') ' . substr($numbers, 3, 3) . '-' . substr($numbers, 6, 4);
-        }
-        return $phone;
+        $this->resetPage();
     }
-} 
+
+    public function updatedEmail()
+    {
+        $emailRule = ['required', 'string', 'email', 'max:255'];
+        if ($this->uuid) {
+            $emailRule[] = Rule::unique('email_data', 'email')->ignore($this->uuid, 'uuid');
+        } else {
+            $emailRule[] = Rule::unique('email_data', 'email');
+        }
+        $this->validateOnly('email', ['email' => $emailRule]);
+    }
+
+    public function updatedPhone()
+    {
+        if (empty($this->phone)) return;
+
+        $phoneRule = ['required', 'string', 'max:20'];
+        if ($this->uuid) {
+            $phoneRule[] = Rule::unique('email_data', 'phone')->ignore($this->uuid, 'uuid');
+        } else {
+            $phoneRule[] = Rule::unique('email_data', 'phone');
+        }
+        $this->validateOnly('phone', ['phone' => $phoneRule]);
+    }
+}
