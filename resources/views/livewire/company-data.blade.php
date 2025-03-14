@@ -47,9 +47,9 @@
                     <div class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show deleted companies -->
 <div class="flex items-center w-full sm:w-auto justify-between sm:justify-start">
-    <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Deleted Companies</span>
+    <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Inactive Companies</span>
     <button type="button" wire:click="toggleShowDeleted"
-        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-2"
         :class="{ 'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }}, 'bg-gray-200 dark:bg-gray-700': !{{ $showDeleted ? 'true' : 'false' }} }">
         <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center"
             :class="{ 'translate-x-5': {{ $showDeleted ? 'true' : 'false' }}, 'translate-x-0': !{{ $showDeleted ? 'true' : 'false' }} }">
@@ -477,7 +477,8 @@
                                 <span x-show="isSubmitting">Saving...</span>
                             </button>
                             <button type="button" wire:click="closeModal"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-10 sm:w-auto sm:text-sm mr-3">
+                                class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                x-bind:disabled="isSubmitting">
                                 Cancel
                             </button>
                         </div>
@@ -573,7 +574,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showDeleteModal = false; companyToDelete = null;"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
@@ -668,7 +669,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showRestoreModal = false; companyToRestore = null;"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         Cancel
                     </button>
