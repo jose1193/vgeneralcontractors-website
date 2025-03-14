@@ -114,6 +114,8 @@ class CompanyData extends Component
 
     public function store()
     {
+        $this->isSubmitting = true;
+        
         try {
             $this->validate($this->getCreateValidationRules());
 
@@ -148,9 +150,11 @@ class CompanyData extends Component
             $this->dispatch('refreshComponent');
             $this->dispatch('company-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->isSubmitting = false;
             $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
+            $this->isSubmitting = false;
             \Log::error('Error creating company', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -158,6 +162,8 @@ class CompanyData extends Component
             session()->flash('error', 'Error creating company: ' . $e->getMessage());
             $this->dispatch('company-created-error');
         }
+        
+        $this->isSubmitting = false;
     }
 
     public function edit($id)
@@ -201,6 +207,8 @@ class CompanyData extends Component
 
     public function update()
     {
+        $this->isSubmitting = true;
+        
         try {
             $this->validate($this->getUpdateValidationRules());
 
@@ -231,9 +239,11 @@ class CompanyData extends Component
             $this->dispatch('refreshComponent');
             $this->dispatch('company-updated-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->isSubmitting = false;
             $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
+            $this->isSubmitting = false;
             \Log::error('Error updating company', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -241,6 +251,8 @@ class CompanyData extends Component
             session()->flash('error', 'Error updating company: ' . $e->getMessage());
             $this->dispatch('company-updated-error');
         }
+        
+        $this->isSubmitting = false;
     }
 
     public function deleteCompany($id)
