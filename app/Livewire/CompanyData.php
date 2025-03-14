@@ -8,50 +8,89 @@ use Livewire\WithPagination;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\CompanyValidation;
-use App\Traits\CompanyCache;
 use App\Traits\CompanyDataFormatter;
+use App\Traits\CompanyCache;
+use App\Traits\KeyboardShortcuts;
 
 class CompanyData extends Component
 {
     use WithPagination;
     use CompanyValidation;
-    use CompanyCache;
     use CompanyDataFormatter;
-
-    protected $paginationTheme = 'tailwind';
+    use CompanyCache;
+    use KeyboardShortcuts;
 
     public $company_name, $name, $signature_path, $email, $phone, $address, $website, $latitude, $longitude;
-    public $isOpen = false;
-    public $modalTitle = 'Create Company Data';
-    public $companyId;
+    public $uuid, $companyId;
     public $search = '';
-    public $isSubmitting = false;
+    public $perPage = 10;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 10;
+    public $page = 1;
+    public $isOpen = false;
+    public $modalTitle = 'Create Company Data';
+    public $modalAction = 'store';
+    public $isSubmitting = false;
+    public $showDeleted = false; // New property to toggle deleted records
 
     protected $listeners = [
+        'delete' => 'deleteCompany',
+        'restore', // Add restore listener
         'refreshComponent' => '$refresh'
     ];
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+        'sortField' => ['except' => 'created_at'],
+        'sortDirection' => ['except' => 'desc'],
+        'perPage' => ['except' => 10],
+        'showDeleted' => ['except' => false] // Add to query string
+    ];
+
+    protected $significantDataChange = false;
+
+    protected function rules()
+    {
+        return $this->getCompanyValidationRules();
+    }
+
+    public function mount()
+    {
+        $this->resetPage();
+        $this->mountKeyboardShortcuts();
+    }
 
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
-        
-        // Use the cache key generator from the trait
         $cacheKey = $this->generateCompanyCacheKey();
         
         $companies = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
-            return CompanyDataModel::where('company_name', 'like', $searchTerm)
-                ->orWhere('name', 'like', $searchTerm)
-                ->orWhere('email', 'like', $searchTerm)
-                ->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
+            return $this->getCompaniesQuery($searchTerm)->paginate($this->perPage);
         });
-        
+
         return view('livewire.company-data', [
             'companies' => $companies
         ]);
+    }
+
+    protected function getCompaniesQuery($searchTerm)
+    {
+        $query = CompanyDataModel::query();
+        
+        if ($this->showDeleted) {
+            $query->withTrashed(); // Include soft-deleted records
+        }
+
+        $query->where(function ($query) use ($searchTerm) {
+            $query->where('company_name', 'like', $searchTerm)
+                ->orWhere('name', 'like', $searchTerm)
+                ->orWhere('email', 'like', $searchTerm);
+        })
+        ->orderBy($this->sortField, $this->sortDirection);
+
+        return $query;
     }
 
     public function sort($field)
@@ -67,47 +106,105 @@ class CompanyData extends Component
     public function create()
     {
         $this->resetInputFields();
+        $this->modalTitle = 'Create New Company';
+        $this->modalAction = 'store';
         $this->openModal();
-    }
-
-    public function openModal()
-    {
-        $this->isOpen = true;
-    }
-
-    public function closeModal()
-    {
-        $this->isOpen = false;
-    }
-
-    private function resetInputFields()
-    {
-        $this->company_name = '';
-        $this->name = '';
-        $this->signature_path = '';
-        $this->email = '';
-        $this->phone = '';
-        $this->address = '';
-        $this->website = '';
-        $this->latitude = '';
-        $this->longitude = '';
-        $this->companyId = '';
-        $this->isSubmitting = false;
     }
 
     public function store()
     {
         try {
-            // Use validation trait
-            $this->validate($this->getCompanyValidationRules());
+            $this->validate($this->getCreateValidationRules());
 
-            \Log::info('Attempting to save company data', [
-                'company_id' => $this->companyId,
+            \Log::info('Storing company data', [
                 'company_name' => $this->company_name,
-                'action' => $this->companyId ? 'update' : 'create'
+                'email' => $this->email
             ]);
 
-            // Prepare data
+            $data = [
+                'uuid' => Uuid::uuid4()->toString(),
+                'company_name' => $this->company_name,
+                'name' => $this->name,
+                'signature_path' => $this->signature_path,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'website' => $this->website,
+                'latitude' => $this->latitude ?: null,
+                'longitude' => $this->longitude ?: null,
+                'user_id' => auth()->id()
+            ];
+
+            $formattedData = $this->formatCompanyData($data);
+            $company = CompanyDataModel::create($formattedData);
+            
+            $this->significantDataChange = true;
+            $this->clearCompanyCache();
+
+            session()->flash('message', 'Company Data Created Successfully.');
+            $this->closeModal();
+            $this->resetInputFields();
+            $this->dispatch('refreshComponent');
+            $this->dispatch('company-created-success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Error creating company', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            session()->flash('error', 'Error creating company: ' . $e->getMessage());
+            $this->dispatch('company-created-error');
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $company = CompanyDataModel::findOrFail($id);
+            $this->companyId = $id;
+            $this->uuid = $company->uuid;
+            $this->company_name = $company->company_name;
+            $this->name = $company->name;
+            $this->signature_path = $company->signature_path;
+            $this->email = $company->email;
+            $this->phone = $this->formatPhoneForDisplay($company->phone);
+            $this->address = $company->address;
+            $this->website = $company->website;
+            $this->latitude = $company->latitude;
+            $this->longitude = $company->longitude;
+
+            $this->modalTitle = 'Edit Company: ' . $company->company_name;
+            $this->modalAction = 'update';
+            $this->openModal();
+
+            $this->dispatch('company-edit', [
+                'company_name' => $this->company_name,
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'website' => $this->website
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error loading company data', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            session()->flash('error', 'Error loading company data: ' . $e->getMessage());
+            $this->dispatch('company-edit-error');
+        }
+    }
+
+    public function update()
+    {
+        try {
+            $this->validate($this->getUpdateValidationRules());
+
+            $company = CompanyDataModel::findOrFail($this->companyId);
+
             $data = [
                 'company_name' => $this->company_name,
                 'name' => $this->name,
@@ -121,84 +218,27 @@ class CompanyData extends Component
                 'user_id' => auth()->id()
             ];
 
-            // Add UUID if creating a new company
-            if (!$this->companyId) {
-                $data['uuid'] = Uuid::uuid4()->toString();
-            }
-
-            // Format data using trait
             $formattedData = $this->formatCompanyData($data);
-            
-            CompanyDataModel::updateOrCreate(
-                ['id' => $this->companyId],
-                $formattedData
-            );
+            $company->update($formattedData);
 
-            // Clear cache using trait
+            $this->significantDataChange = true;
             $this->clearCompanyCache();
 
-            \Log::info('Company data saved successfully', [
-                'company_id' => $this->companyId,
-                'company_name' => $this->company_name
-            ]);
-
-            session()->flash('message', 
-                $this->companyId ? 'Company Data Updated Successfully.' : 'Company Data Created Successfully.');
-
+            session()->flash('message', 'Company Data Updated Successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            $this->dispatch('refreshComponent');
+            $this->dispatch('company-updated-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
-            $this->dispatch('validation-failed');
-            \Log::error('Error saving company data', [
-                'company_id' => $this->companyId,
-                'company_name' => $this->company_name,
+            \Log::error('Error updating company', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
-            session()->flash('error', 'Error saving company data: ' . $e->getMessage());
-        }
-    }
-
-    public function edit($id)
-    {
-        try {
-            \Log::info('Attempting to edit company', ['id' => $id]);
-            
-            $company = CompanyDataModel::findOrFail($id);
-            $this->companyId = $id;
-            $this->company_name = $company->company_name;
-            $this->name = $company->name;
-            $this->signature_path = $company->signature_path;
-            $this->email = $company->email;
-            
-            // Format phone using trait method
-            $this->phone = $this->formatPhoneForDisplay($company->phone);
-            
-            $this->address = $company->address;
-            $this->website = $company->website;
-            $this->latitude = $company->latitude;
-            $this->longitude = $company->longitude;
-            $this->modalTitle = 'Edit Company Data';
-            
-            $this->openModal();
-            $this->dispatch('company-edit')->self();
-            
-            \Log::info('Company data loaded for editing', [
-                'id' => $id, 
-                'company_name' => $company->company_name
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error loading company for edit', [
-                'id' => $id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            session()->flash('error', 'Error loading company data: ' . $e->getMessage());
+            session()->flash('error', 'Error updating company: ' . $e->getMessage());
+            $this->dispatch('company-updated-error');
         }
     }
 
@@ -208,25 +248,25 @@ class CompanyData extends Component
             \Log::info('Attempting to delete company', ['id' => $id]);
             
             $company = CompanyDataModel::findOrFail($id);
+            
+            \Log::info('Found company to delete', [
+                'id' => $id,
+                'company_name' => $company->company_name,
+                'email' => $company->email
+            ]);
+            
             $company->delete();
             
-            // Clear cache using trait
             $this->clearCompanyCache();
-            
-            \Log::info('Company deleted successfully', ['id' => $id]);
-            
             session()->flash('message', 'Company deleted successfully.');
             $this->dispatch('companyDeleted');
-            return ['success' => true];
         } catch (\Exception $e) {
             \Log::error('Error deleting company', [
                 'id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
             session()->flash('error', 'Error deleting company: ' . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -235,43 +275,103 @@ class CompanyData extends Component
         try {
             \Log::info('Attempting to restore company', ['id' => $id]);
             
-            // Find the company with trashed records
             $company = CompanyDataModel::withTrashed()->findOrFail($id);
             
-            if (!$company) {
-                \Log::warning('Company not found for restoration', ['id' => $id]);
-                session()->flash('error', 'Company not found.');
-                return ['success' => false, 'error' => 'Company not found.'];
+            if (!$company->trashed()) {
+                \Log::warning('Company is not deleted', ['id' => $id]);
+                session()->flash('error', 'Company is not deleted.');
+                return;
             }
             
             \Log::info('Found company to restore', [
                 'id' => $id,
-                'company_name' => $company->company_name
+                'company_name' => $company->company_name,
+                'email' => $company->email
             ]);
             
-            // Perform the restoration
-            $restored = $company->restore();
+            $company->restore();
             
-            \Log::info('Company restoration result', [
-                'id' => $id,
-                'restored' => $restored ? 'success' : 'failed'
-            ]);
-            
-            // Clear cache using trait
             $this->clearCompanyCache();
-            
             session()->flash('message', 'Company restored successfully.');
             $this->dispatch('companyRestored');
-            return ['success' => true];
         } catch (\Exception $e) {
             \Log::error('Error restoring company', [
                 'id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
             session()->flash('error', 'Error restoring company: ' . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
         }
+    }
+
+    public function openModal()
+    {
+        $this->isOpen = true;
+        $this->dispatch('company-edit', [
+            'company_name' => $this->company_name,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'website' => $this->website,
+            'action' => $this->modalAction
+        ]);
+    }
+
+    public function closeModal()
+    {
+        $this->isOpen = false;
+        if ($this->modalAction !== 'update') {
+            $this->resetInputFields();
+        }
+        $this->resetValidation();
+        $this->dispatch('company-edit');
+    }
+
+    private function resetInputFields()
+    {
+        $this->reset([
+            'companyId', 'uuid', 'company_name', 'name', 'signature_path',
+            'email', 'phone', 'address', 'website', 'latitude', 'longitude',
+            'isSubmitting'
+        ]);
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedEmail()
+    {
+        $emailRule = ['required', 'string', 'email', 'max:255'];
+        if ($this->companyId) {
+            $emailRule[] = Rule::unique('company_data', 'email')->ignore($this->companyId);
+        } else {
+            $emailRule[] = Rule::unique('company_data', 'email');
+        }
+        $this->validateOnly('email', ['email' => $emailRule]);
+    }
+
+    public function updatedPhone()
+    {
+        if (empty($this->phone)) return;
+        
+        $phoneRule = ['required', 'string', 'max:20'];
+        if ($this->companyId) {
+            $phoneRule[] = Rule::unique('company_data', 'phone')->ignore($this->companyId);
+        } else {
+            $phoneRule[] = Rule::unique('company_data', 'phone');
+        }
+        $this->validateOnly('phone', ['phone' => $phoneRule]);
+    }
+
+    public function toggleShowDeleted()
+    {
+        $this->showDeleted = !$this->showDeleted;
+        $this->resetPage();
+        $this->clearCompanyCache();
     }
 }
