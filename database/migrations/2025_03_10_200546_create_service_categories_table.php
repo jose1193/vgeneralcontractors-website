@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('service_categories', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('name');
-            $table->string('slug')->unique();
+            
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            
             $table->enum('type', [
                 'Roof Repair',
                 'New Roof',

@@ -14,10 +14,9 @@ class ServiceCategory extends Model
 
     protected $fillable = [
         'uuid',
-        'name',
-        'slug',
+        
         'description',
-        'image',
+        
         'type',
         'status',
         'user_id'
@@ -37,11 +36,7 @@ class ServiceCategory extends Model
         });
     }
 
-    public function portfolios(): HasMany
-    {
-        return $this->hasMany(Portfolio::class);
-    }
-
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

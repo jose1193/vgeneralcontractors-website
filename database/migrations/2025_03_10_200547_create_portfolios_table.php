@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('image');
-            $table->json('additional_images')->nullable();
+            $table->string('order')->nullable();
             $table->string('status')->default('active');
-            $table->foreignId('service_category_id')->constrained('service_categories')->onUpdate('cascade')->onDelete('cascade');
+           
             $table->foreignId('project_type_id')->nullable()->constrained('project_types')->onUpdate('cascade')->onDelete('set null');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

@@ -47,9 +47,9 @@
                     <div class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show deleted emails -->
                         <div class="flex items-center w-full sm:w-auto justify-between sm:justify-start">
-                            <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Deleted Emails</span>
+                            <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Inactive Emails</span>
                             <button type="button" wire:click="toggleShowDeleted"
-                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-2"
                                 :class="{ 'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }}, 'bg-gray-200 dark:bg-gray-700': !{{ $showDeleted ? 'true' : 'false' }} }">
                                 <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center"
                                     :class="{ 'translate-x-5': {{ $showDeleted ? 'true' : 'false' }}, 'translate-x-0': !{{ $showDeleted ? 'true' : 'false' }} }">
@@ -197,8 +197,8 @@
                             @forelse ($emailDatas as $emailData)
                                 <tr class="{{ $emailData->trashed() ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
-                                            {{ $emailData->description }}
+                                        <div class="text-sm text-gray-900 dark:text-gray-100 capitalize">
+                                            {{ $emailData->description ?? 'N/A' }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -207,7 +207,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100">
                                             <a href="tel:{{ $emailData->phone }}">
-                                                {{ \App\Helpers\PhoneHelper::format($emailData->phone) }}
+                                                {{ $emailData->phone ?? 'N/A' }}
                                             </a>
                                         </div>
                                     </td>
@@ -217,10 +217,69 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         {{ $emailData->created_at->format('F d, Y h:i A') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+    @if ($emailData->type == 'Collections' || $emailData->type == 'collections')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Info' || $emailData->type == 'info')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Appointment' || $emailData->type == 'appointment')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Personal' || $emailData->type == 'personal')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-yellow-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Work' || $emailData->type == 'work')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-orange-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3 1h10v2H5V6zm0 4h10v2H5v-2zm0 4h10v2H5v-2z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Business' || $emailData->type == 'business')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 4h8a1 1 0 110 2H6a1 1 0 110-2zm0 4h8a1 1 0 110 2H6a1 1 0 110-2z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @elseif ($emailData->type == 'Other' || $emailData->type == 'other')
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @else
+        <span class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-500 text-white">
+            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+            </svg>
+            {{ $emailData->type }}
+        </span>
+    @endif
+</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         @if ($emailData->trashed())
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
-                                                Deleted
+                                                Inactive
                                             </span>
                                         @else
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
@@ -239,7 +298,7 @@
 
                                             @if ($emailData->trashed())
                                                 <!-- Restore button -->
-                                                <button @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $emailData->uuid }}', description: '{{ addslashes($emailData->description) }}'}}))"
+                                                <button @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $emailData->uuid }}', email: '{{ addslashes($emailData->email) }}'}}))"
                                                     class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 focus:outline-none">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -247,7 +306,7 @@
                                                 </button>
                                             @else
                                                 <!-- Delete button -->
-                                                <button @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $emailData->uuid }}', description: '{{ addslashes($emailData->description) }}'}}))"
+                                                <button @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $emailData->uuid }}', email: '{{ addslashes($emailData->email) }}'}}))"
                                                     class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 focus:outline-none">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -333,14 +392,14 @@
                                 <div class="mb-4">
                                     <label for="description" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Description:</label>
                                     <input type="text" x-model="form.description"
-                                        @input="
-                                            $wire.set('description', $event.target.value);
-                                            validateField('description');
-                                        "
+                                        @input="$wire.set('description', $event.target.value); validateField('description');"
                                         id="description"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.description }" placeholder="Enter description">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.description" x-text="errors.description"></div>
+                                    @error('description')
+                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-4">
@@ -348,9 +407,12 @@
                                     <input type="email" x-model="form.email"
                                         @input="$wire.set('email', $event.target.value); validateEmail($event.target.value);"
                                         @blur="checkEmailAvailability($event.target.value)" id="email"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.email }" placeholder="Enter email">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.email" x-text="errors.email"></div>
+                                    @error('email')
+                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-4">
@@ -358,67 +420,85 @@
                                     <input type="tel" x-model="form.phone" @input="formatPhone($event);"
                                         @blur="validatePhone($event.target.value); checkPhoneAvailability($event.target.value);"
                                         id="phone"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.phone }" placeholder="Enter phone (XXX) XXX-XXXX">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.phone" x-text="errors.phone"></div>
+                                    @error('phone')
+                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="type" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Type:</label>
-                                    <input type="text" x-model="form.type"
-                                        @input="
-                                            $wire.set('type', $event.target.value);
-                                            validateField('type');
-                                        "
+                                    <select x-model="form.type" @change="$wire.set('type', $event.target.value); validateField('type');"
                                         id="type"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        :class="{ 'border-red-500': errors.type }" placeholder="Enter type">
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
+                                        :class="{ 'border-red-500': errors.type }">
+                                        <option value="">Select Type</option>
+                                        <option value="Appointment">Appointment</option>
+                                        <option value="Info">Info</option>
+                                        <option value="Collections">Collections</option>
+                                        <option value="Personal">Personal</option>
+                                        <option value="Work">Work</option>
+                                        <option value="Business">Business</option>
+                                        <option value="Other">Other</option>
+                                       
+                                    </select>
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.type" x-text="errors.type"></div>
+                                    @error('type')
+                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="mb-4 col-span-1 md:col-span-2">
                                     <label for="user_id" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">User:</label>
-                                    <select x-model="form.user_id"
-                                        @change="$wire.set('user_id', $event.target.value); validateField('user_id');"
+                                    <select x-model="form.user_id" @change="$wire.set('user_id', $event.target.value); validateField('user_id');"
                                         id="user_id"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
                                         :class="{ 'border-red-500': errors.user_id }">
-                                        <option value="">Select a user</option>
+                                        <option value="">Select User</option>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
                                     </select>
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.user_id" x-text="errors.user_id"></div>
+                                    @error('user_id')
+                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
 
                         <!-- Modal footer -->
                         <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit"
-                                x-on:click="
-                                    if (!isSubmitting && validateForm()) {
-                                        isSubmitting = true;
-                                        $wire.{{ $modalAction }}().then(() => {
-                                            isSubmitting = false;
-                                        }).catch(() => {
-                                            isSubmitting = false;
-                                        });
-                                    }
-                                "
-                                @validation-failed.window="isSubmitting = false"
-                                class="sm:w-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600">
-                                <svg x-show="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                <span x-show="!isSubmitting">{{ $modalAction === 'store' ? 'Create' : 'Update' }}</span>
-                                <span x-show="isSubmitting">Saving...</span>
-                            </button>
-                            <button type="button" wire:click="closeModal"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-10 sm:w-auto sm:text-sm mr-3">
-                                Cancel
-                            </button>
+                        <button type="submit"
+    x-on:click="
+        if (!isSubmitting && validateForm()) {
+            isSubmitting = true;
+            $wire.{{ $modalAction }}().then(() => {
+                isSubmitting = false;
+            }).catch(() => {
+                isSubmitting = false;
+            });
+        }
+    "
+    @validation-failed.window="isSubmitting = false"
+    :disabled="isSubmitting"
+    class="sm:w-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600"
+    :class="{ 'opacity-75 cursor-not-allowed': isSubmitting }">
+    <svg x-show="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <span x-show="!isSubmitting">{{ $modalAction === 'store' ? 'Create' : 'Update' }}</span>
+    <span x-show="isSubmitting">Saving...</span>
+</button>
+<button type="button" wire:click="closeModal"
+    class="mr-3 hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+    x-bind:disabled="isSubmitting"
+    :class="{ 'opacity-75 cursor-not-allowed': isSubmitting }">
+    Cancel
+</button>
                         </div>
                     </form>
                 </div>
@@ -481,7 +561,7 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500 dark:text-gray-400" x-show="emailToDelete">
-                                    Are you sure you want to delete the email <span class="font-bold" x-text="emailToDelete?.description"></span>? This action will soft delete the email.
+                                    Are you sure you want to delete the email <span class="font-bold" x-text="emailToDelete?.email"></span>? This action will soft delete the email.
                                 </p>
                             </div>
                         </div>
@@ -492,7 +572,7 @@
                     <button type="button"
                         x-on:click="
                             isDeleting = true;
-                            @this.delete(emailToDelete.uuid).then(() => {
+                            @this.deleteEmail(emailToDelete.uuid).then(() => {
                                 showDeleteModal = false;
                                 isDeleting = false;
                             }).catch(error => {
@@ -512,7 +592,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showDeleteModal = false; emailToDelete = null;"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
                         Cancel
                     </button>
@@ -576,7 +656,7 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500 dark:text-gray-400" x-show="emailToRestore">
-                                    Are you sure you want to restore the email <span class="font-bold" x-text="emailToRestore?.description"></span>? This action will reactivate the email.
+                                    Are you sure you want to restore the email <span class="font-bold" x-text="emailToRestore?.email"></span>? This action will reactivate the email.
                                 </p>
                             </div>
                         </div>
@@ -587,7 +667,7 @@
                     <button type="button"
                         x-on:click="
                             isRestoring = true;
-                            @this.restore(emailToRestore.uuid).then(() => {
+                            @this.restoreEmail(emailToRestore.uuid).then(() => {
                                 showRestoreModal = false;
                                 isRestoring = false;
                             }).catch(error => {
@@ -607,7 +687,7 @@
                         </span>
                     </button>
                     <button type="button" @click="showRestoreModal = false; emailToRestore = null;"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        class="hidden lg:inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                         :disabled="isRestoring" :class="{ 'opacity-75 cursor-not-allowed': isRestoring }">
                         Cancel
                     </button>
@@ -703,12 +783,7 @@
 
                 validatePhone(phone) {
                     this.errors.phone = '';
-                    if (!phone) {
-                        this.errors.phone = 'Phone is required';
-                        return false;
-                    }
-
-                    if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
+                    if (phone && !/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
                         this.errors.phone = 'Please enter a valid phone number format: (XXX) XXX-XXXX';
                         return false;
                     }
@@ -720,7 +795,7 @@
 
                     this.$wire.checkPhoneExists(phone).then(exists => {
                         if (exists) {
-                            this.errors.phone = 'This Phone is already taken';
+                            this.errors.phone = 'This phone number is already in use';
                         }
                     });
                 },
@@ -730,8 +805,8 @@
 
                     switch (field) {
                         case 'description':
-                            if (!this.form.description) {
-                                this.errors.description = 'Description is required';
+                            if (this.form.description && this.form.description.length > 255) {
+                                this.errors.description = 'Description must not exceed 255 characters';
                                 return false;
                             }
                             return true;

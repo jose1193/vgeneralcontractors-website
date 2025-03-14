@@ -16,10 +16,10 @@ class Portfolio extends Model
         'title',
         'description',
         'image',
-        'additional_images',
+       
         'order',
         'status',
-        'service_category_id',
+        
         'project_type_id',
         'user_id'
     ];
@@ -38,10 +38,7 @@ class Portfolio extends Model
         });
     }
 
-    public function serviceCategory(): BelongsTo
-    {
-        return $this->belongsTo(ServiceCategory::class);
-    }
+    
 
     public function projectType(): BelongsTo
     {
