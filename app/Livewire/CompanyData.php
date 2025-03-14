@@ -11,6 +11,7 @@ use App\Traits\CompanyValidation;
 use App\Traits\CompanyDataFormatter;
 use App\Traits\CompanyCache;
 use App\Traits\KeyboardShortcuts;
+use Illuminate\Validation\Rule;
 
 class CompanyData extends Component
 {
