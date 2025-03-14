@@ -135,10 +135,31 @@ class Users extends Component
 
     public function create()
     {
+        // Asegurarse de que todos los campos estén limpios
         $this->resetInputFields();
+        
+        // Establecer el título y la acción del modal
         $this->modalTitle = 'Create New User';
         $this->modalAction = 'store';
-        $this->openModal();
+        
+        // Abrir el modal
+        $this->isOpen = true;
+        
+        // Emitir evento para actualizar Alpine.js
+        $this->dispatch('user-edit', [
+            'name' => '',
+            'last_name' => '',
+            'email' => '',
+            'username' => '',
+            'phone' => '',
+            'address' => '',
+            'zip_code' => '',
+            'city' => '',
+            'country' => '',
+            'gender' => '',
+            'date_of_birth' => '',
+            'action' => 'store'
+        ]);
     }
 
     public function store()
@@ -306,13 +327,15 @@ class Users extends Component
                 'city' => $this->city,
                 'country' => $this->country,
                 'gender' => $this->gender,
-                'date_of_birth' => $this->date_of_birth
+                'date_of_birth' => $this->date_of_birth,
+                'action' => 'update'
             ]);
             
             \Log::info('User data loaded successfully', [
                 'uuid' => $this->uuid,
                 'name' => $this->name,
-                'email' => $this->email
+                'email' => $this->email,
+                'username' => $this->username
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [
