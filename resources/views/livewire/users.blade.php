@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Success and error messages -->
         @if (session()->has('message'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)"
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 14000)"
                 class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                 role="alert">
                 <span class="block sm:inline">{{ session('message') }}</span>
@@ -460,14 +460,20 @@
                                         Name:</label>
                                     <input type="text" x-model="form.name"
                                         @input="
+                                            validateField('name');
+                                            // Only allow letters and spaces
+                                            $event.target.value = $event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                                            // Capitalize first letter of each word
                                             let words = $event.target.value.toLowerCase().split(' ');
                                             words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
                                             $event.target.value = words.join(' ');
+                                            form.name = $event.target.value;
                                             $wire.set('name', $event.target.value);
                                         "
-                                        id="name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        @blur="validateField('name')"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 dark:focus:border-blue-600"
                                         :class="{ 'border-red-500': errors.name }" placeholder="Enter first name">
+                                    <div class="text-red-500 text-xs mt-1" x-show="errors.name" x-text="errors.name"></div>
                                     @error('name')
                                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                                     @enderror
@@ -479,14 +485,20 @@
                                         Name:</label>
                                     <input type="text" x-model="form.last_name"
                                         @input="
+                                            validateField('last_name');
+                                            // Only allow letters and spaces
+                                            $event.target.value = $event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                                            // Capitalize first letter of each word
                                             let words = $event.target.value.toLowerCase().split(' ');
                                             words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
                                             $event.target.value = words.join(' ');
+                                            form.last_name = $event.target.value;
                                             $wire.set('last_name', $event.target.value);
                                         "
-                                        id="last_name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        @blur="validateField('last_name')"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 dark:focus:border-blue-600"
                                         :class="{ 'border-red-500': errors.last_name }" placeholder="Enter last name">
+                                    <div class="text-red-500 text-xs mt-1" x-show="errors.last_name" x-text="errors.last_name"></div>
                                     @error('last_name')
                                         <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                                     @enderror
@@ -756,8 +768,8 @@
                     <div class="sm:flex sm:items-start">
                         <div
                             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                 </path>
@@ -1161,11 +1173,45 @@
                         }
                     });
                 },
+                validateName(name) {
+                    this.errors.name = '';
+                    if (!name) {
+                        this.errors.name = 'First name is required';
+                        return false;
+                    }
+                    
+                    // Check if name contains only letters and spaces
+                    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u.test(name)) {
+                        this.errors.name = 'First name should only contain letters and spaces';
+                        return false;
+                    }
+                    
+                    return true;
+                },
+                validateLastName(lastName) {
+                    this.errors.last_name = '';
+                    if (!lastName) {
+                        this.errors.last_name = 'Last name is required';
+                        return false;
+                    }
+                    
+                    // Check if lastName contains only letters and spaces
+                    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u.test(lastName)) {
+                        this.errors.last_name = 'Last name should only contain letters and spaces';
+                        return false;
+                    }
+                    
+                    return true;
+                },
                 clearErrors() {
                     this.errors = {};
                 },
                 validateField(field) {
                     switch (field) {
+                        case 'name':
+                            return this.validateName(this.form.name);
+                        case 'last_name':
+                            return this.validateLastName(this.form.last_name);
                         case 'email':
                             return this.validateEmail(this.form.email);
                         case 'phone':
@@ -1181,12 +1227,14 @@
                     let isValid = true;
 
                     // Validate required fields
+                    if (!this.validateName(this.form.name)) isValid = false;
+                    if (!this.validateLastName(this.form.last_name)) isValid = false;
                     if (!this.validateEmail(this.form.email)) isValid = false;
                     if (this.form.phone && !this.validatePhone(this.form.phone)) isValid = false;
 
                     // Only validate username in update mode
                     if (this.modalAction === 'update' && !this.validateUsername(this.form.username)) isValid = false;
-
+                    
                     // Sync with Livewire if valid
                     if (isValid) {
                         this.syncToLivewire();

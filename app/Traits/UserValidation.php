@@ -14,8 +14,8 @@ trait UserValidation
     protected function getUserValidationRules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+            'last_name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'username' => ['required', 'string', 'min:7', 'max:255', 'regex:/^.*[0-9].*[0-9].*$/',
                 Rule::unique('users', 'username')->ignore($this->uuid, 'uuid')],
             'date_of_birth' => 'nullable|date',
@@ -44,8 +44,8 @@ trait UserValidation
     protected function getCreateValidationRules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+            'last_name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'email' => ['required', 'string', 'email', 'max:255', 
                 Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
             'phone' => ['nullable', 'string', 'max:20',
@@ -59,8 +59,8 @@ trait UserValidation
     protected function getUpdateValidationRules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+            'last_name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'email' => ['required', 'string', 'email', 'max:255', 
                 Rule::unique('users', 'email')->ignore($this->uuid, 'uuid')],
             'username' => ['required', 'string', 'min:7', 'max:255', 'regex:/^.*[0-9].*[0-9].*$/',
@@ -75,4 +75,4 @@ trait UserValidation
             'gender' => 'nullable|string|in:male,female,other',
         ];
     }
-} 
+}

@@ -281,97 +281,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm text-gray-900 dark:text-gray-100 capitalize">
-                                            {{ $emailData->type }}</div>
+                                            {{ $emailData->type ?? 'N/A' }}
+                                        </div>
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         {{ $emailData->created_at->format('F d, Y h:i A') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        @if ($emailData->type == 'Collections' || $emailData->type == 'collections')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Info' || $emailData->type == 'info')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Appointment' || $emailData->type == 'appointment')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-green-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Personal' || $emailData->type == 'personal')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-yellow-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Work' || $emailData->type == 'work')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-orange-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3 1h10v2H5V6zm0 4h10v2H5v-2zm0 4h10v2H5v-2z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Business' || $emailData->type == 'business')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 4h8a1 1 0 110 2H6a1 1 0 110-2zm0 4h8a1 1 0 110 2H6a1 1 0 110-2z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @elseif ($emailData->type == 'Other' || $emailData->type == 'other')
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @else
-                                            <span
-                                                class="px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-500 text-white">
-                                                <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                                {{ $emailData->type }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                                         @if ($emailData->trashed())
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
@@ -430,7 +347,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td class="px-6 py-4 text-center" colspan="8">No emails available</td>
+                                    <td class="px-6 py-4 text-center" colspan="9">No emails available</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -677,8 +594,8 @@
                     <div class="sm:flex sm:items-start">
                         <div
                             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                 </path>
@@ -784,8 +701,8 @@
                     <div class="sm:flex sm:items-start">
                         <div
                             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
                                 </path>

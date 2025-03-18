@@ -14,21 +14,9 @@ return new class extends Migration
         Schema::create('service_categories', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
+            $table->string('type')->nullable();
+            $table->text('category')->nullable();
             
-            $table->text('description')->nullable();
-            
-            $table->enum('type', [
-                'Roof Repair',
-                'New Roof',
-                'Storm Damage',
-                'Mold Remediation',
-                'Mitigation',
-                'Tarp',
-                'ReTarp',
-                'Rebuild',
-                'Roof Paint'
-            ]);
-            $table->string('status')->default('active');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

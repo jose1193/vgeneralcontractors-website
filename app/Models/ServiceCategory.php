@@ -15,16 +15,12 @@ class ServiceCategory extends Model
     protected $fillable = [
         'uuid',
         
-        'description',
+        'category',
         
-        'type',
-        'status',
         'user_id'
     ];
 
-    protected $casts = [
-        'type' => 'string',
-    ];
+    
 
     protected static function boot()
     {
@@ -32,7 +28,7 @@ class ServiceCategory extends Model
         
         static::creating(function ($model) {
             $model->uuid = (string) Str::uuid();
-            $model->slug = Str::slug($model->name);
+          
         });
     }
 

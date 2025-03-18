@@ -15,7 +15,7 @@ trait CompanyValidation
     {
         return [
             'company_name' => 'required',
-            'name' => 'required',
+            'name' => 'required|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
@@ -32,7 +32,7 @@ trait CompanyValidation
     {
         return [
             'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'email' => ['required', 'string', 'email', 'max:255',
                 Rule::unique('company_data', 'email')->ignore($this->uuid ?? null, 'uuid')],
             'phone' => ['required', 'string', 'max:20',
@@ -49,7 +49,7 @@ trait CompanyValidation
     {
         return [
             'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
             'email' => ['required', 'string', 'email', 'max:255',
                 Rule::unique('company_data', 'email')->ignore($this->uuid ?? null, 'uuid')],
             'phone' => ['required', 'string', 'max:20',

@@ -5,22 +5,21 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\ServiceCategory;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use App\Traits\UserCache;
 
 class ServiceCategories extends Component
 {
     use WithPagination;
+    use UserCache;
 
-    protected $paginationTheme = 'tailwind';
+    public $category_id;
+    public $uuid;
+    public $category;
+    public $user_id;
+    public $showDeleted = false;
 
-    public $editId;
-    public $name = '';
-    public $type = '';
-    public $description = '';
-    public $status = 'active';
-    
     public $isOpen = false;
     public $modalTitle = 'Create Category';
     public $modalAction = 'store';
@@ -28,63 +27,70 @@ class ServiceCategories extends Component
     public $perPage = 10;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $isSubmitting = false;
+    public $page = 1;
 
-    // Añade esta propiedad para validación en tiempo real
-    protected $validationAttributes = [
-        'name' => 'name',
-        'type' => 'type',
-        'description' => 'description',
-        'status' => 'status'
+    protected $listeners = ['delete', 'restore', 'closeModal', 'refreshComponent' => '$refresh'];
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'page' => ['except' => 1],
+        'sortField' => ['except' => 'created_at'],
+        'sortDirection' => ['except' => 'desc'],
+        'perPage' => ['except' => 10],
+        'showDeleted' => ['except' => false]
     ];
 
-    protected $listeners = [
-        'refreshComponent' => '$refresh'
-    ];
+    protected $significantDataChange = false;
 
     protected function rules()
     {
-        $nameRule = 'required|min:3|unique:service_categories,name';
-        
-        // For edit mode, ignore the current record
-        if ($this->editId) {
-            $nameRule .= ',' . $this->editId;
-        }
-        
         return [
-            'name' => $nameRule,
-            'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
-            'description' => 'nullable|min:10',
-            'status' => 'required|in:active,inactive',
+            'category' => 'required|string|max:255',
         ];
+    }
+
+    public function mount()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
         
-        // Get the current page from the URL
-        $currentPage = request()->query('page', 1);
-        
-        $cacheKey = 'service_categories_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $currentPage;
-        
-        // Clear cache when changing perPage to ensure fresh results
-        if (session()->has('perPage_changed')) {
-            Cache::forget($cacheKey);
-            session()->forget('perPage_changed');
-        }
+        // Use a cache key generator from UserCache trait
+        $cacheKey = $this->generateCategoryCacheKey();
         
         $categories = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
-            return ServiceCategory::where('name', 'like', $searchTerm)
-                ->orWhere('type', 'like', $searchTerm)
-                ->orWhere('description', 'like', $searchTerm)
-                ->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
+            return $this->getCategoriesQuery($searchTerm)->paginate($this->perPage);
         });
 
         return view('livewire.service-categories', [
             'categories' => $categories
         ]);
+    }
+    
+    /**
+     * Build the categories query with appropriate filters
+     * 
+     * @param string $searchTerm Search term with wildcards
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getCategoriesQuery($searchTerm)
+    {
+        $query = ServiceCategory::query();
+        
+        // Include trashed categories if showDeleted is true
+        if ($this->showDeleted) {
+            $query->withTrashed();
+        }
+        
+        $query->where(function ($query) use ($searchTerm) {
+            $query->where('category', 'like', $searchTerm);
+        })
+        ->orderBy($this->sortField, $this->sortDirection);
+        
+        return $query;
     }
 
     public function sort($field)
@@ -100,321 +106,289 @@ class ServiceCategories extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->modalTitle = 'Create Category';
+        $this->modalTitle = 'Create New Category';
         $this->modalAction = 'store';
-        $this->openModal();
+        $this->isOpen = true;
+        
+        $this->dispatch('category-edit', [
+            'category' => '',
+            'action' => 'store'
+        ]);
     }
 
     public function store()
     {
         try {
-            $this->validate([
-                'name' => 'required|min:3|unique:service_categories,name',
-                'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
-                'description' => 'nullable|min:10',
-                'status' => 'required|in:active,inactive',
+            $this->validate();
+
+            \Log::info('Storing category with data:', [
+                'category' => $this->category
             ]);
 
-            \Log::info('Attempting to save service category', [
-                'name' => $this->name,
-                'action' => 'create'
-            ]);
-
-            // Generate base slug
-            $baseSlug = Str::slug($this->name);
-            
-            // Check if slug exists and make it unique if needed
-            $slug = $this->generateUniqueSlug($baseSlug);
-
-            $category = ServiceCategory::create([
+            // Create the category
+            ServiceCategory::create([
                 'uuid' => Str::uuid(),
-                'name' => $this->name,
-                'slug' => $slug,
-                'type' => $this->type,
-                'description' => $this->description,
-                'status' => $this->status,
-                'user_id' => auth()->id(),
+                'category' => $this->category,
+                'user_id' => auth()->id()
             ]);
+            
+            $this->significantDataChange = true;
+            
+            // Clear cache using the trait
+            $this->clearCategoryCache();
 
-            // Clear cache
-            $this->clearCache();
-
-            \Log::info('Service category saved successfully', [
-                'name' => $this->name
-            ]);
-
-            session()->flash('message', 'Category created successfully.');
+            session()->flash('message', 'Category Created Successfully.');
             $this->closeModal();
             $this->resetInputFields();
-            
-            // Replace the full page reload with a component refresh
             $this->dispatch('refreshComponent');
+            $this->dispatch('category-created');
+            $this->dispatch('category-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
             $this->dispatch('validation-failed');
-            \Log::error('Error saving service category', [
-                'name' => $this->name,
+            \Log::error('Error creating category', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
-            session()->flash('error', 'Error saving category: ' . $e->getMessage());
+            session()->flash('error', 'Error creating category: ' . $e->getMessage());
+            $this->dispatch('category-created-error');
         }
     }
 
-    public function edit($id)
+    public function edit($uuid)
     {
         try {
-            \Log::info('Attempting to edit category', ['id' => $id]);
+            \Log::info('Attempting to edit category', ['uuid' => $uuid]);
             
-            $category = ServiceCategory::findOrFail($id);
-            
-            // Set the Livewire properties
-            $this->editId = $id;
-            $this->name = $category->name;
-            $this->type = $category->type;
-            $this->description = $category->description ?? '';
-            $this->status = $category->status;
+            $category = ServiceCategory::where('uuid', $uuid)->firstOrFail();
+            $this->category_id = $category->id;
+            $this->uuid = $category->uuid;
+            $this->category = $category->category;
             
             $this->modalTitle = 'Edit Category';
             $this->modalAction = 'update';
-            
-            // Make sure the modal opens
             $this->openModal();
             
-            // Dispatch event to update Alpine.js state
+            // Dispatch event with category data
             $this->dispatch('category-edit', [
-                'id' => $id,
-                'name' => $this->name,
-                'type' => $this->type,
-                'description' => $this->description,
-                'status' => $this->status
+                'category' => $this->category,
+                'action' => 'update'
             ]);
             
-            \Log::info('Category data loaded for editing', [
-                'id' => $id, 
-                'name' => $category->name,
-                'data' => [
-                    'name' => $this->name,
-                    'type' => $this->type,
-                    'description' => $this->description,
-                    'status' => $this->status
-                ]
+            \Log::info('Category data loaded successfully', [
+                'uuid' => $this->uuid,
+                'category' => $this->category
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error loading category for edit', [
-                'id' => $id,
+            \Log::error('Error loading category data', [
+                'uuid' => $uuid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
             session()->flash('error', 'Error loading category data: ' . $e->getMessage());
+            $this->dispatch('category-edit-error');
         }
     }
 
     public function update()
     {
         try {
-            $this->validate([
-                'name' => 'required|min:3|unique:service_categories,name,'.$this->editId,
-                'type' => 'required|in:Roof Repair,New Roof,Storm Damage,Mold Remediation,Mitigation,Tarp,ReTarp,Rebuild,Roof Paint',
-                'description' => 'nullable|min:10',
-                'status' => 'required|in:active,inactive',
-            ]);
+            $this->validate();
 
-            \Log::info('Attempting to update service category', [
-                'id' => $this->editId,
-                'name' => $this->name
-            ]);
-
-            $category = ServiceCategory::findOrFail($this->editId);
-            
-            // Generate base slug
-            $baseSlug = Str::slug($this->name);
-            
-            // If name changed, check if new slug exists and make it unique if needed
-            if ($category->name !== $this->name) {
-                $slug = $this->generateUniqueSlug($baseSlug, $category->id);
-            } else {
-                $slug = $category->slug;
-            }
+            $category = ServiceCategory::where('uuid', $this->uuid)->firstOrFail();
             
             $category->update([
-                'name' => $this->name,
-                'slug' => $slug,
-                'type' => $this->type,
-                'description' => $this->description,
-                'status' => $this->status,
+                'category' => $this->category
             ]);
+            
+            // Set flag for cache clearing
+            $this->significantDataChange = true;
 
             // Clear cache
-            $this->clearCache();
+            $this->clearCategoryCache();
 
-            \Log::info('Service category updated successfully', [
-                'id' => $this->editId,
-                'name' => $this->name
-            ]);
-
-            session()->flash('message', 'Category updated successfully.');
+            session()->flash('message', 'Category Updated Successfully.');
             $this->closeModal();
             $this->resetInputFields();
-            
-            // At the end, use dispatch instead of refresh-categories
             $this->dispatch('refreshComponent');
+            $this->dispatch('category-updated');
+            $this->dispatch('category-updated-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
             $this->dispatch('validation-failed');
-            \Log::error('Error updating service category', [
-                'id' => $this->editId,
-                'name' => $this->name,
+            \Log::error('Error updating category', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
             session()->flash('error', 'Error updating category: ' . $e->getMessage());
+            $this->dispatch('category-updated-error');
         }
     }
 
-    public function delete($id)
+    public function delete($uuid)
     {
         try {
-            \Log::info('Attempting to delete category', ['id' => $id]);
+            \Log::info('Attempting to delete category', ['uuid' => $uuid]);
             
-            $category = ServiceCategory::findOrFail($id);
-            $category->delete();
+            // Find the category first to log details
+            $category = ServiceCategory::where('uuid', $uuid)->first();
+            
+            if (!$category) {
+                \Log::warning('Category not found for deletion', ['uuid' => $uuid]);
+                session()->flash('error', 'Category not found.');
+                return;
+            }
+            
+            \Log::info('Found category to delete', [
+                'uuid' => $uuid,
+                'category' => $category->category,
+                'id' => $category->id
+            ]);
+            
+            // Perform the deletion
+            $deleted = $category->delete();
+            
+            \Log::info('Category deletion result', [
+                'uuid' => $uuid,
+                'deleted' => $deleted ? 'success' : 'failed'
+            ]);
             
             // Clear cache
-            $this->clearCache();
-            
-            \Log::info('Category deleted successfully', ['id' => $id]);
+            $this->clearCategoryCache();
             
             session()->flash('message', 'Category deleted successfully.');
             $this->dispatch('categoryDeleted');
-            return ['success' => true];
         } catch (\Exception $e) {
             \Log::error('Error deleting category', [
-                'id' => $id,
+                'uuid' => $uuid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
             session()->flash('error', 'Error deleting category: ' . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function restore($uuid)
+    {
+        try {
+            \Log::info('Attempting to restore category', ['uuid' => $uuid]);
+            
+            // Find the category first to log details
+            $category = ServiceCategory::withTrashed()->where('uuid', $uuid)->first();
+            
+            if (!$category) {
+                \Log::warning('Category not found for restoration', ['uuid' => $uuid]);
+                session()->flash('error', 'Category not found.');
+                return;
+            }
+            
+            \Log::info('Found category to restore', [
+                'uuid' => $uuid,
+                'category' => $category->category,
+                'id' => $category->id
+            ]);
+            
+            // Perform the restoration
+            $restored = $category->restore();
+            
+            \Log::info('Category restoration result', [
+                'uuid' => $uuid,
+                'restored' => $restored ? 'success' : 'failed'
+            ]);
+            
+            // Clear cache
+            $this->clearCategoryCache();
+            
+            session()->flash('message', 'Category restored successfully.');
+            $this->dispatch('categoryRestored');
+        } catch (\Exception $e) {
+            \Log::error('Error restoring category', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Error restoring category: ' . $e->getMessage());
         }
     }
 
     public function openModal()
     {
         $this->isOpen = true;
+        $this->dispatch('category-edit', [
+            'category' => $this->category,
+            'action' => $this->modalAction
+        ]);
     }
 
     public function closeModal()
     {
         $this->isOpen = false;
+        if ($this->modalAction !== 'update') {
+            $this->resetInputFields();
+        }
+        $this->resetValidation();
+        $this->dispatch('category-edit');
     }
 
     private function resetInputFields()
     {
         $this->reset([
-            'editId', 'name', 'type', 'description', 'status', 'isSubmitting'
+            'category_id', 'uuid', 'category'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
     }
-    
-    private function clearCache()
+
+    /**
+     * Generate a cache key for categories
+     * 
+     * @return string
+     */
+    protected function generateCategoryCacheKey()
     {
-        try {
-            // Try to use tags if supported
-            if (method_exists(Cache::getStore(), 'tags')) {
-                Cache::tags(['service_categories'])->flush();
-            }
-            
-            // Clear specific cache keys (works with any driver)
-            Cache::forget('service_categories_list');
-            
-            // Clear any other related caches
-            $searchPatterns = [
-                'service_categories_*',
-                'portfolios_*', // Clear portfolio caches as they depend on categories
-            ];
-            
-            // For file/database cache, we need to manually clear keys that match patterns
-            // This is a simplified approach - in production you might want to use a more robust solution
-            $currentPage = request()->query('page', 1);
-            for ($i = 1; $i <= max(1, $currentPage + 5); $i++) {
-                Cache::forget('service_categories_' . $this->search . '_' . $this->sortField . '_' . $this->sortDirection . '_' . $this->perPage . '_' . $i);
-            }
-            
-            // Clear portfolio cache keys
-            Cache::forget('portfolios_list');
-            Cache::forget('service_categories_list');
-            Cache::forget('project_types_list');
-            
-        } catch (\Exception $e) {
-            \Log::error('Error clearing cache', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-        }
+        return 'service_categories_' . $this->search . '_' . 
+               $this->sortField . '_' . $this->sortDirection . '_' . 
+               $this->perPage . '_' . $this->page . '_' . 
+               ($this->showDeleted ? 'with_deleted' : 'without_deleted');
     }
 
     /**
-     * Generate a unique slug
-     * 
-     * @param string $baseSlug
-     * @param int|null $ignoreId
-     * @return string
+     * Clear all category related cache
      */
-    private function generateUniqueSlug($baseSlug, $ignoreId = null)
+    protected function clearCategoryCache()
     {
-        $slug = $baseSlug;
-        $counter = 1;
-        
-        // Check if slug exists
-        while (true) {
-            $query = ServiceCategory::where('slug', $slug);
-            
-            // Ignore current category when updating
-            if ($ignoreId) {
-                $query->where('id', '!=', $ignoreId);
-            }
-            
-            $exists = $query->exists();
-            
-            if (!$exists) {
-                break;
-            }
-            
-            // Add counter to slug
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-        
-        return $slug;
+        Cache::forget($this->generateCategoryCacheKey());
+        // Clear any other related cache keys
+        Cache::forget('all_service_categories');
     }
 
-    // Add this method to handle perPage changes
-    public function updatedPerPage()
+    public function updatedSearch()
     {
-        // Mark that perPage was changed to clear cache on next render
-        session()->put('perPage_changed', true);
-        $this->resetPage(); // Reset to first page when changing items per page
+        $this->resetPage();
     }
 
-    // Añade este método para validación en tiempo real del campo nombre
-    public function updatedName()
+    public function updating($name, $value)
     {
-        $nameRule = 'required|min:3|unique:service_categories,name';
-        
-        if ($this->editId) {
-            $nameRule .= ',' . $this->editId;
+        if ($name === 'search') {
+            $this->resetPage();
         }
-        
-        $this->validateOnly('name', ['name' => $nameRule]);
     }
-} 
+
+    public function toggleShowDeleted()
+    {
+        $this->showDeleted = !$this->showDeleted;
+        $this->resetPage();
+        $this->clearCategoryCache();
+    }
+
+    public function updatedCategory()
+    {
+        $this->validateOnly('category', ['category' => 'required|string|max:255']);
+    }
+}

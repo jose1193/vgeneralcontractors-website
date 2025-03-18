@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Success and error messages -->
         @if (session()->has('message'))
-            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)"
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 14000)"
                 class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
                 role="alert">
                 <span class="block sm:inline">{{ session('message') }}</span>
@@ -49,7 +49,7 @@
                                 </svg>
                             </div>
                             <input id="search" wire:model.live.debounce.300ms="search"
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-500 focus:border-blue-300 dark:focus:border-blue-600 focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 sm:text-sm"
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-700 focus:ring-opacity-50 focus:border-blue-300 dark:focus:border-blue-600 sm:text-sm"
                                 placeholder="Search companies..." type="search">
                         </div>
                     </div>
@@ -490,18 +490,20 @@
                                         Name:</label>
                                     <input type="text" x-model="form.name"
                                         @input="
+                                            validateField('name');
+                                            // Only allow letters and spaces
+                                            $event.target.value = $event.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                                            // Capitalize first letter of each word
                                             let words = $event.target.value.toLowerCase().split(' ');
                                             words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
                                             $event.target.value = words.join(' ');
-                                            $wire.set('name', $event.target.value);
-                                            validateField('name');
+                                            form.name = $event.target.value;
                                         "
-                                        id="name"
-                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        :class="{ 'border-red-500': errors.name }" placeholder="Enter CEO name">
+                                        @blur="validateField('name')"
+                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 dark:focus:border-blue-600"
+                                        placeholder="Enter CEO name">
                                     <div class="text-red-500 text-xs mt-1" x-show="errors.name" x-text="errors.name">
                                     </div>
-
                                 </div>
 
                                 <div class="mb-4">
@@ -942,15 +944,15 @@
                         case 'company_name':
                             if (!this.form.company_name) {
                                 this.errors.company_name = 'Company name is required';
-                                return false;
                             }
-                            return true;
+                            break;
                         case 'name':
                             if (!this.form.name) {
                                 this.errors.name = 'CEO name is required';
-                                return false;
+                            } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u.test(this.form.name)) {
+                                this.errors.name = 'CEO name must contain only letters and spaces';
                             }
-                            return true;
+                            break;
                         case 'email':
                             return this.validateEmail(this.form.email);
                         case 'phone':
@@ -958,33 +960,28 @@
                         case 'address':
                             if (!this.form.address) {
                                 this.errors.address = 'Address is required';
-                                return false;
                             }
-                            return true;
+                            break;
                         case 'website':
                             if (!this.form.website) {
                                 this.errors.website = 'Website is required';
-                                return false;
                             }
                             const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
                             if (!urlRegex.test(this.form.website)) {
                                 this.errors.website = 'Please enter a valid URL (e.g., https://www.example.com)';
-                                return false;
                             }
-                            return true;
+                            break;
                         case 'latitude':
                             if (this.form.latitude && !/^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/.test(this.form.latitude)) {
                                 this.errors.latitude = 'Please enter a valid latitude (-90 to 90)';
-                                return false;
                             }
-                            return true;
+                            break;
                         case 'longitude':
                             if (this.form.longitude && !/^-?((1[0-7][0-9])|([1-9]?[0-9]))(\.[0-9]+)?$/.test(this.form
                                     .longitude)) {
                                 this.errors.longitude = 'Please enter a valid longitude (-180 to 180)';
-                                return false;
                             }
-                            return true;
+                            break;
                     }
                     return true;
                 },

@@ -2,16 +2,13 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-use App\Models\MainCategories;
 use App\Models\BlogCategory;
 use Ramsey\Uuid\Uuid;
 use App\Models\CompanyData;
-use App\Models\StatuOptions;
 use App\Models\ServiceCategory;
 use Illuminate\Support\Str;
 
@@ -86,8 +83,8 @@ class DatabaseSeeder extends Seeder
         $othersRole->syncPermissions([$permissions[2]]);
         // END OTHERS ROLES
 
-      // Crear la categoría "General" para blog
-       BlogCategory::create([
+        // Crear la categoría "General" para blog
+        BlogCategory::create([
             'uuid' => Uuid::uuid4()->toString(),
             'blog_category_name' => 'Roofing',
             'blog_category_description' => 'Valor por defecto',
@@ -95,164 +92,76 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
             'status' => 'active',
         ]);
-    // end      
+        // end      
 
-    // COMPANY DATA
-    $companyData = [
-        'company_name' => 'V General Contractors',
-        'name' => 'Victor Lara',
-        'signature_path' => '/signatures/acme_signature.png',
-        'phone' => '+13466920757',
-        'email' => 'info@vgeneralcontractors.com',
-        'address' => '1302 Waugh Dr # 810 Houston TX 77019',
-        'website' => 'https://vgeneralcontractors.com',
-        'latitude' => 29.75516,
-        'longitude' => -95.3984135,
-        'user_id' => 1,
-        'uuid' => Uuid::uuid4()->toString()
-    ];
-
-    CompanyData::create($companyData);
-    // END COMPANY DATA
-
-    
-    // END COMPANY SIGNATURE
-
-    // EMAIL DATA
-    $emailsData = [
-        [
-            'description' => 'Correo para colecciones y pagos',
-            'email' => 'collections@vgeneralcontractors.com',
-            'phone' => '+17133646240',
-            'type' => 'Collections',
-            'user_id' => $adminUser->id,
-        ],
-        [
-            'description' => 'Correo para información general',
+        // COMPANY DATA
+        $companyData = [
+            'company_name' => 'V General Contractors',
+            'name' => 'Victor Lara',
+            'signature_path' => '/signatures/acme_signature.png',
+            'phone' => '+13466920757',
             'email' => 'info@vgeneralcontractors.com',
-            'phone' => '+13466920757',
-            'type' => 'Info',
-            'user_id' => $adminUser->id,
-        ],
-        [
-            'description' => 'Correo para citas y agendamiento',
-            'email' => 'appointment@vgeneralcontractors.com',
-            'phone' => '+13466920757',
-            'type' => 'Appointment',
-            'user_id' => $adminUser->id,
-        ]
-    ];
+            'address' => '1302 Waugh Dr # 810 Houston TX 77019',
+            'website' => 'https://vgeneralcontractors.com',
+            'latitude' => 29.75516,
+            'longitude' => -95.3984135,
+            'user_id' => 1,
+            'uuid' => Uuid::uuid4()->toString()
+        ];
 
-    foreach ($emailsData as $emailData) {
-        $emailData['uuid'] = Uuid::uuid4()->toString();
-        \App\Models\EmailData::create($emailData);
-    }
-    // END EMAIL DATA
+        CompanyData::create($companyData);
+        // END COMPANY DATA
 
-    // Project Types
-    $projectTypes = [
-        [
-            'name' => 'Roof Repair',
-            'description' => 'Services for fixing damaged or worn roofing components.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Roof Installation',
-            'description' => 'Complete roof installation and replacement services.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Roof Maintenance',
-            'description' => 'Preventive maintenance and regular roof inspections.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Mitigation',
-            'description' => 'Water damage mitigation and prevention services.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Tarp Installation',
-            'description' => 'Emergency roof covering with tarp to prevent further damage.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Retarp Service',
-            'description' => 'Replacement or adjustment of existing roof tarps.',
-            'status' => 'active'
-        ],
-        [
-            'name' => 'Mold Remediation',
-            'description' => 'Treatment and removal of mold caused by roof leaks.',
-            'status' => 'active'
-        ]
-    ];
+        // EMAIL DATA
+        $emailsData = [
+            [
+                'description' => 'Correo para colecciones y pagos',
+                'email' => 'collections@vgeneralcontractors.com',
+                'phone' => '+17133646240',
+                'type' => 'Collections',
+                'user_id' => $adminUser->id,
+            ],
+            [
+                'description' => 'Correo para información general',
+                'email' => 'info@vgeneralcontractors.com',
+                'phone' => '+13466920757',
+                'type' => 'Info',
+                'user_id' => $adminUser->id,
+            ],
+            [
+                'description' => 'Correo para citas y agendamiento',
+                'email' => 'appointment@vgeneralcontractors.com',
+                'phone' => '+13466920757',
+                'type' => 'Appointment',
+                'user_id' => $adminUser->id,
+            ]
+        ];
 
-    foreach ($projectTypes as $type) {
-        \App\Models\ProjectType::create([
-            'uuid' => (string) Str::uuid(),
-            'name' => $type['name'],
-            'description' => $type['description'],
-            'status' => $type['status']
-        ]);
-    }
+        foreach ($emailsData as $emailData) {
+            $emailData['uuid'] = Uuid::uuid4()->toString();
+            \App\Models\EmailData::create($emailData);
+        }
+        // END EMAIL DATA
 
-    // Service Categories - Updated to match project types
-    $serviceCategories = [
-        [
-            'name' => 'Roof Repair',
-            'type' => 'Roof Repair',
-            'description' => 'Professional roof repair services for all types of damage',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'New Roof Installation',
-            'type' => 'New Roof',
-            'description' => 'Complete new roof installation services',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'Storm Damage Repair',
-            'type' => 'Storm Damage',
-            'description' => 'Emergency storm damage repair and assessment',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'Mold Remediation',
-            'type' => 'Mold Remediation',
-            'description' => 'Professional mold removal and remediation services',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'Water Damage Mitigation',
-            'type' => 'Mitigation',
-            'description' => 'Quick response water damage mitigation services',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'Tarp Services',
-            'type' => 'Tarp',
-            'description' => 'Initial emergency roof tarping protection',
-            'status' => 'active',
-        ],
-        [
-            'name' => 'ReTarp Services',
-            'type' => 'ReTarp',
-            'description' => 'Roof re-tarping and tarp maintenance services',
-            'status' => 'active',
-        ]
-    ];
+        // Service Categories
+        $serviceCategories = [
+            'Roof Repair',
+            'New Roof',
+            'Storm Damage',
+            'Mold Remediation',
+            'Mitigation',
+            'Tarp',
+            'ReTarp',
+            'Rebuild',
+            'Roof Paint'
+        ];
 
-    foreach ($serviceCategories as $category) {
-        ServiceCategory::create([
-            'uuid' => (string) Str::uuid(),
-            'name' => $category['name'],
-            'slug' => Str::slug($category['name']),
-            'type' => $category['type'],
-            'description' => $category['description'],
-            'status' => $category['status'],
-            'user_id' => $adminUser->id,
-        ]);
-    }
+        foreach ($serviceCategories as $category) {
+            ServiceCategory::create([
+                'uuid' => (string) Str::uuid(),
+                'category' => $category,
+                'user_id' => $adminUser->id,
+            ]);
+        }
     }
 }
