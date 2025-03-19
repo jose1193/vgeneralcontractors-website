@@ -56,7 +56,14 @@ class Users extends Component
     public $sortDirection = 'desc';
     public $page = 1;
 
-    protected $listeners = ['delete', 'restore', 'closeModal', 'refreshComponent' => '$refresh'];
+    protected $listeners = [
+        'delete',
+        'restore', 
+        'closeModal', 
+        'refreshComponent' => '$refresh',
+        'userDeleteError',
+        'userRestoreError'
+    ];
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -278,6 +285,7 @@ class Users extends Component
             
             // Ensure username is at least 7 characters
             if (strlen($username) < 7) {
+                $username = $baseUsername . rand(100, 999) . Str::random(3);
                 $extraChars = 7 - strlen($username);
                 $username .= Str::random($extraChars);
             }
@@ -352,9 +360,26 @@ class Users extends Component
     {
         try {
             // Use validation trait
-            $this->validate($this->getUpdateValidationRules());
-
+            $validationRules = $this->getUpdateValidationRules();
+            
+            // Verificar si el teléfono ha cambiado
             $user = User::where('uuid', $this->uuid)->firstOrFail();
+            $formattedPhone = '+1' . preg_replace('/[^0-9]/', '', $this->phone);
+            
+            // Si el teléfono ha cambiado, verificar si ya existe
+            if ($formattedPhone !== $user->phone) {
+                $phoneExists = User::where('phone', $formattedPhone)
+                    ->where('uuid', '!=', $this->uuid)
+                    ->exists();
+                
+                if ($phoneExists) {
+                    $this->addError('phone', 'The phone number has already been taken.');
+                    $this->dispatch('validation-failed');
+                    return;
+                }
+            }
+            
+            $this->validate($validationRules);
 
             $data = [
                 'name' => $this->name,
@@ -424,7 +449,8 @@ class Users extends Component
             if (!$user) {
                 \Log::warning('User not found for deletion', ['uuid' => $uuid]);
                 session()->flash('error', 'User not found.');
-                return;
+                $this->dispatch('userDeleteError', ['message' => 'User not found.']);
+                return false;
             }
             
             \Log::info('Found user to delete', [
@@ -447,6 +473,7 @@ class Users extends Component
             
             session()->flash('message', 'User deleted successfully.');
             $this->dispatch('userDeleted');
+            return true;
         } catch (\Exception $e) {
             \Log::error('Error deleting user', [
                 'uuid' => $uuid,
@@ -455,6 +482,8 @@ class Users extends Component
             ]);
             
             session()->flash('error', 'Error deleting user: ' . $e->getMessage());
+            $this->dispatch('userDeleteError', ['message' => $e->getMessage()]);
+            return false;
         }
     }
 
@@ -469,7 +498,8 @@ class Users extends Component
             if (!$user) {
                 \Log::warning('User not found for restoration', ['uuid' => $uuid]);
                 session()->flash('error', 'User not found.');
-                return;
+                $this->dispatch('userRestoreError', ['message' => 'User not found.']);
+                return false;
             }
             
             \Log::info('Found user to restore', [
@@ -492,6 +522,7 @@ class Users extends Component
             
             session()->flash('message', 'User restored successfully.');
             $this->dispatch('userRestored');
+            return true;
         } catch (\Exception $e) {
             \Log::error('Error restoring user', [
                 'uuid' => $uuid,
@@ -500,6 +531,8 @@ class Users extends Component
             ]);
             
             session()->flash('error', 'Error restoring user: ' . $e->getMessage());
+            $this->dispatch('userRestoreError', ['message' => $e->getMessage()]);
+            return false;
         }
     }
 
@@ -525,10 +558,8 @@ class Users extends Component
     public function closeModal()
     {
         $this->isOpen = false;
-        // Only reset fields when not in edit mode to preserve data
-        if ($this->modalAction !== 'update') {
-            $this->resetInputFields();
-        }
+        // Reset fields always when closing the modal
+        $this->resetInputFields();
         $this->resetValidation();
         $this->dispatch('user-edit');
     }

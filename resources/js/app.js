@@ -11,3 +11,62 @@ window.Alpine = Alpine;
 
 // Start Alpine
 Alpine.start();
+
+// Importar los componentes
+import formValidation from "./components/formValidation.js";
+import phoneFormat from "./components/phoneFormat.js";
+import modalActions from "./components/modalActions.js";
+
+// Exponer componentes a la ventana global para uso con Alpine.js
+window.formValidation = formValidation;
+window.phoneFormat = phoneFormat;
+window.modalActions = modalActions;
+
+// Configurar eventos de Livewire
+document.addEventListener("livewire:initialized", () => {
+    Livewire.on("refreshComponent", () => {
+        Livewire.dispatch("$refresh");
+    });
+
+    Livewire.on("closeModal", () => {
+        document.getElementById("closeModalButton")?.click();
+    });
+
+    // Eventos de validación y formularios
+    Livewire.on("validationErrors", (errors) => {
+        window.dispatchEvent(
+            new CustomEvent("validation-errors", {
+                detail: errors,
+            })
+        );
+    });
+
+    Livewire.on("formData", (data) => {
+        window.dispatchEvent(
+            new CustomEvent("form-data", {
+                detail: data,
+            })
+        );
+    });
+
+    // Evento para confirmación de eliminación
+    Livewire.on("confirmDelete", (userData) => {
+        window.dispatchEvent(
+            new CustomEvent("delete-confirmation", {
+                detail: userData,
+            })
+        );
+    });
+
+    // Evento para confirmación de restauración
+    Livewire.on("confirmRestore", (userData) => {
+        window.dispatchEvent(
+            new CustomEvent("restore-confirmation", {
+                detail: userData,
+            })
+        );
+    });
+});
+
+// Puedes agregar aquí cualquier otra inicialización que necesites
+console.log("Application JavaScript initialized");
