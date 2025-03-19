@@ -8,37 +8,37 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     NRO
                 </th>
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'name',
                     'label' => 'NAME',
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'email',
                     'label' => 'EMAIL',
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'username',
                     'label' => 'USERNAME',
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'phone',
                     'label' => 'PHONE',
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'created_at',
                     'label' => 'CREATED AT',
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
-                @include('components.livewire.users.table-header', [
+                @include('components.sort-position', [
                     'field' => 'deleted_at',
                     'label' => 'STATUS',
                     'sortField' => $sortField,

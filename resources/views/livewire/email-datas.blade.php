@@ -60,12 +60,18 @@
                             <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Show Inactive Emails</span>
                             <button type="button" wire:click="toggleShowDeleted"
                                 class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2  focus:ring-blue-500 focus:ring-offset-2"
-                                :class="{ 'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }}, 'bg-gray-200 dark:bg-gray-700':
-                                        !{{ $showDeleted ? 'true' : 'false' }} }">
+                                :class="{
+                                    'bg-blue-600': {{ $showDeleted ? 'true' : 'false' }},
+                                    'bg-gray-200 dark:bg-gray-700':
+                                        !{{ $showDeleted ? 'true' : 'false' }}
+                                }">
                                 <span
                                     class="pointer-events-none  h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center"
-                                    :class="{ 'translate-x-5': {{ $showDeleted ? 'true' : 'false' }}, 'translate-x-0': !
-                                            {{ $showDeleted ? 'true' : 'false' }} }">
+                                    :class="{
+                                        'translate-x-5': {{ $showDeleted ? 'true' : 'false' }},
+                                        'translate-x-0': !
+                                            {{ $showDeleted ? 'true' : 'false' }}
+                                    }">
                                     <svg x-show="{{ $showDeleted ? 'true' : 'false' }}" class="h-4 w-4 text-blue-600"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -594,8 +600,8 @@
                     <div class="sm:flex sm:items-start">
                         <div
                             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                 </path>
@@ -701,8 +707,8 @@
                     <div class="sm:flex sm:items-start">
                         <div
                             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z">
                                 </path>
