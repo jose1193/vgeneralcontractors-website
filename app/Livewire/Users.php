@@ -13,16 +13,14 @@ use App\Mail\UserCredentialsMail;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\SendUserCredentialsEmail;
 use App\Traits\UserValidation;
-use App\Traits\UserCache;
-
+use App\Traits\CacheTrait;
 use App\Traits\UserDataFormatter;
 
 class Users extends Component
 {
     use WithPagination;
     use UserValidation;
-    use UserCache;
-   
+    use CacheTrait;
     use UserDataFormatter;
 
     public $uuid;
@@ -91,8 +89,8 @@ class Users extends Component
     {
         $searchTerm = '%' . $this->search . '%';
         
-        // Use a cache key generator from UserCache trait
-        $cacheKey = $this->generateUserCacheKey();
+        // Use CacheTrait's generic method instead of UserCache specific method
+        $cacheKey = $this->generateCacheKey('users');
         
         $users = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
             return $this->getUsersQuery($searchTerm)->paginate($this->perPage);
@@ -219,8 +217,8 @@ class Users extends Component
             
             $this->significantDataChange = true;
             
-            // Clear cache using the trait
-            $this->clearUserCache();
+            // Use the generic method with 'users' parameter
+            $this->clearCache('users');
 
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
@@ -415,8 +413,8 @@ class Users extends Component
             // Set flag for cache clearing
             $this->significantDataChange = true;
 
-            // Clear cache
-            $this->clearUserCache();
+            // Clear cache using the generic method
+            $this->clearCache('users');
 
             session()->flash('message', 'User Updated Successfully.');
             $this->closeModal();
@@ -468,8 +466,8 @@ class Users extends Component
                 'deleted' => $deleted ? 'success' : 'failed'
             ]);
             
-            // Clear cache
-            $this->clearUserCache();
+            // Clear cache using the generic method
+            $this->clearCache('users');
             
             session()->flash('message', 'User deleted successfully.');
             $this->dispatch('userDeleted');
@@ -517,8 +515,8 @@ class Users extends Component
                 'restored' => $restored ? 'success' : 'failed'
             ]);
             
-            // Clear cache
-            $this->clearUserCache();
+            // Clear cache using the generic method
+            $this->clearCache('users');
             
             session()->flash('message', 'User restored successfully.');
             $this->dispatch('userRestored');
@@ -575,12 +573,6 @@ class Users extends Component
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
-    }
-
-    private function clearCache()
-    {
-        // Use trait method instead
-        $this->clearUserCache();
     }
 
     /**
@@ -739,6 +731,6 @@ class Users extends Component
     {
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
-        $this->clearUserCache();
+        $this->clearCache('users');
     }
 }

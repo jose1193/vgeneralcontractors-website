@@ -9,8 +9,8 @@ use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\CompanyValidation;
 use App\Traits\CompanyDataFormatter;
-use App\Traits\CompanyCache;
-use App\Traits\KeyboardShortcuts;
+use App\Traits\CacheTrait;
+
 use Illuminate\Validation\Rule;
 
 class CompanyData extends Component
@@ -18,8 +18,8 @@ class CompanyData extends Component
     use WithPagination;
     use CompanyValidation;
     use CompanyDataFormatter;
-    use CompanyCache;
-    use KeyboardShortcuts;
+    use CacheTrait;
+   
 
     public $company_name, $name, $signature_path, $email, $phone, $address, $website, $latitude, $longitude;
     public $uuid, $companyId;
@@ -61,13 +61,13 @@ class CompanyData extends Component
     public function mount()
     {
         $this->resetPage();
-        $this->mountKeyboardShortcuts();
+       
     }
 
     public function render()
     {
         $searchTerm = '%' . $this->search . '%';
-        $cacheKey = $this->generateCompanyCacheKey();
+        $cacheKey = $this->generateCacheKey('company');
         
         $companies = Cache::remember($cacheKey, 300, function () use ($searchTerm) {
             return $this->getCompaniesQuery($searchTerm)->paginate($this->perPage);
@@ -158,7 +158,7 @@ class CompanyData extends Component
             $company = CompanyDataModel::create($formattedData);
             
             $this->significantDataChange = true;
-            $this->clearCompanyCache();
+            $this->clearCache('company');
 
             session()->flash('message', 'Company Data Created Successfully.');
             $this->closeModal();
@@ -247,7 +247,7 @@ class CompanyData extends Component
             $company->update($formattedData);
 
             $this->significantDataChange = true;
-            $this->clearCompanyCache();
+            $this->clearCache('company');
 
             session()->flash('message', 'Company Data Updated Successfully.');
             $this->closeModal();
@@ -293,7 +293,7 @@ class CompanyData extends Component
             
             $company->delete();
             
-            $this->clearCompanyCache();
+            $this->clearCache('company');
             session()->flash('message', 'Company deleted successfully.');
             $this->dispatch('companyDeleted');
         } catch (\Exception $e) {
@@ -339,7 +339,7 @@ class CompanyData extends Component
             
             $company->restore();
             
-            $this->clearCompanyCache();
+            $this->clearCache('company');
             session()->flash('message', 'Company restored successfully.');
             $this->dispatch('companyRestored');
         } catch (\Exception $e) {
@@ -420,6 +420,6 @@ class CompanyData extends Component
     {
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
-        $this->clearCompanyCache();
+        $this->clearCache('company');
     }
 }
