@@ -36,9 +36,10 @@ class CompanyData extends Component
     public $hasExistingCompany = false;
 
     protected $listeners = [
-        'delete' => 'deleteCompany',
-        'restore', // Add restore listener
-        'refreshComponent' => '$refresh'
+        'delete',
+        'restore',
+        'refreshComponent' => '$refresh',
+        'debug-restore-event' => 'debugRestoreEvent'
     ];
 
     protected $queryString = [
@@ -181,11 +182,11 @@ class CompanyData extends Component
         $this->isSubmitting = false;
     }
 
-    public function edit($id)
+    public function edit($uuid)
     {
         try {
-            $company = CompanyDataModel::findOrFail($id);
-            $this->companyId = $id;
+            $company = CompanyDataModel::where('uuid', $uuid)->firstOrFail();
+            $this->companyId = $company->id;
             $this->uuid = $company->uuid;
             $this->company_name = $company->company_name;
             $this->name = $company->name;
@@ -211,7 +212,7 @@ class CompanyData extends Component
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading company data', [
-                'id' => $id,
+                'uuid' => $uuid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -270,15 +271,22 @@ class CompanyData extends Component
         $this->isSubmitting = false;
     }
 
-    public function deleteCompany($id)
+    public function delete($uuid)
     {
         try {
-            \Log::info('Attempting to delete company', ['id' => $id]);
+            \Log::info('Attempting to delete company', ['uuid' => $uuid]);
             
-            $company = CompanyDataModel::findOrFail($id);
+            if (!$uuid) {
+                \Log::error('Company UUID is null or empty');
+                session()->flash('error', 'Company UUID is missing. Cannot delete company.');
+                return;
+            }
+            
+            $company = CompanyDataModel::where('uuid', $uuid)->firstOrFail();
             
             \Log::info('Found company to delete', [
-                'id' => $id,
+                'uuid' => $uuid,
+                'id' => $company->id,
                 'company_name' => $company->company_name,
                 'email' => $company->email
             ]);
@@ -290,7 +298,7 @@ class CompanyData extends Component
             $this->dispatch('companyDeleted');
         } catch (\Exception $e) {
             \Log::error('Error deleting company', [
-                'id' => $id,
+                'uuid' => $uuid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -298,21 +306,33 @@ class CompanyData extends Component
         }
     }
 
-    public function restore($id)
+    public function debugRestoreEvent($data)
+    {
+        \Log::info('Restore event received', $data);
+    }
+
+    public function restore($uuid)
     {
         try {
-            \Log::info('Attempting to restore company', ['id' => $id]);
+            \Log::info('Attempting to restore company', ['uuid' => $uuid, 'type' => gettype($uuid)]);
             
-            $company = CompanyDataModel::withTrashed()->findOrFail($id);
+            if (empty($uuid)) {
+                \Log::error('Company UUID is null or empty');
+                session()->flash('error', 'Company UUID is missing. Cannot restore company.');
+                return;
+            }
+            
+            $company = CompanyDataModel::withTrashed()->where('uuid', $uuid)->firstOrFail();
             
             if (!$company->trashed()) {
-                \Log::warning('Company is not deleted', ['id' => $id]);
+                \Log::warning('Company is not deleted', ['uuid' => $uuid]);
                 session()->flash('error', 'Company is not deleted.');
                 return;
             }
             
             \Log::info('Found company to restore', [
-                'id' => $id,
+                'uuid' => $uuid,
+                'id' => $company->id,
                 'company_name' => $company->company_name,
                 'email' => $company->email
             ]);
@@ -324,7 +344,7 @@ class CompanyData extends Component
             $this->dispatch('companyRestored');
         } catch (\Exception $e) {
             \Log::error('Error restoring company', [
-                'id' => $id,
+                'uuid' => $uuid,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
