@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Jobs\SendUserCredentialsEmail;
 use App\Traits\UserValidation;
 use App\Traits\UserCache;
-use App\Traits\KeyboardShortcuts;
+
 use App\Traits\UserDataFormatter;
 
 class Users extends Component
@@ -22,7 +22,7 @@ class Users extends Component
     use WithPagination;
     use UserValidation;
     use UserCache;
-    use KeyboardShortcuts;
+   
     use UserDataFormatter;
 
     public $uuid;
@@ -84,7 +84,7 @@ class Users extends Component
     public function mount()
     {
         $this->resetPage();
-        $this->mountKeyboardShortcuts();
+        
     }
 
     public function render()
