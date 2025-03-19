@@ -215,28 +215,25 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                         <div class="inline-flex items-center justify-center space-x-4">
-                            <!-- Edit button -->
-                            <button wire:click="edit('{{ $company->uuid }}')"
-                                class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 focus:outline-none">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                            </button>
+                            <!-- Edit button - only show if company is not deleted -->
+                            @if (!$company->trashed())
+                                <button wire:click="edit('{{ $company->uuid }}')"
+                                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 focus:outline-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            @endif
 
                             @if ($company->trashed())
                                 <!-- Restore button -->
                                 <button
-                                    @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {
-                                    detail: {
-                                        id: '{{ $company->uuid }}',
-                                        type: 'company',
-                                        name: '{{ addslashes($company->company_name) }}'
-                                    }
-                                }))"
-                                    class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 focus:outline-none">
+                                    @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $company->uuid }}', name: '{{ $company->company_name }}'}}))"
+                                    class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 focus:outline-none"
+                                    title="Restore Company">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -249,8 +246,7 @@
                                 <button
                                     @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {
                                         detail: {
-                                            id: '{{ $company->uuid }}',
-                                            type: 'company',
+                                            uuid: '{{ $company->uuid }}',
                                             name: '{{ addslashes($company->company_name) }}'
                                         }
                                     }))"
