@@ -32,14 +32,14 @@
                 <!-- Pie -->
                 <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="submit"
-                        class="sm:w-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="sm:w-auto w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 dark:bg-gray-800 text-base font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                         wire:loading.attr="disabled" wire:target="{{ $modalAction }}"
                         x-bind:disabled="Object.keys(errors).length > 0">
                         <span wire:loading.remove wire:target="{{ $modalAction }}">
                             {{ $modalAction === 'store' ? 'Save' : 'Update' }}
                         </span>
-                        <span wire:loading wire:target="{{ $modalAction }}" class="flex items-center">
-                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                        <span wire:loading wire:target="{{ $modalAction }}" class="inline-flex items-center">
+                            <svg class="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
                                 fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                     stroke-width="4"></circle>
