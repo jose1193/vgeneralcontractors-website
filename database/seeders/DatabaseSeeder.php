@@ -19,20 +19,57 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = [
-            Permission::create(['name' => 'Admin', 'guard_name' => 'web', 'uuid' => Uuid::uuid4()->toString()]),
-            Permission::create(['name' => 'User', 'guard_name' => 'web', 'uuid' => Uuid::uuid4()->toString()]),
-            Permission::create(['name' => 'Other', 'guard_name' => 'web', 'uuid' => Uuid::uuid4()->toString()]),
-        ];
-
-        // MANAGER ADMIN
+        // Crear los roles principales (Capitalize format)
         $adminRole = Role::create([
-            'name' => 'Admin', 
-            'guard_name' => 'web',
+            'name' => 'Admin',
             'uuid' => Uuid::uuid4()->toString()
         ]);
-        $adminRole->syncPermissions($permissions);
+        $userRole = Role::create([
+            'name' => 'User',
+            'uuid' => Uuid::uuid4()->toString()
+        ]);
+        $otherRole = Role::create([
+            'name' => 'Other',
+            'uuid' => Uuid::uuid4()->toString()
+        ]);
 
+        // Definir modelos para permisos
+        $models = [
+            'USER', 'EMAIL_DATA', 'SERVICE_CATEGORY', 'PORTFOLIO', 'COMPANY_DATA', 
+            'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO'
+        ];
+
+        // Definir acciones para permisos
+        $actions = ['CREATE', 'READ', 'UPDATE', 'DELETE', 'RESTORE'];
+
+        // Crear todos los permisos (UPPERCASE format)
+        $allPermissions = [];
+        foreach ($models as $model) {
+            foreach ($actions as $action) {
+                $permissionName = "{$action}_{$model}";
+                Permission::create([
+                    'name' => $permissionName,
+                    'uuid' => Uuid::uuid4()->toString()
+                ]);
+                $allPermissions[] = $permissionName;
+            }
+        }
+
+        // Permisos para gestionar usuarios
+        $userManagementPermissions = [
+            'CREATE_USER', 'READ_USER', 'UPDATE_USER', 'DELETE_USER', 'RESTORE_USER'
+        ];
+
+        // Permisos para "Other" (ajusta según tus necesidades)
+        $otherPermissions = [
+            'READ_POST', 'READ_PORTFOLIO', 'READ_SERVICE_CATEGORY'
+            // Añade más según sea necesario
+        ];
+
+        // Todos los permisos excepto los de gestión de usuarios
+        $nonUserManagementPermissions = array_diff($allPermissions, $userManagementPermissions);
+
+        // Crear usuarios para cada rol
         $adminUser = User::factory()->create([
             'name' => 'Victor Lara',
             'email' => 'info@vgeneralcontractors.com',
@@ -41,7 +78,7 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $adminUser->assignRole($adminRole);
+        $adminUser->assignRole('Admin');
 
         // SECOND ADMIN
         $adminUser2 = User::factory()->create([
@@ -51,17 +88,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('argenis01='),
             'uuid' => Uuid::uuid4()->toString()
         ]);
-        $adminUser2->assignRole($adminRole);
+        $adminUser2->assignRole('Admin');
         // END SECOND ADMIN
-        // END MANAGER ADMIN
-
-        // MANAGER USER
-        $userRole = Role::create([
-            'name' => 'User', 
-            'guard_name' => 'web',
-            'uuid' => Uuid::uuid4()->toString()
-        ]);
-        $userRole->syncPermissions([$permissions[1]]);
 
         $userUser = User::factory()->create([
             'name' => 'User',
@@ -71,17 +99,25 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $userUser->assignRole($userRole);
-        // END MANAGER USER
+        $userUser->assignRole('User');
 
-        // OTHERS ROLES
-        $othersRole = Role::create([
-            'name' => 'Others', 
-            'guard_name' => 'web',
+        $otherUser = User::factory()->create([
+            'name' => 'Other User',
+            'email' => 'other@example.com',
+            'password' => bcrypt('password'),
             'uuid' => Uuid::uuid4()->toString()
         ]);
-        $othersRole->syncPermissions([$permissions[2]]);
-        // END OTHERS ROLES
+        $otherUser->assignRole('Other');
+
+        // Asignar permisos a los roles
+        // Para Admin: todos los permisos
+        $adminRole->givePermissionTo($allPermissions);
+        
+        // Para User: todos excepto gestión de usuarios
+        $userRole->givePermissionTo($nonUserManagementPermissions);
+        
+        // Para Other: solo permisos específicos
+        $otherRole->givePermissionTo($otherPermissions);
 
         // Crear la categoría "General" para blog
         BlogCategory::create([
