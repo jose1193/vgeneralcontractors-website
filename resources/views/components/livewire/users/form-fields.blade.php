@@ -39,7 +39,7 @@
 
 <!-- Role Selection -->
 <div class="col-span-1 md:col-span-2">
-    <x-select-input name="role" label="Role" model="form.role" :options="$roles" :error="$errors->first('role')" />
+    <x-select-input name="role" label="Role *" model="form.role" :options="$roles" :error="$errors->first('role')" required />
 </div>
 
 <!-- Date of birth - only shown in edit mode -->
