@@ -34,13 +34,11 @@
 <x-text-input name="country" label="Country" model="form.country" :error="$errors->first('country')" />
 
 
-<!-- Gender -->
+<!-- Gender - Ahora ocupa solo una columna -->
 <x-select-input name="gender" label="Gender" model="form.gender" :options="['male' => 'Male', 'female' => 'Female', 'other' => 'Other']" :error="$errors->first('gender')" />
 
-<!-- Role Selection -->
-<div class="col-span-1 md:col-span-2">
-    <x-select-input name="role" label="Role *" model="form.role" :options="$roles" :error="$errors->first('role')" required />
-</div>
+<!-- Role Selection - Ahora está al lado de Gender -->
+<x-select-input name="role" label="Role" model="form.role" :options="$roles" :error="$errors->first('role')" required />
 
 <!-- Date of birth - only shown in edit mode -->
 @if ($modalAction === 'update')
