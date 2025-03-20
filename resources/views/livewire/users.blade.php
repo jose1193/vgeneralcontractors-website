@@ -30,7 +30,7 @@
                         </x-select-input-per-pages>
 
                         <div class="w-full sm:w-auto">
-                            <x-add-button :wireClick="'openModal'">
+                            <x-add-button :wireClick="'create'">
                                 Add User
                             </x-add-button>
                         </div>
@@ -66,6 +66,7 @@
                     gender: '{{ $gender }}',
                     date_of_birth: '{{ $date_of_birth }}',
                     username: '{{ $username }}',
+                    role: '{{ $role }}',
                     password: '',
                     password_confirmation: '',
                     send_password_reset: false
@@ -85,6 +86,7 @@
                 gender: '{{ $gender }}',
                 date_of_birth: '{{ $date_of_birth }}',
                 username: '{{ $username }}',
+                role: '{{ $role }}',
                 password: '',
                 password_confirmation: '',
                 send_password_reset: false
@@ -95,33 +97,35 @@
                 const data = event.detail;
                 console.log('Received user data:', data);
             
+                // Limpiar completamente el formulario primero
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+            
                 // Actualizar el formulario con los nuevos datos
-                form.name = data.name;
-                form.last_name = data.last_name;
-                form.email = data.email;
-                form.phone = data.phone;
-                form.address = data.address;
-                form.city = data.city;
-                form.zip_code = data.zip_code;
-                form.country = data.country;
-                form.gender = data.gender;
-                form.username = data.username;
+                Object.keys(data).forEach(key => {
+                    if (key in form) {
+                        form[key] = data[key];
+                    }
+                });
             
                 // Sincronizar con Livewire
-                $wire.set('name', data.name);
-                $wire.set('last_name', data.last_name);
-                $wire.set('email', data.email);
-                $wire.set('phone', data.phone);
-                $wire.set('address', data.address);
-                $wire.set('city', data.city);
-                $wire.set('zip_code', data.zip_code);
-                $wire.set('country', data.country);
-                $wire.set('gender', data.gender);
-                $wire.set('username', data.username);
+                $wire.set('name', data.name || '');
+                $wire.set('last_name', data.last_name || '');
+                $wire.set('email', data.email || '');
+                $wire.set('phone', data.phone || '');
+                $wire.set('address', data.address || '');
+                $wire.set('city', data.city || '');
+                $wire.set('zip_code', data.zip_code || '');
+                $wire.set('country', data.country || '');
+                $wire.set('gender', data.gender || '');
+                $wire.set('date_of_birth', data.date_of_birth || '');
+                $wire.set('username', data.username || '');
+                $wire.set('role', data.role || '');
             
                 clearErrors();
             });">
-                <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" />
+                <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
         </x-modals.form-modal>
     @endif

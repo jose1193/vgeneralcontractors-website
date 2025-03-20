@@ -1,4 +1,4 @@
-@props(['modalAction', 'usernameAvailable' => null])
+@props(['modalAction', 'usernameAvailable' => null, 'roles' => []])
 
 <!-- First Name -->
 <x-name-input name="name" label="First Name" model="form.name" :error="$errors->first('name')" />
@@ -36,6 +36,11 @@
 
 <!-- Gender -->
 <x-select-input name="gender" label="Gender" model="form.gender" :options="['male' => 'Male', 'female' => 'Female', 'other' => 'Other']" :error="$errors->first('gender')" />
+
+<!-- Role Selection -->
+<div class="col-span-1 md:col-span-2">
+    <x-select-input name="role" label="Role" model="form.role" :options="$roles" :error="$errors->first('role')" />
+</div>
 
 <!-- Date of birth - only shown in edit mode -->
 @if ($modalAction === 'update')

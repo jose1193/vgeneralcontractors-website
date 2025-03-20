@@ -44,6 +44,8 @@ class Users extends Component
     public $send_password_reset = false;
     public $state;
     public $showDeleted = false;
+    public $role;
+    public $roles = [];
 
     public $isOpen = false;
     public $modalTitle = 'Create User';
@@ -82,7 +84,16 @@ class Users extends Component
     public function mount()
     {
         $this->resetPage();
-        
+        $this->loadRoles();
+    }
+
+    /**
+     * Load roles for the dropdown
+     */
+    public function loadRoles()
+    {
+        // Get all roles from Spatie's Role model
+        $this->roles = \Spatie\Permission\Models\Role::pluck('name', 'name')->toArray();
     }
 
     public function render()
@@ -150,7 +161,7 @@ class Users extends Component
         // Abrir el modal
         $this->isOpen = true;
         
-        // Emitir evento para actualizar Alpine.js
+        // Emitir evento para actualizar Alpine.js - make sure ALL fields are empty
         $this->dispatch('user-edit', [
             'name' => '',
             'last_name' => '',
@@ -160,9 +171,11 @@ class Users extends Component
             'address' => '',
             'zip_code' => '',
             'city' => '',
+            'state' => '',
             'country' => '',
             'gender' => '',
             'date_of_birth' => '',
+            'role' => '',
             'action' => 'store'
         ]);
     }
@@ -171,13 +184,17 @@ class Users extends Component
     {
         try {
             // Use validation trait
-            $this->validate($this->getCreateValidationRules());
+            $validationRules = $this->getCreateValidationRules();
+            $validationRules['role'] = 'required|string|exists:roles,name';
+            
+            $this->validate($validationRules);
 
             \Log::info('Storing user with data:', [
                 'name' => $this->name,
                 'last_name' => $this->last_name,
                 'email' => $this->email,
-                'phone' => $this->phone
+                'phone' => $this->phone,
+                'role' => $this->role
             ]);
 
             // Generate username from name and last_name
@@ -207,6 +224,7 @@ class Users extends Component
                 'latitude' => null,
                 'longitude' => null,
                 'state' => $this->state,
+                'role' => $this->role,
             ];
 
             // Format data and create user
@@ -214,6 +232,9 @@ class Users extends Component
             $formattedData['password'] = Hash::make($randomPassword); // Hash the password
             
             $user = User::create($formattedData);
+            
+            // Assign the selected role to the user
+            $user->assignRole($this->role);
             
             $this->significantDataChange = true;
             
@@ -317,6 +338,9 @@ class Users extends Component
             $this->longitude = $user->longitude;
             $this->state = $user->state;
             
+            // Get the user's role
+            $this->role = $user->roles->first()->name ?? '';
+            
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
             $this->openModal();
@@ -334,6 +358,7 @@ class Users extends Component
                 'country' => $this->country,
                 'gender' => $this->gender,
                 'date_of_birth' => $this->date_of_birth,
+                'role' => $this->role,
                 'action' => 'update'
             ]);
             
@@ -341,7 +366,8 @@ class Users extends Component
                 'uuid' => $this->uuid,
                 'name' => $this->name,
                 'email' => $this->email,
-                'username' => $this->username
+                'username' => $this->username,
+                'role' => $this->role
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [
@@ -359,6 +385,7 @@ class Users extends Component
         try {
             // Use validation trait
             $validationRules = $this->getUpdateValidationRules();
+            $validationRules['role'] = 'required|string|exists:roles,name';
             
             // Verificar si el teléfono ha cambiado
             $user = User::where('uuid', $this->uuid)->firstOrFail();
@@ -409,6 +436,9 @@ class Users extends Component
             }
 
             $user->update($formattedData);
+            
+            // Update user role
+            $user->syncRoles([$this->role]);
             
             // Set flag for cache clearing
             $this->significantDataChange = true;
@@ -549,6 +579,7 @@ class Users extends Component
             'country' => $this->country,
             'gender' => $this->gender,
             'date_of_birth' => $this->date_of_birth,
+            'role' => $this->role,
             'action' => $this->modalAction
         ]);
     }
@@ -556,10 +587,28 @@ class Users extends Component
     public function closeModal()
     {
         $this->isOpen = false;
+        
         // Reset fields always when closing the modal
         $this->resetInputFields();
         $this->resetValidation();
-        $this->dispatch('user-edit');
+        
+        // Explicitly send empty data for ALL fields to reset Alpine.js form
+        $this->dispatch('user-edit', [
+            'name' => '',
+            'last_name' => '',
+            'email' => '',
+            'username' => '',
+            'phone' => '',
+            'address' => '',
+            'zip_code' => '',
+            'city' => '',
+            'state' => '',
+            'country' => '',
+            'gender' => '',
+            'date_of_birth' => '',
+            'role' => '',
+            'action' => ''
+        ]);
     }
 
     private function resetInputFields()
@@ -569,7 +618,7 @@ class Users extends Component
             'email', 'password', 'password_confirmation', 'phone', 
             'address', 'zip_code', 'city', 'country', 'gender', 
             'profile_photo_path', 'terms_and_conditions', 'latitude', 'longitude',
-            'send_password_reset', 'state'
+            'send_password_reset', 'state', 'role'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
