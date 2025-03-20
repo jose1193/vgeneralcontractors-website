@@ -11,6 +11,7 @@ use App\Traits\CacheTrait;
 use App\Traits\EmailValidation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Traits\ChecksPermissions;
 
 class EmailDatas extends Component
 {
@@ -18,6 +19,7 @@ class EmailDatas extends Component
     use PhoneDataFormatter;
     use CacheTrait;
     use EmailValidation;
+    use ChecksPermissions;
 
     // Definir el modelo para validación
     protected $validationModel = EmailData::class;
@@ -66,6 +68,10 @@ class EmailDatas extends Component
 
     public function render()
     {
+        if (!$this->checkPermission('READ_EMAIL_DATA', true)) {
+            return;
+        }
+        
         $searchTerm = '%' . $this->search . '%';
         $cacheKey = $this->generateCacheKey('emaildatas');
 
@@ -109,6 +115,10 @@ class EmailDatas extends Component
 
     public function create()
     {
+        if (!$this->checkPermissionWithMessage('CREATE_EMAIL_DATA', 'No tienes permiso para crear datos de email')) {
+            return;
+        }
+        
         $this->resetInputFields();
         $this->modalTitle = 'Create New Email Data';
         $this->modalAction = 'store';
@@ -118,6 +128,10 @@ class EmailDatas extends Component
     public function store()
     {
         try {
+            if (!$this->checkPermissionWithMessage('CREATE_EMAIL_DATA', 'No tienes permiso para crear datos de email')) {
+                return;
+            }
+            
             $this->validate($this->getCreateValidationRules());
 
             Log::info('Attempting to create new EmailData', [
@@ -208,6 +222,10 @@ class EmailDatas extends Component
     public function edit($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para editar datos de email')) {
+                return;
+            }
+            
             Log::info('Attempting to edit EmailData', ['uuid' => $uuid]);
 
             $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
@@ -247,6 +265,10 @@ class EmailDatas extends Component
     public function update()
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para actualizar datos de email')) {
+                return;
+            }
+            
             $this->validate($this->getUpdateValidationRules());
 
             Log::info('Attempting to update EmailData', [
@@ -296,6 +318,10 @@ class EmailDatas extends Component
     public function delete($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('DELETE_EMAIL_DATA', 'No tienes permiso para eliminar datos de email')) {
+                return false;
+            }
+            
             Log::info('Attempting to delete EmailData', ['uuid' => $uuid]);
 
             $emailData = EmailData::where('uuid', $uuid)->first();
@@ -325,6 +351,10 @@ class EmailDatas extends Component
     public function restore($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('RESTORE_EMAIL_DATA', 'No tienes permiso para restaurar datos de email')) {
+                return false;
+            }
+            
             Log::info('Attempting to restore EmailData', ['uuid' => $uuid]);
 
             $emailData = EmailData::withTrashed()->where('uuid', $uuid)->first();

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Traits\CompanyValidation;
 use App\Traits\CompanyDataFormatter;
 use App\Traits\CacheTrait;
+use App\Traits\ChecksPermissions;
 
 use Illuminate\Validation\Rule;
 
@@ -19,6 +20,7 @@ class CompanyData extends Component
     use CompanyValidation;
     use CompanyDataFormatter;
     use CacheTrait;
+    use ChecksPermissions;
    
 
     public $company_name, $name, $signature_path, $email, $phone, $address, $website, $latitude, $longitude;
@@ -66,6 +68,10 @@ class CompanyData extends Component
 
     public function render()
     {
+        if (!$this->checkPermission('READ_COMPANY_DATA', true)) {
+            return;
+        }
+        
         $searchTerm = '%' . $this->search . '%';
         $cacheKey = $this->generateCacheKey('company');
         
@@ -118,6 +124,10 @@ class CompanyData extends Component
 
     public function store()
     {
+        if (!$this->checkPermissionWithMessage('CREATE_COMPANY_DATA', 'No tienes permiso para crear datos de la compañía')) {
+            return;
+        }
+        
         $this->isSubmitting = true;
         
         try {
@@ -223,6 +233,10 @@ class CompanyData extends Component
 
     public function update()
     {
+        if (!$this->checkPermissionWithMessage('UPDATE_COMPANY_DATA', 'No tienes permiso para actualizar datos de la compañía')) {
+            return;
+        }
+        
         $this->isSubmitting = true;
         
         try {

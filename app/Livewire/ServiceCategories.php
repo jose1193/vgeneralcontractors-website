@@ -9,11 +9,13 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 use App\Traits\CacheTrait;
+use App\Traits\ChecksPermissions;
 
 class ServiceCategories extends Component
 {
     use WithPagination;
     use CacheTrait;
+    use ChecksPermissions;
 
     public $uuid;
     public $category;
@@ -59,6 +61,10 @@ class ServiceCategories extends Component
 
     public function render()
     {
+        if (!$this->checkPermission('READ_SERVICE_CATEGORY', true)) {
+            return;
+        }
+        
         $searchTerm = '%' . $this->search . '%';
         
         // Use CacheTrait's generic method
@@ -108,6 +114,10 @@ class ServiceCategories extends Component
 
     public function create()
     {
+        if (!$this->checkPermissionWithMessage('CREATE_SERVICE_CATEGORY', 'No tienes permiso para crear categorías de servicio')) {
+            return;
+        }
+        
         // Make sure all fields are clean
         $this->resetInputFields();
         
@@ -128,6 +138,10 @@ class ServiceCategories extends Component
     public function store()
     {
         try {
+            if (!$this->checkPermissionWithMessage('CREATE_SERVICE_CATEGORY', 'No tienes permiso para crear categorías de servicio')) {
+                return;
+            }
+
             $this->validate();
 
             \Log::info('Storing service category with data:', [
@@ -167,6 +181,10 @@ class ServiceCategories extends Component
     public function edit($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_SERVICE_CATEGORY', 'No tienes permiso para editar categorías de servicio')) {
+                return;
+            }
+            
             \Log::info('Attempting to edit service category', ['uuid' => $uuid]);
             
             $category = ServiceCategory::where('uuid', $uuid)->firstOrFail();
@@ -201,6 +219,10 @@ class ServiceCategories extends Component
     public function update()
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_SERVICE_CATEGORY', 'No tienes permiso para actualizar categorías de servicio')) {
+                return;
+            }
+
             $this->validate([
                 'category' => [
                     'required', 
@@ -249,6 +271,10 @@ class ServiceCategories extends Component
     public function delete($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('DELETE_SERVICE_CATEGORY', 'No tienes permiso para eliminar categorías de servicio')) {
+                return false;
+            }
+            
             \Log::info('Attempting to delete service category', ['uuid' => $uuid]);
             
             // Find the category first to log details
@@ -297,6 +323,10 @@ class ServiceCategories extends Component
     public function restore($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('RESTORE_SERVICE_CATEGORY', 'No tienes permiso para restaurar categorías de servicio')) {
+                return false;
+            }
+            
             \Log::info('Attempting to restore service category', ['uuid' => $uuid]);
             
             // Find the category first to log details

@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Traits\ChecksPermissions;
 
 class Portfolios extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithFileUploads, WithPagination, ChecksPermissions;
 
     protected $paginationTheme = 'tailwind';
 
@@ -63,6 +64,10 @@ class Portfolios extends Component
 
     public function render()
     {
+        if (!$this->checkPermission('READ_PORTFOLIO', true)) {
+            return;
+        }
+        
         $query = Portfolio::query()
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', '%' . $this->search . '%')
@@ -105,6 +110,10 @@ class Portfolios extends Component
 
     public function create()
     {
+        if (!$this->checkPermissionWithMessage('CREATE_PORTFOLIO', 'No tienes permiso para crear elementos de portfolio')) {
+            return;
+        }
+        
         $this->resetInputFields();
         $this->modalTitle = 'Create Portfolio';
         $this->modalAction = 'store';
@@ -114,6 +123,10 @@ class Portfolios extends Component
     public function store()
     {
         try {
+            if (!$this->checkPermissionWithMessage('CREATE_PORTFOLIO', 'No tienes permiso para crear elementos de portfolio')) {
+                return;
+            }
+
             $this->validate();
 
             \Log::info('Attempting to save portfolio', [
@@ -177,6 +190,10 @@ class Portfolios extends Component
     public function edit($id)
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_PORTFOLIO', 'No tienes permiso para editar elementos de portfolio')) {
+                return;
+            }
+            
             \Log::info('Attempting to edit portfolio', ['id' => $id]);
             
             $portfolio = Portfolio::findOrFail($id);
@@ -221,6 +238,10 @@ class Portfolios extends Component
     public function update()
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_PORTFOLIO', 'No tienes permiso para actualizar elementos de portfolio')) {
+                return;
+            }
+
             $this->validate();
 
             \Log::info('Attempting to update portfolio', [
@@ -297,6 +318,10 @@ class Portfolios extends Component
     public function delete($id)
     {
         try {
+            if (!$this->checkPermissionWithMessage('DELETE_PORTFOLIO', 'No tienes permiso para eliminar elementos de portfolio')) {
+                return false;
+            }
+            
             \Log::info('Attempting to delete portfolio', ['id' => $id]);
             
             $portfolio = Portfolio::findOrFail($id);
@@ -376,5 +401,19 @@ class Portfolios extends Component
     private function clearCache()
     {
         Cache::tags(['portfolios'])->flush();
+    }
+
+    public function restore($uuid)
+    {
+        try {
+            if (!$this->checkPermissionWithMessage('RESTORE_PORTFOLIO', 'No tienes permiso para restaurar elementos de portfolio')) {
+                return false;
+            }
+            
+            // ... código existente ...
+            
+        } catch (\Exception $e) {
+            // ... manejo de errores ...
+        }
     }
 } 

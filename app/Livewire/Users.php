@@ -15,6 +15,7 @@ use App\Jobs\SendUserCredentialsEmail;
 use App\Traits\UserValidation;
 use App\Traits\CacheTrait;
 use App\Traits\UserDataFormatter;
+use App\Traits\ChecksPermissions;
 
 class Users extends Component
 {
@@ -22,6 +23,7 @@ class Users extends Component
     use UserValidation;
     use CacheTrait;
     use UserDataFormatter;
+    use ChecksPermissions;
 
     public $uuid;
     public $name;
@@ -98,6 +100,10 @@ class Users extends Component
 
     public function render()
     {
+        if (!$this->checkPermission('READ_USER', true)) {
+            return; // No continúa si no tiene permiso
+        }
+        
         $searchTerm = '%' . $this->search . '%';
         
         // Use CacheTrait's generic method instead of UserCache specific method
@@ -151,6 +157,10 @@ class Users extends Component
 
     public function create()
     {
+        if (!$this->checkPermissionWithMessage('CREATE_USER', 'No tienes permiso para crear usuarios')) {
+            return;
+        }
+        
         // Asegurarse de que todos los campos estén limpios
         $this->resetInputFields();
         
@@ -183,6 +193,11 @@ class Users extends Component
     public function store()
     {
         try {
+            if (!$this->checkPermissionWithMessage('CREATE_USER', 'No tienes permiso para crear usuarios')) {
+                $this->dispatch('validation-failed');
+                return;
+            }
+            
             // Use validation trait
             $validationRules = $this->getCreateValidationRules();
             $validationRules['role'] = 'required|string|exists:roles,name';
@@ -316,6 +331,10 @@ class Users extends Component
     public function edit($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_USER', 'No tienes permiso para editar usuarios')) {
+                return;
+            }
+            
             \Log::info('Attempting to edit user', ['uuid' => $uuid]);
             
             $user = User::where('uuid', $uuid)->firstOrFail();
@@ -383,6 +402,11 @@ class Users extends Component
     public function update()
     {
         try {
+            if (!$this->checkPermissionWithMessage('UPDATE_USER', 'No tienes permiso para actualizar usuarios')) {
+                $this->dispatch('validation-failed');
+                return;
+            }
+            
             // Use validation trait
             $validationRules = $this->getUpdateValidationRules();
             $validationRules['role'] = 'required|string|exists:roles,name';
@@ -469,6 +493,11 @@ class Users extends Component
     public function delete($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('DELETE_USER', 'No tienes permiso para eliminar usuarios')) {
+                $this->dispatch('userDeleteError', ['message' => 'No tienes permiso para eliminar usuarios']);
+                return false;
+            }
+            
             \Log::info('Attempting to delete user', ['uuid' => $uuid]);
             
             // Find the user first to log details
@@ -518,6 +547,11 @@ class Users extends Component
     public function restore($uuid)
     {
         try {
+            if (!$this->checkPermissionWithMessage('RESTORE_USER', 'No tienes permiso para restaurar usuarios')) {
+                $this->dispatch('userRestoreError', ['message' => 'No tienes permiso para restaurar usuarios']);
+                return false;
+            }
+            
             \Log::info('Attempting to restore user', ['uuid' => $uuid]);
             
             // Find the user first to log details

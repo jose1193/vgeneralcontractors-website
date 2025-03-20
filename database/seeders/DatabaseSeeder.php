@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'User',
             'email' => 'user@user.com',
             'username' => 'user01',
-            'password' => bcrypt('example123='),
+            'password' => bcrypt('user01='),
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
