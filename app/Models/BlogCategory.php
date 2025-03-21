@@ -23,5 +23,9 @@ class BlogCategory extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 }
 

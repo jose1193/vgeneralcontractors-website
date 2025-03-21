@@ -15,8 +15,6 @@ class Post extends Model
         'post_title',
         'post_content',
         'post_image',
-        'post_status',
-        'post_date',
         'meta_description',
         'meta_title',
         'meta_keywords',
