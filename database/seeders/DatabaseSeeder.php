@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
             'blog_category_description' => 'Valor por defecto',
             'blog_category_image' => 'Valor por defecto',
             'user_id' => 1,
-            'status' => 'active',
+           
         ]);
         // end      
 

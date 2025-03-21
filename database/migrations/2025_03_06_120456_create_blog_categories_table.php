@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('blog_category_name')->nullable();
             $table->string('blog_category_description')->nullable();
             $table->string('blog_category_image')->nullable();
-            $table->string('status')->default('active');
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -40,6 +40,12 @@
                         </x-nav-link>
                     @endcan
 
+                    @can('READ_BLOG_CATEGORY')
+                        <x-nav-link href="{{ route('blog-categories') }}" :active="request()->routeIs('blog-categories')">
+                            {{ __('Blog Categories') }}
+                        </x-nav-link>
+                    @endcan
+
                     @can('READ_PORTFOLIO')
                         <x-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
                             {{ __('Portfolio') }}
@@ -205,6 +211,12 @@
             @can('READ_SERVICE_CATEGORY')
                 <x-responsive-nav-link href="{{ route('service-categories') }}" :active="request()->routeIs('service-categories')">
                     {{ __('Service Categories') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('READ_BLOG_CATEGORY')
+                <x-responsive-nav-link href="{{ route('blog-categories') }}" :active="request()->routeIs('blog-categories')">
+                    {{ __('Blog Categories') }}
                 </x-responsive-nav-link>
             @endcan
 

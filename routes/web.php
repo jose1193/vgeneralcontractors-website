@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Users;
 use App\Livewire\EmailDatas;
 use App\Livewire\CompanyData;
+use App\Livewire\BlogCategories;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +104,10 @@ Route::middleware([
     Route::get('/service-categories', function () {
         return view('service-categories');
     })->name('service-categories');
+    
+    Route::get('/blog-categories', function () {
+        return view('blog-categories');
+    })->name('blog-categories');
 
     Route::get('/portfolios', function () {
         return view('portfolios');
