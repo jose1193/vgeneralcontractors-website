@@ -149,7 +149,17 @@ class BlogCategories extends Component
                 return;
             }
 
-            $this->validate();
+            // Update validation rules to include uniqueness check
+            $validationRules = $this->rules;
+            $validationRules['blog_category_name'] = [
+                'required', 
+                'string', 
+                'min:3', 
+                'max:100',
+                'unique:blog_categories,blog_category_name,NULL,id,deleted_at,NULL'
+            ];
+
+            $this->validate($validationRules);
 
             \Log::info('Storing blog category with data:', [
                 'blog_category_name' => $this->blog_category_name,
@@ -235,6 +245,7 @@ class BlogCategories extends Component
                 return;
             }
 
+            // Use validation with unique rule that ignores current record
             $this->validate([
                 'blog_category_name' => [
                     'required', 
@@ -426,7 +437,15 @@ class BlogCategories extends Component
 
     public function updatedBlogCategoryName()
     {
-        $this->validateOnly('blog_category_name');
+        // First validate basic requirements
+        $this->validateOnly('blog_category_name', [
+            'blog_category_name' => 'required|string|min:3|max:100'
+        ]);
+        
+        // Then check uniqueness
+        if (!empty($this->blog_category_name) && $this->checkCategoryNameExists($this->blog_category_name)) {
+            $this->addError('blog_category_name', 'This category name already exists.');
+        }
     }
 
     public function updatedBlogCategoryDescription()
@@ -439,5 +458,34 @@ class BlogCategories extends Component
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
         $this->clearCache('blog_categories');
+    }
+
+    /**
+     * Check if a category name already exists in the database
+     * 
+     * @param string $categoryName
+     * @return bool
+     */
+    public function checkCategoryNameExists($categoryName)
+    {
+        if (empty($categoryName)) {
+            return false;
+        }
+
+        // If we're in update mode and the category name hasn't changed, it's valid
+        if ($this->modalAction === 'update' && $this->uuid) {
+            $category = BlogCategory::where('uuid', $this->uuid)->first();
+            if ($category && $category->blog_category_name === $categoryName) {
+                return false;
+            }
+        }
+
+        // Check if category name exists for any other category
+        return BlogCategory::where('blog_category_name', $categoryName)
+            ->when($this->uuid, function ($query) {
+                return $query->where('uuid', '!=', $this->uuid);
+            })
+            ->whereNull('deleted_at')
+            ->exists();
     }
 }
