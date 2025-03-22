@@ -9,6 +9,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -112,6 +113,10 @@ Route::middleware([
     Route::get('/portfolios', function () {
         return view('portfolios');
     })->name('portfolios');
+
+    Route::get('/admin/posts', function () {
+        return view('posts');
+    })->name('admin.posts');
 });
 
 Route::get('/new-roof', function () {
@@ -169,3 +174,7 @@ Route::get('/cookies-policy', function () {
 Route::get('/terms-and-conditions', function () {
     return view('terms-and-conditions');
 })->name('terms-and-conditions');
+
+// Public post routes
+Route::get('/blog/{postId}', [PostController::class, 'showPost'])->name('posts.show');
+Route::get('/blog', [PostController::class, 'showLatestPosts'])->name('posts.latest');

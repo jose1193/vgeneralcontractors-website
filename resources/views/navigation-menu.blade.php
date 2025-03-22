@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false, blogMenuOpen: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -40,11 +40,54 @@
                         </x-nav-link>
                     @endcan
 
-                    @can('READ_BLOG_CATEGORY')
-                        <x-nav-link href="{{ route('blog-categories') }}" :active="request()->routeIs('blog-categories')">
-                            {{ __('Blog Categories') }}
-                        </x-nav-link>
-                    @endcan
+                    <!-- Blog Dropdown Menu -->
+                    @if (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY'))
+                        <div class="hidden sm:flex sm:items-center">
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open"
+                                    class="inline-flex items-center px-1 pt-1 border-b-2 
+                                    {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories')
+                                        ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
+                                        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
+                                    text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
+                                    {{ __('Blog Management') }}
+                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+
+                                <div x-show="open" @click.away="open = false"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95"
+                                    class="absolute z-50 mt-2 w-48 rounded-md shadow-lg origin-top-right right-0"
+                                    style="display: none;">
+                                    <div
+                                        class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-gray-700">
+                                        @can('READ_POST')
+                                            <a href="{{ route('admin.posts') }}"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('admin.posts') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                                {{ __('Posts') }}
+                                            </a>
+                                        @endcan
+
+                                        @can('READ_BLOG_CATEGORY')
+                                            <a href="{{ route('blog-categories') }}"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('blog-categories') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                                {{ __('Blog Categories') }}
+                                            </a>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     @can('READ_PORTFOLIO')
                         <x-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
@@ -214,11 +257,40 @@
                 </x-responsive-nav-link>
             @endcan
 
-            @can('READ_BLOG_CATEGORY')
-                <x-responsive-nav-link href="{{ route('blog-categories') }}" :active="request()->routeIs('blog-categories')">
-                    {{ __('Blog Categories') }}
-                </x-responsive-nav-link>
-            @endcan
+            <!-- Blog Management Dropdown (Mobile) -->
+            @if (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY'))
+                <div x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 
+                        {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories')
+                            ? 'border-gray-400 dark:border-indigo-600 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/50'
+                            : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' }}
+                        text-base font-medium focus:outline-none transition duration-150 ease-in-out">
+                        <span>{{ __('Blog Management') }}</span>
+                        <svg class="ml-auto h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div x-show="open" class="mt-2 space-y-1" style="display: none;">
+                        @can('READ_POST')
+                            <x-responsive-nav-link href="{{ route('admin.posts') }}" :active="request()->routeIs('admin.posts')" class="pl-8">
+                                {{ __('Posts') }}
+                            </x-responsive-nav-link>
+                        @endcan
+
+                        @can('READ_BLOG_CATEGORY')
+                            <x-responsive-nav-link href="{{ route('blog-categories') }}" :active="request()->routeIs('blog-categories')"
+                                class="pl-8">
+                                {{ __('Blog Categories') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                    </div>
+                </div>
+            @endif
 
             @can('READ_PORTFOLIO')
                 <x-responsive-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
