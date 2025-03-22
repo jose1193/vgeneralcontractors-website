@@ -64,7 +64,7 @@
                                 {{ \Illuminate\Support\Str::limit($post->post_title, 30, '...') }}
                                 @if ($post->deleted_at)
                                     <span class="text-xs text-red-600 dark:text-red-400 ml-2">
-                                        ({{ __('Deleted') }})
+                                        ({{ __('Inactive') }})
                                     </span>
                                 @endif
                             </div>
@@ -107,8 +107,8 @@
                                 </button>
 
                                 <!-- Delete Button -->
-                                <button x-data="{}"
-                                    x-on:click="$dispatch('open-delete-modal', { uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}', type: 'post' })"
+                                <button
+                                    @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}'}}))"
                                     class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -119,8 +119,8 @@
                                 </button>
                             @else
                                 <!-- Restore Button -->
-                                <button x-data="{}"
-                                    x-on:click="$dispatch('open-restore-modal', { uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}', type: 'post' })"
+                                <button
+                                    @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}'}}))"
                                     class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-200">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
