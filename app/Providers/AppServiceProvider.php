@@ -7,6 +7,8 @@ use App\Http\Controllers\CompanyDataController;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Str;
+use App\Helpers\StringHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
                 'job' => get_class($event->job->payload()['data']['command']),
                 'queue' => $event->job->getQueue()
             ]);
+        });
+
+        Str::macro('readDuration', function ($content, $wordsPerMinute = 200) {
+            return StringHelper::readDuration($content, $wordsPerMinute);
         });
     }
 }

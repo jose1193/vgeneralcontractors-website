@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 use Carbon\Carbon;
+use App\Models\Post;
+use App\Models\BlogCategory;
 
 class GenerateSitemap extends Command
 {
@@ -75,9 +77,28 @@ class GenerateSitemap extends Command
             );
         }
 
-        // Añadir páginas dinámicas si existen (ejemplo: proyectos, posts, etc.)
-        // Aquí puedes agregar lógica para obtener URLs dinámicas de tu base de datos
-        
+        // Añadir posts del blog
+        $this->info('Adding blog posts to sitemap...');
+        Post::where('post_status', 'published')->get()->each(function (Post $post) use ($sitemap) {
+            $sitemap->add(
+                Url::create(config('app.url') . "/blog/{$post->post_title_slug}")
+                    ->setLastModificationDate($post->updated_at)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                    ->setPriority(0.7)
+            );
+        });
+
+        // Añadir categorías del blog
+        $this->info('Adding blog categories to sitemap...');
+        BlogCategory::all()->each(function (BlogCategory $category) use ($sitemap) {
+            $sitemap->add(
+                Url::create(config('app.url') . "/blog/category/{$category->blog_category_name}")
+                    ->setLastModificationDate(Carbon::now())
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                    ->setPriority(0.6)
+            );
+        });
+
         // Guarda el sitemap
         $sitemap->writeToFile(public_path('sitemap.xml'));
 

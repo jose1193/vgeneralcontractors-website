@@ -123,6 +123,20 @@
                 }"
                 class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">FAQs</a>
 
+            <!-- Blog Link -->
+            <a href="{{ route('blog.index') }}"
+                :class="{
+                    'text-white': !isScrolled &&
+                        '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}',
+                    'text-yellow-400': isScrolled &&
+                        '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}',
+                    'text-gray-700 hover:text-gray-900': isScrolled && !
+                        '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}',
+                    'text-yellow-400 hover:text-yellow-300': !isScrolled && !
+                        '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}'
+                }"
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">Blog</a>
+
             <!-- Contact Dropdown -->
             <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" @click.away="open = false"
@@ -257,6 +271,15 @@
                     'text-gray-800 hover:bg-gray-100': !'{{ request()->routeIs('faqs') }}'
                 }"
                 class="block py-2.5 px-4 rounded transition duration-200 font-semibold">FAQs</a>
+
+            <!-- Mover este enlace ANTES del Contact Dropdown en el Mobile Drawer -->
+            <a href="{{ route('blog.index') }}"
+                :class="{
+                    'text-yellow-400': '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}',
+                    'text-gray-800 hover:bg-gray-100': !
+                        '{{ request()->routeIs('blog.index') || request()->routeIs('blog.show') || request()->routeIs('blog.category') || request()->routeIs('blog.search') }}'
+                }"
+                class="block py-2.5 px-4 rounded transition duration-200 font-semibold">Blog</a>
 
             <!-- Contact Dropdown -->
             <div x-data="{ open: false }" class="relative">

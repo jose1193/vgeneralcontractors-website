@@ -12,80 +12,51 @@
         <!-- text - end -->
 
         <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
-            <!-- article - start -->
-            <a href="#"
-                class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                <img src="{{ asset('assets/img/blog-1.webp') }}"
-                    alt="Guide to selecting the best roofing materials for Texas weather"
-                    class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-                    width="600" height="400" loading="lazy">
-                <div
-                    class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
-                </div>
-                <div class="relative mt-auto p-4">
-                    <span class="block text-sm text-gray-200">June 15, 2024</span>
-                    <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">Top Roofing Materials
-                        for Texas Weather</h2>
-                    <span class="font-semibold text-yellow-400">Read more</span>
-                </div>
-            </a>
-            <!-- article - end -->
+            @php
+                $latestPosts = App\Models\Post::latest()->take(4)->get();
+            @endphp
 
-            <!-- article - start -->
-            <a href="#"
-                class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                <img src="{{ asset('assets/img/blog-2.webp') }}"
-                    alt="Comprehensive guide to preparing your roof for storm season"
-                    class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-                    width="600" height="400" loading="lazy">
-                <div
-                    class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
+            @forelse($latestPosts as $post)
+                <!-- article - start -->
+                <a href="{{ route('blog.show', $post->post_title_slug) }}"
+                    class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
+                    @if ($post->post_image)
+                        <img src="{{ $post->post_image }}" alt="{{ $post->post_title }}"
+                            class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+                            width="600" height="400" loading="lazy">
+                    @else
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 transition duration-200 group-hover:scale-110">
+                        </div>
+                    @endif
+                    <div
+                        class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
+                    </div>
+                    <div class="relative mt-auto p-4">
+                        <span class="block text-sm text-gray-200">{{ $post->created_at->format('F d, Y') }}</span>
+                        <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">
+                            {{ \Illuminate\Support\Str::limit($post->post_title, 40) }}</h2>
+                        <span class="font-semibold text-yellow-400">Read more</span>
+                    </div>
+                </a>
+                <!-- article - end -->
+            @empty
+                <!-- Fallback content if no posts -->
+                <div class="col-span-full text-center py-8">
+                    <p class="text-lg text-gray-600">Check back soon for our latest blog posts!</p>
                 </div>
-                <div class="relative mt-auto p-4">
-                    <span class="block text-sm text-gray-200">June 10, 2024</span>
-                    <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">Preparing Your Roof
-                        for Storm Season</h2>
-                    <span class="font-semibold text-yellow-400">Read more</span>
-                </div>
-            </a>
-            <!-- article - end -->
+            @endforelse
+        </div>
 
-            <!-- article - start -->
-            <a href="#"
-                class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                <img src="{{ asset('assets/img/blog-3.webp') }}"
-                    alt="Energy-efficient roofing solutions for Texas homes"
-                    class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-                    width="600" height="400" loading="lazy">
-                <div
-                    class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
-                </div>
-                <div class="relative mt-auto p-4">
-                    <span class="block text-sm text-gray-200">June 5, 2024</span>
-                    <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">Energy-Efficient
-                        Roofing Solutions</h2>
-                    <span class="font-semibold text-yellow-400">Read more</span>
-                </div>
+        <div class="mt-10 text-center">
+            <a href="{{ route('blog.index') }}"
+                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition">
+                View All Articles
+                <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                    </path>
+                </svg>
             </a>
-            <!-- article - end -->
-
-            <!-- article - start -->
-            <a href="#"
-                class="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64">
-                <img src="{{ asset('assets/img/blog-4.webp') }}" alt="Essential roof maintenance tips for homeowners"
-                    class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
-                    width="600" height="400" loading="lazy">
-                <div
-                    class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent">
-                </div>
-                <div class="relative mt-auto p-4">
-                    <span class="block text-sm text-gray-200">June 1, 2024</span>
-                    <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">Essential Roof
-                        Maintenance Tips</h2>
-                    <span class="font-semibold text-yellow-400">Read more</span>
-                </div>
-            </a>
-            <!-- article - end -->
         </div>
     </div>
 </div>

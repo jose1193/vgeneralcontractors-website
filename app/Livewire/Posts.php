@@ -67,7 +67,7 @@ class Posts extends Component
 
     protected $rules = [
         'post_title' => 'required|string|min:3|max:255',
-        'post_content' => 'required|string|min:10',
+        'post_content' => 'required|string',
         'temp_image' => 'nullable|image|max:1024',
         'meta_description' => 'nullable|string|max:255',
         'meta_title' => 'nullable|string|max:100',
@@ -176,7 +176,22 @@ class Posts extends Component
                 return;
             }
 
+            \Log::info('Content before validation', [
+                'content' => $this->post_content,
+                'content_length' => strlen($this->post_content ?? ''),
+                'is_null' => is_null($this->post_content),
+                'is_empty' => empty($this->post_content)
+            ]);
+            
             $this->validate();
+
+            // Asegurarnos de que el contenido se procese correctamente antes de guardar
+            $formattedContent = $this->formatPostContentForSaving($this->post_content);
+            if (is_null($formattedContent)) {
+                $this->addError('post_content', 'The post content field cannot be empty.');
+                \Log::error('Content is empty after formatting');
+                return;
+            }
 
             // Generate slug from title
             $slug = Str::slug($this->post_title);
@@ -195,13 +210,14 @@ class Posts extends Component
             \Log::info('Storing post with data:', [
                 'post_title' => $this->post_title,
                 'category_id' => $this->category_id,
-                'image_url' => $imageUrl
+                'image_url' => $imageUrl,
+                'content_length' => strlen($formattedContent)
             ]);
 
             Post::create([
                 'uuid' => Str::uuid(),
                 'post_title' => $this->post_title,
-                'post_content' => $this->post_content,
+                'post_content' => $formattedContent,
                 'post_image' => $imageUrl,
                 'meta_description' => $this->meta_description,
                 'meta_title' => $this->meta_title ?? $this->post_title,
@@ -310,9 +326,11 @@ class Posts extends Component
                 $imageUrl = $this->postImageService->storePostImage($this->temp_image);
             }
             
+            $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><a><h1><h2><h3><h4><h5><h6><blockquote>';
+
             $post->update([
                 'post_title' => $this->post_title,
-                'post_content' => $this->post_content,
+                'post_content' => $this->formatPostContentForSaving($this->post_content),
                 'post_image' => $imageUrl,
                 'meta_description' => $this->meta_description,
                 'meta_title' => $this->meta_title ?? $this->post_title,
@@ -486,5 +504,30 @@ class Posts extends Component
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
         $this->clearCache('posts');
+    }
+
+    protected function formatPostContentForSaving($content)
+    {
+        // Permitir etiquetas HTML seguras
+        $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><a><h1><h2><h3><h4><h5><h6><blockquote><table><thead><tbody><tr><td><th><img><div><span>';
+        
+        // Limpiar el contenido pero conservar las etiquetas permitidas
+        $content = strip_tags($content, $allowedTags);
+        
+        // Asegurarse de que no esté vacío después de limpiar
+        if (empty(trim(strip_tags($content)))) {
+            return null; // Esto disparará el error de validación
+        }
+        
+        return $content;
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (empty(trim(strip_tags($this->post_content)))) {
+                $validator->errors()->add('post_content', 'The post content field cannot contain only HTML tags.');
+            }
+        });
     }
 }

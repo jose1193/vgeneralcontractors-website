@@ -29,6 +29,43 @@
             display: none !important;
         }
     </style>
+
+    <!-- En la sección head -->
+    <meta name="generator" content="V General Contractors Blog">
+    <meta name="robots" content="index, follow">
+    @if (isset($post))
+        <meta property="og:title" content="{{ $post->post_title }}">
+        <meta property="og:description" content="{{ strip_tags(Str::limit($post->post_content, 160)) }}">
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="{{ url()->current() }}">
+        @if ($post->post_image)
+            <meta property="og:image" content="{{ $post->post_image }}">
+        @endif
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $post->post_title }}">
+        <meta name="twitter:description" content="{{ strip_tags(Str::limit($post->post_content, 160)) }}">
+        @if ($post->post_image)
+            <meta name="twitter:image" content="{{ $post->post_image }}">
+        @endif
+    @else
+        <meta property="og:title" content="{{ config('app.name') }} - Blog">
+        <meta property="og:description"
+            content="Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="{{ asset('assets/img/blog-share.jpg') }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ config('app.name') }} - Blog">
+        <meta name="twitter:description"
+            content="Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team.">
+        <meta name="twitter:image" content="{{ asset('assets/img/blog-share.jpg') }}">
+    @endif
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name') }} Blog"
+        href="{{ route('feeds.rss') }}">
+
+    <!-- Antes de cerrar el head -->
+    <script src="https://cdn.tiny.cloud/1/o37wydoc26hw1jj4mpqtzxsgfu1an5c3r8fz59f84yqt7z5u/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
 </head>
 
 <body class="font-sans antialiased">
@@ -48,7 +85,11 @@
 
         <!-- Page Content -->
         <main>
-            {{ $slot }}
+            @hasSection('content')
+                @yield('content')
+            @else
+                {{ $slot ?? '' }}
+            @endif
         </main>
 
         <footer class="bg-transparent py-4 text-center text-gray-600 dark:text-gray-400">

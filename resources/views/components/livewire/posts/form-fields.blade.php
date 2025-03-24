@@ -49,14 +49,44 @@
         @endif
     </div>
 
-    <!-- Post Content -->
-    <div>
+    <!-- Post Content with TinyMCE -->
+    <div wire:ignore>
         <x-label for="post_content" value="{{ __('Post Content') }}" required="true" />
         <textarea id="post_content"
             class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-            rows="8" wire:model.lazy="post_content" x-model="form.post_content"
-            @input="$wire.set('post_content', $event.target.value)"></textarea>
-        <x-input-error for="post_content" class="mt-2" />
+            rows="8" wire:model="post_content">{{ $post_content }}</textarea>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('TinyMCE initialization started');
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.init({
+                        selector: '#post_content',
+                        plugins: 'table lists link image code',
+                        toolbar: 'bold italic | bullist numlist | link',
+                        setup: function(editor) {
+                            editor.on('init', function() {
+                                console.log('TinyMCE init complete');
+                            });
+                            editor.on('change', function() {
+                                @this.set('post_content', editor.getContent());
+                            });
+                        }
+                    });
+                } else {
+                    console.error('TinyMCE not found');
+                }
+            });
+        </script>
+    </div>
+    <x-input-error for="post_content" class="mt-2" />
+
+    <!-- Agregar este div temporalmente para depuración -->
+    <div class="mt-2 text-xs text-gray-500">
+        <p>Content Length: {{ strlen($post_content ?? '') }}</p>
+        <button type="button" class="px-2 py-1 bg-gray-200 rounded" onclick="console.log(@this.post_content)">
+            Log Content
+        </button>
     </div>
 
     <!-- Meta Fields Section -->
@@ -95,6 +125,4 @@
             <x-input-error for="meta_keywords" class="mt-2" />
         </div>
     </div>
-
-
 </div>

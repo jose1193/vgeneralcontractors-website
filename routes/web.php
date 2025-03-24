@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\FeedController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -175,6 +176,9 @@ Route::get('/terms-and-conditions', function () {
     return view('terms-and-conditions');
 })->name('terms-and-conditions');
 
-// Public post routes
-Route::get('/blog/{postId}', [PostController::class, 'showPost'])->name('posts.show');
-Route::get('/blog', [PostController::class, 'showLatestPosts'])->name('posts.latest');
+// Rutas públicas del blog
+Route::get('/blog', [PostController::class, 'showLatestPosts'])->name('blog.index');
+Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
+Route::get('/blog/category/{categorySlug}', [PostController::class, 'showPostsByCategory'])->name('blog.category');
+Route::get('/blog/{slug}', [PostController::class, 'show'])->name('blog.show');
+Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');

@@ -82,8 +82,9 @@
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <div class="flex justify-center space-x-2">
                             <!-- View Button -->
-                            <a href="{{ route('posts.show', $post->post_title_slug) }}" target="_blank"
-                                class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200">
+                            <a href="{{ route('blog.show', $post->post_title_slug) }}" target="_blank"
+                                class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200"
+                                title="View published post">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

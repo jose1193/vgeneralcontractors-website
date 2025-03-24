@@ -21,7 +21,20 @@ class Post extends Model
         'post_title_slug',
         'category_id',
         'user_id',
+        'post_status'
     ];
+
+    // Agrega atributo virtual para post_status
+    protected $attributes = [
+        'post_status' => 'published',
+    ];
+
+    // Accesorio para siempre devolver el estado correcto
+    public function getPostStatusAttribute($value)
+    {
+        // Si no hay valor en la BD, devuelve 'published' por defecto
+        return $value ?: 'published';
+    }
 
     /**
      * Get the user that owns the post.
