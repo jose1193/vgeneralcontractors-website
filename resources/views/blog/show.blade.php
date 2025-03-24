@@ -33,7 +33,7 @@
     <div class="pt-16 lg:pt-20">
         <!-- Featured image -->
         @if ($post->post_image)
-            <div class="relative h-96 md:h-[500px] w-full">
+            <div class="relative h-96 md:h-[500px] w-full blog-hero-section">
                 <img src="{{ $post->post_image }}" alt="{{ $post->post_title }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black opacity-40"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
@@ -202,7 +202,13 @@
 
     @push('styles')
         <style>
-            /* Estilo adicional para el contenido del post */
+            /* Add this to fix the hero image position */
+            .blog-hero-section {
+                margin-top: -5rem;
+                /* Adjust to compensate for navbar */
+            }
+
+            /* Existing styles */
             .prose img {
                 @apply my-6 rounded-lg shadow-md;
             }
