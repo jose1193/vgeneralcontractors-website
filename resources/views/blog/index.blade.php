@@ -3,7 +3,7 @@
 @section('content')
     <div class="pt-16 lg:pt-20">
         <!-- Header Section with Search -->
-        <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-16">
+        <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-28 blog-hero-section">
             <div class="container mx-auto px-4">
                 <div class="max-w-4xl mx-auto text-center">
                     <h1 class="text-4xl md:text-5xl font-bold mb-6">Our Blog</h1>
@@ -120,4 +120,15 @@
             </div>
         </div>
     </div>
+
+    @push('styles')
+        <style>
+            /* Add this to fix the hero section position */
+            .blog-hero-section {
+                margin-top: -5rem;
+
+                /* Adjust to compensate for navbar */
+            }
+        </style>
+    @endpush
 @endsection
