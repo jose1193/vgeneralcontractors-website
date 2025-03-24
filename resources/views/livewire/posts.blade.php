@@ -55,22 +55,22 @@
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
             <div x-data="formValidation({
                 initialValues: {
-                    post_title: '{{ $post_title }}',
-                    post_content: '',
-                    meta_description: '{{ $meta_description }}',
-                    meta_title: '{{ $meta_title }}',
-                    meta_keywords: '{{ $meta_keywords }}',
+                    post_title: '{{ addslashes($post_title) }}',
+                    post_content: '{{ addslashes($post_content) }}',
+                    meta_description: '{{ addslashes($meta_description) }}',
+                    meta_title: '{{ addslashes($meta_title) }}',
+                    meta_keywords: '{{ addslashes($meta_keywords) }}',
                     category_id: '{{ $category_id }}',
                 },
                 modalAction: '{{ $modalAction }}'
             })" x-init="modalAction = '{{ $modalAction }}';
             // Initialize form values
             form = {
-                post_title: '{{ $post_title }}',
-                post_content: '',
-                meta_description: '{{ $meta_description }}',
-                meta_title: '{{ $meta_title }}',
-                meta_keywords: '{{ $meta_keywords }}',
+                post_title: '{{ addslashes($post_title) }}',
+                post_content: `{!! $post_content !!}`,
+                meta_description: '{{ addslashes($meta_description) }}',
+                meta_title: '{{ addslashes($meta_title) }}',
+                meta_keywords: '{{ addslashes($meta_keywords) }}',
                 category_id: '{{ $category_id }}',
             };
             

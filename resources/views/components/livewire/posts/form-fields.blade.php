@@ -35,8 +35,7 @@
         @if ($modalAction == 'update' && $post_image)
             <div class="mt-2">
                 <p class="text-sm font-medium text-gray-500">Current Image:</p>
-                <img src="{{ Storage::url($post_image) }}" alt="Current Post Image"
-                    class="mt-1 h-32 object-cover rounded">
+                <img src="{{ $post_image }}" alt="Current Post Image" class="mt-1 h-32 object-cover rounded">
             </div>
         @endif
 
