@@ -46,7 +46,7 @@
                             </p>
                             <h1 class="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md">{{ $post->post_title }}</h1>
                             <div class="flex items-center justify-center text-sm">
-                                <span>{{ $post->formatted_date }}</span>
+                                <span class="font-bold ">{{ $post->formatted_date }}</span>
                                 <span class="mx-2">•</span>
                                 <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }} min read</span>
                             </div>
@@ -68,7 +68,7 @@
                         </p>
                         <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">{{ $post->post_title }}</h1>
                         <div class="flex items-center justify-center text-sm text-gray-600">
-                            <span>{{ $post->formatted_date }}</span>
+                            <span class="font-bold text-yellow-600">{{ $post->formatted_date }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }} min read</span>
                         </div>
