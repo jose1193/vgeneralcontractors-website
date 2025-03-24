@@ -48,7 +48,7 @@
                         class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900 dark:text-gray-200">
                         <div class="flex items-center justify-center">
                             @if ($post->post_image)
-                                <img src="{{ Storage::url($post->post_image) }}" alt="{{ $post->post_title }}"
+                                <img src="{{ $post->post_image }}" alt="{{ $post->post_title }}"
                                     class="h-10 w-10 rounded-full object-cover mr-3">
                             @else
                                 <div

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Traits\CacheTrait;
 use App\Traits\ChecksPermissions;
+use App\Services\PostImageService;
 
 class Posts extends Component
 {
@@ -73,6 +74,13 @@ class Posts extends Component
         'meta_keywords' => 'nullable|string|max:255',
         'category_id' => 'required|exists:blog_categories,id',
     ];
+
+    protected $postImageService;
+
+    public function boot(PostImageService $postImageService)
+    {
+        $this->postImageService = $postImageService;
+    }
 
     public function mount()
     {
@@ -178,22 +186,23 @@ class Posts extends Component
                 $slug = $slug . '-' . Str::random(5);
             }
 
-            // Handle image upload
-            $imagePath = null;
+            // Handle image upload with S3
+            $imageUrl = null;
             if ($this->temp_image) {
-                $imagePath = $this->temp_image->store('posts', 'public');
+                $imageUrl = $this->postImageService->storePostImage($this->temp_image);
             }
 
             \Log::info('Storing post with data:', [
                 'post_title' => $this->post_title,
-                'category_id' => $this->category_id
+                'category_id' => $this->category_id,
+                'image_url' => $imageUrl
             ]);
 
             Post::create([
                 'uuid' => Str::uuid(),
                 'post_title' => $this->post_title,
                 'post_content' => $this->post_content,
-                'post_image' => $imagePath,
+                'post_image' => $imageUrl,
                 'meta_description' => $this->meta_description,
                 'meta_title' => $this->meta_title ?? $this->post_title,
                 'meta_keywords' => $this->meta_keywords,
@@ -289,19 +298,22 @@ class Posts extends Component
                 }
             }
             
-            // Handle image upload
-            $imagePath = $post->post_image;
+            // Handle image upload with S3
+            $imageUrl = $post->post_image;
             if ($this->temp_image) {
-                if ($post->post_image && Storage::disk('public')->exists($post->post_image)) {
-                    Storage::disk('public')->delete($post->post_image);
+                // Delete old image if exists
+                if ($post->post_image) {
+                    $this->postImageService->deletePostImage($post->post_image);
                 }
-                $imagePath = $this->temp_image->store('posts', 'public');
+                
+                // Store new image
+                $imageUrl = $this->postImageService->storePostImage($this->temp_image);
             }
             
             $post->update([
                 'post_title' => $this->post_title,
                 'post_content' => $this->post_content,
-                'post_image' => $imagePath,
+                'post_image' => $imageUrl,
                 'meta_description' => $this->meta_description,
                 'meta_title' => $this->meta_title ?? $this->post_title,
                 'meta_keywords' => $this->meta_keywords,
@@ -344,6 +356,11 @@ class Posts extends Component
                 session()->flash('error', 'Post not found.');
                 $this->dispatch('postDeleteError', ['message' => 'Post not found.']);
                 return false;
+            }
+            
+            // Delete post image if exists
+            if ($post->post_image) {
+                $this->postImageService->deletePostImage($post->post_image);
             }
             
             $deleted = $post->delete();
