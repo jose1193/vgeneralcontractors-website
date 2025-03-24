@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.blog')
 
 @section('content')
     <!-- Agregar Schema.org Article markup -->
@@ -225,4 +225,6 @@
             }
         </style>
     @endpush
+
+
 @endsection
