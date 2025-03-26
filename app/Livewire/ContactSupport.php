@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\EmailData;
+use App\Services\FacebookConversionApi;
 
 class ContactSupport extends Component
 {
@@ -43,6 +44,26 @@ class ContactSupport extends Component
             'message' => $this->message,
             'type' => 'support',
         ]);
+
+        // Rastrear el evento Lead con Facebook Conversions API
+        $fbApi = app(FacebookConversionApi::class);
+        
+        try {
+            $fbApi->lead([
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+            ], [
+                'content_name' => 'Contact Support',
+                'content_type' => 'Customer Support',
+                'content_id' => 'support_request',
+                'event_id' => 'support_' . time() . '_' . substr(md5($this->email), 0, 8),
+            ]);
+        } catch (\Exception $e) {
+            // Registrar el error pero no afectar la experiencia del usuario
+            \Log::error('Facebook API Error: ' . $e->getMessage());
+        }
 
         session()->flash('success', 'Thank you for contacting us! We will get back to you shortly.');
 

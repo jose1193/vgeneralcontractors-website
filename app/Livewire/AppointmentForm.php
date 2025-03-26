@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Appointment;
 use App\Jobs\ProcessNewLead;
+use App\Services\FacebookConversionApi;
 use Illuminate\Support\Str;
 
 class AppointmentForm extends Component
@@ -72,6 +73,27 @@ class AppointmentForm extends Component
 
         // Dispatch the job to process the new lead
         ProcessNewLead::dispatch($appointment);
+        
+        // Rastrear el evento Lead con Facebook Conversions API
+        $fbApi = app(FacebookConversionApi::class);
+        
+        $names = explode(' ', $this->name, 2);
+        $firstName = $names[0];
+        $lastName = isset($names[1]) ? $names[1] : '';
+        
+        $fbApi->lead([
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'city' => $this->city,
+            'zip_code' => $this->zipcode,
+        ], [
+            'content_name' => 'Appointment Request',
+            'content_type' => 'Roof Inspection Service',
+            'content_id' => 'appointment_request',
+            'event_id' => 'appointment_' . time() . '_' . substr(md5($this->email), 0, 8),
+        ]);
 
         $this->reset(['name', 'phone', 'email', 'city', 'zipcode', 'insurance', 'message', 'sms_consent']);
         $this->success = true;

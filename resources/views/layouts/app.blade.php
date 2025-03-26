@@ -64,8 +64,12 @@
         href="{{ route('feeds.rss') }}">
 
     <!-- Antes de cerrar el head -->
-    <script src="https://cdn.tiny.cloud/1/o37wydoc26hw1jj4mpqtzxsgfu1an5c3r8fz59f84yqt7z5u/tinymce/6/tinymce.min.js"
+    <script src="https://cdn.tiny.cloud/1/o37wydoc26hw1jj4mpqtzxsgfu1an5c3r8fz59f84yqt7z5u/tinymce/7/tinymce.min.js"
         referrerpolicy="origin"></script>
+
+    <x-google-analytics />
+    <x-facebook-pixel />
+
 </head>
 
 <body class="font-sans antialiased">

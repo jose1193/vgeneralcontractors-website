@@ -3,23 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Portfolio extends Model
+class PortfolioImage extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'uuid',
-        'project_type_id'
+        'portfolio_id',
+        'path',
+        'order'
     ];
 
     protected $casts = [
         'order' => 'integer'
     ];
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
     protected static function boot()
     {
         parent::boot();
@@ -29,19 +33,11 @@ class Portfolio extends Model
         });
     }
 
-    public function projectType(): BelongsTo
+    /**
+     * Get the portfolio that owns the image.
+     */
+    public function portfolio(): BelongsTo
     {
-        return $this->belongsTo(ProjectType::class);
-    }
-
-    
-    public function serviceCategory()
-    {
-        return $this->projectType->serviceCategory();
-    }
-
-    public function images()
-    {
-        return $this->hasMany(PortfolioImage::class);
+        return $this->belongsTo(Portfolio::class);
     }
 }

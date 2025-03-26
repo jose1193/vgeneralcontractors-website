@@ -14,13 +14,10 @@ class ServiceCategory extends Model
 
     protected $fillable = [
         'uuid',
-        
+        'type',
         'category',
-        
         'user_id'
     ];
-
-    
 
     protected static function boot()
     {
@@ -28,13 +25,21 @@ class ServiceCategory extends Model
         
         static::creating(function ($model) {
             $model->uuid = (string) Str::uuid();
-          
         });
     }
 
-    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function projectTypes(): HasMany
+    {
+        return $this->hasMany(ProjectType::class);
+    }
+
+    public function portfolios()
+    {
+        return $this->hasManyThrough(Portfolio::class, ProjectType::class);
     }
 }

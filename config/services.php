@@ -41,4 +41,13 @@ return [
         'redirect' => env('APP_URL') . '/google-auth/callback',
     ],
 
+    'google_analytics' => [
+        'id' => env('GOOGLE_ANALYTICS_ID', null),
+    ],
+
+    'facebook' => [
+        'pixel_id' => env('FACEBOOK_PIXEL_ID', '1128486299305330'),
+        'access_token' => env('FACEBOOK_ACCESS_TOKEN', null),
+    ],
+
 ];

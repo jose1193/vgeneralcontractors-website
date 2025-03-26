@@ -68,5 +68,12 @@ document.addEventListener("livewire:initialized", () => {
     });
 });
 
+// Para registrar navegaciones en Livewire con Facebook Pixel
+document.addEventListener("livewire:navigated", () => {
+    if (typeof fbq === "function") {
+        fbq("track", "PageView");
+    }
+});
+
 // Puedes agregar aquí cualquier otra inicialización que necesites
 console.log("Application JavaScript initialized");

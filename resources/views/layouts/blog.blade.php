@@ -59,7 +59,11 @@
     <link rel="alternate" type="application/rss+xml" title="{{ config('app.name') }} Blog"
         href="{{ route('feeds.rss') }}">
 
+    <x-google-analytics />
+    <x-facebook-pixel />
+
     @stack('styles')
+
 </head>
 
 <body class="font-sans antialiased bg-gray-100">

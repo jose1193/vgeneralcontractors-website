@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('project_types', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('name');
+            $table->string('title');
             $table->text('description')->nullable();
             $table->string('status')->default('active');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('service_category_id')->constrained('service_categories')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

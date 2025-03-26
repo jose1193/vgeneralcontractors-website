@@ -136,6 +136,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <x-google-analytics />
+    <x-facebook-pixel />
+
     <!-- Local Roboto Font -->
     <style>
         body {

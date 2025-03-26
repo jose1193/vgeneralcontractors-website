@@ -32,6 +32,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ShareCompanyData::class,
             \App\Http\Middleware\ShareBlogCategories::class,
+            \App\Http\Middleware\TrackPageViews::class,
         ],
 
         'api' => [

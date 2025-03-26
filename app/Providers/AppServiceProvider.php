@@ -9,6 +9,7 @@ use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Str;
 use App\Helpers\StringHelper;
+use App\Services\FacebookConversionApi;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->singleton(FacebookConversionApi::class, function ($app) {
+            return new FacebookConversionApi();
+        });
     }
 
     /**
