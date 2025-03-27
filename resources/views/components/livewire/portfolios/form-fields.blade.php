@@ -16,53 +16,29 @@
 <div class="space-y-6">
 
     {{-- Campo Title --}}
-    <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Project Name <span class="text-red-500">*</span>
-        </label>
-        {{-- Bind directly to the parent Livewire component's property --}}
-        <input wire:model.lazy="title" type="text" id="title" autocomplete="off"
-            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('title') border-red-500 dark:border-red-500 @enderror">
-        {{-- Display Livewire validation error for 'title' --}}
-        @error('title')
-            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-        @enderror
-    </div>
+    {{-- Use x-input, add Alpine for capitalization --}}
+    {{-- Use the NEW x-input-2 component --}}
+    <x-input-2 name="title" label="Project Name" model="title" {{-- Livewire property to bind to --}} :required="true" :error="$errors->first('title')"
+        autocomplete="off" placeholder="Enter project name" {{-- Add Alpine directive for capitalization HERE.
+             It gets merged onto the <input> inside the component. --}}
+        @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
 
     {{-- Campo Description --}}
-    <div>
-        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Description <span class="text-red-500">*</span>
-        </label>
-        <textarea wire:model.lazy="description" id="description" rows="4"
-            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('description') border-red-500 dark:border-red-500 @enderror"></textarea>
-        @error('description')
-            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-        @enderror
-    </div>
+    {{-- Uncomment the @input directive below --}}
+    <x-text-area-2 name="description" label="Description" model="description" :required="true" :error="$errors->first('description')"
+        rows="4" placeholder="Enter project description" {{-- Apply capitalization logic --}}
+        @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
 
     {{-- Campo Service Category Select --}}
-    <div>
-        <label for="service_category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Service Category <span class="text-red-500">*</span>
-        </label>
-        <select wire:model="service_category_id" id="service_category_id"
-            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('service_category_id') border-red-500 dark:border-red-500 @enderror">
-            <option value="">Select a Service Category</option>
-            {{-- Use the prop passed to the component --}}
-            @foreach ($serviceCategoriesList as $category)
-                <option value="{{ $category->id }}">
-                    {{ $category->category }} {{-- Adjust field name if needed --}}
-                </option>
-            @endforeach
-        </select>
-        @error('service_category_id')
-            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-        @enderror
-    </div>
 
+    {{-- Use the NEW x-select-input-2 component --}}
+    <x-select-input-2 name="service_category_id" {{-- HTML id/name --}} label="Service Category"
+        model="service_category_id" {{-- Livewire property to bind to --}} :required="true" :error="$errors->first('service_category_id')" :options="$serviceCategoriesList"
+        {{-- Your collection of ServiceCategory models --}} placeholder="Select a Service Category" value-field="id" {{-- Tell component to use the 'id' property for the option value --}}
+        text-field="category" {{-- Tell component to use the 'category' property for the option text --}} />
 
     {{-- ========== SECCIÓN IMÁGENES ========== --}}
+    {{-- NO CHANGES in this section as requested --}}
     <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Images
@@ -85,8 +61,7 @@
                          file:text-indigo-700 dark:file:text-indigo-200
                          hover:file:bg-indigo-100 dark:hover:file:bg-gray-500"
             @php
-// Calculate if more images can be added using props/state passed in
-                $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
+$currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
                 $newPendingCount = count($pendingNewImages);
                 $canAddMore = ($currentVisibleExistingCount + $newPendingCount) < $maxFiles; @endphp
             {{ $canAddMore ? '' : 'disabled' }}
@@ -209,8 +184,7 @@
                                         <span wire:loading wire:target="markImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                             <svg class="animate-spin h-4 w-4 text-white"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24">
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle class="opacity-25" cx="12" cy="12" r="10"
                                                     stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor"
