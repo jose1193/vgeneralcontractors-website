@@ -1,7 +1,8 @@
 @extends('layouts.main')
 
 @section('title', 'Portfolio - ' . $companyData->company_name)
-@section('meta_description', 'Explore our portfolio of successful roofing projects in Houston, Dallas and surrounding
+@section('meta_description',
+    'Explore our portfolio of successful roofing projects in Houston, Dallas and surrounding
     areas. View our work in new roof installations, repairs, and storm damage restoration.')
 
 @section('content')
@@ -30,9 +31,7 @@
     <!-- Content -->
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <p class="text-lg text-gray-600">Coming Soon</p>
-            </div>
+            <x-company-cam />
         </div>
     </section>
 @endsection

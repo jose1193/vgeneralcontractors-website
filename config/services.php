@@ -50,4 +50,8 @@ return [
         'access_token' => env('FACEBOOK_ACCESS_TOKEN', null),
     ],
 
+    'companycam' => [
+        'showcase_id' => env('COMPANYCAM_SHOWCASE_ID', '01057770-8ca0-47a5-a1dc-40128a20f85b'),
+    ],
+
 ];
