@@ -789,4 +789,111 @@ class Portfolios extends Component
         $this->existing_images = $portfolio->images->sortBy('order')->values();
         Log::debug("Finished reordering images for portfolio UUID: {$portfolio->uuid}");
     }
+
+    /**
+     * Handles the reordering of existing images via drag-and-drop.
+     * Livewire passes an array of ['value' => image_id, 'order' => new_position].
+     */
+    public function updateExistingImageOrder(array $newOrder): void
+    {
+        // Ensure we are actually editing and have a portfolio context
+        if (!$this->isEditing || !$this->editingPortfolio) {
+            Log::warning("updateExistingImageOrder called without an active editing portfolio.");
+            return;
+        }
+        // Add permission check if necessary, though typically editing permission covers this
+        // if (!$this->checkPermission('UPDATE_PORTFOLIO')) { return; }
+
+        Log::debug("Received new order for existing images", ['newOrder' => $newOrder]);
+
+        DB::beginTransaction();
+        try {
+            $orderMap = [];
+            foreach ($newOrder as $item) {
+                // 'value' is the image ID, 'order' is the 1-based new position
+                $orderMap[(int)$item['value']] = (int)$item['order'] - 1; // Convert to 0-based index for consistency
+            }
+
+            // Fetch images belonging to this portfolio to ensure we only update owned images
+            $imagesToUpdate = PortfolioImage::where('portfolio_id', $this->editingPortfolio->id)
+                                          ->whereIn('id', array_keys($orderMap))
+                                          ->get();
+
+            if ($imagesToUpdate->count() !== count($orderMap)) {
+                 Log::warning("Mismatch between expected image IDs and found images during reorder.", [
+                    'portfolio_id' => $this->editingPortfolio->id,
+                    'expected_ids' => array_keys($orderMap),
+                    'found_count' => $imagesToUpdate->count()
+                 ]);
+                 // Potentially throw an exception or flash an error
+            }
+
+            foreach ($imagesToUpdate as $image) {
+                if (isset($orderMap[$image->id])) {
+                    // Only update if the order actually changed
+                    if ($image->order !== $orderMap[$image->id]) {
+                        $image->order = $orderMap[$image->id];
+                        $image->saveQuietly(); // Use saveQuietly if you don't want timestamps updated
+                        // $image->save(); // Use save() if you want timestamps updated
+                    }
+                }
+            }
+
+            DB::commit();
+            Log::info("Successfully updated order for existing images.", ['portfolio_id' => $this->editingPortfolio->id]);
+
+            // *** CRUCIAL: Refresh the $existing_images collection ***
+            // Reload the images relation on the portfolio model, ensuring correct order
+            $this->editingPortfolio->load(['images' => fn ($q) => $q->orderBy('order', 'asc')]);
+            // Update the component property that the view uses
+            $this->existing_images = $this->editingPortfolio->images;
+
+            // No need to dispatch event usually, Livewire handles the re-render.
+            // $this->dispatch('images-reordered');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error updating existing image order: " . $e->getMessage(), [
+                 'portfolio_id' => $this->editingPortfolio->id,
+                 'trace' => Str::limit($e->getTraceAsString(), 1000)
+             ]);
+            session()->flash('error', 'Failed to reorder images. Please try again.');
+             // $this->dispatch('image-reorder-failed');
+        }
+    }
+
+    /**
+     * Handles the reordering of newly added pending images via drag-and-drop.
+     * Livewire passes an array of ['value' => original_index, 'order' => new_position].
+     */
+    public function updatePendingImageOrder(array $newOrder): void
+    {
+         Log::debug("Received new order for pending images", ['newOrder' => $newOrder]);
+
+        // Create a new empty array correctly sized
+        $reordered = array_fill(0, count($this->pendingNewImages), null);
+        $originalIndices = array_keys($this->pendingNewImages); // Get current keys/indices
+
+        foreach ($newOrder as $item) {
+            // 'value' is the original index (from the wire:sortable.item key)
+            $originalIndex = (int)$item['value'];
+            // 'order' is the new position (1-based), convert to 0-based index
+            $newIndex = (int)$item['order'] - 1;
+
+            // Check if the original index exists in our current pending images
+            if (isset($originalIndices[$originalIndex]) && isset($this->pendingNewImages[$originalIndices[$originalIndex]])) {
+                 // Place the file from the original position into the new position
+                 $reordered[$newIndex] = $this->pendingNewImages[$originalIndices[$originalIndex]];
+             } else {
+                 Log::warning("Could not find pending image for original index during reorder.", ['original_index' => $originalIndex]);
+            }
+        }
+
+        // Filter out any null values (shouldn't happen if logic is correct) and re-index
+        $this->pendingNewImages = array_values(array_filter($reordered));
+
+        Log::debug("Pending images reordered.", ['new_pending_count' => count($this->pendingNewImages)]);
+        // No need to re-validate totals here unless the *content* changes, just order.
+        // $this->validateTotals(); // Optional if needed
+    }
 }

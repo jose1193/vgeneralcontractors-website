@@ -3,7 +3,7 @@
 @props([
     'isEditing',
     'serviceCategoriesList', // Collection of ServiceCategory models
-    'existing_images', // Collection of PortfolioImage models when editing (assumed ordered by 'order')
+    'existing_images', // Collection of PortfolioImage models when editing (ASSUMED ORDERED BY 'order')
     'images_to_delete', // Array of existing image IDs marked for deletion
     'pendingNewImages', // Array of TemporaryUploadedFile for new images
     // Pass constants explicitly
@@ -11,6 +11,39 @@
     'maxSizeKb',
     'maxTotalSizeKb',
 ])
+
+{{-- Add CSS for dragging effect --}}
+@once
+    <style>
+        [wire\:sortable-dragging] {
+            cursor: grabbing !important;
+            /* Indicate active drag */
+            opacity: 0.8;
+            /* Make it slightly transparent */
+            transform: scale(1.03);
+            /* Slightly enlarge */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            /* Tailwind shadow-lg */
+            z-index: 50;
+            /* Ensure it's above other items */
+            /* Prevent text selection during drag */
+            -webkit-user-select: none;
+            /* Safari */
+            -ms-user-select: none;
+            /* IE 10 and IE 11 */
+            user-select: none;
+            /* Standard syntax */
+        }
+
+        /* Optional: Style the placeholder element if desired */
+        /* .livewire-sortable-ghost { */
+        /* background-color: #e5e7eb; */
+        /* bg-gray-200 */
+        /* border-radius: 0.375rem; */
+        /* rounded-md */
+        /* } */
+    </style>
+@endonce
 
 {{-- Wrapper div for consistent spacing --}}
 <div class="space-y-6">
@@ -37,7 +70,7 @@
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             (Max {{ $maxFiles }} total. Max {{ $maxSizeKb / 1024 }}MB/image. Max {{ $maxTotalSizeKb / 1024 }}MB
-            total new. Drag to reorder.) {{-- Added drag note --}}
+            total new. Drag to reorder.)
         </p>
 
         {{-- Input File Múltiple --}}
@@ -67,8 +100,13 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
         @enderror
 
-        {{-- Errores Globales (`pendingNewImages`) - e.g., total count/size limits, required --}}
+        {{-- Errores Globales (`pendingNewImages`, `image_files`) - e.g., total count/size limits, required --}}
         @error('pendingNewImages')
+            {{-- Catches validation rule on the array property itself --}}
+            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+        @enderror
+        @error('image_files')
+            {{-- Catches validation rule on the file input property itself --}}
             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
         @enderror
 
@@ -78,21 +116,21 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     New Images Pending Upload ({{ count($pendingNewImages) }}):
                 </p>
-                {{-- ADDED: wire:sortable pointing to the method for pending images --}}
+                {{-- wire:sortable pointing to the method for pending images --}}
                 <div wire:sortable="updatePendingImageOrder"
                     class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     @foreach ($pendingNewImages as $index => $image)
                         @if (
                             $image instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile &&
                                 method_exists($image, 'temporaryUrl'))
-                            {{-- ADDED: wire:sortable.item with $index as value, cursor-grab --}}
-                            {{-- MOVED: wire:key to the sortable item div --}}
+                            {{-- wire:sortable.item with $index, cursor-grab --}}
                             <div wire:sortable.item="{{ $index }}"
                                 wire:key="pending-new-image-{{ $index }}"
-                                class="relative group aspect-square cursor-grab">
-                                {{-- Optional: Add wire:sortable.handle here if you want only a specific part to be draggable --}}
+                                class="relative group aspect-square cursor-grab"> {{-- Added cursor-grab --}}
+                                {{-- Optional: Add wire:sortable.handle here if needed --}}
                                 {{-- <span wire:sortable.handle class="absolute top-0 left-0 p-1 bg-gray-400 z-20">Drag</span> --}}
                                 <img src="{{ $image->temporaryUrl() }}" alt="New image {{ $index + 1 }} preview"
+                                    draggable="false" {{-- PREVENT BROWSER DRAG --}}
                                     class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
                                 {{-- Botón quitar PENDIENTE --}}
                                 <button type="button" wire:click="$parent.removePendingNewImage({{ $index }})"
@@ -128,32 +166,38 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @endif
 
         {{-- Visualización de Imágenes EXISTENTES --}}
+        {{-- Ensure $existing_images is ordered by 'order' column from the parent component --}}
         @if ($isEditing && $existing_images instanceof \Illuminate\Support\Collection && $existing_images->isNotEmpty())
             <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     Current Images ({{ $existing_images->whereNotIn('id', $images_to_delete)->count() }} visible):
                 </p>
-                {{-- ADDED: wire:sortable pointing to the method for existing images --}}
+                {{-- wire:sortable pointing to the method for existing images --}}
                 <div wire:sortable="updateExistingImageOrder"
                     class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    @php $visibleImageIndex = 0; @endphp {{-- Counter for visible images --}}
                     @foreach ($existing_images as $image)
-                        {{-- ADDED: wire:sortable.item with $image->id as value, cursor-grab --}}
-                        {{-- Kept wire:key on the sortable item div --}}
+                        {{-- wire:sortable.item with $image->id, cursor-grab --}}
                         <div wire:sortable.item="{{ $image->id }}" wire:key="existing-image-{{ $image->id }}"
                             class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }} cursor-grab">
+                            {{-- Added cursor-grab --}}
 
-                            {{-- Optional: Add wire:sortable.handle here if you want only a specific part to be draggable --}}
+                            {{-- Optional: Add wire:sortable.handle here if needed --}}
                             {{-- <span wire:sortable.handle class="absolute top-0 left-0 p-1 bg-gray-400 z-20">Drag</span> --}}
 
-                            {{-- Label MAIN --}}
-                            @if ($loop->first && !in_array($image->id, $images_to_delete))
-                                <span
-                                    class="absolute top-1 left-1 z-10 bg-indigo-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded shadow">
-                                    MAIN
-                                </span>
+                            {{-- Label MAIN - Check if it's the first *visible* image in the loop --}}
+                            @if (!in_array($image->id, $images_to_delete))
+                                @if ($visibleImageIndex === 0)
+                                    <span
+                                        class="absolute top-1 left-1 z-10 bg-indigo-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded shadow">
+                                        MAIN
+                                    </span>
+                                @endif
+                                @php $visibleImageIndex++; @endphp {{-- Increment only for visible images --}}
                             @endif
 
                             <img src="{{ $image->path }}" alt="Existing image {{ $loop->iteration }}"
+                                draggable="false" {{-- PREVENT BROWSER DRAG --}}
                                 class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
 
                             {{-- Overlay y Botones --}}
