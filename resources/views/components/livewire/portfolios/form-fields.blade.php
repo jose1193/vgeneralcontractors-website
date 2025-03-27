@@ -167,7 +167,7 @@
                 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     @foreach ($existing_images as $image)
                         <div wire:key="existing-image-{{ $image->id }}"
-                            class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }} transition-opacity duration-200">
+                            class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }}">
                             <img src="{{ $image->path }}" {{-- Assuming public URL --}}
                                 alt="Existing image {{ $loop->iteration }}"
                                 class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
@@ -177,14 +177,13 @@
                                 class="absolute inset-0 flex items-center justify-center rounded-md {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }} transition-all duration-200">
                                 @if (!in_array($image->id, $images_to_delete))
                                     {{-- Botón Marcar para Borrar - Calls parent method --}}
-                                    <button type="button"
-                                        wire:click="$parent.markImageForDeletion({{ $image->id }})"
+                                    <button type="button" wire:click="markImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
-                                        wire:target="$parent.markImageForDeletion({{ $image->id }})"
+                                        wire:target="markImageForDeletion({{ $image->id }})"
                                         class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Mark for Deletion">
                                         <span wire:loading.remove
-                                            wire:target="$parent.markImageForDeletion({{ $image->id }})">
+                                            wire:target="markImageForDeletion({{ $image->id }})">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -192,8 +191,7 @@
                                                 </path>
                                             </svg>
                                         </span>
-                                        <span wire:loading
-                                            wire:target="$parent.markImageForDeletion({{ $image->id }})"
+                                        <span wire:loading wire:target="markImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                             <svg class="animate-spin h-4 w-4 text-white"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -208,14 +206,13 @@
                                     </button>
                                 @else
                                     {{-- Botón Desmarcar - Calls parent method --}}
-                                    <button type="button"
-                                        wire:click="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                    <button type="button" wire:click="unmarkImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
-                                        wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                        wire:target="unmarkImageForDeletion({{ $image->id }})"
                                         class="p-2 bg-yellow-500 hover:bg-yellow-600 text-gray-800 rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Undo Mark for Deletion">
                                         <span wire:loading.remove
-                                            wire:target="$parent.unmarkImageForDeletion({{ $image->id }})">
+                                            wire:target="unmarkImageForDeletion({{ $image->id }})">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -223,9 +220,9 @@
                                                 </path>
                                             </svg>
                                         </span>
-                                        <span wire:loading
-                                            wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                        <span wire:loading wire:target="unmarkImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-yellow-500 bg-opacity-50 rounded-full">
+
                                             <svg class="animate-spin h-4 w-4 text-gray-800"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24">
@@ -235,6 +232,7 @@
                                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                                 </path>
                                             </svg>
+
                                         </span>
                                     </button>
                                 @endif

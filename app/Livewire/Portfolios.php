@@ -76,6 +76,8 @@ class Portfolios extends Component
         // You might have other listeners e.g., from confirmation dialogs
         'confirmedDeletePortfolio' => 'delete',
         'confirmedRestorePortfolio' => 'restore',
+        'markImageForDeletion',
+        'unmarkImageForDeletion',
     ];
 
     // --- Mapeo del Estado a Query String de URL ---
@@ -160,6 +162,7 @@ class Portfolios extends Component
     {
         $this->serviceCategories = ServiceCategory::orderBy('category')->get();
         $this->existing_images = collect();
+        $this->images_to_delete = [];
         $this->resetPage();
     }
 
@@ -620,21 +623,29 @@ class Portfolios extends Component
 
     public function markImageForDeletion(int $imageId): void
     {
+        Log::debug("Attempting to mark image for deletion", ['imageId' => $imageId]);
         if (!in_array($imageId, $this->images_to_delete)) {
             $this->images_to_delete[] = $imageId;
-            Log::debug("Marked existing image ID {$imageId} for deletion.");
-            $this->validateTotals(); // Re-check limits/requirement
+            Log::debug("Marked image for deletion", [
+                'imageId' => $imageId, 
+                'images_to_delete' => $this->images_to_delete
+            ]);
+            $this->validateTotals();
         }
     }
 
     public function unmarkImageForDeletion(int $imageId): void
     {
+        Log::debug("Attempting to unmark image from deletion", ['imageId' => $imageId]);
         $key = array_search($imageId, $this->images_to_delete);
         if ($key !== false) {
             unset($this->images_to_delete[$key]);
-            $this->images_to_delete = array_values($this->images_to_delete); // Reindex
-            Log::debug("Unmarked existing image ID {$imageId} from deletion list.");
-            $this->validateTotals(); // Re-check limits/requirement
+            $this->images_to_delete = array_values($this->images_to_delete);
+            Log::debug("Unmarked image from deletion", [
+                'imageId' => $imageId, 
+                'images_to_delete' => $this->images_to_delete
+            ]);
+            $this->validateTotals();
         }
     }
 
