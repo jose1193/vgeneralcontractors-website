@@ -1,274 +1,280 @@
-@props(['modalAction', 'categories' => [], 'portfolio' => null])
+{{-- resources/views/components/livewire/portfolios/form-fields.blade.php --}}
 
-<div class="p-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Title Field -->
-        <div class="col-span-1 md:col-span-2">
-            <x-label for="title" value="{{ __('Title') }}" />
-            <x-input id="title" type="text" class="mt-1 block w-full" wire:model.live="title" x-model="form.title"
-                @input="validateField('title')" />
-            <div x-show="errors.title" class="text-red-500 text-sm mt-1" x-text="errors.title"></div>
-            @error('title')
-                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-            @enderror
+@props([
+    'isEditing',
+    'serviceCategoriesList', // Collection of ServiceCategory models
+    'existing_images', // Collection of PortfolioImage models when editing
+    'images_to_delete', // Array of existing image IDs marked for deletion
+    'pendingNewImages', // Array of TemporaryUploadedFile for new images
+    // Pass constants explicitly
+    'maxFiles',
+    'maxSizeKb',
+    'maxTotalSizeKb',
+])
+
+<div class="space-y-6">
+
+    {{-- Campo Title --}}
+    <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Project Name <span class="text-red-500">*</span>
+        </label>
+        {{-- Use $wire.title directly if not using Alpine x-model --}}
+        <input wire:model.lazy="title" type="text" id="title" autocomplete="off"
+            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('title') border-red-500 dark:border-red-500 @enderror">
+        @error('title')
+            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+        @enderror
+    </div>
+
+    {{-- Campo Description --}}
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Description <span class="text-red-500">*</span>
+        </label>
+        <textarea wire:model.lazy="description" id="description" rows="4"
+            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('description') border-red-500 dark:border-red-500 @enderror"></textarea>
+        @error('description')
+            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+        @enderror
+    </div>
+
+    {{-- Campo Service Category Select --}}
+    <div>
+        <label for="service_category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Service Category <span class="text-red-500">*</span>
+        </label>
+        <select wire:model="service_category_id" id="service_category_id"
+            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('service_category_id') border-red-500 dark:border-red-500 @enderror">
+            <option value="">Select a Service Category</option>
+            @foreach ($serviceCategoriesList as $category)
+                <option value="{{ $category->id }}">
+                    {{ $category->category }} {{-- Assuming the field name is 'category' --}}
+                </option>
+            @endforeach
+        </select>
+        @error('service_category_id')
+            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+        @enderror
+    </div>
+
+
+    {{-- ========== SECCIÓN IMÁGENES ========== --}}
+    <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Images
+            @php
+                // Determine if image is required based on current state within the modal
+                $isImageRequiredForDisplay = false;
+                if (!$isEditing) {
+                    $isImageRequiredForDisplay = empty($pendingNewImages);
+                } elseif ($isEditing && $existing_images instanceof \Illuminate\Support\Collection) {
+                    $isImageRequiredForDisplay =
+                        $existing_images->whereNotIn('id', $images_to_delete)->isEmpty() && empty($pendingNewImages);
+                }
+            @endphp
+            {{-- Show asterisk based on validation logic, not just display state --}}
+            {{-- (The actual requirement is handled by backend validation rules) --}}
+            {{-- Maybe just show hint text instead of asterisk? --}}
+            {{-- <span class="text-red-500">*</span> --}}
+        </label>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+            (Max {{ $maxFiles }} total. Max {{ $maxSizeKb / 1024 }}MB/image. Max {{ $maxTotalSizeKb / 1024 }}MB
+            total
+            new.)
+        </p>
+
+        {{-- Input File Múltiple --}}
+        {{-- Use $wire.$parent inside partial if needed, but wire:model works directly --}}
+        <input wire:model="image_files" type="file" id="image_files" multiple
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            class="block w-full text-sm text-gray-500 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800
+                         file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-l-md
+                         file:text-sm file:font-semibold file:cursor-pointer
+                         file:bg-indigo-50 dark:file:bg-gray-600
+                         file:text-indigo-700 dark:file:text-indigo-200
+                         hover:file:bg-indigo-100 dark:hover:file:bg-gray-500"
+            @php
+$currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
+                $newPendingCount = count($pendingNewImages);
+                $canAddMore = ($currentVisibleExistingCount + $newPendingCount) < $maxFiles; @endphp
+            {{ $canAddMore ? '' : 'disabled' }}
+            title="{{ $canAddMore ? 'Select images to add' : 'Maximum number of images reached (' . $maxFiles . ')' }}">
+
+        {{-- Indicador de carga --}}
+        <div wire:loading wire:target="image_files"
+            class="mt-2 text-sm text-indigo-600 dark:text-indigo-400 animate-pulse">
+            Processing selection...
         </div>
 
-        <!-- Description Field -->
-        <div class="col-span-1 md:col-span-2">
-            <x-textarea-input name="description" label="Description" model="form.description"
-                required></x-textarea-input>
-            <div x-show="errors.description" class="text-red-500 text-sm mt-1" x-text="errors.description"></div>
-            @error('description')
-                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-            @enderror
-        </div>
+        {{-- Errores del Input (`image_files.*`) --}}
+        @error('image_files.*')
+            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+        @enderror
 
-        <!-- Service Category Select -->
-        <div class="col-span-1 md:col-span-2">
-            <x-label for="service_category_id" value="{{ __('Service Category') }}" />
-            <select id="service_category_id" wire:model.live="service_category_id" x-model="form.service_category_id"
-                class="mt-1 block w-full border-gray-300 dark:border-gray-700 
-                dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 
-                dark:focus:border-indigo-600 focus:ring-indigo-500 
-                dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                <option value="">Select Service Category</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->category }}</option>
-                @endforeach
-            </select>
-            @error('service_category_id')
-                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-            @enderror
-        </div>
+        {{-- Errores Globales (`pendingNewImages`) --}}
+        @error('pendingNewImages')
+            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+        @enderror
 
-        <!-- Images Upload with Dropzone -->
-        <div class="col-span-1 md:col-span-2">
-            <x-label for="images" value="{{ __('Images') }}" />
-
-            <!-- Dropzone area -->
-            <div x-data="dropzone()"
-                class="mt-1 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4"
-                :class="{ 'bg-gray-100 dark:bg-gray-700': isDragging }" @dragover.prevent="dragOver"
-                @dragleave.prevent="dragLeave" @drop.prevent="drop">
-
-                <input type="file" wire:model.live="{{ $isEditing ? 'tempImages' : 'images' }}" multiple
-                    id="image-upload" class="hidden" accept="image/*">
-
-                <label for="image-upload" class="cursor-pointer flex flex-col items-center justify-center">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
-                        viewBox="0 0 48 48">
-                        <path
-                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4h-12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-
-                    <div class="mt-4 flex text-sm text-gray-600 dark:text-gray-400 justify-center">
-                        <span
-                            class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus-within:outline-none px-4 py-2">
-                            Upload files
-                        </span>
-                        <p class="pl-1 pt-2">or drag and drop</p>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">
-                        Max total size: 30MB. Max files: 15. The first image will be used as the main image.
-                    </p>
-                </label>
+        {{-- Previsualización de NUEVAS Imágenes PENDIENTES --}}
+        @if (!empty($pendingNewImages))
+            <div class="mt-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                    New Images Pending Upload ({{ count($pendingNewImages) }}):
+                </p>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    @foreach ($pendingNewImages as $index => $image)
+                        @if (
+                            $image instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile &&
+                                method_exists($image, 'temporaryUrl'))
+                            <div wire:key="pending-new-image-{{ $index }}" class="relative group aspect-square">
+                                <img src="{{ $image->temporaryUrl() }}" alt="New image {{ $index + 1 }} preview"
+                                    class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
+                                {{-- Botón quitar PENDIENTE (uses $parent context) --}}
+                                <button type="button" wire:click="$parent.removePendingNewImage({{ $index }})"
+                                    wire:loading.attr="disabled"
+                                    wire:target="$parent.removePendingNewImage({{ $index }})"
+                                    class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md transition-all duration-150 ease-in-out opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    title="Remove this pending image">
+                                    <span wire:loading.remove
+                                        wire:target="$parent.removePendingNewImage({{ $index }})">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </span>
+                                    {{-- Loading Spinner --}}
+                                    <span wire:loading wire:target="$parent.removePendingNewImage({{ $index }})"
+                                        class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
+                                        <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
             </div>
+        @endif
 
-            @error('images.*')
-                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-            @enderror
-            @error('images')
-                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
-            @enderror
+        {{-- Visualización de Imágenes EXISTENTES --}}
+        @if ($isEditing && $existing_images instanceof \Illuminate\Support\Collection && $existing_images->isNotEmpty())
+            <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                    Current Images ({{ $existing_images->whereNotIn('id', $images_to_delete)->count() }} visible):
+                </p>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    @foreach ($existing_images as $image)
+                        <div wire:key="existing-image-{{ $image->id }}"
+                            class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }} transition-opacity duration-200">
+                            <img src="{{ $image->path }}" {{-- Assuming public URL --}}
+                                alt="Existing image {{ $loop->iteration }}"
+                                class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
 
-            <!-- Image Preview Section - Livewire Images -->
-            @if (isset($images) && count($images) > 0)
-                <div class="mt-4">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Upload Preview</h3>
-                    <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" x-data="imageReorder()">
-                        @foreach ($images as $index => $image)
-                            <div class="relative group border rounded" draggable="true"
-                                @dragstart="dragStart($event, {{ $index }})" @dragend="dragEnd($event)"
-                                @dragover.prevent @drop="drop($event, {{ $index }})">
-                                <img src="{{ $image->temporaryUrl() }}" alt="Preview"
-                                    class="h-32 w-full object-cover rounded">
-                                <div
-                                    class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
-                                    <button type="button" wire:click="removeImage({{ $index }})"
-                                        class="text-white hover:text-red-500">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                                @if ($index === 0)
-                                    <div
-                                        class="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-bl rounded-tr">
-                                        Main
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
-            <!-- Temp Images in Edit Mode -->
-            @if ($modalAction === 'update' && isset($tempImages) && count($tempImages) > 0)
-                <div class="mt-4">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">New Images</h3>
-                    <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" x-data="imageReorder()">
-                        @foreach ($tempImages as $index => $image)
-                            <div class="relative group border rounded" draggable="true"
-                                @dragstart="dragStart($event, {{ $index }})" @dragend="dragEnd($event)"
-                                @dragover.prevent @drop="drop($event, {{ $index }})">
-                                <img src="{{ $image->temporaryUrl() }}" alt="New Image"
-                                    class="h-32 w-full object-cover rounded">
-                                <div
-                                    class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
-                                    <button type="button" wire:click="removeTemporaryImage({{ $index }})"
-                                        class="text-white hover:text-red-500">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                                @if ($index === 0)
-                                    <div
-                                        class="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-bl rounded-tr">
-                                        Main
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
-            <!-- Existing Image (for Edit) -->
-            @if ($modalAction === 'update' && isset($portfolio) && $portfolio->image)
-                <div class="mt-4">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Current Images</h3>
-                    <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                        <div class="relative group">
-                            <img src="{{ asset($portfolio->image) }}" alt="Main Image"
-                                class="h-32 w-full object-cover rounded">
+                            {{-- Overlay y Botones --}}
                             <div
-                                class="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-bl rounded-tr">
-                                Main
+                                class="absolute inset-0 flex items-center justify-center rounded-md
+                                        {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }}
+                                        transition-all duration-200">
+
+                                {{-- Botón Marcar/Desmarcar para Borrar --}}
+                                @if (!in_array($image->id, $images_to_delete))
+                                    <button type="button"
+                                        wire:click="$parent.markImageForDeletion({{ $image->id }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="$parent.markImageForDeletion({{ $image->id }})"
+                                        class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Mark for Deletion">
+                                        {{-- Icono Papelera --}}
+                                        <span wire:loading.remove
+                                            wire:target="$parent.markImageForDeletion({{ $image->id }})">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        {{-- Loading Spinner --}}
+                                        <span wire:loading
+                                            wire:target="$parent.markImageForDeletion({{ $image->id }})"
+                                            class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
+                                            <svg class="animate-spin h-4 w-4 text-white"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                    </button>
+                                @else
+                                    <button type="button"
+                                        wire:click="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                        class="p-2 bg-yellow-500 hover:bg-yellow-600 text-gray-800 rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Undo Mark for Deletion">
+                                        {{-- Icono Deshacer --}}
+                                        <span wire:loading.remove
+                                            wire:target="$parent.unmarkImageForDeletion({{ $image->id }})">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 00-15.357-2m15.357 2H15">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        {{-- Loading Spinner --}}
+                                        <span wire:loading
+                                            wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
+                                            class="absolute inset-0 flex items-center justify-center bg-yellow-500 bg-opacity-50 rounded-full">
+                                            <svg class="animate-spin h-4 w-4 text-gray-800"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                    </button>
+                                @endif
                             </div>
                         </div>
-                        @if (!empty($portfolio->additional_images))
-                            @foreach ($portfolio->additional_images as $index => $image)
-                                <div class="relative group">
-                                    <img src="{{ asset($image) }}" alt="Additional Image {{ $index + 1 }}"
-                                        class="h-32 w-full object-cover rounded">
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">Upload new images to replace the current ones.</p>
+                    @endforeach
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
+
+        {{-- Mensajes informativos sobre estado de imágenes --}}
+        @if (!$isEditing && empty($pendingNewImages))
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400 italic">
+                Please select at least one image.
+            </p>
+        @endif
+        @if (
+            $isEditing &&
+                $existing_images instanceof \Illuminate\Support\Collection &&
+                $existing_images->whereNotIn('id', $images_to_delete)->isEmpty() &&
+                empty($pendingNewImages))
+            <p class="mt-4 text-sm text-yellow-600 dark:text-yellow-400">
+                Warning: No images will remain after saving. Please add or unmark an image if one is required.
+            </p>
+        @endif
+
     </div>
-</div>
+    {{-- ========== FIN SECCIÓN IMÁGENES ========== --}}
 
-<!-- Alpine.js scripts -->
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('dropzone', () => ({
-            isDragging: false,
-
-            dragOver(e) {
-                e.preventDefault();
-                this.isDragging = true;
-            },
-
-            dragLeave(e) {
-                e.preventDefault();
-                this.isDragging = false;
-            },
-
-            drop(e) {
-                e.preventDefault();
-                this.isDragging = false;
-                const files = e.dataTransfer.files;
-                if (files.length) {
-                    const input = this.$el.querySelector('input[type="file"]');
-                    input.files = files;
-                    input.dispatchEvent(new Event('change', {
-                        bubbles: true
-                    }));
-                }
-            },
-
-            init() {
-                // Agregar listener para el input file
-                const input = this.$el.querySelector('input[type="file"]');
-                input.addEventListener('change', (e) => {
-                    if (e.target.files.length) {
-                        const isEditMode =
-                            '{{ isset($modalAction) && $modalAction === 'update' }}' ===
-                            '1';
-                        const propertyName = isEditMode ? 'tempImages' : 'images';
-
-                        // Livewire manejará la subida automáticamente debido al wire:model
-                    }
-                });
-            }
-        }));
-
-        Alpine.data('imageReorder', () => ({
-            draggingIndex: null,
-            dragStart(e, index) {
-                this.draggingIndex = index;
-                e.target.classList.add('opacity-50');
-            },
-            dragEnd(e) {
-                e.target.classList.remove('opacity-50');
-            },
-            drop(e, index) {
-                e.preventDefault();
-                const isEditMode = '{{ isset($modalAction) && $modalAction === 'update' }}' ===
-                    '1';
-                const items = this.$wire.get(isEditMode ? 'tempImages' : 'images');
-
-                if (items && this.draggingIndex !== null) {
-                    const draggedItem = items[this.draggingIndex];
-
-                    // Reorder array
-                    items.splice(this.draggingIndex, 1);
-                    items.splice(index, 0, draggedItem);
-
-                    // Update Livewire
-                    this.$wire.set(isEditMode ? 'tempImages' : 'images', items);
-                }
-
-                this.draggingIndex = null;
-
-                // Notify Livewire about the reordering
-                this.$wire.call('handleImageReorder');
-            },
-
-            init() {
-                // Escuchar el evento de cierre del modal
-                window.addEventListener('close-modal', () => {
-                    this.draggingIndex = null;
-                });
-            }
-        }));
-    });
-</script>
-
-<button wire:click="closeModal" type="button"
-    class="absolute right-0 text-white hover:text-gray-200 focus:outline-none" @click="$wire.closeModal()">
-    <span class="sr-only">Close</span>
-    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-</button>
+</div> {{-- end space-y-6 --}}
