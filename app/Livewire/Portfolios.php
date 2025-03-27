@@ -542,6 +542,9 @@ class Portfolios extends Component
        /**
      * Restaura un portfolio borrado (Soft Delete) usando su UUID.
      */
+        /**
+     * Restaura un portfolio borrado (Soft Delete) usando su UUID.
+     */
     public function restore(string $uuid): void // Changed parameter to UUID
     {
         if (!$this->checkPermissionWithMessage('RESTORE_PORTFOLIO', 'You do not have permission to restore portfolio items.')) {
@@ -567,28 +570,21 @@ class Portfolios extends Component
             DB::commit();
             session()->flash('message', 'Portfolio restored successfully.');
 
-            // --- REFRESH LOGIC REFINEMENT ---
+            // --- REFRESH LOGIC REFINEMENT (Keep Current View) ---
 
             // 1. Clear the cache *before* changing state that affects the query
             $this->clearCache('portfolios');
 
-            // 2. Change state that affects the view/query.
-            // If the user was viewing the trash, switch back to the active view.
-            // This state change WILL trigger a re-render.
-            if ($this->showDeleted) {
-                $this->showDeleted = false;
-            }
-
-            // 3. Reset pagination. This state change ALSO triggers a re-render.
-            // It ensures the user is on page 1 after the list potentially changes.
+            // 2. Reset pagination. This state change triggers a re-render.
+            //    Crucially, it will use the CURRENT value of $this->showDeleted
+            //    when fetching data for the refreshed view. If $showDeleted was true,
+            //    the query runs with withTrashed(), but the just-restored item
+            //    will no longer match (deleted_at is NULL) and thus disappears
+            //    from the inactive list correctly.
             $this->resetPage();
 
-            // 4. Dispatch event *after* state changes, mainly for frontend feedback (e.g., toasts).
+            // 3. Dispatch event *after* state changes, mainly for frontend feedback (e.g., toasts).
             $this->dispatch('portfolio-restored-success', uuid: $uuid);
-
-            // REMOVED: Explicit $this->dispatch('refreshComponent');
-            // We now rely on the state changes ($showDeleted, $page) and the cleared cache
-            // to cause Livewire to fetch fresh data during its next render cycle.
 
             // --- END REFRESH LOGIC REFINEMENT ---
 
