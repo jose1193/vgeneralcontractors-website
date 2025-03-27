@@ -466,8 +466,9 @@ class Portfolios extends Component
         }
     }
 
-    /**
+        /**
      * Elimina (Soft Delete) un portfolio usando su UUID.
+     * Images are NOT physically deleted here.
      */
     public function delete(string $uuid): void // Changed parameter to UUID
     {
@@ -478,26 +479,37 @@ class Portfolios extends Component
         DB::beginTransaction();
         try {
             // Find by UUID, including trashed in case of repeated attempts
+            // Keep 'images' in with() if needed for logging or other checks, but don't delete them.
             $portfolio = Portfolio::withTrashed()->with(['images', 'projectType'])
                                     ->where('uuid', $uuid)->firstOrFail(); // Query by UUID
 
-            // Delete physical image files
-            if ($portfolio->images->isNotEmpty()) {
-                Log::info("Deleting image files for portfolio UUID {$uuid}. Count: {$portfolio->images->count()}");
-                foreach ($portfolio->images as $image) {
-                    if ($image->path) {
-                        $this->portfolioImageService->deleteImage($image->path);
-                    }
-                }
-                // Delete PortfolioImage records (cascade might handle this, but explicit is safer)
-                $portfolio->images()->delete();
+            // --- MODIFICATION START ---
+            // Check if the portfolio is already soft-deleted to prevent repeated operations if needed
+            if ($portfolio->trashed()) {
+                 session()->flash('error', 'Portfolio item is already in trash.');
+                 DB::rollBack(); // Roll back if no action needed
+                 return;
             }
 
-            // Soft delete Portfolio
-            $portfolio->delete();
-            Log::info("Soft deleted portfolio UUID {$uuid}.");
+            // REMOVED: Physical image file deletion logic.
+            // The portfolioImageService->deleteImage calls are removed from this method.
+            // Physical files will only be deleted during an update operation
+            // when specific images are marked via $this->images_to_delete.
 
-            // Optional: Handle orphaned ProjectType
+            // Optional: Decide if PortfolioImage *database records* should also be soft-deleted.
+            // If the PortfolioImage model uses the SoftDeletes trait and you want its DB records
+            // to be marked as deleted when the parent Portfolio is:
+            // $portfolio->images()->delete(); // This would trigger soft deletes on PortfolioImage records if trait is used.
+            // If PortfolioImage doesn't use SoftDeletes, or you want the records to persist until
+            // explicitly deleted via update, then simply do nothing with $portfolio->images() here.
+            // --- MODIFICATION END ---
+
+
+            // Soft delete Portfolio record ONLY
+            $portfolio->delete(); // This performs the soft delete on the Portfolio model
+            Log::info("Soft deleted portfolio UUID {$uuid}. Associated image files were NOT physically deleted.");
+
+            // Optional: Handle orphaned ProjectType (existing logic is fine)
             $projectType = $portfolio->projectType;
             if ($projectType && !$projectType->trashed()) {
                  if ($projectType->portfolios()->whereNull('deleted_at')->doesntExist()) {
@@ -509,18 +521,17 @@ class Portfolios extends Component
             DB::commit();
             $this->clearCache('portfolios');
             session()->flash('message', 'Portfolio item moved to trash successfully.');
-            // Dispatch event for frontend feedback
             $this->dispatch('portfolio-deleted-success', uuid: $uuid);
             $this->resetPage(); // Refresh list
 
         } catch (ModelNotFoundException $e) { // More specific exception
             DB::rollBack();
-            Log::warning("Attempted to delete non-existent portfolio UUID {$uuid}.");
-            session()->flash('error', 'Portfolio item not found.');
-            $this->dispatch('portfolio-delete-failed', uuid: $uuid, message: 'Not found');
+            Log::warning("Attempted to delete non-existent or already deleted portfolio UUID {$uuid}.");
+            session()->flash('error', 'Portfolio item not found or already in trash.');
+            $this->dispatch('portfolio-delete-failed', uuid: $uuid, message: 'Not found or already deleted');
         } catch (\Exception $e) {
              DB::rollBack();
-             Log::error("Error deleting portfolio UUID {$uuid}: " . $e->getMessage(), [
+             Log::error("Error soft deleting portfolio UUID {$uuid}: " . $e->getMessage(), [
                 'trace' => Str::limit($e->getTraceAsString(), 1000)
              ]);
              session()->flash('error', 'Failed to move portfolio item to trash.');
@@ -528,7 +539,7 @@ class Portfolios extends Component
         }
     }
 
-    /**
+       /**
      * Restaura un portfolio borrado (Soft Delete) usando su UUID.
      */
     public function restore(string $uuid): void // Changed parameter to UUID
@@ -550,22 +561,36 @@ class Portfolios extends Component
             $projectType = $portfolio->projectType()->onlyTrashed()->first();
             if ($projectType) {
                  $projectType->restore();
-                 // Consider reactivating if status was changed
-                 // if ($projectType->status === 'inactive') $projectType->update(['status' => 'active']);
                  Log::info("Restored associated ProjectType ID {$projectType->id} for portfolio UUID {$uuid}.");
             }
-            // NOTE: Physical image files are NOT restored from storage by this action.
 
             DB::commit();
-            $this->clearCache('portfolios');
             session()->flash('message', 'Portfolio restored successfully.');
-            // Optional: Hide deleted items view after restore
+
+            // --- REFRESH LOGIC REFINEMENT ---
+
+            // 1. Clear the cache *before* changing state that affects the query
+            $this->clearCache('portfolios');
+
+            // 2. Change state that affects the view/query.
+            // If the user was viewing the trash, switch back to the active view.
+            // This state change WILL trigger a re-render.
             if ($this->showDeleted) {
                 $this->showDeleted = false;
             }
-             // Dispatch event for frontend feedback
+
+            // 3. Reset pagination. This state change ALSO triggers a re-render.
+            // It ensures the user is on page 1 after the list potentially changes.
+            $this->resetPage();
+
+            // 4. Dispatch event *after* state changes, mainly for frontend feedback (e.g., toasts).
             $this->dispatch('portfolio-restored-success', uuid: $uuid);
-            $this->resetPage(); // Refresh list
+
+            // REMOVED: Explicit $this->dispatch('refreshComponent');
+            // We now rely on the state changes ($showDeleted, $page) and the cleared cache
+            // to cause Livewire to fetch fresh data during its next render cycle.
+
+            // --- END REFRESH LOGIC REFINEMENT ---
 
         } catch (ModelNotFoundException $e) { // More specific exception
             DB::rollBack();
@@ -581,7 +606,6 @@ class Portfolios extends Component
              $this->dispatch('portfolio-restore-failed', uuid: $uuid, message: $e->getMessage());
         }
      }
-
      // --- Image Management Methods (Pending & Existing) ---
 
     public function removePendingNewImage(int $index): void
