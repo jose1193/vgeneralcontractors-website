@@ -3,7 +3,7 @@
 @props([
     'isEditing',
     'serviceCategoriesList', // Collection of ServiceCategory models
-    'existing_images', // Collection of PortfolioImage models when editing
+    'existing_images', // Collection of PortfolioImage models when editing (assumed ordered by 'order')
     'images_to_delete', // Array of existing image IDs marked for deletion
     'pendingNewImages', // Array of TemporaryUploadedFile for new images
     // Pass constants explicitly
@@ -22,7 +22,7 @@
         </label>
         {{-- Bind directly to the parent Livewire component's property --}}
         <input wire:model.lazy="title" type="text" id="title" autocomplete="off"
-            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('title') border-red-500 dark:border-red-500 @enderror">
+            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('title') border-red-500 dark:border-red-500 @enderror">
         {{-- Display Livewire validation error for 'title' --}}
         @error('title')
             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -35,7 +35,7 @@
             Description <span class="text-red-500">*</span>
         </label>
         <textarea wire:model.lazy="description" id="description" rows="4"
-            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('description') border-red-500 dark:border-red-500 @enderror"></textarea>
+            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('description') border-red-500 dark:border-red-500 @enderror"></textarea>
         @error('description')
             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
         @enderror
@@ -47,7 +47,7 @@
             Service Category <span class="text-red-500">*</span>
         </label>
         <select wire:model="service_category_id" id="service_category_id"
-            class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('service_category_id') border-red-500 dark:border-red-500 @enderror">
+            class="mt-1 block w-full border dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('service_category_id') border-red-500 dark:border-red-500 @enderror">
             <option value="">Select a Service Category</option>
             {{-- Use the prop passed to the component --}}
             @foreach ($serviceCategoriesList as $category)
@@ -66,8 +66,7 @@
     <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Images
-            {{-- Logic to display asterisk based on validation rules (might differ slightly from simple check) --}}
-            {{-- Consider just using hint text or relying on backend validation messages --}}
+            {{-- Asterisk based on requirement is complex; rely on validation messages --}}
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             {{-- Use the props for constants --}}
@@ -104,7 +103,7 @@
             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
         @enderror
 
-        {{-- Errores Globales (`pendingNewImages`) --}}
+        {{-- Errores Globales (`pendingNewImages`) - e.g., total count/size limits, required --}}
         @error('pendingNewImages')
             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
         @enderror
@@ -132,12 +131,14 @@
                                     title="Remove this pending image">
                                     <span wire:loading.remove
                                         wire:target="$parent.removePendingNewImage({{ $index }})">
+                                        {{-- X Icon --}}
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </span>
+                                    {{-- Loading Spinner --}}
                                     <span wire:loading wire:target="$parent.removePendingNewImage({{ $index }})"
                                         class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                         <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -165,16 +166,28 @@
                     Current Images ({{ $existing_images->whereNotIn('id', $images_to_delete)->count() }} visible):
                 </p>
                 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {{-- Ensure $existing_images is sorted by 'order' in the parent component before passing --}}
                     @foreach ($existing_images as $image)
                         <div wire:key="existing-image-{{ $image->id }}"
                             class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }}">
-                            <img src="{{ $image->path }}" {{-- Assuming public URL --}}
+
+                            {{-- ****** NEW: MAIN Label for the first visible image ****** --}}
+                            @if ($loop->first && !in_array($image->id, $images_to_delete))
+                                <span
+                                    class="absolute top-1 left-1 z-10 bg-indigo-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded shadow">
+                                    MAIN
+                                </span>
+                            @endif
+                            {{-- ********************************************************** --}}
+
+                            <img src="{{ $image->path }}" {{-- Assuming public URL or use Storage::url() --}}
                                 alt="Existing image {{ $loop->iteration }}"
                                 class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
 
                             {{-- Overlay y Botones --}}
                             <div
                                 class="absolute inset-0 flex items-center justify-center rounded-md {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }} transition-all duration-200">
+
                                 @if (!in_array($image->id, $images_to_delete))
                                     {{-- Botón Marcar para Borrar - Calls parent method --}}
                                     <button type="button" wire:click="markImageForDeletion({{ $image->id }})"
@@ -184,6 +197,7 @@
                                         title="Mark for Deletion">
                                         <span wire:loading.remove
                                             wire:target="markImageForDeletion({{ $image->id }})">
+                                            {{-- Trash Icon --}}
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -191,6 +205,7 @@
                                                 </path>
                                             </svg>
                                         </span>
+                                        {{-- Loading Spinner --}}
                                         <span wire:loading wire:target="markImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                             <svg class="animate-spin h-4 w-4 text-white"
@@ -213,16 +228,17 @@
                                         title="Undo Mark for Deletion">
                                         <span wire:loading.remove
                                             wire:target="unmarkImageForDeletion({{ $image->id }})">
+                                            {{-- Undo/Refresh Icon --}}
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 00-15.357-2m15.357 2H15">
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                                 </path>
                                             </svg>
                                         </span>
+                                        {{-- Loading Spinner --}}
                                         <span wire:loading wire:target="unmarkImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-yellow-500 bg-opacity-50 rounded-full">
-
                                             <svg class="animate-spin h-4 w-4 text-gray-800"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24">
@@ -232,7 +248,6 @@
                                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                                 </path>
                                             </svg>
-
                                         </span>
                                     </button>
                                 @endif

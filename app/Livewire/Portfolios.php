@@ -641,6 +641,10 @@ class Portfolios extends Component
         if ($key !== false) {
             unset($this->images_to_delete[$key]);
             $this->images_to_delete = array_values($this->images_to_delete);
+            
+            // Forzar actualización de la vista
+            $this->dispatch('image-unmarked-from-deletion', imageId: $imageId);
+            
             Log::debug("Unmarked image from deletion", [
                 'imageId' => $imageId, 
                 'images_to_delete' => $this->images_to_delete
