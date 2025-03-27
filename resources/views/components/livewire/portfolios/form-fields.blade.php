@@ -12,6 +12,7 @@
     'maxTotalSizeKb',
 ])
 
+{{-- Wrapper div for consistent spacing --}}
 <div class="space-y-6">
 
     {{-- Campo Title --}}
@@ -19,9 +20,10 @@
         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Project Name <span class="text-red-500">*</span>
         </label>
-        {{-- Use $wire.title directly if not using Alpine x-model --}}
+        {{-- Bind directly to the parent Livewire component's property --}}
         <input wire:model.lazy="title" type="text" id="title" autocomplete="off"
             class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('title') border-red-500 dark:border-red-500 @enderror">
+        {{-- Display Livewire validation error for 'title' --}}
         @error('title')
             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
         @enderror
@@ -47,9 +49,10 @@
         <select wire:model="service_category_id" id="service_category_id"
             class="mt-1 block w-full border  dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('service_category_id') border-red-500 dark:border-red-500 @enderror">
             <option value="">Select a Service Category</option>
+            {{-- Use the prop passed to the component --}}
             @foreach ($serviceCategoriesList as $category)
                 <option value="{{ $category->id }}">
-                    {{ $category->category }} {{-- Assuming the field name is 'category' --}}
+                    {{ $category->category }} {{-- Adjust field name if needed --}}
                 </option>
             @endforeach
         </select>
@@ -63,29 +66,17 @@
     <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Images
-            @php
-                // Determine if image is required based on current state within the modal
-                $isImageRequiredForDisplay = false;
-                if (!$isEditing) {
-                    $isImageRequiredForDisplay = empty($pendingNewImages);
-                } elseif ($isEditing && $existing_images instanceof \Illuminate\Support\Collection) {
-                    $isImageRequiredForDisplay =
-                        $existing_images->whereNotIn('id', $images_to_delete)->isEmpty() && empty($pendingNewImages);
-                }
-            @endphp
-            {{-- Show asterisk based on validation logic, not just display state --}}
-            {{-- (The actual requirement is handled by backend validation rules) --}}
-            {{-- Maybe just show hint text instead of asterisk? --}}
-            {{-- <span class="text-red-500">*</span> --}}
+            {{-- Logic to display asterisk based on validation rules (might differ slightly from simple check) --}}
+            {{-- Consider just using hint text or relying on backend validation messages --}}
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+            {{-- Use the props for constants --}}
             (Max {{ $maxFiles }} total. Max {{ $maxSizeKb / 1024 }}MB/image. Max {{ $maxTotalSizeKb / 1024 }}MB
-            total
-            new.)
+            total new.)
         </p>
 
         {{-- Input File Múltiple --}}
-        {{-- Use $wire.$parent inside partial if needed, but wire:model works directly --}}
+        {{-- Binds to the parent's 'image_files' property --}}
         <input wire:model="image_files" type="file" id="image_files" multiple
             accept="image/jpeg,image/png,image/gif,image/webp"
             class="block w-full text-sm text-gray-500 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800
@@ -95,19 +86,20 @@
                          file:text-indigo-700 dark:file:text-indigo-200
                          hover:file:bg-indigo-100 dark:hover:file:bg-gray-500"
             @php
-$currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
+// Calculate if more images can be added using props/state passed in
+                $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
                 $newPendingCount = count($pendingNewImages);
                 $canAddMore = ($currentVisibleExistingCount + $newPendingCount) < $maxFiles; @endphp
             {{ $canAddMore ? '' : 'disabled' }}
             title="{{ $canAddMore ? 'Select images to add' : 'Maximum number of images reached (' . $maxFiles . ')' }}">
 
-        {{-- Indicador de carga --}}
+        {{-- Indicador de carga for file input --}}
         <div wire:loading wire:target="image_files"
             class="mt-2 text-sm text-indigo-600 dark:text-indigo-400 animate-pulse">
             Processing selection...
         </div>
 
-        {{-- Errores del Input (`image_files.*`) --}}
+        {{-- Errores Específicos del Input (`image_files.*`) --}}
         @error('image_files.*')
             <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
         @enderror
@@ -118,6 +110,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @enderror
 
         {{-- Previsualización de NUEVAS Imágenes PENDIENTES --}}
+        {{-- Uses the $pendingNewImages prop --}}
         @if (!empty($pendingNewImages))
             <div class="mt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
@@ -131,7 +124,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                             <div wire:key="pending-new-image-{{ $index }}" class="relative group aspect-square">
                                 <img src="{{ $image->temporaryUrl() }}" alt="New image {{ $index + 1 }} preview"
                                     class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
-                                {{-- Botón quitar PENDIENTE (uses $parent context) --}}
+                                {{-- Botón quitar PENDIENTE - Calls parent method --}}
                                 <button type="button" wire:click="$parent.removePendingNewImage({{ $index }})"
                                     wire:loading.attr="disabled"
                                     wire:target="$parent.removePendingNewImage({{ $index }})"
@@ -145,7 +138,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                                 d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </span>
-                                    {{-- Loading Spinner --}}
                                     <span wire:loading wire:target="$parent.removePendingNewImage({{ $index }})"
                                         class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                         <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -166,6 +158,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @endif
 
         {{-- Visualización de Imágenes EXISTENTES --}}
+        {{-- Uses $isEditing, $existing_images, $images_to_delete props --}}
         @if ($isEditing && $existing_images instanceof \Illuminate\Support\Collection && $existing_images->isNotEmpty())
             <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
@@ -181,19 +174,15 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
 
                             {{-- Overlay y Botones --}}
                             <div
-                                class="absolute inset-0 flex items-center justify-center rounded-md
-                                        {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }}
-                                        transition-all duration-200">
-
-                                {{-- Botón Marcar/Desmarcar para Borrar --}}
+                                class="absolute inset-0 flex items-center justify-center rounded-md {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }} transition-all duration-200">
                                 @if (!in_array($image->id, $images_to_delete))
+                                    {{-- Botón Marcar para Borrar - Calls parent method --}}
                                     <button type="button"
                                         wire:click="$parent.markImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
                                         wire:target="$parent.markImageForDeletion({{ $image->id }})"
                                         class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Mark for Deletion">
-                                        {{-- Icono Papelera --}}
                                         <span wire:loading.remove
                                             wire:target="$parent.markImageForDeletion({{ $image->id }})">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -203,7 +192,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                                 </path>
                                             </svg>
                                         </span>
-                                        {{-- Loading Spinner --}}
                                         <span wire:loading
                                             wire:target="$parent.markImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
@@ -219,13 +207,13 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                         </span>
                                     </button>
                                 @else
+                                    {{-- Botón Desmarcar - Calls parent method --}}
                                     <button type="button"
                                         wire:click="$parent.unmarkImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
                                         wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
                                         class="p-2 bg-yellow-500 hover:bg-yellow-600 text-gray-800 rounded-full shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
                                         title="Undo Mark for Deletion">
-                                        {{-- Icono Deshacer --}}
                                         <span wire:loading.remove
                                             wire:target="$parent.unmarkImageForDeletion({{ $image->id }})">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -235,7 +223,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                                 </path>
                                             </svg>
                                         </span>
-                                        {{-- Loading Spinner --}}
                                         <span wire:loading
                                             wire:target="$parent.unmarkImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-yellow-500 bg-opacity-50 rounded-full">
@@ -260,21 +247,18 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
 
         {{-- Mensajes informativos sobre estado de imágenes --}}
         @if (!$isEditing && empty($pendingNewImages))
-            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400 italic">
-                Please select at least one image.
-            </p>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400 italic"> Please select at least one image. </p>
         @endif
         @if (
             $isEditing &&
                 $existing_images instanceof \Illuminate\Support\Collection &&
                 $existing_images->whereNotIn('id', $images_to_delete)->isEmpty() &&
                 empty($pendingNewImages))
-            <p class="mt-4 text-sm text-yellow-600 dark:text-yellow-400">
-                Warning: No images will remain after saving. Please add or unmark an image if one is required.
-            </p>
+            <p class="mt-4 text-sm text-yellow-600 dark:text-yellow-400"> Warning: No images will remain after saving.
+                Please add or unmark an image if one is required. </p>
         @endif
 
     </div>
     {{-- ========== FIN SECCIÓN IMÁGENES ========== --}}
 
-</div> {{-- end space-y-6 --}}
+</div> {{-- end wrapper div --}}
