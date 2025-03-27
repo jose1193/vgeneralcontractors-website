@@ -3,6 +3,9 @@ import "../css/app.css";
 import "../css/common.css"; // Import common styles
 import "./common"; // Import common scripts
 
+// Importa el paquete livewire-sortable
+import "livewire-sortable";
+
 // Import Alpine.js
 import Alpine from "alpinejs";
 

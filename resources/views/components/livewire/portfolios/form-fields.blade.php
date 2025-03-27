@@ -16,50 +16,39 @@
 <div class="space-y-6">
 
     {{-- Campo Title --}}
-    {{-- Use x-input, add Alpine for capitalization --}}
-    {{-- Use the NEW x-input-2 component --}}
-    <x-input-2 name="title" label="Project Name" model="title" {{-- Livewire property to bind to --}} :required="true" :error="$errors->first('title')"
-        autocomplete="off" placeholder="Enter project name" {{-- Add Alpine directive for capitalization HERE.
-             It gets merged onto the <input> inside the component. --}}
+    <x-input-2 name="title" label="Project Name" model="title" :required="true" :error="$errors->first('title')" autocomplete="off"
+        placeholder="Enter project name"
         @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
 
     {{-- Campo Description --}}
-    {{-- Uncomment the @input directive below --}}
     <x-text-area-2 name="description" label="Description" model="description" :required="true" :error="$errors->first('description')"
-        rows="4" placeholder="Enter project description" {{-- Apply capitalization logic --}}
+        rows="4" placeholder="Enter project description"
         @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
 
     {{-- Campo Service Category Select --}}
-
-    {{-- Use the NEW x-select-input-2 component --}}
-    <x-select-input-2 name="service_category_id" {{-- HTML id/name --}} label="Service Category"
-        model="service_category_id" {{-- Livewire property to bind to --}} :required="true" :error="$errors->first('service_category_id')" :options="$serviceCategoriesList"
-        {{-- Your collection of ServiceCategory models --}} placeholder="Select a Service Category" value-field="id" {{-- Tell component to use the 'id' property for the option value --}}
-        text-field="category" {{-- Tell component to use the 'category' property for the option text --}} />
+    <x-select-input-2 name="service_category_id" label="Service Category" model="service_category_id" :required="true"
+        :error="$errors->first('service_category_id')" :options="$serviceCategoriesList" placeholder="Select a Service Category" value-field="id"
+        text-field="category" />
 
     {{-- ========== SECCIÓN IMÁGENES ========== --}}
-    {{-- NO CHANGES in this section as requested --}}
     <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Images
-            {{-- Asterisk based on requirement is complex; rely on validation messages --}}
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
-            {{-- Use the props for constants --}}
             (Max {{ $maxFiles }} total. Max {{ $maxSizeKb / 1024 }}MB/image. Max {{ $maxTotalSizeKb / 1024 }}MB
-            total new.)
+            total new. Drag to reorder.) {{-- Added drag note --}}
         </p>
 
         {{-- Input File Múltiple --}}
-        {{-- Binds to the parent's 'image_files' property --}}
         <input wire:model="image_files" type="file" id="image_files" multiple
             accept="image/jpeg,image/png,image/gif,image/webp"
             class="block w-full text-sm text-gray-500 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800
-                         file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-l-md
-                         file:text-sm file:font-semibold file:cursor-pointer
-                         file:bg-indigo-50 dark:file:bg-gray-600
-                         file:text-indigo-700 dark:file:text-indigo-200
-                         hover:file:bg-indigo-100 dark:hover:file:bg-gray-500"
+                   file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-l-md
+                   file:text-sm file:font-semibold file:cursor-pointer
+                   file:bg-indigo-50 dark:file:bg-gray-600
+                   file:text-indigo-700 dark:file:text-indigo-200
+                   hover:file:bg-indigo-100 dark:hover:file:bg-gray-500"
             @php
 $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illuminate\Support\Collection ? $existing_images->whereNotIn('id', $images_to_delete)->count() : 0;
                 $newPendingCount = count($pendingNewImages);
@@ -84,36 +73,41 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @enderror
 
         {{-- Previsualización de NUEVAS Imágenes PENDIENTES --}}
-        {{-- Uses the $pendingNewImages prop --}}
         @if (!empty($pendingNewImages))
             <div class="mt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     New Images Pending Upload ({{ count($pendingNewImages) }}):
                 </p>
-                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                {{-- ADDED: wire:sortable pointing to the method for pending images --}}
+                <div wire:sortable="updatePendingImageOrder"
+                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     @foreach ($pendingNewImages as $index => $image)
                         @if (
                             $image instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile &&
                                 method_exists($image, 'temporaryUrl'))
-                            <div wire:key="pending-new-image-{{ $index }}" class="relative group aspect-square">
+                            {{-- ADDED: wire:sortable.item with $index as value, cursor-grab --}}
+                            {{-- MOVED: wire:key to the sortable item div --}}
+                            <div wire:sortable.item="{{ $index }}"
+                                wire:key="pending-new-image-{{ $index }}"
+                                class="relative group aspect-square cursor-grab">
+                                {{-- Optional: Add wire:sortable.handle here if you want only a specific part to be draggable --}}
+                                {{-- <span wire:sortable.handle class="absolute top-0 left-0 p-1 bg-gray-400 z-20">Drag</span> --}}
                                 <img src="{{ $image->temporaryUrl() }}" alt="New image {{ $index + 1 }} preview"
                                     class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
-                                {{-- Botón quitar PENDIENTE - Calls parent method --}}
+                                {{-- Botón quitar PENDIENTE --}}
                                 <button type="button" wire:click="$parent.removePendingNewImage({{ $index }})"
                                     wire:loading.attr="disabled"
                                     wire:target="$parent.removePendingNewImage({{ $index }})"
-                                    class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md transition-all duration-150 ease-in-out opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="absolute -top-2 -right-2 z-10 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md transition-all duration-150 ease-in-out opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Remove this pending image">
                                     <span wire:loading.remove
                                         wire:target="$parent.removePendingNewImage({{ $index }})">
-                                        {{-- X Icon --}}
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </span>
-                                    {{-- Loading Spinner --}}
                                     <span wire:loading wire:target="$parent.removePendingNewImage({{ $index }})"
                                         class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                         <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -134,37 +128,39 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @endif
 
         {{-- Visualización de Imágenes EXISTENTES --}}
-        {{-- Uses $isEditing, $existing_images, $images_to_delete props --}}
         @if ($isEditing && $existing_images instanceof \Illuminate\Support\Collection && $existing_images->isNotEmpty())
             <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
                     Current Images ({{ $existing_images->whereNotIn('id', $images_to_delete)->count() }} visible):
                 </p>
-                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                    {{-- Ensure $existing_images is sorted by 'order' in the parent component before passing --}}
+                {{-- ADDED: wire:sortable pointing to the method for existing images --}}
+                <div wire:sortable="updateExistingImageOrder"
+                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                     @foreach ($existing_images as $image)
-                        <div wire:key="existing-image-{{ $image->id }}"
-                            class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }}">
+                        {{-- ADDED: wire:sortable.item with $image->id as value, cursor-grab --}}
+                        {{-- Kept wire:key on the sortable item div --}}
+                        <div wire:sortable.item="{{ $image->id }}" wire:key="existing-image-{{ $image->id }}"
+                            class="relative group aspect-square {{ in_array($image->id, $images_to_delete) ? 'opacity-40' : '' }} cursor-grab">
 
-                            {{-- ****** NEW: MAIN Label for the first visible image ****** --}}
+                            {{-- Optional: Add wire:sortable.handle here if you want only a specific part to be draggable --}}
+                            {{-- <span wire:sortable.handle class="absolute top-0 left-0 p-1 bg-gray-400 z-20">Drag</span> --}}
+
+                            {{-- Label MAIN --}}
                             @if ($loop->first && !in_array($image->id, $images_to_delete))
                                 <span
                                     class="absolute top-1 left-1 z-10 bg-indigo-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded shadow">
                                     MAIN
                                 </span>
                             @endif
-                            {{-- ********************************************************** --}}
 
-                            <img src="{{ $image->path }}" {{-- Assuming public URL or use Storage::url() --}}
-                                alt="Existing image {{ $loop->iteration }}"
+                            <img src="{{ $image->path }}" alt="Existing image {{ $loop->iteration }}"
                                 class="h-full w-full object-cover rounded-md border border-gray-300 dark:border-gray-600 shadow-sm">
 
                             {{-- Overlay y Botones --}}
                             <div
                                 class="absolute inset-0 flex items-center justify-center rounded-md {{ in_array($image->id, $images_to_delete) ? 'bg-gray-800 bg-opacity-70' : 'bg-black bg-opacity-0 group-hover:bg-opacity-60' }} transition-all duration-200">
-
                                 @if (!in_array($image->id, $images_to_delete))
-                                    {{-- Botón Marcar para Borrar - Calls parent method --}}
+                                    {{-- Botón Marcar para Borrar --}}
                                     <button type="button" wire:click="markImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
                                         wire:target="markImageForDeletion({{ $image->id }})"
@@ -172,7 +168,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                         title="Mark for Deletion">
                                         <span wire:loading.remove
                                             wire:target="markImageForDeletion({{ $image->id }})">
-                                            {{-- Trash Icon --}}
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -180,11 +175,11 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                                 </path>
                                             </svg>
                                         </span>
-                                        {{-- Loading Spinner --}}
                                         <span wire:loading wire:target="markImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-red-600 bg-opacity-50 rounded-full">
                                             <svg class="animate-spin h-4 w-4 text-white"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24">
                                                 <circle class="opacity-25" cx="12" cy="12" r="10"
                                                     stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor"
@@ -194,7 +189,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                         </span>
                                     </button>
                                 @else
-                                    {{-- Botón Desmarcar - Calls parent method --}}
+                                    {{-- Botón Desmarcar --}}
                                     <button type="button" wire:click="unmarkImageForDeletion({{ $image->id }})"
                                         wire:loading.attr="disabled"
                                         wire:target="unmarkImageForDeletion({{ $image->id }})"
@@ -202,7 +197,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                         title="Undo Mark for Deletion">
                                         <span wire:loading.remove
                                             wire:target="unmarkImageForDeletion({{ $image->id }})">
-                                            {{-- Undo/Refresh Icon --}}
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -210,7 +204,6 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                                 </path>
                                             </svg>
                                         </span>
-                                        {{-- Loading Spinner --}}
                                         <span wire:loading wire:target="unmarkImageForDeletion({{ $image->id }})"
                                             class="absolute inset-0 flex items-center justify-center bg-yellow-500 bg-opacity-50 rounded-full">
                                             <svg class="animate-spin h-4 w-4 text-gray-800"
