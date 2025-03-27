@@ -199,8 +199,28 @@
     <x-certifications />
     <x-financing />
     <x-blog-posts />
+
+    <!-- Add CompanyCam Portfolio Showcase -->
+
+    <x-company-cam />
+
+
     <x-footer />
 
+    <!-- CompanyCam Showcase Initialization -->
+    <script>
+        (function() {
+            var ccShowcaseRoot = document.getElementById("companycam-showcase-root");
+            if (!ccShowcaseRoot || !ccShowcaseRoot.attachShadow || !window.fetch) {
+                return;
+            }
+            var ccShowcaseRootParent = document.getElementsByTagName("body")[0];
+            var ccShowcaseScript = document.createElement("script");
+            ccShowcaseScript.src = 'https://showcase.companycam.com/bundle.js';
+            ccShowcaseScript.type = "text/javascript";
+            ccShowcaseRootParent.appendChild(ccShowcaseScript);
+        })();
+    </script>
 </body>
 
 </html>
