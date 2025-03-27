@@ -48,11 +48,10 @@
 {{-- Wrapper div for consistent spacing --}}
 <div class="space-y-6">
 
-    {{-- Campo Title --}}
-    <x-input-2 name="title" label="Project Name" model="title" :required="true" :error="$errors->first('title')" autocomplete="off"
-        placeholder="Enter project name"
+    <x-input-2 name="title" label="Project Name" {{-- Explicitly add wire:model.live to control update frequency --}} wire:model.live="title" {{-- Keep 'model' if x-input-2 uses it for other things like id/name/label linking --}}
+        model="title" :required="true" :error="$errors->first('title')" autocomplete="off" placeholder="Enter project name"
+        {{-- The @input for capitalization can remain --}}
         @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
-
     {{-- Campo Description --}}
     <x-text-area-2 name="description" label="Description" model="description" :required="true" :error="$errors->first('description')"
         rows="4" placeholder="Enter project description"

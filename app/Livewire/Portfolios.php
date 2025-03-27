@@ -20,7 +20,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile; // Necesario para el manejo de archivos acumulados
-
+use Illuminate\Validation\Rule;
 class Portfolios extends Component
 {
     // --- Traits Requeridos ---
@@ -100,36 +100,50 @@ class Portfolios extends Component
     protected function rules(): array
     {
         // Determine if at least one image is required
+        // ... (existing image requirement logic remains the same) ...
         $isImageRequired = false;
         if (!$this->isEditing) {
-            $isImageRequired = true; // Creating: always need at least one new image
+            $isImageRequired = true;
         } elseif ($this->isEditing && $this->existing_images instanceof Collection) {
             $hasVisibleExisting = $this->existing_images->whereNotIn('id', $this->images_to_delete)->isNotEmpty();
             $hasPendingNew = !empty($this->pendingNewImages);
-            // Editing: require image if no visible existing AND no pending new images
             $isImageRequired = !$hasVisibleExisting && !$hasPendingNew;
         }
 
+
+        // --- Dynamic Unique Rule for Title ---
+        $titleUniqueRule = Rule::unique('project_types', 'title'); // Target table and column
+        if ($this->isEditing && $this->editingPortfolio && $this->editingPortfolio->projectType) {
+            // If editing, ignore the ProjectType ID associated with the current portfolio
+            $titleUniqueRule->ignore($this->editingPortfolio->project_type_id);
+        }
+        // --- End Dynamic Unique Rule ---
+
+
         return [
-            'title' => 'required|string|max:255',
+            // --- Updated title rule ---
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                $titleUniqueRule // Apply the dynamic unique rule
+            ],
+            // --- End updated title rule ---
+
             'description' => 'required|string',
             'service_category_id' => 'required|exists:service_categories,id',
 
-            // Validate the accumulated array `$pendingNewImages` for the final save
-            'pendingNewImages' => [
-                 $isImageRequired ? 'required' : 'nullable', // Required if no other images remain/are added
+            // ... (rest of the image validation rules remain the same) ...
+             'pendingNewImages' => [
+                 $isImageRequired ? 'required' : 'nullable',
                  'array',
-                 // MAX total count validation happens in `validateTotals`
             ],
-            // Validation for each file in the accumulated `$pendingNewImages` array
             'pendingNewImages.*' => [
                  'required',
                  'image',
                  'mimes:jpeg,png,jpg,gif,webp',
-                 'max:' . self::MAX_SIZE_KB // Limit per individual file
+                 'max:' . self::MAX_SIZE_KB
             ],
-
-             // Validation 'sometimes' for the input $image_files for immediate feedback on selection
              'image_files.*' => [
                  'sometimes',
                  'image',
@@ -144,6 +158,7 @@ class Portfolios extends Component
     {
         return [
             'title.required' => 'The project title is required.',
+            'title.unique' => 'This project title is already taken. Please choose another.', // <-- Add this message
             'description.required' => 'The project description is required.',
             'service_category_id.required' => 'Please select a service category.',
             'pendingNewImages.required' => 'At least one image is required for the portfolio.',
@@ -166,6 +181,16 @@ class Portfolios extends Component
         $this->resetPage();
     }
 
+    /**
+     * Validate the title in real-time when it's updated.
+     */
+    public function updatedTitle(string $value): void
+    {
+        // Use validateOnly to run validation rules just for the 'title' field
+        $this->validateOnly('title');
+        Log::debug("Validated title in real-time.", ['title' => $value]);
+    }
+    
     // --- Hooks (updated*, updating) ---
     public function updatedImageFiles(): void
     {
