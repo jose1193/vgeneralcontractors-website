@@ -49,7 +49,7 @@
             <div class="text-center">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">New Roof Installation
                 </h1>
-                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Premium Roofing Solutions
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Roofing Solutions
                     in Houston, Dallas and
                     Surrounding Areas</p>
 
@@ -83,10 +83,9 @@
                         <p class="text-base sm:text-lg md:text-xl text-gray-600">
                             At <strong>V General Contractors</strong>, we're proud to be Houston and Dallas's trusted choice
                             for new roof installations. <strong>We work with CERTIFIED public adjusters to MAXIMIZE your
-                                insurance claim</strong> if your roof replacement is due to storm or hail damage. Our
-                            commitment to excellence and family-focused service ensures your
-                            new roof will be installed with the highest quality standards and backed by our comprehensive
-                            warranty.
+                                insurance claim</strong> if your roof replacement is due to storm or hail damage.
+                            Our focus on quality craftsmanship and customer satisfaction means your new roof is installed to
+                            the highest standards and covered by our comprehensive warranty.
                         </p>
                     </div>
 
@@ -94,44 +93,44 @@
                         <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">Why Choose Us:</h3>
                         <ul class="space-y-2 text-base sm:text-lg md:text-xl text-gray-600">
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Expert Installation Team with Proven Track Record
+                                <span>Expert Installation Team with Proven Track Record</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Premium Materials & Superior Workmanship
+                                <span>Premium Materials & Superior Workmanship</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Comprehensive Warranty Protection
+                                <span>Comprehensive Warranty Protection</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Free, No-Obligation Estimates
+                                <span>Free, No-Obligation Estimates</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Insurance Claim Assistance with Certified Public Adjusters
+                                <span>Insurance Claim Assistance with Certified Public Adjusters</span>
                             </li>
                         </ul>
                     </div>
@@ -147,8 +146,18 @@
         </div>
 
         <!-- Contact Form Section -->
-        <div class="mt-12">
-            <x-contact-form />
+        <div id="schedule-estimate" class="mt-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Get Your Free New Roof Estimate</h2>
+                <p class="text-lg text-gray-600 mt-2">Schedule your free, no-obligation estimate today!</p>
+            </div>
+
+            <div class="text-center">
+                <x-primary-button @click="$dispatch('open-appointment-modal')"
+                    class="w-full sm:w-auto text-center justify-center px-8 py-3 text-lg">
+                    Book A Free Estimate Now
+                </x-primary-button>
+            </div>
         </div>
     </main>
 @endsection
