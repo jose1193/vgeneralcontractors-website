@@ -95,146 +95,105 @@
                 <div class="space-y-6">
                     <div>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Professional Storm Damage
-                            Repair</h2>
-                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                            We know how inconvenient it is for a roof to be damaged by a storm, as even a small amount of
-                            damage can allow water to penetrate your roof and leak to your home. <strong>We work with
-                                CERTIFIED public adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the
-                            full coverage you deserve. Detecting if a storm has
-                            damaged your roof can be difficult to the untrained eye, as sometimes the signs of roof damage
-                            are not readily apparent.
+                            Repair & Replacement</h2>
+                        <p class="text-base sm:text-lg text-gray-600">
+                            Storms can cause significant roof damage, even if it's not immediately visible. Small damages
+                            can lead to water penetration and leaks inside your home. <strong>We work hand-in-hand with
+                                <b>CERTIFIED public adjusters to MAXIMIZE your insurance claim</b></strong>, ensuring you
+                            receive
+                            the full compensation you deserve. Detecting storm damage often requires a trained eye, as signs
+                            might not be obvious.
                         </p>
                     </div>
 
                     <div class="space-y-4">
-                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                            The correct way to find out if your home's roof has suffered storm damage and resolve the
-                            problem efficiently is to contact <strong>V General Contractors</strong>, a knowledgeable
-                            <strong>Houston</strong> and <strong>Dallas</strong> roofing company that performs storm-damaged
-                            roof repairs on a regular basis.
+                        <p class="text-base sm:text-lg text-gray-600">
+                            The most effective way to assess and resolve storm damage is by contacting <strong>V General
+                                Contractors</strong>. As an experienced roofing company serving <strong>Houston</strong>,
+                            <strong>Dallas</strong>, and surrounding areas, we regularly handle storm-damaged roofs.
                         </p>
 
-                        <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                            Once we have evaluated your roof, we will proceed to generate a repair plan that will restore
-                            your home's safety as if the storm had never happened. Similar to how referat schreiben lassen
-                            can simplify the process of creating a detailed and structured report, our approach ensures that
-                            every aspect of your roof's restoration is carefully planned and professionally executed.
+                        <p class="text-base sm:text-lg text-gray-600">
+                            After evaluating your roof's condition, we develop a detailed repair or replacement plan to
+                            restore your home's safety and integrity, ensuring every aspect is professionally managed and
+                            executed.
                         </p>
                     </div>
 
                     <!-- Call to Action Box -->
                     <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm
-                            Damage Repair?</h3>
-                        <ul class="space-y-3 text-base sm:text-lg md:text-xl">
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm
+                            Damage?</h3>
+                        <ul class="space-y-3 text-base sm:text-lg">
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span>24/7 Emergency Response</span>
+                                <span>24/7 Emergency Response Available</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span>Free Comprehensive Inspection</span>
+                                <span>Free, No-Obligation Comprehensive Inspection</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span>Insurance Claim Assistance with Certified Public Adjusters</span>
+                                <span>Expert Insurance Claim Assistance with Certified Public Adjusters</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
-                                <span>GAF Certified Contractors</span>
+                                <span>Experienced & GAF Certified Contractors</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Image Column -->
-                <div class="relative h-[400px] rounded-lg overflow-hidden fade-in-section">
+                <div class="relative rounded-lg overflow-hidden fade-in-section">
                     <img src="{{ asset('assets/img/storm-damage-content.webp') }}"
-                        alt="Storm Damage Roof Repair Process Houston Dallas"
-                        class="absolute inset-0 w-full h-full object-cover image-zoom">
+                        alt="Storm Damage Roof Repair Process Houston Dallas" class="w-full h-auto object-cover image-zoom">
                 </div>
             </div>
         </div>
 
-        <!-- Hail Damage Section -->
         <div class="mt-12 bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6">Professional Hail Damage Assessment
-            </h2>
-            <div class="prose max-w-none mb-8">
-                <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                    To determine with certainty if the roof of your home was damaged by hail, a professional evaluation by a
-                    qualified roofing expert is required. Similarly, in academic work, identifying gaps in research or
-                    structuring a compelling argument can be as challenging as spotting hail damage. In such cases, a
-                    ghostwriter bachelorarbeit serves as a reliable assistant, providing the expertise needed to craft a
-                    high-quality bachelor's thesis. Hail damage is often not easy to recognize without an expert's eye, and
-                    the same applies to tackling the complexities of academic writing.
-                </p>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-6">The process that will be
-                    carried out to guarantee and
-                    justify your investment is the following:</h3>
-
-                <!-- Tabs Section -->
-                <div x-data="{ activeTab: 'assessment' }" class="mt-6">
-                    <!-- Tab Buttons -->
-                    <div class="flex space-x-4 border-b">
-                        <button @click="activeTab = 'assessment'"
-                            :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'assessment' }"
-                            class="px-4 py-2 text-lg font-semibold border-b-2 hover:text-yellow-600 transition-colors">
-                            1. Damage Assessment
-                        </button>
-                        <button @click="activeTab = 'repair'"
-                            :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'repair' }"
-                            class="px-4 py-2 text-lg font-semibold border-b-2 hover:text-yellow-600 transition-colors">
-                            2. Repair Process
-                        </button>
-                    </div>
-
-                    <!-- Tab Content -->
-                    <div class="mt-6">
-                        <!-- Assessment Tab -->
-                        <div x-show="activeTab === 'assessment'" class="space-y-4">
-                            <div class="bg-gray-50 p-6 rounded-lg">
-                                <h4 class="text-xl font-semibold text-gray-900 mb-4">1) Damage assessment</h4>
-                                <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                                    We can determine if damage has been produced by hail and document it properly.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Repair Tab -->
-                        <div x-show="activeTab === 'repair'" class="space-y-4">
-                            <div class="bg-gray-50 p-6 rounded-lg">
-                                <h4 class="text-xl font-semibold text-gray-900 mb-4">2) Based on the damage evaluation, we
-                                    will repair or replace your roof.</h4>
-                                <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                                    After getting your insurance claim cleared, we will proceed to repair the roof of your
-                                    home, restoring it as if hail damage had never occurred. If the hail damage is severe
-                                    enough to require a complete roof replacement, we will review your roofing options,
-                                    allowing you to select the type of shingles and colors available. Once the materials are
-                                    chosen, we will get to work!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Our Storm Damage Restoration Process</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">1. Thorough Damage Assessment</h3>
+                    <p class="text-base sm:text-lg text-gray-600">
+                        Our experts conduct a detailed inspection to identify all storm-related damage (wind, debris, water
+                        intrusion, etc.) and document findings for your insurance claim. We work closely with certified
+                        public adjusters during this phase.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">2. Clear Repair/Replacement Plan</h3>
+                    <p class="text-base sm:text-lg text-gray-600">
+                        Based on the assessment and insurance approval, we outline a clear plan. If repairs suffice, we
+                        target damaged areas. If replacement is needed, we guide you through material selection (shingles,
+                        colors) and provide a timeline.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">3. Professional Execution</h3>
+                    <p class="text-base sm:text-lg text-gray-600">
+                        Our certified team carries out the repair or replacement using high-quality materials and proven
+                        techniques, ensuring your roof is restored to optimal condition and protects your home effectively.
+                    </p>
                 </div>
             </div>
         </div>
@@ -246,7 +205,7 @@
                 <p class="text-lg text-gray-600 mt-2">Get your free inspection today and protect your home from further
                     damage</p>
             </div>
-            <x-contact-form />
+            <x-appointment-form />
         </div>
     </main>
 @endsection
