@@ -97,28 +97,34 @@
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">What should I look for in a trusted roofing
                                     company?</h3>
-                                <p class="text-gray-700">We pride ourselves on holding all of the critical traits of a
-                                    trusted roofing company. It's important to work with a contractor who is
-                                    <strong>experienced and knowledgeable</strong>, offers <strong>warranties on the
-                                        products</strong> being installed, can provide <strong>customer reviews and
-                                        examples</strong> of their work, has the required <strong>certifications and
-                                        insurance</strong>, and will provide a <strong>detailed, written estimate</strong>.
+                                <p class="text-gray-700">We pride ourselves on embodying the critical traits of a
+                                    trusted roofing company. It's crucial to partner with a contractor who is
+                                    <strong>experienced, knowledgeable, and transparent</strong>. Look for proof of
+                                    <strong>certifications and insurance</strong>, strong <strong>customer reviews</strong>,
+                                    clear explanations of <strong>product warranties</strong>, and a willingness to provide
+                                    a <strong>detailed assessment and action plan</strong>. Choosing the right contractor is
+                                    key; we invite you to schedule a free inspection to experience our professionalism
+                                    firsthand.
                                 </p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">Do you provide references?</h3>
-                                <p class="text-gray-700">Yes! Please visit our <strong>Testimonials page</strong> to read
-                                    our customer reviews and visit the <strong>Gallery page</strong> to view samples of our
-                                    professional work. We're proud to serve <strong>Houston, Dallas, and surrounding
+                                <p class="text-gray-700">Absolutely! We encourage you to visit our <strong>Testimonials
+                                        page</strong> to read
+                                    our customer reviews and browse the <strong>Gallery page</strong> to view samples of our
+                                    professional work completed in <strong>Houston, Dallas, and surrounding
                                         areas</strong>.</p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">What is the typical lifespan of a roof?
                                 </h3>
-                                <p class="text-gray-700">The lifespan of residential roofs depends on various factors, such
-                                    as the materials installed and the exposure to weather. <strong>Asphalt shingles
-                                        typically last 15-20 years</strong>. We can help you choose the best materials for
-                                    your specific needs and climate conditions.</p>
+                                <p class="text-gray-700">The lifespan of a residential roof depends on factors like
+                                    material quality, installation expertise, and weather exposure. <strong>Asphalt shingles
+                                        typically last 15-25 years</strong>, though high-impact or severe weather can
+                                    shorten this. We'll help you choose durable materials suited for the Texas climate. If
+                                    your roof is approaching this age or has weathered storms, a free inspection is highly
+                                    recommended.
+                                </p>
                             </div>
                         </div>
 
@@ -127,22 +133,27 @@
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">What kinds of roofs does V-General
                                     Contractors install?</h3>
-                                <p class="text-gray-700">We work with roofs of all kinds, including <strong>pitched roofs,
-                                        flat roofs, shingles</strong>, and more. Our team is certified to work with various
-                                    roofing materials and systems to meet your specific needs.</p>
+                                <p class="text-gray-700">Our certified team has extensive experience with various
+                                    residential and commercial roofing systems, including <strong>pitched roofs,
+                                        flat roofs, asphalt shingles (like GAF), metal roofing</strong>, and more. We assess
+                                    your specific structure and needs to recommend the best solution.</p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">Do you work with insurance claims?</h3>
-                                <p class="text-gray-700">Yes! We work with <strong>CERTIFIED public adjusters</strong> to
-                                    <strong>MAXIMIZE your insurance claim</strong>. Our experienced team will help guide you
-                                    through the entire insurance claim process for storm or hail damage.
+                                <p class="text-gray-700">Yes, absolutely. Assisting with insurance claims is a core part of
+                                    our service. We partner with <strong>CERTIFIED public adjusters</strong> to ensure your
+                                    storm or hail damage claim is thoroughly documented and expertly handled, aiming to
+                                    <strong>MAXIMIZE your rightful coverage</strong> under your policy. Let us navigate the
+                                    complexities for you.
                                 </p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">How do I know if I need a new roof?</h3>
-                                <p class="text-gray-700">We offer <strong>FREE onsite inspections</strong> to assess your
-                                    roof's condition. Upon completing the examination, we provide our honest assessment on
-                                    whether you need repairs or replacement.</p>
+                                <p class="text-gray-700">Visible damage like missing shingles, leaks, or significant granule
+                                    loss are clear signs. However, underlying issues aren't always obvious. We provide
+                                    <strong>FREE, no-obligation onsite inspections</strong> to thoroughly assess your roof's
+                                    condition. We'll give you an honest, expert opinion on whether repairs are sufficient or
+                                    if a replacement is necessary for long-term protection.</p>
                             </div>
                         </div>
 
@@ -151,24 +162,28 @@
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">What should I expect at a roof inspection?
                                 </h3>
-                                <p class="text-gray-700">During our <strong>FREE inspection</strong>, our trained roofers
-                                    will examine the condition of the shingles, inspect the gutters, fascia, and other
-                                    components of the roof. We will also discuss any noticeable problems, leaks, concerns,
-                                    and the estimated age of the current roof.</p>
+                                <p class="text-gray-700">Our <strong>FREE inspection</strong> is comprehensive. A trained
+                                    professional will carefully examine your shingles (or other roofing material) for wear,
+                                    damage, and proper installation. We'll inspect flashing, gutters, fascia, vents, and
+                                    chimneys. We'll also check the attic (if accessible) for signs of leaks or ventilation
+                                    issues. Afterward, we'll discuss our findings, answer your questions, and explain the
+                                    recommended next steps, especially if an insurance claim seems warranted.</p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">How long does a roof replacement take?</h3>
-                                <p class="text-gray-700">The size of the roof will play a role in that, but we have a
-                                    <strong>robust crew that works quickly without cutting corners</strong>. We aim to have
-                                    most roofing replacement jobs completed within one day.
-                                </p>
+                                <p class="text-gray-700">Project duration depends on factors like roof size, complexity, and
+                                    weather. However, our <strong>efficient and experienced crews</strong> work diligently
+                                    without compromising quality. For most standard residential roof replacements, we aim to
+                                    complete the job within <strong>1-2 days</strong>.</p>
                             </div>
                             <div class="faq-item bg-gray-50 p-6 rounded-lg">
                                 <h3 class="text-xl font-bold text-gray-900 mb-3">Can I stay in my house while you replace my
                                     roof?</h3>
-                                <p class="text-gray-700">Yes! While many home improvement projects can be an inconvenience,
-                                    our goal is to allow you to continue with your daily routine while we work on your roof.
-                                    We can discuss special requests you have to make this process easier.</p>
+                                <p class="text-gray-700">Yes, in almost all cases, you can remain comfortably in your home
+                                    during the roof replacement. We understand it's a significant project, and our team
+                                    prioritizes minimizing disruption to your daily routine. We take care to protect your
+                                    property and clean up thoroughly. We're happy to discuss any specific concerns or
+                                    requests you may have.</p>
                             </div>
                         </div>
                     </div>
@@ -196,7 +211,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="text-gray-700">Work with <strong>CERTIFIED</strong> Public Adjusters</span>
+                                <span class="text-gray-700"><strong>We work with CERTIFIED</strong> Public Adjusters</span>
                             </li>
                             <li class="flex items-start">
                                 <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
@@ -204,7 +219,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="text-gray-700"><strong>Insurance Claim</strong> Assistance</span>
+                                <span class="text-gray-700"><strong>Expert Insurance Claim</strong> Assistance</span>
                             </li>
                             <li class="flex items-start">
                                 <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none"
@@ -220,9 +235,9 @@
                     <!-- CTA Box -->
                     <div class="bg-yellow-500 rounded-lg shadow-lg p-6 text-center">
                         <h3 class="text-xl font-bold text-white mb-4">Schedule Your FREE Inspection</h3>
-                        <p class="text-white mb-6">Get your questions answered by our roofing experts and receive a
-                            detailed estimate.</p>
-                        <button @click="showAppointmentModal = true"
+                        <p class="text-white mb-6">Let our experts answer your questions and guide you through the
+                            inspection and insurance process.</p>
+                        <button @click="$dispatch('open-appointment-modal')"
                             class="w-full bg-white text-yellow-500 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
                             Book Now
                         </button>
