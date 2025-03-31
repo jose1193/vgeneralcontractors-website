@@ -71,107 +71,120 @@
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <!-- Emergency Contact Banner -->
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
-            <div class="flex items-center justify-between">
+            @php
+                use App\Helpers\PhoneHelper;
+                $phoneNumber = $companyData->phone ?? '3466920757';
+                $formattedPhone = class_exists(PhoneHelper::class) ? PhoneHelper::format($phoneNumber) : $phoneNumber;
+            @endphp
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <p class="ml-3 text-base sm:text-lg md:text-xl font-medium text-yellow-700">
-                        Emergency Hail Damage? Call us now at <a href="tel:+13466920757"
-                            class="font-bold hover:text-yellow-800">(346) 692-0757</a>
+                    <p class="ml-3 text-base sm:text-lg font-medium text-yellow-700 text-center sm:text-left">
+                        Suspect Hail Damage? Call us now at
+                        <a href="tel:{{ $phoneNumber }}"
+                            class="font-bold hover:text-yellow-800 whitespace-nowrap">{{ $formattedPhone }}</a>
                     </p>
                 </div>
-                <a href="#contact-form"
-                    class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 transition-colors">
+                <a href="javascript:void(0)" @click.prevent="$dispatch('open-appointment-modal')"
+                    class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 transition-colors whitespace-nowrap flex-shrink-0">
                     Get Free Inspection
                 </a>
             </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-8">
                 <!-- Text Content Column -->
                 <div class="space-y-6">
                     <div>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Professional Hail Damage
-                            Assessment</h2>
+                            Assessment & Repair</h2>
                         <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                            To determine with certainty if the roof of your home was damaged by hail, a professional
-                            evaluation by a qualified roofing expert is required. <strong>We work with CERTIFIED public
-                                adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the full coverage you
-                            deserve for any hail damage repairs. Our expert team will thoroughly document all damage to
-                            support your insurance claim.
+                            Hail can cause subtle yet significant damage to your roof, often appearing as small dents or
+                            bruises on shingles that compromise their integrity and lifespan. Determining the extent of hail
+                            damage requires a professional evaluation by qualified roofing experts like those at <b>V
+                                General
+                                Contractors.</b> <strong>We collaborate closely with CERTIFIED public adjusters to
+                                meticulously
+                                document all findings and MAXIMIZE your insurance claim</strong>, ensuring you receive the
+                            full coverage necessary for proper hail damage repairs or replacement. Don't let hidden hail
+                            damage lead to future leaks – get a professional assessment.
                         </p>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">The process that will be
-                            carried out to guarantee
-                            and justify your investment is the following:</h3>
-
-                        <div x-data="{ activeTab: 'assessment' }" class="mt-4">
-                            <!-- Tabs -->
-                            <div class="flex space-x-4 border-b border-gray-200">
-                                <button @click="activeTab = 'assessment'"
-                                    :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'assessment', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'assessment' }"
-                                    class="py-4 px-1 border-b-2 font-medium text-sm sm:text-base transition-colors duration-200">
-                                    1) Damage Assessment
-                                </button>
-                                <button @click="activeTab = 'repair'"
-                                    :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'repair', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'repair' }"
-                                    class="py-4 px-1 border-b-2 font-medium text-sm sm:text-base transition-colors duration-200">
-                                    2) Repair or Replace
-                                </button>
-                            </div>
-
-                            <!-- Tab Content -->
-                            <div class="mt-6">
-                                <!-- Assessment Tab -->
-                                <div x-show="activeTab === 'assessment'"
-                                    class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                                    <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                                        We can determine if damage has been produced by hail and document it properly.
-                                    </p>
-                                </div>
-
-                                <!-- Repair Tab -->
-                                <div x-show="activeTab === 'repair'"
-                                    class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                                    <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                                        After getting your insurance claim cleared, we will proceed to repair the roof of
-                                        your home,
-                                        restoring it as if hail damage had never occurred. If the hail damage is severe
-                                        enough to
-                                        require a complete roof replacement, we will review your roofing options, allowing
-                                        you to
-                                        select the type of shingles and colors available. Once the materials are chosen, we
-                                        will get
-                                        to work!
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Image Column -->
-                <div class="relative h-[400px] rounded-lg overflow-hidden fade-in-section">
+                <div class="relative rounded-lg overflow-hidden fade-in-section">
                     <img src="{{ asset('assets/img/hail-damage-content.webp') }}"
-                        alt="Hail Damage Roof Repair Process Houston Dallas"
-                        class="absolute inset-0 w-full h-full object-cover image-zoom">
+                        alt="Hail Damage Roof Repair Process Houston Dallas" class="w-full h-auto object-cover image-zoom">
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">Our Hail Damage Restoration Process:
+                </h3>
+
+                <div x-data="{ activeTab: 'assessment' }" class="mt-4">
+                    <!-- Tabs -->
+                    <div class="flex space-x-4 border-b border-gray-200">
+                        <button @click="activeTab = 'assessment'"
+                            :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'assessment', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'assessment' }"
+                            class="py-4 px-1 border-b-2 font-medium text-sm sm:text-base transition-colors duration-200">
+                            1. Damage Assessment
+                        </button>
+                        <button @click="activeTab = 'repair'"
+                            :class="{ 'border-yellow-500 text-yellow-600': activeTab === 'repair', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'repair' }"
+                            class="py-4 px-1 border-b-2 font-medium text-sm sm:text-base transition-colors duration-200">
+                            2. Repair or Replace
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="mt-6">
+                        <!-- Assessment Tab -->
+                        <div x-show="activeTab === 'assessment'" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Detailed Inspection & Documentation</h4>
+                            <p class="text-base sm:text-lg text-gray-600">
+                                Our trained specialists meticulously inspect your entire roofing system to identify all
+                                signs of hail impact, differentiating it from normal wear. We thoroughly document findings
+                                with photos and detailed notes, working alongside certified public adjusters to build a
+                                strong case for your insurance claim.
+                            </p>
+                        </div>
+
+                        <!-- Repair Tab -->
+                        <div x-show="activeTab === 'repair'" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Targeted Repairs or Full Replacement</h4>
+                            <p class="text-base sm:text-lg text-gray-600">
+                                Once your insurance claim is approved, we proceed with the necessary work. If damage is
+                                localized, we perform targeted repairs to restore affected areas. For widespread or severe
+                                hail damage requiring a complete roof replacement, we'll guide you through selecting
+                                high-quality, impact-resistant materials (shingles, colors) and execute the installation
+                                flawlessly.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contact Form Section -->
-        <div id="contact-form" class="mt-12">
+        <div id="schedule-inspection" class="mt-12">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-900">Request Hail Damage Inspection</h2>
-                <p class="text-lg text-gray-600 mt-2">Get your free inspection today and protect your home from further
-                    damage</p>
+                <h2 class="text-3xl font-bold text-gray-900">Request Your Free Hail Damage Inspection</h2>
+                <p class="text-lg text-gray-600 mt-2">Protect your roof from hidden hail damage. Schedule your free
+                    inspection now!</p>
             </div>
-            <x-contact-form />
+
+            <div class="text-center">
+                <x-primary-button @click="$dispatch('open-appointment-modal')"
+                    class="w-full sm:w-auto text-center justify-center px-8 py-3 text-lg">
+                    Book A Free Inspection Now
+                </x-primary-button>
+            </div>
         </div>
     </main>
 @endsection
