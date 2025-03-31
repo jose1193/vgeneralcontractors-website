@@ -40,7 +40,7 @@
     </div>
 
     <!-- Content -->
-    <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
+    <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center mt-12 lg:mt-0">
         <!-- Left Text Content -->
         <div class="text-white md:w-1/2 mt-8 sm:mt-32 md:mt-0">
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">Professional
