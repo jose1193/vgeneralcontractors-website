@@ -5,7 +5,7 @@
 @section('meta_description',
     'Expert roof repair services in Houston, Dallas and surrounding areas. We work with
     certified public adjusters to maximize your insurance claim. Certified professionals for storm damage, hail damage,
-    aging roofs, and warranty claims. GAF certified contractors with 50-year durability guarantee.')
+    aging roofs, and warranty claims. Trust our GAF certified contractors for quality materials and long-lasting results.')
 @section('meta_keywords',
     'roof repair Houston, roof repair Dallas, surrounding areas roofing, storm damage repair, hail
     damage repair, roof maintenance, GAF certified contractor, professional roofer, roofing services Texas, emergency roof
