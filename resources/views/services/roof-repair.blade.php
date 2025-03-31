@@ -82,69 +82,72 @@
                             Our roofing repair services are performed by experienced and certified professionals who undergo
                             rigorous training to provide the highest standards of service. <strong>We work with CERTIFIED
                                 public adjusters to MAXIMIZE your insurance claim</strong>, ensuring you get the most value
-                            from your coverage. Our comprehensive insurance ensures that all our clients are protected.
+                            from your coverage.
+                            Furthermore, we are fully insured for your protection and peace of mind.
                         </p>
                     </div>
 
-                    <div class="space-y-4">
-                        <h3 class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">We will evaluate if the roof
-                            of your home needs to
-                            be repaired. There could be different reasons to justify a repair, such as:</h3>
-                        <ul class="space-y-2 text-base sm:text-lg md:text-xl text-gray-600">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">Common Reasons for Roof Repair:
+                        </h3>
+                        <p class="text-base sm:text-lg text-gray-600 mb-4">
+                            Our team will thoroughly evaluate your roof to determine if repairs are needed. Common issues we
+                            address include:
+                        </p>
+                        <ul class="space-y-2 text-base sm:text-lg text-gray-600">
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Damages caused by storms
+                                <span>Damage caused by storms (wind, debris)</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Damages caused by hail
+                                <span>Damage caused by hail impacts</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                A roof repair because your roof is older
+                                <span>Wear and tear due to roof age</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                A roof repair based on a warranty claim or defective materials
+                                <span>Issues covered by warranty or related to defective materials</span>
                             </li>
                             <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor"
+                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Insurance claim assessment and maximization
+                                <span>Leaks, missing shingles, or other visible damage</span>
                             </li>
                         </ul>
                     </div>
 
                     <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                        At <strong>V General Contractors</strong>, we will guide you to make the most assertive decision so
-                        that you can obtain a roof with the highest security guaranteed to last for many years.
+                        Trust <strong>V General Contractors</strong> to guide you toward the best decision for a secure,
+                        long-lasting roof solution.
                     </p>
                 </div>
 
                 <!-- Image Column -->
-                <div class="relative h-[400px] rounded-lg overflow-hidden fade-in-section">
+                <div class="relative rounded-lg overflow-hidden fade-in-section">
                     <img src="{{ asset('assets/img/roof-repair-content.webp') }}"
-                        alt="Professional Roof Repair Process Houston Dallas"
-                        class="absolute inset-0 w-full h-full object-cover image-zoom">
+                        alt="Professional Roof Repair Process Houston Dallas" class="w-full h-auto object-cover image-zoom">
                 </div>
             </div>
         </div>
@@ -216,8 +219,17 @@
         </div>
 
         <!-- Contact Form Section -->
-        <div class="mt-12">
-            <x-contact-form />
+        <div id="schedule-inspection" class="mt-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Schedule Your Free Roof Repair Inspection</h2>
+                <p class="text-lg text-gray-600 mt-2">Get a professional assessment of your roof's condition today!</p>
+            </div>
+            <div class="text-center">
+                <x-primary-button @click="$dispatch('open-appointment-modal')"
+                    class="w-full sm:w-auto text-center justify-center px-8 py-3 text-lg">
+                    Book A Free Inspection Now
+                </x-primary-button>
+            </div>
         </div>
     </main>
 @endsection
