@@ -70,7 +70,7 @@
                                     d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Roof Repair</h3>
+                        <h3 class="text-2xl font-bold mb-2">Roof Repair & Replacement</h3>
                         <p
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Quick and reliable repairs to fix leaks, damage, and maintain your roof's integrity.
@@ -106,7 +106,7 @@
                                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Storm Damage Repair</h3>
+                        <h3 class="text-2xl font-bold mb-2">Storm Damage Repair & Replacement</h3>
                         <p
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Emergency repairs and restoration services for storm-damaged roofs.
@@ -144,7 +144,7 @@
                                     d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Hail Damage Repair</h3>
+                        <h3 class="text-2xl font-bold mb-2">Hail Damage Repair & Replacement</h3>
                         <p
                             class="mb-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                             Specialized repair services for hail-damaged roofs with insurance claim assistance.
