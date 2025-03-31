@@ -97,74 +97,24 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-8">
                 <!-- Text Content Column -->
                 <div class="space-y-6">
                     <div>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Professional Storm Damage
                             Repair & Replacement</h2>
                         <p class="text-base sm:text-lg text-gray-600">
-                            Storms can cause significant roof damage, even if it's not immediately visible. Small damages
-                            can lead to water penetration and leaks inside your home. <strong>We work hand-in-hand with
-                                <b>CERTIFIED public adjusters to MAXIMIZE your insurance claim</b></strong>, ensuring you
-                            receive
-                            the full compensation you deserve. Detecting storm damage often requires a trained eye, as signs
-                            might not be obvious.
+                            Severe weather events, including high winds, hail, and falling debris from storms, can cause
+                            significant roof damage, much of which may not be immediately visible from the ground. Even
+                            seemingly small damages, like lifted shingles or minor punctures, can create pathways for water
+                            penetration. Over time, this moisture intrusion can lead to serious issues such as interior
+                            leaks, mold growth, damaged insulation, and even compromised structural integrity of your home.
+                            Detecting this hidden storm damage requires a professional eye and thorough inspection.
+                            <strong>That's why we work hand-in-hand with <b>CERTIFIED public adjusters</b>. Our combined
+                                expertise ensures all damage is accurately documented and presented to MAXIMIZE your
+                                insurance claim</strong>, helping you receive the full compensation needed for proper
+                            restoration.
                         </p>
-                    </div>
-
-                    <div class="space-y-4">
-                        <p class="text-base sm:text-lg text-gray-600">
-                            The most effective way to assess and resolve storm damage is by contacting <strong>V General
-                                Contractors</strong>. As an experienced roofing company serving <strong>Houston</strong>,
-                            <strong>Dallas</strong>, and surrounding areas, we regularly handle storm-damaged roofs.
-                        </p>
-
-                        <p class="text-base sm:text-lg text-gray-600">
-                            After evaluating your roof's condition, we develop a detailed repair or replacement plan to
-                            restore your home's safety and integrity, ensuring every aspect is professionally managed and
-                            executed.
-                        </p>
-                    </div>
-
-                    <!-- Call to Action Box -->
-                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm
-                            Damage?</h3>
-                        <ul class="space-y-3 text-base sm:text-lg">
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>24/7 Emergency Response Available</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Free, No-Obligation Comprehensive Inspection</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Expert Insurance Claim Assistance with Certified Public Adjusters</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                <span>Experienced & GAF Certified Contractors</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 
@@ -172,6 +122,58 @@
                 <div class="relative rounded-lg overflow-hidden fade-in-section">
                     <img src="{{ asset('assets/img/storm-damage-content.webp') }}"
                         alt="Storm Damage Roof Repair Process Houston Dallas" class="w-full h-auto object-cover image-zoom">
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="space-y-4">
+                    <p class="text-base sm:text-lg text-gray-600">
+                        The most effective way to assess and resolve storm damage is by contacting <strong>V General
+                            Contractors</strong>. As an experienced roofing company serving <strong>Houston</strong>,
+                        <strong>Dallas</strong>, and surrounding areas, we regularly handle storm-damaged roofs.
+                    </p>
+
+                    <p class="text-base sm:text-lg text-gray-600">
+                        After evaluating your roof's condition, we develop a detailed repair or replacement plan to
+                        restore your home's safety and integrity, ensuring every aspect is professionally managed and
+                        executed.
+                    </p>
+                </div>
+
+                <!-- Call to Action Box -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Why Choose Us for Storm
+                        Damage?</h3>
+                    <ul class="space-y-3 text-base sm:text-lg">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>24/7 Emergency Response Available</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Free, No-Obligation Comprehensive Inspection</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Expert Insurance Claim Assistance with Certified Public Adjusters</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Experienced & GAF Certified Contractors</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
