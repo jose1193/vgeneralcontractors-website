@@ -1,6 +1,6 @@
 <!-- Hero Section with Background Slider -->
 <section
-    class="relative h-[750px] md:h-[750px] lg:h-[700px] flex items-center overflow-hidden fade-in-section pt-20 md:pt-24 pb-12 md:pb-0">
+    class="relative h-[750px] md:h-[750px] lg:h-[700px] flex items-center overflow-hidden fade-in-section pt-24 sm:pt-36 md:pt-24 lg:pt-8 pb-12 md:pb-0">
     <!-- Removed x-data="{ showAppointmentModal: false }" -->
     <!-- Background Slider -->
     <div x-data="{ currentSlide: 0 }" x-init="setInterval(() => currentSlide = currentSlide === 3 ? 0 : currentSlide + 1, 5000)" class="absolute inset-0">

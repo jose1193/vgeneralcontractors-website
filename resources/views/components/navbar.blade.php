@@ -6,8 +6,10 @@
     class="fixed w-full top-0 z-40 transition-all duration-300">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <div class="flex items-center">
-            <img :src="isScrolled ? '{{ asset('assets/logo/logo3.webp') }}' : '{{ asset('assets/logo/logo4-white.webp') }}'"
-                alt="V General Contractors Logo" class="h-10 transition-all duration-300">
+            <a href="{{ route('home') }}">
+                <img :src="isScrolled ? '{{ asset('assets/logo/logo3.webp') }}' : '{{ asset('assets/logo/logo4-white.webp') }}'"
+                    alt="V General Contractors Logo" class="h-10 transition-all duration-300">
+            </a>
             <span class="ml-2 text-xl font-bold"
                 :class="{ 'text-gray-800': isScrolled, 'text-white': !isScrolled }"></span>
         </div>
