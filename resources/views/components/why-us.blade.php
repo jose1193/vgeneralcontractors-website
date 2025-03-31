@@ -43,10 +43,10 @@
                             </div>
                         </div>
                         <h2 class="title-font font-semibold text-2xl text-gray-900">
-                            Insurance Claims Management
+                            Insurance Claims Management & Emergency Services
                         </h2>
-                        <p class="mt-2 text-gray-600">Expert assistance with your
-                            insurance claims process</p>
+                        <p class="mt-2 text-gray-600">Expert assistance with claims and prompt emergency roof response
+                        </p>
                     </div>
                 </div>
             </div>
