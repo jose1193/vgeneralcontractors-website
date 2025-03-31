@@ -1,19 +1,30 @@
 @extends('layouts.main')
 
+{{-- SEO Meta Tags --}}
 @section('title', 'Professional New Roof Installation in Houston & Dallas | V General Contractors')
-
-@section('meta')
-    <meta name="description"
-        content="Expert new roof installation services in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term warranty. Get your free estimate today!">
-    <meta name="keywords"
-        content="new roof installation, roof replacement, residential roofing, Houston roofing, Dallas roofing, roofing contractor, professional roofer, roof warranty, certified public adjusters, insurance claims, insurance claim maximization">
-    <meta property="og:title" content="Professional New Roof Installation in Houston & Dallas | V General Contractors">
-    <meta property="og:description"
-        content="Expert new roof installation services in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term warranty.">
-    <meta property="og:type" content="website">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url('/new-roof') }}">
-@endsection
+@section('meta_description',
+    'Expert new roof installation services in Houston, Dallas and surrounding areas. We work
+    with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term
+    warranty. Get your free estimate today!')
+@section('meta_keywords',
+    'new roof installation, roof replacement, residential roofing, Houston roofing, Dallas
+    roofing, roofing contractor, professional roofer, roof warranty, certified public adjusters, insurance claims, insurance
+    claim maximization')
+@section('canonical_url', route('new-roof')) {{-- Assuming 'new-roof' is the route name --}}
+@section('og_title', 'Professional New Roof Installation in Houston & Dallas | V General Contractors')
+@section('og_description',
+    'Expert new roof installation services in Houston, Dallas and surrounding areas. We work with
+    CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term
+    warranty.')
+@section('og_image', asset('assets/img/new-roof.webp')) {{-- Specific image for this page --}}
+@section('twitter_title', 'Professional New Roof Installation in Houston & Dallas | V General Contractors')
+{{-- Reusing OG title --}}
+@section('twitter_description',
+    'Expert new roof installation services in Houston, Dallas and surrounding areas. We work
+    with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Professional team, quality materials, and long-term
+    warranty.') {{-- Reusing OG description --}}
+@section('twitter_image', asset('assets/img/new-roof.webp')) {{-- Specific image for this page --}}
+{{-- Note: og:type, robots are usually inherited from the layout --}}
 
 @push('styles')
     <style>

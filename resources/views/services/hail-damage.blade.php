@@ -1,26 +1,26 @@
 @extends('layouts.main')
 
 @section('title', 'Expert Hail Damage Roof Repair in Houston, Dallas & Surrounding Areas | V General Contractors')
-
-@section('meta')
-    <meta name="description"
-        content="Professional hail damage roof repair in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Expert evaluation and documentation for insurance claims. Trust V General Contractors for comprehensive hail damage solutions.">
-    <meta name="keywords"
-        content="hail damage repair Houston, hail damage repair Dallas, roof inspection, insurance claims, roof replacement, GAF certified contractor, professional roofer, hail damage experts Texas, emergency roof repair, certified public adjusters, insurance claim maximization">
-    <meta property="og:title"
-        content="Hail Damage Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors">
-    <meta property="og:description"
-        content="Expert hail damage repair services by certified contractors. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Serving Houston, Dallas and surrounding areas with professional evaluation and repair solutions.">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="V General Contractors">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Professional Hail Damage Repair - V General Contractors">
-    <meta name="twitter:description"
-        content="Expert hail damage repair in Houston, Dallas and surrounding areas. Professional evaluation and efficient solutions by certified contractors.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url('/hail-damage') }}">
-@endsection
+@section('meta_description',
+    'Professional hail damage roof repair in Houston, Dallas and surrounding areas. We work
+    with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Expert evaluation and documentation for insurance
+    claims. Trust V General Contractors for comprehensive hail damage solutions.')
+@section('meta_keywords',
+    'hail damage repair Houston, hail damage repair Dallas, roof inspection, insurance claims,
+    roof replacement, GAF certified contractor, professional roofer, hail damage experts Texas, emergency roof repair,
+    certified public adjusters, insurance claim maximization')
+@section('canonical_url', route('hail-damage'))
+@section('og_title', 'Hail Damage Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors')
+@section('og_description',
+    'Expert hail damage repair services by certified contractors. We work with CERTIFIED public
+    adjusters to MAXIMIZE your insurance claim. Serving Houston, Dallas and surrounding areas with professional evaluation
+    and repair solutions.')
+@section('og_image', asset('assets/img/hail-damage.webp'))
+@section('twitter_title', 'Professional Hail Damage Repair - V General Contractors')
+@section('twitter_description',
+    'Expert hail damage repair in Houston, Dallas and surrounding areas. Professional
+    evaluation and efficient solutions by certified contractors.')
+@section('twitter_image', asset('assets/img/hail-damage.webp'))
 
 @push('styles')
     <style>

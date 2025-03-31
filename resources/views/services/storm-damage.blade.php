@@ -1,26 +1,26 @@
 @extends('layouts.main')
 
 @section('title', 'Expert Storm Damage Roof Repair in Houston, Dallas & Surrounding Areas | V General Contractors')
-
-@section('meta')
-    <meta name="description"
-        content="Professional storm damage roof repair in Houston, Dallas and surrounding areas. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Fast response, expert evaluation, and efficient repairs. Trust V General Contractors for emergency storm damage solutions.">
-    <meta name="keywords"
-        content="storm damage repair Houston, storm damage repair Dallas, emergency roof repair, storm damage assessment, roof leak repair, water damage repair, professional roofer, storm damage experts Texas, roof inspection, GAF certified contractor, certified public adjusters, insurance claims, insurance claim maximization">
-    <meta property="og:title"
-        content="Storm Damage Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors">
-    <meta property="og:description"
-        content="Emergency storm damage repair services by certified contractors. We work with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Serving Houston, Dallas and surrounding areas with professional roof evaluation and repair solutions.">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="V General Contractors">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Emergency Storm Damage Roof Repair - V General Contractors">
-    <meta name="twitter:description"
-        content="Professional storm damage repair in Houston, Dallas and surrounding areas. Expert evaluation and efficient solutions by certified contractors.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url('/storm-damage') }}">
-@endsection
+@section('meta_description',
+    'Professional storm damage roof repair in Houston, Dallas and surrounding areas. We work
+    with CERTIFIED public adjusters to MAXIMIZE your insurance claim. Fast response, expert evaluation, and efficient
+    repairs. Trust V General Contractors for emergency storm damage solutions.')
+@section('meta_keywords',
+    'storm damage repair Houston, storm damage repair Dallas, emergency roof repair, storm damage
+    assessment, roof leak repair, water damage repair, professional roofer, storm damage experts Texas, roof inspection, GAF
+    certified contractor, certified public adjusters, insurance claims, insurance claim maximization')
+@section('canonical_url', route('storm-damage'))
+@section('og_title', 'Storm Damage Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors')
+@section('og_description',
+    'Emergency storm damage repair services by certified contractors. We work with CERTIFIED
+    public adjusters to MAXIMIZE your insurance claim. Serving Houston, Dallas and surrounding areas with professional roof
+    evaluation and repair solutions.')
+@section('og_image', asset('assets/img/storm-damage.webp'))
+@section('twitter_title', 'Emergency Storm Damage Roof Repair - V General Contractors')
+@section('twitter_description',
+    'Professional storm damage repair in Houston, Dallas and surrounding areas. Expert
+    evaluation and efficient solutions by certified contractors.')
+@section('twitter_image', asset('assets/img/storm-damage.webp'))
 
 @push('styles')
     <style>

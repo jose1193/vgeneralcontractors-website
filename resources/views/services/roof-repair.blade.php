@@ -1,26 +1,29 @@
 @extends('layouts.main')
 
+{{-- SEO Meta Tags --}}
 @section('title', 'Professional Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors')
-
-@section('meta')
-    <meta name="description"
-        content="Expert roof repair services in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. Certified professionals for storm damage, hail damage, aging roofs, and warranty claims. GAF certified contractors with 50-year durability guarantee.">
-    <meta name="keywords"
-        content="roof repair Houston, roof repair Dallas, surrounding areas roofing, storm damage repair, hail damage repair, roof maintenance, GAF certified contractor, professional roofer, roofing services Texas, emergency roof repair, warranty roof repair, certified public adjusters, insurance claims, insurance claim maximization">
-    <meta property="og:title"
-        content="Professional Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors">
-    <meta property="og:description"
-        content="Expert roof repair services by GAF certified contractors in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. Specializing in storm damage, hail damage, and comprehensive roof repairs with long-term guarantees.">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="V General Contractors">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Professional Roof Repair Services - V General Contractors">
-    <meta name="twitter:description"
-        content="Expert roof repair services in Houston, Dallas and surrounding areas. We work with certified public adjusters to maximize your insurance claim. GAF certified contractors specializing in storm and hail damage repairs.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url('/roof-repair') }}">
-@endsection
+@section('meta_description',
+    'Expert roof repair services in Houston, Dallas and surrounding areas. We work with
+    certified public adjusters to maximize your insurance claim. Certified professionals for storm damage, hail damage,
+    aging roofs, and warranty claims. GAF certified contractors with 50-year durability guarantee.')
+@section('meta_keywords',
+    'roof repair Houston, roof repair Dallas, surrounding areas roofing, storm damage repair, hail
+    damage repair, roof maintenance, GAF certified contractor, professional roofer, roofing services Texas, emergency roof
+    repair, warranty roof repair, certified public adjusters, insurance claims, insurance claim maximization')
+@section('canonical_url', route('roof-repair')) {{-- Assuming 'roof-repair' is the route name --}}
+@section('og_title', 'Professional Roof Repair Services in Houston, Dallas & Surrounding Areas | V General Contractors')
+@section('og_description',
+    'Expert roof repair services by GAF certified contractors in Houston, Dallas and surrounding
+    areas. We work with certified public adjusters to maximize your insurance claim. Specializing in storm damage, hail
+    damage, and comprehensive roof repairs with long-term guarantees.')
+@section('og_image', asset('assets/img/roof-repair.webp')) {{-- Specific image for this page --}}
+@section('twitter_title', 'Professional Roof Repair Services - V General Contractors')
+@section('twitter_description',
+    'Expert roof repair services in Houston, Dallas and surrounding areas. We work with
+    certified public adjusters to maximize your insurance claim. GAF certified contractors specializing in storm and hail
+    damage repairs.')
+@section('twitter_image', asset('assets/img/roof-repair.webp')) {{-- Specific image for this page --}}
+{{-- Note: og:type, og:locale, og:site_name, twitter:card, robots are usually inherited from the layout --}}
 
 @push('styles')
     <style>

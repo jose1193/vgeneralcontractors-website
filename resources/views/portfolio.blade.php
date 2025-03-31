@@ -1,9 +1,18 @@
 @extends('layouts.main')
 
-@section('title', 'Portfolio - ' . $companyData->company_name)
+@section('title', 'Portfolio - V General Contractors')
 @section('meta_description',
     'Explore our portfolio of successful roofing projects in Houston, Dallas and surrounding
     areas. View our work in new roof installations, repairs, and storm damage restoration.')
+@section('meta_keywords',
+    'roofing portfolio, project gallery, houston roofing projects, dallas roof work, commercial
+    roofing examples, residential roof photos')
+@section('og_title', 'Roofing Project Portfolio | V General Contractors')
+@section('og_description', 'See examples of our expert commercial and residential roofing work across Texas.')
+@section('og_image', asset('assets/img/portfolio-featured.webp'))
+@section('twitter_title', 'Roofing Project Portfolio | V General Contractors')
+@section('twitter_description', 'See examples of our expert commercial and residential roofing work across Texas.')
+@section('twitter_image', asset('assets/img/portfolio-featured.webp'))
 
 @section('content')
     <!-- Hero Section -->
