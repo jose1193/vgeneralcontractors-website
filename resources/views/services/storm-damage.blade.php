@@ -71,19 +71,26 @@
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <!-- Emergency Contact Banner -->
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
-            <div class="flex items-center justify-between">
+            @php
+                use App\Helpers\PhoneHelper;
+                $phoneNumber = $companyData->phone ?? '3466920757';
+                $formattedPhone = class_exists(PhoneHelper::class) ? PhoneHelper::format($phoneNumber) : $phoneNumber;
+            @endphp
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center">
-                    <svg class="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <p class="ml-3 text-base sm:text-lg md:text-xl font-medium text-yellow-700">
-                        Emergency Storm Damage? Call us now at <a href="tel:+13466920757"
-                            class="font-bold hover:text-yellow-800">(346) 692-0757</a>
+                    <p class="ml-3 text-base sm:text-lg font-medium text-yellow-700 text-center sm:text-left">
+                        Emergency Storm Damage? Call us now at
+                        <a href="tel:{{ $phoneNumber }}"
+                            class="font-bold hover:text-yellow-800 whitespace-nowrap">{{ $formattedPhone }}</a>
                     </p>
                 </div>
-                <a href="#contact-form"
-                    class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 transition-colors">
+                <a href="javascript:void(0)" @click.prevent="$dispatch('open-appointment-modal')"
+                    class="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 transition-colors whitespace-nowrap flex-shrink-0">
                     Get Free Inspection
                 </a>
             </div>
@@ -198,14 +205,24 @@
             </div>
         </div>
 
-        <!-- Contact Form Section with ID for anchor link -->
-        <div id="contact-form" class="mt-12">
+        {{-- Renamed ID from contact-form to schedule-inspection --}}
+        <div id="schedule-inspection" class="mt-12">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-900">Request Emergency Storm Damage Inspection</h2>
-                <p class="text-lg text-gray-600 mt-2">Get your free inspection today and protect your home from further
-                    damage</p>
+                <h2 class="text-3xl font-bold text-gray-900">Request Your Free Storm Damage Inspection</h2>
+                {{-- Adjusted title slightly --}}
+                <p class="text-lg text-gray-600 mt-2">Don't wait! Schedule your no-obligation inspection today and protect
+                    your home.</p> {{-- Adjusted text --}}
             </div>
-            <x-appointment-form />
+            {{-- Removed the direct contact form --}}
+            {{-- <x-contact-form /> --}}
+
+            {{-- Added button to trigger the appointment modal --}}
+            <div class="text-center">
+                <x-primary-button @click="$dispatch('open-appointment-modal')"
+                    class="w-full sm:w-auto text-center justify-center px-8 py-3 text-lg">
+                    Book A Free Inspection Now
+                </x-primary-button>
+            </div>
         </div>
     </main>
 @endsection
