@@ -187,7 +187,7 @@
     @include('cookie-consent::index')
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans" x-data>
     <x-navbar />
     <x-appointment-modal />
 
