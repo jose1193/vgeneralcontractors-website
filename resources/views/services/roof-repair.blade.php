@@ -72,8 +72,9 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <!-- Text Content Column -->
+            {{-- Initial Grid: Title/Intro Text beside Image --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-8"> {{-- Added mb-8 for spacing --}}
+                <!-- Text Content Column (Shorter) -->
                 <div class="space-y-6">
                     <div>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Expert Roof Repair
@@ -86,62 +87,7 @@
                             Furthermore, we are fully insured for your protection and peace of mind.
                         </p>
                     </div>
-
-                    <div>
-                        <h3 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">Common Reasons for Roof Repair:
-                        </h3>
-                        <p class="text-base sm:text-lg text-gray-600 mb-4">
-                            Our team will thoroughly evaluate your roof to determine if repairs are needed. Common issues we
-                            address include:
-                        </p>
-                        <ul class="space-y-2 text-base sm:text-lg text-gray-600">
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span>Damage caused by storms (wind, debris)</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span>Damage caused by hail impacts</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span>Wear and tear due to roof age</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span>Issues covered by warranty or related to defective materials</span>
-                            </li>
-                            <li class="flex items-start">
-                                <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span>Leaks, missing shingles, or other visible damage</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <p class="text-base sm:text-lg md:text-xl text-gray-600">
-                        Trust <strong>V General Contractors</strong> to guide you toward the best decision for a secure,
-                        long-lasting roof solution.
-                    </p>
+                    {{-- Moved the "Common Reasons" section and final P tag out of this column --}}
                 </div>
 
                 <!-- Image Column -->
@@ -149,6 +95,65 @@
                     <img src="{{ asset('assets/img/roof-repair-content.webp') }}"
                         alt="Professional Roof Repair Process Houston Dallas" class="w-full h-auto object-cover image-zoom">
                 </div>
+            </div>
+
+            {{-- Moved Content: Common Reasons and Final P tag now span full width below the grid --}}
+            <div class="space-y-6"> {{-- Wrapped moved content in a new div --}}
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">Common Reasons for Roof Repair:
+                    </h3>
+                    <p class="text-base sm:text-lg text-gray-600 mb-4">
+                        Our team will thoroughly evaluate your roof to determine if repairs are needed. Common issues we
+                        address include:
+                    </p>
+                    <ul class="space-y-2 text-base sm:text-lg text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
+                            </svg>
+                            <span>Damage caused by storms (wind, debris)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
+                            </svg>
+                            <span>Damage caused by hail impacts</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
+                            </svg>
+                            <span>Wear and tear due to roof age</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
+                            </svg>
+                            <span>Issues covered by warranty or related to defective materials</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
+                            </svg>
+                            <span>Leaks, missing shingles, or other visible damage</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="text-base sm:text-lg md:text-xl text-gray-600">
+                    Trust <strong>V General Contractors</strong> to guide you toward the best decision for a secure,
+                    long-lasting roof solution.
+                </p>
             </div>
         </div>
 
