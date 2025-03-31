@@ -186,7 +186,7 @@
                     <div x-show="activeTab === 'replacement'" class="space-y-4">
                         <div class="prose max-w-none">
                             <p class="text-lg text-gray-600">
-                                We are going to build you a new roof to last over 50 years. No more worries about the
+                                We are going to build you a new roof to last over 30 years. No more worries about the
                                 roof of your home!. We have GAF certification and guarantee.
                             </p>
 
