@@ -41,8 +41,9 @@
             <h2 class="text-xl sm:text-2xl md:text-3xl text-yellow-400 mb-3 md:mb-4">Expert Roofing Solutions for
                 Businesses and Homes</h2>
             <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8">GAF certified contractors providing
-                superior roofing services in
-                Houston, Dallas, and across Texas. Specializing in commercial installations, repairs, and storm
+                superior <b>roofing services in
+                    Houston, Dallas, and surrounding areas.</b> Specializing in commercial installations, repairs, and
+                storm
                 damage restoration.</p>
             <div class="flex flex-col sm:flex-row gap-4">
                 <x-primary-button @click="showAppointmentModal = true"
@@ -67,8 +68,10 @@
         <div class="md:w-1/2 relative hidden md:block">
             <div class="absolute top-10 right-10 bg-gray-800 text-white p-4 rounded-lg shadow-lg">
                 <h3 class="font-bold">Emergency Roof Repair Needed?</h3>
-                <p>Don't wait until it's too late! Roof damage can lead to costly repairs if left unchecked.
-                    Schedule your free inspection now and protect your home.</p>
+                <p>Don't wait until it's too late! Roof damage can lead to costly repairs if left unchecked. Schedule
+                    your free inspection now and protect your home. <b>Plus, we work with certified public adjusters and
+                        manage the insurance claim process for you, helping maximize your coverage and minimize
+                        stress.</b></p>
             </div>
         </div>
     </div>
