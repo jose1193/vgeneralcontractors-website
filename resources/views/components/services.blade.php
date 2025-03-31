@@ -27,7 +27,8 @@
                     <h3 class="text-3xl font-bold text-gray-900">Comprehensive Roofing Solutions</h3>
                     <p class="text-gray-600 mb-6">At V General Contractors, we specialize in providing <strong>FREE
                             professional inspections</strong>
-                        and working with <strong>CERTIFIED public adjusters</strong> to maximize your insurance claims.
+                        and we work with with <strong>CERTIFIED public adjusters</strong> to maximize your insurance
+                        claims.
                         Our expert team handles
                         complete <strong>insurance claim documentation</strong> and guides you through the entire
                         process.</p>
@@ -54,8 +55,8 @@
                         </button>
                         <div x-show="openItems['roof-replacement']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            Expert installation with <strong>50+ year durability guarantee</strong>. As <strong>GAF
-                                Master Elite Certified</strong> contractors,
+                            Expert installation with <strong>30+ year durability guarantee</strong>. As <strong>GAF
+                                Certified</strong> contractors,
                             we ensure top-quality materials and installation, backed by comprehensive warranties.
                         </div>
                     </div>

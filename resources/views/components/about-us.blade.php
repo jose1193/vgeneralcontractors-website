@@ -33,8 +33,8 @@
                         we've built our reputation on three core principles: <strong>exceptional craftsmanship</strong>,
                         <strong>superior customer service</strong>, and <strong>maximum insurance claim
                             assistance</strong>.
-                        We work exclusively with <strong>CERTIFIED public adjusters</strong> to ensure you receive the
-                        full compensation you deserve for your roofing claims.
+                        <b>We work hand in hand with CERTIFIED public adjusters to ensure you receive the
+                            full compensation you deserve for your roofing claims.</b>
                     </p>
                     <p class="text-gray-600 mb-6">Our vision is to be recognized by 2030 as the leading roofing company
                         in Texas,
@@ -64,7 +64,7 @@
                                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                             </svg>
                         </div>
-                        <span class="text-gray-700 font-medium">Work with <strong>CERTIFIED Public
+                        <span class="text-gray-700 font-medium">We Work with <strong>CERTIFIED Public
                                 Adjusters</strong></span>
                     </div>
                     <div class="flex items-center gap-3">

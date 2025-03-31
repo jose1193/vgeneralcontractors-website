@@ -10,7 +10,7 @@
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
+        <div class="grid md:grid-cols-3 gap-8">
             <!-- Houston Card -->
             <div class="relative rounded-lg overflow-hidden shadow-lg group">
                 <div class="h-80 bg-gray-300">
@@ -65,6 +65,27 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Florida Card (Updated Again) -->
+            <div class="relative rounded-lg overflow-hidden shadow-lg group">
+                <div class="h-80 bg-gray-300">
+                    {{-- Ensure assets/img/florida.webp image exists --}}
+                    <img src="{{ asset('assets/img/florida.webp') }}"
+                        alt="Coastal Florida landscape hinting at future expansion of roofing services"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        width="800" height="600" loading="lazy">
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6 text-white">
+                    <h3 class="text-3xl font-bold mb-2">Florida</h3>
+                    {{-- Changed to English descriptive text and "Coming Soon" --}}
+                    <p class="mb-2">We are preparing to bring our expert roofing solutions to the Sunshine State,
+                        addressing the unique challenges of Florida's climate.</p>
+                    <p class="text-lg italic">Coming Soon...</p>
+                    {{-- Kept the button removed --}}
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
