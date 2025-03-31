@@ -25,6 +25,8 @@
 
     <x-footer />
 
+    <x-appointment-modal />
+
     @include('cookie-consent::index')
 
     <!-- Additional Body Scripts -->

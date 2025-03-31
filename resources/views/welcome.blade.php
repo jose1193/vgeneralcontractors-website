@@ -189,6 +189,8 @@
 
 <body class="bg-gray-100 font-sans">
     <x-navbar />
+    <x-appointment-modal />
+
     <x-hero />
     <x-city-locations />
     <x-about-us />
