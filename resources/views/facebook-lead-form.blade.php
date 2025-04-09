@@ -174,9 +174,9 @@
                             assistance. Message and data rates apply. Information obtained as part of the SMS consent
                             process will not be shared with third parties.
                             <a href="{{ route('privacy-policy') }}" target="_blank"
-                                class="text-yellow-500 hover:text-yellow-600 underline">Privacy Policy</a>
+                                class="text-yellow-500 hover:text-yellow-600">Privacy Policy</a>
                             and <a href="{{ route('terms-and-conditions') }}" target="_blank"
-                                class="text-yellow-500 hover:text-yellow-600 underline">Terms
+                                class="text-yellow-500 hover:text-yellow-600">Terms
                                 of Service</a>.
                         </span>
                     </label>

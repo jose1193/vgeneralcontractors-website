@@ -64,7 +64,8 @@ class ContactSupport extends Component
             \Log::error('Facebook API Error: ' . $e->getMessage());
         }
 
-        session()->flash('success', 'Thank you for contacting us! We will get back to you shortly.');
+        // session()->flash('success', 'Thank you for contacting us! We will get back to you shortly.');
+        $this->dispatch('support-request-success', message: 'Thank you for contacting us! We will get back to you shortly.');
 
         $this->reset();
     }
