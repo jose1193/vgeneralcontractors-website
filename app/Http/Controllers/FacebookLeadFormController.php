@@ -61,6 +61,16 @@ class FacebookLeadFormController extends Controller
     {
         $validatedData = $request->validated(); // Get validated data
         
+        // Verify reCAPTCHA token manually since we don't have the validation rule
+        $recaptchaToken = $request->input('g-recaptcha-response');
+        if (!$this->verifyRecaptchaToken($recaptchaToken)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'reCAPTCHA verification failed. Please try again.',
+                'errors' => ['g-recaptcha-response' => ['CAPTCHA verification failed.']]
+            ], 422);
+        }
+        
         // We don't need to save address_map_input to the database since it's just for UI
         // but we keep the extracted address fields (address, city, state, zipcode)
 
@@ -403,6 +413,49 @@ class FacebookLeadFormController extends Controller
                 'success' => false,
                 'message' => 'An error occurred while retrieving leads'
             ], 500);
+        }
+    }
+
+    /**
+     * Verify reCAPTCHA token manually.
+     * 
+     * @param string $token The reCAPTCHA token
+     * @return bool True if verification passed, false otherwise
+     */
+    private function verifyRecaptchaToken($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        try {
+            $recaptchaSecret = config('captcha.secret');
+            
+            // Make a POST request to the Google reCAPTCHA API
+            $client = new \GuzzleHttp\Client();
+            $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+                'form_params' => [
+                    'secret' => $recaptchaSecret,
+                    'response' => $token
+                ]
+            ]);
+            
+            $result = json_decode((string) $response->getBody(), true);
+            
+            // Log the verification for debugging
+            Log::debug('reCAPTCHA verification result', [
+                'result' => $result,
+                'score' => $result['score'] ?? 'N/A'
+            ]);
+            
+            // Check if successful and score is acceptable (0.5 is the default threshold)
+            return isset($result['success']) && $result['success'] === true && 
+                   (!isset($result['score']) || $result['score'] >= 0.5);
+        } catch (\Exception $e) {
+            Log::error('reCAPTCHA verification error', [
+                'error' => $e->getMessage()
+            ]);
+            return false;
         }
     }
 }

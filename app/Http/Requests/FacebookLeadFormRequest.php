@@ -52,7 +52,7 @@ class FacebookLeadFormRequest extends FormRequest
             // Add reCAPTCHA rule (using package's default v3 rule)
             // The package handles checking the score against a default threshold (0.5)
             // You can customize the threshold in the config/nocaptcha.php file if published
-            'g-recaptcha-response' => 'required|nocaptcha',
+            'g-recaptcha-response' => 'required',
         ];
     }
 
@@ -71,7 +71,6 @@ class FacebookLeadFormRequest extends FormRequest
             'address_map_input.required' => 'Please enter your full address.',
             'address_map_input.min' => 'The address must be at least 5 characters.',
             'g-recaptcha-response.required' => 'CAPTCHA verification is required.',
-            'g-recaptcha-response.nocaptcha' => 'CAPTCHA verification failed. Please try again.',
             // Add other custom messages if needed
         ];
     }

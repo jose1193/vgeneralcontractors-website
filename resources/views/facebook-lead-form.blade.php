@@ -275,6 +275,8 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async defer>
     </script>
+    <!-- SweetAlert2 for alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('facebook-lead-form');
