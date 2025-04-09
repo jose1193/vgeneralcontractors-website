@@ -1021,15 +1021,14 @@
         }
 
         /* Ensure reCAPTCHA badge is visible */
-        .grecaptcha-badge {
-            right: 14px !important;
-            /* Override any inline style pushing it off-screen */
-            visibility: visible !important;
-            /* Ensure it's not hidden */
-            opacity: 1 !important;
-            /* Ensure it's not transparent */
-            z-index: 9999 !important;
-            /* Ensure it's on top */
-        }
+        /* Removing custom styles as requested */
+        /*
+                .grecaptcha-badge {
+                    right: 14px !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    z-index: 9999 !important;
+                }
+                */
     </style>
 @endpush
