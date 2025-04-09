@@ -10,6 +10,9 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Str;
 use App\Helpers\StringHelper;
 use App\Services\FacebookConversionApi;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Definir rate limiters
+        $this->configureRateLimiting();
+        
         // Inicializar el controlador de datos de la compañía
         $companyDataController = new CompanyDataController();
 
@@ -73,6 +79,38 @@ class AppServiceProvider extends ServiceProvider
 
         Str::macro('readDuration', function ($content, $wordsPerMinute = 200) {
             return StringHelper::readDuration($content, $wordsPerMinute);
+        });
+    }
+
+    /**
+     * Configure the rate limiters for the application.
+     */
+    protected function configureRateLimiting(): void
+    {
+        // API rate limiter
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // For contact forms - limit to 3 submissions per minute
+        RateLimiter::for('contact', function (Request $request) {
+            return Limit::perMinute(3)->by($request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Too many requests. Please try again in a moment.'
+                    ], 429);
+                });
+        });
+
+        // For field validation - allow more frequent but still limited
+        RateLimiter::for('validation', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
+        // Global protection for all routes
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(300)->by($request->ip());
         });
     }
 }

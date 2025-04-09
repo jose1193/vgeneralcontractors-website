@@ -14,6 +14,9 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FacebookLeadFormController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\ContactSupportController;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,7 +27,9 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/contact-support', [ContactSupportController::class, 'showForm'])->name('contact-support');
-Route::post('/contact-support', [ContactSupportController::class, 'store'])->name('contact-support.store');
+Route::post('/contact-support', [ContactSupportController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('contact-support.store');
 Route::post('/contact-support/validate', [ContactSupportController::class, 'validateField'])->name('contact-support.validate');
 
 // Google Authentication Routes
@@ -87,6 +92,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'throttle:60,1', // 60 requests per minute
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -194,5 +200,21 @@ Route::get('/contact', function () {
 
 // Standalone Facebook Lead Form Routes
 Route::get('/facebook-lead-form', [FacebookLeadFormController::class, 'showForm'])->name('facebook.lead.form');
-Route::post('/facebook-lead-form/submit', [FacebookLeadFormController::class, 'store'])->name('facebook.lead.store');
+Route::post('/facebook-lead-form/submit', [FacebookLeadFormController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('facebook.lead.store');
 Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])->name('facebook.lead.validate'); // Route for single field validation
+
+// Field validation routes
+Route::middleware(['throttle:validation'])->group(function () {
+    Route::post('/contact-support/validate', [ContactSupportController::class, 'validateField'])
+        ->name('contact-support.validate');
+    Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])
+        ->name('facebook.lead.validate');
+});
+
+// Public API routes
+Route::middleware(['throttle:api'])->group(function () {
+    Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
+    Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
+});
