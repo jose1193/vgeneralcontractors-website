@@ -60,6 +60,554 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <x-contact-support />
+        @php use App\Helpers\PhoneHelper; @endphp
+        <!-- Contact Support Form -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div id="success-message" class="hidden p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+            </div>
+            <div id="general-error-message" class="hidden p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg"
+                role="alert"></div>
+
+            <form id="contact-support-form" action="{{ route('contact-support.store') }}" method="POST" class="space-y-6">
+                @csrf
+                <!-- Hidden Input for reCAPTCHA v3 Token -->
+                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- First Name -->
+                    <div>
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" id="first_name" name="first_name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
+                        <p class="mt-1 text-sm text-red-600 error-message" data-field="first_name"></p>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" id="last_name" name="last_name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
+                        <p class="mt-1 text-sm text-red-600 error-message" data-field="last_name"></p>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
+                        <p class="mt-1 text-sm text-red-600 error-message" data-field="email"></p>
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(XXX) XXX-XXXX"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
+                        <p class="mt-1 text-sm text-red-600 error-message" data-field="phone"></p>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <textarea id="message" name="message" rows="4"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field"></textarea>
+                    <p class="mt-1 text-sm text-red-600 error-message" data-field="message"></p>
+                </div>
+
+                <!-- SMS Consent Checkbox -->
+                <div class="mt-6">
+                    <label class="inline-flex items-start cursor-pointer">
+                        <input type="checkbox" name="sms_consent" id="sms_consent"
+                            class="form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500 input-field">
+                        <span class="ml-2 text-sm text-gray-600">
+                            Yes, I would like to receive text messages from <span class="font-semibold">V GENERAL
+                                CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services.
+                            <span class="font-semibold">Messaging Frequency may vary</span>. I understand that I can cancel
+                            my
+                            subscription at any time by replying <span class="font-semibold">STOP</span>. Reply <span
+                                class="font-semibold">HELP {{ PhoneHelper::format($companyData->phone) }}</span> for
+                            assistance.
+                            Message and data rates apply. Information obtained as part of the SMS consent process will not
+                            be
+                            shared with third parties.
+                            <a href="{{ route('privacy-policy') }}" target="_blank"
+                                class="text-yellow-500 hover:text-yellow-600">Privacy Policy</a>
+                            and <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                                class="text-yellow-500 hover:text-yellow-600">Terms
+                                of Service</a>.
+                        </span>
+                    </label>
+                    <p class="mt-1 text-sm text-red-600 error-message" data-field="sms_consent"></p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center py-10 mt-5">
+                    <button type="submit" id="submit-button"
+                        class="group relative overflow-hidden bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 inline-flex items-center px-7 py-2.5 rounded-lg text-white justify-center disabled:opacity-75 disabled:cursor-not-allowed w-full md:w-auto">
+                        <span id="submit-spinner" class="hidden z-40 animate-spin -ml-1 mr-3 h-5 w-5 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </span>
+                        <span id="submit-button-text" class="z-40">Send Message</span>
+                        <div
+                            class="absolute inset-0 h-[200%] w-[200%] rotate-45 translate-x-[-70%] transition-all group-hover:scale-100 bg-white/30 group-hover:translate-x-[50%] z-20 duration-1000">
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
     </main>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async defer>
+    </script>
+    <script>
+        // Global variables for reCAPTCHA
+        window.recaptchaSiteKey = '{{ $recaptchaSiteKey ?? '' }}';
+        window.recaptchaLoaded = false;
+
+        // Function to execute when reCAPTCHA API is loaded
+        function onRecaptchaLoad() {
+            console.log('reCAPTCHA API loaded');
+            window.recaptchaLoaded = true;
+        }
+
+        // Function to get reCAPTCHA token safely
+        function executeRecaptcha(action) {
+            console.log('[executeRecaptcha] Called with action:', action);
+            return new Promise((resolve, reject) => {
+                if (!window.recaptchaLoaded || typeof grecaptcha === 'undefined') {
+                    console.error('[executeRecaptcha] Error: reCAPTCHA API not loaded');
+                    reject(new Error('reCAPTCHA API not loaded'));
+                    return;
+                }
+
+                try {
+                    grecaptcha.ready(function() {
+                        console.log('[executeRecaptcha] grecaptcha.ready callback fired.');
+                        console.log('[executeRecaptcha] Attempting to execute with key:', window
+                            .recaptchaSiteKey);
+                        grecaptcha.execute(window.recaptchaSiteKey, {
+                                action: action
+                            })
+                            .then(token => {
+                                console.log('[executeRecaptcha] Token received:', token ? '***' :
+                                    'null/undefined');
+                                document.getElementById('g-recaptcha-response').value = token;
+                                resolve(token);
+                            })
+                            .catch(error => {
+                                console.error('[executeRecaptcha] grecaptcha.execute() failed:', error);
+                                reject(error);
+                            });
+                    });
+                } catch (error) {
+                    console.error('[executeRecaptcha] Error during ready/execute:', error);
+                    reject(error);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contact-support-form');
+            const submitButton = document.getElementById('submit-button');
+            const submitSpinner = document.getElementById('submit-spinner');
+            const submitButtonText = document.getElementById('submit-button-text');
+            const successMessageDiv = document.getElementById('success-message');
+            const generalErrorDiv = document.getElementById('general-error-message');
+            const csrfToken = document.querySelector('input[name="_token"]')?.value;
+            const allInputs = form.querySelectorAll('.input-field');
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
+            const phoneInput = document.getElementById('phone');
+            let successTimeoutId = null;
+            let errorTimeoutId = null;
+
+            // --- Helper Functions ---
+            function clearFieldError(fieldElement) {
+                const fieldName = fieldElement.name;
+                const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                if (errorSpan) errorSpan.textContent = '';
+                fieldElement.classList.remove('border-red-500');
+                checkFormValidity();
+            }
+
+            function clearAllErrors() {
+                document.querySelectorAll('.error-message').forEach(span => span.textContent = '');
+                allInputs.forEach(input => input.classList.remove('border-red-500'));
+
+                clearTimeout(successTimeoutId);
+                successMessageDiv.classList.add('hidden');
+                successMessageDiv.textContent = '';
+
+                clearTimeout(errorTimeoutId);
+                generalErrorDiv.classList.add('hidden');
+                generalErrorDiv.textContent = '';
+
+                checkFormValidity();
+            }
+
+            function displayErrors(errors) {
+                clearAllErrors();
+                let firstErrorField = null;
+                for (const field in errors) {
+                    const errorSpan = form.querySelector(`.error-message[data-field="${field}"]`);
+                    const inputElement = form.querySelector(`[name="${field}"]`);
+
+                    if (errorSpan && errors[field]?.[0]) {
+                        errorSpan.textContent = errors[field][0];
+                    }
+                    if (inputElement) {
+                        inputElement.classList.add('border-red-500');
+                        if (!firstErrorField) firstErrorField = inputElement;
+                    }
+                }
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+                submitButton.disabled = true;
+            }
+
+            function showSuccessMessage(message) {
+                clearAllErrors();
+                clearTimeout(successTimeoutId);
+
+                successMessageDiv.textContent = message;
+                successMessageDiv.classList.remove('hidden');
+                form.reset();
+                successMessageDiv.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                submitButton.disabled = true;
+
+                successTimeoutId = setTimeout(() => {
+                    successMessageDiv.classList.add('hidden');
+                    successMessageDiv.textContent = '';
+                }, 5000);
+            }
+
+            function showGeneralError(message) {
+                clearTimeout(successTimeoutId);
+                successMessageDiv.classList.add('hidden');
+                successMessageDiv.textContent = '';
+                clearTimeout(errorTimeoutId);
+
+                generalErrorDiv.textContent = message || 'An unexpected error occurred.';
+                generalErrorDiv.classList.remove('hidden');
+                generalErrorDiv.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                submitButton.disabled = true;
+
+                errorTimeoutId = setTimeout(() => {
+                    generalErrorDiv.classList.add('hidden');
+                    generalErrorDiv.textContent = '';
+                }, 5000);
+            }
+
+            function setLoadingState(isLoading) {
+                submitButton.disabled = isLoading;
+                if (isLoading) {
+                    submitSpinner.classList.remove('hidden');
+                    submitButtonText.textContent = 'Sending...';
+                    submitButton.setAttribute('aria-busy', 'true');
+                    submitButton.setAttribute('aria-label', 'Sending');
+                } else {
+                    submitSpinner.classList.add('hidden');
+                    submitButtonText.textContent = 'Send Message';
+                    submitButton.removeAttribute('aria-busy');
+                    submitButton.removeAttribute('aria-label');
+                    checkFormValidity();
+                }
+            }
+
+            function formatName(inputElement) {
+                let value = inputElement.value;
+                if (typeof value === 'string' && value.length > 0) {
+                    let parts = value.trim().split(' ');
+                    let firstWord = parts[0];
+                    inputElement.value = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+                }
+            }
+
+            function formatPhoneInput(inputElement, event) {
+                const isBackspace = event?.inputType === 'deleteContentBackward';
+                let value = inputElement.value.replace(/\D/g, '');
+
+                if (!isBackspace) {
+                    value = value.substring(0, 10);
+                }
+
+                let formattedValue = '';
+                if (value.length === 0) {
+                    formattedValue = '';
+                } else if (value.length <= 3) {
+                    formattedValue = `(${value}`;
+                } else if (value.length <= 6) {
+                    formattedValue = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+                } else {
+                    formattedValue = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6)}`;
+                }
+                inputElement.value = formattedValue;
+                validateField(inputElement);
+            }
+
+            // --- Check Form Validity Function ---
+            function checkFormValidity() {
+                const requiredFields = ['first_name', 'last_name', 'email', 'phone', 'message'];
+                let allRequiredFilled = true;
+
+                requiredFields.forEach(field => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    if (input && !input.value.trim()) {
+                        allRequiredFilled = false;
+                    }
+                });
+
+                const hasVisibleErrors = Array.from(form.querySelectorAll('.error-message'))
+                    .some(span => span.textContent.trim() !== '');
+
+                submitButton.disabled = !allRequiredFilled || hasVisibleErrors;
+            }
+
+            // --- Debounce Function ---
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            };
+
+            // --- Field Validation Function ---
+            function validateField(fieldElement) {
+                const fieldName = fieldElement.name;
+                let fieldValue = fieldElement.type === 'checkbox' ? (fieldElement.checked ? 1 : 0) : fieldElement
+                    .value;
+
+                fetch('{{ route('contact-support.validate') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fieldName: fieldName,
+                            fieldValue: fieldValue
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok && response.status !== 422) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                        if (errorSpan) {
+                            if (!data.valid && data.errors?.[0]) {
+                                errorSpan.textContent = data.errors[0];
+                                fieldElement.classList.add('border-red-500');
+                            } else {
+                                errorSpan.textContent = '';
+                                fieldElement.classList.remove('border-red-500');
+                            }
+                        }
+                        checkFormValidity();
+                    })
+                    .catch(error => {
+                        console.error('Validation request failed:', error);
+                        checkFormValidity();
+                    });
+            }
+
+            // Debounced version of the validation function
+            const debouncedValidateField = debounce(validateField, 500);
+
+            // --- Event Listeners ---
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', (event) => {
+                    formatName(event.target);
+                    debouncedValidateField(event.target);
+                });
+                firstNameInput.addEventListener('blur', (event) => {
+                    formatName(event.target);
+                    validateField(event.target);
+                });
+            }
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', (event) => {
+                    formatName(event.target);
+                    debouncedValidateField(event.target);
+                });
+                lastNameInput.addEventListener('blur', (event) => {
+                    formatName(event.target);
+                    validateField(event.target);
+                });
+            }
+            if (phoneInput) {
+                phoneInput.addEventListener('input', (event) => {
+                    formatPhoneInput(phoneInput, event);
+                });
+                phoneInput.addEventListener('blur', (event) => {
+                    validateField(phoneInput);
+                });
+            }
+
+            // Add listeners to all other inputs
+            allInputs.forEach(input => {
+                if (input.name === 'first_name' || input.name === 'last_name' || input.name === 'phone') {
+                    return; // Skip these as they already have listeners
+                }
+
+                if (input.type === 'checkbox') {
+                    input.addEventListener('change', (event) => {
+                        validateField(event.target);
+                    });
+                } else {
+                    input.addEventListener('input', (event) => {
+                        debouncedValidateField(event.target);
+                    });
+                    input.addEventListener('blur', (event) => {
+                        validateField(event.target);
+                    });
+                }
+            });
+
+            // --- Form Submission ---
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                setLoadingState(true);
+                clearAllErrors();
+
+                executeRecaptcha('submit_contact_support')
+                    .then(function(token) {
+                        submitFormData();
+                    })
+                    .catch(function(error) {
+                        console.error('reCAPTCHA execution failed:', error);
+                        showGeneralError('Could not verify request. Please try again.');
+                        setLoadingState(false);
+                    });
+            });
+
+            function submitFormData() {
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        const contentType = response.headers.get("content-type");
+                        if (!response.ok && !(contentType && contentType.indexOf("application/json") !== -1 &&
+                                response.status === 422)) {
+                            if (response.status === 403) {
+                                throw new Error(`Security check failed.`);
+                            }
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json().then(data => ({
+                            status: response.status,
+                            body: data
+                        }));
+                    })
+                    .then(({
+                        status,
+                        body
+                    }) => {
+                        if (status === 422 && body.errors) {
+                            if (body.errors['g-recaptcha-response']) {
+                                showGeneralError('reCAPTCHA validation failed. Please try again.');
+                            } else {
+                                displayErrors(body.errors);
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                });
+
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: 'Please correct the errors marked below'
+                                });
+                            }
+                        } else if (body.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: body.message || 'Your message has been sent successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#f59e0b',
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    form.reset();
+                                    window.scrollTo({
+                                        top: 0,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Oops!',
+                                text: body.message ||
+                                    'An error occurred on the server. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#f59e0b',
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Submission failed:', error);
+                        Swal.fire({
+                            title: 'Submission Error',
+                            text: error.message.includes('Security check failed') ?
+                                'Security check failed. Please refresh and try again.' :
+                                'Could not submit the form due to a network or server issue. Please try again later.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#f59e0b',
+                        });
+                    })
+                    .finally(() => {
+                        setLoadingState(false);
+                    });
+            }
+
+            // Initial form validation check
+            checkFormValidity();
+        });
+    </script>
+@endpush

@@ -13,6 +13,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FacebookLeadFormController;
 use App\Http\Controllers\ConfirmationController;
+use App\Http\Controllers\ContactSupportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,11 +23,9 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/contact-support', function () {
-    return view('contact-support');
-})->name('contact-support');
-
-Route::get('/contact-form', App\Livewire\ContactSupport::class)->name('contact-form');
+Route::get('/contact-support', [ContactSupportController::class, 'showForm'])->name('contact-support');
+Route::post('/contact-support', [ContactSupportController::class, 'store'])->name('contact-support.store');
+Route::post('/contact-support/validate', [ContactSupportController::class, 'validateField'])->name('contact-support.validate');
 
 // Google Authentication Routes
 Route::get('/google-auth/redirect', function () {
