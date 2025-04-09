@@ -2,7 +2,7 @@
     @open-appointment-modal.window="
         showFacebookLeadModal = true; 
         $nextTick(() => { 
-            initGoogleMapsForModal(); 
+            initGoogleMapsForModal();
         });
     ">
     @php use App\Helpers\PhoneHelper; @endphp
@@ -264,7 +264,7 @@
                 const submitSpinner = document.getElementById('submit-spinner');
                 const submitButtonText = document.getElementById('submit-button-text');
                 const successMessageDiv = document.getElementById('success-message');
-                const generalErrorDiv = document.getElementById('general-error-message');
+                const modalGeneralErrorDiv = document.getElementById('general-error-message');
                 const csrfToken = document.querySelector('input[name="_token"]')?.value;
                 const allInputs = form.querySelectorAll('.input-field, .radio-field, .checkbox-field');
                 const firstNameInput = document.getElementById('first_name');
@@ -473,7 +473,7 @@
                 const submitSpinner = document.getElementById('submit-spinner');
                 const submitButtonText = document.getElementById('submit-button-text');
                 const successMessageDiv = document.getElementById('success-message');
-                const generalErrorDiv = document.getElementById('general-error-message');
+                const modalGeneralErrorDiv = document.getElementById('general-error-message');
                 const csrfToken = document.querySelector('input[name="_token"]')?.value;
                 const recaptchaInput = document.getElementById('modal-g-recaptcha-response'); // Get recaptcha input
                 const allInputs = form.querySelectorAll('.input-field, .radio-field, .checkbox-field');
@@ -541,8 +541,8 @@
                     successMessageDiv.textContent = '';
 
                     clearTimeout(errorTimeoutId);
-                    generalErrorDiv.classList.add('hidden');
-                    generalErrorDiv.textContent = '';
+                    modalGeneralErrorDiv.classList.add('hidden');
+                    modalGeneralErrorDiv.textContent = '';
 
                     checkFormValidity();
                 }
@@ -663,10 +663,15 @@
                     } else if (value.length <= 6) {
                         formattedValue = `(${value.substring(0, 3)}) ${value.substring(3)}`;
                     } else {
-                        formattedValue = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6)}`;
+                        formattedValue = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 10)}`;
                     }
                     inputElement.value = formattedValue;
-                    validateField(inputElement); // Validate after format
+
+                    // Trigger validation after formatting
+                    const form = document.getElementById('facebook-lead-form');
+                    if (form && typeof validateField === 'function') {
+                        validateField(inputElement);
+                    }
                 }
 
                 // Event Listeners
@@ -718,29 +723,46 @@
                     }
                 });
 
-                // Form Submission
+                // Modal form submission handling
                 form.addEventListener('submit', function(event) {
                     event.preventDefault();
 
+                    // Disable button immediately to prevent multiple clicks
                     setLoadingState(true);
                     clearAllErrors();
 
-                    // --- reCAPTCHA v3 Execution ---
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute(window.recaptchaSiteKey, {
-                            action: 'submit_modal_lead'
-                        }).then(function(token) {
-                            // Add the token to the hidden input
-                            recaptchaInput.value = token;
-                            // Now submit the form data
+                    // Hide previous general errors if any
+                    if (modalGeneralErrorDiv) {
+                        modalGeneralErrorDiv.classList.add('hidden');
+                        modalGeneralErrorDiv.textContent = '';
+                    }
+
+                    // Execute reCAPTCHA safely using our helper function
+                    executeModalRecaptcha('submit_modal_lead')
+                        .then(function(token) {
+                            // Token is now already set in the form by the executeModalRecaptcha function
+                            // Now submit the form data via fetch
                             submitModalFormData(form, csrfToken);
-                        }).catch(function(error) {
+                        })
+                        .catch(function(error) {
                             console.error('reCAPTCHA execution failed:', error);
-                            // You might need a specific modal error display function
-                            alert('Could not verify request. Please try again.');
-                            setLoadingState(false);
+
+                            // Show error with SweetAlert if available
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    title: 'Verification Error',
+                                    text: 'Could not verify your request. Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#f59e0b'
+                                });
+                            } else {
+                                // Fallback to alert if SweetAlert is not available
+                                alert('Could not verify request. Please try again.');
+                            }
+
+                            setLoadingState(false); // Re-enable button on reCAPTCHA error
                         });
-                    });
                 });
 
                 // Display errors
@@ -966,19 +988,58 @@
             defer></script>
     @endonce
 
-    <!-- SweetAlert2 -->
+    <!-- SweetAlert2 for alerts -->
     @once
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endonce
 
+    <!-- reCAPTCHA v3 script -->
     @once
-        {{-- Add reCAPTCHA v3 script with explicit render --}}
-        <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+        {{-- Add reCAPTCHA v3 script --}}
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('captcha.sitekey') }}" async defer></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Global variable to hold the reCAPTCHA site key
-                window.recaptchaSiteKey = '{{ config('nocaptcha.sitekey') }}';
+                window.recaptchaSiteKey = '{{ config('captcha.sitekey') }}';
+                window.recaptchaLoaded = true;
             });
+
+            // Function to get reCAPTCHA token safely
+            function executeModalRecaptcha(action) {
+                console.log('[executeModalRecaptcha] Called with action:', action);
+                return new Promise((resolve, reject) => {
+                    if (typeof grecaptcha === 'undefined') {
+                        console.error('[executeModalRecaptcha] Error: reCAPTCHA API not loaded');
+                        reject(new Error('reCAPTCHA API not loaded'));
+                        return;
+                    }
+
+                    try {
+                        grecaptcha.ready(function() {
+                            console.log('[executeModalRecaptcha] grecaptcha.ready callback fired.');
+                            console.log('[executeModalRecaptcha] Attempting to execute with key:', window
+                                .recaptchaSiteKey);
+                            grecaptcha.execute(window.recaptchaSiteKey, {
+                                    action: action
+                                })
+                                .then(token => {
+                                    console.log('[executeModalRecaptcha] Token received:', token ? '***' :
+                                        'null/undefined');
+                                    document.getElementById('modal-g-recaptcha-response').value = token;
+                                    resolve(token);
+                                })
+                                .catch(error => {
+                                    console.error('[executeModalRecaptcha] grecaptcha.execute() failed:',
+                                        error);
+                                    reject(error);
+                                });
+                        });
+                    } catch (error) {
+                        console.error('[executeModalRecaptcha] Error during ready/execute:', error);
+                        reject(error);
+                    }
+                });
+            }
         </script>
     @endonce
 </div>
