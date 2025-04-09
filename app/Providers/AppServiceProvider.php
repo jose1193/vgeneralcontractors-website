@@ -34,17 +34,41 @@ class AppServiceProvider extends ServiceProvider
 
         // Monitoreo de jobs
         Queue::before(function (JobProcessing $event) {
-            \Log::info('Processing job', [
-                'job' => get_class($event->job->payload()['data']['command']),
-                'queue' => $event->job->getQueue()
-            ]);
+            try {
+                $payload = $event->job->payload();
+                if (isset($payload['data']) && isset($payload['data']['command'])) {
+                    $command = $payload['data']['command'];
+                    $jobClass = is_object($command) ? get_class($command) : (is_string($command) ? $command : 'Unknown');
+                } else {
+                    $jobClass = 'Unknown (malformed payload)';
+                }
+                
+                \Log::info('Processing job', [
+                    'job' => $jobClass,
+                    'queue' => $event->job->getQueue()
+                ]);
+            } catch (\Throwable $e) {
+                \Log::error('Error logging job processing: ' . $e->getMessage());
+            }
         });
 
         Queue::after(function (JobProcessed $event) {
-            \Log::info('Job processed', [
-                'job' => get_class($event->job->payload()['data']['command']),
-                'queue' => $event->job->getQueue()
-            ]);
+            try {
+                $payload = $event->job->payload();
+                if (isset($payload['data']) && isset($payload['data']['command'])) {
+                    $command = $payload['data']['command'];
+                    $jobClass = is_object($command) ? get_class($command) : (is_string($command) ? $command : 'Unknown');
+                } else {
+                    $jobClass = 'Unknown (malformed payload)';
+                }
+                
+                \Log::info('Job processed', [
+                    'job' => $jobClass,
+                    'queue' => $event->job->getQueue()
+                ]);
+            } catch (\Throwable $e) {
+                \Log::error('Error logging job completion: ' . $e->getMessage());
+            }
         });
 
         Str::macro('readDuration', function ($content, $wordsPerMinute = 200) {

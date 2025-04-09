@@ -95,9 +95,12 @@ class FacebookConversionApi
             
             if (!empty($customData['content_type'])) {
                 $content = (new Content())
-                    ->setId(!empty($customData['content_id']) ? $customData['content_id'] : '1')
                     ->setTitle(!empty($customData['content_name']) ? $customData['content_name'] : 'Roofing Service')
                     ->setDeliveryCategory(DeliveryCategory::HOME_DELIVERY);
+                
+                if (!empty($customData['content_id'])) {
+                    $eventCustomData->setContentIds([$customData['content_id']]);
+                }
                     
                 $eventCustomData->setContents([$content]);
             }

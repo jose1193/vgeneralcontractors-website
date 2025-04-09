@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ContactSupport;
 use App\Services\FacebookConversionApi;
 use App\Services\TransactionService;
+use App\Jobs\SendContactSupportNotification;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -59,6 +60,9 @@ class ContactSupportController extends Controller
 
         $validatedData = $validator->validated();
         
+        // Format the phone number
+        $validatedData['phone'] = $this->formatPhoneNumber($validatedData['phone']);
+        
         // Verify reCAPTCHA token manually
         $recaptchaToken = $request->input('g-recaptcha-response');
         if (!$this->verifyRecaptchaToken($recaptchaToken)) {
@@ -105,6 +109,17 @@ class ContactSupportController extends Controller
                         Log::info('Facebook Conversion API lead event sent successfully');
                     } catch (Throwable $fbError) {
                         Log::error('Facebook API Error sending support lead: ' . $fbError->getMessage(), ['exception' => $fbError]);
+                    }
+                    
+                    // Dispatch the email notification job
+                    try {
+                        SendContactSupportNotification::dispatch($createdContact);
+                        Log::info('Contact support notification job dispatched.', ['contact_id' => $createdContact->id]);
+                    } catch (Throwable $jobError) {
+                        Log::error('Failed to dispatch contact support notification job.', [
+                            'contact_id' => $createdContact->id,
+                            'error' => $jobError->getMessage()
+                        ]);
                     }
                 }
             );
@@ -201,6 +216,30 @@ class ContactSupportController extends Controller
                 'error' => $e->getMessage()
             ]);
             return false;
+        }
+    }
+
+    /**
+     * Format a phone number to the +1XXXXXXXXXX format
+     * 
+     * @param string $phone The input phone number
+     * @return string Formatted phone number
+     */
+    private function formatPhoneNumber(string $phone): string
+    {
+        // Remove all non-numeric characters
+        $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+        
+        // Check if the phone number already has a country code
+        if (strlen($digitsOnly) === 10) {
+            // Add the US country code (+1) if it's a 10-digit number
+            return '+1' . $digitsOnly;
+        } elseif (strlen($digitsOnly) > 10 && substr($digitsOnly, 0, 1) === '1') {
+            // If it starts with 1 and has more than 10 digits, assume it already has country code
+            return '+' . $digitsOnly;
+        } else {
+            // For any other format, just add + at the beginning
+            return '+' . $digitsOnly;
         }
     }
 }
