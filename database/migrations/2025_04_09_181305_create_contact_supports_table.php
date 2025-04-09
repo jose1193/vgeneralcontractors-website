@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phone');
             $table->text('message');
             $table->boolean('sms_consent')->default(false);
+            $table->boolean('readed')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

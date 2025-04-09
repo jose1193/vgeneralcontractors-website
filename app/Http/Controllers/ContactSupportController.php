@@ -80,6 +80,7 @@ class ContactSupportController extends Controller
                         'phone' => $validatedData['phone'],
                         'message' => $validatedData['message'],
                         'sms_consent' => $validatedData['sms_consent'] ?? false,
+                        'readed' => false,
                     ]);
 
                     Log::info('Contact support record created', ['contact_id' => $contact->id]);

@@ -23,6 +23,7 @@ class ContactSupport extends Model
         'phone',
         'message',
         'sms_consent',
+        'readed',
     ];
 
     /**
@@ -32,6 +33,7 @@ class ContactSupport extends Model
      */
     protected $casts = [
         'sms_consent' => 'boolean',
+        'readed' => 'boolean',
     ];
 
     /**
