@@ -95,6 +95,16 @@
         formData.sms_consent = false;
         errors = {}; // Clear Alpine errors
     "
+    @support-request-error.window="
+        loading = false;
+        Swal.fire({
+            title: 'Error',
+            text: $event.detail.message || 'There was a problem sending your message. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#f59e0b'
+        });
+    "
     class="space-y-6">
     @csrf <!-- Add CSRF token -->
     {{-- Hidden Input for reCAPTCHA v3 Token --}}
@@ -188,7 +198,24 @@
                             document.getElementById('contact-g-recaptcha-response').value = token;
                             // Now submit the Livewire action
                             $wire.set('captcha', token); // Pass token to Livewire
-                            $wire.submit().finally(() => loading = false);
+                            $wire.submit()
+                                .then(() => {
+                                    // Success handler is managed by the event listener
+                                    console.log('Form submission success');
+                                })
+                                .catch((error) => {
+                                    console.error('Form submission error:', error);
+                                    // Fallback error handling in case event isn't triggered
+                                    loading = false;
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'There was a problem submitting your form. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#f59e0b'
+                                    });
+                                })
+                                .finally(() => loading = false);
                         }).catch(function(error){
                             console.error('reCAPTCHA error:', error);
                             Swal.fire({
