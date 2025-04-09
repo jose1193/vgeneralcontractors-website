@@ -169,7 +169,7 @@
                 Monday to Friday: 9:00 AM - 5:00 PM</p>
             <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} V General Contractors. All rights
                 reserved.</p>
-            <p style="font-size: 10px; color: #999;">1302 Waugh Dr # 810 Houston TX 77019</p>
+            <p style="font-size: 10px; color: #999;">{{ \App\Models\CompanyData::first()->address ?? '' }}</p>
         </div>
     </div>
 </body>

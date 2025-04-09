@@ -103,6 +103,7 @@
                 <p style="color: #666; font-size: 12px;">
                     Copyright © {{ date('Y') }} {{ $companyData->company_name }} - All Rights Reserved
                 </p>
+                <p style="font-size: 10px; color: #999;">{{ $companyData->address ?? '' }}</p>
             </div>
         </div>
     </div>
