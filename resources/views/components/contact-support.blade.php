@@ -194,7 +194,7 @@
                 if(validateForm()) {
                     loading = true;
                     grecaptcha.ready(function() {
-                        grecaptcha.execute('{{ config('nocaptcha.sitekey') }}', {action: 'submit_contact_support'}).then(function(token) {
+                        grecaptcha.execute('{{ config('captcha.sitekey') }}', {action: 'submit_contact_support'}).then(function(token) {
                             document.getElementById('contact-g-recaptcha-response').value = token;
                             // Now submit the Livewire action
                             $wire.set('captcha', token); // Pass token to Livewire
@@ -248,5 +248,5 @@
 
 @pushOnce('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render={{ config('nocaptcha.sitekey') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('captcha.sitekey') }}"></script>
 @endPushOnce
