@@ -39,6 +39,9 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('APP_URL') . '/google-auth/callback',
+        'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+        'sheet_id' => env('GOOGLE_SHEET_ID', null),
+        'credentials_path' => env('GOOGLE_SHEETS_CREDENTIALS_PATH', storage_path('app/secrets/google-credentials.json')),
     ],
 
     'google_analytics' => [
@@ -52,6 +55,10 @@ return [
 
     'companycam' => [
         'showcase_id' => env('COMPANYCAM_SHOWCASE_ID', '01057770-8ca0-47a5-a1dc-40128a20f85b'),
+    ],
+
+    'facebook_lead' => [
+        'api_key' => env('FACEBOOK_LEAD_API_KEY', 'v3KQ7bHcP8fLTjGxE5mRnZ2sAyXu6pDwY9NVtJW4qrMzF'),
     ],
 
 ];

@@ -12,6 +12,8 @@ use App\Traits\EmailValidation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Traits\ChecksPermissions;
+use App\Services\TransactionService;
+use Throwable;
 
 class EmailDatas extends Component
 {
@@ -21,10 +23,10 @@ class EmailDatas extends Component
     use EmailValidation;
     use ChecksPermissions;
 
-    // Definir el modelo para validación
+    protected TransactionService $transactionService;
+
     protected $validationModel = EmailData::class;
     
-    // Opcionalmente, si la tabla tiene un nombre diferente
     protected $validationTable = 'email_data';
 
     public $uuid;
@@ -44,8 +46,10 @@ class EmailDatas extends Component
     public $sortDirection = 'desc';
 
     protected $listeners = [
-        'delete',
-        'restore',
+        'delete' => 'confirmDelete',
+        'restore' => 'confirmRestore',
+        'confirmedDeleteEmailData' => 'delete',
+        'confirmedRestoreEmailData' => 'restore',
         'closeModal',
         'refreshComponent' => '$refresh',
     ];
@@ -61,6 +65,11 @@ class EmailDatas extends Component
 
     protected $significantDataChange = false;
 
+    public function boot(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     public function mount()
     {
         $this->resetPage();
@@ -69,7 +78,7 @@ class EmailDatas extends Component
     public function render()
     {
         if (!$this->checkPermission('READ_EMAIL_DATA', true)) {
-            return;
+            return view('livewire.forbidden');
         }
         
         $searchTerm = '%' . $this->search . '%';
@@ -111,6 +120,8 @@ class EmailDatas extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+        $this->clearCache('emaildatas');
+        $this->resetPage();
     }
 
     public function create()
@@ -120,6 +131,7 @@ class EmailDatas extends Component
         }
         
         $this->resetInputFields();
+        $this->resetErrorBag();
         $this->modalTitle = 'Create New Email Data';
         $this->modalAction = 'store';
         $this->openModal();
@@ -127,51 +139,46 @@ class EmailDatas extends Component
 
     public function store()
     {
-        try {
-            if (!$this->checkPermissionWithMessage('CREATE_EMAIL_DATA', 'No tienes permiso para crear datos de email')) {
-                return;
-            }
-            
-            $this->validate($this->getCreateValidationRules());
-
-            Log::info('Attempting to create new EmailData', [
-                'description' => $this->description,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'type' => $this->type,
-                'user_id' => $this->user_id,
-            ]);
-
-            EmailData::create([
-                'uuid' => (string) Str::uuid(), // Generar UUID único
-                'description' => $this->description,
-                'email' => $this->email,
-                'phone' => $this->formatPhone($this->phone),
-                'type' => $this->type,
-                'user_id' => $this->user_id,
-            ]);
-
-            $this->significantDataChange = true;
-            $this->clearCache('emaildatas');
-
-            Log::info('EmailData created successfully', [
-                'description' => $this->description,
-                'email' => $this->email,
-            ]);
-
-            session()->flash('message', 'Email Data Created Successfully.');
-            $this->closeModal();
-            $this->resetInputFields();
-            $this->dispatch('refreshComponent');
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        if (!$this->checkPermissionWithMessage('CREATE_EMAIL_DATA', 'No tienes permiso para crear datos de email')) {
             $this->dispatch('validation-failed');
-            throw $e;
-        } catch (\Exception $e) {
-            Log::error('Error creating EmailData', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Error creating Email Data: ' . $e->getMessage());
+            return;
+        }
+        
+        $validatedData = $this->validate($this->getCreateValidationRules());
+
+        try {
+            $this->transactionService->run(
+                function () use ($validatedData) {
+                    Log::info('Attempting to create new EmailData within transaction', $validatedData);
+                    $emailData = EmailData::create([
+                        'uuid' => (string) Str::uuid(),
+                        'description' => $this->description,
+                        'email' => $this->email,
+                        'phone' => $this->formatPhone($this->phone),
+                        'type' => $this->type,
+                        'user_id' => $this->user_id,
+                    ]);
+                    Log::info('EmailData created successfully within transaction', ['uuid' => $emailData->uuid]);
+                    return $emailData;
+                },
+                function ($createdEmailData) {
+                    $this->clearCache('emaildatas');
+                    session()->flash('message', 'Email Data Created Successfully.');
+                    $this->closeModal();
+                    $this->resetInputFields();
+                    $this->dispatch('refreshComponent');
+                },
+                function (Throwable $e) {
+                    Log::error('Error creating EmailData during transaction.', ['error' => $e->getMessage()]);
+                    if ($e instanceof \Illuminate\Validation\ValidationException) {
+                         $this->dispatch('validation-failed');
+                    }
+                }
+            );
+        } catch (Throwable $e) {
+            if (!($e instanceof \Illuminate\Validation\ValidationException)) {
+                 session()->flash('error', 'Error creating Email Data: ' . $e->getMessage());
+            }
         }
     }
 
@@ -181,7 +188,6 @@ class EmailDatas extends Component
             return false;
         }
 
-        // If updating and email hasn't changed, it's valid
         if ($this->modalAction === 'update' && $this->uuid) {
             $emailData = EmailData::where('uuid', $this->uuid)->first();
             if ($emailData && $emailData->email === $email) {
@@ -189,7 +195,6 @@ class EmailDatas extends Component
             }
         }
 
-        // Check if email exists, excluding the current record if updating
         return EmailData::where('email', $email)
             ->when($this->uuid, function ($query) {
                 return $query->where('uuid', '!=', $this->uuid);
@@ -203,7 +208,6 @@ class EmailDatas extends Component
             return false;
         }
 
-        // Si estamos actualizando y el teléfono no ha cambiado, es válido
         if ($this->modalAction === 'update' && $this->uuid) {
             $emailData = EmailData::where('uuid', $this->uuid)->first();
             if ($emailData && $emailData->phone === $this->formatPhone($phone)) {
@@ -211,7 +215,6 @@ class EmailDatas extends Component
             }
         }
 
-        // Verificar si el teléfono existe, excluyendo el registro actual si estamos actualizando
         return EmailData::where('phone', $this->formatPhone($phone))
             ->when($this->uuid, function ($query) {
                 return $query->where('uuid', '!=', $this->uuid);
@@ -221,14 +224,15 @@ class EmailDatas extends Component
 
     public function edit($uuid)
     {
+        if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para editar datos de email')) {
+            return;
+        }
+        
         try {
-            if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para editar datos de email')) {
-                return;
-            }
-            
             Log::info('Attempting to edit EmailData', ['uuid' => $uuid]);
-
             $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
+
+            $this->resetErrorBag();
             $this->uuid = $emailData->uuid;
             $this->description = $emailData->description;
             $this->email = $emailData->email;
@@ -240,11 +244,7 @@ class EmailDatas extends Component
             $this->modalAction = 'update';
             $this->openModal();
 
-            Log::info('EmailData loaded for editing', [
-                'uuid' => $this->uuid,
-                'description' => $this->description,
-                'email' => $this->email,
-            ]);
+            Log::info('EmailData loaded for editing', ['uuid' => $this->uuid]);
 
             $this->dispatch('email-data-edit', [
                 'description' => $this->description,
@@ -252,131 +252,142 @@ class EmailDatas extends Component
                 'phone' => $this->phone,
                 'type' => $this->type
             ]);
-        } catch (\Exception $e) {
-            Log::error('Error loading EmailData for editing', [
-                'uuid' => $uuid,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('EmailData not found for editing.', ['uuid' => $uuid]);
+            session()->flash('error', 'Email Data not found.');
+        } catch (Throwable $e) {
+            Log::error('Error loading EmailData for editing', ['uuid' => $uuid, 'error' => $e->getMessage()]);
             session()->flash('error', 'Error loading Email Data: ' . $e->getMessage());
         }
     }
 
     public function update()
     {
-        try {
-            if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para actualizar datos de email')) {
-                return;
-            }
-            
-            $this->validate($this->getUpdateValidationRules());
-
-            Log::info('Attempting to update EmailData', [
-                'uuid' => $this->uuid,
-                'description' => $this->description,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'type' => $this->type,
-                'user_id' => $this->user_id,
-            ]);
-
-            $emailData = EmailData::where('uuid', $this->uuid)->firstOrFail();
-            $emailData->update([
-                'description' => $this->description,
-                'email' => $this->email,
-                'phone' => $this->formatPhone($this->phone),
-                'type' => $this->type,
-                'user_id' => $this->user_id,
-            ]);
-
-            $this->significantDataChange = true;
-            $this->clearCache('emaildatas');
-
-            Log::info('EmailData updated successfully', [
-                'uuid' => $this->uuid,
-                'description' => $this->description,
-                'email' => $this->email,
-            ]);
-
-            session()->flash('message', 'Email Data Updated Successfully.');
-            $this->closeModal();
-            $this->resetInputFields();
-            $this->dispatch('refreshComponent');
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        if (!$this->checkPermissionWithMessage('UPDATE_EMAIL_DATA', 'No tienes permiso para actualizar datos de email')) {
             $this->dispatch('validation-failed');
-            throw $e;
-        } catch (\Exception $e) {
-            Log::error('Error updating EmailData', [
-                'uuid' => $this->uuid,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Error updating Email Data: ' . $e->getMessage());
+            return;
         }
+        
+        $validatedData = $this->validate($this->getUpdateValidationRules());
+
+        try {
+             $this->transactionService->run(
+                function () use ($validatedData) {
+                    Log::info('Attempting to update EmailData within transaction', ['uuid' => $this->uuid]);
+                    $emailData = EmailData::where('uuid', $this->uuid)->firstOrFail();
+                    $emailData->update([
+                        'description' => $this->description,
+                        'email' => $this->email,
+                        'phone' => $this->formatPhone($this->phone),
+                        'type' => $this->type,
+                        'user_id' => $this->user_id,
+                    ]);
+                     Log::info('EmailData updated successfully within transaction', ['uuid' => $this->uuid]);
+                    return $emailData;
+                },
+                function ($updatedEmailData) {
+                    $this->clearCache('emaildatas');
+                    session()->flash('message', 'Email Data Updated Successfully.');
+                    $this->closeModal();
+                    $this->resetInputFields();
+                     $this->dispatch('refreshComponent');
+                },
+                function (Throwable $e) {
+                    Log::error('Error updating EmailData during transaction.', ['uuid' => $this->uuid, 'error' => $e->getMessage()]);
+                     if ($e instanceof \Illuminate\Validation\ValidationException) {
+                         $this->dispatch('validation-failed');
+                     }
+                 }
+             );
+        } catch (Throwable $e) {
+            if (!($e instanceof \Illuminate\Validation\ValidationException)) {
+                 session()->flash('error', 'Error updating Email Data: ' . $e->getMessage());
+             }
+        }
+    }
+
+    public function confirmDelete($uuid)
+    {
+        if (!$this->checkPermissionWithMessage('DELETE_EMAIL_DATA', 'No tienes permiso para eliminar datos de email')) {
+            return;
+        }
+        $this->dispatch('show-confirmation-modal', [
+            'title' => 'Confirm Deletion',
+            'message' => 'Are you sure you want to move this email data to trash?',
+            'confirmEvent' => 'confirmedDeleteEmailData',
+            'eventData' => $uuid
+        ]);
+    }
+
+    public function confirmRestore($uuid)
+    {
+        if (!$this->checkPermissionWithMessage('RESTORE_EMAIL_DATA', 'No tienes permiso para restaurar datos de email')) {
+            return;
+        }
+        $this->dispatch('show-confirmation-modal', [
+            'title' => 'Confirm Restoration',
+            'message' => 'Are you sure you want to restore this email data?',
+            'confirmEvent' => 'confirmedRestoreEmailData',
+            'eventData' => $uuid
+        ]);
     }
 
     public function delete($uuid)
     {
+        if (!$this->checkPermissionWithMessage('DELETE_EMAIL_DATA', 'No tienes permiso para eliminar datos de email')) {
+            return;
+        }
+
         try {
-            if (!$this->checkPermissionWithMessage('DELETE_EMAIL_DATA', 'No tienes permiso para eliminar datos de email')) {
-                return false;
-            }
-            
-            Log::info('Attempting to delete EmailData', ['uuid' => $uuid]);
-
-            $emailData = EmailData::where('uuid', $uuid)->first();
-            if (!$emailData) {
-                Log::warning('EmailData not found for deletion', ['uuid' => $uuid]);
-                session()->flash('error', 'Email Data not found.');
-                return;
-            }
-
-            $emailData->delete();
-            $this->clearCache('emaildatas');
-
-            Log::info('EmailData deleted successfully', ['uuid' => $uuid]);
-
-            session()->flash('message', 'Email Data Deleted Successfully.');
-            $this->dispatch('refreshComponent');
-        } catch (\Exception $e) {
-            Log::error('Error deleting EmailData', [
-                'uuid' => $uuid,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            $this->transactionService->run(
+                function () use ($uuid) {
+                    Log::info('Attempting to delete EmailData within transaction', ['uuid' => $uuid]);
+                    $emailData = EmailData::where('uuid', $uuid)->firstOrFail();
+                    $emailData->delete();
+                    Log::info('EmailData deleted successfully within transaction', ['uuid' => $uuid]);
+                    return $uuid;
+                },
+                function ($deletedUuid) {
+                    $this->clearCache('emaildatas');
+                    session()->flash('message', 'Email Data Deleted Successfully.');
+                    $this->dispatch('refreshComponent');
+                    $this->resetPage();
+                },
+                function (Throwable $e) use ($uuid) {
+                    Log::error('Error deleting EmailData during transaction.', ['uuid' => $uuid, 'error' => $e->getMessage()]);
+                }
+            );
+        } catch (Throwable $e) {
             session()->flash('error', 'Error deleting Email Data: ' . $e->getMessage());
         }
     }
 
     public function restore($uuid)
     {
+        if (!$this->checkPermissionWithMessage('RESTORE_EMAIL_DATA', 'No tienes permiso para restaurar datos de email')) {
+            return;
+        }
+
         try {
-            if (!$this->checkPermissionWithMessage('RESTORE_EMAIL_DATA', 'No tienes permiso para restaurar datos de email')) {
-                return false;
-            }
-            
-            Log::info('Attempting to restore EmailData', ['uuid' => $uuid]);
-
-            $emailData = EmailData::withTrashed()->where('uuid', $uuid)->first();
-            if (!$emailData) {
-                Log::warning('EmailData not found for restoration', ['uuid' => $uuid]);
-                session()->flash('error', 'Email Data not found.');
-                return;
-            }
-
-            $emailData->restore();
-            $this->clearCache('emaildatas');
-
-            Log::info('EmailData restored successfully', ['uuid' => $uuid]);
-
-            session()->flash('message', 'Email Data Restored Successfully.');
-            $this->dispatch('refreshComponent');
-        } catch (\Exception $e) {
-            Log::error('Error restoring EmailData', [
-                'uuid' => $uuid,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            $this->transactionService->run(
+                function () use ($uuid) {
+                    Log::info('Attempting to restore EmailData within transaction', ['uuid' => $uuid]);
+                    $emailData = EmailData::withTrashed()->where('uuid', $uuid)->firstOrFail();
+                    $emailData->restore();
+                    Log::info('EmailData restored successfully within transaction', ['uuid' => $uuid]);
+                    return $uuid;
+                },
+                function ($restoredUuid) {
+                    $this->clearCache('emaildatas');
+                    session()->flash('message', 'Email Data Restored Successfully.');
+                    $this->dispatch('refreshComponent');
+                    $this->resetPage();
+                },
+                function (Throwable $e) use ($uuid) {
+                    Log::error('Error restoring EmailData during transaction.', ['uuid' => $uuid, 'error' => $e->getMessage()]);
+                }
+            );
+        } catch (Throwable $e) {
             session()->flash('error', 'Error restoring Email Data: ' . $e->getMessage());
         }
     }
@@ -384,7 +395,6 @@ class EmailDatas extends Component
     public function openModal()
     {
         $this->isOpen = true;
-        
         $this->dispatch('email-data-edit', [
             'description' => $this->description,
             'email' => $this->email,
@@ -397,11 +407,13 @@ class EmailDatas extends Component
     {
         $this->isOpen = false;
         $this->resetInputFields();
+        $this->resetValidation();
     }
 
     private function resetInputFields()
     {
         $this->reset(['uuid', 'description', 'email', 'phone', 'type', 'user_id']);
+        $this->resetErrorBag();
     }
 
     public function toggleShowDeleted()

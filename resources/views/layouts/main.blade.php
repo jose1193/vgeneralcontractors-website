@@ -46,7 +46,8 @@
 
     <x-footer />
 
-    <x-appointment-modal />
+    {{-- <x-appointment-modal /> --}}
+    <x-facebook-lead-modal />
 
     @include('cookie-consent::index')
 

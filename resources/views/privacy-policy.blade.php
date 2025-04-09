@@ -90,6 +90,10 @@
                     contractually obligated to protect the confidentiality of this data and to use it only to send you
                     messages on
                     our behalf, in accordance with your consent.
+                    <br><br>
+                    <b>SMS opt-in and phone numbers collected for SMS communication purposes will not be shared with any
+                        third
+                        party and affiliates for marketing purposes.</b>
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">3. Purposes of Processing</h2>

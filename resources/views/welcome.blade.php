@@ -189,7 +189,7 @@
 
 <body class="bg-gray-100 font-sans" x-data>
     <x-navbar />
-    <x-appointment-modal />
+    <x-facebook-lead-modal />
 
     <x-hero />
     <x-city-locations />

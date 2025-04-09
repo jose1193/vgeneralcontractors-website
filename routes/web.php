@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\FacebookLeadFormController;
+use App\Http\Controllers\ConfirmationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -182,3 +184,16 @@ Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search
 Route::get('/blog/category/{categorySlug}', [PostController::class, 'showPostsByCategory'])->name('blog.category');
 Route::get('/blog/{slug}', [PostController::class, 'show'])->name('blog.show');
 Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
+
+Route::get('/services', function () {
+    return view('services');
+})->name('services');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// Standalone Facebook Lead Form Routes
+Route::get('/facebook-lead-form', [FacebookLeadFormController::class, 'showForm'])->name('facebook.lead.form');
+Route::post('/facebook-lead-form/submit', [FacebookLeadFormController::class, 'store'])->name('facebook.lead.store');
+Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])->name('facebook.lead.validate'); // Route for single field validation

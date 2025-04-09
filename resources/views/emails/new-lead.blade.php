@@ -70,6 +70,18 @@
             font-size: 1.2em;
             color: #28a745;
         }
+
+        .details td {
+            padding: 5px 0;
+            vertical-align: top;
+        }
+
+        .details strong {
+            display: inline-block;
+            width: 150px;
+        }
+
+        /* Adjust width as needed */
     </style>
 </head>
 
@@ -90,34 +102,51 @@
                 </p>
             </div>
 
-            <table style="width: 100%; margin: 20px 0;">
+            <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Lead Details:</h3>
+            <table style="width: 100%; margin: 0 0 20px 0; border-collapse: collapse;">
                 <tr>
-                    <td style="width: 30%;"><span class="lead-icon">👤</span> <strong>Name:</strong></td>
-                    <td style="width: 70%;">{{ $data['full_name'] }}</td>
+                    <td><span class="lead-icon">👤</span> <strong>First Name:</strong></td>
+                    <td>{{ $appointment->first_name }}</td>
+                </tr>
+                <tr>
+                    <td><span class="lead-icon">👤</span> <strong>Last Name:</strong></td>
+                    <td>{{ $appointment->last_name }}</td>
                 </tr>
                 <tr>
                     <td><span class="lead-icon">📧</span> <strong>Email:</strong></td>
-                    <td>{{ $data['email'] }}</td>
+                    <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
                 </tr>
                 <tr>
                     <td><span class="lead-icon">📞</span> <strong>Phone:</strong></td>
-                    <td>{{ $data['phone_number'] }}</td>
+                    <td>{{ $appointment->phone }}</td>
                 </tr>
                 <tr>
                     <td><span class="lead-icon">📍</span> <strong>Address:</strong></td>
-                    <td>{{ $data['city'] }}, {{ $data['zip_code'] }}</td>
+                    <td>
+                        {{ $appointment->address }}<br>
+                        @if ($appointment->address_2)
+                            {{ $appointment->address_2 }}<br>
+                        @endif
+                        {{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}<br>
+                        {{ $appointment->country }}
+                    </td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">🏙️</span> <strong>City:</strong></td>
-                    <td>{{ $data['city'] }}</td>
+                    <td><span class="lead-icon">🛡️</span> <strong>Has Insurance?:</strong></td>
+                    <td>{{ $appointment->insurance_property }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">🔢</span> <strong>Zip Code:</strong></td>
-                    <td>{{ $data['zip_code'] }}</td>
+                    <td><span class="lead-icon">💬</span> <strong>SMS Consent:</strong></td>
+                    <td>{{ $appointment->sms_consent ? 'Yes' : 'No' }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">🛡️</span> <strong>Insurance Property:</strong></td>
-                    <td>{{ $data['tiene_seguro'] }}</td>
+                    <td><span class="lead-icon">📝</span> <strong>Message:</strong></td>
+                    <td>{{ $appointment->message ?: 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td><span class="lead-icon">📅</span> <strong>Submitted:</strong></td>
+                    <td>{{ $appointment->registration_date ? $appointment->registration_date->format('M d, Y g:i A T') : 'N/A' }}
+                    </td>
                 </tr>
             </table>
 
@@ -138,7 +167,8 @@
         <div class="footer">
             <p>Business Hours:<br>
                 Monday to Friday: 9:00 AM - 5:00 PM</p>
-            <p style="margin-top: 10px; font-size: 12px;">© 2025 V General Contractors. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} V General Contractors. All rights
+                reserved.</p>
             <p style="font-size: 10px; color: #999;">1302 Waugh Dr # 810 Houston TX 77019</p>
         </div>
     </div>

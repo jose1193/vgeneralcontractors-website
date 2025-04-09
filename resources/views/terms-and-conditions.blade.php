@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@php use App\Helpers\PhoneHelper; @endphp
 
 @section('title', 'Terms and Conditions - ' . $companyData->company_name)
 @section('meta_description', 'Read our terms and conditions to understand your rights and obligations when using ' .
@@ -31,6 +32,25 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="prose max-w-none">
+                <h2 class="text-2xl font-bold mb-6">SMS Messaging Service Terms</h2>
+
+                <h3 class="text-xl font-semibold mb-4">Consent to Receive Text Messages</h3>
+                <p class="mb-6">
+                    By checking the consent box on our forms, you agree to the following:
+                    <br>
+                    <em>"Yes, I would like to receive text messages from <span
+                            class="font-semibold">{{ $companyData->company_name }}</span> with offers, appointment
+                        reminders, and updates on roofing services. <span class="font-semibold">Messaging Frequency may
+                            vary</span>. I understand that I can cancel my subscription at any time by replying <span
+                            class="font-semibold">STOP</span>. Reply <span class="font-semibold">HELP
+                            {{ PhoneHelper::format($companyData->phone) }}</span> for assistance. Message and data rates
+                        apply. Information obtained as part of the SMS consent process will not be shared with third
+                        parties. <a href="{{ route('privacy-policy') }}" target="_blank"
+                            class="text-yellow-600 hover:text-yellow-700 underline">Privacy Policy</a> and <a
+                            href="{{ route('terms-and-conditions') }}" target="_blank"
+                            class="text-yellow-600 hover:text-yellow-700 underline">Terms of Service</a>."</em>
+                </p>
+
                 <h2 class="text-2xl font-bold mb-6">Interpretation and Definitions</h2>
 
                 <h3 class="text-xl font-semibold mb-4">Interpretation</h3>
@@ -89,50 +109,31 @@
                     the Service.
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">1. Acceptance of these Terms (SMS Messaging Service)</h2>
-                <p class="mb-6">
-                    By providing your phone number and consenting to receive text (SMS) messages from
-                    {{ $companyData->company_name }}
-                    - Roofing Services,
-                    you agree to be bound by these SMS Messaging Service Terms and Conditions ("SMS Terms") and our Privacy
-                    Policy. If you do
-                    not agree to these SMS Terms, please do not provide your phone number or consent to receive SMS messages
-                    from us.
-                </p>
-
-                <h2 class="text-2xl font-bold mb-6">2. Types of SMS Messages You May Receive</h2>
-                <p class="mb-4">By subscribing to {{ $companyData->company_name }}'s SMS messaging service, you can expect
-                    to receive
-                    text messages related to:</p>
+                <h2 class="text-2xl font-bold mb-6">2. Types of SMS Communications</h2>
+                <p class="mb-4">If you have consented to receive text messages, you may receive SMS communications related
+                    to the following:</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Roof inspection appointment reminders</li>
-                    <li>Roofing service scheduling confirmations</li>
-                    <li>Updates on the status of your inspection, estimate, or roofing work</li>
-                    <li>Payment and billing notifications</li>
-                    <li>Special offers and promotions for roofing services</li>
-                    <li>Customer satisfaction surveys about roofing services</li>
+                    <li><strong>Customers and Guests:</strong> Updates regarding relevant information, including roof
+                        inspection appointment reminders, roofing service scheduling confirmations, updates on the status of
+                        your inspection, estimate, or roofing work, payment and billing notifications, special offers and
+                        promotions for roofing services, and customer satisfaction surveys about roofing services.</li>
+                    <li><strong>Job Applicants:</strong> Information about your application status, onboarding materials, or
+                        other employment-related updates.</li>
                 </ul>
 
                 <h2 class="text-2xl font-bold mb-6">3. Frequency of SMS Messages</h2>
                 <p class="mb-6">
-                    The frequency of SMS messages may vary. The number of SMS messages you receive will depend on your
-                    interactions with
-                    {{ $companyData->company_name }}, the services you request, and your communication preferences. We will
-                    strive to
-                    keep message
-                    frequency relevant and not excessive.
+                    The frequency of SMS messages may vary depending on your interactions with
+                    {{ $companyData->company_name }}, the services you request, and your communication preferences. The
+                    estimated frequency is 2-5 messages per client.
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">4. Message and Data Rates (SMS Messaging Service)</h2>
                 <p class="mb-6">
                     Message and data rates may apply. {{ $companyData->company_name }} does not charge for sending SMS
-                    messages, but
-                    your mobile service
-                    provider may charge you for messages you receive and send, as well as data usage associated with the SMS
-                    service, depending
-                    on your rate plan. Check with your mobile service provider for details on your plan and possible
-                    charges. You are responsible
-                    for all charges associated with text messages you receive from us.
+                    messages, but standard messaging rates will be charged by your mobile service provider depending on your
+                    rate plan. Check with your mobile service provider for details. You are responsible for all charges
+                    associated with text messages you receive from us.
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">5. Opt-Out of SMS Messages</h2>
@@ -147,10 +148,12 @@
 
                 <h2 class="text-2xl font-bold mb-6">6. Help and Support for SMS Messaging Service</h2>
                 <p class="mb-6">
-                    For help with the SMS messaging service, reply HELP to any SMS message you receive from us, or visit our
-                    website at
-                    https://vgeneralcontractors.com/ and see our "Contact" section for information on how to contact us
-                    through other means.
+                    For assistance with the SMS messaging service, reply <strong>HELP</strong> to any SMS message you
+                    receive from us, text <strong>HELP</strong> to {{ PhoneHelper::format($companyData->phone) }}, or visit
+                    our <a href="{{ route('privacy-policy') }}" target="_blank"
+                        class="text-yellow-600 hover:text-yellow-700 underline">Privacy Policy</a> and <a
+                        href="{{ route('terms-and-conditions') }}" target="_blank"
+                        class="text-yellow-600 hover:text-yellow-700 underline">Terms of Service</a>.
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">Links to Other Websites</h2>

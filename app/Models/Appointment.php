@@ -3,24 +3,52 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Appointment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'uuid',
-        'name',
+        'first_name',
+        'last_name',
         'phone',
         'email',
+        'address',
+        'address_2',
         'city',
+        'state',
         'zipcode',
-        'insurance',
+        'country',
+        'insurance_property',
         'message',
-        'sms_consent'
+        'sms_consent',
+        'registration_date',
+        'inspection_date',
+        'inspection_time',
+        'inspection_confirmed',
+        'notes',
+        'owner',
+        'damage_detail',
+        'intent_to_claim',
+        'lead_source',
+        'follow_up_date',
+        'additional_note',
+        'inspection_status',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
-        'sms_consent' => 'boolean'
+        'sms_consent' => 'boolean',
+        'registration_date' => 'datetime',
+        'inspection_date' => 'date',
+        'inspection_time' => 'datetime:H:i:s',
+        'inspection_confirmed' => 'boolean',
+        'intent_to_claim' => 'boolean',
+        'follow_up_date' => 'date',
+        'latitude' => 'double',
+        'longitude' => 'double',
     ];
 } 

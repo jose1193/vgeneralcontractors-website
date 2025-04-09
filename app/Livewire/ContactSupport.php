@@ -5,32 +5,30 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\EmailData;
 use App\Services\FacebookConversionApi;
+use Livewire\Attributes\Rule;
 
 class ContactSupport extends Component
 {
+    #[Rule('required|min:2')]
     public $first_name = '';
+
+    #[Rule('required|min:2')]
     public $last_name = '';
+
+    #[Rule('required|email')]
     public $email = '';
+
+    #[Rule('required')]
     public $phone = '';
+
+    #[Rule('required|min:10')]
     public $message = '';
 
-    protected $rules = [
-        'first_name' => 'required|min:2',
-        'last_name' => 'required|min:2',
-        'email' => 'required|email',
-        'phone' => 'required',
-        'message' => 'required|min:10',
-    ];
+    #[Rule('boolean')]
+    public $sms_consent = false;
 
-    protected $messages = [
-        'first_name.required' => 'Please enter your first name.',
-        'last_name.required' => 'Please enter your last name.',
-        'email.required' => 'Please enter your email address.',
-        'email.email' => 'Please enter a valid email address.',
-        'phone.required' => 'Please enter your phone number.',
-        'message.required' => 'Please enter your message.',
-        'message.min' => 'Your message should be at least 10 characters.',
-    ];
+    #[Rule('required|nocaptcha')]
+    public $captcha = null;
 
     public function submit()
     {
@@ -42,6 +40,7 @@ class ContactSupport extends Component
             'email' => $this->email,
             'phone' => $this->phone,
             'message' => $this->message,
+            'sms_consent' => (bool) $this->sms_consent,
             'type' => 'support',
         ]);
 

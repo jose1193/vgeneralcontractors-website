@@ -153,7 +153,8 @@
                                     loss are clear signs. However, underlying issues aren't always obvious. We provide
                                     <strong>FREE, no-obligation onsite inspections</strong> to thoroughly assess your roof's
                                     condition. We'll give you an honest, expert opinion on whether repairs are sufficient or
-                                    if a replacement is necessary for long-term protection.</p>
+                                    if a replacement is necessary for long-term protection.
+                                </p>
                             </div>
                         </div>
 

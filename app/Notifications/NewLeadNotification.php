@@ -26,17 +26,34 @@ class NewLeadNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
+        // Combine first and last name for the view if needed, or pass separately
+        $full_name = $this->appointment->first_name . ' ' . $this->appointment->last_name;
+
         return (new MailMessage)
             ->subject('🚨 New Lead Alert! 🔔')
             ->view('emails.new-lead', [
+                // Pass the whole appointment object for flexibility
+                'appointment' => $this->appointment,
+                // Or pass specific data if preferred
+                /*
                 'data' => [
-                    'full_name' => $this->appointment->name,
+                    'first_name' => $this->appointment->first_name,
+                    'last_name' => $this->appointment->last_name,
+                    'full_name' => $full_name, // Combined name
                     'email' => $this->appointment->email,
                     'phone_number' => $this->appointment->phone,
+                    'address' => $this->appointment->address,
+                    'address_2' => $this->appointment->address_2,
                     'city' => $this->appointment->city,
+                    'state' => $this->appointment->state,
                     'zip_code' => $this->appointment->zipcode,
-                    'tiene_seguro' => $this->appointment->insurance
+                    'country' => $this->appointment->country,
+                    'insurance_property' => $this->appointment->insurance_property, // Use new field
+                    'message' => $this->appointment->message,
+                    'sms_consent' => $this->appointment->sms_consent ? 'Yes' : 'No',
+                    'registration_date' => $this->appointment->registration_date ? $this->appointment->registration_date->format('Y-m-d H:i:s') : 'N/A',
                 ]
+                */
             ]);
     }
 } 

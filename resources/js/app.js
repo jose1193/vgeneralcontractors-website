@@ -9,8 +9,15 @@ import "livewire-sortable";
 // Import Alpine.js
 import Alpine from "alpinejs";
 
+// Import SweetAlert2
+import Swal from "sweetalert2"; // Import
+import "sweetalert2/dist/sweetalert2.min.css"; // Import the CSS
+
 // Make Alpine available globally
 window.Alpine = Alpine;
+
+// Make Swal globally accessible (optional, but needed for your current form JS)
+window.Swal = Swal;
 
 // Start Alpine
 Alpine.start();
