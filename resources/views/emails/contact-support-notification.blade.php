@@ -121,8 +121,21 @@
                 <p><strong>Email:</strong> <a
                         href="mailto:{{ $contactSupport->email }}">{{ $contactSupport->email }}</a>
                 </p>
-                <p><strong>Phone:</strong> <a
-                        href="tel:{{ preg_replace('/[^\d]/', '', $contactSupport->phone) }}">{{ $contactSupport->phone }}</a>
+                <p><strong>Phone:</strong> <a href="tel:{{ preg_replace('/[^\d]/', '', $contactSupport->phone) }}">
+                        @php
+                            $digits = preg_replace('/[^\d]/', '', $contactSupport->phone);
+                            if (strlen($digits) === 10) {
+                                echo '(' .
+                                    substr($digits, 0, 3) .
+                                    ') ' .
+                                    substr($digits, 3, 3) .
+                                    '-' .
+                                    substr($digits, 6, 4);
+                            } else {
+                                echo $contactSupport->phone;
+                            }
+                        @endphp
+                    </a>
                 </p>
                 <p><strong>SMS Consent:</strong> {{ $contactSupport->sms_consent ? 'Yes' : 'No' }}</p>
                 <p><strong>Submitted:</strong> {{ $contactSupport->created_at->format('M d, Y H:i A T') }}</p>
