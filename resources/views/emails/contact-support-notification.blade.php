@@ -131,6 +131,14 @@
                                     substr($digits, 3, 3) .
                                     '-' .
                                     substr($digits, 6, 4);
+                            } elseif (strlen($digits) === 11 && substr($digits, 0, 1) === '1') {
+                                // Manejar números con código de país +1
+                                echo '(' .
+                                    substr($digits, 1, 3) .
+                                    ') ' .
+                                    substr($digits, 4, 3) .
+                                    '-' .
+                                    substr($digits, 7, 4);
                             } else {
                                 echo $contactSupport->phone;
                             }
