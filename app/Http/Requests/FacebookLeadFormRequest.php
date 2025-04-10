@@ -49,6 +49,7 @@ class FacebookLeadFormRequest extends FormRequest
             'latitude' => 'nullable|numeric|between:-90,90', // Add latitude validation
             'longitude' => 'nullable|numeric|between:-180,180', // Add longitude validation
             'lead_source' => 'nullable|string', // Add lead_source validation as nullable string
+            'status_lead' => 'nullable|string|in:New,Called,Pending,Declined', // Add status_lead field validation
             // Add reCAPTCHA rule (using package's default v3 rule)
             // The package handles checking the score against a default threshold (0.5)
             // You can customize the threshold in the config/nocaptcha.php file if published

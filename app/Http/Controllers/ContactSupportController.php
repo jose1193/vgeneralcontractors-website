@@ -9,6 +9,7 @@ use App\Services\FacebookConversionApi;
 use App\Services\TransactionService;
 use App\Jobs\SendContactSupportNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Throwable;
 
 class ContactSupportController extends Controller
@@ -27,7 +28,9 @@ class ContactSupportController extends Controller
     public function showForm()
     {
         // Retrieve the reCAPTCHA v3 Site Key using the config helper
-        $recaptchaSiteKey = config('captcha.sitekey');
+        $recaptchaSiteKey = Cache::remember('recaptcha_site_key', 3600, function() {
+            return config('captcha.sitekey');
+        });
 
         // Pass the key to the view
         return view('contact-support', [
@@ -88,6 +91,11 @@ class ContactSupportController extends Controller
                     ]);
 
                     Log::info('Contact support record created', ['contact_id' => $contact->id]);
+                    
+                    // Clear any related cache
+                    Cache::forget('contact_support_recent');
+                    Cache::forget('contact_support_count');
+                    
                     return $contact;
                 },
                 // 2. Post-Commit actions
@@ -189,7 +197,9 @@ class ContactSupportController extends Controller
         }
 
         try {
-            $recaptchaSecret = config('captcha.secret');
+            $recaptchaSecret = Cache::remember('recaptcha_secret', 3600, function() {
+                return config('captcha.secret');
+            });
             
             // Make a POST request to the Google reCAPTCHA API
             $client = new \GuzzleHttp\Client();

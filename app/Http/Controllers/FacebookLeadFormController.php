@@ -11,6 +11,7 @@ use App\Services\FacebookConversionApi;
 use App\Services\TransactionService;
 use Revolution\Google\Sheets\Facades\Sheets;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Throwable;
@@ -34,9 +35,14 @@ class FacebookLeadFormController extends Controller
     public function showForm()
     {
         // Retrieve the Google Maps API key (assuming it's set elsewhere, e.g., config/services.php)
-        $googleMapsApiKey = config('services.google.maps_api_key');
+        $googleMapsApiKey = Cache::remember('google_maps_api_key', 3600, function() {
+            return config('services.google.maps_api_key');
+        });
+        
         // Retrieve the reCAPTCHA v3 Site Key using the config helper
-        $recaptchaSiteKey = config('captcha.sitekey'); // Use the corrected config/captcha.php
+        $recaptchaSiteKey = Cache::remember('recaptcha_site_key', 3600, function() {
+            return config('captcha.sitekey');
+        });
 
         // Pass both keys to the view
         return view('facebook-lead-form', [
@@ -95,13 +101,20 @@ class FacebookLeadFormController extends Controller
                         'sms_consent' => $validatedData['sms_consent'] ?? false,
                         'registration_date' => Carbon::now(),
                         'inspection_status' => 'Pending',
+                        'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
                         'lead_source' => $validatedData['lead_source'] ?? 'Web'
                     ]);
 
+                    // Clear caches related to appointments
+                    $this->clearAppointmentCache();
+
                     // Prepare data for Google Sheets
-                    $sheetName = 'VG-Leads Active';
+                    $sheetName = Cache::remember('google_sheet_leads_active', 3600, function() {
+                        return 'VG-Leads Active';
+                    });
+                    
                     $registrationDate = Carbon::now()->toDateTimeString();
                     $fullAddress = trim(($validatedData['address'] ?? '') . ' ' . ($validatedData['address_2'] ?? '')) . ', ' . ($validatedData['city'] ?? '') . ', ' . ($validatedData['state'] ?? '') . ' ' . ($validatedData['zipcode'] ?? '');
 
@@ -120,11 +133,15 @@ class FacebookLeadFormController extends Controller
                         $newAppointment->uuid
                     ];
 
-                    Sheets::spreadsheet(config('services.google.sheet_id'))
+                    $sheetId = Cache::remember('google_sheet_id', 3600, function() {
+                        return config('services.google.sheet_id');
+                    });
+
+                    Sheets::spreadsheet($sheetId)
                           ->sheet($sheetName)
                           ->append([$values]);
 
-                    Log::info('Lead successfully added to Google Sheet via Facebook Form.', ['email' => $validatedData['email'], 'sheet_id' => config('services.google.sheet_id'), 'sheet_name' => $sheetName]);
+                    Log::info('Lead successfully added to Google Sheet via Facebook Form.', ['email' => $validatedData['email'], 'sheet_id' => $sheetId, 'sheet_name' => $sheetName]);
 
                     return $newAppointment;
                 },
@@ -249,6 +266,7 @@ class FacebookLeadFormController extends Controller
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'lead_source' => 'nullable|string',
+            'status_lead' => 'nullable|string|in:New,Called,Pending,Declined',
             'api_key' => 'required' // Add API key validation for security
         ]);
 
@@ -262,7 +280,11 @@ class FacebookLeadFormController extends Controller
         $validatedData = $validator->validated();
         
         // Check API key
-        if ($validatedData['api_key'] !== config('services.facebook_lead.api_key')) {
+        $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
+            return config('services.facebook_lead.api_key');
+        });
+        
+        if ($validatedData['api_key'] !== $apiKey) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid API key'
@@ -293,13 +315,20 @@ class FacebookLeadFormController extends Controller
                         'sms_consent' => $validatedData['sms_consent'] ?? false,
                         'registration_date' => Carbon::now(),
                         'inspection_status' => 'Pending',
+                        'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
                         'lead_source' => $validatedData['lead_source'] ?? 'Facebook'
                     ]);
 
+                    // Clear caches related to appointments
+                    $this->clearAppointmentCache();
+
                     // Similar sheet update logic as in store method
-                    $sheetName = 'VG-Leads Active';
+                    $sheetName = Cache::remember('google_sheet_leads_active', 3600, function() {
+                        return 'VG-Leads Active';
+                    });
+                    
                     $registrationDate = Carbon::now()->toDateTimeString();
                     $fullAddress = trim(($validatedData['address'] ?? '') . ' ' . ($validatedData['address_2'] ?? '')) . ', ' . ($validatedData['city'] ?? '') . ', ' . ($validatedData['state'] ?? '') . ' ' . ($validatedData['zipcode'] ?? '');
 
@@ -318,7 +347,11 @@ class FacebookLeadFormController extends Controller
                         $newAppointment->uuid
                     ];
 
-                    Sheets::spreadsheet(config('services.google.sheet_id'))
+                    $sheetId = Cache::remember('google_sheet_id', 3600, function() {
+                        return config('services.google.sheet_id');
+                    });
+
+                    Sheets::spreadsheet($sheetId)
                           ->sheet($sheetName)
                           ->append([$values]);
 
@@ -369,7 +402,11 @@ class FacebookLeadFormController extends Controller
     public function getAllLeads(Request $request)
     {
         // Check API key
-        if ($request->header('X-API-KEY') !== config('services.facebook_lead.api_key')) {
+        $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
+            return config('services.facebook_lead.api_key');
+        });
+        
+        if ($request->header('X-API-KEY') !== $apiKey) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized access'
@@ -387,17 +424,23 @@ class FacebookLeadFormController extends Controller
                 $filters['inspection_status'] = $request->input('status');
             }
             
-            // Build query
-            $query = Appointment::query();
+            // Generate cache key based on parameters
+            $cacheKey = "leads_" . $page . "_" . $perPage . "_" . md5(json_encode($filters));
             
-            // Apply filters
-            foreach ($filters as $column => $value) {
-                $query->where($column, $value);
-            }
-            
-            // Get paginated results
-            $leads = $query->orderBy('registration_date', 'desc')
+            // Get results with cache
+            $leads = Cache::remember($cacheKey, 300, function() use ($filters, $perPage, $page) {
+                // Build query
+                $query = Appointment::query();
+                
+                // Apply filters
+                foreach ($filters as $column => $value) {
+                    $query->where($column, $value);
+                }
+                
+                // Get paginated results
+                return $query->orderBy('registration_date', 'desc')
                            ->paginate($perPage, ['*'], 'page', $page);
+            });
             
             return response()->json([
                 'success' => true,
@@ -417,6 +460,31 @@ class FacebookLeadFormController extends Controller
     }
 
     /**
+     * Clear caches related to appointments
+     */
+    private function clearAppointmentCache()
+    {
+        // Clear all appointment-related caches
+        $cacheKeys = [
+            'appointments_count', 
+            'appointments_pending',
+            'appointments_recent'
+        ];
+
+        foreach ($cacheKeys as $key) {
+            Cache::forget($key);
+        }
+
+        // Also clear paginated lead caches - pattern-based deletion
+        $keys = Cache::get('cache_keys_leads', []);
+        foreach ($keys as $key) {
+            if (Str::startsWith($key, 'leads_')) {
+                Cache::forget($key);
+            }
+        }
+    }
+
+    /**
      * Verify reCAPTCHA token manually.
      * 
      * @param string $token The reCAPTCHA token
@@ -429,7 +497,9 @@ class FacebookLeadFormController extends Controller
         }
 
         try {
-            $recaptchaSecret = config('captcha.secret');
+            $recaptchaSecret = Cache::remember('recaptcha_secret', 3600, function() {
+                return config('captcha.secret');
+            });
             
             // Make a POST request to the Google reCAPTCHA API
             $client = new \GuzzleHttp\Client();
