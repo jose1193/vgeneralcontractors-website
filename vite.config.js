@@ -8,13 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    server: {
-        host: "0.0.0.0", // <-- importante
-        port: 5173, // coincide con el mapeo anterior
-        hmr: {
-            host: process.env.HOSTNAME || "3.87.79.207",
-            protocol: "ws",
-            port: 5173,
-        },
-    },
 });
