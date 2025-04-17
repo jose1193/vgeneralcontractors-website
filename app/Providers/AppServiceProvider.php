@@ -32,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 1) Forzar HTTPS en todas las URLs generadas por Laravel
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+          // 2) Tus rate limiters
         // Definir rate limiters
         $this->configureRateLimiting();
         
