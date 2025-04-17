@@ -33,6 +33,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\ShareCompanyData::class,
             \App\Http\Middleware\ShareBlogCategories::class,
             \App\Http\Middleware\TrackPageViews::class,
+            \App\Http\Middleware\TrustProxies::class,
         ],
 
         'api' => [
