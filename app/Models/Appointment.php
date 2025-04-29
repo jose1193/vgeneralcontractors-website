@@ -51,4 +51,12 @@ class Appointment extends Model
         'latitude' => 'double',
         'longitude' => 'double',
     ];
+
+    /**
+     * Get full name attribute
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 } 

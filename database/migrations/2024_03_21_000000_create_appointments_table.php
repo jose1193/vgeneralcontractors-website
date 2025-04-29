@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('owner')->nullable();
             $table->text('damage_detail')->nullable();
             $table->boolean('intent_to_claim')->nullable();
-            $table->string('lead_source')->nullable();
+            $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference'])->nullable();
             $table->date('follow_up_date')->nullable();
             $table->text('additional_note')->nullable();
             $table->enum('inspection_status', ['Completed', 'Pending', 'Declined'])->nullable();

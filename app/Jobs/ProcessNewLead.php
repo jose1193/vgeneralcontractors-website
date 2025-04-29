@@ -29,7 +29,7 @@ class ProcessNewLead implements ShouldQueue
     {
         // 1. Send notification to the internal team
         try {
-            $appointmentEmailData = EmailData::where('type', 'appointment')->first();
+            $appointmentEmailData = EmailData::where('type', 'Admin')->first();
             if ($appointmentEmailData && $appointmentEmailData->email) {
                 Notification::route('mail', $appointmentEmailData->email)
                     ->notify(new NewLeadNotification($this->appointment));

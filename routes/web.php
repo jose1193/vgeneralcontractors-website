@@ -17,6 +17,7 @@ use App\Http\Controllers\ContactSupportController;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AppointmentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -125,6 +126,10 @@ Route::middleware([
     Route::get('/admin/posts', function () {
         return view('posts');
     })->name('admin.posts');
+
+    // Appointment Resource Routes (CRUD)
+    Route::resource('appointments', AppointmentController::class);
+
 });
 
 Route::get('/new-roof', function () {
@@ -217,4 +222,16 @@ Route::middleware(['throttle:validation'])->group(function () {
 Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
+});
+
+Route::prefix('appointments')->name('appointments.')->group(function () {
+    Route::get('/', [AppointmentController::class, 'index'])->name('index');
+    Route::get('/create', [AppointmentController::class, 'create'])->name('create');
+    Route::post('/', [AppointmentController::class, 'store'])->name('store');
+    Route::get('/{uuid}', [AppointmentController::class, 'show'])->name('show');
+    Route::get('/{uuid}/edit', [AppointmentController::class, 'edit'])->name('edit');
+    Route::put('/{uuid}', [AppointmentController::class, 'update'])->name('update');
+    Route::delete('/{uuid}', [AppointmentController::class, 'destroy'])->name('destroy');
+    Route::patch('/{uuid}/restore', [AppointmentController::class, 'restore'])->name('restore');
+    Route::post('/check-email', [AppointmentController::class, 'checkNameExists'])->name('check-email');
 });

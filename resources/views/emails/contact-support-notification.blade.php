@@ -108,8 +108,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://vgeneralcontractors.com/wp-content/uploads/2021/06/v-general-contractors-logo.png"
-                width="180" alt="Logo V General Contractors">
+            <img src="https://vgeneralcontractors.com/assets/logo/logo3.webp" width="180"
+                alt="Logo V General Contractors">
         </div>
 
         <div class="content">

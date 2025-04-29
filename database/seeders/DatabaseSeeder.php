@@ -66,6 +66,11 @@ class DatabaseSeeder extends Seeder
             // Añade más según sea necesario
         ];
 
+        // Permisos solo para appointment
+        $appointmentPermissions = [
+            'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT'
+        ];
+
         // Todos los permisos excepto los de gestión de usuarios
         $nonUserManagementPermissions = array_diff($allPermissions, $userManagementPermissions);
 
@@ -90,6 +95,19 @@ class DatabaseSeeder extends Seeder
         ]);
         $adminUser2->assignRole('Admin');
         // END SECOND ADMIN
+
+        // APPOINTMENT ADMIN USER
+        $adminAppointmentUser = User::factory()->create([
+            'name' => 'Administrator',
+            'email' => 'admin@vgeneralcontractors.com',
+            'username' => 'adminAppointment',
+            'password' => bcrypt('admin01='),
+            'uuid' => Uuid::uuid4()->toString(),
+            'terms_and_conditions' => true
+        ]);
+        $adminAppointmentUser->assignRole('Admin');
+        $adminAppointmentUser->syncPermissions($appointmentPermissions);
+        // END APPOINTMENT ADMIN USER
 
         $userUser = User::factory()->create([
             'name' => 'User',
@@ -166,10 +184,10 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'description' => 'Correo para citas y agendamiento',
-                'email' => 'appointment@vgeneralcontractors.com',
+                'email' => 'admin@vgeneralcontractors.com',
                 'phone' => '+13466920757',
-                'type' => 'Appointment',
-                'user_id' => $adminUser->id,
+                'type' => 'Admin',
+                'user_id' => $adminAppointmentUser->id,
             ]
         ];
 

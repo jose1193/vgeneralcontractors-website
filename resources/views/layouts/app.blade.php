@@ -19,7 +19,9 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Styles -->
     @livewireStyles
 
@@ -28,7 +30,26 @@
             display: none !important;
         }
     </style>
+    <style>
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
 
+        ::-webkit-scrollbar-track {
+            background-color: #e5e7eb;
+            border-radius: 9px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #6b7280;
+            border-radius: 7px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #3b82f6;
+            border-radius: 7px;
+        }
+    </style>
     <!-- En la sección head -->
     <meta name="generator" content="V General Contractors Blog">
     <meta name="robots" content="index, follow">
@@ -121,6 +142,10 @@
             }
         });
     </script>
+    @stack('modals')
+    <script src="{{ asset('js/crud-manager.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @stack('scripts')
 </body>
 
 </html>
