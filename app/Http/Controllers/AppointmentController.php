@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Services\TransactionService;
 use App\Jobs\ProcessNewLead;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AppointmentsExport;
 
 class AppointmentController extends BaseCrudController
 {
@@ -226,6 +228,17 @@ class AppointmentController extends BaseCrudController
             $sortField = $request->input('sort_field', 'inspection_date');
             $sortDirection = $request->input('sort_direction', 'desc');
             $query->orderBy($sortField, $sortDirection);
+
+            // Handle Excel export
+            if ($request->has('export') && $request->export === 'excel') {
+                Log::info('Exporting appointments to Excel', [
+                    'filter_count' => $query->count(),
+                    'request_params' => $request->all()
+                ]);
+                
+                $filename = 'appointments_export_' . date('Y-m-d_His') . '.xlsx';
+                return Excel::download(new AppointmentsExport($query), $filename);
+            }
 
             // Pagination
             $perPage = $request->input('per_page', 10);
