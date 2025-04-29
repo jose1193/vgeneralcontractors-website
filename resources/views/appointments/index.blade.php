@@ -52,6 +52,28 @@
                     </div>
                 </div>
 
+                <!-- Date range filters -->
+                <div class="flex flex-col md:flex-row items-center py-5 mb-4 space-y-3 md:space-y-0 md:space-x-4">
+                    <div>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start
+                            Date</label>
+                        <input type="date" id="start_date" name="start_date"
+                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">End
+                            Date</label>
+                        <input type="date" id="end_date" name="end_date"
+                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    </div>
+                    <div class="self-end">
+                        <button id="clearDateFilters" type="button"
+                            class="px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Appointments table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -133,6 +155,10 @@
                     showDeletedSelector: '#showDeleted',
                     paginationSelector: '#pagination',
                     alertSelector: '#alertContainer',
+                    // Date filter selectors
+                    startDateSelector: '#start_date',
+                    endDateSelector: '#end_date',
+                    clearDateFilterSelector: '#clearDateFilters',
                     idField: 'uuid',
                     searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
                     tableHeaders: [{

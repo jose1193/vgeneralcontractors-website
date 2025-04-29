@@ -26,6 +26,12 @@ class CrudManager {
         this.alertSelector = options.alertSelector || "#alertMessage";
         this.addButtonSelector = options.addButtonSelector || "#addEntityBtn";
 
+        // Date filter selectors
+        this.startDateSelector = options.startDateSelector || "#start_date";
+        this.endDateSelector = options.endDateSelector || "#end_date";
+        this.clearDateFilterSelector =
+            options.clearDateFilterSelector || "#clearDateFilters";
+
         // Modal elements
         this.modalHeaderSelector =
             options.modalHeaderSelector || "#modalHeader";
@@ -67,6 +73,8 @@ class CrudManager {
         this.sortDirection = options.defaultSortDirection || "desc";
         this.searchTerm = "";
         this.showDeleted = false;
+        this.startDate = "";
+        this.endDate = "";
 
         // For real-time validation
         this.validationTimeouts = {};
@@ -83,13 +91,78 @@ class CrudManager {
         this.loadEntities();
         this.setupEventHandlers();
         this.setupValidation();
+        this.setupDateFilters();
+    }
+
+    /**
+     * Set up date filter event handlers
+     */
+    setupDateFilters() {
+        const self = this;
+        const startDateInput = $(this.startDateSelector);
+        const endDateInput = $(this.endDateSelector);
+
+        // Skip if date filter elements don't exist
+        if (startDateInput.length === 0 || endDateInput.length === 0) {
+            return;
+        }
+
+        // Validate end date not before start date
+        endDateInput.on("change", function () {
+            const startDate = startDateInput.val();
+            const endDate = $(this).val();
+
+            if (
+                startDate &&
+                endDate &&
+                new Date(endDate) < new Date(startDate)
+            ) {
+                alert("End date cannot be earlier than start date");
+                $(this).val("");
+                return;
+            }
+
+            self.startDate = startDate;
+            self.endDate = endDate;
+            // Apply filter
+            self.loadEntities();
+        });
+
+        startDateInput.on("change", function () {
+            const endDate = endDateInput.val();
+            const startDate = $(this).val();
+
+            if (
+                endDate &&
+                startDate &&
+                new Date(endDate) < new Date(startDate)
+            ) {
+                alert("End date cannot be earlier than start date");
+                endDateInput.val("");
+                self.endDate = "";
+            }
+
+            self.startDate = startDate;
+            // Apply filter
+            self.loadEntities();
+        });
+
+        // Clear date filters
+        $(this.clearDateFilterSelector).on("click", function () {
+            startDateInput.val("");
+            endDateInput.val("");
+            self.startDate = "";
+            self.endDate = "";
+            self.loadEntities();
+        });
     }
 
     /**
      * Load entities with current filters and pagination
      */
-    loadEntities() {
+    loadEntities(page = 1) {
         const self = this;
+        this.currentPage = page;
 
         // Debug console log
         console.log("CrudManager::loadEntities - Parameters:", {
@@ -98,7 +171,32 @@ class CrudManager {
             inputValue: $(this.searchSelector).val(),
             showDeleted: this.showDeleted,
             showDeletedAsString: this.showDeleted ? "true" : "false",
+            startDate: this.startDate,
+            endDate: this.endDate,
         });
+
+        // Prepare request data
+        const requestData = {
+            page: this.currentPage,
+            per_page: this.perPage,
+            sort_field: this.sortField,
+            sort_direction: this.sortDirection,
+            search: this.searchTerm,
+            show_deleted: this.showDeleted ? "true" : "false",
+        };
+
+        // Add date filters if they exist
+        if (this.startDate) {
+            requestData.start_date = this.startDate;
+        }
+
+        if (this.endDate) {
+            requestData.end_date = this.endDate;
+        }
+
+        // Show loading indicator
+        $(this.tableSelector + " tr:not(#loadingRow)").remove();
+        $(this.tableSelector + " #loadingRow").show();
 
         $.ajax({
             url: this.routes.index,
@@ -108,16 +206,8 @@ class CrudManager {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 Accept: "application/json",
             },
-            data: {
-                page: this.currentPage,
-                per_page: this.perPage,
-                sort_field: this.sortField,
-                sort_direction: this.sortDirection,
-                search: this.searchTerm,
-                show_deleted: this.showDeleted ? "true" : "false",
-            },
+            data: requestData,
             beforeSend: function () {
-                $(self.tableSelector + " #loadingRow").show();
                 console.log(`Loading ${self.entityNamePlural}...`);
             },
             success: function (response) {
@@ -187,7 +277,7 @@ class CrudManager {
                                 entity[this.idField]
                             }" title="Restore">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m-15.357-2a8.001 8.001 0 0015.357 2M15 15h-5" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m-15.357-2a8.001 8.001 0 0115.357 2M15 15h-5" />
                                 </svg>
                             </button>`;
                         } else {

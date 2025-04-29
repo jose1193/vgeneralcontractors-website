@@ -128,7 +128,17 @@ Route::middleware([
     })->name('admin.posts');
 
     // Appointment Resource Routes (CRUD)
-    Route::resource('appointments', AppointmentController::class);
+    Route::prefix('appointments')->name('appointments.')->group(function () {
+        Route::get('/', [AppointmentController::class, 'index'])->name('index');
+        Route::get('/create', [AppointmentController::class, 'create'])->name('create');
+        Route::post('/', [AppointmentController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [AppointmentController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [AppointmentController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [AppointmentController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [AppointmentController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [AppointmentController::class, 'restore'])->name('restore');
+        Route::post('/check-email', [AppointmentController::class, 'checkEmailExists'])->name('check-email');
+    });
 
 });
 
@@ -222,16 +232,4 @@ Route::middleware(['throttle:validation'])->group(function () {
 Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
-});
-
-Route::prefix('appointments')->name('appointments.')->group(function () {
-    Route::get('/', [AppointmentController::class, 'index'])->name('index');
-    Route::get('/create', [AppointmentController::class, 'create'])->name('create');
-    Route::post('/', [AppointmentController::class, 'store'])->name('store');
-    Route::get('/{uuid}', [AppointmentController::class, 'show'])->name('show');
-    Route::get('/{uuid}/edit', [AppointmentController::class, 'edit'])->name('edit');
-    Route::put('/{uuid}', [AppointmentController::class, 'update'])->name('update');
-    Route::delete('/{uuid}', [AppointmentController::class, 'destroy'])->name('destroy');
-    Route::patch('/{uuid}/restore', [AppointmentController::class, 'restore'])->name('restore');
-    Route::post('/check-email', [AppointmentController::class, 'checkNameExists'])->name('check-email');
 });
