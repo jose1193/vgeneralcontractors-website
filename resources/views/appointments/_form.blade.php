@@ -251,36 +251,15 @@
 </div>
 
 {{-- Checkboxes section transformed to radio buttons for insurance_property --}}
-<div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    {{-- Insurance Property as Radio Buttons --}}
+<div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 my-10 py-5">
+    {{-- Insurance Property as Checkbox --}}
     <div class="block">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Does the house have property
-            insurance? <span class="text-red-500">*</span></label>
-        <fieldset class="mt-2">
-            <div class="flex items-center space-x-4">
-                <div class="radio-option flex items-center">
-                    <input id="insurance_yes" name="insurance_property" type="radio" value="yes"
-                        class="radio-field sr-only"
-                        {{ old('insurance_property', $appointment->insurance_property ?? 'yes') == 'yes' ? 'checked' : '' }}
-                        required>
-                    <label for="insurance_yes"
-                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                        Yes
-                    </label>
-                </div>
-                <div class="radio-option flex items-center">
-                    <input id="insurance_no" name="insurance_property" type="radio" value="no"
-                        class="radio-field sr-only"
-                        {{ old('insurance_property', $appointment->insurance_property ?? '') == 'no' ? 'checked' : '' }}
-                        required>
-                    <label for="insurance_no"
-                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                        No
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-        <x-input-error for="insurance_property" class="mt-2" />
+        <label for="insurance_property" class="flex items-center">
+            <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
+                required />
+            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Property Insurance') }}
+                <span class="text-red-500">*</span></span>
+        </label>
     </div>
 
     {{-- Other checkboxes --}}
@@ -305,12 +284,12 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
         defer></script>
     <script>
-        // Global variables for map functionality
-        let appointmentMap;
-        let appointmentMarker;
-        let autocomplete;
-
         document.addEventListener('DOMContentLoaded', function() {
+            // Global variables for map functionality
+            let appointmentMap;
+            let appointmentMarker;
+            let autocomplete;
+
             // Initialize map if Google Maps API is loaded
             initAppointmentMap();
 
@@ -596,52 +575,6 @@
                     this.value = formattedValue;
                 });
             }
-
-            // Setup radio button styling for insurance options
-            const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
-            const insuranceLabels = document.querySelectorAll('.insurance-label');
-
-            // Function to apply the selected style to the appropriate label
-            function updateSelectedInsuranceStyle() {
-                // Clear all selected classes first
-                insuranceLabels.forEach(label => {
-                    label.classList.remove('selected');
-                });
-
-                // Apply selected class to the checked option
-                insuranceRadios.forEach(option => {
-                    if (option.checked) {
-                        const label = document.querySelector(`label[for="${option.id}"]`);
-                        if (label) {
-                            label.classList.add('selected');
-                        }
-                    }
-                });
-            }
-
-            // Initial call to set the selected style
-            updateSelectedInsuranceStyle();
-
-            // Add click event listeners for labels (more responsive than change events on radios)
-            insuranceLabels.forEach(label => {
-                label.addEventListener('click', function() {
-                    // Find the associated radio button and check it
-                    const radioId = this.getAttribute('for');
-                    const radio = document.getElementById(radioId);
-                    if (radio) {
-                        radio.checked = true;
-
-                        // Update styles
-                        insuranceLabels.forEach(l => l.classList.remove('selected'));
-                        this.classList.add('selected');
-                    }
-                });
-            });
-
-            // Add change event listeners for the radios too
-            insuranceRadios.forEach(radio => {
-                radio.addEventListener('change', updateSelectedInsuranceStyle);
-            });
         });
 
         // Initialize map
@@ -805,80 +738,14 @@
 
 @push('styles')
     <style>
-        /* Radio buttons styling */
-        .insurance-label {
-            transition: all 0.2s ease;
-            background-color: white;
-            border: 2px solid #e5e7eb;
-        }
-
-        .insurance-label:hover {
-            background-color: #facc15 !important;
-            color: white !important;
-            border-color: #eab308 !important;
-        }
-
-        .insurance-label.selected {
-            background-color: #f59e0b !important;
-            color: white !important;
-            border-color: #d97706 !important;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
         /* Map height */
         #location-map {
             min-height: 200px;
         }
 
-        /* Dark mode adjustments */
-        .dark .insurance-label {
-            background-color: #1f2937;
-            color: #e5e7eb;
-            border-color: #374151;
-        }
-
-        .dark .insurance-label.selected {
-            background-color: #f59e0b !important;
-            color: white !important;
-            border-color: #d97706 !important;
-            font-weight: bold;
-        }
-
         /* Capitalize only first letter */
         .capitalize-first::first-letter {
             text-transform: uppercase;
-        }
-
-        /* Radio button container */
-        .radio-option {
-            position: relative;
-        }
-
-        /* Radio button input */
-        .radio-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        /* Radio button label */
-        .radio-option label {
-            display: inline-block;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        /* Selected state */
-        .radio-option input[type="radio"]:checked+label {
-            background-color: #f59e0b !important;
-            color: white !important;
-            border-color: #d97706 !important;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 @endpush

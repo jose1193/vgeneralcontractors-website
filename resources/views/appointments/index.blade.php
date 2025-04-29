@@ -121,10 +121,10 @@
                     routes: {
                         index: "{{ route('appointments.index') }}",
                         store: "{{ route('appointments.store') }}",
-                        edit: "/appointments/:id/edit",
-                        update: "/appointments/:id",
-                        destroy: "/appointments/:id",
-                        restore: "/appointments/:id/restore",
+                        edit: "{{ route('appointments.edit', ':id') }}",
+                        update: "{{ route('appointments.update', ':id') }}",
+                        destroy: "{{ route('appointments.destroy', ':id') }}",
+                        restore: "{{ route('appointments.restore', ':id') }}",
                         checkName: "{{ route('appointments.check-email') }}"
                     },
                     tableSelector: '#appointmentsTable',
@@ -178,7 +178,7 @@
                             name: 'Actions',
                             sortable: false,
                             getter: (appointment) => {
-                                const editUrl = `/appointments/${appointment.uuid}/edit`;
+                                const editUrl = `{{ url('/appointments') }}/${appointment.uuid}/edit`;
 
                                 let actionsHtml = `
                                     <div class="flex justify-center space-x-1">

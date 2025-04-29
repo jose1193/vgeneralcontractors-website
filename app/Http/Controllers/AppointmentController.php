@@ -38,7 +38,7 @@ class AppointmentController extends BaseCrudController
             'state' => 'nullable|string|max:100',
             'zipcode' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
-            'insurance_property' => 'nullable|in:yes,no',
+            'insurance_property' => 'present',
             'message' => 'nullable|string',
             'sms_consent' => 'nullable|boolean',
             'registration_date' => 'nullable|date',
@@ -80,7 +80,8 @@ class AppointmentController extends BaseCrudController
             'state.max' => 'The state may not be greater than 100 characters.',
             'zipcode.max' => 'The zipcode may not be greater than 20 characters.',
             'country.max' => 'The country may not be greater than 100 characters.',
-            'insurance_property.in' => 'The insurance property must be either "yes" or "no".',
+            'insurance_property.required' => 'Please indicate if the property has insurance.',
+            'insurance_property.boolean' => 'The insurance property must be a boolean value.',
             'lead_source.required' => 'The lead source is required.',
             'lead_source.in' => 'The lead source must be one of: Website, Facebook Ads, or Reference.',
             'sms_consent.boolean' => 'The SMS consent must be a boolean value.',
@@ -114,7 +115,7 @@ class AppointmentController extends BaseCrudController
             'state' => $request->state,
             'zipcode' => $request->zipcode,
             'country' => $request->country,
-            'insurance_property' => $request->insurance_property,
+            'insurance_property' => $request->insurance_property ?? false,
             'message' => $request->message,
             'sms_consent' => $request->sms_consent ?? false,
             'registration_date' => $request->registration_date,
@@ -150,7 +151,7 @@ class AppointmentController extends BaseCrudController
             'state' => $request->state,
             'zipcode' => $request->zipcode,
             'country' => $request->country,
-            'insurance_property' => $request->insurance_property,
+            'insurance_property' => $request->insurance_property ?? false,
             'message' => $request->message,
             'sms_consent' => $request->sms_consent ?? false,
             'registration_date' => $request->registration_date,
@@ -273,8 +274,10 @@ class AppointmentController extends BaseCrudController
                 return redirect()->route($this->routePrefix . '.index')->with('error', "Permission denied");
             }
             
-            return view("{$this->viewPrefix}.create", [
+            // Retorna la vista unificada de formulario sin un appointment
+            return view("{$this->viewPrefix}.form", [
                 'entityName' => $this->entityName,
+                'appointment' => new Appointment(), // Appointment vacío para evitar errores con los condicionales
             ]);
         } catch (Throwable $e) {
             Log::error("Error showing create form for {$this->entityName}: {$e->getMessage()}", [
@@ -357,8 +360,8 @@ class AppointmentController extends BaseCrudController
                 ]);
             }
 
-            // Si necesitas renderizar una vista para edición no-AJAX
-            return view("{$this->viewPrefix}.edit", [
+            // Usa la misma vista unificada pero con un appointment existente
+            return view("{$this->viewPrefix}.form", [
                 'appointment' => $appointment,
                 'entityName' => $this->entityName,
             ]);
@@ -555,6 +558,11 @@ class AppointmentController extends BaseCrudController
     {
         $rules = $this->getValidationRules($id);
         $messages = $this->getValidationMessages();
+
+        // Convertir insurance_property a booleano
+        $request->merge([
+            'insurance_property' => filter_var($request->input('insurance_property', false), FILTER_VALIDATE_BOOLEAN)
+        ]);
 
         // Automatically set inspection_confirmed based on inspection date and time
         if ($request->has('inspection_date') && $request->has('inspection_time') && 
