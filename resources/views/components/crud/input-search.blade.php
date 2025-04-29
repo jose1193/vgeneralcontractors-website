@@ -17,7 +17,8 @@
     </div>
     <input type="text" id="{{ $id }}" name="{{ $name }}" class="{{ $class }} pl-10 pr-10"
         placeholder="{{ $placeholder }}" autocomplete="off" {{ $attributes }}>
-    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer " id="{{ $id }}-clear">
+    <div class="absolute inset-y-0 right-0 pr-3 top-2.5 items-center cursor-pointer hidden"
+        id="{{ $id }}-clear">
         <svg class="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
