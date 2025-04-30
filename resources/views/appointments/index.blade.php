@@ -188,14 +188,15 @@
                                 Send Rejection Notification
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                                Please select the reason(s) for rejecting the selected appointment(s):
+                                Please select the reason for rejecting the selected appointment(s):
                             </p>
 
                             <div class="mt-4">
-                                <div class="flex items-start mb-2">
+                                <div class="flex items-start mb-3">
                                     <div class="flex items-center h-5">
-                                        <input id="reason_no_contact" name="rejection_reason" type="checkbox"
-                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                        <input id="reason_no_contact" name="rejection_reason" type="radio"
+                                            value="no_contact"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
                                     </div>
                                     <div class="ml-3 text-sm">
                                         <label for="reason_no_contact"
@@ -203,10 +204,11 @@
                                     </div>
                                 </div>
 
-                                <div class="flex items-start mb-2">
+                                <div class="flex items-start mb-3">
                                     <div class="flex items-center h-5">
-                                        <input id="reason_no_insurance" name="rejection_reason" type="checkbox"
-                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                        <input id="reason_no_insurance" name="rejection_reason" type="radio"
+                                            value="no_insurance"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
                                     </div>
                                     <div class="ml-3 text-sm">
                                         <label for="reason_no_insurance"
@@ -215,10 +217,22 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4">
+                                <div class="flex items-start mb-3">
+                                    <div class="flex items-center h-5">
+                                        <input id="reason_other_option" name="rejection_reason" type="radio"
+                                            value="other"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="reason_other_option"
+                                            class="font-medium text-gray-700 dark:text-gray-300">Other reason</label>
+                                    </div>
+                                </div>
+
+                                <div id="other_reason_container" class="mt-4 hidden">
                                     <label for="reason_other"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Other
-                                        reason(s):</label>
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Specify other
+                                        reason:</label>
                                     <textarea id="reason_other" name="reason_other" rows="3"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"></textarea>
                                 </div>
@@ -280,6 +294,7 @@
                             name: '',
                             sortable: false,
                             getter: (entity) =>
+                                entity.deleted_at ? '' :
                                 `<input type="checkbox" class="appointment-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" data-id="${entity.uuid}">`
                         },
                         {
@@ -479,17 +494,27 @@
 
                 // Submit rejection notification
                 $('#sendRejectionNotification').on('click', function() {
-                    // Get selected reason(s)
-                    const noContact = $('#reason_no_contact').prop('checked');
-                    const noInsurance = $('#reason_no_insurance').prop('checked');
+                    // Get selected reason
+                    const selectedReason = $('input[name="rejection_reason"]:checked').val();
                     const otherReason = $('#reason_other').val().trim();
 
-                    // Validate at least one reason is selected
-                    if (!noContact && !noInsurance && otherReason === '') {
+                    // Validate a reason is selected
+                    if (!selectedReason) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Please select at least one reason for rejection',
+                            text: 'Please select a reason for rejection',
+                            confirmButtonColor: '#3B82F6'
+                        });
+                        return;
+                    }
+
+                    // If "other" is selected, validate text is provided
+                    if (selectedReason === 'other' && otherReason === '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please provide details for the other reason',
                             confirmButtonColor: '#3B82F6'
                         });
                         return;
@@ -505,17 +530,20 @@
                         Sending...
                     `).prop('disabled', true);
 
+                    // Prepare data based on selected reason
+                    const requestData = {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        appointment_ids: selectedAppointments,
+                        no_contact: selectedReason === 'no_contact',
+                        no_insurance: selectedReason === 'no_insurance',
+                        other_reason: selectedReason === 'other' ? otherReason : null
+                    };
+
                     // Send the rejection notification
                     $.ajax({
                         url: window.appointmentManager.routes.sendRejection,
                         type: 'POST',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            appointment_ids: selectedAppointments,
-                            no_contact: noContact,
-                            no_insurance: noInsurance,
-                            other_reason: otherReason
-                        },
+                        data: requestData,
                         success: function(response) {
                             $('#rejectionModal').addClass('hidden');
                             resetRejectionForm();
@@ -559,9 +587,19 @@
 
                 // Reset rejection form
                 function resetRejectionForm() {
-                    $('#reason_no_contact, #reason_no_insurance').prop('checked', false);
+                    $('input[name="rejection_reason"]').prop('checked', false);
                     $('#reason_other').val('');
+                    $('#other_reason_container').addClass('hidden');
                 }
+
+                // Toggle other reason textarea visibility
+                $(document).on('change', 'input[name="rejection_reason"]', function() {
+                    if ($(this).val() === 'other') {
+                        $('#other_reason_container').removeClass('hidden');
+                    } else {
+                        $('#other_reason_container').addClass('hidden');
+                    }
+                });
 
                 function exportAppointmentsToExcel() {
                     // Show loading indicator
