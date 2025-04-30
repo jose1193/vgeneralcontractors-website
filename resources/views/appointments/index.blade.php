@@ -1,6 +1,10 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Appointments Management') }}
+        </h2>
+    </x-slot>
 
-@section('content')
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Success and error messages -->
         <div id="alertContainer"></div>
@@ -22,7 +26,8 @@
                         <x-crud.input-search id="searchInput" placeholder="Search appointments..." />
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
+                    <div
+                        class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show inactive appointments -->
                         <x-crud.toggle-deleted id="showDeleted" label="Show Inactive Appointments" />
 
@@ -74,8 +79,8 @@
                         <button id="sendRejectionBtn" disabled
                             class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-200 disabled:opacity-25">
                             <span class="mr-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
@@ -85,8 +90,8 @@
                         <button id="exportToExcel"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
                             <span class="mr-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                                 </svg>
@@ -145,7 +150,8 @@
                             class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <tr id="loadingRow">
                                 <td colspan="8" class="px-6 py-4 text-center">
-                                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
+                                        viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10"
                                             stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor"
@@ -184,7 +190,8 @@
                             </svg>
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="modal-title">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100"
+                                id="modal-title">
                                 Send Rejection Notification
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -200,7 +207,8 @@
                                     </div>
                                     <div class="ml-3 text-sm">
                                         <label for="reason_no_contact"
-                                            class="font-medium text-gray-700 dark:text-gray-300">Unable to contact</label>
+                                            class="font-medium text-gray-700 dark:text-gray-300">Unable to
+                                            contact</label>
                                     </div>
                                 </div>
 
@@ -231,7 +239,8 @@
 
                                 <div id="other_reason_container" class="mt-4 hidden">
                                     <label for="reason_other"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Specify other
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Specify
+                                        other
                                         reason:</label>
                                     <textarea id="reason_other" name="reason_other" rows="3"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"></textarea>
@@ -355,27 +364,49 @@
                                 const editUrl = `{{ url('/appointments') }}/${appointment.uuid}/edit`;
 
                                 let actionsHtml = `
-                                    <div class="flex justify-center space-x-1">
-                                        <a href="${editUrl}" class="btn btn-icon btn-sm btn-primary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </a>`;
+                                <div class="flex justify-center space-x-1">
+                                    <a href="${editUrl}" class="btn btn-icon btn-sm btn-primary">
+                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                         </svg>
+                                    </a>`;
+
+                                // Botón para compartir ubicación - Se agrega independientemente del estado de borrado
+                                if (appointment.latitude && appointment.longitude) {
+                                    const address =
+                                        `${appointment.address || ''}, ${appointment.city || ''}`;
+                                    actionsHtml += `
+                                    <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location btn btn-icon btn-sm btn-info" style="background-color: #4299e1; color: white; border-radius: 0.375rem; padding: 0.375rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </button>`;
+                                } else {
+                                    // Si no hay coordenadas, aún mostrar el botón pero con un comportamiento diferente
+                                    actionsHtml += `
+                                    <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location btn btn-icon btn-sm" style="background-color: #9CA3AF; color: white; border-radius: 0.375rem; padding: 0.375rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </button>`;
+                                }
 
                                 if (appointment.deleted_at) {
                                     actionsHtml += `
-                                        <button data-id="${appointment.uuid}" class="restore-btn btn btn-icon btn-sm btn-success">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                            </svg>
-                                        </button>`;
+                                    <button data-id="${appointment.uuid}" class="restore-btn btn btn-icon btn-sm btn-success">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                    </button>`;
                                 } else {
                                     actionsHtml += `
-                                        <button data-id="${appointment.uuid}" class="delete-btn btn btn-icon btn-sm btn-danger">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>`;
+                                    <button data-id="${appointment.uuid}" class="delete-btn btn btn-icon btn-sm btn-danger">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>`;
                                 }
 
                                 actionsHtml += `</div>`;
@@ -523,12 +554,12 @@
                     // Show loading state
                     const originalBtnText = $('#sendRejectionNotification').text();
                     $('#sendRejectionNotification').html(`
-                        <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Sending...
-                    `).prop('disabled', true);
+                    <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending...
+                `).prop('disabled', true);
 
                     // Prepare data based on selected reason
                     const requestData = {
@@ -605,12 +636,12 @@
                     // Show loading indicator
                     const originalButtonContent = $('#exportToExcel').html();
                     $('#exportToExcel').html(`
-                        <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Exporting...
-                    `).prop('disabled', true);
+                    <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Exporting...
+                `).prop('disabled', true);
 
                     // Gather filter parameters
                     const searchValue = $(window.appointmentManager.searchSelector).val();
@@ -709,6 +740,75 @@
                         });
                     }
                 }
+
+                // Compartir ubicación desde el listado
+                $(document).on('click', '.share-location', function(e) {
+                    e.preventDefault();
+
+                    // Verificar si no hay coordenadas disponibles
+                    if ($(this).data('no-coords')) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'No hay ubicación',
+                            text: 'No hay coordenadas disponibles para esta cita. Edite la cita para agregar una dirección con coordenadas.',
+                            confirmButtonColor: '#3B82F6'
+                        });
+                        return;
+                    }
+
+                    const lat = $(this).data('lat');
+                    const lng = $(this).data('lng');
+                    const address = $(this).data('address');
+
+                    if (!lat || !lng) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No hay coordenadas disponibles para esta dirección',
+                            confirmButtonColor: '#3B82F6'
+                        });
+                        return;
+                    }
+
+                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                    // Mostrar opciones de compartir
+                    Swal.fire({
+                        title: 'Compartir ubicación',
+                        html: `
+                        <p class="mb-4">${address}</p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <a href="https://wa.me/?text=${encodeURIComponent('Ubicación para inspección: ' + address + ' - ' + mapsUrl)}" target="_blank" class="px-3 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600">
+                                WhatsApp
+                            </a>
+                            <a href="mailto:?subject=${encodeURIComponent('Ubicación para inspección')}&body=${encodeURIComponent('La ubicación para la inspección es: ' + address + '\n\nVer en Google Maps: ' + mapsUrl)}" class="px-3 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600">
+                                Email
+                            </a>
+                            <a href="${mapsUrl}" target="_blank" class="px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600">
+                                Abrir en Maps
+                            </a>
+                            <button id="copy-map-link" class="px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">
+                                Copiar Enlace
+                            </button>
+                        </div>
+                    `,
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        customClass: {
+                            container: 'swal-wide'
+                        }
+                    });
+
+                    // Copiar enlace
+                    $(document).on('click', '#copy-map-link', function() {
+                        navigator.clipboard.writeText(mapsUrl).then(() => {
+                            $(this).text('¡Copiado!');
+                            setTimeout(() => {
+                                $(this).text('Copiar Enlace');
+                            }, 2000);
+                        });
+                    });
+                });
             });
         </script>
     @endpush
@@ -724,4 +824,4 @@
             max-width: 800px !important;
         }
     </style>
-@endsection
+</x-app-layout>

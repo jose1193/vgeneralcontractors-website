@@ -135,6 +135,80 @@
                         setLoadingState(false);
                     });
             });
+
+            // Funcionalidad de compartir ubicación
+            const shareWhatsApp = document.getElementById('share-whatsapp');
+            const shareEmail = document.getElementById('share-email');
+            const shareMaps = document.getElementById('share-maps');
+            const copyAddress = document.getElementById('copy-address');
+
+            if (shareWhatsApp && shareEmail && shareMaps && copyAddress) {
+                const updateShareLinks = () => {
+                    const lat = document.getElementById('latitude').value;
+                    const lng = document.getElementById('longitude').value;
+                    const address = document.getElementById('address_map_input').value;
+
+                    if (!lat || !lng) {
+                        // Deshabilitar botones si no hay coordenadas
+                        [shareWhatsApp, shareEmail, shareMaps, copyAddress].forEach(btn => {
+                            btn.classList.add('opacity-50', 'cursor-not-allowed');
+                            btn.setAttribute('disabled', 'disabled');
+                        });
+                        return;
+                    }
+
+                    // Habilitar botones
+                    [shareWhatsApp, shareEmail, shareMaps, copyAddress].forEach(btn => {
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        btn.removeAttribute('disabled');
+                    });
+
+                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                    // WhatsApp
+                    shareWhatsApp.href =
+                        `https://wa.me/?text=Ubicación para inspección: ${encodeURIComponent(address)} - ${encodeURIComponent(mapsUrl)}`;
+                    shareWhatsApp.target = '_blank';
+
+                    // Email
+                    const subject = encodeURIComponent('Ubicación para inspección');
+                    const body = encodeURIComponent(
+                        `La ubicación para la inspección es: ${address}\n\nVer en Google Maps: ${mapsUrl}`);
+                    shareEmail.href = `mailto:?subject=${subject}&body=${body}`;
+
+                    // Maps
+                    shareMaps.href = mapsUrl;
+                    shareMaps.target = '_blank';
+
+                    // Copy link
+                    copyAddress.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigator.clipboard.writeText(mapsUrl).then(() => {
+                            // Mostrar mensaje de confirmación
+                            const originalText = this.innerHTML;
+                            this.innerHTML =
+                                '<svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ¡Copiado!';
+                            setTimeout(() => {
+                                this.innerHTML = originalText;
+                            }, 2000);
+                        });
+                    });
+                };
+
+                // Actualizar enlaces cuando cambie la dirección
+                document.getElementById('address_map_input').addEventListener('change', updateShareLinks);
+
+                // Inicializar enlaces
+                updateShareLinks();
+
+                // Actualizar enlaces cuando cambie el mapa
+                if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+                    // Si se usa autocomplete, escuchar ese evento también
+                    if (typeof autocomplete !== 'undefined') {
+                        google.maps.event.addListener(autocomplete, 'place_changed', updateShareLinks);
+                    }
+                }
+            }
         });
     </script>
 @endpush

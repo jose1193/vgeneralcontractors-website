@@ -70,7 +70,7 @@
     <div class="container">
         <!-- Logo -->
         <div class="logo">
-            <img src="https://vgeneralcontractors.com/assets/logo/logo3.webp" width="180"
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
                 alt="Logo V General Contractors">
         </div>
 
@@ -90,12 +90,46 @@
             {{-- Replace placeholder with Blade variable --}}
             <p style="margin: 20px 0;">Hola <strong> {{ $full_name }} </strong>, ¡gracias por contactarnos! 🙌</p>
 
-            <p>Al completar este formulario, autorizas a V General Contractors a contactarte para coordinar tu
+            <p>Al completar este formulario, autorizas a
+                <strong>{{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}</strong> a
+                contactarte
+                para
+                coordinar tu
                 inspección gratuita. Un agente o asistente virtual te llamará dentro de <strong>1 día hábil</strong>
-                desde el número:</p>
+                desde el número:
+            </p>
 
             <p style="text-align: center; font-size: 1.2em; margin: 25px 0;">
-                📞 <span class="highlight-blue">(346) 692-0757</span>
+                <span class="highlight-blue"><strong>📞
+                        @php
+                            $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                            echo $formattedPhone;
+                        @endphp
+                    </strong></span>
             </p>
 
             <p style="margin-bottom: 25px;">Tu información es confidencial y será utilizada exclusivamente para este

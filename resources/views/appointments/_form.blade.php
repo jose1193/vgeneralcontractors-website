@@ -58,12 +58,52 @@
         <div id="location-map"
             class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600">
         </div>
+
+        {{-- Share location buttons --}}
+        <div class="mt-2 flex flex-wrap gap-2">
+            <a href="#" id="share-whatsapp"
+                class="inline-flex items-center px-3 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600">
+                <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M17.498 14.382l-1.87-1.147c-0.308-0.24-0.705-0.242-1.058-0.046l-1.103 0.69c-0.26 0.16-0.563 0.217-0.858 0.147c-0.893-0.216-2.404-1.511-3.122-2.251c-0.483-0.502-1.038-1.489-1.254-2.362c-0.09-0.351 0.014-0.721 0.269-0.974l0.74-0.73c0.243-0.241 0.37-0.567 0.354-0.904l-0.075-1.78c-0.035-0.843-0.913-1.384-1.693-1.041l-0.807 0.353c-0.905 0.405-1.467 1.268-1.457 2.241c0.01 0.935 0.307 3.375 2.301 6.123c2.035 2.809 4.372 3.526 5.338 3.628c0.975 0.103 1.926-0.621 2.251-1.505l0.282-0.861c0.256-0.788-0.343-1.623-1.238-1.724z" />
+                </svg>
+                WhatsApp
+            </a>
+            <a href="#" id="share-email"
+                class="inline-flex items-center px-3 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600">
+                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Email
+            </a>
+            <a href="#" id="share-maps"
+                class="inline-flex items-center px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600">
+                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Abrir en Maps
+            </a>
+            <button id="copy-address"
+                class="inline-flex items-center px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">
+                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copiar Enlace
+            </button>
+        </div>
     </div>
 
     {{-- Hidden Address Fields --}}
     <input type="hidden" id="address" name="address" value="{{ old('address', $appointment->address ?? '') }}">
-    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude', $appointment->latitude ?? '') }}">
-    <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude', $appointment->longitude ?? '') }}">
+    <input type="hidden" id="latitude" name="latitude"
+        value="{{ old('latitude', $appointment->latitude ?? '') }}">
+    <input type="hidden" id="longitude" name="longitude"
+        value="{{ old('longitude', $appointment->longitude ?? '') }}">
 
     {{-- Address 2 --}}
     <div class="md:col-span-2">
@@ -76,21 +116,24 @@
     {{-- City --}}
     <div>
         <x-label for="city" value="{{ __('City') }}" />
-        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')" required />
+        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
+            required />
         <x-input-error for="city" class="mt-2" />
     </div>
 
     {{-- State --}}
     <div>
         <x-label for="state" value="{{ __('State') }}" />
-        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')" required />
+        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
+            required />
         <x-input-error for="state" class="mt-2" />
     </div>
 
     {{-- Zipcode --}}
     <div>
         <x-label for="zipcode" value="{{ __('Zip Code') }}" />
-        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')" required />
+        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
+            required />
         <x-input-error for="zipcode" class="mt-2" />
     </div>
 

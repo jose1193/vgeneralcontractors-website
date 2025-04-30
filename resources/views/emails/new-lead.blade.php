@@ -88,7 +88,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://vgeneralcontractors.com/assets/logo/logo3.webp" width="180"
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
                 alt="Logo V General Contractors">
         </div>
 
@@ -98,7 +98,8 @@
 
             <div class="lead-banner">
                 <p style="text-align: center; margin: 0;">
-                    You have received a <span class="highlight">new potential customer</span> inquiry!
+                    You have received a <span class="highlight">new potential customer</span> inquiry for
+                    <strong>{{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}</strong>!
                 </p>
             </div>
 
@@ -118,7 +119,36 @@
                 </tr>
                 <tr>
                     <td><span class="lead-icon">📞</span> <strong>Phone:</strong></td>
-                    <td>{{ $appointment->phone }}</td>
+                    <td>
+                        @php
+                            $phone = $appointment->phone ?? '';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                            echo $formattedPhone;
+                        @endphp
+                    </td>
                 </tr>
                 <tr>
                     <td><span class="lead-icon">📍</span> <strong>Address:</strong></td>
@@ -152,6 +182,38 @@
 
             <div style="padding: 15px; border-radius: 8px; margin-top: 25px; text-align: center;">
                 <p>Act quickly to connect with this potential client!</p>
+                <p>Contact them from:
+                    <strong>📞
+                        @php
+                            $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                            echo $formattedPhone;
+                        @endphp
+                    </strong>
+                </p>
             </div>
         </div>
 
