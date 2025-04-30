@@ -464,7 +464,15 @@ class AppointmentController extends BaseCrudController
 
             $this->transactionService->run(function () use ($uuid) {
                 $appointment = $this->modelClass::where('uuid', $uuid)->firstOrFail();
+                
+                // Actualizar estado a Declined antes de eliminar
+                $appointment->status_lead = 'Declined';
+                $appointment->inspection_status = 'Declined';
+                $appointment->save();
+                
+                // Realizar soft delete
                 $appointment->delete();
+                
                 return $appointment;
             }, function ($appointment) {
                 Log::info("{$this->entityName} deleted successfully", ['id' => $appointment->id]);
@@ -672,16 +680,44 @@ class AppointmentController extends BaseCrudController
                 ], 403);
             }
 
+            // Registrar los datos recibidos para depuración
+            Log::info('Rejection request data:', [
+                'all_data' => $request->all(),
+                'appointment_ids' => $request->input('appointment_ids'),
+                'no_contact' => $request->input('no_contact'),
+                'no_insurance' => $request->input('no_insurance'),
+                'other_reason' => $request->input('other_reason'),
+            ]);
+            
+            // Convertir strings "true"/"false" a valores booleanos antes de la validación
+            $booleanFields = ['no_contact', 'no_insurance'];
+            foreach ($booleanFields as $field) {
+                if ($request->has($field)) {
+                    $value = $request->input($field);
+                    if ($value === 'true' || $value === '1') {
+                        $request->merge([$field => true]);
+                    } else if ($value === 'false' || $value === '0') {
+                        $request->merge([$field => false]);
+                    }
+                }
+            }
+
             // Validate request
             $validator = Validator::make($request->all(), [
                 'appointment_ids' => 'required|array|min:1',
-                'appointment_ids.*' => 'required|string|exists:appointments,uuid',
+                'appointment_ids.*' => 'required|string',
                 'no_contact' => 'sometimes|boolean',
                 'no_insurance' => 'sometimes|boolean',
                 'other_reason' => 'nullable|string|max:500',
             ]);
 
             if ($validator->fails()) {
+                // Registrar los errores de validación para depuración
+                Log::error('Validation error in sendRejection:', [
+                    'errors' => $validator->errors()->toArray(),
+                    'data' => $request->all()
+                ]);
+                
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation error',
@@ -690,7 +726,7 @@ class AppointmentController extends BaseCrudController
             }
 
             // Get validated data
-            $appointmentIds = $request->appointment_ids;
+            $appointmentIds = $request->input('appointment_ids');
             $noContact = filter_var($request->input('no_contact', false), FILTER_VALIDATE_BOOLEAN);
             $noInsurance = filter_var($request->input('no_insurance', false), FILTER_VALIDATE_BOOLEAN);
             $otherReason = $request->input('other_reason');
@@ -703,6 +739,26 @@ class AppointmentController extends BaseCrudController
                 ], 422);
             }
 
+            // Verificar que cada ID exista en la base de datos
+            $existingAppointments = $this->modelClass::whereIn('uuid', $appointmentIds)->pluck('uuid')->toArray();
+            $missingIds = array_diff($appointmentIds, $existingAppointments);
+            
+            if (!empty($missingIds)) {
+                Log::warning('Some appointment IDs not found:', [
+                    'missing_ids' => $missingIds
+                ]);
+                
+                // Continuamos con las citas existentes
+                $appointmentIds = $existingAppointments;
+                
+                if (empty($appointmentIds)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No valid appointment IDs provided',
+                    ], 422);
+                }
+            }
+
             // Dispatch job to process rejection notifications
             ProcessRejectionNotifications::dispatch(
                 $appointmentIds,
@@ -711,8 +767,42 @@ class AppointmentController extends BaseCrudController
                 $otherReason
             );
 
-            Log::info('Rejection notifications queued for processing', [
-                'appointment_count' => count($appointmentIds),
+            // Actualizar y mover a papelera todas las citas seleccionadas
+            $processed = 0;
+            $errors = 0;
+            
+            foreach ($appointmentIds as $appointmentId) {
+                try {
+                    $this->transactionService->run(function () use ($appointmentId) {
+                        $appointment = $this->modelClass::where('uuid', $appointmentId)->first();
+                        
+                        if ($appointment) {
+                            // Actualizar estado a Declined
+                            $appointment->status_lead = 'Declined';
+                            $appointment->inspection_status = 'Declined';
+                            $appointment->save();
+                            
+                            // Realizar soft delete
+                            $appointment->delete();
+                        }
+                        
+                        return $appointment;
+                    });
+                    
+                    $processed++;
+                } catch (Throwable $e) {
+                    $errors++;
+                    Log::error("Error processing appointment during rejection: {$e->getMessage()}", [
+                        'uuid' => $appointmentId,
+                        'exception' => $e
+                    ]);
+                }
+            }
+
+            Log::info('Rejection notifications sent and appointments moved to trash', [
+                'total' => count($appointmentIds),
+                'processed' => $processed,
+                'errors' => $errors,
                 'reasons' => [
                     'no_contact' => $noContact,
                     'no_insurance' => $noInsurance,
@@ -722,8 +812,9 @@ class AppointmentController extends BaseCrudController
 
             return response()->json([
                 'success' => true,
-                'message' => 'Rejection notifications have been queued for processing',
-                'appointment_count' => count($appointmentIds),
+                'message' => 'Rejection notifications sent and appointments moved to trash',
+                'processed' => $processed,
+                'errors' => $errors,
             ]);
         } catch (Throwable $e) {
             Log::error("Error sending rejection notifications: {$e->getMessage()}", [
