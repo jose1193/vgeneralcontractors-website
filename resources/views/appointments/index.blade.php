@@ -243,6 +243,10 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
+                // Recuperar estado del toggle de localStorage antes de inicializar el manager
+                const showDeletedState = localStorage.getItem('showDeleted') === 'true';
+                console.log('Estado inicial de showDeleted:', showDeletedState);
+
                 // Make the manager globally accessible
                 window.appointmentManager = new CrudManager({
                     entityName: 'Appointment',
@@ -269,6 +273,8 @@
                     clearDateFilterSelector: '#clearDateFilters',
                     idField: 'uuid',
                     searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
+                    // Establecer el valor inicial basado en localStorage
+                    showDeleted: showDeletedState,
                     tableHeaders: [{
                             field: 'checkbox',
                             name: '',

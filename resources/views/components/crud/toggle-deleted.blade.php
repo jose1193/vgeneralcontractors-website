@@ -24,46 +24,65 @@
         if (toggleElement) {
             // Check if there's a value stored in localStorage
             const storedValue = localStorage.getItem('{{ $id }}');
+
+            // Inicializar el toggle basado en localStorage
             if (storedValue !== null) {
                 toggleElement.checked = storedValue === 'true';
-
-                // If it was checked, trigger a change event to load deleted items immediately
-                if (toggleElement.checked && window.appointmentManager) {
-                    window.appointmentManager.showDeleted = true;
-                    window.appointmentManager.loadEntities();
-                }
+                console.log('Toggle inicializado desde localStorage:', {
+                    checked: toggleElement.checked
+                });
             }
+
+            // Función para aplicar el estado del toggle al manager
+            function applyToggleState() {
+                if (!window.appointmentManager) {
+                    console.log('appointmentManager no disponible todavía');
+                    return false;
+                }
+
+                window.appointmentManager.showDeleted = toggleElement.checked;
+                console.log('Estado aplicado a appointmentManager:', {
+                    showDeleted: window.appointmentManager.showDeleted
+                });
+                return true;
+            }
+
+            // Esperar a que el manager esté disponible y aplicar el estado
+            let attempts = 0;
+            const maxAttempts = 10;
+            const waitForManager = setInterval(function() {
+                attempts++;
+
+                if (applyToggleState()) {
+                    clearInterval(waitForManager);
+                    if (toggleElement.checked) {
+                        // Forzar recarga con los elementos inactivos si el toggle está activado
+                        window.appointmentManager.loadEntities();
+                        console.log('Cargando entidades inactivas al iniciar');
+                    }
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(waitForManager);
+                    console.log('No se pudo sincronizar con appointmentManager después de', attempts,
+                        'intentos');
+                }
+            }, 200);
 
             // Handle change events
             toggleElement.addEventListener('change', function() {
                 // Store the current state in localStorage
                 localStorage.setItem('{{ $id }}', this.checked);
+                console.log('Toggle cambiado por usuario, guardado en localStorage:', {
+                    checked: this.checked
+                });
 
                 // If we have access to the CrudManager instance, update and refresh
                 if (window.appointmentManager) {
-                    console.log('Toggle Deleted State Changed:', {
-                        checked: this.checked,
-                        id: '{{ $id }}',
-                        previousState: window.appointmentManager.showDeleted
-                    });
-
                     window.appointmentManager.showDeleted = this.checked;
                     window.appointmentManager.currentPage = 1; // Reset to first page 
-
-                    // Ensure it's passed as a string 'true'/'false' as expected by the backend
-                    const originalLoadEntities = window.appointmentManager.loadEntities;
-                    window.appointmentManager.loadEntities = function() {
-                        console.log('Before AJAX call - show_deleted:', this.showDeleted ? 'true' :
-                            'false');
-                        originalLoadEntities.call(window.appointmentManager);
-                    };
-
                     window.appointmentManager.loadEntities();
-
-                    // Restore original method
-                    setTimeout(() => {
-                        window.appointmentManager.loadEntities = originalLoadEntities;
-                    }, 1000);
+                    console.log('Estado de toggle actualizado y datos recargados:', {
+                        showDeleted: this.checked
+                    });
                 }
             });
         }

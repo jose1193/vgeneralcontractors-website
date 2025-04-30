@@ -131,7 +131,7 @@ class AppointmentController extends BaseCrudController
             'intent_to_claim' => $request->intent_to_claim ?? false,
             'lead_source' => $request->lead_source,
             'additional_note' => $request->additional_note,
-            'inspection_status' => $request->inspection_status,
+            'inspection_status' => $request->inspection_status ?? 'Pending',
             'status_lead' => $request->status_lead ?? 'New',
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
@@ -226,7 +226,7 @@ class AppointmentController extends BaseCrudController
             }
 
             // Sorting
-            $sortField = $request->input('sort_field', 'inspection_date');
+            $sortField = $request->input('sort_field', 'created_at');
             $sortDirection = $request->input('sort_direction', 'desc');
             $query->orderBy($sortField, $sortDirection);
 
