@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Services\TransactionService;
 use App\Jobs\ProcessNewLead;
+use App\Jobs\ProcessRejectionNotifications;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AppointmentsExport;
 
@@ -656,5 +657,84 @@ class AppointmentController extends BaseCrudController
     protected function afterRestore($appointment)
     {
         // Add custom logic here, e.g., notify user
+    }
+
+    /**
+     * Send rejection notifications to multiple appointments
+     */
+    public function sendRejection(Request $request)
+    {
+        try {
+            if (!$this->checkPermissionWithMessage("UPDATE_APPOINTMENT", "You don't have permission to update appointments")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Permission denied',
+                ], 403);
+            }
+
+            // Validate request
+            $validator = Validator::make($request->all(), [
+                'appointment_ids' => 'required|array|min:1',
+                'appointment_ids.*' => 'required|string|exists:appointments,uuid',
+                'no_contact' => 'sometimes|boolean',
+                'no_insurance' => 'sometimes|boolean',
+                'other_reason' => 'nullable|string|max:500',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            // Get validated data
+            $appointmentIds = $request->appointment_ids;
+            $noContact = filter_var($request->input('no_contact', false), FILTER_VALIDATE_BOOLEAN);
+            $noInsurance = filter_var($request->input('no_insurance', false), FILTER_VALIDATE_BOOLEAN);
+            $otherReason = $request->input('other_reason');
+
+            // Validate that at least one reason is provided
+            if (!$noContact && !$noInsurance && empty($otherReason)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'At least one rejection reason must be provided',
+                ], 422);
+            }
+
+            // Dispatch job to process rejection notifications
+            ProcessRejectionNotifications::dispatch(
+                $appointmentIds,
+                $noContact,
+                $noInsurance,
+                $otherReason
+            );
+
+            Log::info('Rejection notifications queued for processing', [
+                'appointment_count' => count($appointmentIds),
+                'reasons' => [
+                    'no_contact' => $noContact,
+                    'no_insurance' => $noInsurance,
+                    'has_other_reason' => !empty($otherReason),
+                ]
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rejection notifications have been queued for processing',
+                'appointment_count' => count($appointmentIds),
+            ]);
+        } catch (Throwable $e) {
+            Log::error("Error sending rejection notifications: {$e->getMessage()}", [
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sending rejection notifications: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

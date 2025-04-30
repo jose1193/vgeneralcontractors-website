@@ -42,6 +42,7 @@ class Appointment extends Model
 
     protected $casts = [
         'sms_consent' => 'boolean',
+        'insurance_property' => 'boolean',
         'registration_date' => 'datetime',
         'inspection_date' => 'date',
         'inspection_time' => 'datetime:H:i:s',

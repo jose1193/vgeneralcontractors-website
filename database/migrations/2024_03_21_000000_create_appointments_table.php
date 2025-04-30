@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('zipcode');
             $table->string('country');
-            $table->enum('insurance_property', ['yes', 'no']);
+            $table->boolean('insurance_property')->default(false);
             $table->text('message')->nullable();
             $table->boolean('sms_consent')->default(false);
             $table->timestamp('registration_date')->nullable();

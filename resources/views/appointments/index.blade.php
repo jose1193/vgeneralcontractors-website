@@ -53,26 +53,35 @@
                 </div>
 
                 <!-- Date range filters -->
-                <div class="flex flex-col md:flex-row items-center py-5 mb-4 space-y-3 md:space-y-0 md:space-x-4">
-                    <div class="w-full md:w-1/3 lg:w-1/4">
+                <div class="flex flex-wrap items-end gap-3 py-5 mb-4">
+                    <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start
                             Date</label>
                         <input type="date" id="start_date" name="start_date"
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     </div>
-                    <div class="w-full md:w-1/3 lg:w-1/4">
+                    <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">End
                             Date</label>
                         <input type="date" id="end_date" name="end_date"
-                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     </div>
-                    <div class="self-end">
-                        <button id="clearDateFilters" type="button"
-                            class="px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-                            Clear
+                    <button id="clearDateFilters" type="button"
+                        class="px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                        Clear
+                    </button>
+                    <div class="ml-auto flex space-x-2">
+                        <button id="sendRejectionBtn" disabled
+                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-200 disabled:opacity-25">
+                            <span class="mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            Send Rejection
                         </button>
-                    </div>
-                    <div class="ml-auto self-end">
                         <button id="exportToExcel"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
                             <span class="mr-2">
@@ -92,6 +101,11 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
+                                <th
+                                    class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <input type="checkbox" id="selectAll"
+                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                </th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                     data-field="first_name">
                                     Name
@@ -112,6 +126,11 @@
                                     <span class="sort-icon"></span>
                                 </th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    data-field="insurance_property">
+                                    Insurance
+                                    <span class="sort-icon"></span>
+                                </th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                     data-field="status_lead">
                                     Status Lead
                                     <span class="sort-icon"></span>
@@ -125,7 +144,7 @@
                         <tbody id="appointmentsTable"
                             class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <tr id="loadingRow">
-                                <td colspan="6" class="px-6 py-4 text-center">
+                                <td colspan="8" class="px-6 py-4 text-center">
                                     <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10"
                                             stroke="currentColor" stroke-width="4"></circle>
@@ -146,6 +165,81 @@
         </div>
     </div>
 
+    <!-- Rejection Notification Modal -->
+    <div id="rejectionModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div
+                            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="modal-title">
+                                Send Rejection Notification
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                                Please select the reason(s) for rejecting the selected appointment(s):
+                            </p>
+
+                            <div class="mt-4">
+                                <div class="flex items-start mb-2">
+                                    <div class="flex items-center h-5">
+                                        <input id="reason_no_contact" name="rejection_reason" type="checkbox"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="reason_no_contact"
+                                            class="font-medium text-gray-700 dark:text-gray-300">Unable to contact</label>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start mb-2">
+                                    <div class="flex items-center h-5">
+                                        <input id="reason_no_insurance" name="rejection_reason" type="checkbox"
+                                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="reason_no_insurance"
+                                            class="font-medium text-gray-700 dark:text-gray-300">No property
+                                            insurance</label>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <label for="reason_other"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Other
+                                        reason(s):</label>
+                                    <textarea id="reason_other" name="reason_other" rows="3"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="sendRejectionNotification"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Send Notification
+                    </button>
+                    <button type="button" id="cancelRejection"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             $(document).ready(function() {
@@ -160,7 +254,8 @@
                         update: "{{ route('appointments.update', ':id') }}",
                         destroy: "{{ route('appointments.destroy', ':id') }}",
                         restore: "{{ route('appointments.restore', ':id') }}",
-                        checkName: "{{ route('appointments.check-email') }}"
+                        checkName: "{{ route('appointments.check-email') }}",
+                        sendRejection: "{{ route('appointments.send-rejection') }}"
                     },
                     tableSelector: '#appointmentsTable',
                     searchSelector: '#searchInput',
@@ -175,6 +270,13 @@
                     idField: 'uuid',
                     searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
                     tableHeaders: [{
+                            field: 'checkbox',
+                            name: '',
+                            sortable: false,
+                            getter: (entity) =>
+                                `<input type="checkbox" class="appointment-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" data-id="${entity.uuid}">`
+                        },
+                        {
                             field: 'first_name',
                             name: 'Name',
                             sortable: true,
@@ -196,6 +298,18 @@
                             sortable: true,
                             getter: (entity) => entity.inspection_date ? new Date(entity.inspection_date)
                                 .toLocaleDateString() : 'N/A'
+                        },
+                        {
+                            field: 'insurance_property',
+                            name: 'Insurance',
+                            sortable: true,
+                            getter: (entity) => {
+                                if (entity.insurance_property === true) {
+                                    return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Yes</span>';
+                                } else {
+                                    return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">No</span>';
+                                }
+                            }
                         },
                         {
                             field: 'status_lead',
@@ -302,6 +416,146 @@
                 $('#exportToExcel').on('click', function() {
                     exportAppointmentsToExcel();
                 });
+
+                // Selected appointments tracking
+                let selectedAppointments = [];
+
+                // Handle select all checkbox
+                $(document).on('change', '#selectAll', function() {
+                    const isChecked = $(this).prop('checked');
+                    $('.appointment-checkbox').prop('checked', isChecked);
+
+                    // Update selected appointments array
+                    selectedAppointments = isChecked ?
+                        $('.appointment-checkbox').map(function() {
+                            return $(this).data('id');
+                        }).get() : [];
+
+                    // Enable/disable rejection button
+                    updateRejectionButtonState();
+                });
+
+                // Handle individual checkbox changes
+                $(document).on('change', '.appointment-checkbox', function() {
+                    const id = $(this).data('id');
+
+                    if ($(this).prop('checked')) {
+                        // Add to selected if not already there
+                        if (!selectedAppointments.includes(id)) {
+                            selectedAppointments.push(id);
+                        }
+                    } else {
+                        // Remove from selected
+                        selectedAppointments = selectedAppointments.filter(item => item !== id);
+                        // Uncheck "select all" if any individual checkbox is unchecked
+                        $('#selectAll').prop('checked', false);
+                    }
+
+                    // Enable/disable rejection button
+                    updateRejectionButtonState();
+                });
+
+                // Update rejection button state
+                function updateRejectionButtonState() {
+                    $('#sendRejectionBtn').prop('disabled', selectedAppointments.length === 0);
+                }
+
+                // Open rejection modal
+                $('#sendRejectionBtn').on('click', function() {
+                    $('#rejectionModal').removeClass('hidden');
+                });
+
+                // Close rejection modal
+                $('#cancelRejection').on('click', function() {
+                    $('#rejectionModal').addClass('hidden');
+                    resetRejectionForm();
+                });
+
+                // Submit rejection notification
+                $('#sendRejectionNotification').on('click', function() {
+                    // Get selected reason(s)
+                    const noContact = $('#reason_no_contact').prop('checked');
+                    const noInsurance = $('#reason_no_insurance').prop('checked');
+                    const otherReason = $('#reason_other').val().trim();
+
+                    // Validate at least one reason is selected
+                    if (!noContact && !noInsurance && otherReason === '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please select at least one reason for rejection',
+                            confirmButtonColor: '#3B82F6'
+                        });
+                        return;
+                    }
+
+                    // Show loading state
+                    const originalBtnText = $('#sendRejectionNotification').text();
+                    $('#sendRejectionNotification').html(`
+                        <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                    `).prop('disabled', true);
+
+                    // Send the rejection notification
+                    $.ajax({
+                        url: window.appointmentManager.routes.sendRejection,
+                        type: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            appointment_ids: selectedAppointments,
+                            no_contact: noContact,
+                            no_insurance: noInsurance,
+                            other_reason: otherReason
+                        },
+                        success: function(response) {
+                            $('#rejectionModal').addClass('hidden');
+                            resetRejectionForm();
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Rejection notifications sent successfully',
+                                confirmButtonColor: '#3B82F6'
+                            });
+
+                            // Clear selected appointments
+                            selectedAppointments = [];
+                            $('.appointment-checkbox, #selectAll').prop('checked', false);
+                            updateRejectionButtonState();
+
+                            // Refresh the table
+                            window.appointmentManager.loadEntities();
+                        },
+                        error: function(xhr) {
+                            let errorMessage =
+                                'An error occurred while sending rejection notifications';
+
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                                confirmButtonColor: '#3B82F6'
+                            });
+                        },
+                        complete: function() {
+                            $('#sendRejectionNotification').text(originalBtnText).prop('disabled',
+                                false);
+                        }
+                    });
+                });
+
+                // Reset rejection form
+                function resetRejectionForm() {
+                    $('#reason_no_contact, #reason_no_insurance').prop('checked', false);
+                    $('#reason_other').val('');
+                }
 
                 function exportAppointmentsToExcel() {
                     // Show loading indicator
