@@ -497,9 +497,10 @@
                 });
             });
 
-            // Run initial check
+            // Run initial checks
             if (inspectionDateField && inspectionTimeField) {
                 updateTimeFieldRequirement();
+                updateStatusBasedOnDateTime(); // Run this function on page load as well
             }
 
             // Set minimum date for inspection date field to today
@@ -620,6 +621,160 @@
                     }
                     this.value = formattedValue;
                 });
+            }
+
+            // Function to update inspection status and lead status based on date and time selection
+            function updateStatusBasedOnDateTime() {
+                // Check if both date and time are selected
+                if (inspectionDateField && inspectionTimeField &&
+                    inspectionDateField.value && inspectionTimeField.value) {
+
+                    // Get the status fields
+                    const inspectionStatusField = document.getElementById('inspection_status');
+                    const statusLeadField = document.getElementById('status_lead');
+
+                    if (inspectionStatusField) {
+                        // Store the current value
+                        const currentValue = inspectionStatusField.value;
+
+                        // We'll allow only Confirmed and Completed options
+                        const allowedStatuses = ['Confirmed', 'Completed'];
+
+                        // If current value is not in allowed statuses, default to Confirmed
+                        if (!allowedStatuses.includes(currentValue)) {
+                            inspectionStatusField.value = 'Confirmed';
+                        }
+
+                        // Enable/disable options based on allowed statuses
+                        Array.from(inspectionStatusField.options).forEach(option => {
+                            if (option.value && !allowedStatuses.includes(option.value)) {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
+                        });
+                    }
+
+                    // Set status_lead to Called and limit to only this option
+                    if (statusLeadField) {
+                        // Set value to Called
+                        statusLeadField.value = 'Called';
+
+                        // Only allow "Called" option
+                        Array.from(statusLeadField.options).forEach(option => {
+                            if (option.value && option.value !== 'Called') {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
+                        });
+                    }
+                } else {
+                    // If date or time is not selected, re-enable all options
+                    const inspectionStatusField = document.getElementById('inspection_status');
+                    const statusLeadField = document.getElementById('status_lead');
+
+                    if (inspectionStatusField) {
+                        Array.from(inspectionStatusField.options).forEach(option => {
+                            option.disabled = false;
+                            option.style.display = '';
+                        });
+                    }
+
+                    if (statusLeadField) {
+                        Array.from(statusLeadField.options).forEach(option => {
+                            option.disabled = false;
+                            option.style.display = '';
+                        });
+                    }
+                }
+            }
+
+            // Add the function call to the date and time change events
+            if (inspectionDateField) {
+                inspectionDateField.addEventListener('change', function() {
+                    updateTimeFieldRequirement();
+                    updateStatusBasedOnDateTime();
+                });
+            }
+
+            // Add the function call to the hour and minute change events
+            if (inspectionTimeHourField && inspectionTimeMinuteField) {
+                inspectionTimeHourField.addEventListener('change', function() {
+                    updateHiddenTimeField();
+                    updateStatusBasedOnDateTime();
+                });
+
+                inspectionTimeMinuteField.addEventListener('change', function() {
+                    updateHiddenTimeField();
+                    updateStatusBasedOnDateTime();
+                });
+            }
+
+            // Add this new function after updateStatusBasedOnDateTime()
+            // Function to update lead status options based on inspection status
+            function updateLeadStatusBasedOnInspectionStatus() {
+                const inspectionStatusField = document.getElementById('inspection_status');
+                const statusLeadField = document.getElementById('status_lead');
+
+                if (inspectionStatusField && statusLeadField) {
+                    // Get current values
+                    const inspectionStatus = inspectionStatusField.value;
+                    const currentLeadStatus = statusLeadField.value;
+
+                    // If inspection status is Declined, limit lead status options
+                    if (inspectionStatus === 'Declined') {
+                        // Only allow Called and Declined options
+                        const allowedLeadStatuses = ['Called', 'Declined'];
+
+                        // If current lead status isn't in the allowed options, default to Declined
+                        if (!allowedLeadStatuses.includes(currentLeadStatus)) {
+                            statusLeadField.value = 'Declined';
+                        }
+
+                        // Show/hide options
+                        Array.from(statusLeadField.options).forEach(option => {
+                            if (option.value && !allowedLeadStatuses.includes(option.value)) {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
+                        });
+                    }
+                    // If both date and time are set, handle as before in updateStatusBasedOnDateTime
+                    else if (inspectionDateField.value && inspectionTimeField.value) {
+                        // Logic for date and time set is handled by updateStatusBasedOnDateTime
+                        // No need to do anything here
+                    }
+                    // Otherwise, restore all options
+                    else {
+                        Array.from(statusLeadField.options).forEach(option => {
+                            option.disabled = false;
+                            option.style.display = '';
+                        });
+                    }
+                }
+            }
+
+            // Add an event listener to the inspection status dropdown
+            const inspectionStatusField = document.getElementById('inspection_status');
+            if (inspectionStatusField) {
+                inspectionStatusField.addEventListener('change', updateLeadStatusBasedOnInspectionStatus);
+            }
+
+            // Run initial status checks
+            if (inspectionDateField && inspectionTimeField) {
+                updateTimeFieldRequirement();
+                updateStatusBasedOnDateTime();
+            }
+            if (inspectionStatusField) {
+                updateLeadStatusBasedOnInspectionStatus();
             }
         });
 
