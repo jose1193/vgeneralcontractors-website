@@ -223,6 +223,9 @@ class AppointmentCalendarController extends Controller
             } else if ($status === 'Declined') {
                 $appointment->inspection_confirmed = false;
                 $appointment->status_lead = 'Declined';
+                // Clear inspection date and time to free up the slot
+                $appointment->inspection_date = null;
+                $appointment->inspection_time = null;
             } else if ($status === 'Completed') {
                 $appointment->status_lead = 'Called';
             }

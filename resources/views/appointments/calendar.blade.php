@@ -110,8 +110,8 @@
                                                     class="whitespace-pre-wrap"></span></p>
                                             <p><strong>Damage:</strong> <span id="modalEventDamage"
                                                     class="whitespace-pre-wrap"></span></p>
-                                            <p><strong>Has Insurance?:</strong> <span id="modalEventInsurance"></span>
-                                            </p>
+                                            <p><strong>Has Insurance?:</strong> <span id="modalEventInsurance"
+                                                    class="px-2 py-1 text-xs font-semibold rounded-full"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -812,8 +812,21 @@
                                     'N/A';
                                 document.getElementById('modalEventDamage').textContent = props.damage ||
                                     'N/A';
-                                document.getElementById('modalEventInsurance').textContent = props
-                                    .hasInsurance || 'N/A';
+                                // Formatear el seguro como badge con color
+                                const insuranceElement = document.getElementById('modalEventInsurance');
+                                if (props.hasInsurance === 'Yes') {
+                                    insuranceElement.textContent = 'Yes';
+                                    insuranceElement.className =
+                                        'px-2 py-1 text-xs font-semibold rounded-full text-white bg-green-600';
+                                } else if (props.hasInsurance === 'No') {
+                                    insuranceElement.textContent = 'No';
+                                    insuranceElement.className =
+                                        'px-2 py-1 text-xs font-semibold rounded-full text-white bg-red-600';
+                                } else {
+                                    insuranceElement.textContent = 'N/A';
+                                    insuranceElement.className =
+                                        'px-2 py-1 text-xs font-semibold rounded-full text-white bg-gray-600';
+                                }
 
                                 // Mostrar/ocultar botones de acción según el estado actual
                                 if (props.status === 'Completed' || props.status === 'Declined') {
@@ -976,7 +989,7 @@
                                     url: `{{ route('appointment-calendar.status', '') }}/${currentAppointmentId}`,
                                     type: 'PATCH',
                                     data: {
-                                        status: 'Cancelled'
+                                        status: 'Declined'
                                     },
                                     success: function(response) {
                                         // Restaurar estado del botón
