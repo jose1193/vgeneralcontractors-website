@@ -200,6 +200,11 @@ class AppointmentController extends BaseCrudController
                 $query->whereDate('inspection_date', '<=', $request->end_date);
             }
 
+            // Handle status_lead filter
+            if ($request->has('status_lead_filter') && !empty($request->status_lead_filter)) {
+                $query->where('status_lead', $request->status_lead_filter);
+            }
+
             // Handle search
             if ($request->has('search') && !empty($request->search)) {
                 $searchTerm = $request->search;

@@ -71,6 +71,18 @@
                         <input type="date" id="end_date" name="end_date"
                             class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     </div>
+                    <div>
+                        <label for="status_lead_filter"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lead Status</label>
+                        <select id="status_lead_filter" name="status_lead_filter"
+                            class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            <option value="">All Statuses</option>
+                            <option value="New">New</option>
+                            <option value="Called">Called</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Declined">Declined</option>
+                        </select>
+                    </div>
                     <button id="clearDateFilters" type="button"
                         class="px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
                         Clear
@@ -298,6 +310,7 @@
                     startDateSelector: '#start_date',
                     endDateSelector: '#end_date',
                     clearDateFilterSelector: '#clearDateFilters',
+                    statusLeadFilterSelector: '#status_lead_filter',
                     idField: 'uuid',
                     searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
                     // Establecer el valor inicial basado en localStorage
@@ -470,6 +483,75 @@
                     defaultSortDirection: 'desc'
                 });
 
+                // Add statusLeadFilter property to appointmentManager
+                window.appointmentManager.statusLeadFilter = '';
+
+                // Extend the original loadEntities method
+                const originalLoadEntities = window.appointmentManager.loadEntities;
+                window.appointmentManager.loadEntities = function(page = 1) {
+                    // Set current page
+                    this.currentPage = page;
+
+                    // Show loading state
+                    $(this.tableSelector + ' #loadingRow').show();
+                    $(this.tableSelector + ' tr:not(#loadingRow)').remove();
+
+                    // Prepare request data
+                    const requestData = {
+                        page: this.currentPage,
+                        per_page: this.perPage,
+                        sort_field: this.sortField,
+                        sort_direction: this.sortDirection,
+                        search: this.searchTerm,
+                        show_deleted: this.showDeleted ? "true" : "false",
+                    };
+
+                    // Add date filters if they exist
+                    if (this.startDate) {
+                        requestData.start_date = this.startDate;
+                    }
+
+                    if (this.endDate) {
+                        requestData.end_date = this.endDate;
+                    }
+
+                    // Add status_lead_filter if it exists
+                    if (this.statusLeadFilter) {
+                        requestData.status_lead_filter = this.statusLeadFilter;
+                    }
+
+                    // Make AJAX request
+                    $.ajax({
+                        url: this.routes.index,
+                        type: 'GET',
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Accept': 'application/json'
+                        },
+                        data: requestData,
+                        success: (response) => {
+                            this.renderTable(response);
+                            this.renderPagination(response);
+                        },
+                        error: (xhr) => {
+                            console.error(`Error loading ${this.entityNamePlural}:`, xhr.responseText);
+
+                            // Show error message in table
+                            $(this.tableSelector).html(`
+                                <tr>
+                                    <td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-red-500">
+                                        Error loading ${this.entityNamePlural}. Please check the console for details.
+                                    </td>
+                                </tr>
+                            `);
+                        },
+                        complete: () => {
+                            $(this.tableSelector + ' #loadingRow').hide();
+                        }
+                    });
+                };
+
                 // Add event listeners for delete and restore buttons
                 $(document).on('click', '.delete-btn', function() {
                     const id = $(this).data('id');
@@ -481,10 +563,155 @@
                     window.appointmentManager.restoreEntity(id);
                 });
 
+                // Add event listener for status lead filter
+                $('#status_lead_filter').on('change', function() {
+                    // Update the statusLeadFilter property
+                    window.appointmentManager.statusLeadFilter = $(this).val();
+                    // Reset to first page when changing filter
+                    window.appointmentManager.currentPage = 1;
+                    // Load entities with new filter
+                    window.appointmentManager.loadEntities();
+                });
+
+                // Add event listeners for date filters to update properties
+                $('#start_date').on('change', function() {
+                    window.appointmentManager.startDate = $(this).val();
+                    window.appointmentManager.currentPage = 1; // Reset to first page
+                    window.appointmentManager.loadEntities();
+                });
+
+                $('#end_date').on('change', function() {
+                    window.appointmentManager.endDate = $(this).val();
+                    window.appointmentManager.currentPage = 1; // Reset to first page
+                    window.appointmentManager.loadEntities();
+                });
+
                 // Initialize loading of entities
                 window.appointmentManager.loadEntities();
 
-                // Handle export to Google Sheets
+                // Update the clear filters button to also clear status filter
+                $('#clearDateFilters').on('click', function() {
+                    $('#start_date, #end_date').val('');
+                    $('#status_lead_filter').val('');
+                    window.appointmentManager.startDate = '';
+                    window.appointmentManager.endDate = '';
+                    window.appointmentManager.statusLeadFilter = '';
+                    window.appointmentManager.loadEntities();
+                });
+
+                // Handle export to Excel with status filter
+                function exportAppointmentsToExcel() {
+                    // Show loading indicator
+                    const originalButtonContent = $('#exportToExcel').html();
+                    $('#exportToExcel').html(`
+                    <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Exporting...
+                `).prop('disabled', true);
+
+                    // Gather filter parameters
+                    const searchValue = $(window.appointmentManager.searchSelector).val();
+                    const showDeleted = $(window.appointmentManager.showDeletedSelector).is(':checked') ? 'true' :
+                        'false';
+                    const startDate = window.appointmentManager.startDate;
+                    const endDate = window.appointmentManager.endDate;
+                    const statusLeadFilter = window.appointmentManager.statusLeadFilter;
+                    const sortField = window.appointmentManager.sortField;
+                    const sortDirection = window.appointmentManager.sortDirection;
+
+                    // Create the URL with query parameters
+                    const exportUrl = new URL(window.appointmentManager.routes.index, window.location.origin);
+                    exportUrl.searchParams.append('export', 'excel');
+                    exportUrl.searchParams.append('search', searchValue);
+                    exportUrl.searchParams.append('show_deleted', showDeleted);
+                    if (startDate) exportUrl.searchParams.append('start_date', startDate);
+                    if (endDate) exportUrl.searchParams.append('end_date', endDate);
+                    if (statusLeadFilter) exportUrl.searchParams.append('status_lead_filter', statusLeadFilter);
+                    exportUrl.searchParams.append('sort_field', sortField);
+                    exportUrl.searchParams.append('sort_direction', sortDirection);
+
+                    // Ensure the button resets after a max time (fallback)
+                    const resetTimeout = setTimeout(function() {
+                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+                    }, 10000); // 10 seconds timeout as fallback
+
+                    try {
+                        // Use fetch API instead of iframe for better control
+                        fetch(exportUrl.toString())
+                            .then(response => {
+                                clearTimeout(resetTimeout);
+
+                                if (!response.ok) {
+                                    throw new Error('Export failed');
+                                }
+
+                                // Check content disposition to confirm it's a file download
+                                const contentDisposition = response.headers.get('content-disposition');
+                                if (!contentDisposition || !contentDisposition.includes('attachment')) {
+                                    throw new Error('Invalid response format');
+                                }
+
+                                return response.blob();
+                            })
+                            .then(blob => {
+                                // Create download link
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                const filename = 'appointments_export_' + new Date().toISOString().slice(0, 10) +
+                                    '.xlsx';
+
+                                a.href = url;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.click();
+
+                                // Cleanup
+                                window.URL.revokeObjectURL(url);
+                                a.remove();
+
+                                // Reset button and show success message
+                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Export Successful',
+                                    text: 'Your appointments have been exported to Excel',
+                                    confirmButtonColor: '#3B82F6'
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Export error:', error);
+
+                                // Reset button and show error message
+                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Export Failed',
+                                    text: 'There was an error exporting to Excel. Please try again.',
+                                    confirmButtonColor: '#3B82F6'
+                                });
+                            });
+                    } catch (error) {
+                        // Handle any unexpected errors
+                        clearTimeout(resetTimeout);
+                        console.error('Unexpected export error:', error);
+
+                        // Reset button and show error message
+                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Export Failed',
+                            text: 'There was an unexpected error. Please try again.',
+                            confirmButtonColor: '#3B82F6'
+                        });
+                    }
+                }
+
+                // Replace the handle export to Excel
                 $('#exportToExcel').on('click', function() {
                     exportAppointmentsToExcel();
                 });
@@ -651,115 +878,6 @@
                         $('#other_reason_container').addClass('hidden');
                     }
                 });
-
-                function exportAppointmentsToExcel() {
-                    // Show loading indicator
-                    const originalButtonContent = $('#exportToExcel').html();
-                    $('#exportToExcel').html(`
-                    <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Exporting...
-                `).prop('disabled', true);
-
-                    // Gather filter parameters
-                    const searchValue = $(window.appointmentManager.searchSelector).val();
-                    const showDeleted = $(window.appointmentManager.showDeletedSelector).is(':checked') ? 'true' :
-                        'false';
-                    const startDate = $('#start_date').val();
-                    const endDate = $('#end_date').val();
-                    const sortField = window.appointmentManager.sortField;
-                    const sortDirection = window.appointmentManager.sortDirection;
-
-                    // Create the URL with query parameters
-                    const exportUrl = new URL(window.appointmentManager.routes.index, window.location.origin);
-                    exportUrl.searchParams.append('export', 'excel');
-                    exportUrl.searchParams.append('search', searchValue);
-                    exportUrl.searchParams.append('show_deleted', showDeleted);
-                    if (startDate) exportUrl.searchParams.append('start_date', startDate);
-                    if (endDate) exportUrl.searchParams.append('end_date', endDate);
-                    exportUrl.searchParams.append('sort_field', sortField);
-                    exportUrl.searchParams.append('sort_direction', sortDirection);
-
-                    // Ensure the button resets after a max time (fallback)
-                    const resetTimeout = setTimeout(function() {
-                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-                    }, 10000); // 10 seconds timeout as fallback
-
-                    try {
-                        // Use fetch API instead of iframe for better control
-                        fetch(exportUrl.toString())
-                            .then(response => {
-                                clearTimeout(resetTimeout);
-
-                                if (!response.ok) {
-                                    throw new Error('Export failed');
-                                }
-
-                                // Check content disposition to confirm it's a file download
-                                const contentDisposition = response.headers.get('content-disposition');
-                                if (!contentDisposition || !contentDisposition.includes('attachment')) {
-                                    throw new Error('Invalid response format');
-                                }
-
-                                return response.blob();
-                            })
-                            .then(blob => {
-                                // Create download link
-                                const url = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                const filename = 'appointments_export_' + new Date().toISOString().slice(0, 10) +
-                                    '.xlsx';
-
-                                a.href = url;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.click();
-
-                                // Cleanup
-                                window.URL.revokeObjectURL(url);
-                                a.remove();
-
-                                // Reset button and show success message
-                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Export Successful',
-                                    text: 'Your appointments have been exported to Excel',
-                                    confirmButtonColor: '#3B82F6'
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Export error:', error);
-
-                                // Reset button and show error message
-                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Export Failed',
-                                    text: 'There was an error exporting to Excel. Please try again.',
-                                    confirmButtonColor: '#3B82F6'
-                                });
-                            });
-                    } catch (error) {
-                        // Handle any unexpected errors
-                        clearTimeout(resetTimeout);
-                        console.error('Unexpected export error:', error);
-
-                        // Reset button and show error message
-                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Export Failed',
-                            text: 'There was an unexpected error. Please try again.',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                    }
-                }
 
                 // Compartir ubicación desde el listado
                 $(document).on('click', '.share-location', function(e) {
