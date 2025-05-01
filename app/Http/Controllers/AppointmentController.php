@@ -13,6 +13,7 @@ use App\Jobs\ProcessNewLead;
 use App\Jobs\ProcessRejectionNotifications;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AppointmentsExport;
+use Illuminate\Validation\ValidationException;
 
 class AppointmentController extends BaseCrudController
 {
@@ -54,7 +55,7 @@ class AppointmentController extends BaseCrudController
             'intent_to_claim' => 'nullable|boolean',
             'lead_source' => 'required|in:Website,Facebook Ads,Reference',
             'additional_note' => 'nullable|string',
-            'inspection_status' => 'nullable|in:Completed,Pending,Declined',
+            'inspection_status' => 'nullable|in:Completed,Pending,Declined,Confirmed',
             'status_lead' => 'nullable|in:New,Called,Pending,Declined',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
@@ -94,7 +95,7 @@ class AppointmentController extends BaseCrudController
             'inspection_time.date_format' => 'The inspection time must be in HH:MM format.',
             'inspection_confirmed.boolean' => 'The inspection confirmed must be a boolean value.',
             'intent_to_claim.boolean' => 'The intent to claim must be a boolean value.',
-            'inspection_status.in' => 'The inspection status must be one of: Completed, Pending, Declined.',
+            'inspection_status.in' => 'The inspection status must be one of: Completed, Pending, Declined, Confirmed.',
             'status_lead.in' => 'The lead status must be one of: New, Called, Pending, Declined.',
             'latitude.between' => 'The latitude must be between -90 and 90 degrees.',
             'longitude.between' => 'The longitude must be between -180 and 180 degrees.',
@@ -589,8 +590,26 @@ class AppointmentController extends BaseCrudController
         // Automatically set inspection_confirmed based on inspection date and time
         if ($request->has('inspection_date') && $request->has('inspection_time') && 
             !empty($request->inspection_date) && !empty($request->inspection_time)) {
+            
+            // Check for scheduling conflicts with other appointments
+            $uuid = $id;
+            $date = $request->inspection_date;
+            $time = $request->inspection_time;
+            
+            $conflict = $this->checkScheduleConflict($date, $time, $uuid);
+            
+            if ($conflict) {
+                throw ValidationException::withMessages([
+                    'schedule_conflict' => 'This time slot is already booked with another client. Please select a different date or time for your inspection.'
+                ]);
+            }
+            
             // If both inspection date and time are provided, set inspection_confirmed to true
-            $request->merge(['inspection_confirmed' => true]);
+            // and set inspection_status to "Confirmed"
+            $request->merge([
+                'inspection_confirmed' => true,
+                'inspection_status' => 'Confirmed'
+            ]);
         } else {
             // If inspection date or time is missing, set inspection_confirmed to false
             $request->merge(['inspection_confirmed' => false]);
@@ -603,6 +622,30 @@ class AppointmentController extends BaseCrudController
         }
 
         return $request;
+    }
+    
+    /**
+     * Check if there's a scheduling conflict with existing appointments
+     * 
+     * @param string $date Inspection date
+     * @param string $time Inspection time
+     * @param string|null $excludeUuid UUID of the appointment to exclude from check (when editing)
+     * @return bool True if conflict exists, false otherwise
+     */
+    protected function checkScheduleConflict($date, $time, $excludeUuid = null)
+    {
+        // Query to find appointments on the same date and time
+        $query = Appointment::where('inspection_date', $date)
+            ->where('inspection_time', $time)
+            ->whereNotIn('inspection_status', ['Declined', 'Cancelled']); // Only care about active appointments
+        
+        // Exclude the current appointment when editing
+        if ($excludeUuid) {
+            $query->where('uuid', '!=', $excludeUuid);
+        }
+        
+        // Check if any appointments exist at this date and time
+        return $query->exists();
     }
 
     /**

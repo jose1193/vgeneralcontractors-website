@@ -103,20 +103,30 @@
                                     "{{ route('appointments.index') }}";
                             });
                         } else {
-                            let errorMessage = data.message;
-                            if (data.errors) {
-                                errorMessage += '\n';
-                                Object.values(data.errors).forEach(error => {
-                                    errorMessage += '\n• ' + error;
+                            // Check specifically for scheduling conflicts
+                            if (data.errors && data.errors.schedule_conflict) {
+                                Swal.fire({
+                                    title: 'Scheduling Conflict',
+                                    text: data.errors.schedule_conflict,
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                let errorMessage = data.message;
+                                if (data.errors) {
+                                    errorMessage += '\n';
+                                    Object.values(data.errors).forEach(error => {
+                                        errorMessage += '\n• ' + error;
+                                    });
+                                }
+
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: errorMessage,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
                                 });
                             }
-
-                            Swal.fire({
-                                title: 'Error!',
-                                text: errorMessage,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
 
                             // Hide spinner and enable button on error
                             setLoadingState(false);

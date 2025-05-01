@@ -142,6 +142,10 @@
                                 </th>
                                 <th
                                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    Inspection Status
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     Actions
                                 </th>
                             </tr>
@@ -354,6 +358,22 @@
                                 };
                                 return entity.status_lead ? statusMap[entity.status_lead] || entity
                                     .status_lead : 'N/A';
+                            }
+                        },
+                        {
+                            field: 'inspection_status',
+                            name: 'Inspection Status',
+                            sortable: true,
+                            getter: (entity) => {
+                                const statusMap = {
+                                    'Confirmed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Confirmed</span>',
+                                    'Completed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>',
+                                    'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
+                                    'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
+                                };
+                                return entity.inspection_status ? statusMap[entity.inspection_status] ||
+                                    entity
+                                    .inspection_status : 'N/A';
                             }
                         },
                         {

@@ -120,7 +120,7 @@
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open"
                                     class="inline-flex items-center px-1 pt-1 border-b-2 
-                                    {{ request()->routeIs('appointments')
+                                    {{ request()->routeIs('appointments') || request()->routeIs('appointment-calendar')
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
@@ -145,8 +145,12 @@
                                     <div
                                         class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-gray-700">
                                         <a href="{{ route('appointments.index') }}"
-                                            class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('appointments') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                            class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('appointments.index') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
                                             {{ __('Manage Appointments') }}
+                                        </a>
+                                        <a href="{{ route('appointment-calendar') }}"
+                                            class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('appointment-calendar') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                            {{ __('Calendar View') }}
                                         </a>
                                     </div>
                                 </div>
@@ -424,7 +428,7 @@
             <div x-data="{ open: false }">
                 <button @click="open = !open"
                     class="w-full flex items-center pl-3 pr-4 py-2 border-l-4 
-                        {{ request()->routeIs('appointments')
+                        {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')
                             ? 'border-gray-400 dark:border-indigo-600 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/50'
                             : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' }}
                         text-base font-medium focus:outline-none transition duration-150 ease-in-out">
@@ -438,9 +442,13 @@
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-1" style="display: none;">
-                    <x-responsive-nav-link href="{{ route('appointments.index') }}" :active="request()->routeIs('appointments')"
+                    <x-responsive-nav-link href="{{ route('appointments.index') }}" :active="request()->routeIs('appointments.index')"
                         class="pl-8">
                         {{ __('Manage Appointments') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link href="{{ route('appointment-calendar') }}" :active="request()->routeIs('appointment-calendar')"
+                        class="pl-8">
+                        {{ __('Calendar View') }}
                     </x-responsive-nav-link>
                 </div>
             </div>

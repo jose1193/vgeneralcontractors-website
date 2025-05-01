@@ -141,6 +141,13 @@ Route::middleware([
         Route::post('/send-rejection', [AppointmentController::class, 'sendRejection'])->name('send-rejection');
     });
 
+    // Appointment Calendar Routes
+    Route::get('/appointment-calendar', [\App\Http\Controllers\AppointmentCalendarController::class, 'index'])->name('appointment-calendar');
+    Route::get('/appointment-calendar/events', [\App\Http\Controllers\AppointmentCalendarController::class, 'events'])->name('appointment-calendar.events');
+    Route::get('/appointment-calendar/clients', [\App\Http\Controllers\AppointmentCalendarController::class, 'getClients'])->name('appointment-calendar.clients');
+    Route::patch('/appointment-calendar/events/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'update'])->name('appointment-calendar.update');
+    Route::patch('/appointment-calendar/status/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'updateStatus'])->name('appointment-calendar.status');
+    Route::post('/appointment-calendar/create', [\App\Http\Controllers\AppointmentCalendarController::class, 'create'])->name('appointment-calendar.create');
 });
 
 Route::get('/new-roof', function () {

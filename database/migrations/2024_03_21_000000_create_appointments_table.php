@@ -35,7 +35,7 @@ return new class extends Migration
             $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference'])->nullable();
             $table->date('follow_up_date')->nullable();
             $table->text('additional_note')->nullable();
-            $table->enum('inspection_status', ['Completed', 'Pending', 'Declined'])->nullable();
+            $table->enum('inspection_status', ['Confirmed', 'Completed', 'Pending', 'Declined'])->nullable();
             $table->enum('status_lead', ['New', 'Called','Pending', 'Declined'])->nullable();
             // Add latitude and longitude
             $table->double('latitude', 10, 7)->nullable();
