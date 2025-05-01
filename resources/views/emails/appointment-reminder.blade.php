@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recordatorio de Cita</title>
+    <title>Recordatorio de Inspección</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -70,110 +70,151 @@
             display: inline-block;
             margin-top: 15px;
         }
+
+        .logo {
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+        }
     </style>
 </head>
 
 <body>
-    @php
-        // Función para formatear números de teléfono españoles
-        if (!function_exists('formatSpanishPhone')) {
-            function formatSpanishPhone($phoneNumber)
-            {
-                // Eliminar cualquier espacio existente
-                $cleaned = preg_replace('/\s+/', '', $phoneNumber);
-
-                // Si el número comienza con +34, formatearlo correctamente
-                if (str_starts_with($cleaned, '+34')) {
-                    // Quitar el código de país para trabajar solo con los 9 dígitos
-                    $nationalNumber = substr($cleaned, 3);
-
-                    // Aplicar formato +34 XXX XX XX XX
-                    if (strlen($nationalNumber) === 9) {
-                        return '+34 ' .
-                            substr($nationalNumber, 0, 3) .
-                            ' ' .
-                            substr($nationalNumber, 3, 2) .
-                            ' ' .
-                            substr($nationalNumber, 5, 2) .
-                            ' ' .
-                            substr($nationalNumber, 7, 2);
-                    }
-                }
-
-                // Si no es un número español o no tiene el formato esperado, devolverlo sin cambios
-                return $phoneNumber;
-            }
-        }
-    @endphp
-
     <div class="header">
-        <h1>Recordatorio de Cita</h1>
+        <h1>Recordatorio de Inspección de Techo</h1>
     </div>
 
     <div class="content">
-        @if ($isForCompany)
-            <p>Hola <strong>{{ $companyData->name }}</strong>,</p>
-            <p>Este es un recordatorio de que tiene una cita programada para mañana con el cliente
-                <strong>{{ $appointment->client_name }}</strong>.
+        @if ($isInternal)
+            <p>Hola Administrador,</p>
+            <p>Este es un recordatorio para una inspección de techo programada para mañana con el cliente
+                <strong>{{ $appointment->first_name }} {{ $appointment->last_name }}</strong>.
             </p>
         @else
-            <p>Hola <strong>{{ $appointment->client_name }}</strong>,</p>
-            <p>Este es un recordatorio de su cita programada para mañana con
-                <strong>{{ $companyData->company_name }}</strong>.
-            </p>
+            <p>Hola <strong>{{ $appointment->first_name }}</strong>,</p>
+            <p>Este es un cordial recordatorio de que tu inspección de techo con
+                {{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }} está programada para
+                mañana.</p>
         @endif
 
         <div class="appointment-details">
-            <h3>Detalles de la Cita:</h3>
-            <p><strong>Servicio:</strong> {{ $appointment->service }}</p>
-            <p><strong>Fecha y hora:</strong>
-                {{ \Carbon\Carbon::parse($appointment->start_time)->formatLocalized('%A %d de %B de %Y a las %H:%M') }}
+            <h3>Detalles de la Inspección:</h3>
+            <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_date)->format('l, F j, Y') }}
             </p>
-            <p><strong>Dirección:</strong> {{ $appointment->address }}</p>
-            @if (!empty($appointment->issue))
-                <p><strong>Problema/Asunto:</strong> {{ $appointment->issue }}</p>
+            <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_time)->format('g:i A') }}</p>
+            <p><strong>Dirección:</strong> {{ $appointment->address }}
+                @if ($appointment->address_2)
+                    , {{ $appointment->address_2 }}
+                @endif
+                <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+            </p>
+            @if ($appointment->damage_detail)
+                <p><strong>Detalles del Daño:</strong> {{ $appointment->damage_detail }}</p>
             @endif
-            @if (!empty($appointment->notes))
-                <p><strong>Notas adicionales:</strong> {{ $appointment->notes }}</p>
+            @if ($appointment->notes)
+                <p><strong>Notas Adicionales:</strong> {{ $appointment->notes }}</p>
             @endif
         </div>
 
-        @if (!$isForCompany)
-            <p>Si necesita cambiar o cancelar su cita, por favor contáctenos lo antes posible.</p>
-            @if ($companyData->phone)
-                <p><strong>Teléfono:</strong> {{ formatSpanishPhone($companyData->phone) }}</p>
-            @endif
-            @if ($companyData->email)
-                <p><strong>Email:</strong> {{ $companyData->email }}</p>
-            @endif
+        @if (!$isInternal)
+            <p>Un inspector profesional llegará a la hora programada para evaluar tu techo. Por favor asegúrate de que
+                haya acceso disponible a la propiedad.</p>
+            <p>Si necesitas reprogramar o tienes alguna pregunta, contáctanos lo antes posible:</p>
+            <p><strong>Teléfono:</strong>
+                @php
+                    $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
+                    // Remove any non-digit characters
+                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                    // Format the number based on length
+                    if (strlen($digitsOnly) == 10) {
+                        echo '(' .
+                            substr($digitsOnly, 0, 3) .
+                            ') ' .
+                            substr($digitsOnly, 3, 3) .
+                            '-' .
+                            substr($digitsOnly, 6);
+                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                        // US number with country code
+                        echo '(' .
+                            substr($digitsOnly, 1, 3) .
+                            ') ' .
+                            substr($digitsOnly, 4, 3) .
+                            '-' .
+                            substr($digitsOnly, 7);
+                    } else {
+                        // Fallback to original
+                        echo $phone;
+                    }
+                @endphp
+            </p>
+            <p><strong>Correo:</strong> {{ \App\Models\CompanyData::first()->email ?? 'info@vgeneralcontractors.com' }}
+            </p>
+        @else
+            <div style="background-color: #f5f5f5; border-left: 4px solid #3490dc; padding: 15px; margin: 20px 0;">
+                <h4 style="margin-top: 0; color: #3490dc;">Información del Cliente:</h4>
+                <p><strong>Nombre Completo:</strong> {{ $appointment->getFullNameAttribute() }}</p>
+                <p><strong>Teléfono:</strong> {{ $appointment->phone }}</p>
+                <p><strong>Correo:</strong> {{ $appointment->email }}</p>
+
+                <h4 style="margin-bottom: 5px;">Dirección Completa:</h4>
+                <p style="margin-top: 0;">
+                    {{ $appointment->address }}
+                    @if ($appointment->address_2)
+                        , {{ $appointment->address_2 }}
+                    @endif
+                    <br>
+                    {{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}<br>
+                    @if ($appointment->country)
+                        {{ $appointment->country }}
+                    @endif
+                </p>
+
+                @if ($appointment->insurance_property)
+                    <p><strong>Tiene Seguro de Propiedad:</strong> Sí</p>
+                @else
+                    <p><strong>Tiene Seguro de Propiedad:</strong> No</p>
+                @endif
+
+                @if ($appointment->intent_to_claim)
+                    <p><strong>Intención de Reclamar:</strong> Sí</p>
+                @endif
+
+                @if ($appointment->lead_source)
+                    <p><strong>Fuente del Lead:</strong> {{ $appointment->lead_source }}</p>
+                @endif
+
+                @if ($appointment->damage_detail)
+                    <p><strong>Detalles del Daño:</strong> {{ $appointment->damage_detail }}</p>
+                @endif
+
+                @if ($appointment->additional_note)
+                    <p><strong>Notas Adicionales:</strong> {{ $appointment->additional_note }}</p>
+                @endif
+
+                @if ($appointment->notes)
+                    <p><strong>Notas:</strong> {{ $appointment->notes }}</p>
+                @endif
+            </div>
         @endif
 
         <div class="company-info">
-            <p><strong>{{ $companyData->company_name }}</strong></p>
-            @if ($companyData->address)
-                <p>{{ $companyData->address }}</p>
-            @endif
+            <p><strong>{{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}</strong></p>
+            <p>{{ \App\Models\CompanyData::first()->address ?? '1302 Waugh Dr # 810 Houston TX 77019' }}</p>
 
             <div class="social-links">
-                @if ($companyData->social_media_facebook)
-                    <a href="{{ $companyData->social_media_facebook }}" target="_blank">Facebook</a>
-                @endif
-                @if ($companyData->social_media_instagram)
-                    <a href="{{ $companyData->social_media_instagram }}" target="_blank">Instagram</a>
-                @endif
-                @if ($companyData->social_media_twitter)
-                    <a href="{{ $companyData->social_media_twitter }}" target="_blank">Twitter</a>
-                @endif
+                <a href="https://facebook.com/vgeneralcontractors" target="_blank">Facebook</a>
+                <a href="https://instagram.com/vgeneralcontractors" target="_blank">Instagram</a>
             </div>
 
-            @if ($companyData->website)
-                <p><a href="{{ $companyData->website }}" target="_blank">{{ $companyData->website }}</a></p>
-            @endif
+            <p><a href="{{ \App\Models\CompanyData::first()->website ?? 'https://vgeneralcontractors.com' }}"
+                    target="_blank">{{ \App\Models\CompanyData::first()->website ?? 'www.vgeneralcontractors.com' }}</a>
+            </p>
         </div>
     </div>
 
     <div class="footer">
-        <p>© {{ date('Y') }} {{ $companyData->company_name }}. Todos los derechos reservados.</p>
+        <p>© {{ date('Y') }} {{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}.
+            Todos los derechos reservados.</p>
     </div>
 </body>
 

@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Appointment;
+use App\Models\EmailData;
 use Carbon\Carbon;
-use App\Jobs\ProcessAppointmentEmail;
+use App\Notifications\AppointmentReminderNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class SendAppointmentReminders extends Command
 {
@@ -15,61 +17,72 @@ class SendAppointmentReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-appointment-reminders {--days=1 : Número de días antes de la cita para enviar el recordatorio}';
+    protected $signature = 'app:send-appointment-reminders';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Envía recordatorios por correo electrónico para las citas programadas próximamente';
+    protected $description = 'Sends email reminders for appointments scheduled for tomorrow at 9 AM Central Time';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $daysBeforeAppointment = $this->option('days');
-        $reminderDate = Carbon::tomorrow()->addDays($daysBeforeAppointment - 1);
+        // Get tomorrow's date in Central Time (Texas/Chicago)
+        $tomorrow = Carbon::tomorrow('America/Chicago')->format('Y-m-d');
         
-        $this->info("Enviando recordatorios para citas programadas para el " . $reminderDate->format('Y-m-d'));
+        $this->info("Sending reminders for appointments scheduled for {$tomorrow}");
 
-        // Obtenemos las citas confirmadas para la fecha objetivo
-        $appointments = Appointment::where('inspection_date', $reminderDate->format('Y-m-d'))
+        // Get confirmed appointments for tomorrow that haven't been declined or completed
+        $appointments = Appointment::where('inspection_date', $tomorrow)
             ->where('inspection_confirmed', true)
             ->whereNotIn('inspection_status', ['Declined', 'Completed'])
             ->get();
 
+        // Get admin email from EmailData like ProcessNewLead does
+        $adminEmailData = EmailData::where('type', 'Admin')->first();
+        $adminEmail = $adminEmailData ? $adminEmailData->email : null;
+
+        if (!$adminEmail) {
+            $this->error("Admin email not found in EmailData table. Using fallback email.");
+            $adminEmail = 'admin@vgeneralcontractors.com'; // Fallback from DatabaseSeeder
+        }
+
         $count = 0;
         $errors = 0;
 
+        $this->info("Admin email for notifications: {$adminEmail}");
+
         foreach ($appointments as $appointment) {
             try {
-                // Crear job para enviar el recordatorio
-                ProcessAppointmentEmail::dispatch($appointment, 'reminder');
+                // Send reminder to client
+                Notification::route('mail', $appointment->email)
+                    ->notify(new AppointmentReminderNotification($appointment, false));
+                
+                // Send reminder to admin
+                Notification::route('mail', $adminEmail)
+                    ->notify(new AppointmentReminderNotification($appointment, true));
                 
                 $count++;
-                $this->info("Job de recordatorio creado para: {$appointment->email}");
-                
-                // Opcionalmente, podemos actualizar el registro para marcar que se envió el recordatorio
-                $appointment->timestamps = false; // Evita actualizar updated_at
-                $appointment->reminder_sent = true;
-                $appointment->save();
+                $this->info("Reminder sent to client: {$appointment->email} and admin: {$adminEmail}");
                 
             } catch (\Exception $e) {
                 $errors++;
-                $this->error("Error al crear job de recordatorio para {$appointment->email}: {$e->getMessage()}");
-                Log::error("Error al enviar recordatorio de cita: " . $e->getMessage(), [
+                $this->error("Error sending reminder for {$appointment->email}: {$e->getMessage()}");
+                Log::error("Error sending appointment reminder: " . $e->getMessage(), [
                     'appointment_id' => $appointment->id,
                     'email' => $appointment->email
                 ]);
             }
         }
 
-        $this->info("Proceso completado: {$count} recordatorios programados, {$errors} errores.");
+        $this->info("Process completed: {$count} reminders sent, {$errors} errors.");
         
         if ($count === 0 && $errors === 0) {
-            $this->info("No se encontraron citas programadas para el " . $reminderDate->format('Y-m-d'));
+            $this->info("No appointments found scheduled for {$tomorrow}");
         }
 
         return 0;

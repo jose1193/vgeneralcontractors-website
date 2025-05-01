@@ -20,10 +20,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('sitemap:generate')->daily();
         
-        // Enviar recordatorios de citas programadas para el día siguiente
+        // Send appointment reminders for tomorrow's inspections at 9 AM Central Time
         $schedule->command('app:send-appointment-reminders')
-                 ->dailyAt('08:00')
-                 ->timezone('America/New_York') // Ajusta a tu zona horaria
+                 ->dailyAt('09:00')
+                 ->timezone('America/Chicago') // Central Time (Texas/Chicago)
                  ->appendOutputTo(storage_path('logs/appointment-reminders.log'));
     }
 
