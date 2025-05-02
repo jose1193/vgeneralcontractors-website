@@ -36,7 +36,26 @@
     <meta name="twitter:description"
         content="Fill out the form to schedule your free, no-obligation roofing inspection with V General Contractors.">
     <meta name="twitter:image" content="{{ asset('assets/logo/logo3.webp') }}">
+    <style>
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
 
+        ::-webkit-scrollbar-track {
+            background-color: #e5e7eb;
+            border-radius: 9px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #6b7280;
+            border-radius: 7px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #e7c104;
+            border-radius: 7px;
+        }
+    </style>
     {{-- Tracking Scripts (Include necessary ones) --}}
     <x-google-analytics />
     <x-facebook-pixel />
