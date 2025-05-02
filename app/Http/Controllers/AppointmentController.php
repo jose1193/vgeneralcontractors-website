@@ -46,9 +46,8 @@ class AppointmentController extends BaseCrudController
             'message' => 'nullable|string',
             'sms_consent' => 'nullable|boolean',
             'registration_date' => 'nullable|date',
-            'inspection_date' => 'nullable|date|after_or_equal:today',
-            'inspection_time' => 'nullable|date_format:H:i',
-            'inspection_confirmed' => 'nullable|boolean',
+            'inspection_date' => 'nullable|date|after_or_equal:today|required_with:inspection_time',
+            'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
             'notes' => 'nullable|string',
             'owner' => 'nullable|string|max:255',
             'damage_detail' => 'nullable|string',
@@ -92,10 +91,11 @@ class AppointmentController extends BaseCrudController
             'registration_date.date' => 'The registration date must be a valid date.',
             'inspection_date.date' => 'The inspection date must be a valid date.',
             'inspection_date.after_or_equal' => 'The inspection date must be today or a future date.',
+            'inspection_date.required_with' => 'The inspection date is required when inspection time is present.',
             'inspection_time.date_format' => 'The inspection time must be in HH:MM format.',
-            'inspection_confirmed.boolean' => 'The inspection confirmed must be a boolean value.',
+            'inspection_time.required_with' => 'The inspection time is required when inspection date is present.',
             'intent_to_claim.boolean' => 'The intent to claim must be a boolean value.',
-            'inspection_status.in' => 'The inspection status must be one of: Completed, Pending, Declined, Confirmed.',
+            'inspection_status.in' => 'The inspection status must be one of: Completed, New, Declined, Confirmed.',
             'status_lead.in' => 'The lead status must be one of: New, Called, Pending, Declined.',
             'latitude.between' => 'The latitude must be between -90 and 90 degrees.',
             'longitude.between' => 'The longitude must be between -180 and 180 degrees.',
@@ -125,7 +125,6 @@ class AppointmentController extends BaseCrudController
             'registration_date' => $request->registration_date,
             'inspection_date' => $request->inspection_date,
             'inspection_time' => $request->inspection_time,
-            'inspection_confirmed' => $request->inspection_confirmed ?? false,
             'notes' => $request->notes,
             'owner' => $request->owner ? ucwords(strtolower($request->owner)) : null,
             'damage_detail' => $request->damage_detail,
@@ -161,7 +160,6 @@ class AppointmentController extends BaseCrudController
             'registration_date' => $request->registration_date,
             'inspection_date' => $request->inspection_date,
             'inspection_time' => $request->inspection_time,
-            'inspection_confirmed' => $request->inspection_confirmed ?? false,
             'notes' => $request->notes,
             'owner' => $request->owner ? ucwords(strtolower($request->owner)) : null,
             'damage_detail' => $request->damage_detail,
@@ -592,32 +590,51 @@ class AppointmentController extends BaseCrudController
             'insurance_property' => filter_var($request->input('insurance_property', false), FILTER_VALIDATE_BOOLEAN)
         ]);
 
-        // Automatically set inspection_confirmed based on inspection date and time
-        if ($request->has('inspection_date') && $request->has('inspection_time') && 
-            !empty($request->inspection_date) && !empty($request->inspection_time)) {
-            
-            // Check for scheduling conflicts with other appointments
-            $uuid = $id;
-            $date = $request->inspection_date;
-            $time = $request->inspection_time;
-            
-            $conflict = $this->checkScheduleConflict($date, $time, $uuid);
-            
-            if ($conflict) {
-                throw ValidationException::withMessages([
-                    'schedule_conflict' => 'This time slot is already booked with another client. Please select a different date or time for your inspection.'
+        // Handle inspection date and time relationship
+        if ($request->has('inspection_date')) {
+            if (empty($request->inspection_date)) {
+                // If date is empty, time should be empty too
+                $request->merge(['inspection_time' => null]);
+            } else if ($request->has('inspection_time') && !empty($request->inspection_time)) {
+                // Check for scheduling conflicts with other appointments
+                $uuid = $id;
+                $date = $request->inspection_date;
+                $time = $request->inspection_time;
+                
+                $conflict = $this->checkScheduleConflict($date, $time, $uuid);
+                
+                if ($conflict) {
+                    throw ValidationException::withMessages([
+                        'schedule_conflict' => 'This time slot is already booked with another client. Please select a different date or time for your inspection.'
+                    ]);
+                }
+                
+                // If both inspection date and time are provided, set inspection_status to "Confirmed"
+                $request->merge([
+                    'inspection_status' => 'Confirmed'
                 ]);
             }
+        }
+
+        // Handle inspection_status and status_lead relationship
+        if ($request->has('inspection_status')) {
+            $inspection_status = $request->inspection_status;
             
-            // If both inspection date and time are provided, set inspection_confirmed to true
-            // and set inspection_status to "Confirmed"
-            $request->merge([
-                'inspection_confirmed' => true,
-                'inspection_status' => 'Confirmed'
-            ]);
+            if ($inspection_status === 'Declined') {
+                // If inspection status is Declined, set status_lead to Declined
+                $request->merge(['status_lead' => 'Declined']);
+            } else if ($inspection_status === 'Confirmed' || $inspection_status === 'Completed') {
+                // If inspection status is Confirmed or Completed, set status_lead to Called
+                $request->merge(['status_lead' => 'Called']);
+            } else if ($inspection_status === 'Pending') {
+                // If inspection status is Pending and status_lead is not already Pending, set to New
+                if ($request->status_lead !== 'Pending') {
+                    $request->merge(['status_lead' => 'New']);
+                }
+            }
         } else {
-            // If inspection date or time is missing, set inspection_confirmed to false
-            $request->merge(['inspection_confirmed' => false]);
+            // Default inspection_status to Pending if not provided
+            $request->merge(['inspection_status' => 'Pending', 'status_lead' => 'New']);
         }
 
         $validator = Validator::make($request->all(), $rules, $messages);

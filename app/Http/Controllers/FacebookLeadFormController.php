@@ -267,6 +267,8 @@ class FacebookLeadFormController extends Controller
             'longitude' => 'nullable|numeric|between:-180,180',
             'lead_source' => 'nullable|string',
             'status_lead' => 'nullable|string|in:New,Called,Pending,Declined',
+            'inspection_date' => 'nullable|date|required_with:inspection_time',
+            'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
             'api_key' => 'required' // Add API key validation for security
         ]);
 

@@ -147,24 +147,38 @@ class AppointmentCalendarController extends Controller
                     // If the appointment has a specific time, also update the time
                     if (!$newStartTime->startOfDay()->eq($newStartTime)) {
                         $appointment->inspection_time = $newStartTime->format('H:i:s');
+                    } else {
+                        // If no specific time, clear the time field
+                        $appointment->inspection_time = null;
+                        
+                        // For consistency, we don't allow date without time
+                        throw new \RuntimeException('Both inspection date and time must be provided together.', 422);
                     }
                     
                     // Check for conflicts with other appointments (optional)
-                    $existingAppointment = Appointment::where('id', '!=', $appointment->id)
-                        ->where('inspection_date', $appointment->inspection_date)
-                        ->where('inspection_time', $appointment->inspection_time)
-                        ->whereNotIn('inspection_status', ['Declined'])
-                        ->first();
-
-                    if ($existingAppointment) {
-                        throw new \RuntimeException('Schedule conflict: Another appointment is already scheduled for this time.', 409);
+                    if ($appointment->inspection_time) {
+                        $existingAppointment = Appointment::where('id', '!=', $appointment->id)
+                            ->where('inspection_date', $appointment->inspection_date)
+                            ->where('inspection_time', $appointment->inspection_time)
+                            ->whereNotIn('inspection_status', ['Declined'])
+                            ->first();
+    
+                        if ($existingAppointment) {
+                            throw new \RuntimeException('Schedule conflict: Another appointment is already scheduled for this time.', 409);
+                        }
                     }
 
                     // Mark the inspection as confirmed if it has a date and time
                     if ($appointment->inspection_date && $appointment->inspection_time) {
-                        $appointment->inspection_confirmed = true;
                         $appointment->inspection_status = 'Confirmed';
                         $appointment->status_lead = 'Called';
+                    } else {
+                        // This case shouldn't happen with the validation above
+                        // but keeping it for defensive programming
+                        $appointment->inspection_status = 'Pending';
+                        if ($appointment->status_lead !== 'Pending') {
+                            $appointment->status_lead = 'New';
+                        }
                     }
                     
                     $appointment->save();
@@ -216,17 +230,25 @@ class AppointmentCalendarController extends Controller
             $oldStatus = $appointment->inspection_status;
             $appointment->inspection_status = $status;
             
-            // Update inspection_confirmed flag based on status
-            if ($status === 'Confirmed') {
-                $appointment->inspection_confirmed = true;
+            // Update status_lead based on inspection_status
+            if ($status === 'Confirmed' || $status === 'Completed') {
                 $appointment->status_lead = 'Called';
             } else if ($status === 'Declined') {
-                $appointment->inspection_confirmed = false;
                 $appointment->status_lead = 'Declined';
                 // Clear inspection date and time to free up the slot
                 $appointment->inspection_date = null;
                 $appointment->inspection_time = null;
-            } else if ($status === 'Completed') {
+            } else if ($status === 'Pending') {
+                if ($appointment->status_lead !== 'Pending') {
+                    $appointment->status_lead = 'New';
+                }
+            }
+            
+            // If status is not Confirmed or Completed, but date/time are set,
+            // ensure inspection_status is set to Confirmed
+            if (($status !== 'Confirmed' && $status !== 'Completed') && 
+                $appointment->inspection_date && $appointment->inspection_time) {
+                $appointment->inspection_status = 'Confirmed';
                 $appointment->status_lead = 'Called';
             }
             
@@ -236,13 +258,13 @@ class AppointmentCalendarController extends Controller
             $message = 'Appointment status updated successfully.';
             $emailType = '';
             
-            if ($status === 'Confirmed') {
+            if ($appointment->inspection_status === 'Confirmed') {
                 $emailType = 'confirmed';
                 $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
-            } else if ($status === 'Declined') {
+            } else if ($appointment->inspection_status === 'Declined') {
                 $emailType = 'declined';
                 $message = 'Appointment declined successfully. A notification email has been sent to the client.';
-            } else if ($status === 'Completed') {
+            } else if ($appointment->inspection_status === 'Completed') {
                 $emailType = 'completed';
                 $message = 'Appointment marked as completed successfully.';
             }
@@ -305,16 +327,48 @@ class AppointmentCalendarController extends Controller
             // Update the appointment with new inspection details
             $oldStatus = $client->inspection_status;
             $client->inspection_date = $request->inspection_date;
-            $client->inspection_time = $request->inspection_time;
-            $client->inspection_status = $request->inspection_status;
-            $client->inspection_confirmed = ($request->inspection_status === 'Confirmed');
             
-            // Update lead status if appointment is confirmed
-            if ($request->inspection_status === 'Confirmed') {
+            // Both date and time must always be provided together
+            if (empty($request->inspection_date) && !empty($request->inspection_time)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => [
+                        'inspection_date' => ['The inspection date is required when inspection time is present.']
+                    ]
+                ], 422);
+            }
+            
+            if (!empty($request->inspection_date) && empty($request->inspection_time)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => [
+                        'inspection_time' => ['The inspection time is required when inspection date is present.']
+                    ]
+                ], 422);
+            }
+            
+            $client->inspection_time = $request->inspection_time;
+            
+            // Ensure consistent status handling
+            // If both date and time are provided, always set status to Confirmed
+            if (!empty($client->inspection_date) && !empty($client->inspection_time)) {
+                $client->inspection_status = 'Confirmed';
                 $client->status_lead = 'Called';
-            } else if ($request->inspection_status === 'Declined') {
-                $client->status_lead = 'Declined';
-                $client->inspection_confirmed = false;
+            } else {
+                $client->inspection_status = $request->inspection_status;
+                
+                // Set status_lead based on inspection_status
+                if ($client->inspection_status === 'Confirmed') {
+                    $client->status_lead = 'Called';
+                } else if ($client->inspection_status === 'Declined') {
+                    $client->status_lead = 'Declined';
+                } else if ($client->inspection_status === 'Pending') {
+                    if ($client->status_lead !== 'Pending') {
+                        $client->status_lead = 'New';
+                    }
+                }
             }
             
             $client->save();
@@ -323,7 +377,7 @@ class AppointmentCalendarController extends Controller
             $message = 'Appointment scheduled successfully.';
             $emailType = '';
             
-            if ($request->inspection_status === 'Confirmed') {
+            if ($client->inspection_status === 'Confirmed') {
                 if ($oldStatus !== 'Confirmed') {
                     $emailType = 'confirmed';
                     $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';

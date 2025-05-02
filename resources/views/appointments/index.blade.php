@@ -170,7 +170,7 @@
                         <tbody id="appointmentsTable"
                             class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <tr id="loadingRow">
-                                <td colspan="8" class="px-6 py-4 text-center">
+                                <td colspan="10" class="px-6 py-4 text-center">
                                     <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
                                         viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10"

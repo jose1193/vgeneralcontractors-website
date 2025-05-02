@@ -32,14 +32,14 @@ class SendAppointmentReminders extends Command
     public function handle()
     {
         // Get tomorrow's date in Central Time (Texas/Chicago)
-        $tomorrow = Carbon::tomorrow('America/Chicago')->format('Y-m-d');
+        $tomorrow = Carbon::tomorrow()->toDateString();
         
         $this->info("Sending reminders for appointments scheduled for {$tomorrow}");
 
-        // Get confirmed appointments for tomorrow that haven't been declined or completed
+        // Get all appointments scheduled for tomorrow that are confirmed
         $appointments = Appointment::where('inspection_date', $tomorrow)
-            ->where('inspection_confirmed', true)
-            ->whereNotIn('inspection_status', ['Declined', 'Completed'])
+            ->where('inspection_status', 'Confirmed')
+            ->whereNotNull('inspection_time')
             ->get();
 
         // Get admin email from EmailData like ProcessNewLead does

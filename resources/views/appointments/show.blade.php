@@ -57,7 +57,7 @@
                     <div><strong class="text-gray-600 dark:text-gray-400">Intent to Claim:</strong>
                         {{ $appointment->intent_to_claim ? 'Yes' : 'No' }}</div>
                     <div><strong class="text-gray-600 dark:text-gray-400">Inspection Confirmed:</strong>
-                        {{ $appointment->inspection_confirmed ? 'Yes' : 'No' }}</div>
+                        {{ $appointment->inspection_status === 'Confirmed' ? 'Yes' : 'No' }}</div>
                 </div>
 
                 {{-- Text Areas --}}

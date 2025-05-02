@@ -365,10 +365,15 @@
                 inspectionTimeMinuteField.addEventListener('change', updateHiddenTimeField);
             }
 
-            // Function to check if time is required and validate
+            // Function to manage time fields based on date selection:
+            // - Enables/disables time fields based on date presence
+            // - Makes time fields required when date is selected
+            // - Resets time values when date is cleared
             function updateTimeFieldRequirement() {
                 if (inspectionDateField.value) {
-                    // If date is set, make time required
+                    // If date is set, enable and make time required
+                    inspectionTimeHourField.removeAttribute('disabled');
+                    inspectionTimeMinuteField.removeAttribute('disabled');
                     inspectionTimeHourField.setAttribute('required', 'required');
                     inspectionTimeMinuteField.setAttribute('required', 'required');
 
@@ -399,9 +404,18 @@
                         updateHiddenTimeField();
                     }
                 } else {
-                    // If date is not set, time is not required
+                    // If date is not set, disable and reset time fields
+                    inspectionTimeHourField.setAttribute('disabled', 'disabled');
+                    inspectionTimeMinuteField.setAttribute('disabled', 'disabled');
                     inspectionTimeHourField.removeAttribute('required');
                     inspectionTimeMinuteField.removeAttribute('required');
+
+                    // Reset time values
+                    inspectionTimeHourField.value = '';
+                    inspectionTimeMinuteField.value = '';
+                    inspectionTimeField.value = '';
+
+                    // Reset styles
                     inspectionTimeHourField.classList.remove('border-red-300');
                     inspectionTimeHourField.classList.remove('border-green-500');
                     inspectionTimeMinuteField.classList.remove('border-red-300');
@@ -674,22 +688,50 @@
                         });
                     }
                 } else {
-                    // If date or time is not selected, re-enable all options
+                    // If date or time is not selected, set inspection_status to Pending by default
+                    // and only allow Pending and Declined options
                     const inspectionStatusField = document.getElementById('inspection_status');
                     const statusLeadField = document.getElementById('status_lead');
 
                     if (inspectionStatusField) {
+                        // Default to Pending if not already set to Declined
+                        if (inspectionStatusField.value !== 'Declined') {
+                            inspectionStatusField.value = 'Pending';
+                        }
+
+                        // Only allow Pending and Declined options
+                        const allowedStatuses = ['Pending', 'Declined'];
                         Array.from(inspectionStatusField.options).forEach(option => {
-                            option.disabled = false;
-                            option.style.display = '';
+                            if (option.value && !allowedStatuses.includes(option.value)) {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
                         });
                     }
 
-                    if (statusLeadField) {
-                        Array.from(statusLeadField.options).forEach(option => {
-                            option.disabled = false;
-                            option.style.display = '';
-                        });
+                    // For status_lead, if inspection_status is not Declined, allow New and Pending
+                    if (statusLeadField && inspectionStatusField) {
+                        if (inspectionStatusField.value !== 'Declined') {
+                            // Default to New if not already set to Pending
+                            if (statusLeadField.value !== 'Pending') {
+                                statusLeadField.value = 'New';
+                            }
+
+                            // Only allow New and Pending options
+                            const allowedLeadStatuses = ['New', 'Pending'];
+                            Array.from(statusLeadField.options).forEach(option => {
+                                if (option.value && !allowedLeadStatuses.includes(option.value)) {
+                                    option.disabled = true;
+                                    option.style.display = 'none';
+                                } else {
+                                    option.disabled = false;
+                                    option.style.display = '';
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -715,30 +757,33 @@
                 });
             }
 
-            // Add this new function after updateStatusBasedOnDateTime()
             // Function to update lead status options based on inspection status
             function updateLeadStatusBasedOnInspectionStatus() {
                 const inspectionStatusField = document.getElementById('inspection_status');
                 const statusLeadField = document.getElementById('status_lead');
 
                 if (inspectionStatusField && statusLeadField) {
+                    // Check if inspection status is selected
+                    if (!inspectionStatusField.value) {
+                        // Disable lead status until inspection status is selected
+                        statusLeadField.disabled = true;
+                        statusLeadField.value = ''; // Clear selection
+                        return;
+                    } else {
+                        // Enable lead status field
+                        statusLeadField.disabled = false;
+                    }
+
                     // Get current values
                     const inspectionStatus = inspectionStatusField.value;
-                    const currentLeadStatus = statusLeadField.value;
 
-                    // If inspection status is Declined, limit lead status options
+                    // If inspection status is Declined, set lead status to Declined
                     if (inspectionStatus === 'Declined') {
-                        // Only allow Called and Declined options
-                        const allowedLeadStatuses = ['Called', 'Declined'];
+                        statusLeadField.value = 'Declined';
 
-                        // If current lead status isn't in the allowed options, default to Declined
-                        if (!allowedLeadStatuses.includes(currentLeadStatus)) {
-                            statusLeadField.value = 'Declined';
-                        }
-
-                        // Show/hide options
+                        // Only allow Declined option
                         Array.from(statusLeadField.options).forEach(option => {
-                            if (option.value && !allowedLeadStatuses.includes(option.value)) {
+                            if (option.value && option.value !== 'Declined') {
                                 option.disabled = true;
                                 option.style.display = 'none';
                             } else {
@@ -747,16 +792,37 @@
                             }
                         });
                     }
-                    // If both date and time are set, handle as before in updateStatusBasedOnDateTime
-                    else if (inspectionDateField.value && inspectionTimeField.value) {
-                        // Logic for date and time set is handled by updateStatusBasedOnDateTime
-                        // No need to do anything here
-                    }
-                    // Otherwise, restore all options
-                    else {
+                    // If inspection status is Confirmed or Completed, limit lead status to Called
+                    else if (inspectionStatus === 'Confirmed' || inspectionStatus === 'Completed') {
+                        statusLeadField.value = 'Called';
+
+                        // Only allow Called option
                         Array.from(statusLeadField.options).forEach(option => {
-                            option.disabled = false;
-                            option.style.display = '';
+                            if (option.value && option.value !== 'Called') {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
+                        });
+                    }
+                    // If inspection status is Pending, limit to New and Pending
+                    else if (inspectionStatus === 'Pending') {
+                        if (statusLeadField.value !== 'New' && statusLeadField.value !== 'Pending') {
+                            statusLeadField.value = 'New';
+                        }
+
+                        // Only allow New and Pending options
+                        const allowedStatuses = ['New', 'Pending'];
+                        Array.from(statusLeadField.options).forEach(option => {
+                            if (option.value && !allowedStatuses.includes(option.value)) {
+                                option.disabled = true;
+                                option.style.display = 'none';
+                            } else {
+                                option.disabled = false;
+                                option.style.display = '';
+                            }
                         });
                     }
                 }
@@ -766,6 +832,20 @@
             const inspectionStatusField = document.getElementById('inspection_status');
             if (inspectionStatusField) {
                 inspectionStatusField.addEventListener('change', updateLeadStatusBasedOnInspectionStatus);
+
+                // Clear inspection status on page load to force selection
+                if (!inspectionStatusField.value) {
+                    // Default to Pending if empty
+                    inspectionStatusField.value = 'Pending';
+                }
+            }
+
+            // Disable lead status field initially if inspection status is not selected
+            const statusLeadField = document.getElementById('status_lead');
+            if (statusLeadField && inspectionStatusField) {
+                if (!inspectionStatusField.value) {
+                    statusLeadField.disabled = true;
+                }
             }
 
             // Run initial status checks
@@ -775,6 +855,17 @@
             }
             if (inspectionStatusField) {
                 updateLeadStatusBasedOnInspectionStatus();
+            }
+
+            // Set the time fields disabled by default when the page loads
+            // Note: This initialization is redundant with updateTimeFieldRequirement,
+            // but ensures correct initial state if the function doesn't run
+            if (inspectionTimeHourField && inspectionTimeMinuteField && inspectionDateField) {
+                // Only disable if no date is selected
+                if (!inspectionDateField.value) {
+                    inspectionTimeHourField.setAttribute('disabled', 'disabled');
+                    inspectionTimeMinuteField.setAttribute('disabled', 'disabled');
+                }
             }
         });
 

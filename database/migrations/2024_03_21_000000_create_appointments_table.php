@@ -27,17 +27,17 @@ return new class extends Migration
             $table->timestamp('registration_date')->nullable();
             $table->date('inspection_date')->nullable();
             $table->time('inspection_time')->nullable();
-            $table->boolean('inspection_confirmed')->nullable();
+            $table->enum('inspection_status', ['Confirmed', 'Completed', 'Pending', 'Declined'])->nullable();
+            $table->enum('status_lead', ['New', 'Called','Pending', 'Declined'])->nullable();
+            $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference'])->nullable();
             $table->text('notes')->nullable();
             $table->string('owner')->nullable();
             $table->text('damage_detail')->nullable();
             $table->boolean('intent_to_claim')->nullable();
-            $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference'])->nullable();
+          
             $table->date('follow_up_date')->nullable();
             $table->text('additional_note')->nullable();
-            $table->enum('inspection_status', ['Confirmed', 'Completed', 'Pending', 'Declined'])->nullable();
-            $table->enum('status_lead', ['New', 'Called','Pending', 'Declined'])->nullable();
-            // Add latitude and longitude
+           // Add latitude and longitude
             $table->double('latitude', 10, 7)->nullable();
             $table->double('longitude', 10, 7)->nullable();
 

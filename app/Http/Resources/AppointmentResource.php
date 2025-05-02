@@ -39,7 +39,7 @@ class AppointmentResource extends JsonResource
             'inspection' => [
                 'date' => $this->inspection_date ? $this->inspection_date->toDateString() : null,
                 'time' => $this->inspection_time ? $this->inspection_time->format('H:i:s') : null,
-                'confirmed' => (bool)$this->inspection_confirmed,
+                'confirmed' => $this->inspection_status === 'Confirmed',
                 'status' => $this->inspection_status,
             ],
             'damage_detail' => $this->damage_detail,
@@ -56,6 +56,9 @@ class AppointmentResource extends JsonResource
             ],
             'created_at' => $this->registration_date ? $this->registration_date->toIso8601String() : null,
             'updated_at' => $this->updated_at ? $this->updated_at->toIso8601String() : null,
+            'inspection_date' => $this->inspection_date,
+            'inspection_time' => $this->inspection_time,
+            'inspection_status' => $this->inspection_status,
         ];
     }
 } 

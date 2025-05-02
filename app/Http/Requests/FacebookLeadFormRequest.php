@@ -50,6 +50,8 @@ class FacebookLeadFormRequest extends FormRequest
             'longitude' => 'nullable|numeric|between:-180,180', // Add longitude validation
             'lead_source' => 'nullable|string', // Add lead_source validation as nullable string
             'status_lead' => 'nullable|string|in:New,Called,Pending,Declined', // Add status_lead field validation
+            'inspection_date' => 'nullable|date|required_with:inspection_time',
+            'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
             // Add reCAPTCHA rule (using package's default v3 rule)
             // The package handles checking the score against a default threshold (0.5)
             // You can customize the threshold in the config/nocaptcha.php file if published
@@ -72,6 +74,8 @@ class FacebookLeadFormRequest extends FormRequest
             'address_map_input.required' => 'Please enter your full address.',
             'address_map_input.min' => 'The address must be at least 5 characters.',
             'g-recaptcha-response.required' => 'CAPTCHA verification is required.',
+            'inspection_date.required_with' => 'The inspection date is required when inspection time is present.',
+            'inspection_time.required_with' => 'The inspection time is required when inspection date is present.',
             // Add other custom messages if needed
         ];
     }
