@@ -143,6 +143,11 @@
                                     <span class="sort-icon"></span>
                                 </th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    data-field="inspection_time">
+                                    Inspection Time
+                                    <span class="sort-icon"></span>
+                                </th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                     data-field="insurance_property">
                                     Insurance
                                     <span class="sort-icon"></span>
@@ -345,6 +350,17 @@
                             sortable: true,
                             getter: (entity) => entity.inspection_date ? new Date(entity.inspection_date)
                                 .toLocaleDateString() : 'N/A'
+                        },
+                        {
+                            field: 'inspection_time',
+                            name: 'Inspection Time',
+                            sortable: true,
+                            getter: (entity) => entity.inspection_time ? new Date(
+                                    `2000-01-01T${entity.inspection_time}`)
+                                .toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }) : 'N/A'
                         },
                         {
                             field: 'insurance_property',
