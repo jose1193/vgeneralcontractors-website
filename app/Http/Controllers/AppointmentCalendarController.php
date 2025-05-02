@@ -420,7 +420,10 @@ class AppointmentCalendarController extends Controller
             $clients = Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone')
                 ->whereNotNull('first_name')
                 ->whereNotNull('email')
-                ->whereNotIn('inspection_status', ['Declined'])
+                ->where(function($query) {
+                    $query->whereNull('inspection_date')
+                          ->orWhereNull('inspection_time');
+                })
                 ->orderBy('created_at', 'desc')
                 ->get();
 
