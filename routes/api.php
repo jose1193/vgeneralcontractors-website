@@ -16,8 +16,21 @@ Route::prefix('facebook-leads')->group(function () {
     // Get all leads with optional pagination and filtering
     Route::get('/', [FacebookLeadFormController::class, 'getAllLeads']);
     
-    // You can add more endpoints here as needed
-    // Route::get('/{id}', [FacebookLeadFormController::class, 'getLeadById']);
-    // Route::put('/{id}', [FacebookLeadFormController::class, 'updateLead']);
-    // Route::delete('/{id}', [FacebookLeadFormController::class, 'deleteLead']);
+    // Check calendar availability
+    Route::get('/availability', [FacebookLeadFormController::class, 'getAllLeads'])->defaults('availability', true);
+    
+    // Reschedule existing appointment
+    Route::post('/reschedule', [FacebookLeadFormController::class, 'getAllLeads'])->defaults('reschedule', true);
+    
+    // Get client's appointments by name, phone or email
+    Route::get('/client', [FacebookLeadFormController::class, 'getAllLeads'])->defaults('client_lookup', true);
+    
+    // Get appointments by UUID
+    Route::get('/{uuid}', [FacebookLeadFormController::class, 'getAppointmentByUuid']);
+    
+    // Update appointment status
+    Route::patch('/{uuid}/status', [FacebookLeadFormController::class, 'updateAppointmentStatus']);
+    
+    // Delete appointment (soft delete)
+    Route::delete('/{uuid}', [FacebookLeadFormController::class, 'deleteAppointment']);
 });

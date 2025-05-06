@@ -374,11 +374,11 @@ class FacebookLeadFormController extends Controller
     }
 
     /**
-     * API endpoint to get all leads.
+     * API endpoint to get all leads or check availability.
      */
     public function getAllLeads(Request $request)
     {
-        // También actualizar esta validación para usar la misma variable de entorno
+        // Validación de API key
         $apiKey = env('API_KEY_STORE_API_REST');
         
         if ($request->header('X-API-KEY') !== $apiKey) {
@@ -389,6 +389,64 @@ class FacebookLeadFormController extends Controller
         }
         
         try {
+            // Si se está reprogramando una cita
+            if ($request->has('reschedule')) {
+                return $this->rescheduleAppointment($request);
+            }
+            
+            // Si se solicita disponibilidad
+            if ($request->has('availability')) {
+                // Si es para un cliente específico
+                if ($request->has('email') || $request->has('phone')) {
+                    return $this->getClientAppointments($request);
+                }
+                
+                // Fechas a consultar (convertir de MM-DD-YYYY a YYYY-MM-DD para procesamiento interno)
+                $startDate = $request->input('start_date');
+                $endDate = $request->input('end_date');
+                
+                // Convertir formato de fecha si es necesario
+                if ($startDate && preg_match('/^\d{2}-\d{2}-\d{4}$/', $startDate)) {
+                    $startDate = $this->convertDateFormat($startDate);
+                }
+                
+                if ($endDate && preg_match('/^\d{2}-\d{2}-\d{4}$/', $endDate)) {
+                    $endDate = $this->convertDateFormat($endDate);
+                }
+                
+                // Si no hay fechas, usar fecha actual
+                if (!$startDate) {
+                    $startDate = Carbon::now()->format('Y-m-d');
+                }
+                
+                // Si solo hay fecha de inicio, determinar el rango automáticamente
+                if (!$endDate) {
+                    // Si la fecha de inicio parece ser un año-mes (YYYY-MM)
+                    if (preg_match('/^\d{4}-\d{2}$/', $startDate)) {
+                        // Si es mes completo: usar todo el mes
+                        list($year, $month) = explode('-', $startDate);
+                        $startDate = Carbon::createFromDate($year, $month, 1)->format('Y-m-d');
+                        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth()->format('Y-m-d');
+                    } else {
+                        // Si es fecha específica: usar solo ese día
+                        $endDate = Carbon::parse($startDate)->format('Y-m-d');
+                    }
+                }
+                
+                // Obtener todos los slots disponibles para el rango de fechas
+                $availableSlots = $this->getCalendarAvailability($startDate, $endDate);
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $availableSlots,
+                    'period' => [
+                        'start_date' => $this->formatDateForDisplay($startDate),
+                        'end_date' => $this->formatDateForDisplay($endDate)
+                    ]
+                ]);
+            }
+            
+            // Consulta normal de appointments
             $this->perPage = $request->input('per_page', 15);
             $page = $request->input('page', 1);
             $this->search = $request->input('search', '');
@@ -400,7 +458,7 @@ class FacebookLeadFormController extends Controller
             
             $cacheKey = $this->generateCacheKey('appointments', $page);
             
-            $leads = Cache::remember($cacheKey, 300, function() use ($filters, $page) {
+            $leads = Cache::remember($cacheKey, 300, function() use ($filters, $page, $request) {
                 $query = Appointment::query();
                 
                 if (!empty($this->search)) {
@@ -412,6 +470,23 @@ class FacebookLeadFormController extends Controller
                           ->orWhere('phone', 'like', $searchTerm)
                           ->orWhere('address', 'like', $searchTerm);
                     });
+                }
+                
+                // Filtrado por fecha si se especifica
+                if ($request->has('from_date')) {
+                    $fromDate = $request->input('from_date');
+                    if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fromDate)) {
+                        $fromDate = $this->convertDateFormat($fromDate);
+                    }
+                    $query->whereDate('inspection_date', '>=', $fromDate);
+                }
+                
+                if ($request->has('to_date')) {
+                    $toDate = $request->input('to_date');
+                    if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $toDate)) {
+                        $toDate = $this->convertDateFormat($toDate);
+                    }
+                    $query->whereDate('inspection_date', '<=', $toDate);
                 }
                 
                 foreach ($filters as $column => $value) {
@@ -428,15 +503,285 @@ class FacebookLeadFormController extends Controller
             ]);
             
         } catch (Throwable $e) {
-            Log::error('Failed to fetch leads via API.', [
-                'error_message' => $e->getMessage()
+            Log::error('Failed to fetch leads or availability via API.', [
+                'error_message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while retrieving leads'
+                'message' => 'An error occurred while processing your request'
             ], 500);
         }
+    }
+    
+    /**
+     * Reprogramar una cita con nombre, apellido y teléfono
+     */
+    private function rescheduleAppointment(Request $request)
+    {
+        // Validar los campos requeridos
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'phone' => 'required|string',
+            'new_date' => 'required|string',
+            'new_time' => 'required|string'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Missing required fields',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        
+        // Buscar la cita por nombre, apellido y teléfono
+        $appointment = Appointment::where('first_name', $request->input('first_name'))
+            ->where('last_name', $request->input('last_name'))
+            ->where('phone', $request->input('phone'))
+            ->whereIn('inspection_status', ['Pending', 'Confirmed'])
+            ->first();
+        
+        if (!$appointment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active appointment found for this client'
+            ], 404);
+        }
+        
+        // Convertir la fecha si viene en formato MM-DD-YYYY
+        $newDate = $request->input('new_date');
+        if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $newDate)) {
+            $newDate = $this->convertDateFormat($newDate);
+        }
+        
+        // Verificar si el nuevo slot está disponible
+        $isAvailable = $this->isTimeSlotAvailable($newDate, $request->input('new_time'));
+        
+        if (!$isAvailable) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The requested time slot is not available'
+            ], 409);
+        }
+        
+        try {
+            // Actualizar la cita
+            $appointment->inspection_date = $newDate;
+            $appointment->inspection_time = $request->input('new_time');
+            $appointment->save();
+            
+            // Limpiar caché
+            $this->clearCache('appointments');
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Appointment rescheduled successfully',
+                'data' => new AppointmentResource($appointment)
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to reschedule appointment', [
+                'error' => $e->getMessage(),
+                'appointment_id' => $appointment->id
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to reschedule appointment'
+            ], 500);
+        }
+    }
+    
+    /**
+     * Verifica si un slot de tiempo específico está disponible
+     */
+    private function isTimeSlotAvailable($date, $time)
+    {
+        // Verificar si la fecha es domingo
+        if (Carbon::parse($date)->dayOfWeek === Carbon::SUNDAY) {
+            return false; // Domingos no disponibles
+        }
+        
+        // Horario de trabajo: 8 AM - 6 PM
+        $workingHours = [
+            '08:00', '09:00', '10:00', '11:00', '12:00', 
+            '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
+        ];
+        
+        // Si la hora no está en el horario de trabajo
+        if (!in_array($time, $workingHours)) {
+            return false;
+        }
+        
+        // Buscar citas existentes para esa fecha y hora
+        $existingAppointment = Appointment::whereDate('inspection_date', $date)
+            ->whereTime('inspection_time', $time)
+            ->whereIn('inspection_status', ['Confirmed', 'Pending'])
+            ->first();
+        
+        // Si no hay cita existente, el slot está disponible
+        return $existingAppointment === null;
+    }
+    
+    /**
+     * Obtiene las citas existentes de un cliente
+     */
+    private function getClientAppointments(Request $request)
+    {
+        $query = Appointment::query();
+        
+        if ($request->has('email')) {
+            $query->where('email', $request->input('email'));
+        }
+        
+        if ($request->has('phone')) {
+            $query->where('phone', $request->input('phone'));
+        }
+        
+        if ($request->has('first_name') && $request->has('last_name')) {
+            $query->where('first_name', $request->input('first_name'))
+                  ->where('last_name', $request->input('last_name'));
+        }
+        
+        $appointments = $query->orderBy('created_at', 'desc')->get();
+        
+        // Formatear fechas para la respuesta
+        $formattedAppointments = $appointments->map(function($appointment) {
+            if ($appointment->inspection_date) {
+                $appointment->formatted_inspection_date = $this->formatDateForDisplay($appointment->inspection_date);
+            }
+            return $appointment;
+        });
+        
+        return response()->json([
+            'success' => true,
+            'data' => new AppointmentCollection($formattedAppointments),
+            'message' => 'Client appointments retrieved successfully'
+        ]);
+    }
+    
+    /**
+     * Convierte fecha de MM-DD-YYYY a YYYY-MM-DD
+     */
+    private function convertDateFormat($date)
+    {
+        if (empty($date)) return null;
+        
+        // Si ya está en formato YYYY-MM-DD
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return $date;
+        }
+        
+        // Convertir de MM-DD-YYYY a YYYY-MM-DD
+        $parts = explode('-', $date);
+        if (count($parts) === 3) {
+            return $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+        }
+        
+        return $date;
+    }
+    
+    /**
+     * Formatea fecha de YYYY-MM-DD a MM-DD-YYYY para mostrar
+     */
+    private function formatDateForDisplay($date)
+    {
+        if (empty($date)) return null;
+        
+        if ($date instanceof \Carbon\Carbon) {
+            return $date->format('m-d-Y');
+        }
+        
+        // Si es string en formato YYYY-MM-DD
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            $parts = explode('-', $date);
+            return $parts[1] . '-' . $parts[2] . '-' . $parts[0];
+        }
+        
+        return $date;
+    }
+    
+    /**
+     * Obtiene la disponibilidad del calendario para un rango de fechas
+     * 
+     * @param string $startDate Fecha de inicio (YYYY-MM-DD)
+     * @param string $endDate Fecha de fin (YYYY-MM-DD)
+     * @return array Arreglo con días y horas disponibles
+     */
+    private function getCalendarAvailability($startDate, $endDate)
+    {
+        // Determinar horario de trabajo
+        $workingHours = [
+            '08:00', '09:00', '10:00', '11:00', '12:00', 
+            '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'
+        ];
+        
+        // Obtener las citas existentes
+        $existingAppointments = Appointment::whereNotNull('inspection_date')
+            ->whereNotNull('inspection_time')
+            ->whereDate('inspection_date', '>=', $startDate)
+            ->whereDate('inspection_date', '<=', $endDate)
+            ->whereIn('inspection_status', ['Confirmed', 'Pending'])
+            ->get(['inspection_date', 'inspection_time'])
+            ->groupBy(function($appointment) {
+                return $appointment->inspection_date->format('Y-m-d');
+            });
+        
+        // Inicializar el resultado
+        $calendar = [
+            'days' => []
+        ];
+        
+        // Recorrer cada día del rango
+        $currentDate = Carbon::parse($startDate);
+        $lastDate = Carbon::parse($endDate);
+        
+        while ($currentDate->lte($lastDate)) {
+            $dateStr = $currentDate->format('Y-m-d');
+            $dayOfWeek = $currentDate->dayOfWeek;
+            
+            // Omitir domingos
+            if ($dayOfWeek !== Carbon::SUNDAY) {
+                $daySlots = [];
+                
+                // Para cada hora de trabajo
+                foreach ($workingHours as $time) {
+                    $isReserved = false;
+                    
+                    // Verificar si ya hay cita
+                    if (isset($existingAppointments[$dateStr])) {
+                        foreach ($existingAppointments[$dateStr] as $appointment) {
+                            if ($appointment->inspection_time->format('H:i') === $time) {
+                                $isReserved = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Añadir el slot al día
+                    $daySlots[] = [
+                        'time' => $time,
+                        'formatted_time' => Carbon::parse($time)->format('h:i A'),
+                        'available' => !$isReserved
+                    ];
+                }
+                
+                // Añadir el día al calendario con formato MM-DD-YYYY
+                $calendar['days'][] = [
+                    'date' => $dateStr,
+                    'formatted_date' => $this->formatDateForDisplay($dateStr),
+                    'day_of_week' => $currentDate->format('l'),
+                    'month_day' => $currentDate->format('F j'),
+                    'slots' => $daySlots
+                ];
+            }
+            
+            $currentDate->addDay();
+        }
+        
+        return $calendar;
     }
 
     /**
