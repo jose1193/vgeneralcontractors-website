@@ -227,6 +227,7 @@ Route::post('/facebook-lead-form/submit', [FacebookLeadFormController::class, 's
     ->middleware('throttle:contact')
     ->name('facebook.lead.store');
 Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])->name('facebook.lead.validate'); // Route for single field validation
+Route::get('/facebook-lead-form/confirmation', [FacebookLeadFormController::class, 'showConfirmation'])->name('facebook.confirmation');
 
 // Field validation routes
 Route::middleware(['throttle:validation'])->group(function () {

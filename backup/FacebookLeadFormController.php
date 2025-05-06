@@ -4,32 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\FacebookLeadFormRequest;
+use App\Http\Requests\FacebookLeadFormRequest; // We'll create this next
 use App\Models\Appointment;
 use App\Jobs\ProcessNewLead;
 use App\Services\FacebookConversionApi;
 use App\Services\TransactionService;
+use Revolution\Google\Sheets\Facades\Sheets;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Throwable;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Config; // Import Config facade
 use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\AppointmentCollection;
-use App\Traits\CacheTrait;
 
 class FacebookLeadFormController extends Controller
 {
-    use CacheTrait;
-    
     protected TransactionService $transactionService;
-    public $search = '';
-    public $sortField = 'registration_date';
-    public $sortDirection = 'desc';
-    public $perPage = 15;
-    public $showDeleted = false;
-    protected $significantDataChange = false;
 
     // Inject TransactionService via constructor
     public function __construct(TransactionService $transactionService)
@@ -42,17 +34,20 @@ class FacebookLeadFormController extends Controller
      */
     public function showForm()
     {
+        // Retrieve the Google Maps API key (assuming it's set elsewhere, e.g., config/services.php)
         $googleMapsApiKey = Cache::remember('google_maps_api_key', 3600, function() {
             return config('services.google.maps_api_key');
         });
         
+        // Retrieve the reCAPTCHA v3 Site Key using the config helper
         $recaptchaSiteKey = Cache::remember('recaptcha_site_key', 3600, function() {
             return config('captcha.sitekey');
         });
 
+        // Pass both keys to the view
         return view('facebook-lead-form', [
             'googleMapsApiKey' => $googleMapsApiKey,
-            'recaptchaSiteKey' => $recaptchaSiteKey
+            'recaptchaSiteKey' => $recaptchaSiteKey // Pass the site key
         ]);
     }
 
@@ -66,12 +61,13 @@ class FacebookLeadFormController extends Controller
 
     /**
      * Store the submitted lead data via AJAX.
+     * Uses FacebookLeadFormRequest for validation.
      */
     public function store(FacebookLeadFormRequest $request)
     {
-        $validatedData = $request->validated();
+        $validatedData = $request->validated(); // Get validated data
         
-        // Verify reCAPTCHA token
+        // Verify reCAPTCHA token manually since we don't have the validation rule
         $recaptchaToken = $request->input('g-recaptcha-response');
         if (!$this->verifyRecaptchaToken($recaptchaToken)) {
             return response()->json([
@@ -80,16 +76,14 @@ class FacebookLeadFormController extends Controller
                 'errors' => ['g-recaptcha-response' => ['CAPTCHA verification failed.']]
             ], 422);
         }
+        
+        // We don't need to save address_map_input to the database since it's just for UI
+        // but we keep the extracted address fields (address, city, state, zipcode)
 
         try {
             $appointment = $this->transactionService->run(
-                // Database operations
+                // 1. Database/Google Sheets operations
                 function () use ($validatedData) {
-                    Log::info('Creating appointment with data:', [
-                        'first_name' => $validatedData['first_name'],
-                        'status_lead' => 'New'
-                    ]);
-                
                     $newAppointment = Appointment::create([
                         'uuid' => Str::uuid(),
                         'first_name' => $validatedData['first_name'],
@@ -110,47 +104,73 @@ class FacebookLeadFormController extends Controller
                         'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
-                        'lead_source' => $validatedData['lead_source'] ?? 'Facebook Ads'
+                        'lead_source' => $validatedData['lead_source'] ?? 'Web'
                     ]);
 
-                    Log::info('Appointment created:', [
-                        'id' => $newAppointment->id,
-                        'status_lead' => $newAppointment->status_lead,
-                        'fresh_status' => $newAppointment->fresh()->status_lead
-                    ]);
+                    // Clear caches related to appointments
+                    $this->clearAppointmentCache();
 
-                    $this->significantDataChange = true;
-                    $this->clearCache('appointments');
+                    // Prepare data for Google Sheets
+                    $sheetName = Cache::remember('google_sheet_leads_active', 3600, function() {
+                        return 'VG-Leads Active';
+                    });
+                    
+                    $registrationDate = Carbon::now()->toDateTimeString();
+                    $fullAddress = trim(($validatedData['address'] ?? '') . ' ' . ($validatedData['address_2'] ?? '')) . ', ' . ($validatedData['city'] ?? '') . ', ' . ($validatedData['state'] ?? '') . ' ' . ($validatedData['zipcode'] ?? '');
 
-                    Log::info('Lead successfully created via Facebook Form.', ['email' => $validatedData['email']]);
+                    $values = [
+                        ($validatedData['first_name'] ?? '') . ' ' . ($validatedData['last_name'] ?? ''),
+                        "'" . ($validatedData['phone'] ?? ''),
+                        $fullAddress,
+                        $validatedData['email'] ?? '',
+                        ($validatedData['insurance_property'] ?? 'no') === 'yes' ? 'Sí' : 'No',
+                        $validatedData['state'] ?? '',
+                        $registrationDate,
+                        null, null, null, // Inspection date/time/confirmed
+                        $validatedData['message'] ?? '',
+                        null, null, null, null, null, null, // Other fields not from form
+                        'Pending',
+                        $newAppointment->uuid
+                    ];
+
+                    $sheetId = Cache::remember('google_sheet_id', 3600, function() {
+                        return config('services.google.sheet_id');
+                    });
+
+                    Sheets::spreadsheet($sheetId)
+                          ->sheet($sheetName)
+                          ->append([$values]);
+
+                    Log::info('Lead successfully added to Google Sheet via Facebook Form.', ['email' => $validatedData['email'], 'sheet_id' => $sheetId, 'sheet_name' => $sheetName]);
 
                     return $newAppointment;
                 },
-                // Post-Commit actions
+                // 2. Post-Commit actions
                 function ($createdAppointment) {
-                    Log::info('Transaction committed for Facebook Form Appointment.', ['appointment_uuid' => $createdAppointment->uuid]);
+                    Log::info('Transaction committed for Facebook Form Appointment. Running post-commit actions.', ['appointment_uuid' => $createdAppointment->uuid]);
                     ProcessNewLead::dispatch($createdAppointment);
 
+                    // Track Facebook event (Make sure FacebookConversionApi is correctly configured)
                     try {
-                        $fbApi = app(FacebookConversionApi::class);
-                        $fbApi->lead([
-                            'email' => $createdAppointment->email,
-                            'phone' => $createdAppointment->phone,
-                            'first_name' => $createdAppointment->first_name,
-                            'last_name' => $createdAppointment->last_name,
-                            'address' => $createdAppointment->address,
-                            'address_2' => $createdAppointment->address_2,
-                            'city' => $createdAppointment->city,
-                            'state' => $createdAppointment->state,
-                            'zip_code' => $createdAppointment->zipcode,
-                            'country' => $createdAppointment->country,
-                        ], [
-                            'content_name' => 'Appointment Request (Facebook Form)',
-                            'content_type' => 'Roof Inspection Service',
-                            'content_id' => 'appointment_request_fb',
-                            'event_id' => 'appointment_fb_' . time() . '_' . substr(md5($createdAppointment->email), 0, 8),
-                        ]);
-                        Log::info('Facebook Lead event tracked successfully.', ['appointment_uuid' => $createdAppointment->uuid]);
+                         $fbApi = app(FacebookConversionApi::class);
+                         $fbApi->lead([
+                             'email' => $createdAppointment->email,
+                             'phone' => $createdAppointment->phone,
+                             'first_name' => $createdAppointment->first_name,
+                             'last_name' => $createdAppointment->last_name,
+                             'address' => $createdAppointment->address,
+                             'address_2' => $createdAppointment->address_2,
+                             'city' => $createdAppointment->city,
+                             'state' => $createdAppointment->state,
+                             'zip_code' => $createdAppointment->zipcode,
+                             'country' => $createdAppointment->country,
+                         ], [
+                             'content_name' => 'Appointment Request (Facebook Form)',
+                             'content_type' => 'Roof Inspection Service',
+                             'content_id' => 'appointment_request_fb',
+                             'event_id' => 'appointment_fb_' . time() . '_' . substr(md5($createdAppointment->email), 0, 8),
+                         ]);
+                         Log::info('Facebook Lead event tracked successfully.', ['appointment_uuid' => $createdAppointment->uuid]);
                     } catch (Throwable $fbError) {
                         Log::error('Failed to track Facebook Lead event.', [
                             'appointment_uuid' => $createdAppointment->uuid,
@@ -158,32 +178,35 @@ class FacebookLeadFormController extends Controller
                         ]);
                     }
                 },
-                // Error actions (before rollback)
+                // 3. Error actions (before rollback)
                 function (Throwable $e) use ($validatedData) {
-                    Log::error('Error occurred during Facebook Form transaction.', [
-                        'error_message' => $e->getMessage(),
-                        'email' => $validatedData['email'] ?? 'N/A'
+                    Log::error('Error occurred during Facebook Form transaction, before rollback.', [
+                         'error_message' => $e->getMessage(),
+                         'email' => $validatedData['email'] ?? 'N/A'
                     ]);
                 }
             );
 
+            // If successful, return JSON response for AJAX
             return response()->json([
                 'success' => true,
                 'message' => 'Your request has been submitted successfully!',
-                'redirectUrl' => route('facebook.confirmation')
+                'redirectUrl' => route('appointment.confirmation') // Send redirect URL to JS
             ]);
 
         } catch (Throwable $e) {
+            // Log the main error that caused the transaction to fail or other issues
             Log::error('Failed to process Facebook lead form submission.', [
                 'error_message' => $e->getMessage(),
                 'email' => $validatedData['email'] ?? 'N/A',
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString() // Optional: for detailed debugging
             ]);
 
+            // Return a generic error for AJAX
             return response()->json([
                 'success' => false,
                 'message' => 'An unexpected error occurred. Please try again later.'
-            ], 500);
+            ], 500); // Use 500 for server error
         }
     }
 
@@ -199,6 +222,7 @@ class FacebookLeadFormController extends Controller
             return response()->json(['error' => 'Field name not provided.'], 400);
         }
 
+        // Use the rules from the Form Request, but adapt for single field validation
         $formRequest = new FacebookLeadFormRequest();
         $rules = $formRequest->rules();
 
@@ -206,6 +230,7 @@ class FacebookLeadFormController extends Controller
             return response()->json(['error' => 'Invalid field name.'], 400);
         }
 
+        // Create a validator instance for only the specified field
         $validator = Validator::make([$fieldName => $fieldValue], [$fieldName => $rules[$fieldName]]);
 
         if ($validator->fails()) {
@@ -217,9 +242,13 @@ class FacebookLeadFormController extends Controller
 
     /**
      * API endpoint to store lead data from external services.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function storeApi(Request $request)
     {
+        // Validate the request data 
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'min:2', 'regex:/^[A-Za-z\'-]+$/'],
             'last_name' => ['required', 'min:2', 'regex:/^[A-Za-z\'-]+$/'],
@@ -240,7 +269,7 @@ class FacebookLeadFormController extends Controller
             'status_lead' => 'nullable|string|in:New,Called,Pending,Declined',
             'inspection_date' => 'nullable|date|required_with:inspection_time',
             'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
-            'api_key' => 'required'
+            'api_key' => 'required' // Add API key validation for security
         ]);
 
         if ($validator->fails()) {
@@ -252,6 +281,7 @@ class FacebookLeadFormController extends Controller
 
         $validatedData = $validator->validated();
         
+        // Check API key
         $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
             return config('services.facebook_lead.api_key');
         });
@@ -263,18 +293,13 @@ class FacebookLeadFormController extends Controller
             ], 401);
         }
         
+        // Remove api_key from data to be saved
         unset($validatedData['api_key']);
 
         try {
             $appointment = $this->transactionService->run(
-                // Database operations
+                // Database/Google Sheets operations
                 function () use ($validatedData) {
-                    Log::info('Creating API appointment with data:', [
-                        'first_name' => $validatedData['first_name'],
-                        'status_lead_input' => $validatedData['status_lead'] ?? 'Not provided', 
-                        'status_lead_default' => 'New'
-                    ]);
-                
                     $newAppointment = Appointment::create([
                         'uuid' => Str::uuid(),
                         'first_name' => $validatedData['first_name'],
@@ -295,36 +320,62 @@ class FacebookLeadFormController extends Controller
                         'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
-                        'lead_source' => $validatedData['lead_source'] ?? 'Facebook Ads'
+                        'lead_source' => $validatedData['lead_source'] ?? 'Facebook'
                     ]);
 
-                    Log::info('API Appointment created:', [
-                        'id' => $newAppointment->id,
-                        'status_lead' => $newAppointment->status_lead,
-                        'fresh_status' => $newAppointment->fresh()->status_lead
-                    ]);
+                    // Clear caches related to appointments
+                    $this->clearAppointmentCache();
 
-                    $this->significantDataChange = true;
-                    $this->clearCache('appointments');
+                    // Similar sheet update logic as in store method
+                    $sheetName = Cache::remember('google_sheet_leads_active', 3600, function() {
+                        return 'VG-Leads Active';
+                    });
+                    
+                    $registrationDate = Carbon::now()->toDateTimeString();
+                    $fullAddress = trim(($validatedData['address'] ?? '') . ' ' . ($validatedData['address_2'] ?? '')) . ', ' . ($validatedData['city'] ?? '') . ', ' . ($validatedData['state'] ?? '') . ' ' . ($validatedData['zipcode'] ?? '');
 
-                    Log::info('API Lead successfully created.', ['email' => $validatedData['email']]);
+                    $values = [
+                        ($validatedData['first_name'] ?? '') . ' ' . ($validatedData['last_name'] ?? ''),
+                        "'" . ($validatedData['phone'] ?? ''),
+                        $fullAddress,
+                        $validatedData['email'] ?? '',
+                        ($validatedData['insurance_property'] ?? 'no') === 'yes' ? 'Sí' : 'No',
+                        $validatedData['state'] ?? '',
+                        $registrationDate,
+                        null, null, null, // Inspection date/time/confirmed
+                        $validatedData['message'] ?? '',
+                        null, null, null, null, null, null, // Other fields not from form
+                        'Pending',
+                        $newAppointment->uuid
+                    ];
+
+                    $sheetId = Cache::remember('google_sheet_id', 3600, function() {
+                        return config('services.google.sheet_id');
+                    });
+
+                    Sheets::spreadsheet($sheetId)
+                          ->sheet($sheetName)
+                          ->append([$values]);
+
+                    Log::info('API Lead successfully added to Google Sheet.', ['email' => $validatedData['email']]);
 
                     return $newAppointment;
                 },
                 // Post-Commit actions
                 function ($createdAppointment) {
-                    Log::info('API Transaction committed for Appointment.', ['appointment_uuid' => $createdAppointment->uuid]);
+                    Log::info('API Transaction committed for Appointment. Running post-commit actions.', ['appointment_uuid' => $createdAppointment->uuid]);
                     ProcessNewLead::dispatch($createdAppointment);
                 },
                 // Error actions (before rollback)
                 function (Throwable $e) use ($validatedData) {
-                    Log::error('Error occurred during API transaction.', [
-                        'error_message' => $e->getMessage(),
-                        'email' => $validatedData['email'] ?? 'N/A'
+                    Log::error('Error occurred during API transaction, before rollback.', [
+                         'error_message' => $e->getMessage(),
+                         'email' => $validatedData['email'] ?? 'N/A'
                     ]);
                 }
             );
 
+            // Return success response with resource
             return response()->json([
                 'success' => true,
                 'message' => 'Lead successfully created',
@@ -346,9 +397,13 @@ class FacebookLeadFormController extends Controller
 
     /**
      * API endpoint to get all leads.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getAllLeads(Request $request)
     {
+        // Check API key
         $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
             return config('services.facebook_lead.api_key');
         });
@@ -361,37 +416,32 @@ class FacebookLeadFormController extends Controller
         }
         
         try {
-            $this->perPage = $request->input('per_page', 15);
+            // Optional pagination parameters
+            $perPage = $request->input('per_page', 15);
             $page = $request->input('page', 1);
-            $this->search = $request->input('search', '');
             
+            // Optional filters
             $filters = [];
             if ($request->has('status')) {
                 $filters['inspection_status'] = $request->input('status');
             }
             
-            $cacheKey = $this->generateCacheKey('appointments', $page);
+            // Generate cache key based on parameters
+            $cacheKey = "leads_" . $page . "_" . $perPage . "_" . md5(json_encode($filters));
             
-            $leads = Cache::remember($cacheKey, 300, function() use ($filters, $page) {
+            // Get results with cache
+            $leads = Cache::remember($cacheKey, 300, function() use ($filters, $perPage, $page) {
+                // Build query
                 $query = Appointment::query();
                 
-                if (!empty($this->search)) {
-                    $searchTerm = '%' . $this->search . '%';
-                    $query->where(function($q) use ($searchTerm) {
-                        $q->where('first_name', 'like', $searchTerm)
-                          ->orWhere('last_name', 'like', $searchTerm)
-                          ->orWhere('email', 'like', $searchTerm)
-                          ->orWhere('phone', 'like', $searchTerm)
-                          ->orWhere('address', 'like', $searchTerm);
-                    });
-                }
-                
+                // Apply filters
                 foreach ($filters as $column => $value) {
                     $query->where($column, $value);
                 }
                 
-                return $query->orderBy($this->sortField, $this->sortDirection)
-                           ->paginate($this->perPage, ['*'], 'page', $page);
+                // Get paginated results
+                return $query->orderBy('registration_date', 'desc')
+                           ->paginate($perPage, ['*'], 'page', $page);
             });
             
             return response()->json([
@@ -412,25 +462,35 @@ class FacebookLeadFormController extends Controller
     }
 
     /**
-     * Clear caches related to appointments - Legacy method
+     * Clear caches related to appointments
      */
     private function clearAppointmentCache()
     {
-        $this->clearCache('appointments');
-        
-        $specificCacheKeys = [
+        // Clear all appointment-related caches
+        $cacheKeys = [
             'appointments_count', 
             'appointments_pending',
             'appointments_recent'
         ];
 
-        foreach ($specificCacheKeys as $key) {
+        foreach ($cacheKeys as $key) {
             Cache::forget($key);
+        }
+
+        // Also clear paginated lead caches - pattern-based deletion
+        $keys = Cache::get('cache_keys_leads', []);
+        foreach ($keys as $key) {
+            if (Str::startsWith($key, 'leads_')) {
+                Cache::forget($key);
+            }
         }
     }
 
     /**
      * Verify reCAPTCHA token manually.
+     * 
+     * @param string $token The reCAPTCHA token
+     * @return bool True if verification passed, false otherwise
      */
     private function verifyRecaptchaToken($token)
     {
@@ -443,6 +503,7 @@ class FacebookLeadFormController extends Controller
                 return config('captcha.secret');
             });
             
+            // Make a POST request to the Google reCAPTCHA API
             $client = new \GuzzleHttp\Client();
             $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
                 'form_params' => [
@@ -453,11 +514,13 @@ class FacebookLeadFormController extends Controller
             
             $result = json_decode((string) $response->getBody(), true);
             
+            // Log the verification for debugging
             Log::debug('reCAPTCHA verification result', [
                 'result' => $result,
                 'score' => $result['score'] ?? 'N/A'
             ]);
             
+            // Check if successful and score is acceptable (0.5 is the default threshold)
             return isset($result['success']) && $result['success'] === true && 
                    (!isset($result['score']) || $result['score'] >= 0.5);
         } catch (\Exception $e) {

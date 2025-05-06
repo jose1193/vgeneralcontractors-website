@@ -1,7 +1,8 @@
 @extends('layouts.main')
 
 @section('title', 'Appointment Confirmation - V General Contractors')
-@section('meta_description', 'Your free inspection request has been received. V General Contractors will contact you
+@section('meta_description',
+    'Your free inspection request has been received. V General Contractors will contact you
     soon.')
     {{-- Add other meta tags if needed --}}
 
@@ -18,7 +19,7 @@
         </div>
         <div class="relative container mx-auto px-4 text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">V General Contractors</h1>
-            <p class="text-xl text-gray-300">Gracias. Ya terminaste.</p>
+            <p class="text-xl text-gray-300">Thank you. You're all set.</p>
         </div>
     </section>
 
@@ -43,12 +44,23 @@
                 </div>
             @endif
 
+            {{-- Green Check Icon --}}
+            <div class="flex justify-center mb-8">
+                <div class="rounded-full bg-green-500 p-4 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
             <div class="prose prose-lg max-w-none text-gray-700">
-                <p class="lead">Al completar este formulario, autorizas a V General Contractors a contactarte para agendar
-                    tu inspección gratuita.</p>
-                <p>Un agente o asistente virtual te llamará desde el número <strong class="text-gray-900">(346)
-                        692-0757</strong> para coordinar tu cita.</p>
-                <p>Tu información es confidencial y se usará solo para este fin.</p>
+                <p class="lead">By completing this form, you authorize V General Contractors to contact you to schedule
+                    your free inspection.</p>
+                <p>An agent or virtual assistant will call you from <strong
+                        class="text-gray-900">{{ App\Helpers\PhoneHelper::format($companyData->phone) }}</strong> to
+                    coordinate your appointment.</p>
+                <p>Your information is confidential and will be used only for this purpose.</p>
             </div>
 
             <div class="mt-8 text-center">

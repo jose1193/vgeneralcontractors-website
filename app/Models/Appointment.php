@@ -35,6 +35,7 @@ class Appointment extends Model
         'follow_up_date',
         'additional_note',
         'inspection_status',
+        'status_lead',
         'latitude',
         'longitude',
     ];
@@ -49,6 +50,12 @@ class Appointment extends Model
         'follow_up_date' => 'date',
         'latitude' => 'double',
         'longitude' => 'double',
+    ];
+
+    // Agregar atributos predeterminados
+    protected $attributes = [
+        'status_lead' => 'New',
+        'inspection_status' => 'Pending'
     ];
 
     /**

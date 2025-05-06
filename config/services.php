@@ -50,7 +50,7 @@ return [
 
     'facebook' => [
         'pixel_id' => env('FACEBOOK_PIXEL_ID', '1128486299305330'),
-        'access_token' => env('FACEBOOK_ACCESS_TOKEN', null),
+        'access_token' => env('FACEBOOK_ACCESS_TOKEN', 'EAAJdLdgHTeABOZCVpQvtvUEpeTq9waE3pBoGhRayrO6xhZBEEZCVA8K8ZBj3Ov9ZCnuwiZClZB0hokIZB78BnBJ1eGmzZBPhnqGlsWEyfQwCZACcr2z8Q8g8rSWcZCXzrAllsHY1ZCHzKMCeeLogyArZAzWMynYIXxQRpMA03T0lgAnZB8OLQ62owSwGmxxmwMKNMsZBQdFiQZDZD'),
     ],
 
     'companycam' => [
