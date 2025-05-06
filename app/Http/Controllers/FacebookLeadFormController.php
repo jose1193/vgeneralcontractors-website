@@ -231,8 +231,11 @@ class FacebookLeadFormController extends Controller
             'state' => 'required',
             'zipcode' => 'required|digits:5',
             'country' => 'required',
-            'insurance_property' => 'required|in:yes,no',
+            'insurance_property' => 'required|string',
+            'intent_to_claim' => 'nullable|string',
             'message' => 'nullable|min:5',
+            'notes' => 'nullable|string',
+            'damage_detail' => 'nullable|string',
             'sms_consent' => 'nullable|boolean',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
@@ -252,9 +255,8 @@ class FacebookLeadFormController extends Controller
 
         $validatedData = $validator->validated();
         
-        $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
-            return config('services.facebook_lead.api_key');
-        });
+        // Usar directamente la variable de entorno en lugar de cache y config
+        $apiKey = env('API_KEY_STORE_API_REST');
         
         if ($validatedData['api_key'] !== $apiKey) {
             return response()->json([
@@ -275,6 +277,30 @@ class FacebookLeadFormController extends Controller
                         'status_lead_default' => 'New'
                     ]);
                 
+                    // Convertir insurance_property a boolean correctamente aceptando diferentes variaciones
+                    $insuranceProperty = false;
+                    if (is_string($validatedData['insurance_property'])) {
+                        $value = strtolower($validatedData['insurance_property']);
+                        $insuranceProperty = in_array($value, ['yes', 'y', 'true', '1', 'si', 'sí']);
+                    } elseif (is_bool($validatedData['insurance_property'])) {
+                        $insuranceProperty = $validatedData['insurance_property'];
+                    } elseif (is_numeric($validatedData['insurance_property'])) {
+                        $insuranceProperty = (bool)$validatedData['insurance_property'];
+                    }
+                    
+                    // Convertir intent_to_claim a boolean con la misma lógica
+                    $intentToClaim = false;
+                    if (isset($validatedData['intent_to_claim'])) {
+                        if (is_string($validatedData['intent_to_claim'])) {
+                            $value = strtolower($validatedData['intent_to_claim']);
+                            $intentToClaim = in_array($value, ['yes', 'y', 'true', '1', 'si', 'sí']);
+                        } elseif (is_bool($validatedData['intent_to_claim'])) {
+                            $intentToClaim = $validatedData['intent_to_claim'];
+                        } elseif (is_numeric($validatedData['intent_to_claim'])) {
+                            $intentToClaim = (bool)$validatedData['intent_to_claim'];
+                        }
+                    }
+
                     $newAppointment = Appointment::create([
                         'uuid' => Str::uuid(),
                         'first_name' => $validatedData['first_name'],
@@ -287,15 +313,18 @@ class FacebookLeadFormController extends Controller
                         'state' => $validatedData['state'],
                         'zipcode' => $validatedData['zipcode'],
                         'country' => $validatedData['country'],
-                        'insurance_property' => $validatedData['insurance_property'] === 'yes',
+                        'insurance_property' => $insuranceProperty,
+                        'intent_to_claim' => $intentToClaim,
                         'message' => $validatedData['message'] ?? null,
+                        'notes' => $validatedData['notes'] ?? null,
+                        'damage_detail' => $validatedData['damage_detail'] ?? null,
                         'sms_consent' => filter_var($validatedData['sms_consent'] ?? false, FILTER_VALIDATE_BOOLEAN),
                         'registration_date' => Carbon::now(),
                         'inspection_status' => 'Pending',
                         'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
-                        'lead_source' => $validatedData['lead_source'] ?? 'Facebook Ads'
+                        'lead_source' => $validatedData['lead_source'] ?? 'Website'
                     ]);
 
                     Log::info('API Appointment created:', [
@@ -329,7 +358,7 @@ class FacebookLeadFormController extends Controller
                 'success' => true,
                 'message' => 'Lead successfully created',
                 'data' => new AppointmentResource($appointment)
-            ], 201);
+            ], 200);
 
         } catch (Throwable $e) {
             Log::error('Failed to process API lead submission.', [
@@ -349,9 +378,8 @@ class FacebookLeadFormController extends Controller
      */
     public function getAllLeads(Request $request)
     {
-        $apiKey = Cache::remember('facebook_lead_api_key', 3600, function() {
-            return config('services.facebook_lead.api_key');
-        });
+        // También actualizar esta validación para usar la misma variable de entorno
+        $apiKey = env('API_KEY_STORE_API_REST');
         
         if ($request->header('X-API-KEY') !== $apiKey) {
             return response()->json([
