@@ -126,9 +126,7 @@
             @endif
             <p><strong>Estado:</strong> <span class="status-tag">Reagendada</span></p>
             <p><strong>Nueva fecha y hora:</strong>
-                {{ \Carbon\Carbon::parse($appointment->start_time)->format('d/m/Y') }}
-                {{ \Carbon\Carbon::parse($appointment->start_time)->format('h:i A') }} a
-                {{ \Carbon\Carbon::parse($appointment->end_time)->format('h:i A') }}
+                {{ \Carbon\Carbon::parse($appointment->start_time)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY [a las] HH:mm') }}
             </p>
             <p><strong>Dirección:</strong> {{ $appointment->address }}</p>
 

@@ -99,9 +99,10 @@
 
         <div class="appointment-details">
             <h3>Detalles de la Inspección:</h3>
-            <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_date)->format('l, F j, Y') }}
+            <p><strong>Fecha:</strong>
+                {{ \Carbon\Carbon::parse($appointment->inspection_date)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY') }}
             </p>
-            <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_time)->format('g:i A') }}</p>
+            <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_time)->format('HH:mm') }}</p>
             <p><strong>Dirección:</strong> {{ $appointment->address }}
                 @if ($appointment->address_2)
                     , {{ $appointment->address_2 }}
