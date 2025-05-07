@@ -43,7 +43,8 @@
         }
 
         .social-icons {
-            margin: 20px 0;
+            margin-top: 5px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -231,41 +232,56 @@
 
             <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
 
-            <div style="text-align: center; margin: 20px 0;">
-                @if ($companyData->phone)
-                    <p><strong>📞 Teléfono:</strong>
-                        @php
-                            $phone = $companyData->phone ?? '';
-                            // Remove any non-digit characters
-                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                            // Format the number based on length
-                            if (strlen($digitsOnly) == 10) {
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 0, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 3, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 6);
-                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                // US number with country code
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 1, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 4, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 7);
-                            } else {
-                                // Fallback to original
-                                $formattedPhone = $phone;
-                            }
-                            echo $formattedPhone;
-                        @endphp
+            <div
+                style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; text-align: center; border: 1px solid #e9ecef;">
+                @if ($companyData->phone || $companyData->email)
+                    <p style="margin: 0; font-size: 15px;">
+                        @if ($companyData->phone)
+                            <span style="display: inline-block; margin: 0 8px;">
+                                <span style="margin-right: 5px;">📞</span>
+                                <strong>Teléfono:</strong>
+                                <span>
+                                    @php
+                                        $phone = $companyData->phone ?? '';
+                                        $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                        if (strlen($digitsOnly) == 10) {
+                                            $formattedPhone =
+                                                '(' .
+                                                substr($digitsOnly, 0, 3) .
+                                                ') ' .
+                                                substr($digitsOnly, 3, 3) .
+                                                '-' .
+                                                substr($digitsOnly, 6);
+                                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                            $formattedPhone =
+                                                '(' .
+                                                substr($digitsOnly, 1, 3) .
+                                                ') ' .
+                                                substr($digitsOnly, 4, 3) .
+                                                '-' .
+                                                substr($digitsOnly, 7);
+                                        } else {
+                                            $formattedPhone = $phone;
+                                        }
+                                        echo $formattedPhone;
+                                    @endphp
+                                </span>
+                            </span>
+                        @endif
+
+                        @if ($companyData->phone && $companyData->email)
+                            <span style="color: #999; margin: 0 8px;">|</span>
+                        @endif
+
+                        @if ($companyData->email)
+                            <span style="display: inline-block; margin: 0 8px;">
+                                <span style="margin-right: 5px;">📧</span>
+                                <strong>Email:</strong>
+                                <a href="mailto:{{ $companyData->email }}"
+                                    style="text-decoration: none; color: #10b981;">{{ $companyData->email }}</a>
+                            </span>
+                        @endif
                     </p>
-                @endif
-                @if ($companyData->email)
-                    <p><strong>📧 Email:</strong> {{ $companyData->email }}</p>
                 @endif
             </div>
         </div>
@@ -300,9 +316,33 @@
                 Lunes a Viernes: 9:00 AM - 5:00 PM</p>
             <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
                 Todos los derechos reservados.</p>
-            @if ($companyData->address)
-                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
-            @endif
+
+            <div style="margin-top: 15px; font-size: 12px; color: #777;">
+                @if ($companyData->address || $companyData->phone || $companyData->email)
+                    @if ($companyData->address)
+                        <p style="margin: 3px 0;">{{ $companyData->address }}</p>
+                    @endif
+
+                    <p style="margin: 3px 0;">
+                        @if ($companyData->phone)
+                            <span>
+                                @php
+                                    echo $formattedPhone ?? $companyData->phone;
+                                @endphp
+                            </span>
+
+                            @if ($companyData->email)
+                                <span style="margin: 0 5px;">|</span>
+                            @endif
+                        @endif
+
+                        @if ($companyData->email)
+                            <a href="mailto:{{ $companyData->email }}"
+                                style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
+                        @endif
+                    </p>
+                @endif
+            </div>
         </div>
     </div>
 </body>

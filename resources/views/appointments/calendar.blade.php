@@ -675,7 +675,7 @@
 
                             Swal.fire({
                                 title: 'Reschedule Appointment',
-                                text: `Do you want to move "${event.title}" appointment to ${event.start.toLocaleString('en-US', {dateStyle: 'short', timeStyle: 'short'})}?`,
+                                html: `Do you want to move <strong>${event.title}</strong> appointment to ${event.start.toLocaleString('en-US', {dateStyle: 'short', timeStyle: 'short'})}?`,
                                 icon: 'question',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
