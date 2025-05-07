@@ -29,7 +29,7 @@ return new class extends Migration
             $table->time('inspection_time')->nullable();
             $table->enum('inspection_status', ['Confirmed', 'Completed', 'Pending', 'Declined'])->nullable();
             $table->enum('status_lead', ['New', 'Called','Pending', 'Declined'])->nullable();
-            $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference'])->nullable();
+            $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference', 'Retell AI'])->nullable();
             $table->text('notes')->nullable();
             $table->string('owner')->nullable();
             $table->text('damage_detail')->nullable();

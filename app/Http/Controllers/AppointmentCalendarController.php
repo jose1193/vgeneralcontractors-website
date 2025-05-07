@@ -11,10 +11,20 @@ use App\Services\TransactionService;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Jobs\ProcessAppointmentEmail;
+use Illuminate\Support\Facades\Cache;
+use App\Traits\CacheTrait;
 
 class AppointmentCalendarController extends Controller
 {
+    use CacheTrait;
+    
     protected TransactionService $transactionService;
+    public $search = '';
+    public $sortField = 'inspection_date';
+    public $sortDirection = 'asc';
+    public $perPage = 100;
+    public $showDeleted = false;
+    protected $significantDataChange = false;
 
     public function __construct(TransactionService $transactionService)
     {
@@ -39,77 +49,86 @@ class AppointmentCalendarController extends Controller
         // Or load all relevant appointments if a range is not initially provided
         $start = $request->query('start') ? Carbon::parse($request->query('start'))->startOfDay() : now()->subMonth();
         $end = $request->query('end') ? Carbon::parse($request->query('end'))->endOfDay() : now()->addMonth();
-
-        $appointments = Appointment::query()
-            ->where(function($query) use ($start, $end) {
-                // Filter appointments with inspection date within the range
-                $query->whereBetween('inspection_date', [$start->toDateString(), $end->toDateString()]);
-            })
-            // Optionally filter by status if needed
-            // ->whereNotIn('inspection_status', ['Declined'])
-            ->get();
-
-        $events = $appointments->map(function (Appointment $appointment) {
-            // Color based on appointment status
-            $color = '#3b82f6'; // Blue by default (pending)
-            switch ($appointment->inspection_status) {
-                case 'Completed':
-                    $color = '#10b981'; // Green
-                    break;
-                case 'Confirmed':
-                    $color = '#8B5CF6'; // Purple
-                    break;
-                case 'Declined':
-                    $color = '#ef4444'; // Red
-                    break;
-                case 'Pending':
-                    $color = '#f59e0b'; // Orange
-                    break;
-            }
-
-            // Convert inspection_date and inspection_time to Carbon objects
-            $inspectionDate = Carbon::parse($appointment->inspection_date);
-            $inspectionTime = $appointment->inspection_time ? Carbon::parse($appointment->inspection_time) : null;
-            
-            // If we have a time, combine it with the date
-            if ($inspectionTime) {
-                $startTime = Carbon::parse($appointment->inspection_date)
-                    ->setHour($inspectionTime->hour)
-                    ->setMinute($inspectionTime->minute)
-                    ->setSecond(0);
+        
+        // Create a cache key based on the date range
+        $cacheKey = 'calendar_events_' . $start->format('Y-m-d') . '_' . $end->format('Y-m-d');
+        
+        // Register this cache key for future invalidation
+        $this->trackCalendarCacheKey($cacheKey);
+        
+        // Cache the events for 60 minutes (adjust as needed)
+        $events = Cache::remember($cacheKey, 60, function() use ($start, $end) {
+            $appointments = Appointment::query()
+                ->where(function($query) use ($start, $end) {
+                    // Filter appointments with inspection date within the range
+                    $query->whereBetween('inspection_date', [$start->toDateString(), $end->toDateString()]);
+                })
+                // Optionally filter by status if needed
+                // ->whereNotIn('inspection_status', ['Declined'])
+                ->get();
+    
+            return $appointments->map(function (Appointment $appointment) {
+                // Color based on appointment status
+                $color = '#3b82f6'; // Blue by default (pending)
+                switch ($appointment->inspection_status) {
+                    case 'Completed':
+                        $color = '#10b981'; // Green
+                        break;
+                    case 'Confirmed':
+                        $color = '#8B5CF6'; // Purple
+                        break;
+                    case 'Declined':
+                        $color = '#ef4444'; // Red
+                        break;
+                    case 'Pending':
+                        $color = '#f59e0b'; // Orange
+                        break;
+                }
+    
+                // Convert inspection_date and inspection_time to Carbon objects
+                $inspectionDate = Carbon::parse($appointment->inspection_date);
+                $inspectionTime = $appointment->inspection_time ? Carbon::parse($appointment->inspection_time) : null;
                 
-                // Add 1 hour for the end by default
-                $endTime = $startTime->copy()->addHour();
-            } else {
-                // If there's no time, use all day
-                $startTime = $inspectionDate;
-                $endTime = $inspectionDate->copy()->addDay();
-            }
-
-            // Format the appointment for FullCalendar
-            return [
-                'id' => $appointment->id,
-                'title' => $appointment->first_name . ' ' . $appointment->last_name,
-                'start' => $startTime->toIso8601String(),
-                'end' => $endTime->toIso8601String(),
-                'color' => $color,
-                'allDay' => $inspectionTime ? false : true,
-                // Additional properties to display in the popup
-                'extendedProps' => [
-                    'clientName' => $appointment->first_name . ' ' . $appointment->last_name,
-                    'clientEmail' => $appointment->email,
-                    'clientPhone' => $appointment->phone,
-                    'status' => $appointment->inspection_status,
-                    'leadStatus' => $appointment->status_lead,
-                    'notes' => $appointment->notes,
-                    'address' => $appointment->address . ', ' . $appointment->city . ', ' . $appointment->state . ' ' . $appointment->zipcode,
-                    'message' => $appointment->message,
-                    'damage' => $appointment->damage_detail,
-                    'hasInsurance' => $appointment->insurance_property ? 'Yes' : 'No',
-                    'latitude' => $appointment->latitude,
-                    'longitude' => $appointment->longitude,
-                ]
-            ];
+                // If we have a time, combine it with the date
+                if ($inspectionTime) {
+                    $startTime = Carbon::parse($appointment->inspection_date)
+                        ->setHour($inspectionTime->hour)
+                        ->setMinute($inspectionTime->minute)
+                        ->setSecond(0);
+                    
+                    // Add 1 hour for the end by default
+                    $endTime = $startTime->copy()->addHour();
+                } else {
+                    // If there's no time, use all day
+                    $startTime = $inspectionDate;
+                    $endTime = $inspectionDate->copy()->addDay();
+                }
+    
+                // Format the appointment for FullCalendar
+                return [
+                    'id' => $appointment->id,
+                    'title' => $appointment->first_name . ' ' . $appointment->last_name,
+                    'start' => $startTime->toIso8601String(),
+                    'end' => $endTime->toIso8601String(),
+                    'color' => $color,
+                    'allDay' => $inspectionTime ? false : true,
+                    // Additional properties to display in the popup
+                    'extendedProps' => [
+                        'clientName' => $appointment->first_name . ' ' . $appointment->last_name,
+                        'clientEmail' => $appointment->email,
+                        'clientPhone' => $appointment->phone,
+                        'status' => $appointment->inspection_status,
+                        'leadStatus' => $appointment->status_lead,
+                        'notes' => $appointment->notes,
+                        'address' => $appointment->address . ', ' . $appointment->city . ', ' . $appointment->state . ' ' . $appointment->zipcode,
+                        'message' => $appointment->message,
+                        'damage' => $appointment->damage_detail,
+                        'hasInsurance' => $appointment->insurance_property ? 'Yes' : 'No',
+                        'latitude' => $appointment->latitude,
+                        'longitude' => $appointment->longitude,
+                    ]
+                ];
+            });
         });
 
         return response()->json($events);
@@ -191,6 +210,18 @@ class AppointmentCalendarController extends Controller
                     // Send notification via job
                     ProcessAppointmentEmail::dispatch($updatedAppointment, 'rescheduled');                    
                     Log::info('Rescheduling email job dispatched', ['id' => $updatedAppointment->id]);
+                    
+                    // Mark significant change and clear relevant caches
+                    $this->significantDataChange = true;
+                    $this->clearCache('appointments');
+                    
+                    // Clear calendar event cache for all potential date ranges that could include this appointment
+                    // We'll use a pattern to clear all calendar event caches
+                    $cacheKeys = Cache::get('calendar_event_keys', []);
+                    foreach ($cacheKeys as $key) {
+                        Cache::forget($key);
+                    }
+                    Cache::forget('calendar_event_keys');
                 }
             );
 
@@ -253,6 +284,17 @@ class AppointmentCalendarController extends Controller
             }
             
             $appointment->save();
+            
+            // Clear cache
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
+            
+            // Clear calendar event cache
+            $cacheKeys = Cache::get('calendar_event_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            Cache::forget('calendar_event_keys');
 
             // Determine message and email type based on status
             $message = 'Appointment status updated successfully.';
@@ -372,6 +414,17 @@ class AppointmentCalendarController extends Controller
             }
             
             $client->save();
+            
+            // Clear cache after updating
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
+            
+            // Clear calendar event cache
+            $cacheKeys = Cache::get('calendar_event_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            Cache::forget('calendar_event_keys');
 
             // Determine email type and message based on status
             $message = 'Appointment scheduled successfully.';
@@ -417,15 +470,21 @@ class AppointmentCalendarController extends Controller
     public function getClients()
     {
         try {
-            $clients = Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone')
-                ->whereNotNull('first_name')
-                ->whereNotNull('email')
-                ->where(function($query) {
-                    $query->whereNull('inspection_date')
-                          ->orWhereNull('inspection_time');
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
+            // Create a cache key for clients list
+            $cacheKey = 'calendar_available_clients';
+            
+            // Cache the clients list for 10 minutes
+            $clients = Cache::remember($cacheKey, 10, function() {
+                return Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone')
+                    ->whereNotNull('first_name')
+                    ->whereNotNull('email')
+                    ->where(function($query) {
+                        $query->whereNull('inspection_date')
+                              ->orWhereNull('inspection_time');
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            });
 
             return response()->json([
                 'success' => true,
@@ -436,6 +495,18 @@ class AppointmentCalendarController extends Controller
                 'success' => false,
                 'message' => 'Error fetching clients: ' . $e->getMessage()
             ], 500);
+        }
+    }
+    
+    /**
+     * Track calendar event cache keys for efficient invalidation
+     */
+    private function trackCalendarCacheKey($key)
+    {
+        $cacheKeys = Cache::get('calendar_event_keys', []);
+        if (!in_array($key, $cacheKeys)) {
+            $cacheKeys[] = $key;
+            Cache::put('calendar_event_keys', $cacheKeys, 60 * 24); // Store for 24 hours
         }
     }
 } 

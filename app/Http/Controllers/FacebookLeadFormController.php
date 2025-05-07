@@ -324,7 +324,7 @@ class FacebookLeadFormController extends Controller
                         'status_lead' => 'New',
                         'latitude' => $validatedData['latitude'] ?? null,
                         'longitude' => $validatedData['longitude'] ?? null,
-                        'lead_source' => $validatedData['lead_source'] ?? 'Website'
+                        'lead_source' => $validatedData['lead_source'] ?? 'Retell AI'
                     ]);
 
                     Log::info('API Appointment created:', [

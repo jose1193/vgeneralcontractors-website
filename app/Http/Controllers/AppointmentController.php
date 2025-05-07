@@ -14,9 +14,20 @@ use App\Jobs\ProcessRejectionNotifications;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AppointmentsExport;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
+use App\Traits\CacheTrait;
 
 class AppointmentController extends BaseCrudController
 {
+    use CacheTrait;
+    
+    public $search = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $perPage = 10;
+    public $showDeleted = false;
+    protected $significantDataChange = false;
+    
     public function __construct(TransactionService $transactionService)
     {
         parent::__construct($transactionService);
@@ -179,63 +190,28 @@ class AppointmentController extends BaseCrudController
     public function index(Request $request)
     {
         try {
-            $query = $this->modelClass::query();
-
+            // Set up cache and search parameters
+            $this->search = $request->input('search', '');
+            $this->sortField = $request->input('sort_field', 'created_at');
+            $this->sortDirection = $request->input('sort_direction', 'desc');
+            $this->perPage = $request->input('per_page', 10);
+            $this->showDeleted = $request->input('show_deleted', 'false') === 'true';
+            
             // Add debug logging
             Log::info('AppointmentController::index - Request parameters:', [
                 'all_params' => $request->all(),
-                'search_param' => $request->search,
+                'search_param' => $this->search,
                 'has_search' => $request->has('search'),
-                'is_empty' => empty($request->search)
+                'is_empty' => empty($this->search)
             ]);
-
-            // Apply date range filters if provided
-            if ($request->has('start_date') && !empty($request->start_date)) {
-                $query->whereDate('inspection_date', '>=', $request->start_date);
-            }
-
-            if ($request->has('end_date') && !empty($request->end_date)) {
-                $query->whereDate('inspection_date', '<=', $request->end_date);
-            }
-
-            // Handle status_lead filter
-            if ($request->has('status_lead_filter') && !empty($request->status_lead_filter)) {
-                $query->where('status_lead', $request->status_lead_filter);
-            }
-
-            // Handle search
-            if ($request->has('search') && !empty($request->search)) {
-                $searchTerm = $request->search;
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('email', 'like', "%{$searchTerm}%")
-                      ->orWhere('first_name', 'like', "%{$searchTerm}%")
-                      ->orWhere('last_name', 'like', "%{$searchTerm}%")
-                      ->orWhere('status_lead', 'like', "%{$searchTerm}%")
-                      ->orWhere('phone', 'like', "%{$searchTerm}%");
-                });
-            }
-
-            // Handle soft deletes
-            if ($request->input('show_deleted', 'false') === 'true') {
-                Log::info('Including trashed appointments', [
-                    'show_deleted' => $request->input('show_deleted'),
-                    'is_true' => $request->input('show_deleted') === 'true'
-                ]);
-                $query->withTrashed();
-            } else {
-                Log::info('Excluding trashed appointments', [
-                    'show_deleted' => $request->input('show_deleted'),
-                    'is_true' => $request->input('show_deleted') === 'true'
-                ]);
-            }
-
-            // Sorting
-            $sortField = $request->input('sort_field', 'created_at');
-            $sortDirection = $request->input('sort_direction', 'desc');
-            $query->orderBy($sortField, $sortDirection);
-
-            // Handle Excel export
+            
+            $page = $request->input('page', 1);
+            $cacheKey = $this->generateCacheKey('appointments', $page);
+            
+            // Handle Excel export (skip cache for exports)
             if ($request->has('export') && $request->export === 'excel') {
+                $query = $this->buildAppointmentsQuery($request);
+                
                 Log::info('Exporting appointments to Excel', [
                     'filter_count' => $query->count(),
                     'request_params' => $request->all()
@@ -244,10 +220,14 @@ class AppointmentController extends BaseCrudController
                 $filename = 'appointments_export_' . date('Y-m-d_His') . '.xlsx';
                 return Excel::download(new AppointmentsExport($query), $filename);
             }
-
-            // Pagination
-            $perPage = $request->input('per_page', 10);
-            $appointments = $query->paginate($perPage);
+            
+            // Use cache for normal views
+            $appointments = Cache::remember($cacheKey, 300, function() use ($request, $page) {
+                $query = $this->buildAppointmentsQuery($request);
+                
+                // Pagination
+                return $query->paginate($this->perPage, ['*'], 'page', $page);
+            });
 
             if ($request->ajax()) {
                 return response()->json([
@@ -280,6 +260,50 @@ class AppointmentController extends BaseCrudController
 
             return back()->with('error', "Error listing {$this->entityName}s");
         }
+    }
+    
+    /**
+     * Build appointments query based on request filters
+     */
+    private function buildAppointmentsQuery(Request $request)
+    {
+        $query = $this->modelClass::query();
+        
+        // Apply date range filters if provided
+        if ($request->has('start_date') && !empty($request->start_date)) {
+            $query->whereDate('inspection_date', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && !empty($request->end_date)) {
+            $query->whereDate('inspection_date', '<=', $request->end_date);
+        }
+
+        // Handle status_lead filter
+        if ($request->has('status_lead_filter') && !empty($request->status_lead_filter)) {
+            $query->where('status_lead', $request->status_lead_filter);
+        }
+
+        // Handle search
+        if (!empty($this->search)) {
+            $searchTerm = '%' . $this->search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('email', 'like', $searchTerm)
+                  ->orWhere('first_name', 'like', $searchTerm)
+                  ->orWhere('last_name', 'like', $searchTerm)
+                  ->orWhere('status_lead', 'like', $searchTerm)
+                  ->orWhere('phone', 'like', $searchTerm);
+            });
+        }
+
+        // Handle soft deletes
+        if ($this->showDeleted) {
+            $query->withTrashed();
+        }
+
+        // Sorting
+        $query->orderBy($this->sortField, $this->sortDirection);
+        
+        return $query;
     }
 
     /**
@@ -319,6 +343,11 @@ class AppointmentController extends BaseCrudController
                 return $this->modelClass::create($preparedData);
             }, function ($appointment) {
                 Log::info("{$this->entityName} created successfully", ['id' => $appointment->id]);
+                
+                // Mark significant data change and clear cache
+                $this->significantDataChange = true;
+                $this->clearCache('appointments');
+                
                 $this->afterStore($appointment);
             });
 
@@ -419,6 +448,11 @@ class AppointmentController extends BaseCrudController
                 return $appointment->fresh();
             }, function ($appointment) {
                 Log::info("{$this->entityName} updated successfully", ['id' => $appointment->id]);
+                
+                // Mark significant data change and clear cache
+                $this->significantDataChange = true;
+                $this->clearCache('appointments');
+                
                 $this->afterUpdate($appointment);
             });
 
@@ -480,6 +514,11 @@ class AppointmentController extends BaseCrudController
                 return $appointment;
             }, function ($appointment) {
                 Log::info("{$this->entityName} deleted successfully", ['id' => $appointment->id]);
+                
+                // Mark significant data change and clear cache
+                $this->significantDataChange = true;
+                $this->clearCache('appointments');
+                
                 $this->afterDestroy($appointment);
             });
 
@@ -516,6 +555,11 @@ class AppointmentController extends BaseCrudController
                 return $appointment;
             }, function ($appointment) {
                 Log::info("{$this->entityName} restored successfully", ['id' => $appointment->id]);
+                
+                // Mark significant data change and clear cache
+                $this->significantDataChange = true;
+                $this->clearCache('appointments');
+                
                 $this->afterRestore($appointment);
             });
 
@@ -863,6 +907,10 @@ class AppointmentController extends BaseCrudController
                     ]);
                 }
             }
+            
+            // Clear cache after batch processing
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
 
             Log::info('Rejection notifications sent and appointments moved to trash', [
                 'total' => count($appointmentIds),
