@@ -228,6 +228,8 @@
                 <ul style="margin: 0; padding-left: 20px;">
                     <li>Por favor, confirme que la nueva fecha y hora le convienen</li>
                     <li>Si necesita hacer algún ajuste adicional, contáctenos lo antes posible</li>
+                    <li>Por favor, tenga a mano su <strong>póliza de cobertura de seguro</strong> de su propiedad el día
+                        de la inspección</li>
                 </ul>
             </div>
 

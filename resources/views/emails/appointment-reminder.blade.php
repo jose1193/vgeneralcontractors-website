@@ -183,6 +183,8 @@
                 <ul style="margin: 0; padding-left: 20px;">
                     <li>Por favor, llegue 5 minutos antes de su cita</li>
                     <li>Si necesita reprogramar o cancelar, contáctenos lo antes posible</li>
+                    <li>Por favor, tenga a mano su <strong>póliza de cobertura de seguro</strong> de su propiedad el día
+                        de la inspección</li>
                 </ul>
             </div>
 
