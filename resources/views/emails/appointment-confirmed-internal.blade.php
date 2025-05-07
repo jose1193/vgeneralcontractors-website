@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>🎉 New Lead Alert! 🔔 - V General Contractors</title>
+    <title>🎉 Appointment Confirmed Alert! 🔔 - V General Contractors</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,22 +53,22 @@
         }
 
         .highlight {
-            color: #28a745;
+            color: #10b981;
             font-weight: bold;
         }
 
-        .lead-banner {
+        .appointment-banner {
             background: #e6f9e9;
             padding: 15px;
             border-radius: 8px;
             margin: 20px 0;
         }
 
-        .lead-icon {
+        .appointment-icon {
             display: inline-block;
             margin-right: 5px;
             font-size: 1.2em;
-            color: #28a745;
+            color: #10b981;
         }
 
         .details td {
@@ -81,7 +81,15 @@
             width: 150px;
         }
 
-        /* Adjust width as needed */
+        .status-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            background-color: #10b981;
+            color: white;
+        }
     </style>
 </head>
 
@@ -93,32 +101,29 @@
         </div>
 
         <div class="details">
-            <h2 style="color: #28a745; text-align: center; border-bottom: 2px solid #28a745; padding-bottom: 10px;">🎉
-                New Lead Alert! 🔔</h2>
+            <h2 style="color: #10b981; text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
+                🎉 Appointment Confirmed Alert! 🔔
+            </h2>
 
-            <div class="lead-banner">
+            <div class="appointment-banner">
                 <p style="text-align: center; margin: 0;">
-                    You have received a <span class="highlight">new potential customer</span> inquiry for
-                    <strong>{{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}</strong>!
+                    A new appointment has been <span class="highlight">confirmed</span> for
+                    <strong>{{ $companyData->company_name }}</strong>!
                 </p>
             </div>
 
-            <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Lead Details:</h3>
+            <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Appointment Details:</h3>
             <table style="width: 100%; margin: 0 0 20px 0; border-collapse: collapse;">
                 <tr>
-                    <td><span class="lead-icon">👤</span> <strong>First Name:</strong></td>
-                    <td>{{ $appointment->first_name }}</td>
+                    <td><span class="appointment-icon">👤</span> <strong>Client Name:</strong></td>
+                    <td>{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">👤</span> <strong>Last Name:</strong></td>
-                    <td>{{ $appointment->last_name }}</td>
-                </tr>
-                <tr>
-                    <td><span class="lead-icon">📧</span> <strong>Email:</strong></td>
+                    <td><span class="appointment-icon">📧</span> <strong>Email:</strong></td>
                     <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">📞</span> <strong>Phone:</strong></td>
+                    <td><span class="appointment-icon">📞</span> <strong>Phone:</strong></td>
                     <td>
                         @php
                             $phone = $appointment->phone ?? '';
@@ -151,41 +156,66 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">📍</span> <strong>Address:</strong></td>
+                    <td><span class="appointment-icon">📍</span> <strong>Address:</strong></td>
                     <td>
-                        {{ $appointment->address }}<br>
+                        {{ $appointment->address }}
                         @if ($appointment->address_2)
-                            {{ $appointment->address_2 }}<br>
+                            <br>{{ $appointment->address_2 }}
                         @endif
-                        {{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}<br>
-                        {{ $appointment->country }}
+                        <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+                        <br>{{ $appointment->country }}
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">🛡️</span> <strong>Has Insurance?:</strong></td>
+                    <td><span class="appointment-icon">🕒</span> <strong>Appointment Time:</strong></td>
+                    <td>
+                        @php
+                            $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
+                            $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
+                            $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
+                            $endDateTime = $startDateTime->copy()->addHours(2);
+                            $formattedDate = $startDateTime
+                                ->locale('es')
+                                ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                            echo ucfirst($formattedDate);
+                        @endphp
+                        <br>
+                        <small>Duration: 2 hours (until {{ $endDateTime->format('h:i A') }})</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="appointment-icon">⏱️</span> <strong>Duration:</strong></td>
+                    <td>2 hours</td>
+                </tr>
+                <tr>
+                    <td><span class="appointment-icon">🛡️</span> <strong>Has Insurance?:</strong></td>
                     <td>{{ $appointment->insurance_property ? 'Yes' : 'No' }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">💬</span> <strong>SMS Consent:</strong></td>
+                    <td><span class="appointment-icon">💬</span> <strong>SMS Consent:</strong></td>
                     <td>{{ $appointment->sms_consent ? 'Yes' : 'No' }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">📝</span> <strong>Message:</strong></td>
+                    <td><span class="appointment-icon">📝</span> <strong>Message:</strong></td>
                     <td>{{ $appointment->message ?: 'N/A' }}</td>
                 </tr>
                 <tr>
-                    <td><span class="lead-icon">📅</span> <strong>Submitted:</strong></td>
+                    <td><span class="appointment-icon">📅</span> <strong>Registration Date:</strong></td>
                     <td>{{ $appointment->registration_date ? $appointment->registration_date->format('M d, Y g:i A T') : 'N/A' }}
                     </td>
+                </tr>
+                <tr>
+                    <td><span class="appointment-icon">🔍</span> <strong>Lead Source:</strong></td>
+                    <td>{{ $appointment->lead_source ?: 'N/A' }}</td>
                 </tr>
             </table>
 
             <div style="padding: 15px; border-radius: 8px; margin-top: 25px; text-align: center;">
-                <p>Act quickly to connect with this potential client!</p>
-                <p>Contact them from:
+                <p>Please prepare for this appointment!</p>
+                <p>Contact the client from:
                     <strong>📞
                         @php
-                            $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
+                            $phone = $companyData->phone ?? '';
                             // Remove any non-digit characters
                             $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
                             // Format the number based on length
@@ -218,20 +248,25 @@
         </div>
 
         <div class="social-icons">
-            <a href="[URL_FACEBOOK]" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-            </a>
-            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-            </a>
+            @if ($companyData->social_media_facebook)
+                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                </a>
+            @endif
+            @if ($companyData->social_media_instagram)
+                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                </a>
+            @endif
         </div>
 
         <div class="footer">
             <p>Business Hours:<br>
                 Monday to Friday: 9:00 AM - 5:00 PM</p>
-            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} V General Contractors. All rights
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}. All
+                rights
                 reserved.</p>
-            <p style="font-size: 10px; color: #999;">{{ \App\Models\CompanyData::first()->address ?? '' }}</p>
+            <p style="font-size: 10px; color: #999;">{{ $companyData->address ?? '' }}</p>
         </div>
     </div>
 </body>

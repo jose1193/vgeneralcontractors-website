@@ -1,97 +1,106 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Su cita ha sido confirmada</title>
+    <title>✅ ¡Cita Confirmada! - V General Contractors</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
         }
 
-        .header {
-            background-color: #10b981;
-            /* Verde para confirmación */
-            color: white;
-            padding: 20px;
+        .logo {
             text-align: center;
-            border-radius: 5px 5px 0 0;
+            margin-bottom: 25px;
         }
 
-        .content {
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .details {
+            line-height: 1.6;
+            color: #333333;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .social-icons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            display: inline-block;
+        }
+
+        .highlight-green {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .confirmation-banner {
+            background: #e6f9e9;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
+            border-radius: 8px;
+            margin: 20px 0;
         }
 
         .appointment-details {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
             margin: 20px 0;
+        }
+
+        .details td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .details strong {
+            display: inline-block;
+            width: 150px;
+            color: #4a5568;
         }
 
         .status-tag {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: bold;
-            text-transform: uppercase;
-            background-color: #10b981;
-            /* Verde para confirmación */
-            color: white;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        .company-info {
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-
-        .social-links {
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #3490dc;
-            text-decoration: none;
-        }
-
-        .map-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 15px;
-            background-color: #3490dc;
+            font-weight: bold;
+            background-color: #10b981;
             color: white;
-            text-decoration: none;
-            border-radius: 4px;
         }
 
-        .calendar-link {
+        .action-button {
             display: inline-block;
-            margin-top: 15px;
-            padding: 8px 15px;
+            padding: 12px 24px;
             background-color: #10b981;
             color: white;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 15px 0;
         }
     </style>
 </head>
@@ -129,86 +138,159 @@
         }
     @endphp
 
-    <div class="header">
-        <h1>¡Su cita ha sido confirmada!</h1>
-    </div>
-
-    <div class="content">
-        <p>Hola <strong>{{ $appointment->client_first_name }} {{ $appointment->client_last_name }}</strong>,</p>
-
-        <p>Nos complace confirmar su cita con <strong>{{ $companyData->company_name }}</strong>.
-            Hemos recibido y aprobado su solicitud, ¡estamos esperando para atenderle!</p>
-
-        <div class="appointment-details">
-            <h3>Detalles de la Cita:</h3>
-            @if ($appointment->service)
-                <p><strong>Servicio:</strong> {{ $appointment->service->name }}</p>
-            @endif
-            <p><strong>Estado:</strong> <span class="status-tag">Confirmada</span></p>
-            <p><strong>Fecha y hora:</strong>
-                {{ \Carbon\Carbon::parse($appointment->start_time)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY [a las] HH:mm') }}
-            </p>
-            <p><strong>Duración estimada:</strong> {{ $appointment->service ? $appointment->service->duration : '?' }}
-                minutos</p>
-            <p><strong>Dirección:</strong> {{ $appointment->address }}</p>
-
-            @if ($appointment->brand)
-                <p><strong>Marca:</strong> {{ $appointment->brand->name }}</p>
-            @endif
-
-            @if (!empty($appointment->issue_description))
-                <p><strong>Descripción del problema:</strong> {{ $appointment->issue_description }}</p>
-            @endif
-
-            @if (!empty($appointment->notes))
-                <p><strong>Notas adicionales:</strong> {{ $appointment->notes }}</p>
-            @endif
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
+                alt="Logo V General Contractors">
         </div>
 
-        <p><strong>¿Qué debe hacer ahora?</strong></p>
-        <ul>
-            <li>Guarde esta información en su calendario.</li>
-            <li>Si necesita reprogramar o cancelar, contáctenos lo antes posible.</li>
+        <div class="details">
+            <h2 style="color: #10b981; text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
+                ✅ ¡Su cita ha sido confirmada!
+            </h2>
 
-        </ul>
-
-
-
-        <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
-
-        @if ($companyData->phone)
-            <p><strong>Teléfono:</strong> {{ formatSpanishPhone($companyData->phone) }}</p>
-        @endif
-        @if ($companyData->email)
-            <p><strong>Email:</strong> {{ $companyData->email }}</p>
-        @endif
-
-        <div class="company-info">
-            <p><strong>{{ $companyData->company_name }}</strong></p>
-            @if ($companyData->address)
-                <p>{{ $companyData->address }}</p>
-            @endif
-
-            <div class="social-links">
-                @if ($companyData->social_media_facebook)
-                    <a href="{{ $companyData->social_media_facebook }}" target="_blank">Facebook</a>
-                @endif
-                @if ($companyData->social_media_instagram)
-                    <a href="{{ $companyData->social_media_instagram }}" target="_blank">Instagram</a>
-                @endif
-                @if ($companyData->social_media_twitter)
-                    <a href="{{ $companyData->social_media_twitter }}" target="_blank">Twitter</a>
-                @endif
+            <div class="confirmation-banner">
+                <p style="text-align: center; margin: 0;">
+                    <strong>Hemos confirmado su cita exitosamente.</strong>
+                </p>
             </div>
 
-            @if ($companyData->website)
-                <p><a href="{{ $companyData->website }}" target="_blank">{{ $companyData->website }}</a></p>
+            <p style="margin: 20px 0;">Hola <strong>{{ $appointment->first_name }}
+                    {{ $appointment->last_name }}</strong>,</p>
+
+            <p>Nos complace confirmar su cita con <strong>{{ $companyData->company_name }}</strong>.
+                Hemos recibido y aprobado su solicitud, ¡estamos esperando para atenderle!</p>
+
+            <div class="appointment-details">
+                <h3 style="color: #2d3748; margin-top: 0;">Detalles de la Cita:</h3>
+                <table style="width: 100%;">
+                    @if ($appointment->service)
+                        <tr>
+                            <td><strong>Servicio:</strong></td>
+                            <td>{{ $appointment->service->name }}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td><strong>Estado:</strong></td>
+                        <td><span class="status-tag">Confirmada</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fecha y hora:</strong></td>
+                        <td>
+                            @php
+                                $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
+                                $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
+                                $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
+                                $endDateTime = $startDateTime->copy()->addHours(2);
+                                $formattedDate = $startDateTime
+                                    ->locale('es')
+                                    ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                                echo ucfirst($formattedDate);
+                            @endphp
+                            <br>
+                            <small>Duración: 2 horas (hasta {{ $endDateTime->format('h:i A') }})</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duración:</strong></td>
+                        <td>2 horas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dirección:</strong></td>
+                        <td>
+                            {{ $appointment->address }}
+                            @if ($appointment->address_2)
+                                <br>{{ $appointment->address_2 }}
+                            @endif
+                            <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+                            <br>{{ $appointment->country }}
+                        </td>
+                    </tr>
+
+
+                    @if (!empty($appointment->notes))
+                        <tr>
+                            <td><strong>Notas:</strong></td>
+                            <td>{{ $appointment->notes }}</td>
+                        </tr>
+                    @endif
+                </table>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h4 style="margin-top: 0; color: #2d3748;">¿Qué debe hacer ahora?</h4>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Guarde esta información en su calendario</li>
+                    <li>Si necesita reprogramar o cancelar, contáctenos lo antes posible</li>
+                </ul>
+            </div>
+
+            <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
+
+            <div style="text-align: center; margin: 20px 0;">
+                @if ($companyData->phone)
+                    <p><strong>📞 Teléfono:</strong>
+                        @php
+                            $phone = $companyData->phone ?? '';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                            echo $formattedPhone;
+                        @endphp
+                    </p>
+                @endif
+                @if ($companyData->email)
+                    <p><strong>📧 Email:</strong> {{ $companyData->email }}</p>
+                @endif
+            </div>
+        </div>
+
+        <!-- Redes Sociales -->
+        <div class="social-icons">
+            @if ($companyData->social_media_facebook)
+                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                </a>
+            @endif
+            @if ($companyData->social_media_instagram)
+                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                </a>
             @endif
         </div>
-    </div>
 
-    <div class="footer">
-        <p>© {{ date('Y') }} {{ $companyData->company_name }}. Todos los derechos reservados.</p>
+        <!-- Pie de Página -->
+        <div class="footer">
+            <p>Horario de atención:<br>
+                Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+                Todos los derechos reservados.</p>
+            @if ($companyData->address)
+                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
+            @endif
+        </div>
     </div>
 </body>
 

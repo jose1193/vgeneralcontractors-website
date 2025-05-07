@@ -1,221 +1,234 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recordatorio de Inspección</title>
+    <title>⏰ Recordatorio de Cita - V General Contractors</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background-color: #3490dc;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .content {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-        }
-
-        .appointment-details {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        .company-info {
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-
-        .social-links {
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #3490dc;
-            text-decoration: none;
-        }
-
-        .button {
-            background-color: #3490dc;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 15px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
         }
 
         .logo {
-            max-width: 200px;
-            margin: 0 auto;
-            display: block;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .details {
+            line-height: 1.6;
+            color: #333333;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .social-icons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            display: inline-block;
+        }
+
+        .highlight-blue {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .reminder-banner {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .appointment-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .details td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .details strong {
+            display: inline-block;
+            width: 150px;
+            color: #4a5568;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 15px 0;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <h1>Recordatorio de Inspección de Techo</h1>
-    </div>
-
-    <div class="content">
-        @if ($isInternal)
-            <p>Hola Administrador,</p>
-            <p>Este es un recordatorio para una inspección de techo programada para mañana con el cliente
-                <strong>{{ $appointment->first_name }} {{ $appointment->last_name }}</strong>.
-            </p>
-        @else
-            <p>Hola <strong>{{ $appointment->first_name }}</strong>,</p>
-            <p>Este es un cordial recordatorio de que tu inspección de techo con
-                {{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }} está programada para
-                mañana.</p>
-        @endif
-
-        <div class="appointment-details">
-            <h3>Detalles de la Inspección:</h3>
-            <p><strong>Fecha:</strong>
-                {{ \Carbon\Carbon::parse($appointment->inspection_date)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY') }}
-            </p>
-            <p><strong>Hora:</strong> {{ \Carbon\Carbon::parse($appointment->inspection_time)->format('HH:mm') }}</p>
-            <p><strong>Dirección:</strong> {{ $appointment->address }}
-                @if ($appointment->address_2)
-                    , {{ $appointment->address_2 }}
-                @endif
-                <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
-            </p>
-            @if ($appointment->damage_detail)
-                <p><strong>Detalles del Daño:</strong> {{ $appointment->damage_detail }}</p>
-            @endif
-            @if ($appointment->notes)
-                <p><strong>Notas Adicionales:</strong> {{ $appointment->notes }}</p>
-            @endif
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
+                alt="Logo V General Contractors">
         </div>
 
-        @if (!$isInternal)
-            <p>Un inspector profesional llegará a la hora programada para evaluar tu techo. Por favor asegúrate de que
-                haya acceso disponible a la propiedad.</p>
-            <p>Si necesitas reprogramar o tienes alguna pregunta, contáctanos lo antes posible:</p>
-            <p><strong>Teléfono:</strong>
-                @php
-                    $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
-                    // Remove any non-digit characters
-                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                    // Format the number based on length
-                    if (strlen($digitsOnly) == 10) {
-                        echo '(' .
-                            substr($digitsOnly, 0, 3) .
-                            ') ' .
-                            substr($digitsOnly, 3, 3) .
-                            '-' .
-                            substr($digitsOnly, 6);
-                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                        // US number with country code
-                        echo '(' .
-                            substr($digitsOnly, 1, 3) .
-                            ') ' .
-                            substr($digitsOnly, 4, 3) .
-                            '-' .
-                            substr($digitsOnly, 7);
-                    } else {
-                        // Fallback to original
-                        echo $phone;
-                    }
-                @endphp
-            </p>
-            <p><strong>Correo:</strong> {{ \App\Models\CompanyData::first()->email ?? 'info@vgeneralcontractors.com' }}
-            </p>
-        @else
-            <div style="background-color: #f5f5f5; border-left: 4px solid #3490dc; padding: 15px; margin: 20px 0;">
-                <h4 style="margin-top: 0; color: #3490dc;">Información del Cliente:</h4>
-                <p><strong>Nombre Completo:</strong> {{ $appointment->getFullNameAttribute() }}</p>
-                <p><strong>Teléfono:</strong> {{ $appointment->phone }}</p>
-                <p><strong>Correo:</strong> {{ $appointment->email }}</p>
+        <div class="details">
+            <h2 style="color: #3b82f6; text-align: center; border-bottom: 2px solid #3b82f6; padding-bottom: 10px;">
+                ⏰ Recordatorio de Cita
+            </h2>
 
-                <h4 style="margin-bottom: 5px;">Dirección Completa:</h4>
-                <p style="margin-top: 0;">
-                    {{ $appointment->address }}
-                    @if ($appointment->address_2)
-                        , {{ $appointment->address_2 }}
-                    @endif
-                    <br>
-                    {{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}<br>
-                    @if ($appointment->country)
-                        {{ $appointment->country }}
-                    @endif
+            <div class="reminder-banner">
+                <p style="text-align: center; margin: 0;">
+                    <strong>Le recordamos su próxima cita programada.</strong>
                 </p>
-
-                @if ($appointment->insurance_property)
-                    <p><strong>Tiene Seguro de Propiedad:</strong> Sí</p>
-                @else
-                    <p><strong>Tiene Seguro de Propiedad:</strong> No</p>
-                @endif
-
-                @if ($appointment->intent_to_claim)
-                    <p><strong>Intención de Reclamar:</strong> Sí</p>
-                @endif
-
-                @if ($appointment->lead_source)
-                    <p><strong>Fuente del Lead:</strong> {{ $appointment->lead_source }}</p>
-                @endif
-
-                @if ($appointment->damage_detail)
-                    <p><strong>Detalles del Daño:</strong> {{ $appointment->damage_detail }}</p>
-                @endif
-
-                @if ($appointment->additional_note)
-                    <p><strong>Notas Adicionales:</strong> {{ $appointment->additional_note }}</p>
-                @endif
-
-                @if ($appointment->notes)
-                    <p><strong>Notas:</strong> {{ $appointment->notes }}</p>
-                @endif
-            </div>
-        @endif
-
-        <div class="company-info">
-            <p><strong>{{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}</strong></p>
-            <p>{{ \App\Models\CompanyData::first()->address ?? '1302 Waugh Dr # 810 Houston TX 77019' }}</p>
-
-            <div class="social-links">
-                <a href="https://facebook.com/vgeneralcontractors" target="_blank">Facebook</a>
-                <a href="https://instagram.com/vgeneralcontractors" target="_blank">Instagram</a>
             </div>
 
-            <p><a href="{{ \App\Models\CompanyData::first()->website ?? 'https://vgeneralcontractors.com' }}"
-                    target="_blank">{{ \App\Models\CompanyData::first()->website ?? 'www.vgeneralcontractors.com' }}</a>
-            </p>
+            <p style="margin: 20px 0;">Hola <strong>{{ $appointment->client_first_name }}
+                    {{ $appointment->client_last_name }}</strong>,</p>
+
+            <p>Le recordamos que tiene una cita programada con <strong>{{ $companyData->company_name }}</strong>
+                para el servicio de {{ $appointment->service->name }}.</p>
+
+            <div class="appointment-details">
+                <h3 style="color: #2d3748; margin-top: 0;">Detalles de la Cita:</h3>
+                <table style="width: 100%;">
+                    @if ($appointment->service)
+                        <tr>
+                            <td><strong>Servicio:</strong></td>
+                            <td>{{ $appointment->service->name }}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td><strong>Estado:</strong></td>
+                        <td><span class="status-tag">Confirmada</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fecha y hora:</strong></td>
+                        <td>
+                            @php
+                                $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
+                                $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
+                                $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
+                                $endDateTime = $startDateTime->copy()->addHours(2);
+                                $formattedDate = $startDateTime
+                                    ->locale('es')
+                                    ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                                echo ucfirst($formattedDate);
+                            @endphp
+                            <br>
+                            <small>Duración: 2 horas (hasta {{ $endDateTime->format('h:i A') }})</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duración:</strong></td>
+                        <td>{{ $appointment->service ? $appointment->service->duration : '?' }} minutos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dirección:</strong></td>
+                        <td>
+                            {{ $appointment->address }}
+                            @if ($appointment->address_2)
+                                <br>{{ $appointment->address_2 }}
+                            @endif
+                            <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+                            <br>{{ $appointment->country }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h4 style="margin-top: 0; color: #2d3748;">Importante:</h4>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Por favor, llegue 5 minutos antes de su cita</li>
+                    <li>Si necesita reprogramar o cancelar, contáctenos lo antes posible</li>
+                </ul>
+            </div>
+
+            @if ($companyData->website)
+                <div style="text-align: center; margin: 20px 0;">
+                    <a href="{{ $companyData->website }}/appointments/reschedule/{{ $appointment->id }}"
+                        class="action-button">Reprogramar Cita</a>
+                </div>
+            @endif
+
+            <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
+
+            <div style="text-align: center; margin: 20px 0;">
+                @if ($companyData->phone)
+                    <p><strong>📞 Teléfono:</strong> {{ formatSpanishPhone($companyData->phone) }}</p>
+                @endif
+                @if ($companyData->email)
+                    <p><strong>📧 Email:</strong> {{ $companyData->email }}</p>
+                @endif
+            </div>
         </div>
-    </div>
 
-    <div class="footer">
-        <p>© {{ date('Y') }} {{ \App\Models\CompanyData::first()->company_name ?? 'V General Contractors' }}.
-            Todos los derechos reservados.</p>
+        <!-- Redes Sociales -->
+        <div class="social-icons">
+            @if ($companyData->social_media_facebook)
+                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                </a>
+            @endif
+            @if ($companyData->social_media_instagram)
+                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                </a>
+            @endif
+        </div>
+
+        <!-- Pie de Página -->
+        <div class="footer">
+            <p>Horario de atención:<br>
+                Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+                Todos los derechos reservados.</p>
+            @if ($companyData->address)
+                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
+            @endif
+        </div>
     </div>
 </body>
 
