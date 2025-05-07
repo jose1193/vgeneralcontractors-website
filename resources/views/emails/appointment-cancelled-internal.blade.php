@@ -108,7 +108,7 @@
 
             <div class="cancellation-banner">
                 <p style="text-align: center; margin: 0;">
-                    An appointment has been <span class="highlight-red">cancelled</span> for
+                    An appointment has been <span class="highlight-red">Cancelled</span> for
                     <strong>{{ $companyData->company_name }}</strong>!
                 </p>
             </div>
@@ -168,17 +168,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="appointment-icon">🕒</span> <strong>Appointment Time:</strong></td>
+                    <td><span class="appointment-icon">🕒</span> <strong>Date and Time:</strong></td>
                     <td>
                         @php
                             $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
                             $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
                             $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
                             $endDateTime = $startDateTime->copy()->addHours(2);
+                            $formattedDate = $startDateTime
+                                ->locale('es')
+                                ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                            echo ucfirst($formattedDate);
                         @endphp
-                        {{ $startDateTime->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY [a las] HH:mm') }}
                         <br>
-                        <small>Duration: 2 hours (until {{ $endDateTime->format('H:i') }})</small>
+                        <small>Duration: 2 hours (until {{ $endDateTime->format('h:i A') }})</small>
                     </td>
                 </tr>
                 <tr>
@@ -214,12 +217,26 @@
         </div>
 
         <div class="social-icons">
-            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-            </a>
-            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-            </a>
+            @if ($companyData->facebook_link)
+                <a href="{{ $companyData->facebook_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                </a>
+            @endif
+            @if ($companyData->instagram_link)
+                <a href="{{ $companyData->instagram_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                </a>
+            @endif
+            @if ($companyData->linkedin_link)
+                <a href="{{ $companyData->linkedin_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
+                </a>
+            @endif
+            @if ($companyData->twitter_link)
+                <a href="{{ $companyData->twitter_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
+                </a>
+            @endif
         </div>
 
         <div class="footer">

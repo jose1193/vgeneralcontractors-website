@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>🎉 Appointment Confirmed Alert! 🔔 - V General Contractors</title>
+    <title>📅 New Appointment Confirmed - V General Contractors</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,43 +42,34 @@
             font-size: 14px;
         }
 
-        .social-icons {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .social-icons a {
-            margin: 0 10px;
-            display: inline-block;
-        }
-
-        .highlight {
-            color: #10b981;
+        .highlight-blue {
+            color: #1e90ff;
             font-weight: bold;
         }
 
         .appointment-banner {
-            background: #e6f9e9;
-            padding: 15px;
+            background: #e6f4ff;
+            padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
         }
 
-        .appointment-icon {
-            display: inline-block;
-            margin-right: 5px;
-            font-size: 1.2em;
-            color: #10b981;
+        .appointment-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
         }
 
         .details td {
-            padding: 5px 0;
+            padding: 8px 0;
             vertical-align: top;
         }
 
         .details strong {
             display: inline-block;
             width: 150px;
+            color: #4a5568;
         }
 
         .status-tag {
@@ -90,179 +81,229 @@
             background-color: #10b981;
             color: white;
         }
+
+        .action-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #1e90ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .social-icons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body>
+    @php
+        // Función para formatear números de teléfono españoles
+        if (!function_exists('formatSpanishPhone')) {
+            function formatSpanishPhone($phoneNumber)
+            {
+                // Eliminar cualquier espacio existente
+                $cleaned = preg_replace('/\s+/', '', $phoneNumber);
+
+                // Si el número comienza con +34, formatearlo correctamente
+                if (str_starts_with($cleaned, '+34')) {
+                    // Quitar el código de país para trabajar solo con los 9 dígitos
+                    $nationalNumber = substr($cleaned, 3);
+
+                    // Aplicar formato +34 XXX XX XX XX
+                    if (strlen($nationalNumber) === 9) {
+                        return '+34 ' .
+                            substr($nationalNumber, 0, 3) .
+                            ' ' .
+                            substr($nationalNumber, 3, 2) .
+                            ' ' .
+                            substr($nationalNumber, 5, 2) .
+                            ' ' .
+                            substr($nationalNumber, 7, 2);
+                    }
+                }
+
+                // Si no es un número español o no tiene el formato esperado, devolverlo sin cambios
+                return $phoneNumber;
+            }
+        }
+    @endphp
+
     <div class="container">
+        <!-- Logo -->
         <div class="logo">
             <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
                 alt="Logo V General Contractors">
         </div>
 
         <div class="details">
-            <h2 style="color: #10b981; text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 10px;">
-                🎉 Appointment Confirmed Alert! 🔔
+            <h2 style="color: #1e90ff; text-align: center; border-bottom: 2px solid #1e90ff; padding-bottom: 10px;">
+                📅 New Appointment Confirmed
             </h2>
 
             <div class="appointment-banner">
                 <p style="text-align: center; margin: 0;">
-                    A new appointment has been <span class="highlight">confirmed</span> for
-                    <strong>{{ $companyData->company_name }}</strong>!
+                    <strong>A new appointment has been confirmed in the system.</strong>
                 </p>
             </div>
 
-            <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Appointment Details:</h3>
-            <table style="width: 100%; margin: 0 0 20px 0; border-collapse: collapse;">
-                <tr>
-                    <td><span class="appointment-icon">👤</span> <strong>Client Name:</strong></td>
-                    <td>{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">📧</span> <strong>Email:</strong></td>
-                    <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">📞</span> <strong>Phone:</strong></td>
-                    <td>
-                        @php
-                            $phone = $appointment->phone ?? '';
-                            // Remove any non-digit characters
-                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                            // Format the number based on length
-                            if (strlen($digitsOnly) == 10) {
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 0, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 3, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 6);
-                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                // US number with country code
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 1, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 4, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 7);
-                            } else {
-                                // Fallback to original
-                                $formattedPhone = $phone;
-                            }
-                            echo $formattedPhone;
-                        @endphp
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">📍</span> <strong>Address:</strong></td>
-                    <td>
-                        {{ $appointment->address }}
-                        @if ($appointment->address_2)
-                            <br>{{ $appointment->address_2 }}
-                        @endif
-                        <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
-                        <br>{{ $appointment->country }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">🕒</span> <strong>Appointment Time:</strong></td>
-                    <td>
-                        @php
-                            $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
-                            $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
-                            $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
-                            $endDateTime = $startDateTime->copy()->addHours(2);
-                            $formattedDate = $startDateTime
-                                ->locale('es')
-                                ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
-                            echo ucfirst($formattedDate);
-                        @endphp
-                        <br>
-                        <small>Duration: 2 hours (until {{ $endDateTime->format('h:i A') }})</small>
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">⏱️</span> <strong>Duration:</strong></td>
-                    <td>2 hours</td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">🛡️</span> <strong>Has Insurance?:</strong></td>
-                    <td>{{ $appointment->insurance_property ? 'Yes' : 'No' }}</td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">💬</span> <strong>SMS Consent:</strong></td>
-                    <td>{{ $appointment->sms_consent ? 'Yes' : 'No' }}</td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">📝</span> <strong>Message:</strong></td>
-                    <td>{{ $appointment->message ?: 'N/A' }}</td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">📅</span> <strong>Registration Date:</strong></td>
-                    <td>{{ $appointment->registration_date ? $appointment->registration_date->format('M d, Y g:i A T') : 'N/A' }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="appointment-icon">🔍</span> <strong>Lead Source:</strong></td>
-                    <td>{{ $appointment->lead_source ?: 'N/A' }}</td>
-                </tr>
-            </table>
+            <div class="appointment-details">
+                <h3 style="color: #2d3748; margin-top: 0;">Client Information:</h3>
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>Client Name:</strong></td>
+                        <td>{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone:</strong></td>
+                        <td>
+                            @php
+                                $phone = $appointment->phone ?? '';
+                                // Remove any non-digit characters
+                                $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                // Format the number based on length
+                                if (strlen($digitsOnly) == 10) {
+                                    $formattedPhone =
+                                        '(' .
+                                        substr($digitsOnly, 0, 3) .
+                                        ') ' .
+                                        substr($digitsOnly, 3, 3) .
+                                        '-' .
+                                        substr($digitsOnly, 6);
+                                } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                    // US number with country code
+                                    $formattedPhone =
+                                        '(' .
+                                        substr($digitsOnly, 1, 3) .
+                                        ') ' .
+                                        substr($digitsOnly, 4, 3) .
+                                        '-' .
+                                        substr($digitsOnly, 7);
+                                } else {
+                                    // Fallback to original
+                                    $formattedPhone = $phone;
+                                }
+                                echo $formattedPhone;
+                            @endphp
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td>
+                            {{ $appointment->address }}
+                            @if ($appointment->address_2)
+                                <br>{{ $appointment->address_2 }}
+                            @endif
+                            <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+                            <br>{{ $appointment->country }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Has Insurance:</strong></td>
+                        <td>{{ $appointment->insurance_property ? 'Yes' : 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SMS Consent:</strong></td>
+                        <td>{{ $appointment->sms_consent ? 'Yes' : 'No' }}</td>
+                    </tr>
+                    @if (!empty($appointment->notes))
+                        <tr>
+                            <td><strong>Notes:</strong></td>
+                            <td>{{ $appointment->notes }}</td>
+                        </tr>
+                    @endif
+                </table>
+            </div>
 
-            <div style="padding: 15px; border-radius: 8px; margin-top: 25px; text-align: center;">
-                <p>Please prepare for this appointment!</p>
-                <p>Contact the client from:
-                    <strong>📞
-                        @php
-                            $phone = $companyData->phone ?? '';
-                            // Remove any non-digit characters
-                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                            // Format the number based on length
-                            if (strlen($digitsOnly) == 10) {
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 0, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 3, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 6);
-                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                // US number with country code
-                                $formattedPhone =
-                                    '(' .
-                                    substr($digitsOnly, 1, 3) .
-                                    ') ' .
-                                    substr($digitsOnly, 4, 3) .
-                                    '-' .
-                                    substr($digitsOnly, 7);
-                            } else {
-                                // Fallback to original
-                                $formattedPhone = $phone;
-                            }
-                            echo $formattedPhone;
-                        @endphp
-                    </strong>
-                </p>
+            <div class="appointment-details">
+                <h3 style="color: #2d3748; margin-top: 0;">Appointment Details:</h3>
+                <table style="width: 100%;">
+                    @if ($appointment->service)
+                        <tr>
+                            <td><strong>Service:</strong></td>
+                            <td>{{ $appointment->service->name }}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td><strong>Status:</strong></td>
+                        <td><span class="status-tag">Confirmed</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date and Time:</strong></td>
+                        <td>
+                            @php
+                                $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
+                                $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
+                                $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
+                                $endDateTime = $startDateTime->copy()->addHours(2);
+                                $formattedDate = $startDateTime
+                                    ->locale('es')
+                                    ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                                echo ucfirst($formattedDate);
+                            @endphp
+                            <br>
+                            <small>Duration: 2 hours (until {{ $endDateTime->format('h:i A') }})</small>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <h4 style="margin-top: 0; color: #2d3748;">Required Actions:</h4>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Verify team availability for the scheduled date and time</li>
+                    <li>Prepare necessary documentation for the inspection</li>
+                    <li>Confirm route and travel time to the location</li>
+                </ul>
             </div>
         </div>
 
+        <!-- Redes Sociales -->
         <div class="social-icons">
-            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-            </a>
-            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-            </a>
+            @if ($companyData->facebook_link)
+                <a href="{{ $companyData->facebook_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                </a>
+            @endif
+            @if ($companyData->instagram_link)
+                <a href="{{ $companyData->instagram_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                </a>
+            @endif
+            @if ($companyData->linkedin_link)
+                <a href="{{ $companyData->linkedin_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
+                </a>
+            @endif
+            @if ($companyData->twitter_link)
+                <a href="{{ $companyData->twitter_link }}" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
+                </a>
+            @endif
         </div>
 
+        <!-- Pie de Página -->
         <div class="footer">
             <p>Business Hours:<br>
                 Monday to Friday: 9:00 AM - 5:00 PM</p>
-            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}. All
-                rights
-                reserved.</p>
-            <p style="font-size: 10px; color: #999;">{{ $companyData->address ?? '' }}</p>
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+                All rights reserved.</p>
+            @if ($companyData->address)
+                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
+            @endif
         </div>
     </div>
 </body>

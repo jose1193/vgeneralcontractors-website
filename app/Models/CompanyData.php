@@ -21,7 +21,11 @@ class CompanyData extends Model
         'website',
         'user_id',
         'latitude',
-        'longitude'
+        'longitude',
+        'facebook_link',
+        'instagram_link',
+        'linkedin_link',
+        'twitter_link'
     ];
 
     protected $table = 'company_data';

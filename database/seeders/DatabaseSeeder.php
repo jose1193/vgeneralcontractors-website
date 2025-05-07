@@ -160,7 +160,11 @@ class DatabaseSeeder extends Seeder
             'latitude' => 29.75516,
             'longitude' => -95.3984135,
             'user_id' => 1,
-            'uuid' => Uuid::uuid4()->toString()
+            'uuid' => Uuid::uuid4()->toString(),
+            'facebook_link' => 'https://www.facebook.com/vgeneralcontractors/',
+            'instagram_link' => 'https://www.instagram.com/vgeneralcontractors/',
+            'linkedin_link' => 'https://www.linkedin.com/company/v-general-contractors/',
+            'twitter_link' => 'https://twitter.com/vgeneralcontractors'
         ];
 
         CompanyData::create($companyData);
