@@ -181,7 +181,14 @@
                 <table style="width: 100%;">
                     <tr>
                         <td><strong>Previous Time:</strong></td>
-                        <td>{{ \Carbon\Carbon::parse($appointment->previous_start_time)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY [a las] HH:mm') }}
+                        <td>
+                            @php
+                                $previousDateTime = \Carbon\Carbon::parse($appointment->previous_start_time);
+                                $formattedPreviousDate = $previousDateTime
+                                    ->locale('es')
+                                    ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                                echo ucfirst($formattedPreviousDate);
+                            @endphp
                         </td>
                     </tr>
                     <tr>
@@ -207,10 +214,7 @@
             <div class="appointment-details">
                 <h3 style="margin-top: 0; color: #333;">Additional Information:</h3>
                 <table style="width: 100%;">
-                    <tr>
-                        <td><span class="appointment-icon">⏱️</span> <strong>Duration:</strong></td>
-                        <td>{{ $appointment->service ? $appointment->service->duration : '?' }} minutes</td>
-                    </tr>
+
                     <tr>
                         <td><span class="appointment-icon">🛡️</span> <strong>Has Insurance?:</strong></td>
                         <td>{{ $appointment->insurance_property ? 'Yes' : 'No' }}</td>
@@ -236,16 +240,12 @@
         </div>
 
         <div class="social-icons">
-            @if ($companyData->social_media_facebook)
-                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-                </a>
-            @endif
-            @if ($companyData->social_media_instagram)
-                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-                </a>
-            @endif
+            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+            </a>
         </div>
 
         <div class="footer">

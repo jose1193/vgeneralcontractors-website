@@ -160,45 +160,24 @@ class AppointmentCalendarController extends Controller
                     // Parse new times
                     $newStartTime = Carbon::parse($validatedData['start']);
                     
-                    // Update the inspection date
+                    // Update the inspection date and time
                     $appointment->inspection_date = $newStartTime->toDateString();
+                    $appointment->inspection_time = $newStartTime->format('H:i:s');
                     
-                    // If the appointment has a specific time, also update the time
-                    if (!$newStartTime->startOfDay()->eq($newStartTime)) {
-                        $appointment->inspection_time = $newStartTime->format('H:i:s');
-                    } else {
-                        // If no specific time, clear the time field
-                        $appointment->inspection_time = null;
-                        
-                        // For consistency, we don't allow date without time
-                        throw new \RuntimeException('Both inspection date and time must be provided together.', 422);
-                    }
-                    
-                    // Check for conflicts with other appointments (optional)
-                    if ($appointment->inspection_time) {
-                        $existingAppointment = Appointment::where('id', '!=', $appointment->id)
-                            ->where('inspection_date', $appointment->inspection_date)
-                            ->where('inspection_time', $appointment->inspection_time)
-                            ->whereNotIn('inspection_status', ['Declined'])
-                            ->first();
-    
-                        if ($existingAppointment) {
-                            throw new \RuntimeException('Schedule conflict: Another appointment is already scheduled for this time.', 409);
-                        }
+                    // Check for conflicts with other appointments
+                    $existingAppointment = Appointment::where('id', '!=', $appointment->id)
+                        ->where('inspection_date', $appointment->inspection_date)
+                        ->where('inspection_time', $appointment->inspection_time)
+                        ->whereNotIn('inspection_status', ['Declined'])
+                        ->first();
+
+                    if ($existingAppointment) {
+                        throw new \RuntimeException('Schedule conflict: Another appointment is already scheduled for this time.', 409);
                     }
 
-                    // Mark the inspection as confirmed if it has a date and time
-                    if ($appointment->inspection_date && $appointment->inspection_time) {
-                        $appointment->inspection_status = 'Confirmed';
-                        $appointment->status_lead = 'Called';
-                    } else {
-                        // This case shouldn't happen with the validation above
-                        // but keeping it for defensive programming
-                        $appointment->inspection_status = 'Pending';
-                        if ($appointment->status_lead !== 'Pending') {
-                            $appointment->status_lead = 'New';
-                        }
-                    }
+                    // Mark the inspection as confirmed
+                    $appointment->inspection_status = 'Confirmed';
+                    $appointment->status_lead = 'Called';
                     
                     $appointment->save();
 

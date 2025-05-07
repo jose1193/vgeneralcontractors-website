@@ -256,16 +256,12 @@
 
         <!-- Redes Sociales -->
         <div class="social-icons">
-            @if ($companyData->social_media_facebook)
-                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-                </a>
-            @endif
-            @if ($companyData->social_media_instagram)
-                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-                </a>
-            @endif
+            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+            </a>
         </div>
 
         <!-- Pie de Página -->

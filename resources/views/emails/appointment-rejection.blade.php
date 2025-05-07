@@ -1,94 +1,95 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información Importante Sobre Su Solicitud de Inspección</title>
+    <title>❌ Solicitud Rechazada - V General Contractors</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-        }
-
-        .header {
-            background-color: #1a365d;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .content {
-            padding: 20px;
-            background-color: #f9fafb;
-            border-left: 1px solid #e5e7eb;
-            border-right: 1px solid #e5e7eb;
-        }
-
-        .footer {
-            background-color: #f3f4f6;
-            padding: 15px;
-            text-align: center;
-            font-size: 14px;
-            color: #6b7280;
-            border-radius: 0 0 5px 5px;
-            border: 1px solid #e5e7eb;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
         }
 
         .logo {
-            max-width: 150px;
-            margin: 0 auto 15px;
-            display: block;
-        }
-
-        h1 {
-            color: #ffffff;
-            font-size: 24px;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        h2 {
-            color: #1a365d;
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .details {
+            text-align: center;
             margin-bottom: 25px;
         }
 
-        .details p {
-            margin: 8px 0;
+        .logo img {
+            max-width: 180px;
+            height: auto;
         }
 
-        .highlight {
-            color: #1a365d;
-            font-weight: 600;
+        .details {
+            line-height: 1.6;
+            color: #333333;
         }
 
-        .btn {
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .social-icons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
             display: inline-block;
-            background-color: #1a365d;
+        }
+
+        .highlight-red {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .rejection-banner {
+            background: #fee2e2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .appointment-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .details td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .details strong {
+            display: inline-block;
+            width: 150px;
+            color: #4a5568;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            background-color: #ef4444;
             color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            margin-top: 15px;
         }
 
         .reason-list {
@@ -102,80 +103,137 @@
 
         .contact-info {
             margin-top: 25px;
-            background-color: #e6f2ff;
+            background-color: #f8f9fa;
             padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #1a365d;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="header">
-            <img src="{{ asset('images/logo-white.png') }}" alt="VGeneralContractors Logo" class="logo">
-            <h1>Información Importante Sobre Su Solicitud de Inspección</h1>
+        <!-- Logo -->
+        <div class="logo">
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
+                alt="Logo V General Contractors">
         </div>
 
-        <div class="content">
-            <h2>Hola {{ $appointment->first_name }} {{ $appointment->last_name }},</h2>
+        <div class="details">
+            <h2 style="color: #ef4444; text-align: center; border-bottom: 2px solid #ef4444; padding-bottom: 10px;">
+                ❌ Información Importante Sobre Su Solicitud
+            </h2>
 
-            <div class="details">
-                <p>Gracias por su interés en nuestros servicios. Después de revisar su solicitud de inspección,
-                    lamentamos informarle que actualmente no podemos proceder con su cita por la(s) siguiente(s)
-                    razón(es):</p>
-
-                <ul class="reason-list">
-                    @if ($noContact)
-                        <li>Hemos intentado contactarle varias veces con respecto a su solicitud de inspección pero no
-                            hemos podido comunicarnos con usted. Por favor, si sigue interesado en nuestros servicios,
-                            no dude en llamarnos al número que aparece a continuación.</li>
-                    @endif
-
-                    @if ($noInsurance)
-                        <li>Nuestros registros indican que su propiedad no cuenta con la cobertura de seguro necesaria
-                            para que podamos realizar los servicios de inspección.</li>
-                    @endif
-
-                    @if ($otherReason)
-                        <li>{{ $otherReason }}</li>
-                    @endif
-                </ul>
-
-                <p>Detalles de su solicitud:</p>
-                <p><span class="highlight">Fecha de Cita:</span>
-                    {{ $appointment->inspection_date ? date('j \d\e F \d\e Y', strtotime($appointment->inspection_date)) : 'No especificada' }}
+            <div class="rejection-banner">
+                <p style="text-align: center; margin: 0;">
+                    <strong>Lamentamos informarle que su solicitud ha sido rechazada.</strong>
                 </p>
-                <p><span class="highlight">Dirección de Propiedad:</span>
-                    {{ $appointment->address ?? 'No especificada' }}</p>
-
-                <div class="contact-info">
-                    <p>Si cree que esta decisión se tomó por error o si sus circunstancias han cambiado, no dude en
-                        contactarnos:</p>
-                    @if ($companyData)
-                        <p><span class="highlight">Teléfono:</span> {{ $companyData->phone ?? '(No disponible)' }}</p>
-                        <p><span class="highlight">Email:</span>
-                            {{ $companyData->email ?? 'support@vgeneralcontractors.com' }}</p>
-                        @if ($companyData->address)
-                            <p><span class="highlight">Dirección:</span> {{ $companyData->address }}</p>
-                        @endif
-                    @else
-                        <p><span class="highlight">Teléfono:</span> (555) 123-4567</p>
-                        <p><span class="highlight">Email:</span> support@vgeneralcontractors.com</p>
-                    @endif
-                </div>
-
-                <p>Valoramos su interés en nuestros servicios y estaremos encantados de ayudarle en el futuro si estas
-                    circunstancias cambian.</p>
-
-                <p>Atentamente,<br>
-                    El Equipo de VGeneralContractors</p>
             </div>
+
+            <p style="margin: 20px 0;">Hola <strong>{{ $appointment->first_name }}
+                    {{ $appointment->last_name }}</strong>,</p>
+
+            <p>Gracias por su interés en nuestros servicios. Después de revisar su solicitud de inspección,
+                lamentamos informarle que actualmente no podemos proceder con su cita por la(s) siguiente(s)
+                razón(es):</p>
+
+            <ul class="reason-list">
+                @if ($noContact)
+                    <li>Hemos intentado contactarle varias veces con respecto a su solicitud de inspección pero no
+                        hemos podido comunicarnos con usted. Por favor, si sigue interesado en nuestros servicios,
+                        no dude en llamarnos al número que aparece a continuación.</li>
+                @endif
+
+                @if ($noInsurance)
+                    <li>Nuestros registros indican que su propiedad no cuenta con la cobertura de seguro necesaria
+                        para que podamos realizar los servicios de inspección.</li>
+                @endif
+
+                @if ($otherReason)
+                    <li>{{ $otherReason }}</li>
+                @endif
+            </ul>
+
+            <div class="appointment-details">
+                <h3 style="color: #2d3748; margin-top: 0;">Detalles de la Solicitud:</h3>
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>Estado:</strong></td>
+                        <td><span class="status-tag">Rechazada</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fecha de Cita:</strong></td>
+                        <td>
+                            @if ($appointment->inspection_date)
+                                @php
+                                    $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
+                                    $formattedDate = $inspectionDate
+                                        ->locale('es')
+                                        ->isoFormat('dddd D [de] MMMM [de] YYYY');
+                                    echo ucfirst($formattedDate);
+                                @endphp
+                            @else
+                                No especificada
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dirección:</strong></td>
+                        <td>
+                            {{ $appointment->address ?? 'No especificada' }}
+                            @if ($appointment->address_2)
+                                <br>{{ $appointment->address_2 }}
+                            @endif
+                            @if ($appointment->city)
+                                <br>{{ $appointment->city }}, {{ $appointment->state }} {{ $appointment->zipcode }}
+                                <br>{{ $appointment->country }}
+                            @endif
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="contact-info">
+                <h4 style="margin-top: 0; color: #2d3748;">¿Necesita más información?</h4>
+                <p>Si cree que esta decisión se tomó por error o si sus circunstancias han cambiado, no dude en
+                    contactarnos:</p>
+                @if ($companyData->phone)
+                    <p><strong>📞 Teléfono:</strong> <a
+                            href="tel:{{ preg_replace('/[^0-9]/', '', $companyData->phone) }}">{{ formatSpanishPhone($companyData->phone) }}</a>
+                    </p>
+                @endif
+                @if ($companyData->email)
+                    <p><strong>📧 Email:</strong> <a
+                            href="mailto:{{ $companyData->email }}">{{ $companyData->email }}</a></p>
+                @endif
+            </div>
+
+            <p>Valoramos su interés en nuestros servicios y estaremos encantados de ayudarle en el futuro si estas
+                circunstancias cambian.</p>
+
+            <p>Atentamente,<br>
+                El Equipo de {{ $companyData->company_name }}</p>
         </div>
 
+        <!-- Redes Sociales -->
+        <div class="social-icons">
+            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+            </a>
+        </div>
+
+        <!-- Pie de Página -->
         <div class="footer">
-            <p>&copy; {{ date('Y') }} VGeneralContractors. Todos los derechos reservados.</p>
-            <p>Este es un mensaje automático, por favor no responda a este correo.</p>
+            <p>Horario de atención:<br>
+                Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+                Todos los derechos reservados.</p>
+            @if ($companyData->address)
+                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
+            @endif
         </div>
     </div>
 </body>

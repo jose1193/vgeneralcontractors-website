@@ -162,7 +162,7 @@
                     </tr>
                     <tr>
                         <td><strong>Duración:</strong></td>
-                        <td>{{ $appointment->service ? $appointment->service->duration : '?' }} minutos</td>
+                        <td>2 horas</td>
                     </tr>
                     <tr>
                         <td><strong>Dirección:</strong></td>
@@ -190,8 +190,7 @@
 
             @if ($companyData->website)
                 <div style="text-align: center; margin: 20px 0;">
-                    <a href="{{ $companyData->website }}/appointments/reschedule/{{ $appointment->id }}"
-                        class="action-button">Reprogramar Cita</a>
+                    <p>Si necesita reprogramar su cita, por favor contáctenos por teléfono o email.</p>
                 </div>
             @endif
 
@@ -199,26 +198,25 @@
 
             <div style="text-align: center; margin: 20px 0;">
                 @if ($companyData->phone)
-                    <p><strong>📞 Teléfono:</strong> {{ formatSpanishPhone($companyData->phone) }}</p>
+                    <p><strong>Teléfono:</strong> <a
+                            href="tel:{{ preg_replace('/[^0-9]/', '', $companyData->phone) }}">{{ formatSpanishPhone($companyData->phone) }}</a>
+                    </p>
                 @endif
                 @if ($companyData->email)
-                    <p><strong>📧 Email:</strong> {{ $companyData->email }}</p>
+                    <p><strong>📧 Email:</strong> <a
+                            href="mailto:{{ $companyData->email }}">{{ $companyData->email }}</a></p>
                 @endif
             </div>
         </div>
 
         <!-- Redes Sociales -->
         <div class="social-icons">
-            @if ($companyData->social_media_facebook)
-                <a href="{{ $companyData->social_media_facebook }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-                </a>
-            @endif
-            @if ($companyData->social_media_instagram)
-                <a href="{{ $companyData->social_media_instagram }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-                </a>
-            @endif
+            <a href="https://www.facebook.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/vgeneralcontractors/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+            </a>
         </div>
 
         <!-- Pie de Página -->
