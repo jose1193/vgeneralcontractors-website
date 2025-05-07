@@ -249,8 +249,35 @@
 
             <div style="text-align: center; margin: 20px 0;">
                 @if ($companyData->phone)
-                    <p><strong>📞 Teléfono:</strong> <a
-                            href="tel:{{ preg_replace('/[^0-9]/', '', $companyData->phone) }}">{{ formatSpanishPhone($companyData->phone) }}</a>
+                    <p><strong>📞 Teléfono:</strong>
+                        @php
+                            $phone = $companyData->phone ?? '';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                            echo $formattedPhone;
+                        @endphp
                     </p>
                 @endif
                 @if ($companyData->email)
