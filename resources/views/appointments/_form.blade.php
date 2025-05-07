@@ -259,6 +259,9 @@
             <option value="Reference"
                 {{ old('lead_source', $appointment->lead_source ?? '') == 'Reference' ? 'selected' : '' }}>
                 Reference</option>
+            <option value="Retell AI"
+                {{ old('lead_source', $appointment->lead_source ?? '') == 'Retell AI' ? 'selected' : '' }}>
+                Retell AI</option>
         </select>
         <x-input-error for="lead_source" class="mt-2" />
     </div>
