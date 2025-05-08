@@ -173,16 +173,18 @@
             <div class="time-change">
                 <h4 style="margin-top: 0; color: #2d3748;">Cambio de Horario:</h4>
                 <p style="margin: 5px 0;"><strong>Fecha y hora anterior:</strong><br>
-                    @php
-                        $originalDateTime = \Carbon\Carbon::parse($appointment->original_start_time);
-                        $formattedOriginalDate = $originalDateTime
-                            ->locale('es')
-                            ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
-                        echo ucfirst($formattedOriginalDate);
-                    @endphp
+                    <span style="color: #ef4444;">
+                        @php
+                            $originalDateTime = \Carbon\Carbon::parse($appointment->original_start_time);
+                            $formattedOriginalDate = $originalDateTime
+                                ->locale('es')
+                                ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
+                            echo ucfirst($formattedOriginalDate);
+                        @endphp
+                    </span>
                 </p>
                 <p style="margin: 5px 0;"><strong>Nueva fecha y hora:</strong></p>
-                <p style="margin: 5px 0;">
+                <p style="margin: 5px 0; color: #10b981;">
                     @php
                         $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
                         $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);

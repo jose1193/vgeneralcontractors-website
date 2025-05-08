@@ -185,7 +185,7 @@
                 <table style="width: 100%;">
                     <tr>
                         <td><strong>Previous Time:</strong></td>
-                        <td>
+                        <td style="color: #ef4444;">
                             @php
                                 $previousDateTime = \Carbon\Carbon::parse($appointment->previous_start_time);
                                 $formattedPreviousDate = $previousDateTime
@@ -197,7 +197,7 @@
                     </tr>
                     <tr>
                         <td><span class="appointment-icon">🕒</span> <strong>New Appointment Time:</strong></td>
-                        <td>
+                        <td style="color: #10b981;">
                             @php
                                 $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
                                 $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
