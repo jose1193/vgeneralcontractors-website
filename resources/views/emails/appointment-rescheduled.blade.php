@@ -295,7 +295,7 @@
                                                         style="font-size: 14px; color: #4a5568; vertical-align: middle;">
                                                         📞</td>
                                                     <td style="padding-left: 5px; vertical-align: middle;">
-                                                        <a href="tel:{{ $companyData->phone }}"
+                                                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $companyData->phone) }}"
                                                             style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $phoneToDisplay }}</a>
                                                     </td>
                                                 </tr>

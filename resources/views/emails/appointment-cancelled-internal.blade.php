@@ -152,8 +152,8 @@
                                 // Fallback to original
                                 $formattedPhone = $phone;
                             }
-                            echo $formattedPhone;
                         @endphp
+                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $phone) }}">{{ $formattedPhone }}</a>
                     </td>
                 </tr>
                 <tr>
@@ -243,8 +243,9 @@
                             } else {
                                 $formattedPhone = $phone;
                             }
-                            echo $formattedPhone;
                         @endphp
+                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $phone) }}"
+                            style="color: #666; text-decoration: none;">{{ $formattedPhone }}</a>
                     @endif
                     @if ($companyData->phone && $companyData->email)
                         &nbsp;|&nbsp;
@@ -315,8 +316,9 @@
                                 } else {
                                     $formattedPhone = $phone;
                                 }
-                                echo $formattedPhone;
                             @endphp
+                            <a href="tel:{{ preg_replace('/[^0-9]/', '', $phone) }}"
+                                style="color: #666; text-decoration: none;">{{ $formattedPhone }}</a>
                         </span>
 
                         @if ($companyData->email)
