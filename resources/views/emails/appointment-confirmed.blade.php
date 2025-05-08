@@ -137,6 +137,11 @@
                 return $phoneNumber;
             }
         }
+
+        // Obtener los datos de correo del administrador
+        $adminEmail = \App\Models\EmailData::where('type', 'Admin')->first();
+        $adminEmailAddress = $adminEmail ? $adminEmail->email : $companyData->email;
+        $adminPhone = $adminEmail ? $adminEmail->phone : $companyData->phone;
     @endphp
 
     <div class="container">
@@ -230,55 +235,57 @@
                 </ul>
             </div>
 
-            <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
+            <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
 
             <div
                 style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; text-align: center; border: 1px solid #e9ecef;">
-                @if ($companyData->phone || $companyData->email)
+                @if ($adminPhone || $adminEmailAddress)
                     <p style="margin: 0; font-size: 15px;">
-                        @if ($companyData->phone)
+                        @if ($adminPhone)
                             <span style="display: inline-block; margin: 0 8px;">
                                 <span style="margin-right: 5px;">📞</span>
-                                <strong>Teléfono:</strong>
+
                                 <span>
-                                    @php
-                                        $phone = $companyData->phone ?? '';
-                                        $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                        if (strlen($digitsOnly) == 10) {
-                                            $formattedPhone =
-                                                '(' .
-                                                substr($digitsOnly, 0, 3) .
-                                                ') ' .
-                                                substr($digitsOnly, 3, 3) .
-                                                '-' .
-                                                substr($digitsOnly, 6);
-                                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                            $formattedPhone =
-                                                '(' .
-                                                substr($digitsOnly, 1, 3) .
-                                                ') ' .
-                                                substr($digitsOnly, 4, 3) .
-                                                '-' .
-                                                substr($digitsOnly, 7);
-                                        } else {
-                                            $formattedPhone = $phone;
-                                        }
-                                        echo $formattedPhone;
-                                    @endphp
+                                    <strong>
+                                        @php
+                                            $phone = $adminPhone ?? '';
+                                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                            if (strlen($digitsOnly) == 10) {
+                                                $formattedPhone =
+                                                    '(' .
+                                                    substr($digitsOnly, 0, 3) .
+                                                    ') ' .
+                                                    substr($digitsOnly, 3, 3) .
+                                                    '-' .
+                                                    substr($digitsOnly, 6);
+                                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                                $formattedPhone =
+                                                    '(' .
+                                                    substr($digitsOnly, 1, 3) .
+                                                    ') ' .
+                                                    substr($digitsOnly, 4, 3) .
+                                                    '-' .
+                                                    substr($digitsOnly, 7);
+                                            } else {
+                                                $formattedPhone = $phone;
+                                            }
+                                            echo $formattedPhone;
+                                        @endphp
+                                    </strong>
                                 </span>
                             </span>
                         @endif
 
-                        @if ($companyData->phone && $companyData->email)
+                        @if ($adminPhone && $adminEmailAddress)
                             <span style="color: #999; margin: 0 8px;">|</span>
                         @endif
 
-                        @if ($companyData->email)
+                        @if ($adminEmailAddress)
                             <span style="display: inline-block; margin: 0 8px;">
                                 <span style="margin-right: 5px;">📧</span>
-                                <strong>Email:</strong>
-                                <a href="mailto:{{ $companyData->email }}"
-                                    style="text-decoration: none; color: #10b981;">{{ $companyData->email }}</a>
+
+                                <a href="mailto:{{ $adminEmailAddress }}"
+                                    style="text-decoration: none;"><strong>{{ $adminEmailAddress }}</strong></a>
                             </span>
                         @endif
                     </p>
@@ -327,7 +334,28 @@
                         @if ($companyData->phone)
                             <span>
                                 @php
-                                    echo $formattedPhone ?? $companyData->phone;
+                                    $phone = $companyData->phone ?? '';
+                                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                    if (strlen($digitsOnly) == 10) {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 0, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 3, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 6);
+                                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 1, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 4, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 7);
+                                    } else {
+                                        $formattedPhone = $phone;
+                                    }
+                                    echo $formattedPhone;
                                 @endphp
                             </span>
 
