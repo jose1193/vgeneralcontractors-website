@@ -238,52 +238,75 @@
             <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
 
             <div
-                style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; text-align: center; border: 1px solid #e9ecef;">
-                <p style="margin: 0; font-size: 15px;">
-                    @if ($adminPhone)
-                        <span style="display: inline-block; margin: 0 4px;">
-                            <span style="margin-right: 5px;">📞</span>
-                            <strong>
-                                @php
-                                    $phone = $adminPhone ?? '';
-                                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                    if (strlen($digitsOnly) == 10) {
-                                        $formattedPhone =
-                                            '(' .
-                                            substr($digitsOnly, 0, 3) .
-                                            ') ' .
-                                            substr($digitsOnly, 3, 3) .
-                                            '-' .
-                                            substr($digitsOnly, 6);
-                                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                        $formattedPhone =
-                                            '(' .
-                                            substr($digitsOnly, 1, 3) .
-                                            ') ' .
-                                            substr($digitsOnly, 4, 3) .
-                                            '-' .
-                                            substr($digitsOnly, 7);
-                                    } else {
-                                        $formattedPhone = $phone;
-                                    }
-                                    echo $formattedPhone;
-                                @endphp
-                            </strong>
-                        </span>
-                    @endif
+                style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; border: 1px solid #e9ecef; margin: 20px 0;">
+                @php
+                    $phoneToDisplay = '';
+                    if ($adminPhone) {
+                        $digitsOnly = preg_replace('/[^0-9]/', '', $adminPhone);
+                        if (strlen($digitsOnly) == 10) {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 0, 3) .
+                                ') ' .
+                                substr($digitsOnly, 3, 3) .
+                                '-' .
+                                substr($digitsOnly, 6);
+                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 1, 3) .
+                                ') ' .
+                                substr($digitsOnly, 4, 3) .
+                                '-' .
+                                substr($digitsOnly, 7);
+                        } else {
+                            $phoneToDisplay = $adminPhone;
+                        }
+                    }
+                @endphp
 
-                    @if ($adminPhone && $adminEmailAddress)
-                        <span style="color: #999;">|</span>
-                    @endif
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center" style="padding-bottom: 10px;">
+                            <span style="font-size: 16px; color: #4a5568;"><strong>Contáctenos</strong></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    @if ($adminPhone)
+                                        <td align="center" style="padding-right: 15px;">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td style="font-size: 18px; color: #4a5568;">📞</td>
+                                                    <td style="padding-left: 5px;">
+                                                        <a href="tel:{{ $adminPhone }}"
+                                                            style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $phoneToDisplay }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    @endif
 
-                    @if ($adminEmailAddress)
-                        <span style="display: inline-block; margin: 0 4px;">
-                            <span style="margin-right: 5px;">📧</span>
-                            <a href="mailto:{{ $adminEmailAddress }}"
-                                style="text-decoration: none;"><strong>{{ $adminEmailAddress }}</strong></a>
-                        </span>
-                    @endif
-                </p>
+                                    @if ($adminEmailAddress)
+                                        <td align="center">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td style="font-size: 18px; color: #4a5568;">📧</td>
+                                                    <td style="padding-left: 5px;">
+                                                        <a href="mailto:{{ $adminEmailAddress }}"
+                                                            style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $adminEmailAddress }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    @endif
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
