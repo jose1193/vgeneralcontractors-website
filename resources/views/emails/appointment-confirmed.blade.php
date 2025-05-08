@@ -239,57 +239,51 @@
 
             <div
                 style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0; text-align: center; border: 1px solid #e9ecef;">
-                @if ($adminPhone || $adminEmailAddress)
-                    <p style="margin: 0; font-size: 15px;">
-                        @if ($adminPhone)
-                            <span style="display: inline-block; margin: 0 8px;">
-                                <span style="margin-right: 5px;">📞</span>
+                <p style="margin: 0; font-size: 15px;">
+                    @if ($adminPhone)
+                        <span style="display: inline-block; margin: 0 4px;">
+                            <span style="margin-right: 5px;">📞</span>
+                            <strong>
+                                @php
+                                    $phone = $adminPhone ?? '';
+                                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                    if (strlen($digitsOnly) == 10) {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 0, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 3, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 6);
+                                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 1, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 4, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 7);
+                                    } else {
+                                        $formattedPhone = $phone;
+                                    }
+                                    echo $formattedPhone;
+                                @endphp
+                            </strong>
+                        </span>
+                    @endif
 
-                                <span>
-                                    <strong>
-                                        @php
-                                            $phone = $adminPhone ?? '';
-                                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                            if (strlen($digitsOnly) == 10) {
-                                                $formattedPhone =
-                                                    '(' .
-                                                    substr($digitsOnly, 0, 3) .
-                                                    ') ' .
-                                                    substr($digitsOnly, 3, 3) .
-                                                    '-' .
-                                                    substr($digitsOnly, 6);
-                                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                                $formattedPhone =
-                                                    '(' .
-                                                    substr($digitsOnly, 1, 3) .
-                                                    ') ' .
-                                                    substr($digitsOnly, 4, 3) .
-                                                    '-' .
-                                                    substr($digitsOnly, 7);
-                                            } else {
-                                                $formattedPhone = $phone;
-                                            }
-                                            echo $formattedPhone;
-                                        @endphp
-                                    </strong>
-                                </span>
-                            </span>
-                        @endif
+                    @if ($adminPhone && $adminEmailAddress)
+                        <span style="color: #999; margin: 0 4px;">|</span>
+                    @endif
 
-                        @if ($adminPhone && $adminEmailAddress)
-                            <span style="color: #999; margin: 0 8px;">|</span>
-                        @endif
-
-                        @if ($adminEmailAddress)
-                            <span style="display: inline-block; margin: 0 8px;">
-                                <span style="margin-right: 5px;">📧</span>
-
-                                <a href="mailto:{{ $adminEmailAddress }}"
-                                    style="text-decoration: none;"><strong>{{ $adminEmailAddress }}</strong></a>
-                            </span>
-                        @endif
-                    </p>
-                @endif
+                    @if ($adminEmailAddress)
+                        <span style="display: inline-block; margin: 0 4px;">
+                            <span style="margin-right: 5px;">📧</span>
+                            <a href="mailto:{{ $adminEmailAddress }}"
+                                style="text-decoration: none;"><strong>{{ $adminEmailAddress }}</strong></a>
+                        </span>
+                    @endif
+                </p>
             </div>
         </div>
 

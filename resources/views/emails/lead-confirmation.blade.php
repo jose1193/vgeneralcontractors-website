@@ -172,6 +172,52 @@
             <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} V General Contractors. Todos los
                 derechos reservados.</p>
             <p style="font-size: 10px; color: #999;">{{ \App\Models\CompanyData::first()->address ?? '' }}</p>
+
+            <div style="margin-top: 5px; font-size: 12px; color: #777;">
+                <p style="margin: 3px 0;">
+                    @php
+                        $companyData = \App\Models\CompanyData::first();
+                    @endphp
+
+                    @if ($companyData && $companyData->phone)
+                        <span>
+                            @php
+                                $phone = $companyData->phone ?? '';
+                                $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                if (strlen($digitsOnly) == 10) {
+                                    $formattedPhone =
+                                        '(' .
+                                        substr($digitsOnly, 0, 3) .
+                                        ') ' .
+                                        substr($digitsOnly, 3, 3) .
+                                        '-' .
+                                        substr($digitsOnly, 6);
+                                } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                    $formattedPhone =
+                                        '(' .
+                                        substr($digitsOnly, 1, 3) .
+                                        ') ' .
+                                        substr($digitsOnly, 4, 3) .
+                                        '-' .
+                                        substr($digitsOnly, 7);
+                                } else {
+                                    $formattedPhone = $phone;
+                                }
+                                echo $formattedPhone;
+                            @endphp
+                        </span>
+
+                        @if ($companyData && $companyData->email)
+                            <span style="margin: 0 5px;">|</span>
+                        @endif
+                    @endif
+
+                    @if ($companyData && $companyData->email)
+                        <a href="mailto:{{ $companyData->email }}"
+                            style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
+                    @endif
+                </p>
+            </div>
         </div>
     </div>
 </body>
