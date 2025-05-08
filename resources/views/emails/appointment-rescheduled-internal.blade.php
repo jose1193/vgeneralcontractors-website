@@ -127,6 +127,43 @@
                     <td>{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
                 </tr>
                 <tr>
+                    <td><span class="appointment-icon">📧</span> <strong>Email:</strong></td>
+                    <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
+                </tr>
+                <tr>
+                    <td><span class="appointment-icon">📞</span> <strong>Phone:</strong></td>
+                    <td>
+                        @php
+                            $phone = $appointment->phone ?? '';
+                            // Remove any non-digit characters
+                            $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                            // Format the number based on length
+                            if (strlen($digitsOnly) == 10) {
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 0, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 3, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 6);
+                            } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                // US number with country code
+                                $formattedPhone =
+                                    '(' .
+                                    substr($digitsOnly, 1, 3) .
+                                    ') ' .
+                                    substr($digitsOnly, 4, 3) .
+                                    '-' .
+                                    substr($digitsOnly, 7);
+                            } else {
+                                // Fallback to original
+                                $formattedPhone = $phone;
+                            }
+                        @endphp
+                        <a href="tel:{{ preg_replace('/[^0-9]/', '', $phone) }}">{{ $formattedPhone }}</a>
+                    </td>
+                </tr>
+                <tr>
                     <td><span class="appointment-icon">📍</span> <strong>Address:</strong></td>
                     <td>
                         {{ $appointment->address }}<br>
@@ -138,47 +175,6 @@
                     </td>
                 </tr>
             </table>
-
-            <div style="text-align: center; margin: 20px 0;">
-                @if ($companyData->phone || $companyData->email)
-                    <p>
-                        @if ($companyData->phone)
-                            <strong>📞 Teléfono:</strong>
-                            @php
-                                $phone = $companyData->phone ?? '';
-                                $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                if (strlen($digitsOnly) == 10) {
-                                    $formattedPhone =
-                                        '(' .
-                                        substr($digitsOnly, 0, 3) .
-                                        ') ' .
-                                        substr($digitsOnly, 3, 3) .
-                                        '-' .
-                                        substr($digitsOnly, 6);
-                                } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                    $formattedPhone =
-                                        '(' .
-                                        substr($digitsOnly, 1, 3) .
-                                        ') ' .
-                                        substr($digitsOnly, 4, 3) .
-                                        '-' .
-                                        substr($digitsOnly, 7);
-                                } else {
-                                    $formattedPhone = $phone;
-                                }
-                                echo $formattedPhone;
-                            @endphp
-                        @endif
-                        @if ($companyData->phone && $companyData->email)
-                            &nbsp;|&nbsp;
-                        @endif
-                        @if ($companyData->email)
-                            <strong>📧 Email:</strong> <a
-                                href="mailto:{{ $companyData->email }}">{{ $companyData->email }}</a>
-                        @endif
-                    </p>
-                @endif
-            </div>
 
             <div class="time-change">
                 <h3 style="margin-top: 0; color: #333;">Schedule Change:</h3>
