@@ -219,52 +219,81 @@
             <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos:</p>
 
             <div
-                style="background-color: #f8f9fa; border-radius: 8px; padding: 10px; margin: 10px 0; text-align: center; border: 1px solid #e9ecef;">
-                @if ($companyData->phone || $companyData->email)
-                    <div style="font-size: 14px; display: flex; flex-direction: column; align-items: center;">
-                        @if ($companyData->phone)
-                            <div style="margin-bottom: 5px; display: flex; align-items: center; gap: 5px;">
-                                <span>📞</span>
-                                <strong style="margin-right: 5px;">Teléfono:</strong>
-                                <span>
-                                    @php
-                                        $phone = $companyData->phone ?? '';
-                                        $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                        if (strlen($digitsOnly) == 10) {
-                                            $formattedPhone =
-                                                '(' .
-                                                substr($digitsOnly, 0, 3) .
-                                                ') ' .
-                                                substr($digitsOnly, 3, 3) .
-                                                '-' .
-                                                substr($digitsOnly, 6);
-                                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                            $formattedPhone =
-                                                '(' .
-                                                substr($digitsOnly, 1, 3) .
-                                                ') ' .
-                                                substr($digitsOnly, 4, 3) .
-                                                '-' .
-                                                substr($digitsOnly, 7);
-                                        } else {
-                                            $formattedPhone = $phone;
-                                        }
-                                        echo $formattedPhone;
-                                    @endphp
-                                </span>
-                            </div>
-                        @endif
+                style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; border: 1px solid #e9ecef; margin: 20px 0;">
+                @php
+                    $phoneToDisplay = '';
+                    if ($companyData->phone) {
+                        $digitsOnly = preg_replace('/[^0-9]/', '', $companyData->phone);
+                        if (strlen($digitsOnly) == 10) {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 0, 3) .
+                                ') ' .
+                                substr($digitsOnly, 3, 3) .
+                                '-' .
+                                substr($digitsOnly, 6);
+                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 1, 3) .
+                                ') ' .
+                                substr($digitsOnly, 4, 3) .
+                                '-' .
+                                substr($digitsOnly, 7);
+                        } else {
+                            $phoneToDisplay = $companyData->phone;
+                        }
+                    }
+                @endphp
 
-                        @if ($companyData->email)
-                            <div style="display: flex; align-items: center; gap: 5px;">
-                                <span>📧</span>
-                                <strong style="margin-right: 5px;">Email:</strong>
-                                <a href="mailto:{{ $companyData->email }}"
-                                    style="text-decoration: none;">{{ $companyData->email }}</a>
-                            </div>
-                        @endif
-                    </div>
-                @endif
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center" style="padding-bottom: 10px;">
+                            <span style="font-size: 16px; color: #4a5568;"><strong>Contáctenos</strong></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                @if ($companyData->phone)
+                                    <tr>
+                                        <td align="center" style="padding-bottom: 8px;">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td
+                                                        style="font-size: 14px; color: #4a5568; vertical-align: middle;">
+                                                        📞</td>
+                                                    <td style="padding-left: 5px; vertical-align: middle;">
+                                                        <a href="tel:{{ $companyData->phone }}"
+                                                            style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $phoneToDisplay }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
+
+                                @if ($companyData->email)
+                                    <tr>
+                                        <td align="center">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td
+                                                        style="font-size: 18px; color: #4a5568; vertical-align: middle;">
+                                                        📧</td>
+                                                    <td style="padding-left: 10px; vertical-align: middle;">
+                                                        <a href="mailto:{{ $companyData->email }}"
+                                                            style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $companyData->email }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 

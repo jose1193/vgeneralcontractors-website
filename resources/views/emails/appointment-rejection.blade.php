@@ -197,15 +197,76 @@
                 <h4 style="margin-top: 0; color: #2d3748;">¿Necesita más información?</h4>
                 <p>Si cree que esta decisión se tomó por error o si sus circunstancias han cambiado, no dude en
                     contactarnos:</p>
-                @if ($companyData->phone)
-                    <p><strong>📞 Teléfono:</strong> <a
-                            href="tel:{{ preg_replace('/[^0-9]/', '', $companyData->phone) }}">{{ formatSpanishPhone($companyData->phone) }}</a>
-                    </p>
-                @endif
-                @if ($companyData->email)
-                    <p><strong>📧 Email:</strong> <a
-                            href="mailto:{{ $companyData->email }}">{{ $companyData->email }}</a></p>
-                @endif
+
+                @php
+                    $phoneToDisplay = '';
+                    if ($companyData->phone) {
+                        $digitsOnly = preg_replace('/[^0-9]/', '', $companyData->phone);
+                        if (strlen($digitsOnly) == 10) {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 0, 3) .
+                                ') ' .
+                                substr($digitsOnly, 3, 3) .
+                                '-' .
+                                substr($digitsOnly, 6);
+                        } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                            $phoneToDisplay =
+                                '(' .
+                                substr($digitsOnly, 1, 3) .
+                                ') ' .
+                                substr($digitsOnly, 4, 3) .
+                                '-' .
+                                substr($digitsOnly, 7);
+                        } else {
+                            $phoneToDisplay = $companyData->phone;
+                        }
+                    }
+                @endphp
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 10px;">
+                    <tr>
+                        <td align="center">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                @if ($companyData->phone)
+                                    <tr>
+                                        <td align="center" style="padding-bottom: 8px;">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td
+                                                        style="font-size: 14px; color: #4a5568; vertical-align: middle;">
+                                                        📞</td>
+                                                    <td style="padding-left: 5px; vertical-align: middle;">
+                                                        <a href="tel:{{ $companyData->phone }}"
+                                                            style="text-decoration: none; color: #ef4444; font-weight: bold;">{{ $phoneToDisplay }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
+
+                                @if ($companyData->email)
+                                    <tr>
+                                        <td align="center">
+                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td
+                                                        style="font-size: 18px; color: #4a5568; vertical-align: middle;">
+                                                        📧</td>
+                                                    <td style="padding-left: 10px; vertical-align: middle;">
+                                                        <a href="mailto:{{ $companyData->email }}"
+                                                            style="text-decoration: none; color: #ef4444; font-weight: bold;">{{ $companyData->email }}</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <p>Valoramos su interés en nuestros servicios y estaremos encantados de ayudarle en el futuro si estas
