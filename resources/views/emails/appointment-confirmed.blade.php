@@ -274,35 +274,41 @@
                     <tr>
                         <td align="center">
                             <table cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    @if ($adminPhone)
-                                        <td align="center" style="padding-right: 15px;">
+                                @if ($adminPhone)
+                                    <tr>
+                                        <td align="center" style="padding-bottom: 8px;">
                                             <table cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
-                                                    <td style="font-size: 18px; color: #4a5568;">📞</td>
-                                                    <td style="padding-left: 5px;">
+                                                    <td
+                                                        style="font-size: 14px; color: #4a5568; vertical-align: middle;">
+                                                        📞</td>
+                                                    <td style="padding-left: 5px; vertical-align: middle;">
                                                         <a href="tel:{{ $adminPhone }}"
                                                             style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $phoneToDisplay }}</a>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                    @endif
+                                    </tr>
+                                @endif
 
-                                    @if ($adminEmailAddress)
+                                @if ($adminEmailAddress)
+                                    <tr>
                                         <td align="center">
                                             <table cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
-                                                    <td style="font-size: 18px; color: #4a5568;">📧</td>
-                                                    <td style="padding-left: 5px;">
+                                                    <td
+                                                        style="font-size: 18px; color: #4a5568; vertical-align: middle;">
+                                                        📧</td>
+                                                    <td style="padding-left: 10px; vertical-align: middle;">
                                                         <a href="mailto:{{ $adminEmailAddress }}"
                                                             style="text-decoration: none; color: #10b981; font-weight: bold;">{{ $adminEmailAddress }}</a>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                    @endif
-                                </tr>
+                                    </tr>
+                                @endif
                             </table>
                         </td>
                     </tr>
