@@ -16,6 +16,7 @@ use App\Exports\AppointmentsExport;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\CacheTrait;
+use App\Jobs\ProcessAppointmentEmail;
 
 class AppointmentController extends BaseCrudController
 {
@@ -63,7 +64,7 @@ class AppointmentController extends BaseCrudController
             'owner' => 'nullable|string|max:255',
             'damage_detail' => 'nullable|string',
             'intent_to_claim' => 'nullable|boolean',
-            'lead_source' => 'required|in:Website,Facebook Ads,Reference',
+            'lead_source' => 'required|in:Website,Facebook Ads,Reference,Retell AI',
             'additional_note' => 'nullable|string',
             'inspection_status' => 'nullable|in:Completed,Pending,Declined,Confirmed',
             'status_lead' => 'nullable|in:New,Called,Pending,Declined',
@@ -743,9 +744,14 @@ class AppointmentController extends BaseCrudController
      */
     protected function afterStore($appointment)
     {
-        // Add custom logic here, e.g., send notification
-        // Dispatch job to process the new lead (send notifications)
-        ProcessNewLead::dispatch($appointment);
+        // If appointment has inspection date and time, send confirmation email instead of new lead notification
+        if ($appointment->inspection_status === 'Confirmed' && $appointment->inspection_date && $appointment->inspection_time) {
+            ProcessAppointmentEmail::dispatch($appointment, 'confirmed');
+            Log::info('Appointment confirmation email dispatched via creation', ['id' => $appointment->id]);
+        } else {
+            // Otherwise, send the standard new lead notification
+            ProcessNewLead::dispatch($appointment);
+        }
     }
 
     /**
@@ -757,6 +763,11 @@ class AppointmentController extends BaseCrudController
         // If this is a new lead (status changed to 'New'), notify admin and client
         if ($appointment->status_lead === 'New') {
             ProcessNewLead::dispatch($appointment);
+        }
+        // If the appointment has been confirmed (has date and time), send confirmation email
+        else if ($appointment->inspection_status === 'Confirmed' && $appointment->inspection_date && $appointment->inspection_time) {
+            ProcessAppointmentEmail::dispatch($appointment, 'confirmed');
+            Log::info('Appointment confirmation email dispatched via update', ['id' => $appointment->id]);
         }
     }
 
