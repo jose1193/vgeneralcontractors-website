@@ -273,7 +273,7 @@
                     @endif
 
                     @if ($adminPhone && $adminEmailAddress)
-                        <span style="color: #999; margin: 0 4px;">|</span>
+                        <span style="color: #999;">|</span>
                     @endif
 
                     @if ($adminEmailAddress)
@@ -288,7 +288,7 @@
         </div>
 
         <!-- Redes Sociales -->
-        <div class="social-icons">
+        <div class="social-icons" style="margin-top: 30px;">
             @if ($companyData->facebook_link)
                 <a href="{{ $companyData->facebook_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
