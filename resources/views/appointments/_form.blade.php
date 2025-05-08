@@ -188,7 +188,7 @@
         <x-input-error for="inspection_time" class="mt-2" />
         <span id="time_required_message" class="hidden text-red-500 text-xs mt-1">Time is required when date is
             selected</span>
-        <span class="text-xs text-gray-500 mt-1">Available times: 9:00 - 23:00</span>
+        <span class="text-xs text-gray-500 mt-1">Available times: 9:00 AM - 17:00 PM</span>
     </div>
 
     {{-- Inspection Status --}}
