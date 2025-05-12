@@ -383,15 +383,18 @@
                         year: 'numeric'
                     });
 
+                    // Ensure the end time is 2 hours after start
+                    const actualEnd = new Date(start.getTime() + (2 * 60 * 60 * 1000));
+
                     const formattedTime = start.toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: false
-                    }) + ' - ' + end.toLocaleTimeString('en-US', {
+                    }) + ' - ' + actualEnd.toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: false
-                    });
+                    }) + ' (2 hours)';
 
                     // Display formatted date & time with proper capitalization
                     selectedDateTime.value = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1) + ' • ' +
@@ -631,7 +634,7 @@
                                 hour12: false
                             }) : '';
 
-                            timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '');
+                            timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '') + ' (2h)';
 
                             // 3. Estado (última línea, más pequeña)
                             let statusText = document.createElement('div');
@@ -740,6 +743,7 @@
 
                                 // Format and display the date and time
                                 const start = info.event.start;
+                                const end = info.event.end;
                                 let formattedDateTime = new Intl.DateTimeFormat('en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
@@ -749,6 +753,17 @@
                                     minute: 'numeric',
                                     hour12: true
                                 }).format(start);
+
+                                // Add end time (2 hours after start)
+                                if (end) {
+                                    formattedDateTime += ' - ' + new Intl.DateTimeFormat('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true
+                                    }).format(end);
+                                    formattedDateTime += ' (2 hours)';
+                                }
+
                                 document.getElementById('modalEventDateTime').textContent =
                                     formattedDateTime;
 

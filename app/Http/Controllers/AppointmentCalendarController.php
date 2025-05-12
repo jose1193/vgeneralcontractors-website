@@ -96,8 +96,8 @@ class AppointmentCalendarController extends Controller
                         ->setMinute($inspectionTime->minute)
                         ->setSecond(0);
                     
-                    // Add 1 hour for the end by default
-                    $endTime = $startTime->copy()->addHour();
+                    // Add 2 hours for the end by default
+                    $endTime = $startTime->copy()->addHours(2);
                 } else {
                     // If there's no time, use all day
                     $startTime = $inspectionDate;
