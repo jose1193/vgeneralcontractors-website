@@ -419,11 +419,11 @@
 
                 // Function to load clients for the dropdown
                 function loadClients() {
-                    // Show loading state
+                    // Mostrar estado de carga
                     clientSelector.innerHTML = '<option value="">Loading clients...</option>';
                     console.log('Loading clients from API...');
 
-                    // Fetch clients from the dedicated endpoint
+                    // Fetch de clientes desde el endpoint
                     fetch('{{ route('appointment-calendar.clients') }}')
                         .then(response => {
                             console.log('API response status:', response.status);
@@ -432,11 +432,11 @@
                         .then(data => {
                             console.log('Client data received:', data);
                             if (data.success && data.data && data.data.length > 0) {
-                                // Clear loading option
+                                // Limpiar opción de carga
                                 clientSelector.innerHTML = '<option value="">Select a client</option>';
                                 console.log('Found', data.data.length, 'clients');
 
-                                // Add clients to dropdown
+                                // Agregar clientes al dropdown
                                 data.data.forEach(client => {
                                     const option = document.createElement('option');
                                     option.value = client.uuid;
@@ -445,6 +445,12 @@
                                     option.dataset.email = client.email;
                                     option.dataset.phone = client.phone;
                                     clientSelector.appendChild(option);
+                                });
+
+                                // Inicializar Select2 después de cargar las opciones
+                                $('#clientSelector').select2({
+                                    placeholder: "Select a client",
+                                    allowClear: true
                                 });
                             } else {
                                 console.error('No clients found in data:', data);
