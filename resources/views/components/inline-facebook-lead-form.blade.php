@@ -10,10 +10,12 @@
 
     <!-- Header -->
     <div class="px-4 py-3 mb-4 bg-yellow-500 sm:px-6 rounded-lg">
-        <h3 class="text-xl font-bold leading-6 text-center text-white">Get Your Free Inspection</h3>
+        <h3 class="font-bold leading-6 text-center text-white text-lg sm:text-xl md:text-2xl">
+            Get Your Free Inspection
+        </h3>
     </div>
 
-    <p class="mt-6 mb-4 text-sm text-gray-600 text-center">
+    <p class="mt-6 mb-4 text-gray-600 text-center text-sm sm:text-base">
         Fill out the form below and our team will contact you shortly to schedule your free inspection.
     </p>
 
@@ -36,8 +38,8 @@
         <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             <!-- First Name -->
             <div>
-                <label for="inline_first_name" class="block text-sm font-medium text-gray-700">First Name <span
-                        class="text-red-500">*</span></label>
+                <label for="inline_first_name" class="block font-medium text-gray-700 text-sm sm:text-base">First Name
+                    <span class="text-red-500">*</span></label>
                 <input type="text" id="inline_first_name" name="first_name"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                     autocomplete="given-name" required>
@@ -45,8 +47,8 @@
             </div>
             <!-- Last Name -->
             <div>
-                <label for="inline_last_name" class="block text-sm font-medium text-gray-700">Last Name <span
-                        class="text-red-500">*</span></label>
+                <label for="inline_last_name" class="block font-medium text-gray-700 text-sm sm:text-base">Last Name
+                    <span class="text-red-500">*</span></label>
                 <input type="text" id="inline_last_name" name="last_name"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                     autocomplete="family-name" required>
@@ -56,7 +58,7 @@
         <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             <!-- Phone -->
             <div>
-                <label for="inline_phone" class="block text-sm font-medium text-gray-700">Phone <span
+                <label for="inline_phone" class="block font-medium text-gray-700 text-sm sm:text-base">Phone <span
                         class="text-red-500">*</span></label>
                 <input type="tel" id="inline_phone" name="phone" placeholder="(XXX) XXX-XXXX"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -65,7 +67,7 @@
             </div>
             <!-- Email -->
             <div>
-                <label for="inline_email" class="block text-sm font-medium text-gray-700">Email <span
+                <label for="inline_email" class="block font-medium text-gray-700 text-sm sm:text-base">Email <span
                         class="text-red-500">*</span></label>
                 <input type="email" id="inline_email" name="email"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -75,8 +77,8 @@
         </div>
         <!-- Address Map Input Field -->
         <div>
-            <label for="inline_address_map_input" class="block text-sm font-medium text-gray-700">Address <span
-                    class="text-red-500">*</span></label>
+            <label for="inline_address_map_input" class="block font-medium text-gray-700 text-sm sm:text-base">Address
+                <span class="text-red-500">*</span></label>
             <input type="text" id="inline_address_map_input" name="address_map_input"
                 placeholder="Enter your complete address"
                 class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -91,7 +93,7 @@
         <input type="hidden" id="inline_country" name="country" value="USA">
         <!-- Address 2 -->
         <div>
-            <label for="inline_address_2" class="block text-sm font-medium text-gray-700">Address 2 <span
+            <label for="inline_address_2" class="block font-medium text-gray-700 text-sm sm:text-base">Address 2 <span
                     class="text-xs text-gray-500">(Optional, e.g., Apt, Suite, Unit)</span></label>
             <input type="text" id="inline_address_2" name="address_2" placeholder="Apt #, Suite #, etc."
                 class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -105,16 +107,16 @@
         </div>
         <!-- Comment/Message -->
         <div>
-            <label for="inline_message" class="block mt-8 text-sm font-medium text-gray-700">Comment or Message <span
-                    class="text-xs text-gray-500">(Optional)</span></label>
+            <label for="inline_message" class="block mt-8 font-medium text-gray-700 text-sm sm:text-base">Comment or
+                Message <span class="text-xs text-gray-500">(Optional)</span></label>
             <textarea id="inline_message" name="message" rows="4"
                 class="input-field block w-full  border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></textarea>
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="message"></span>
         </div>
         <!-- Property Insurance -->
         <div class="mt-6 text-center md:text-center sm:text-center">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Do you have property insurance? <span
-                    class="text-red-500">*</span></label>
+            <label class="block font-medium text-gray-700 mb-2 text-sm sm:text-base">Do you have property insurance?
+                <span class="text-red-500">*</span></label>
             <fieldset class="mt-2">
                 <legend class="sr-only">Property Insurance</legend>
                 <div class="flex items-center justify-center space-x-4">
@@ -136,7 +138,7 @@
         </div>
         <!-- SMS Consent -->
         <div class="mt-6">
-            <label class="inline-flex items-start cursor-pointer">
+            <label class="inline-flex items-start cursor-pointer text-sm sm:text-base">
                 <input id="inline_sms_consent" name="sms_consent" type="checkbox" value="1"
                     class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                 <span class="ml-2 text-sm text-gray-600">
