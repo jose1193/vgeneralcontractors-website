@@ -203,6 +203,8 @@
             });
         });
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
+        defer></script>
     @include('cookie-consent::index')
 </head>
 
@@ -215,7 +217,7 @@
     <x-about-us />
     <x-services />
     <x-service-cards />
-    <x-contact-form />
+    <x-inline-facebook-lead-form />
     <x-why-us />
     <x-video-section />
     <x-certifications />
