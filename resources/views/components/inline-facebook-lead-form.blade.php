@@ -1,6 +1,6 @@
 @php use App\Helpers\PhoneHelper; @endphp
 <!-- Inline Facebook Lead Form -->
-<div class="max-w-3xl mx-auto my-8  fade-in-section">
+<div class="max-w-3xl mx-auto my-8 px-4 fade-in-section">
     <!-- Centered Logo -->
     <div class="flex justify-center mb-6">
         <a href="{{ route('home') }}" title="V General Contractors">
