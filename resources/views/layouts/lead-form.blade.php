@@ -61,7 +61,7 @@
     <x-facebook-pixel />
 
     {{-- Styles and Scripts via Vite --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Additional Page-Specific Styles --}}
     @stack('styles')
