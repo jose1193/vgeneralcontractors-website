@@ -5,7 +5,7 @@
 /* Roboto Font */
 @font-face {
     font-family: "Roboto";
-    src: url("/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+    src: url("../../public/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
         format("truetype");
     font-weight: 100 900;
     font-style: normal;
@@ -14,7 +14,7 @@
 
 @font-face {
     font-family: "Roboto";
-    src: url("/assets/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf")
+    src: url("../../public/assets/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf")
         format("truetype");
     font-weight: 100 900;
     font-style: italic;
