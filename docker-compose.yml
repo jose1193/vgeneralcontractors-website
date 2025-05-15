@@ -24,40 +24,6 @@ services:
         depends_on:
             - mysql
             - redis
-
-    # Nuevo servicio para la cola con Supervisor
-    queue-supervisor:
-        build:
-            context: .
-            dockerfile: Dockerfile.queue
-        volumes:
-            - ".:/var/www/html"
-        networks:
-            - sail
-        depends_on:
-            - mysql
-            - redis
-
-    # Servicio simple de queue (como alternativa a Supervisor)
-    queue:
-        build:
-            context: "./vendor/laravel/sail/runtimes/8.4"
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: "${WWWGROUP}"
-        image: "sail-8.4/app"
-        command: ["php", "artisan", "queue:work", "--tries=3", "--max-time=0"]
-        environment:
-            WWWUSER: "${WWWUSER}"
-            LARAVEL_SAIL: 1
-        volumes:
-            - ".:/var/www/html"
-        networks:
-            - sail
-        depends_on:
-            - mysql
-            - redis
-
     mysql:
         image: "mysql/mysql-server:8.0"
         ports:
