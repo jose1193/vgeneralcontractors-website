@@ -44,14 +44,18 @@ class LeadConfirmationNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        // Combine first and last name for greeting
+        // Obtener datos de la empresa
+        $companyData = \App\Models\CompanyData::first();
+        
+        // Obtener el nombre completo del appointment
         $fullName = $this->appointment->first_name . ' ' . $this->appointment->last_name;
 
         return (new MailMessage)
-            ->subject('✅Hemos recibido sus datos - Próximo paso: Su inspección gratuita')
+            ->subject('✅ Hemos recibido sus datos - Próximo paso: Su inspección gratuita')
             ->view('emails.lead-confirmation', [
-                'appointment' => $this->appointment, // Pass the full appointment if needed
-                'full_name' => $fullName         // Pass the combined name for the template
+                'appointment' => $this->appointment,
+                'companyData' => $companyData,
+                'full_name' => $fullName
             ]);
     }
 

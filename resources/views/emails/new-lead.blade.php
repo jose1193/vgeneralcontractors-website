@@ -214,22 +214,22 @@
         </div>
 
         <div class="social-icons">
-            @if ($companyData->facebook_link)
+            @if (isset($companyData) && $companyData && $companyData->facebook_link)
                 <a href="{{ $companyData->facebook_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
                 </a>
             @endif
-            @if ($companyData->instagram_link)
+            @if (isset($companyData) && $companyData && $companyData->instagram_link)
                 <a href="{{ $companyData->instagram_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
                 </a>
             @endif
-            @if ($companyData->linkedin_link)
+            @if (isset($companyData) && $companyData && $companyData->linkedin_link)
                 <a href="{{ $companyData->linkedin_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
                 </a>
             @endif
-            @if ($companyData->twitter_link)
+            @if (isset($companyData) && $companyData && $companyData->twitter_link)
                 <a href="{{ $companyData->twitter_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
                 </a>
@@ -239,15 +239,16 @@
         <div class="footer">
             <p>Business Hours:<br>
                 Monday to Friday: 9:00 AM - 5:00 PM</p>
-            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }}
+                {{ isset($companyData) && $companyData ? $companyData->company_name : 'V General Contractors' }}.
                 All rights reserved.</p>
-            @if ($companyData->address)
+            @if (isset($companyData) && $companyData && $companyData->address)
                 <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
             @endif
 
             <div style="margin-top: 5px; font-size: 12px; color: #777;">
                 <p style="margin: 3px 0;">
-                    @if ($companyData->phone)
+                    @if (isset($companyData) && $companyData && $companyData->phone)
                         <span>
                             @php
                                 $phone = $companyData->phone ?? '';
@@ -275,12 +276,12 @@
                             @endphp
                         </span>
 
-                        @if ($companyData->email)
+                        @if (isset($companyData) && $companyData && $companyData->email)
                             <span style="margin: 0 5px;">|</span>
                         @endif
                     @endif
 
-                    @if ($companyData->email)
+                    @if (isset($companyData) && $companyData && $companyData->email)
                         <a href="mailto:{{ $companyData->email }}"
                             style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
                     @endif

@@ -143,24 +143,24 @@
 
         <!-- Redes Sociales -->
         <div class="social-icons">
-            @if ($companyData->facebook_link)
+            @if (isset($companyData) && $companyData && $companyData->facebook_link)
                 <a href="{{ $companyData->facebook_link }}" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
                 </a>
             @endif
-            @if ($companyData->instagram_link)
-                <a href="{{ $companyData->instagram_link }}" target="_blank">
+            @if (isset($companyData) && $companyData && $companyData->instagram_link)
+                <a href="{{ $companyData->instagram_link }}" target="_blank" style="margin-left: 10px;">
                     <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
                 </a>
             @endif
-            @if ($companyData->linkedin_link)
-                <a href="{{ $companyData->linkedin_link }}" target="_blank">
+            @if (isset($companyData) && $companyData && $companyData->linkedin_link)
+                <a href="{{ $companyData->linkedin_link }}" target="_blank" style="margin-left: 10px;">
                     <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
                 </a>
             @endif
-            @if ($companyData->twitter_link)
-                <a href="{{ $companyData->twitter_link }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
+            @if (isset($companyData) && $companyData && $companyData->twitter_link)
+                <a href="{{ $companyData->twitter_link }}" target="_blank" style="margin-left: 10px;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124021.png" width="30" alt="Twitter">
                 </a>
             @endif
         </div>
