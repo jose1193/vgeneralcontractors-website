@@ -52,8 +52,8 @@ class FacebookLeadFormRequest extends FormRequest
             'status_lead' => 'nullable|string|in:New,Called,Pending,Declined', // Add status_lead field validation
             'inspection_date' => 'nullable|date|required_with:inspection_time',
             'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
-            // Add reCAPTCHA rule (using package's default v3 rule)
-            'g-recaptcha-response' => 'required',
+            // Make reCAPTCHA field nullable instead of required - we'll validate it in the controller
+            'g-recaptcha-response' => 'nullable',
         ];
     }
 

@@ -73,11 +73,31 @@ class FacebookLeadFormController extends Controller
         
         // Verify reCAPTCHA token with stricter score (0.7 instead of default 0.5)
         $recaptchaToken = $request->input('g-recaptcha-response');
-        if (!$this->verifyRecaptchaToken($recaptchaToken)) {
+        if (empty($recaptchaToken)) {
+            Log::warning('reCAPTCHA token is missing in the request', [
+                'ip' => $request->ip(),
+                'user_agent' => $request->header('User-Agent')
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'reCAPTCHA verification failed. Please try again.',
-                'errors' => ['g-recaptcha-response' => ['CAPTCHA verification failed.']]
+                'message' => 'CAPTCHA verification is required, but no token was provided.',
+                'errors' => ['g-recaptcha-response' => ['Please verify you are not a robot.']]
+            ], 422);
+        }
+        
+        // Log the incoming token for debugging
+        Log::info('Processing reCAPTCHA token', [
+            'token_length' => strlen($recaptchaToken),
+            'ip' => $request->ip()
+        ]);
+        
+        $recaptchaVerification = $this->verifyRecaptchaToken($recaptchaToken);
+        if (!$recaptchaVerification['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'reCAPTCHA verification failed: ' . ($recaptchaVerification['message'] ?? 'Please try again.'),
+                'errors' => ['g-recaptcha-response' => [$recaptchaVerification['message'] ?? 'CAPTCHA verification failed.']]
             ], 422);
         }
 
@@ -849,12 +869,16 @@ class FacebookLeadFormController extends Controller
 
     /**
      * Verify reCAPTCHA token with a higher score threshold.
+     * @return array Success status and message
      */
     private function verifyRecaptchaToken($token)
     {
         if (empty($token)) {
             Log::warning('reCAPTCHA token is empty');
-            return false;
+            return [
+                'success' => false, 
+                'message' => 'Missing reCAPTCHA token'
+            ];
         }
 
         $client = new \GuzzleHttp\Client();
@@ -889,13 +913,33 @@ class FacebookLeadFormController extends Controller
                 'error_codes' => $body['error-codes'] ?? []
             ]);
             
-            // Change to a more permissive threshold (0.5 instead of 0.7)
-            return isset($body['success']) && $body['success'] && (!isset($body['score']) || $body['score'] >= 0.5);
+            // Use 0.5 as the threshold (default recommended by Google)
+            $isValid = isset($body['success']) && $body['success'] && (!isset($body['score']) || $body['score'] >= 0.5);
+            
+            // Construct detailed error message if available
+            $message = 'CAPTCHA verification failed';
+            if (!$isValid && isset($body['error-codes']) && !empty($body['error-codes'])) {
+                $errorCodes = is_array($body['error-codes']) ? implode(', ', $body['error-codes']) : $body['error-codes'];
+                $message .= ': ' . $errorCodes;
+            } elseif (!$isValid && isset($body['score']) && $body['score'] < 0.5) {
+                $message .= ': Low confidence score';
+            }
+            
+            return [
+                'success' => $isValid,
+                'message' => $isValid ? 'Verification successful' : $message,
+                'details' => $body
+            ];
         } catch (\Exception $e) {
             Log::error('reCAPTCHA verification error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            return false;
+            
+            return [
+                'success' => false,
+                'message' => 'reCAPTCHA verification server error: ' . $e->getMessage(),
+                'exception' => get_class($e)
+            ];
         }
     }
 
