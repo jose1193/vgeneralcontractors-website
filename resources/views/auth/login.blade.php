@@ -14,7 +14,7 @@
 
         <!-- Botón de Google con animación -->
         <div class="mb-6">
-            <a href="/google-auth/redirect"
+            <a href="{{ secure_url('/google-auth/redirect') }}"
                 class="rounded-md flex items-center border border-slate-300 py-3 px-6 text-center text-sm transition-all duration-200 shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none w-full justify-center">
                 <img src="https://docs.material-tailwind.com/icons/google.svg" alt="google" class="h-5 w-5" />
                 <span class="font-semibold ml-3">Continue with Google</span>
@@ -26,7 +26,7 @@
             <span class="relative bg-white px-4 text-sm text-gray-600">Or log in with email</span>
         </div>
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ secure_url(route('login', [], false)) }}">
             @csrf
 
             <div>
@@ -51,7 +51,7 @@
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
                     <a class="no-underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        href="{{ route('password.request') }}" style="margin-right:10px">
+                        href="{{ secure_url(route('password.request', [], false)) }}" style="margin-right:10px">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
