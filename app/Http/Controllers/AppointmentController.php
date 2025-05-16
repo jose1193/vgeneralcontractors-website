@@ -223,7 +223,7 @@ class AppointmentController extends BaseCrudController
             }
             
             // Use cache for normal views
-            $appointments = Cache::remember($cacheKey, 300, function() use ($request, $page) {
+            $appointments = Cache::remember($cacheKey, 15, function() use ($request, $page) {
                 $query = $this->buildAppointmentsQuery($request);
                 
                 // Pagination
