@@ -29,6 +29,12 @@
     <form id="inline-facebook-lead-form" action="{{ secure_url(route('facebook.lead.store', [], false)) }}"
         method="POST" class="space-y-4" novalidate>
         @csrf
+
+        {{-- Set form start time in session --}}
+        @php
+            session(['form_start_time' => time()]);
+        @endphp
+
         <!-- Hidden Inputs for Coordinates -->
         <input type="hidden" name="latitude" id="inline-latitude">
         <input type="hidden" name="longitude" id="inline-longitude">
@@ -614,26 +620,70 @@
             }
             // reCAPTCHA v3 para inline
             function executeInlineRecaptcha(action) {
+                console.log('[executeInlineRecaptcha] Called with action:', action);
                 return new Promise((resolve, reject) => {
                     if (typeof grecaptcha === 'undefined') {
-                        reject(new Error('reCAPTCHA API not loaded'));
+                        console.error('[executeInlineRecaptcha] Error: reCAPTCHA API not loaded');
+
+                        // Intentar cargar reCAPTCHA y reintentar
+                        const script = document.createElement('script');
+                        script.src =
+                            'https://www.google.com/recaptcha/api.js?render={{ config('captcha.sitekey') }}';
+                        script.async = true;
+                        script.defer = true;
+                        script.onload = function() {
+                            console.log(
+                                '[executeInlineRecaptcha] reCAPTCHA script loaded, retrying...');
+                            window.recaptchaLoaded = true;
+                            setTimeout(() => {
+                                executeInlineRecaptcha(action).then(resolve).catch(reject);
+                            }, 1000);
+                        };
+                        document.head.appendChild(script);
                         return;
                     }
+
                     try {
                         grecaptcha.ready(function() {
-                            grecaptcha.execute(window.recaptchaSiteKey, {
-                                    action: action
-                                })
-                                .then(token => {
-                                    document.getElementById('inline-g-recaptcha-response')
-                                        .value = token;
-                                    resolve(token);
-                                })
-                                .catch(error => {
-                                    reject(error);
-                                });
+                            console.log(
+                                '[executeInlineRecaptcha] grecaptcha.ready callback fired.');
+                            console.log('[executeInlineRecaptcha] Attempting to execute with key:',
+                                '{{ config('captcha.sitekey') }}');
+
+                            // Asegurarse de que haya un pequeño retraso antes de ejecutar
+                            setTimeout(() => {
+                                grecaptcha.execute('{{ config('captcha.sitekey') }}', {
+                                        action: action
+                                    })
+                                    .then(token => {
+                                        console.log(
+                                            '[executeInlineRecaptcha] Token received:',
+                                            token ? 'success (length: ' + token
+                                            .length + ')' : 'null/undefined');
+
+                                        if (!token) {
+                                            console.error(
+                                                '[executeInlineRecaptcha] Received empty token'
+                                            );
+                                            reject(new Error('Empty reCAPTCHA token'));
+                                            return;
+                                        }
+
+                                        document.getElementById(
+                                                'inline-g-recaptcha-response').value =
+                                            token;
+                                        resolve(token);
+                                    })
+                                    .catch(error => {
+                                        console.error(
+                                            '[executeInlineRecaptcha] grecaptcha.execute() failed:',
+                                            error);
+                                        reject(error);
+                                    });
+                            }, 500);
                         });
                     } catch (error) {
+                        console.error('[executeInlineRecaptcha] Error during ready/execute:', error);
                         reject(error);
                     }
                 });

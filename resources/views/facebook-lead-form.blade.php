@@ -36,6 +36,11 @@
                 class="space-y-4" novalidate>
                 @csrf
 
+                {{-- Set form start time in session --}}
+                @php
+                    session(['form_start_time' => time()]);
+                @endphp
+
                 {{-- Hidden Inputs for Coordinates --}}
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
@@ -243,7 +248,20 @@
             return new Promise((resolve, reject) => {
                 if (!window.recaptchaLoaded || typeof grecaptcha === 'undefined') {
                     console.error('[executeRecaptcha] Error: reCAPTCHA API not loaded');
-                    reject(new Error('reCAPTCHA API not loaded'));
+
+                    // Intentar cargar reCAPTCHA y reintentar
+                    const script = document.createElement('script');
+                    script.src = 'https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}';
+                    script.async = true;
+                    script.defer = true;
+                    script.onload = function() {
+                        console.log('[executeRecaptcha] reCAPTCHA script loaded, retrying...');
+                        window.recaptchaLoaded = true;
+                        setTimeout(() => {
+                            executeRecaptcha(action).then(resolve).catch(reject);
+                        }, 1000);
+                    };
+                    document.head.appendChild(script);
                     return;
                 }
 
@@ -252,19 +270,35 @@
                         console.log('[executeRecaptcha] grecaptcha.ready callback fired.');
                         console.log('[executeRecaptcha] Attempting to execute with key:', window
                             .recaptchaSiteKey);
-                        grecaptcha.execute(window.recaptchaSiteKey, {
-                                action: action
-                            })
-                            .then(token => {
-                                console.log('[executeRecaptcha] Token received:', token ? '***' :
-                                    'null/undefined');
-                                document.getElementById('g-recaptcha-response').value = token;
-                                resolve(token);
-                            })
-                            .catch(error => {
-                                console.error('[executeRecaptcha] grecaptcha.execute() failed:', error);
-                                reject(error);
-                            });
+
+                        // Asegurarse de que haya un pequeño retraso antes de ejecutar
+                        setTimeout(() => {
+                            grecaptcha.execute('{{ $recaptchaSiteKey }}', {
+                                    action: action
+                                })
+                                .then(token => {
+                                    console.log('[executeRecaptcha] Token received:', token ?
+                                        'success (length: ' + token.length + ')' :
+                                        'null/undefined');
+
+                                    if (!token) {
+                                        console.error(
+                                            '[executeRecaptcha] Received empty token');
+                                        reject(new Error('Empty reCAPTCHA token'));
+                                        return;
+                                    }
+
+                                    document.getElementById('g-recaptcha-response').value =
+                                        token;
+                                    resolve(token);
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        '[executeRecaptcha] grecaptcha.execute() failed:',
+                                        error);
+                                    reject(error);
+                                });
+                        }, 500);
                     });
                 } catch (error) {
                     console.error('[executeRecaptcha] Error during ready/execute:', error);
@@ -273,8 +307,8 @@
             });
         }
     </script>
-    <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async defer>
-    </script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async
+        defer></script>
     <!-- SweetAlert2 for alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -1049,12 +1083,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                                        .grecaptcha-badge {
-                                            right: 14px !important;
-                                            visibility: visible !important;
-                                            opacity: 1 !important;
-                                            z-index: 9999 !important;
-                                        }
-                                        */
+                                                                .grecaptcha-badge {
+                                                                    right: 14px !important;
+                                                                    visibility: visible !important;
+                                                                    opacity: 1 !important;
+                                                                    z-index: 9999 !important;
+                                                                }
+                                                                */
     </style>
 @endpush
