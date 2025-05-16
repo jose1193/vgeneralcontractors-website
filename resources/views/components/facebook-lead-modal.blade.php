@@ -484,6 +484,31 @@
                 let successTimeoutId = null;
                 let errorTimeoutId = null;
 
+                // Ensure displayErrors function is defined
+                function displayErrors(errors) {
+                    clearAllErrors();
+                    let firstErrorField = null;
+                    for (const field in errors) {
+                        const errorSpan = form.querySelector(`.error-message[data-field="${field}"]`);
+                        const inputElement = form.querySelector(`[name="${field}"]`);
+
+                        if (errorSpan && errors[field]?.[0]) {
+                            errorSpan.textContent = errors[field][0];
+                        }
+                        if (inputElement) {
+                            inputElement.classList.add('border-red-500');
+                            if (!firstErrorField) firstErrorField = inputElement;
+                        }
+                    }
+                    if (firstErrorField) {
+                        firstErrorField.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                    submitButton.disabled = true;
+                }
+
                 // Setup radio button styling for insurance options
                 const insuranceOptions = document.querySelectorAll('input[name="insurance_property"]');
                 insuranceOptions.forEach(option => {
@@ -765,31 +790,6 @@
                         });
                 });
 
-                // Display errors
-                function displayErrors(errors) {
-                    clearAllErrors();
-                    let firstErrorField = null;
-                    for (const field in errors) {
-                        const errorSpan = form.querySelector(`.error-message[data-field="${field}"]`);
-                        const inputElement = form.querySelector(`[name="${field}"]`);
-
-                        if (errorSpan && errors[field]?.[0]) {
-                            errorSpan.textContent = errors[field][0];
-                        }
-                        if (inputElement) {
-                            inputElement.classList.add('border-red-500');
-                            if (!firstErrorField) firstErrorField = inputElement;
-                        }
-                    }
-                    if (firstErrorField) {
-                        firstErrorField.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }
-                    submitButton.disabled = true;
-                }
-
                 // Loading state
                 function setLoadingState(isLoading) {
                     submitButton.disabled = isLoading;
@@ -903,7 +903,25 @@
                             } else {
                                 // displayErrors(body.errors); // Make sure displayErrors is defined/accessible
                                 // Temp alert for modal context
-                                alert('Please correct the errors marked in the form.');
+                                displayErrors(body.errors);
+
+                                // Mostrar notificación con SweetAlert
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                });
+
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: 'Please correct the errors marked below'
+                                });
                             }
                         } else if (body.success) {
                             // Show success message (e.g., using SweetAlert)

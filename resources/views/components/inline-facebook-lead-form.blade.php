@@ -448,6 +448,12 @@
                                 if (!data.valid && data.errors?.[0]) {
                                     errorSpan.textContent = data.errors[0];
                                     fieldElement.classList.add('border-red-500');
+
+                                    // Si es un error de email duplicado, mostrar un mensaje descriptivo
+                                    if (fieldName === 'email' && data.duplicate_email) {
+                                        errorSpan.innerHTML =
+                                            'This email is already registered. <strong>Please contact support to schedule your appointment.</strong>';
+                                    }
                                 } else {
                                     errorSpan.textContent = '';
                                     fieldElement.classList.remove('border-red-500');
@@ -693,8 +699,38 @@
                                     text: 'reCAPTCHA validation failed. Please try again.',
                                     icon: 'error'
                                 });
+                            }
+                            // Check for duplicate email error
+                            else if (body.duplicate_email) {
+                                Swal.fire({
+                                    title: 'Email Already Registered',
+                                    html: 'This email is already in our system.<br><br>' +
+                                        'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                    icon: 'info',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#f59e0b'
+                                });
                             } else {
-                                alert('Please correct the errors marked in the form.');
+                                // Usar displayErrors en lugar de alert
+                                displayErrors(body.errors);
+
+                                // Mostrar notificación con SweetAlert
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                    }
+                                });
+
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: 'Please correct the errors marked below'
+                                });
                             }
                         } else if (body.success) {
                             Swal.fire({

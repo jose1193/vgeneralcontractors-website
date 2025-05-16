@@ -229,13 +229,11 @@ Route::post('/facebook-lead-form/submit', [FacebookLeadFormController::class, 's
 Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])->name('facebook.lead.validate'); // Route for single field validation
 Route::get('/facebook-lead-form/confirmation', [FacebookLeadFormController::class, 'showConfirmation'])->name('facebook.confirmation');
 
-// Field validation routes
-Route::middleware(['throttle:validation'])->group(function () {
-    Route::post('/contact-support/validate', [ContactSupportController::class, 'validateField'])
-        ->name('contact-support.validate');
-    Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])
-        ->name('facebook.lead.validate');
-});
+// Field validation routes - No throttling for real-time validation
+Route::post('/contact-support/validate', [ContactSupportController::class, 'validateField'])
+    ->name('contact-support.validate');
+Route::post('/facebook-lead-form/validate-field', [FacebookLeadFormController::class, 'validateField'])
+    ->name('facebook.lead.validate');
 
 // Public API routes
 Route::middleware(['throttle:api'])->group(function () {
