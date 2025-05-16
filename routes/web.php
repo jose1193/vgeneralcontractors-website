@@ -40,7 +40,7 @@ Route::get('/google-auth/redirect', function () {
 
 Route::get('/google-auth/callback', function () {
     try {
-        $googleUser = Socialite::driver('google')->user();
+        $googleUser = Socialite::driver('google')->stateless()->user();
         
         // Check if user exists with the same email address
         $existingUser = User::where('email', $googleUser->email)->first();
