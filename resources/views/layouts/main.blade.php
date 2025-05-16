@@ -10,7 +10,7 @@
     <title>@yield('title', 'V General Contractors') - V General Contractors</title>
     <meta name="description" content="@yield('meta_description', 'Expert commercial and residential roofing services in Texas. GAF certified contractors in Houston & Dallas specializing in installation, repairs, and storm damage restoration.')">
     <meta name="keywords" content="@yield('meta_keywords', 'roofing contractor, commercial roofing, residential roofing, roof repair, storm damage, GAF certified, Houston, Dallas, Texas')">
-    <link rel="canonical" href="@yield('canonical_url', secure_url()->current())">
+    <link rel="canonical" href="@yield('canonical_url', secure_url(URL::current()))">
     <meta name="robots" content="index,follow">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ secure_asset('assets/favicon_io/apple-touch-icon.png') }}">
@@ -22,7 +22,7 @@
 
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:url" content="@yield('og_url', secure_url()->current())">
+    <meta property="og:url" content="@yield('og_url', secure_url(URL::current()))">
     <meta property="og:title" content="@yield('og_title', View::yieldContent('title') . ' - V General Contractors')">
     <meta property="og:description" content="@yield('og_description', View::yieldContent('meta_description'))">
     <meta property="og:image" content="@yield('og_image', secure_asset('assets/logo/logo3.webp'))">
@@ -30,7 +30,7 @@
 
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')">
-    <meta name="twitter:url" content="@yield('twitter_url', secure_url()->current())">
+    <meta name="twitter:url" content="@yield('twitter_url', secure_url(URL::current()))">
     <meta name="twitter:title" content="@yield('twitter_title', View::yieldContent('title') . ' - V General Contractors')">
     <meta name="twitter:description" content="@yield('twitter_description', View::yieldContent('meta_description'))">
     <meta name="twitter:image" content="@yield('twitter_image', secure_asset('assets/logo/logo3.webp'))">

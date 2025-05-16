@@ -59,7 +59,7 @@
         <meta property="og:title" content="{{ $post->post_title }}">
         <meta property="og:description" content="{{ strip_tags(Str::limit($post->post_content, 160)) }}">
         <meta property="og:type" content="article">
-        <meta property="og:url" content="{{ secure_url()->current() }}">
+        <meta property="og:url" content="{{ secure_url(URL::current()) }}">
         @if ($post->post_image)
             <meta property="og:image" content="{{ $post->post_image }}">
         @endif
@@ -74,7 +74,7 @@
         <meta property="og:description"
             content="Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ secure_url()->current() }}">
+        <meta property="og:url" content="{{ secure_url(URL::current()) }}">
         <meta property="og:image" content="{{ secure_asset('assets/img/blog-share.jpg') }}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ config('app.name') }} - Blog">
