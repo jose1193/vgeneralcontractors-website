@@ -42,11 +42,6 @@ Route::get('/google-auth/callback', function () {
     try {
         $googleUser = Socialite::driver('google')->user();
         
-        // Generate a username from the name
-        $randomNumber = rand(100, 999);
-        $nameWithoutSpaces = strtolower(str_replace(' ', '', $googleUser->name));
-        $username = $nameWithoutSpaces . $randomNumber;
-        
         // Check if user exists with the same email address
         $existingUser = User::where('email', $googleUser->email)->first();
         
@@ -59,33 +54,13 @@ Route::get('/google-auth/callback', function () {
             
             // Log in the existing user
             Auth::login($existingUser);
-            return redirect('/dashboard');
+            return redirect(secure_url('/dashboard'));
         } else {
-            // Create a new user
-            $user = User::create([
-                'uuid' => Str::uuid()->toString(),
-                'name' => $googleUser->name,
-                'username' => $username,
-                'email' => $googleUser->email,
-                'email_verified_at' => now(),
-                'password' => bcrypt(Str::random(16)),
-                'terms_and_conditions' => true,
-            ]);
-            
-            // Assign default role if you're using Spatie Permission
-            if (class_exists('\Spatie\Permission\Models\Role')) {
-                $defaultRole = \Spatie\Permission\Models\Role::where('name', 'User')->first();
-                if ($defaultRole) {
-                    $user->assignRole($defaultRole);
-                }
-            }
-            
-            // Log in the newly created user
-            Auth::login($user);
-            return redirect('/dashboard');
+            // New users are not allowed, only login with existing emails
+            return redirect(secure_url('/'))->with('error', 'This email is not registered in our system. Please contact the administrator for access.');
         }
     } catch (\Exception $e) {
-        return redirect('/')->with('error', 'Error al autenticar con Google: ' . $e->getMessage());
+        return redirect(secure_url('/'))->with('error', 'Error authenticating with Google: ' . $e->getMessage());
     }
 });
 
