@@ -82,6 +82,18 @@ class FacebookLeadFormController extends Controller
         }
 
         try {
+            // Check if email already exists in appointments
+            $existingAppointment = \App\Models\Appointment::where('email', $validatedData['email'])->first();
+            
+            if ($existingAppointment) {
+                return response()->json([
+                    'success' => false,
+                    'duplicate_email' => true,
+                    'message' => 'This email is already registered in our system. Please contact our support team or call us to schedule your appointment.',
+                    'errors' => ['email' => ['This email is already registered. Please contact support to schedule your appointment.']]
+                ], 422);
+            }
+
             $appointment = $this->transactionService->run(
                 // Database operations
                 function () use ($validatedData) {
@@ -211,6 +223,18 @@ class FacebookLeadFormController extends Controller
         if ($validator->fails()) {
             return response()->json(['valid' => false, 'errors' => $validator->errors()->get($fieldName)], 422);
         } else {
+            // Verificar específicamente si es el campo email y ya existe en la base de datos
+            if ($fieldName === 'email' && !empty($fieldValue)) {
+                $existingEmail = \App\Models\Appointment::where('email', $fieldValue)->exists();
+                if ($existingEmail) {
+                    return response()->json([
+                        'valid' => false, 
+                        'errors' => ['This email is already registered. Please contact our support team to schedule your appointment.'],
+                        'duplicate_email' => true
+                    ], 422);
+                }
+            }
+            
             return response()->json(['valid' => true]);
         }
     }
@@ -268,6 +292,18 @@ class FacebookLeadFormController extends Controller
         unset($validatedData['api_key']);
 
         try {
+            // Check if email already exists in appointments
+            $existingAppointment = \App\Models\Appointment::where('email', $validatedData['email'])->first();
+            
+            if ($existingAppointment) {
+                return response()->json([
+                    'success' => false,
+                    'duplicate_email' => true,
+                    'message' => 'This email is already registered in our system. Please contact our support team or call us to schedule your appointment.',
+                    'data' => $existingAppointment ? new AppointmentResource($existingAppointment) : null
+                ], 422);
+            }
+            
             $appointment = $this->transactionService->run(
                 // Database operations
                 function () use ($validatedData) {

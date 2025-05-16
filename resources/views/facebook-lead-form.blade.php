@@ -691,6 +691,21 @@
                             if (!data.valid && data.errors?.[0]) {
                                 errorSpan.textContent = data.errors[0];
                                 fieldElement.classList.add('border-red-500');
+
+                                // Si es un error de email duplicado, mostrar información adicional
+                                if (fieldName === 'email' && data.duplicate_email) {
+                                    // Opcionalmente mostrar un tooltip o mensaje flotante
+                                    if (typeof Swal !== 'undefined') {
+                                        Swal.fire({
+                                            title: 'Email Already Registered',
+                                            html: 'This email is already in our system.<br><br>' +
+                                                'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                            icon: 'info',
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor: '#f59e0b'
+                                        });
+                                    }
+                                }
                             } else {
                                 errorSpan.textContent = '';
                                 fieldElement.classList.remove('border-red-500');
@@ -845,6 +860,17 @@
                             // Check if there's a specific reCAPTCHA error
                             if (body.errors['g-recaptcha-response']) {
                                 showGeneralError('reCAPTCHA validation failed. Please try again.');
+                            }
+                            // Check for duplicate email error
+                            else if (body.duplicate_email) {
+                                Swal.fire({
+                                    title: 'Email Already Registered',
+                                    html: 'This email is already in our system.<br><br>' +
+                                        'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                    icon: 'info',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#f59e0b'
+                                });
                             } else {
                                 displayErrors(body.errors);
                                 // Show validation errors with SweetAlert toast
@@ -1023,12 +1049,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                            .grecaptcha-badge {
-                                right: 14px !important;
-                                visibility: visible !important;
-                                opacity: 1 !important;
-                                z-index: 9999 !important;
-                            }
-                            */
+                                        .grecaptcha-badge {
+                                            right: 14px !important;
+                                            visibility: visible !important;
+                                            opacity: 1 !important;
+                                            z-index: 9999 !important;
+                                        }
+                                        */
     </style>
 @endpush

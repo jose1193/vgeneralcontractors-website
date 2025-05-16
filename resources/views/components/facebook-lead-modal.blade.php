@@ -889,6 +889,17 @@
                                     text: 'reCAPTCHA validation failed. Please try again.',
                                     icon: 'error'
                                 });
+                            }
+                            // Check for duplicate email error
+                            else if (body.duplicate_email) {
+                                Swal.fire({
+                                    title: 'Email Already Registered',
+                                    html: 'This email is already in our system.<br><br>' +
+                                        'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                    icon: 'info',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#f59e0b'
+                                });
                             } else {
                                 // displayErrors(body.errors); // Make sure displayErrors is defined/accessible
                                 // Temp alert for modal context
