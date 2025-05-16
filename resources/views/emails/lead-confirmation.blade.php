@@ -70,8 +70,7 @@
     <div class="container">
         <!-- Logo -->
         <div class="logo">
-            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.pnghttps://vgeneralcontractors.com/assets/logo/logo-png.png"
-                width="180" alt="Logo V General Contractors">
+            <img src="https://i.imgur.com/f8G0sjH.png" width="180" alt="Logo V General Contractors">
         </div>
 
         <!-- Contenido de Confirmación -->

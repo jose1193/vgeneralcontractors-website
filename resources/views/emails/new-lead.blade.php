@@ -88,8 +88,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
-                alt="Logo V General Contractors">
+            <img src="https://i.imgur.com/f8G0sjH.png" width="180" alt="Logo V General Contractors">
         </div>
 
         <div class="details">
