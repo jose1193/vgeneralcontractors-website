@@ -52,44 +52,42 @@
 
     <!-- Modal Form -->
     <div x-data="{ modalOpen: @entangle('isOpen') }" x-on:show-form-modal.window="modalOpen = true">
-        @if ($isOpen)
-            <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-                <div x-data="formValidation({
-                    initialValues: {
-                        blog_category_name: '{{ $blog_category_name }}',
-                        blog_category_description: '{{ $blog_category_description }}',
-                    },
-                    modalAction: '{{ $modalAction }}'
-                })" x-init="modalAction = '{{ $modalAction }}';
-                // Initialize form values
-                form = {
+        <x-modals.form-modal x-show="modalOpen" :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction" x-transition>
+            <div x-data="formValidation({
+                initialValues: {
                     blog_category_name: '{{ $blog_category_name }}',
                     blog_category_description: '{{ $blog_category_description }}',
-                };
-                
-                // Listen for update events
-                $wire.on('category-edit', (event) => {
-                    const data = event.detail;
-                    console.log('Received category data:', data);
-                
-                    // Update form with new data
-                    if (data) {
-                        form.blog_category_name = data.blog_category_name || '';
-                        form.blog_category_description = data.blog_category_description || '';
-                
-                        // Sync with Livewire
-                        $wire.set('blog_category_name', form.blog_category_name);
-                        $wire.set('blog_category_description', form.blog_category_description);
-                    }
-                
-                    clearErrors();
-                });">
-                    @include('components.livewire.blog-categories.form-fields', [
-                        'modalAction' => $modalAction,
-                    ])
-                </div>
-            </x-modals.form-modal>
-        @endif
+                },
+                modalAction: '{{ $modalAction }}'
+            })" x-init="modalAction = '{{ $modalAction }}';
+            // Initialize form values
+            form = {
+                blog_category_name: '{{ $blog_category_name }}',
+                blog_category_description: '{{ $blog_category_description }}',
+            };
+            
+            // Listen for update events
+            $wire.on('category-edit', (event) => {
+                const data = event.detail;
+                console.log('Received category data:', data);
+            
+                // Update form with new data
+                if (data) {
+                    form.blog_category_name = data.blog_category_name || '';
+                    form.blog_category_description = data.blog_category_description || '';
+            
+                    // Sync with Livewire
+                    $wire.set('blog_category_name', form.blog_category_name);
+                    $wire.set('blog_category_description', form.blog_category_description);
+                }
+            
+                clearErrors();
+            });">
+                @include('components.livewire.blog-categories.form-fields', [
+                    'modalAction' => $modalAction,
+                ])
+            </div>
+        </x-modals.form-modal>
     </div>
 
     <!-- Confirmation Modals -->
