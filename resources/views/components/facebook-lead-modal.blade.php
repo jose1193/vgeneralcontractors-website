@@ -60,8 +60,8 @@
                             class="hidden p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert"></div>
 
                         <!-- Form -->
-                        <form id="facebook-lead-form" action="{{ route('facebook.lead.store') }}" method="POST"
-                            class="space-y-4" novalidate>
+                        <form id="facebook-lead-form" action="{{ secure_url(route('facebook.lead.store', [], false)) }}"
+                            method="POST" class="space-y-4" novalidate>
                             @csrf
 
                             <!-- Hidden Inputs for Coordinates -->
@@ -595,7 +595,7 @@
                         }
                     }
 
-                    fetch('{{ route('facebook.lead.validate') }}', {
+                    fetch('{{ secure_url(route('facebook.lead.validate', [], false)) }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

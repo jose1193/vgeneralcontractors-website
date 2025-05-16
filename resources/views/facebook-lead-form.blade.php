@@ -32,8 +32,8 @@
             </div>
 
             {{-- Form --}}
-            <form id="facebook-lead-form" action="{{ route('facebook.lead.store') }}" method="POST" class="space-y-4"
-                novalidate>
+            <form id="facebook-lead-form" action="{{ secure_url(route('facebook.lead.store', [], false)) }}" method="POST"
+                class="space-y-4" novalidate>
                 @csrf
 
                 {{-- Hidden Inputs for Coordinates --}}
@@ -667,7 +667,7 @@
                     }
                 }
 
-                fetch('{{ route('facebook.lead.validate') }}', {
+                fetch('{{ secure_url(route('facebook.lead.validate', [], false)) }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1023,12 +1023,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                .grecaptcha-badge {
-                    right: 14px !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    z-index: 9999 !important;
-                }
-                */
+                            .grecaptcha-badge {
+                                right: 14px !important;
+                                visibility: visible !important;
+                                opacity: 1 !important;
+                                z-index: 9999 !important;
+                            }
+                            */
     </style>
 @endpush

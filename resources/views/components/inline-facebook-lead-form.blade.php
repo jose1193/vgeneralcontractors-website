@@ -26,8 +26,8 @@
         role="alert"></div>
 
     <!-- Form -->
-    <form id="inline-facebook-lead-form" action="{{ route('facebook.lead.store') }}" method="POST" class="space-y-4"
-        novalidate>
+    <form id="inline-facebook-lead-form" action="{{ secure_url(route('facebook.lead.store', [], false)) }}"
+        method="POST" class="space-y-4" novalidate>
         @csrf
         <!-- Hidden Inputs for Coordinates -->
         <input type="hidden" name="latitude" id="inline-latitude">
@@ -424,7 +424,7 @@
                             document.getElementById('inline_address').value = fieldValue;
                         }
                     }
-                    fetch('{{ route('facebook.lead.validate') }}', {
+                    fetch('{{ secure_url(route('facebook.lead.validate', [], false)) }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
