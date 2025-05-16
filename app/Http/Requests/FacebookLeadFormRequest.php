@@ -54,7 +54,6 @@ class FacebookLeadFormRequest extends FormRequest
             'inspection_time' => 'nullable|date_format:H:i|required_with:inspection_date',
             // Add reCAPTCHA rule (using package's default v3 rule)
             'g-recaptcha-response' => 'required',
-            'honeypot' => 'honeypot', // This requires the honeypot package
         ];
     }
 

@@ -69,13 +69,6 @@
                                 session(['form_start_time' => time()]);
                             @endphp
 
-                            {{-- Honeypot field - invisible to humans, visible to bots --}}
-                            <div class="hidden" style="display:none;">
-                                <label for="modal_honeypot">Leave this field empty</label>
-                                <input type="text" name="honeypot" id="modal_honeypot" autocomplete="off"
-                                    tabindex="-1">
-                            </div>
-
                             <!-- Hidden Inputs for Coordinates -->
                             <input type="hidden" name="latitude" id="latitude">
                             <input type="hidden" name="longitude" id="longitude">

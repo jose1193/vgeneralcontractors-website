@@ -41,12 +41,6 @@
                     session(['form_start_time' => time()]);
                 @endphp
 
-                {{-- Honeypot field - invisible to humans, visible to bots --}}
-                <div class="hidden" style="display:none;">
-                    <label for="honeypot">Leave this field empty</label>
-                    <input type="text" name="honeypot" id="honeypot" autocomplete="off" tabindex="-1">
-                </div>
-
                 {{-- Hidden Inputs for Coordinates --}}
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
@@ -1060,12 +1054,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                                                .grecaptcha-badge {
-                                                    right: 14px !important;
-                                                    visibility: visible !important;
-                                                    opacity: 1 !important;
-                                                    z-index: 9999 !important;
-                                                }
-                                                */
+                                                        .grecaptcha-badge {
+                                                            right: 14px !important;
+                                                            visibility: visible !important;
+                                                            opacity: 1 !important;
+                                                            z-index: 9999 !important;
+                                                        }
+                                                        */
     </style>
 @endpush
