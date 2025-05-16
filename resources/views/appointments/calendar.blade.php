@@ -424,7 +424,7 @@
                     console.log('Loading clients from API...');
 
                     // Fetch de clientes desde el endpoint
-                    fetch('{{ route('appointment-calendar.clients') }}')
+                    fetch('{{ secure_url(route('appointment-calendar.clients', [], false)) }}')
                         .then(response => {
                             console.log('API response status:', response.status);
                             return response.json();
@@ -510,7 +510,7 @@
                         'content'));
 
                     // Send AJAX request to create appointment
-                    fetch('{{ route('appointment-calendar.create') }}', {
+                    fetch('{{ secure_url(route('appointment-calendar.create', [], false)) }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
@@ -659,7 +659,7 @@
 
                         // Event Data Source
                         events: {
-                            url: '{{ route('appointment-calendar.events') }}',
+                            url: '{{ secure_url(route('appointment-calendar.events', [], false)) }}',
                             failure: function(err) {
                                 console.error("Failed to load events:", err);
                             },
@@ -695,7 +695,7 @@
                                 if (result.isConfirmed) {
                                     // Send AJAX request to update backend
                                     $.ajax({
-                                        url: `{{ route('appointment-calendar.update', '') }}/${event.id}`,
+                                        url: `{{ secure_url(route('appointment-calendar.update', '', false)) }}/${event.id}`,
                                         type: 'PATCH',
                                         data: {
                                             start: newStart,
@@ -939,7 +939,7 @@
 
                                 // Send AJAX request to update appointment status
                                 $.ajax({
-                                    url: `{{ route('appointment-calendar.status', '') }}/${currentAppointmentId}`,
+                                    url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
                                     type: 'PATCH',
                                     data: {
                                         status: 'Confirmed'
@@ -1007,7 +1007,7 @@
 
                                 // Send AJAX request to update appointment status
                                 $.ajax({
-                                    url: `{{ route('appointment-calendar.status', '') }}/${currentAppointmentId}`,
+                                    url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
                                     type: 'PATCH',
                                     data: {
                                         status: 'Declined'
