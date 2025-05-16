@@ -296,14 +296,14 @@
                     entityName: 'Appointment',
                     entityNamePlural: 'Appointments',
                     routes: {
-                        index: "{{ route('appointments.index') }}",
-                        store: "{{ route('appointments.store') }}",
-                        edit: "{{ route('appointments.edit', ':id') }}",
-                        update: "{{ route('appointments.update', ':id') }}",
-                        destroy: "{{ route('appointments.destroy', ':id') }}",
-                        restore: "{{ route('appointments.restore', ':id') }}",
-                        checkName: "{{ route('appointments.check-email') }}",
-                        sendRejection: "{{ route('appointments.send-rejection') }}"
+                        index: "{{ secure_url(route('appointments.index', [], false)) }}",
+                        store: "{{ secure_url(route('appointments.store', [], false)) }}",
+                        edit: "{{ secure_url(route('appointments.edit', ':id', false)) }}",
+                        update: "{{ secure_url(route('appointments.update', ':id', false)) }}",
+                        destroy: "{{ secure_url(route('appointments.destroy', ':id', false)) }}",
+                        restore: "{{ secure_url(route('appointments.restore', ':id', false)) }}",
+                        checkName: "{{ secure_url(route('appointments.check-email', [], false)) }}",
+                        sendRejection: "{{ secure_url(route('appointments.send-rejection', [], false)) }}"
                     },
                     tableSelector: '#appointmentsTable',
                     searchSelector: '#searchInput',

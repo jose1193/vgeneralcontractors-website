@@ -14,7 +14,7 @@
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
                 <form id="{{ isset($appointment->uuid) ? 'appointmentEditForm' : 'appointmentCreateForm' }}"
-                    action="{{ isset($appointment->uuid) ? route('appointments.update', $appointment->uuid) : route('appointments.store') }}"
+                    action="{{ isset($appointment->uuid) ? secure_url(route('appointments.update', $appointment->uuid, false)) : secure_url(route('appointments.store', [], false)) }}"
                     method="POST" class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
                     @csrf
                     @if (isset($appointment->uuid))

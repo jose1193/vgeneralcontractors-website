@@ -68,7 +68,8 @@
             <div id="general-error-message" class="hidden p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg"
                 role="alert"></div>
 
-            <form id="contact-support-form" action="{{ route('contact-support.store') }}" method="POST" class="space-y-6">
+            <form id="contact-support-form" action="{{ secure_url(route('contact-support.store', [], false)) }}"
+                method="POST" class="space-y-6">
                 @csrf
                 <!-- Hidden Input for reCAPTCHA v3 Token -->
                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
@@ -402,7 +403,7 @@
                 let fieldValue = fieldElement.type === 'checkbox' ? (fieldElement.checked ? 1 : 0) : fieldElement
                     .value;
 
-                fetch('{{ route('contact-support.validate') }}', {
+                fetch('{{ secure_url(route('contact-support.validate', [], false)) }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

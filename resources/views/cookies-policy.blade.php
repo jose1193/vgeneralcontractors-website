@@ -132,8 +132,8 @@
                             class="text-yellow-600 hover:text-yellow-700">https://support.google.com/accounts/answer/32050</a>
                     </li>
                     <li>For the Internet Explorer web browser, please visit this page from Microsoft: <a
-                            href="http://support.microsoft.com/kb/278835"
-                            class="text-yellow-600 hover:text-yellow-700">http://support.microsoft.com/kb/278835</a></li>
+                            href="https://support.microsoft.com/kb/278835"
+                            class="text-yellow-600 hover:text-yellow-700">https://support.microsoft.com/kb/278835</a></li>
                     <li>For the Firefox web browser, please visit this page from Mozilla: <a
                             href="https://support.mozilla.org/en-US/kb/delete-cookies-remove-info-websites-stored"
                             class="text-yellow-600 hover:text-yellow-700">https://support.mozilla.org/en-US/kb/delete-cookies-remove-info-websites-stored</a>
