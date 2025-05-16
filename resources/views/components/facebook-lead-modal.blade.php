@@ -982,6 +982,71 @@
                         document.getElementById('submit-button-text').textContent = 'Send Request';
                     });
             }
+
+            // Function to get reCAPTCHA token safely
+            function executeModalRecaptcha(action) {
+                console.log('[executeModalRecaptcha] Called with action:', action);
+                return new Promise((resolve, reject) => {
+                    if (typeof grecaptcha === 'undefined') {
+                        console.error('[executeModalRecaptcha] Error: reCAPTCHA API not loaded');
+
+                        // Intentar cargar reCAPTCHA y reintentar
+                        const script = document.createElement('script');
+                        script.src = 'https://www.google.com/recaptcha/api.js?render={{ config('captcha.sitekey') }}';
+                        script.async = true;
+                        script.defer = true;
+                        script.onload = function() {
+                            console.log('[executeModalRecaptcha] reCAPTCHA script loaded, retrying...');
+                            window.recaptchaLoaded = true;
+                            setTimeout(() => {
+                                executeModalRecaptcha(action).then(resolve).catch(reject);
+                            }, 1000);
+                        };
+                        document.head.appendChild(script);
+                        return;
+                    }
+
+                    try {
+                        grecaptcha.ready(function() {
+                            console.log('[executeModalRecaptcha] grecaptcha.ready callback fired.');
+                            console.log('[executeModalRecaptcha] Attempting to execute with key:',
+                                '{{ config('captcha.sitekey') }}');
+
+                            // Asegurarse de que haya un pequeño retraso antes de ejecutar
+                            setTimeout(() => {
+                                grecaptcha.execute('{{ config('captcha.sitekey') }}', {
+                                        action: action
+                                    })
+                                    .then(token => {
+                                        console.log('[executeModalRecaptcha] Token received:',
+                                            token ? 'success (length: ' + token.length + ')' :
+                                            'null/undefined');
+
+                                        if (!token) {
+                                            console.error(
+                                                '[executeModalRecaptcha] Received empty token');
+                                            reject(new Error('Empty reCAPTCHA token'));
+                                            return;
+                                        }
+
+                                        document.getElementById('modal-g-recaptcha-response')
+                                            .value = token;
+                                        resolve(token);
+                                    })
+                                    .catch(error => {
+                                        console.error(
+                                            '[executeModalRecaptcha] grecaptcha.execute() failed:',
+                                            error);
+                                        reject(error);
+                                    });
+                            }, 500);
+                        });
+                    } catch (error) {
+                        console.error('[executeModalRecaptcha] Error during ready/execute:', error);
+                        reject(error);
+                    }
+                });
+            }
         </script>
     @endonce
 
@@ -1037,43 +1102,6 @@
                 window.recaptchaSiteKey = '{{ config('captcha.sitekey') }}';
                 window.recaptchaLoaded = true;
             });
-
-            // Function to get reCAPTCHA token safely
-            function executeModalRecaptcha(action) {
-                console.log('[executeModalRecaptcha] Called with action:', action);
-                return new Promise((resolve, reject) => {
-                    if (typeof grecaptcha === 'undefined') {
-                        console.error('[executeModalRecaptcha] Error: reCAPTCHA API not loaded');
-                        reject(new Error('reCAPTCHA API not loaded'));
-                        return;
-                    }
-
-                    try {
-                        grecaptcha.ready(function() {
-                            console.log('[executeModalRecaptcha] grecaptcha.ready callback fired.');
-                            console.log('[executeModalRecaptcha] Attempting to execute with key:', window
-                                .recaptchaSiteKey);
-                            grecaptcha.execute(window.recaptchaSiteKey, {
-                                    action: action
-                                })
-                                .then(token => {
-                                    console.log('[executeModalRecaptcha] Token received:', token ? '***' :
-                                        'null/undefined');
-                                    document.getElementById('modal-g-recaptcha-response').value = token;
-                                    resolve(token);
-                                })
-                                .catch(error => {
-                                    console.error('[executeModalRecaptcha] grecaptcha.execute() failed:',
-                                        error);
-                                    reject(error);
-                                });
-                        });
-                    } catch (error) {
-                        console.error('[executeModalRecaptcha] Error during ready/execute:', error);
-                        reject(error);
-                    }
-                });
-            }
         </script>
     @endonce
 </div>

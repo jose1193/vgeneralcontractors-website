@@ -853,15 +853,26 @@ class FacebookLeadFormController extends Controller
     private function verifyRecaptchaToken($token)
     {
         if (empty($token)) {
+            Log::warning('reCAPTCHA token is empty');
             return false;
         }
 
         $client = new \GuzzleHttp\Client();
+        $secret = config('captcha.secret');
+        
+        // Log token length and partial token for debugging
+        Log::info('reCAPTCHA verification attempt', [
+            'token_length' => strlen($token),
+            'token_prefix' => substr($token, 0, 10) . '...',
+            'secret_key_length' => strlen($secret),
+            'secret_key_prefix' => substr($secret, 0, 5) . '...',
+            'ip' => request()->ip()
+        ]);
         
         try {
             $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
                 'form_params' => [
-                    'secret' => config('captcha.secret'),
+                    'secret' => $secret,
                     'response' => $token,
                     'remoteip' => request()->ip()
                 ]
@@ -869,10 +880,21 @@ class FacebookLeadFormController extends Controller
 
             $body = json_decode((string) $response->getBody(), true);
             
-            // Require a higher score (0.7 instead of default 0.5) for stricter validation
-            return $body['success'] && $body['score'] >= 0.7;
+            // Log the full response for debugging
+            Log::info('reCAPTCHA response', [
+                'success' => $body['success'] ?? false,
+                'score' => $body['score'] ?? 'N/A',
+                'action' => $body['action'] ?? 'N/A',
+                'hostname' => $body['hostname'] ?? 'N/A',
+                'error_codes' => $body['error-codes'] ?? []
+            ]);
+            
+            // Change to a more permissive threshold (0.5 instead of 0.7)
+            return isset($body['success']) && $body['success'] && (!isset($body['score']) || $body['score'] >= 0.5);
         } catch (\Exception $e) {
-            Log::error('reCAPTCHA verification error: ' . $e->getMessage());
+            Log::error('reCAPTCHA verification error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return false;
         }
     }
