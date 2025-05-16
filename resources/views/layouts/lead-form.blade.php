@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('assets/favicon_io/site.webmanifest') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ secure_asset('assets/favicon_io/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ secure_asset('assets/favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ secure_asset('assets/favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ secure_asset('assets/favicon_io/site.webmanifest') }}">
 
     {{-- SEO Meta Tags for Lead Form --}}
     <title>Get Your Free Inspection - V General Contractors</title>
@@ -17,25 +19,25 @@
         content="Fill out the form to schedule your free, no-obligation roofing inspection with V General Contractors. Serving Houston, Dallas, and Texas.">
     <meta name="keywords"
         content="free roof inspection, roofing estimate, V General Contractors, Houston roofing, Dallas roofing, Texas roofer">
-    <link rel="canonical" href="{{ route('facebook.lead.form') }}">
+    <link rel="canonical" href="{{ secure_url(route('facebook.lead.form', [], false)) }}">
     <meta name="robots" content="index,follow"> {{-- Or noindex if you prefer this page not be indexed directly --}}
 
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ route('facebook.lead.form') }}">
+    <meta property="og:url" content="{{ secure_url(route('facebook.lead.form', [], false)) }}">
     <meta property="og:title" content="Get Your Free Inspection - V General Contractors">
     <meta property="og:description"
         content="Fill out the form to schedule your free, no-obligation roofing inspection with V General Contractors.">
-    <meta property="og:image" content="{{ asset('assets/logo/logo3.webp') }}">
+    <meta property="og:image" content="{{ secure_asset('assets/logo/logo3.webp') }}">
     <meta property="og:site_name" content="V General Contractors">
 
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="{{ route('facebook.lead.form') }}">
+    <meta name="twitter:url" content="{{ secure_url(route('facebook.lead.form', [], false)) }}">
     <meta name="twitter:title" content="Get Your Free Inspection - V General Contractors">
     <meta name="twitter:description"
         content="Fill out the form to schedule your free, no-obligation roofing inspection with V General Contractors.">
-    <meta name="twitter:image" content="{{ asset('assets/logo/logo3.webp') }}">
+    <meta name="twitter:image" content="{{ secure_asset('assets/logo/logo3.webp') }}">
     <style>
         ::-webkit-scrollbar {
             width: 12px;
