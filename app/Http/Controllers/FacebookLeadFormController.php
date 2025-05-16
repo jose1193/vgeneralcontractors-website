@@ -71,13 +71,22 @@ class FacebookLeadFormController extends Controller
     {
         $validatedData = $request->validated();
         
-        // Verify reCAPTCHA token
+        // Verify reCAPTCHA token with stricter score (0.7 instead of default 0.5)
         $recaptchaToken = $request->input('g-recaptcha-response');
         if (!$this->verifyRecaptchaToken($recaptchaToken)) {
             return response()->json([
                 'success' => false,
                 'message' => 'reCAPTCHA verification failed. Please try again.',
                 'errors' => ['g-recaptcha-response' => ['CAPTCHA verification failed.']]
+            ], 422);
+        }
+
+        // Check for spam patterns by IP address
+        if ($this->isLikelySpam($request)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your submission has been flagged. Please contact us directly by phone.',
+                'errors' => ['general' => ['Your submission has been flagged as potentially automated. Please contact us directly.']]
             ], 422);
         }
 
@@ -839,7 +848,7 @@ class FacebookLeadFormController extends Controller
     }
 
     /**
-     * Verify reCAPTCHA token manually.
+     * Verify reCAPTCHA token with a higher score threshold.
      */
     private function verifyRecaptchaToken($token)
     {
@@ -847,33 +856,90 @@ class FacebookLeadFormController extends Controller
             return false;
         }
 
+        $client = new \GuzzleHttp\Client();
+        
         try {
-            $recaptchaSecret = Cache::remember('recaptcha_secret', 3600, function() {
-                return config('captcha.secret');
-            });
-            
-            $client = new \GuzzleHttp\Client();
             $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
                 'form_params' => [
-                    'secret' => $recaptchaSecret,
-                    'response' => $token
+                    'secret' => config('captcha.secret'),
+                    'response' => $token,
+                    'remoteip' => request()->ip()
                 ]
             ]);
+
+            $body = json_decode((string) $response->getBody(), true);
             
-            $result = json_decode((string) $response->getBody(), true);
-            
-            Log::debug('reCAPTCHA verification result', [
-                'result' => $result,
-                'score' => $result['score'] ?? 'N/A'
-            ]);
-            
-            return isset($result['success']) && $result['success'] === true && 
-                   (!isset($result['score']) || $result['score'] >= 0.5);
+            // Require a higher score (0.7 instead of default 0.5) for stricter validation
+            return $body['success'] && $body['score'] >= 0.7;
         } catch (\Exception $e) {
-            Log::error('reCAPTCHA verification error', [
-                'error' => $e->getMessage()
-            ]);
+            Log::error('reCAPTCHA verification error: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Check if submission is likely spam based on various heuristics.
+     */
+    private function isLikelySpam(Request $request)
+    {
+        $ip = $request->ip();
+        $userAgent = $request->header('User-Agent');
+        $data = $request->all();
+        
+        // Rate limiting: Check submissions count from this IP in the last hour
+        $cacheKey = 'form_submissions_' . md5($ip);
+        $submissions = Cache::get($cacheKey, 0);
+        
+        if ($submissions >= 3) {
+            // More than 3 submissions in an hour from same IP
+            Log::warning('Excessive form submissions detected', [
+                'ip' => $ip,
+                'count' => $submissions
+            ]);
+            return true;
+        }
+        
+        // Increment submission count
+        Cache::put($cacheKey, $submissions + 1, 60 * 60); // Store for 1 hour
+        
+        // Check for timing - submissions completed too quickly are suspicious
+        $timeStarted = $request->session()->get('form_start_time');
+        if ($timeStarted && (time() - $timeStarted < 10)) {
+            // Form completed in less than 10 seconds - likely a bot
+            Log::warning('Form submitted too quickly', [
+                'ip' => $ip,
+                'time_taken' => time() - $timeStarted
+            ]);
+            return true;
+        }
+        
+        // Check for suspicious user agents
+        $suspiciousUserAgents = ['curl', 'wget', 'python-requests', 'go-http-client', 'scrapy'];
+        foreach ($suspiciousUserAgents as $agent) {
+            if (stripos($userAgent, $agent) !== false) {
+                Log::warning('Suspicious user agent detected', [
+                    'ip' => $ip,
+                    'user_agent' => $userAgent
+                ]);
+                return true;
+            }
+        }
+        
+        // Look for identical submissions (all fields exactly the same)
+        $submissionHash = md5(json_encode($data));
+        $recentSubmissions = Cache::get('recent_submission_hashes', []);
+        
+        if (in_array($submissionHash, $recentSubmissions)) {
+            Log::warning('Duplicate form submission detected', [
+                'ip' => $ip
+            ]);
+            return true;
+        }
+        
+        // Store this submission hash
+        $recentSubmissions[] = $submissionHash;
+        Cache::put('recent_submission_hashes', array_slice($recentSubmissions, -10), 60 * 60 * 24);
+        
+        return false;
     }
 }
