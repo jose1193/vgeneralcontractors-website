@@ -51,8 +51,7 @@
     </div>
 
     <!-- Modal Form -->
-    <div x-data="{ modalOpen: @entangle('isOpen') }" x-on:show-form-modal.window="modalOpen = true"
-        x-on:modal-opened.window="setTimeout(() => modalOpen = true, 10)">
+    <div x-data="{ modalOpen: @entangle('isOpen') }" x-on:show-form-modal.window="modalOpen = true">
         @if ($isOpen)
             <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
                 <div x-data="formValidation({
