@@ -51,21 +51,7 @@
     </div>
 
     <!-- Modal Form -->
-    <div x-data="{
-        modalOpen: @entangle('isOpen').defer,
-        init() {
-            this.$watch('modalOpen', value => {
-                if (value) {
-                    // Force Alpine to recognize the modal is open
-                    setTimeout(() => { this.modalOpen = true; }, 50);
-                }
-            });
-            // Listen for event from Livewire
-            this.$el.addEventListener('show-form-modal', () => {
-                this.modalOpen = true;
-            });
-        }
-    }">
+    <div x-data="{ modalOpen: @entangle('isOpen') }" x-on:show-form-modal.window="modalOpen = true">
         @if ($isOpen)
             <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
                 <div x-data="formValidation({

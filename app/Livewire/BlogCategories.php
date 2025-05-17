@@ -178,17 +178,11 @@ class BlogCategories extends Component
             // Use the generic method with 'blog_categories' parameter
             $this->clearCache('blog_categories');
 
-            // Close modal first and reset input fields
-            $this->isOpen = false;
-            $this->resetInputFields();
-            
             session()->flash('message', 'Blog Category Created Successfully.');
-            
-            // Dispatch events after modal is closed
-            $this->dispatch('category-created-success');
-            
-            // Refresh component last after all state changes
+            $this->closeModal();
+            $this->resetInputFields();
             $this->dispatch('refreshComponent');
+            $this->dispatch('category-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -219,19 +213,15 @@ class BlogCategories extends Component
             
             $this->modalTitle = 'Edit Blog Category';
             $this->modalAction = 'update';
+            $this->openModal();
             
-            // Set isOpen to true before dispatching events
-            $this->isOpen = true;
-            
-            // Dispatch the data first, then the show modal event
+            // Dispatch event with category data
+            $this->dispatch('show-form-modal');
             $this->dispatch('category-edit', [
                 'blog_category_name' => $this->blog_category_name,
                 'blog_category_description' => $this->blog_category_description,
                 'action' => 'update'
             ]);
-            
-            // Dispatch show modal event after category-edit
-            $this->dispatch('show-form-modal');
             
             \Log::info('Blog category data loaded successfully', [
                 'uuid' => $this->uuid,
