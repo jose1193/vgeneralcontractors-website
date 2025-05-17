@@ -213,15 +213,9 @@ class BlogCategories extends Component
             
             $this->modalTitle = 'Edit Blog Category';
             $this->modalAction = 'update';
-            $this->openModal();
             
-            // Dispatch event with category data
-            $this->dispatch('show-form-modal');
-            $this->dispatch('category-edit', [
-                'blog_category_name' => $this->blog_category_name,
-                'blog_category_description' => $this->blog_category_description,
-                'action' => 'update'
-            ]);
+            // Use the enhanced openModal method
+            $this->openModal();
             
             \Log::info('Blog category data loaded successfully', [
                 'uuid' => $this->uuid,
@@ -400,6 +394,11 @@ class BlogCategories extends Component
     public function openModal()
     {
         $this->isOpen = true;
+        
+        // Give Alpine.js a moment to update its state
+        $this->dispatch('modal-opened');
+        
+        // Then send category data with a slight delay to ensure modal is open
         $this->dispatch('category-edit', [
             'blog_category_name' => $this->blog_category_name,
             'blog_category_description' => $this->blog_category_description,
