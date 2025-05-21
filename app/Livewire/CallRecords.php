@@ -19,7 +19,7 @@ class CallRecords extends Component
     public $sortDirection = 'desc';
     public $selectedCall = null;
     public $showTranscript = false;
-    public $calls = [];
+    protected $calls = [];
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -47,26 +47,38 @@ class CallRecords extends Component
     {
         try {
             $retellService = new RetellAIService();
-            $this->calls = collect($retellService->listCalls());
+            $apiResponse = $retellService->listCalls();
+            
+            // Asegurarse de que la respuesta sea un array
+            $this->calls = is_array($apiResponse) ? collect($apiResponse) : collect([]);
+            
+            if ($this->calls->isEmpty()) {
+                Log::info('No call records found in API response');
+            }
+            
             session()->flash('message', 'Call records loaded successfully.');
         } catch (\Exception $e) {
             Log::error('Error loading calls from RetellAI: ' . $e->getMessage());
-            session()->flash('error', 'Error loading call records.');
+            session()->flash('error', 'Error loading call records: ' . $e->getMessage());
             $this->calls = collect([]);
         }
     }
 
     protected function filterAndSortCalls()
     {
-        return $this->calls
+        return collect($this->calls)
             ->when($this->search, function ($collection) {
                 return $collection->filter(function ($call) {
-                    return str_contains(strtolower($call['from_number']), strtolower($this->search)) ||
-                           str_contains(strtolower($call['to_number']), strtolower($this->search)) ||
-                           str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), strtolower($this->search));
+                    $searchLower = strtolower($this->search);
+                    return 
+                        str_contains(strtolower($call['from_number'] ?? ''), $searchLower) ||
+                        str_contains(strtolower($call['to_number'] ?? ''), $searchLower) ||
+                        str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), $searchLower);
                 });
             })
-            ->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection === 'desc');
+            ->when($this->sortField, function ($collection) {
+                return $collection->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection === 'desc');
+            });
     }
 
     protected function paginateCalls($calls)
@@ -79,7 +91,10 @@ class CallRecords extends Component
             $calls->count(),
             $this->perPage,
             $page,
-            ['path' => request()->url(), 'query' => request()->query()]
+            [
+                'path' => request()->url(),
+                'query' => request()->query()
+            ]
         );
     }
 
@@ -95,7 +110,12 @@ class CallRecords extends Component
 
     public function showCallDetails($callId)
     {
-        $this->selectedCall = $this->calls->firstWhere('call_id', $callId);
+        $this->selectedCall = collect($this->calls)->firstWhere('call_id', $callId);
+        if (!$this->selectedCall) {
+            Log::warning('Call record not found for ID: ' . $callId);
+            session()->flash('error', 'Call record not found.');
+            return;
+        }
         $this->showTranscript = true;
     }
 
