@@ -16,14 +16,14 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
-                    <div
-                        class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:items-center lg:justify-between lg:space-x-4 mb-6">
-                        <!-- Top Row -->
-                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 lg:w-auto">
-                            <!-- Date Range Button with dropdown -->
-                            <div class="relative">
+                    <!-- Header Controls Row -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
+                        <!-- Left side - Date Range + Search -->
+                        <div class="flex flex-col sm:flex-row w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
+                            <!-- Date Range Button -->
+                            <div>
                                 <button id="date-range-btn"
-                                    class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -34,11 +34,10 @@
                                 </button>
                                 <input type="hidden" id="start-date-input">
                                 <input type="hidden" id="end-date-input">
-                                <!-- The calendar will be inserted here by flatpickr -->
                             </div>
 
                             <!-- Search Input -->
-                            <div class="relative">
+                            <div class="relative w-full sm:w-64">
                                 <input type="text" id="search-input" placeholder="Search..."
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -51,18 +50,28 @@
                             </div>
                         </div>
 
-                        <!-- Per Page and Refresh -->
-                        <div class="flex items-center space-x-4">
-                            <select id="per-page"
-                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <option value="10">10 per page</option>
-                                <option value="25">25 per page</option>
-                                <option value="50">50 per page</option>
-                                <option value="100">100 per page</option>
-                            </select>
+                        <!-- Right side - Per Page + Refresh -->
+                        <div class="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                            <div class="relative w-40">
+                                <select id="per-page"
+                                    class="appearance-none w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="10">10 per page</option>
+                                    <option value="25">25 per page</option>
+                                    <option value="50">50 per page</option>
+                                    <option value="100">100 per page</option>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
 
                             <button id="refresh-btn"
-                                class="whitespace-nowrap inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -409,13 +418,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                    </svg>
-                                                                                                                                </a>
-                                                                                                                            ` : ''}
+                                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                                    </svg>
+                                                                                                                                                </a>
+                                                                                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -521,8 +530,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                                                                                                        `).join('')}
+                                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -534,15 +543,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                            <div>
-                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                                </dt>
-                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                                </dd>
-                                                                                                                            </div>
-                                                                                                                        `).join('')}
+                                                                                                                                            <div>
+                                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                                </dt>
+                                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                                </dd>
+                                                                                                                                            </div>
+                                                                                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
