@@ -12,8 +12,8 @@
             <div class="p-6">
                 <div
                     class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 mb-4">
-                    <div class="w-full md:w-2/5">
-                        <x-input-search class="w-full" />
+                    <div class="w-full md:w-1/3">
+                        <x-input-search />
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -25,7 +25,7 @@
                         </x-select-input-per-pages>
 
                         <button wire:click="refreshCallList"
-                            class="inline-flex items-center justify-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 w-32">
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -76,7 +76,7 @@
                                 <tr class="text-center">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if (isset($call['start_timestamp']))
-                                            {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('m/d/Y H:i') }}
+                                            {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('Y-m-d H:i:s') }}
                                         @else
                                             N/A
                                         @endif
