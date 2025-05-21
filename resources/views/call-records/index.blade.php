@@ -193,10 +193,9 @@
             </div>
         </div>
     </div>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     @push('scripts')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // State variables
@@ -410,13 +409,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                        <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                            </svg>
-                                                                                                                        </a>
-                                                                                                                    ` : ''}
+                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                    </svg>
+                                                                                                                                </a>
+                                                                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -522,8 +521,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                    <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                                                                                                `).join('')}
+                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -535,15 +534,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                    <div>
-                                                                                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                                                                            ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                        </dt>
-                                                                                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                                                                                            ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                        </dd>
-                                                                                                                    </div>
-                                                                                                                `).join('')}
+                                                                                                                            <div>
+                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                </dt>
+                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                </dd>
+                                                                                                                            </div>
+                                                                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
