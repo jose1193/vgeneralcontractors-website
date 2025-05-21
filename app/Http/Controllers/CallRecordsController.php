@@ -69,7 +69,9 @@ class CallRecordsController extends Controller
         $filters = [];
         
         // Apply date filters if provided
-        if ($request->has('start_date') && $request->has('end_date')) {
+        if ($request->has('start_date') && !empty($request->start_date) && 
+            $request->has('end_date') && !empty($request->end_date)) {
+            
             $startDate = $request->start_date;
             $endDate = $request->end_date;
             
@@ -103,7 +105,9 @@ class CallRecordsController extends Controller
         }
         
         // Get calls from service
+        Log::info('Fetching calls with filters', ['filters' => $filters]);
         $calls = $this->retellService->listCalls($filters);
+        Log::info('Retrieved calls', ['count' => count($calls)]);
         
         // Apply search filter in PHP if provided
         if (!empty($this->search)) {

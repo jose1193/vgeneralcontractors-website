@@ -12,8 +12,30 @@
             <div class="p-6">
                 <div
                     class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 mb-4">
-                    <div class="w-full md:w-2/3">
+
+                    <!-- Search and Date Filter Controls -->
+                    <div class="w-full md:w-2/3 space-y-4">
                         <x-input-search class="w-full" />
+
+                        <!-- Date Range Filter -->
+                        <div class="flex flex-wrap items-center space-x-2 space-y-2 sm:space-y-0 mt-2">
+                            <label class="text-gray-700 dark:text-gray-300 mr-2 whitespace-nowrap">Date Range:</label>
+                            <div class="flex flex-wrap items-center space-x-2">
+                                <input type="date" wire:model.defer="startDate"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 sm:w-auto p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <span class="text-gray-700 dark:text-gray-300">to</span>
+                                <input type="date" wire:model.defer="endDate"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 sm:w-auto p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <button wire:click="applyDateFilter"
+                                    class="whitespace-nowrap inline-flex items-center px-2 py-1 bg-blue-600 border border-transparent rounded-md font-medium text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring focus:ring-blue-300 disabled:opacity-25 transition">
+                                    Apply
+                                </button>
+                                <button wire:click="clearDateFilter"
+                                    class="whitespace-nowrap inline-flex items-center px-2 py-1 bg-gray-500 border border-transparent rounded-md font-medium text-xs text-white uppercase tracking-widest hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex items-center space-x-4 w-full md:w-auto">
@@ -189,7 +211,8 @@
                                                 </p>
                                             </div>
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">To</h3>
+                                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">To
+                                                </h3>
                                                 <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
                                                     {{ isset($selectedCall['to_number']) ? PhoneHelper::format($selectedCall['to_number']) : 'N/A' }}
                                                 </p>
@@ -198,7 +221,8 @@
 
                                         @if (isset($selectedCall['call_analysis']) && isset($selectedCall['call_analysis']['call_summary']))
                                             <div>
-                                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Summary
+                                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                                    Summary
                                                 </h3>
                                                 <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                                     {{ $selectedCall['call_analysis']['call_summary'] }}

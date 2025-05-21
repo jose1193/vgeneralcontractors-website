@@ -28,6 +28,19 @@ class RetellAIService
             
             // Only add filters if there are any to prevent empty filters object
             if (!empty($filters)) {
+                // Log the filter structure being sent to API
+                Log::info('RetellAI API Request filters', ['filters' => $filters]);
+                
+                // Ensure time_range filter is properly formatted
+                if (isset($filters['time_range'])) {
+                    $timeRange = $filters['time_range'];
+                    // Make sure we have the expected structure
+                    if (isset($timeRange['start_timestamp']) && isset($timeRange['end_timestamp'])) {
+                        // Log the timestamp filtering being applied
+                        Log::info('RetellAI API Time Range Filter', $timeRange);
+                    }
+                }
+                
                 $payload['filters'] = $filters;
             }
             
@@ -39,20 +52,25 @@ class RetellAIService
             if (!$response->successful()) {
                 Log::error('RetellAI API Error', [
                     'status' => $response->status(),
-                    'body' => $response->json()
+                    'body' => $response->json(),
+                    'request_payload' => $payload
                 ]);
                 return [];
             }
 
             $data = $response->json();
-            Log::info('RetellAI API Response', ['data_count' => is_array($data) ? count($data) : 0]);
+            Log::info('RetellAI API Response', [
+                'data_count' => is_array($data) ? count($data) : 0,
+                'filters_applied' => !empty($filters)
+            ]);
 
             return is_array($data) ? $data : [];
 
         } catch (\Exception $e) {
             Log::error('RetellAI - Error listing calls', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'filters' => $filters
             ]);
             return [];
         }

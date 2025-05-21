@@ -20,6 +20,8 @@ class CallRecords extends Component
     public $selectedCall = null;
     public $showTranscript = false;
     public $calls = [];
+    public $startDate = '';
+    public $endDate = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -27,6 +29,8 @@ class CallRecords extends Component
         'sortDirection' => ['except' => 'desc'],
         'perPage' => ['except' => 10],
         'page' => ['except' => 1],
+        'startDate' => ['except' => ''],
+        'endDate' => ['except' => ''],
     ];
 
     public function mount()
@@ -55,19 +59,40 @@ class CallRecords extends Component
     {
         try {
             $retellService = new RetellAIService();
-            $apiResponse = $retellService->listCalls();
+            $filters = [];
+            
+            // Apply date range filter if both dates are provided
+            if (!empty($this->startDate) && !empty($this->endDate)) {
+                Log::info('Applying date filter in Livewire component', [
+                    'startDate' => $this->startDate,
+                    'endDate' => $this->endDate
+                ]);
+                
+                // Prepare timestamp filter (milliseconds)
+                $startTimestamp = strtotime($this->startDate) * 1000;
+                $endTimestamp = strtotime($this->endDate . ' 23:59:59') * 1000;
+                
+                $filters['time_range'] = [
+                    'start_timestamp' => $startTimestamp,
+                    'end_timestamp' => $endTimestamp
+                ];
+            }
+            
+            // Call API with filters
+            $apiResponse = $retellService->listCalls($filters);
             
             $this->calls = collect($apiResponse);
             
             if ($this->calls->isEmpty()) {
-                Log::info('No calls found in API response');
+                Log::info('No calls found in API response', ['filters' => $filters]);
             }
             
             session()->flash('message', 'Calls loaded successfully.');
         } catch (\Exception $e) {
             Log::error('Error loading calls from RetellAI', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'filters' => $filters ?? []
             ]);
             session()->flash('error', 'Error loading calls: ' . $e->getMessage());
             $this->calls = collect([]);
@@ -134,6 +159,26 @@ class CallRecords extends Component
 
     public function refreshCallList()
     {
+        $this->loadCallsFromAPI();
+    }
+
+    /**
+     * Handle date filter changes
+     */
+    public function applyDateFilter()
+    {
+        $this->resetPage();
+        $this->loadCallsFromAPI();
+    }
+    
+    /**
+     * Clear date filters
+     */
+    public function clearDateFilter()
+    {
+        $this->startDate = '';
+        $this->endDate = '';
+        $this->resetPage();
         $this->loadCallsFromAPI();
     }
 } 
