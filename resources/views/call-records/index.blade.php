@@ -16,39 +16,28 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
-                    <div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:justify-between lg:space-x-4 mb-6">
-                        <!-- Left Side - Date Range Picker -->
-                        <div class="w-full lg:w-1/2 flex items-center">
-                            <span class="mr-2 flex items-center">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                <span class="ml-1">Date Filter:</span>
-                            </span>
-                            <div class="flex items-center space-x-2">
-                                <div>
-                                    <label for="start-date-input" class="sr-only">Start Date</label>
-                                    <input type="date" id="start-date-input"
-                                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                </div>
-                                <span>to</span>
-                                <div>
-                                    <label for="end-date-input" class="sr-only">End Date</label>
-                                    <input type="date" id="end-date-input"
-                                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                </div>
-                                <button id="apply-date-filter"
-                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Apply
+                    <div
+                        class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:items-center lg:justify-between lg:space-x-4 mb-6">
+                        <!-- Top Row -->
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 lg:w-auto">
+                            <!-- Date Range Button with dropdown -->
+                            <div class="relative">
+                                <button id="date-range-btn"
+                                    class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    Date Range
                                 </button>
+                                <input type="hidden" id="start-date-input">
+                                <input type="hidden" id="end-date-input">
+                                <!-- The calendar will be inserted here by flatpickr -->
                             </div>
-                        </div>
 
-                        <!-- Right Side - Search & Page Size -->
-                        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                            <!-- Search Input -->
                             <div class="relative">
                                 <input type="text" id="search-input" placeholder="Search..."
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -62,9 +51,10 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center space-x-2">
+                        <!-- Per Page and Refresh -->
+                        <div class="flex items-center space-x-4">
                             <select id="per-page"
-                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-48">
+                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="10">10 per page</option>
                                 <option value="25">25 per page</option>
                                 <option value="50">50 per page</option>
@@ -78,13 +68,13 @@
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                     </path>
                                 </svg>
-                                Refresh List
+                                REFRESH LIST
                             </button>
                         </div>
                     </div>
 
                     <!-- Loading Indicator -->
-                    <div id="loading-indicator" class="flex justify-center my-8 ">
+                    <div id="loading-indicator" class="flex justify-center my-8 hidden">
                         <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
@@ -205,6 +195,8 @@
     </div>
 
     @push('scripts')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // State variables
@@ -234,40 +226,58 @@
                 const modalDetails = document.getElementById('modal-details');
                 const startDateInput = document.getElementById('start-date-input');
                 const endDateInput = document.getElementById('end-date-input');
-                const applyDateFilterBtn = document.getElementById('apply-date-filter');
+                const dateRangeBtn = document.getElementById('date-range-btn');
 
-                // Set max date to today for both date inputs
-                const today = new Date().toISOString().split('T')[0];
-                startDateInput.setAttribute('max', today);
-                endDateInput.setAttribute('max', today);
+                // Initialize flatpickr calendar dropdown
+                const picker = flatpickr(dateRangeBtn, {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    showMonths: 2,
+                    static: true,
+                    altInput: true,
+                    altFormat: "M j, Y",
+                    maxDate: "today",
+                    onChange: function(selectedDates, dateStr) {
+                        if (selectedDates.length === 2) {
+                            startDate = selectedDates[0].toISOString().split('T')[0];
+                            endDate = selectedDates[1].toISOString().split('T')[0];
 
-                // Handle date input validation
-                startDateInput.addEventListener('change', function() {
-                    // Update min date for end date input to be at least the start date
-                    if (this.value) {
-                        endDateInput.setAttribute('min', this.value);
+                            // Update hidden inputs
+                            startDateInput.value = startDate;
+                            endDateInput.value = endDate;
 
-                        // If end date is earlier than start date, reset it
-                        if (endDateInput.value && endDateInput.value < this.value) {
-                            endDateInput.value = this.value;
+                            // Update button text with selected range
+                            const startFormatted = selectedDates[0].toLocaleDateString();
+                            const endFormatted = selectedDates[1].toLocaleDateString();
+                            dateRangeBtn.innerHTML = `
+                                <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                ${startFormatted} - ${endFormatted}
+                            `;
+
+                            // Reset to page 1 and fetch calls
+                            currentPage = 1;
+                            fetchCalls();
                         }
-                    } else {
-                        endDateInput.removeAttribute('min');
                     }
                 });
 
-                endDateInput.addEventListener('change', function() {
-                    // Update max date for start date input to be at most the end date
-                    if (this.value) {
-                        startDateInput.setAttribute('max', this.value);
-
-                        // If start date is later than end date, reset it
-                        if (startDateInput.value && startDateInput.value > this.value) {
-                            startDateInput.value = this.value;
-                        }
-                    } else {
-                        startDateInput.setAttribute('max', today);
-                    }
+                // Clear date filter with double click
+                dateRangeBtn.addEventListener('dblclick', function() {
+                    picker.clear();
+                    startDate = '';
+                    endDate = '';
+                    startDateInput.value = '';
+                    endDateInput.value = '';
+                    dateRangeBtn.innerHTML = `
+                        <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Date Range
+                    `;
+                    currentPage = 1;
+                    fetchCalls();
                 });
 
                 // Format phone numbers
@@ -400,13 +410,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                    </svg>
-                                                                                </a>
-                                                                            ` : ''}
+                                                                                                                        <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                            </svg>
+                                                                                                                        </a>
+                                                                                                                    ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -512,8 +522,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                                                        `).join('')}
+                                                                                                                    <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                                                                `).join('')}
                             </div>
                         </div>
                     `;
@@ -525,15 +535,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                            <div>
-                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                </dt>
-                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                </dd>
-                                                                            </div>
-                                                                        `).join('')}
+                                                                                                                    <div>
+                                                                                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                                                            ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                        </dt>
+                                                                                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                                                            ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                        </dd>
+                                                                                                                    </div>
+                                                                                                                `).join('')}
                             </dl>
                         </div>
                     `;
@@ -565,13 +575,6 @@
 
                 perPageSelect.addEventListener('change', function() {
                     perPage = parseInt(this.value);
-                    currentPage = 1;
-                    fetchCalls();
-                });
-
-                applyDateFilterBtn.addEventListener('click', function() {
-                    startDate = startDateInput.value;
-                    endDate = endDateInput.value;
                     currentPage = 1;
                     fetchCalls();
                 });
