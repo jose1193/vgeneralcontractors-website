@@ -17,9 +17,9 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
                     <!-- Header Controls Row -->
-                    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
+                    <div class="flex flex-col sm:flex-row items-start justify-between mb-8 space-y-6 sm:space-y-0">
                         <!-- Left side - Date Range + Search -->
-                        <div class="flex flex-col sm:flex-row w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div class="flex flex-col w-full sm:w-auto space-y-4">
                             <!-- Date Range Button -->
                             <div>
                                 <button id="date-range-btn"
@@ -37,7 +37,7 @@
                             </div>
 
                             <!-- Search Input -->
-                            <div class="relative w-full sm:w-64">
+                            <div class="relative w-full sm:w-80">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,14 +47,21 @@
                                 </div>
                                 <input type="text" id="search-input" placeholder="Search..."
                                     class="w-full pl-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <button id="clear-search"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-400 hover:text-gray-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
 
                         <!-- Right side - Per Page + Refresh -->
                         <div class="flex items-center space-x-4 w-full sm:w-auto justify-end">
-                            <div class="relative w-40">
+                            <div class="relative w-48">
                                 <select id="per-page"
-                                    class="appearance-none block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pr-8">
+                                    class="appearance-none block w-full py-2 px-3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 pr-8">
                                     <option value="10">10 per page</option>
                                     <option value="25">25 per page</option>
                                     <option value="50">50 per page</option>
@@ -71,7 +78,7 @@
                             </div>
 
                             <button id="refresh-btn"
-                                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -83,7 +90,7 @@
                     </div>
 
                     <!-- Loading Indicator -->
-                    <div id="loading-indicator" class="flex justify-center my-8 ">
+                    <div id="loading-indicator" class="flex justify-center my-8 hidden">
                         <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
@@ -409,13 +416,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                </a>
-                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                                                                                                    </svg>
+                                                                                                                                                                                                                </a>
+                                                                                                                                                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -521,8 +528,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                                                                                                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -534,15 +541,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                                                                                            <div>
-                                                                                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                                                                                                </dt>
-                                                                                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                                                                                                </dd>
-                                                                                                                                                                                            </div>
-                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                            <div>
+                                                                                                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                                                                                                </dt>
+                                                                                                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                                                                                                </dd>
+                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
