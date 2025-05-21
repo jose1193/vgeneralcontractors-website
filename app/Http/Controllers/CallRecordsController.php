@@ -62,11 +62,48 @@ class CallRecordsController extends Controller
             if ($request->has('search') && !empty($request->search)) {
                 $searchTerm = strtolower($request->search);
                 $calls = collect($calls)->filter(function ($call) use ($searchTerm) {
-                    return 
-                        str_contains(strtolower($call['from_number'] ?? ''), $searchTerm) ||
-                        str_contains(strtolower($call['to_number'] ?? ''), $searchTerm) ||
-                        str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), $searchTerm);
+                    // Search in phone numbers
+                    if (isset($call['from_number']) && str_contains(strtolower($call['from_number']), $searchTerm)) {
+                        return true;
+                    }
+                    if (isset($call['to_number']) && str_contains(strtolower($call['to_number']), $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search in call summary
+                    if (isset($call['call_analysis']) && 
+                        isset($call['call_analysis']['call_summary']) && 
+                        str_contains(strtolower($call['call_analysis']['call_summary']), $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search in transcript
+                    if (isset($call['transcript']) && 
+                        str_contains(strtolower($call['transcript']), $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search in call status
+                    if (isset($call['call_status']) && 
+                        str_contains(strtolower($call['call_status']), $searchTerm)) {
+                        return true;
+                    }
+                    
+                    // Search in sentiment
+                    if (isset($call['call_analysis']) && 
+                        isset($call['call_analysis']['user_sentiment']) && 
+                        str_contains(strtolower($call['call_analysis']['user_sentiment']), $searchTerm)) {
+                        return true;
+                    }
+                    
+                    return false;
                 })->values()->all();
+                
+                // Log search results
+                Log::info('Search results', [
+                    'term' => $searchTerm,
+                    'results' => count($calls)
+                ]);
             }
             
             // Apply sorting if provided
