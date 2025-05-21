@@ -25,6 +25,11 @@ class Kernel extends ConsoleKernel
                  ->dailyAt('09:00')
                  ->timezone('America/Chicago') // Central Time (Texas/Chicago)
                  ->appendOutputTo(storage_path('logs/appointment-reminders.log'));
+                 
+        // Verificar nuevas llamadas de Retell API cada 15 minutos
+        $schedule->command('retell:check-calls')
+                 ->everyFifteenMinutes()
+                 ->appendOutputTo(storage_path('logs/retell-calls.log'));
     }
 
     /**
