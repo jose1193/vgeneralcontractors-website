@@ -7,6 +7,7 @@ use App\Services\RetellAIService;
 use App\Jobs\ProcessNewCall;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\CallRecordsController;
 
 class CheckNewCalls extends Command
 {
@@ -22,26 +23,47 @@ class CheckNewCalls extends Command
         
         $lastCheckedTimestamp = Cache::get('last_checked_call_timestamp', 0);
         $newLastCheckedTimestamp = $lastCheckedTimestamp;
+        $newCallsFound = false;
         
         foreach ($calls as $call) {
             $callTimestamp = $call['start_timestamp'] ?? 0;
             
-            // Si la llamada es más reciente que la última comprobada
+            // Check if this is a new call (more recent than last checked timestamp)
             if ($callTimestamp > $lastCheckedTimestamp) {
-                // Es una llamada nueva
-                Log::info('Encontrada nueva llamada', ['call_id' => $call['call_id']]);
+                // Process the new call
+                Log::info('Found new call', ['call_id' => $call['call_id']]);
                 ProcessNewCall::dispatch($call);
+                $newCallsFound = true;
                 
-                // Actualizar el último timestamp revisado
+                // Track the most recent call timestamp
                 if ($callTimestamp > $newLastCheckedTimestamp) {
                     $newLastCheckedTimestamp = $callTimestamp;
                 }
             }
         }
         
-        // Guardar el último timestamp procesado
+        // If we found new calls, clear the call records cache
+        if ($newCallsFound) {
+            $this->clearCallRecordsCache();
+        }
+        
+        // Save the latest processed timestamp
         Cache::put('last_checked_call_timestamp', $newLastCheckedTimestamp, now()->addDays(30));
         
-        $this->info('Se comprobaron nuevas llamadas. Encontradas: ' . ($newLastCheckedTimestamp > $lastCheckedTimestamp ? 'Sí' : 'No'));
+        $this->info('Checked for new calls. Found: ' . ($newCallsFound ? 'Yes' : 'No'));
+    }
+    
+    /**
+     * Clear the call records cache when new calls are detected
+     */
+    private function clearCallRecordsCache()
+    {
+        try {
+            $callRecordsController = new CallRecordsController(app(RetellAIService::class));
+            $callRecordsController->clearCallRecordsCache();
+            Log::info('Call records cache cleared due to new calls');
+        } catch (\Exception $e) {
+            Log::error('Failed to clear call records cache: ' . $e->getMessage());
+        }
     }
 }

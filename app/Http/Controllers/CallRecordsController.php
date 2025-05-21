@@ -85,8 +85,16 @@ class CallRecordsController extends Controller
                 throw new \InvalidArgumentException('Dates cannot be in the future');
             }
             
-            $startTimestamp = Carbon::parse($startDate)->startOfDay()->timestamp;
-            $endTimestamp = Carbon::parse($endDate)->endOfDay()->timestamp;
+            // Convert to milliseconds for Retell API
+            $startTimestamp = Carbon::parse($startDate)->startOfDay()->timestamp * 1000;
+            $endTimestamp = Carbon::parse($endDate)->endOfDay()->timestamp * 1000;
+            
+            Log::info('Date filter applied', [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'start_timestamp' => $startTimestamp,
+                'end_timestamp' => $endTimestamp
+            ]);
             
             $filters['time_range'] = [
                 'start_timestamp' => $startTimestamp,
