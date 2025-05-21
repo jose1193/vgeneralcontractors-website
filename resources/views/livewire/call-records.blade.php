@@ -92,10 +92,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            {{ isset($call['call_analysis']) && ($call['call_analysis']['call_successful'] ?? false)
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800' }}">
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ isset($call['call_analysis']) && ($call['call_analysis']['call_successful'] ?? false) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                             {{ $call['call_status'] ?? 'Unknown' }}
                                         </span>
                                     </td>
@@ -109,11 +106,11 @@
                                         @endphp
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if ($sentiment === 'Positive') bg-emerald-100 text-emerald-800
+                                            @if ($sentiment === 'Positive') bg-green-100 text-green-800
                                             @elseif($sentiment === 'Negative')
-                                                bg-rose-100 text-rose-800
+                                                 
                                             @else
-                                                bg-slate-100 text-slate-800 @endif">
+                                                bg-gray-100 text-gray-800 @endif">
                                             {{ $sentiment ?? 'Unknown' }}
                                         </span>
                                     </td>
