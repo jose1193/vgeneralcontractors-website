@@ -34,3 +34,10 @@ Route::prefix('facebook-leads')->group(function () {
     // Delete appointment (soft delete)
     Route::delete('/{uuid}', [FacebookLeadFormController::class, 'deleteAppointment']);
 });
+
+// Call Records API Routes
+Route::prefix('call-records')->group(function () {
+    Route::get('/', [\App\Http\Controllers\CallRecordsController::class, 'getCalls']);
+    Route::get('/clear-cache', [\App\Http\Controllers\CallRecordsController::class, 'clearCallRecordsCache']);
+    Route::get('/{callId}', [\App\Http\Controllers\CallRecordsController::class, 'getCallDetails']);
+});

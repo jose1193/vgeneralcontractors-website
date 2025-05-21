@@ -80,12 +80,12 @@ class CallRecordsController extends Controller
                 throw new \InvalidArgumentException('End date cannot be before start date');
             }
             
-            // Validate that dates aren't in the future
-            $today = Carbon::now()->startOfDay();
-            if (Carbon::parse($startDate)->startOfDay()->greaterThan($today) ||
-                Carbon::parse($endDate)->startOfDay()->greaterThan($today)) {
-                throw new \InvalidArgumentException('Dates cannot be in the future');
-            }
+            // COMMENTED OUT FUTURE DATE VALIDATION TO ALLOW ANY DATE RANGE
+            // $today = Carbon::now()->startOfDay();
+            // if (Carbon::parse($startDate)->startOfDay()->greaterThan($today) ||
+            //    Carbon::parse($endDate)->startOfDay()->greaterThan($today)) {
+            //    throw new \InvalidArgumentException('Dates cannot be in the future');
+            // }
             
             // Convert to milliseconds for Retell API
             $startTimestamp = Carbon::parse($startDate)->startOfDay()->timestamp * 1000;
@@ -95,7 +95,9 @@ class CallRecordsController extends Controller
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'start_timestamp' => $startTimestamp,
-                'end_timestamp' => $endTimestamp
+                'end_timestamp' => $endTimestamp,
+                'request_has_start_date' => $request->has('start_date'),
+                'request_has_end_date' => $request->has('end_date')
             ]);
             
             $filters['time_range'] = [
