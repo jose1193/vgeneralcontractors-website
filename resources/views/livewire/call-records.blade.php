@@ -70,7 +70,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse ($calls as $call)
+                            @forelse ($callRecords as $call)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if (isset($call['start_timestamp']))
@@ -144,7 +144,7 @@
                 </div>
 
                 <div class="mt-4">
-                    {{ $calls->links() }}
+                    {{ $callRecords->links() }}
                 </div>
             </div>
         </div>

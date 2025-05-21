@@ -26,6 +26,7 @@ class CallRecords extends Component
         'sortField' => ['except' => 'start_timestamp'],
         'sortDirection' => ['except' => 'desc'],
         'perPage' => ['except' => 10],
+        'page' => ['except' => 1],
     ];
 
     public function mount()
@@ -43,11 +44,11 @@ class CallRecords extends Component
             'total_calls' => count($this->calls),
             'filtered_calls' => $filteredCalls->count(),
             'paginated_calls' => $paginatedCalls->count(),
-            'current_page' => $paginatedCalls->currentPage(),
+            'current_page' => $this->page ?? 1,
         ]);
 
         return view('livewire.call-records', [
-            'calls' => $paginatedCalls
+            'callRecords' => $paginatedCalls
         ]);
     }
 
@@ -112,16 +113,17 @@ class CallRecords extends Component
     protected function paginateCalls($calls)
     {
         $page = $this->page ?? 1;
-        $items = $calls->forPage($page, $this->perPage);
-        
+        $perPage = $this->perPage;
+        $items = $calls->forPage($page, $perPage);
+
         return new LengthAwarePaginator(
             $items,
             $calls->count(),
-            $this->perPage,
+            $perPage,
             $page,
             [
                 'path' => request()->url(),
-                'query' => request()->query()
+                'query' => request()->query(),
             ]
         );
     }
