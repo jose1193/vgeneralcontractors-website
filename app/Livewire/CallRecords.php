@@ -8,7 +8,6 @@ use App\Services\RetellAIService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Carbon\Carbon;
 
 class CallRecords extends Component
 {
@@ -58,15 +57,7 @@ class CallRecords extends Component
             $retellService = new RetellAIService();
             $apiResponse = $retellService->listCalls();
             
-            // Asegurar que las fechas estén en el formato correcto
-            $calls = collect($apiResponse)->map(function ($call) {
-                if (isset($call['start_timestamp'])) {
-                    $call['start_timestamp'] = Carbon::parse($call['start_timestamp'])->format('Y-m-d H:i:s');
-                }
-                return $call;
-            });
-            
-            $this->calls = $calls;
+            $this->calls = collect($apiResponse);
             
             if ($this->calls->isEmpty()) {
                 Log::info('No calls found in API response');

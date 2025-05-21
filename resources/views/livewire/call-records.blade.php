@@ -17,26 +17,15 @@
                     </div>
 
                     <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <select wire:model.live="perPage"
-                                class="block appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md py-2 px-4 pr-8 leading-tight focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="10">10 per page</option>
-                                <option value="25">25 per page</option>
-                                <option value="50">50 per page</option>
-                                <option value="100">100 per page</option>
-                            </select>
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                </svg>
-                            </div>
-                        </div>
+                        <x-select-input-per-pages name="perPage" wireModel="perPage" class="w-32">
+                            <option value="10">10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </x-select-input-per-pages>
 
                         <button wire:click="refreshCallList"
-                            class="inline-flex items-center justify-center px-6 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-sm text-white dark:text-gray-800 uppercase tracking-wider hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 min-w-[120px]">
+                            class="inline-flex items-center justify-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150 w-32">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
@@ -87,7 +76,7 @@
                                 <tr class="text-center">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if (isset($call['start_timestamp']))
-                                            {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('m/d/Y H:i:s') }}
+                                            {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('m/d/Y H:i') }}
                                         @else
                                             N/A
                                         @endif
