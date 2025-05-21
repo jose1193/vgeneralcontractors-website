@@ -28,12 +28,31 @@ class CallRecordsController extends Controller
             
             // Apply date filters if provided
             if ($request->has('start_date') && $request->has('end_date')) {
-                $startDate = Carbon::parse($request->start_date)->startOfDay()->timestamp;
-                $endDate = Carbon::parse($request->end_date)->endOfDay()->timestamp;
+                $startDate = $request->start_date;
+                $endDate = $request->end_date;
+                
+                // Validate that end date isn't before start date
+                if (strtotime($endDate) < strtotime($startDate)) {
+                    return response()->json([
+                        'error' => 'End date cannot be before start date'
+                    ], 400);
+                }
+                
+                // Validate that dates aren't in the future
+                $today = Carbon::now()->startOfDay();
+                if (Carbon::parse($startDate)->startOfDay()->greaterThan($today) ||
+                    Carbon::parse($endDate)->startOfDay()->greaterThan($today)) {
+                    return response()->json([
+                        'error' => 'Dates cannot be in the future'
+                    ], 400);
+                }
+                
+                $startTimestamp = Carbon::parse($startDate)->startOfDay()->timestamp;
+                $endTimestamp = Carbon::parse($endDate)->endOfDay()->timestamp;
                 
                 $filters['time_range'] = [
-                    'start_timestamp' => $startDate,
-                    'end_timestamp' => $endDate
+                    'start_timestamp' => $startTimestamp,
+                    'end_timestamp' => $endTimestamp
                 ];
             }
             

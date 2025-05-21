@@ -18,23 +18,32 @@
                 <div class="p-6">
                     <div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:justify-between lg:space-x-4 mb-6">
                         <!-- Left Side - Date Range Picker -->
-                        <div class="w-full lg:w-1/2">
-                            <div class="flex items-center">
-                                <div class="mr-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
+                        <div class="w-full lg:w-1/2 flex items-center">
+                            <span class="mr-2 flex items-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <span class="ml-1">Date Filter:</span>
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <div>
+                                    <label for="start-date-input" class="sr-only">Start Date</label>
+                                    <input type="date" id="start-date-input"
+                                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
-                                <div class="relative w-full">
-                                    <input type="text" id="date-range-picker"
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                        placeholder="Select date range" readonly>
-                                    <input type="hidden" id="start-date">
-                                    <input type="hidden" id="end-date">
+                                <span>to</span>
+                                <div>
+                                    <label for="end-date-input" class="sr-only">End Date</label>
+                                    <input type="date" id="end-date-input"
+                                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
+                                <button id="apply-date-filter"
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Apply
+                                </button>
                             </div>
                         </div>
 
@@ -51,31 +60,31 @@
                                     </svg>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="flex space-x-2">
-                                <select id="per-page"
-                                    class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-48">
-                                    <option value="10">10 per page</option>
-                                    <option value="25">25 per page</option>
-                                    <option value="50">50 per page</option>
-                                    <option value="100">100 per page</option>
-                                </select>
+                        <div class="flex items-center space-x-2">
+                            <select id="per-page"
+                                class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-48">
+                                <option value="10">10 per page</option>
+                                <option value="25">25 per page</option>
+                                <option value="50">50 per page</option>
+                                <option value="100">100 per page</option>
+                            </select>
 
-                                <button id="refresh-btn"
-                                    class="whitespace-nowrap inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                                        </path>
-                                    </svg>
-                                    Refresh List
-                                </button>
-                            </div>
+                            <button id="refresh-btn"
+                                class="whitespace-nowrap inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                    </path>
+                                </svg>
+                                Refresh List
+                            </button>
                         </div>
                     </div>
 
                     <!-- Loading Indicator -->
-                    <div id="loading-indicator" class="flex justify-center my-8 hidden">
+                    <div id="loading-indicator" class="flex justify-center my-8 ">
                         <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
@@ -196,8 +205,6 @@
     </div>
 
     @push('scripts')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // State variables
@@ -225,22 +232,41 @@
                 const closeModalBtn = document.getElementById('close-modal-btn');
                 const modalLoading = document.getElementById('modal-loading');
                 const modalDetails = document.getElementById('modal-details');
-                const startDateInput = document.getElementById('start-date');
-                const endDateInput = document.getElementById('end-date');
+                const startDateInput = document.getElementById('start-date-input');
+                const endDateInput = document.getElementById('end-date-input');
+                const applyDateFilterBtn = document.getElementById('apply-date-filter');
 
-                // Initialize date picker
-                const datePicker = flatpickr("#date-range-picker", {
-                    mode: "range",
-                    dateFormat: "Y-m-d",
-                    onChange: function(selectedDates, dateStr) {
-                        if (selectedDates.length === 2) {
-                            startDate = selectedDates[0].toISOString().split('T')[0];
-                            endDate = selectedDates[1].toISOString().split('T')[0];
-                            startDateInput.value = startDate;
-                            endDateInput.value = endDate;
-                            currentPage = 1;
-                            fetchCalls();
+                // Set max date to today for both date inputs
+                const today = new Date().toISOString().split('T')[0];
+                startDateInput.setAttribute('max', today);
+                endDateInput.setAttribute('max', today);
+
+                // Handle date input validation
+                startDateInput.addEventListener('change', function() {
+                    // Update min date for end date input to be at least the start date
+                    if (this.value) {
+                        endDateInput.setAttribute('min', this.value);
+
+                        // If end date is earlier than start date, reset it
+                        if (endDateInput.value && endDateInput.value < this.value) {
+                            endDateInput.value = this.value;
                         }
+                    } else {
+                        endDateInput.removeAttribute('min');
+                    }
+                });
+
+                endDateInput.addEventListener('change', function() {
+                    // Update max date for start date input to be at most the end date
+                    if (this.value) {
+                        startDateInput.setAttribute('max', this.value);
+
+                        // If start date is later than end date, reset it
+                        if (startDateInput.value && startDateInput.value > this.value) {
+                            startDateInput.value = this.value;
+                        }
+                    } else {
+                        startDateInput.setAttribute('max', today);
                     }
                 });
 
@@ -374,13 +400,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                    </svg>
-                                                </a>
-                                            ` : ''}
+                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                    </svg>
+                                                                                </a>
+                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -486,8 +512,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                        `).join('')}
+                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -499,15 +525,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                            <div>
-                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                </dt>
-                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                </dd>
-                                            </div>
-                                        `).join('')}
+                                                                            <div>
+                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                </dt>
+                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                </dd>
+                                                                            </div>
+                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
@@ -539,6 +565,13 @@
 
                 perPageSelect.addEventListener('change', function() {
                     perPage = parseInt(this.value);
+                    currentPage = 1;
+                    fetchCalls();
+                });
+
+                applyDateFilterBtn.addEventListener('click', function() {
+                    startDate = startDateInput.value;
+                    endDate = endDateInput.value;
                     currentPage = 1;
                     fetchCalls();
                 });
