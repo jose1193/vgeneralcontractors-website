@@ -207,6 +207,49 @@
             </div>
         </div>
     </div>
+
+    <!-- Audio Player Modal -->
+    <div id="audio-player-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 hidden">
+        <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    <div class="absolute top-0 right-0 pt-4 pr-4 z-50">
+                        <button id="close-audio-modal-btn" type="button"
+                            class="rounded-full bg-red-600 text-white p-1.5 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Call Recording</h3>
+
+                        <div id="audio-player-container" class="flex flex-col items-center">
+                            <audio id="audio-player" controls class="w-full mb-4">
+                                Your browser does not support the audio element.
+                            </audio>
+
+                            <div class="flex space-x-2">
+                                <a id="download-audio-link" download
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                    Download Audio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     @push('scripts')
@@ -242,6 +285,10 @@
                 const endDateInput = document.getElementById('end-date-input');
                 const dateRangeBtn = document.getElementById('date-range-btn');
                 const clearDateRangeBtn = document.getElementById('clear-date-range');
+                const audioPlayerModal = document.getElementById('audio-player-modal');
+                const audioPlayer = document.getElementById('audio-player');
+                const downloadAudioLink = document.getElementById('download-audio-link');
+                const closeAudioModalBtn = document.getElementById('close-audio-modal-btn');
 
                 // Initialize flatpickr calendar dropdown
                 const picker = flatpickr(dateRangeBtn, {
@@ -435,13 +482,25 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                                                                                                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                                                                                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                                                                                                                                                </a>
-                                                                                                                                                                                                                                                                                                                            ` : ''}
+                                                                            <div class="audio-controls relative group">
+                                                                                <button data-audio-url="${call.recording_url}" class="play-audio-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
+                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                    </svg>
+                                                                                </button>
+                                                                                <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-150 ease-in-out z-10">
+                                                                                    <div class="py-1">
+                                                                                        <a href="${call.recording_url}" download class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                                            <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                                                                            </svg>
+                                                                                            Download Audio
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -455,6 +514,14 @@
                         button.addEventListener('click', function() {
                             const callId = this.getAttribute('data-call-id');
                             showCallDetails(callId);
+                        });
+                    });
+
+                    // Add event listeners to play audio buttons
+                    document.querySelectorAll('.play-audio-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const audioUrl = this.getAttribute('data-audio-url');
+                            playAudio(audioUrl);
                         });
                     });
                 }
@@ -547,8 +614,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
-                                                `).join('')}
+                                                                                        <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
+                                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -560,15 +627,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                <div>
-                                                    <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                                        ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                    </dt>
-                                                    <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
-                                                        ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                    </dd>
-                                                </div>
-                                                `).join('')}
+                                                                                        <div>
+                                                                                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                                                                                ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                            </dt>
+                                                                                            <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
+                                                                                                ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                            </dd>
+                                                                                        </div>
+                                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
@@ -576,6 +643,41 @@
 
                     modalDetails.innerHTML = html;
                 }
+
+                // Play audio in modal
+                function playAudio(audioUrl) {
+                    audioPlayer.src = audioUrl;
+                    downloadAudioLink.href = audioUrl;
+
+                    // Extract filename from URL for the download attribute
+                    const filename = audioUrl.split('/').pop();
+                    downloadAudioLink.setAttribute('download', filename);
+
+                    // Show the modal
+                    audioPlayerModal.classList.remove('hidden');
+
+                    // Play the audio
+                    audioPlayer.load();
+                    audioPlayer.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                }
+
+                // Close audio modal
+                closeAudioModalBtn.addEventListener('click', function() {
+                    audioPlayerModal.classList.add('hidden');
+                    audioPlayer.pause();
+                    audioPlayer.src = '';
+                });
+
+                // Close modal when clicking outside
+                audioPlayerModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        audioPlayerModal.classList.add('hidden');
+                        audioPlayer.pause();
+                        audioPlayer.src = '';
+                    }
+                });
 
                 // Event Listeners
                 prevPageBtn.addEventListener('click', function() {
