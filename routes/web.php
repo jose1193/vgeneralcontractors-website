@@ -106,6 +106,7 @@ Route::middleware([
     Route::get('/call-records', [App\Http\Controllers\CallRecordsController::class, 'index'])->name('call-records');
     Route::get('/api/call-records', [App\Http\Controllers\CallRecordsController::class, 'getCalls'])->name('api.call-records');
     Route::get('/api/call-records/{callId}', [App\Http\Controllers\CallRecordsController::class, 'getCallDetails'])->name('api.call-records.details');
+    Route::post('/api/call-records/clear-cache', [App\Http\Controllers\CallRecordsController::class, 'clearCallRecordsCache'])->name('api.call-records.clear-cache');
 
     // Appointment Resource Routes (CRUD)
     Route::prefix('appointments')->name('appointments.')->group(function () {
