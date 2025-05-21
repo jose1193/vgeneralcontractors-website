@@ -18,24 +18,8 @@
                 <div class="p-6">
                     <!-- Header Controls Row -->
                     <div class="flex flex-col sm:flex-row items-start justify-between mb-8 space-y-6 sm:space-y-0">
-                        <!-- Left side - Date Range + Search -->
+                        <!-- Left side - Search + Date Range -->
                         <div class="flex flex-col w-full sm:w-auto space-y-4">
-                            <!-- Date Range Button -->
-                            <div>
-                                <button id="date-range-btn"
-                                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                    <span id="date-range-text">Date Range</span>
-                                </button>
-                                <input type="hidden" id="start-date-input">
-                                <input type="hidden" id="end-date-input">
-                            </div>
-
                             <!-- Search Input -->
                             <div class="relative w-full sm:w-80">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -55,6 +39,31 @@
                                     </svg>
                                 </button>
                             </div>
+
+                            <!-- Date Range Button -->
+                            <div class="flex items-center space-x-2">
+                                <button id="date-range-btn"
+                                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    <span id="date-range-text">Date Range</span>
+                                </button>
+                                <button id="clear-date-range"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                                    <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    <span class="ml-1">Clear</span>
+                                </button>
+                                <input type="hidden" id="start-date-input">
+                                <input type="hidden" id="end-date-input">
+                            </div>
                         </div>
 
                         <!-- Right side - Per Page + Refresh -->
@@ -67,14 +76,7 @@
                                     <option value="50">50 per page</option>
                                     <option value="100">100 per page</option>
                                 </select>
-                                <div
-                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
+
                             </div>
 
                             <button id="refresh-btn"
@@ -89,20 +91,21 @@
                         </div>
                     </div>
 
-                    <!-- Loading Indicator -->
-                    <div id="loading-indicator" class="flex justify-center my-8 hidden">
-                        <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                            </path>
-                        </svg>
-                    </div>
-
                     <!-- Table Container -->
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto relative">
+                        <!-- Loading Indicator positioned over the table -->
+                        <div id="loading-indicator"
+                            class="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 z-10 hidden">
+                            <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </div>
+
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead>
                                 <tr class="text-center bg-gray-50 dark:bg-gray-800">
@@ -228,6 +231,7 @@
                 const prevPageBtn = document.getElementById('prev-page');
                 const nextPageBtn = document.getElementById('next-page');
                 const searchInput = document.getElementById('search-input');
+                const clearSearchBtn = document.getElementById('clear-search');
                 const perPageSelect = document.getElementById('per-page');
                 const refreshBtn = document.getElementById('refresh-btn');
                 const loadingIndicator = document.getElementById('loading-indicator');
@@ -242,6 +246,7 @@
                 const startDateInput = document.getElementById('start-date-input');
                 const endDateInput = document.getElementById('end-date-input');
                 const dateRangeBtn = document.getElementById('date-range-btn');
+                const clearDateRangeBtn = document.getElementById('clear-date-range');
 
                 // Initialize flatpickr calendar dropdown
                 const picker = flatpickr(dateRangeBtn, {
@@ -273,8 +278,8 @@
                     }
                 });
 
-                // Clear date filter with double click
-                dateRangeBtn.addEventListener('dblclick', function() {
+                // Clear date filter
+                clearDateRangeBtn.addEventListener('click', function() {
                     picker.clear();
                     startDate = '';
                     endDate = '';
@@ -282,6 +287,14 @@
                     endDateInput.value = '';
                     const dateRangeText = document.getElementById('date-range-text');
                     dateRangeText.textContent = 'Date Range';
+                    currentPage = 1;
+                    fetchCalls();
+                });
+
+                // Clear search input
+                clearSearchBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchTerm = '';
                     currentPage = 1;
                     fetchCalls();
                 });
@@ -416,13 +429,13 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                                                                                                <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                                </a>
-                                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                                        <a href="${call.recording_url}" target="_blank" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                                                                                                                                                                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                                                                                                                            </svg>
+                                                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                                                    ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -528,8 +541,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                                                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
-                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                                                    <p class="text-sm text-gray-500 dark:text-gray-400">${line}</p>
+                                                                                                                                                                                                                                `).join('')}
                             </div>
                         </div>
                     `;
@@ -541,15 +554,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                                                                                                            <div>
-                                                                                                                                                                                                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                                                                                                                </dt>
-                                                                                                                                                                                                                <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                                                                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                                                                                                                </dd>
-                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                                                                                                                                                                                                            ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                                                                                                                        </dt>
+                                                                                                                                                                                                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                                                                                                                                                                                                            ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                                                                                                                        </dd>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                `).join('')}
                             </dl>
                         </div>
                     `;
