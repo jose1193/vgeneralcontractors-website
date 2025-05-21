@@ -109,6 +109,16 @@ class CallRecordsController extends Controller
         $calls = $this->retellService->listCalls($filters);
         Log::info('Retrieved calls', ['count' => count($calls)]);
         
+        // Filtro de fechas en PHP para asegurar que funcione correctamente
+        if (isset($filters['time_range'])) {
+            $start = $filters['time_range']['start_timestamp'];
+            $end = $filters['time_range']['end_timestamp'];
+            $calls = collect($calls)->filter(function ($call) use ($start, $end) {
+                $ts = $call['start_timestamp'] ?? 0;
+                return $ts >= $start && $ts <= $end;
+            })->values()->all();
+        }
+        
         // Apply search filter in PHP if provided
         if (!empty($this->search)) {
             $searchTerm = strtolower($this->search);
