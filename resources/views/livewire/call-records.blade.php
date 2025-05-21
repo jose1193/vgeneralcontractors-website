@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="flex items-center space-x-4 w-full md:w-auto">
-                        <x-select-input-per-pages name="perPage" wireModel="perPage" class="w-32">
+                        <x-select-input-per-pages name="perPage" wireModel="perPage" class="w-48">
                             <option value="10">10 per page</option>
                             <option value="25">25 per page</option>
                             <option value="50">50 per page</option>
@@ -162,7 +162,7 @@
                 <div class="absolute inset-0 overflow-hidden">
                     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
                         <div class="pointer-events-auto w-screen max-w-2xl">
-                            <div class="flex h-full flex-col overflow-y-scroll bg-white dark:bg-gray-900 shadow-xl">
+                            <div class="flex h-full flex-col bg-white dark:bg-gray-900 shadow-xl">
                                 <div class="px-4 py-6 sm:px-6">
                                     <div class="flex items-start justify-between">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Call Details
@@ -178,7 +178,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                                <div class="relative mt-6 flex-1 px-4 sm:px-6 overflow-y-auto max-h-[calc(100vh-5rem)]">
                                     <div class="space-y-6">
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
