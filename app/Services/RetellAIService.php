@@ -23,12 +23,24 @@ class RetellAIService
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
             ])->get($this->baseUrl . '/list-voices');
+
+            if (!$response->successful()) {
+                Log::error('RetellAI API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->json()
+                ]);
+                return [];
+            }
 
             return $response->json();
         } catch (\Exception $e) {
-            Log::error('RetellAI - Error listing voices: ' . $e->getMessage());
-            throw $e;
+            Log::error('RetellAI - Error listing voices', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return [];
         }
     }
 
@@ -40,12 +52,24 @@ class RetellAIService
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
             ])->get($this->baseUrl . '/get-voice/' . $voiceId);
+
+            if (!$response->successful()) {
+                Log::error('RetellAI API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->json()
+                ]);
+                return null;
+            }
 
             return $response->json();
         } catch (\Exception $e) {
-            Log::error('RetellAI - Error getting voice: ' . $e->getMessage());
-            throw $e;
+            Log::error('RetellAI - Error getting voice', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
         }
     }
 
@@ -110,29 +134,62 @@ class RetellAIService
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
-            ])->post($this->baseUrl . '/list-calls', $filters);
+                'Content-Type' => 'application/json',
+            ])->post($this->baseUrl . '/list-calls', [
+                'limit' => 100,
+                'offset' => 0,
+                'filters' => $filters
+            ]);
 
-            return $response->json();
+            if (!$response->successful()) {
+                Log::error('RetellAI API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->json()
+                ]);
+                return [];
+            }
+
+            $data = $response->json();
+            Log::info('RetellAI API Response', ['data' => $data]);
+
+            // Asegurarse de que tenemos un array de llamadas
+            return is_array($data) ? $data : [];
+
         } catch (\Exception $e) {
-            Log::error('RetellAI - Error listing calls: ' . $e->getMessage());
-            throw $e;
+            Log::error('RetellAI - Error listing calls', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return [];
         }
     }
 
     /**
-     * Get call details
+     * Get a specific call
      */
     public function getCall($callId)
     {
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
             ])->get($this->baseUrl . '/get-call/' . $callId);
+
+            if (!$response->successful()) {
+                Log::error('RetellAI API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->json()
+                ]);
+                return null;
+            }
 
             return $response->json();
         } catch (\Exception $e) {
-            Log::error('RetellAI - Error getting call details: ' . $e->getMessage());
-            throw $e;
+            Log::error('RetellAI - Error getting call', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
         }
     }
 } 
