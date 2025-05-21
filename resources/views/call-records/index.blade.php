@@ -79,15 +79,6 @@
 
                             </div>
 
-                            <button id="clear-cache-btn"
-                                class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition ease-in-out duration-150">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                                CLEAR CACHE
-                            </button>
-
                             <button id="refresh-btn"
                                 class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,16 +318,6 @@
 
                             // Reset to page 1 and fetch calls
                             currentPage = 1;
-
-                            console.log('Date picker selected:', {
-                                startDate: startDate,
-                                endDate: endDate,
-                                startFormatted: startFormatted,
-                                endFormatted: endFormatted
-                            });
-
-                            // Close the picker and trigger a fetch
-                            picker.close();
                             fetchCalls();
                         }
                     }
@@ -434,16 +415,9 @@
                     if (startDate && endDate) {
                         params.append('start_date', startDate);
                         params.append('end_date', endDate);
-                        console.log('Date range parameters:', {
-                            startDate,
-                            endDate
-                        });
                     }
 
-                    const requestUrl = `/api/call-records?${params.toString()}`;
-                    console.log('Fetching calls with URL:', requestUrl);
-
-                    fetch(requestUrl)
+                    fetch(`/api/call-records?${params.toString()}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
@@ -525,27 +499,27 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                    <div class="audio-controls relative group">
-                                                                                                                                        <button data-audio-url="${call.recording_url}" class="play-audio-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
-                                                                                                                                                                                                                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                                                                                                                                            </svg>
-                                                                                                                                        </button>
-                                                                                                                                        <!-- Tooltip for download - Comentado para uso futuro
-                                                                                                                                        <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-150 ease-in-out z-10">
-                                                                                                                                            <div class="py-1">
-                                                                                                                                                <a href="${call.recording_url}" download class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                                                                                                                    <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                                                                                                                                    </svg>
-                                                                                                                                                    Download Audio
-                                                                                                                                                </a>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        -->
-                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    ` : ''}
+                                                                                                            <div class="audio-controls relative group">
+                                                                                                                <button data-audio-url="${call.recording_url}" class="play-audio-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
+                                                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                                                                                                                    </svg>
+                                                                                                                </button>
+                                                                                                                <!-- Tooltip for download - Comentado para uso futuro
+                                                                                                                <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-150 ease-in-out z-10">
+                                                                                                                    <div class="py-1">
+                                                                                                                        <a href="${call.recording_url}" download class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                                                                            <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                                                                                                            </svg>
+                                                                                                                            Download Audio
+                                                                                                                        </a>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                -->
+                                                                                                            </div>
+                                                                                                                                                                                                                            ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -659,8 +633,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                                                                                                        <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
-                                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
+                                                                                                                                                                                                                        `).join('')}
                             </div>
                         </div>
                     `;
@@ -672,15 +646,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                                                                                                                                                                                                                                            ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                                                                                                                                                        </dt>
-                                                                                                                                                                                                            <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
-                                                                                                                                                                                                                                                            ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                                                                                                                                                        </dd>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                `).join('')}
+                                                                                                                                                                                                                            <div>
+                                                                                                                                                                                    <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                                                                                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                                                                                                                </dt>
+                                                                                                                                                                                    <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
+                                                                                                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                                                                                                                </dd>
+                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                        `).join('')}
                             </dl>
                         </div>
                     `;
@@ -764,19 +738,6 @@
 
                 refreshBtn.addEventListener('click', function() {
                     fetchCalls();
-                });
-
-                // Clear cache button
-                document.getElementById('clear-cache-btn').addEventListener('click', function() {
-                    fetch('/api/call-records/clear-cache')
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Cache cleared:', data);
-                            fetchCalls();
-                        })
-                        .catch(error => {
-                            console.error('Error clearing cache:', error);
-                        });
                 });
 
                 sortHeaders.forEach(header => {

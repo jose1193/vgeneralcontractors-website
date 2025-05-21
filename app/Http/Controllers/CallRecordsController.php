@@ -40,20 +40,7 @@ class CallRecordsController extends Controller
             $this->perPage = $request->input('per_page', 10);
             
             $page = $request->input('page', 1);
-            
-            // Add date parameters to cache key if present
-            $dateParams = '';
-            if ($request->has('start_date') && $request->has('end_date')) {
-                $dateParams = '_' . $request->start_date . '_' . $request->end_date;
-                
-                // Log date parameters for debugging
-                Log::info('Date filter parameters', [
-                    'start_date' => $request->start_date,
-                    'end_date' => $request->end_date
-                ]);
-            }
-            
-            $cacheKey = $this->generateCacheKey('call_records' . $dateParams, $page);
+            $cacheKey = $this->generateCacheKey('call_records', $page);
             
             // Use cache to improve performance
             $response = Cache::remember($cacheKey, 15, function() use ($request, $page) {
@@ -87,14 +74,6 @@ class CallRecordsController extends Controller
             
             $startDate = $request->start_date;
             $endDate = $request->end_date;
-            
-            // Log date parsing for debugging
-            Log::info('Processing date range', [
-                'raw_start_date' => $startDate,
-                'raw_end_date' => $endDate,
-                'parsed_start' => Carbon::parse($startDate)->startOfDay()->toDateTimeString(),
-                'parsed_end' => Carbon::parse($endDate)->endOfDay()->toDateTimeString()
-            ]);
             
             // Validate that end date isn't before start date
             if (strtotime($endDate) < strtotime($startDate)) {
@@ -234,21 +213,7 @@ class CallRecordsController extends Controller
      */
     public function clearCallRecordsCache()
     {
-        // Get cache pattern and log clearing attempt
-        Log::info('Clearing call records cache');
-        
-        // Clear base cache pattern
         $this->clearCache('call_records');
-        
-        // Clear any cache keys with date parameters by using a wildcard pattern
-        $pattern = 'call_records_*';
-        $deleted = Cache::forget($pattern);
-        
-        Log::info('Cache clearing result', [
-            'base_pattern_cleared' => true,
-            'date_patterns_cleared' => $deleted
-        ]);
-        
         return response()->json(['success' => true, 'message' => 'Call records cache cleared']);
     }
 } 
