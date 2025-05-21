@@ -88,16 +88,6 @@
                                 </svg>
                                 REFRESH LIST
                             </button>
-
-                            <button id="clear-cache-btn"
-                                class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition ease-in-out duration-150">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                    </path>
-                                </svg>
-                                CLEAR CACHE
-                            </button>
                         </div>
                     </div>
 
@@ -326,26 +316,9 @@
                             // Show the clear button when date range is selected
                             clearDateRangeBtn.classList.remove('hidden');
 
-                            // Clear cache before fetching new filtered data
-                            fetch('/api/call-records/clear-cache')
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response.json();
-                                })
-                                .then(() => {
-                                    console.log('Cache cleared before date filter');
-                                    // Reset to page 1 and fetch calls
-                                    currentPage = 1;
-                                    fetchCalls();
-                                })
-                                .catch(error => {
-                                    console.error('Error clearing cache:', error);
-                                    // Still try to fetch calls if cache clear fails
-                                    currentPage = 1;
-                                    fetchCalls();
-                                });
+                            // Reset to page 1 and fetch calls
+                            currentPage = 1;
+                            fetchCalls();
                         }
                     }
                 });
@@ -363,25 +336,8 @@
                     // Hide the clear button when date range is cleared
                     clearDateRangeBtn.classList.add('hidden');
 
-                    // Clear cache when removing date filter
-                    fetch('/api/call-records/clear-cache')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(() => {
-                            console.log('Cache cleared after removing date filter');
-                            currentPage = 1;
-                            fetchCalls();
-                        })
-                        .catch(error => {
-                            console.error('Error clearing cache:', error);
-                            // Still try to fetch calls if cache clear fails
-                            currentPage = 1;
-                            fetchCalls();
-                        });
+                    currentPage = 1;
+                    fetchCalls();
                 });
 
                 // Clear search input
@@ -461,11 +417,7 @@
                         params.append('end_date', endDate);
                     }
 
-                    // Log the complete URL for debugging
-                    const requestURL = `/api/call-records?${params.toString()}`;
-                    console.log('Fetching calls with params:', requestURL);
-
-                    fetch(requestURL)
+                    fetch(`/api/call-records?${params.toString()}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
@@ -473,7 +425,6 @@
                             return response.json();
                         })
                         .then(data => {
-                            console.log('Received data:', data);
                             renderTable(data);
                             updatePagination(data);
                             showLoading(false);
@@ -548,27 +499,27 @@
                                         View Details
                                     </button>
                                     ${call.recording_url ? `
-                                                                                                                                                                                            <div class="audio-controls relative group">
-                                                                                                                                                                                                <button data-audio-url="${call.recording_url}" class="play-audio-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
-                                                                                                                                                                                                                                                                                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                                                                                                                                                                                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                                                                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                </button>
-                                                                                                                                                                                                <!-- Tooltip for download - Comentado para uso futuro
-                                                                                                                                                                                                <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-150 ease-in-out z-10">
-                                                                                                                                                                                                    <div class="py-1">
-                                                                                                                                                                                                        <a href="${call.recording_url}" download class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                                                                                                                                                                            <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                                                                                                                                                                                            </svg>
-                                                                                                                                                                                                            Download Audio
-                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                </div>
-                                                                                                                                                                                                -->
-                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                            ` : ''}
+                                                                                                                    <div class="audio-controls relative group">
+                                                                                                                        <button data-audio-url="${call.recording_url}" class="play-audio-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center">
+                                                                                                                                                                                                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                                                                                                                                                                                            </svg>
+                                                                                                                        </button>
+                                                                                                                        <!-- Tooltip for download - Comentado para uso futuro
+                                                                                                                        <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-150 ease-in-out z-10">
+                                                                                                                            <div class="py-1">
+                                                                                                                                <a href="${call.recording_url}" download class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                                                                                    <svg class="inline-block w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                                                                                                                    </svg>
+                                                                                                                                    Download Audio
+                                                                                                                                </a>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        -->
+                                                                                                                    </div>
+                                                                                                                                                                                                                                    ` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -682,8 +633,8 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Transcript</h3>
                             <div class="mt-2 space-y-4">
                                 ${call.transcript.split('\n').map(line => `
-                                                                                                                                                                                                                                                                <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
-                                                                                                                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                        <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
+                                                                                                                                                                                                                                `).join('')}
                             </div>
                         </div>
                     `;
@@ -695,15 +646,15 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Additional Information</h3>
                             <dl class="mt-2 space-y-2">
                                 ${Object.entries(call.metadata).map(([key, value]) => `
-                                                                                                                                                                                                                                                                                                            <div>
-                                                                                                                                                                                                                                                                    <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                                                                                                                                                                                                                                                                                                    ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
-                                                                                                                                                                                                                                                                                                                </dt>
-                                                                                                                                                                                                                                                                    <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
-                                                                                                                                                                                                                                                                                                                    ${typeof value === 'object' ? JSON.stringify(value) : value}
-                                                                                                                                                                                                                                                                                                                </dd>
-                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                        `).join('')}
+                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                            <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                                                                                                                                                                                                                            ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                                                                                                                                                                                                        </dt>
+                                                                                                                                                                                            <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
+                                                                                                                                                                                                                                            ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                                                                                                                                                                                                        </dd>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                `).join('')}
                             </dl>
                         </div>
                     `;
@@ -787,51 +738,6 @@
 
                 refreshBtn.addEventListener('click', function() {
                     fetchCalls();
-                });
-
-                // Clear Cache button handler
-                document.getElementById('clear-cache-btn').addEventListener('click', function() {
-                    showLoading(true);
-                    fetch('/api/call-records/clear-cache')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            console.log('Cache cleared manually:', data);
-                            // Show a temporary success notification
-                            const notification = document.createElement('div');
-                            notification.className =
-                                'fixed top-4 right-4 px-4 py-2 bg-green-500 text-white rounded shadow-lg z-50';
-                            notification.textContent = 'Cache cleared successfully';
-                            document.body.appendChild(notification);
-
-                            // Remove notification after 3 seconds
-                            setTimeout(() => {
-                                notification.remove();
-                            }, 3000);
-
-                            // Refresh data
-                            fetchCalls();
-                        })
-                        .catch(error => {
-                            console.error('Error clearing cache:', error);
-                            // Show error notification
-                            const notification = document.createElement('div');
-                            notification.className =
-                                'fixed top-4 right-4 px-4 py-2 bg-red-500 text-white rounded shadow-lg z-50';
-                            notification.textContent = 'Error clearing cache: ' + error.message;
-                            document.body.appendChild(notification);
-
-                            // Remove notification after 3 seconds
-                            setTimeout(() => {
-                                notification.remove();
-                            }, 3000);
-
-                            showLoading(false);
-                        });
                 });
 
                 sortHeaders.forEach(header => {

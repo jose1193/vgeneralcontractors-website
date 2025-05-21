@@ -36,11 +36,6 @@ class ProcessNewCall implements ShouldQueue
             } else {
                 Log::warning('Could not find admin email address in EmailData table.');
             }
-            
-            // Clear the calls cache to ensure fresh data appears on dashboard
-            app(\App\Http\Controllers\CallRecordsController::class)->clearCallRecordsCache();
-            Log::info('Call records cache cleared after new call processing');
-            
         } catch (\Exception $e) {
             Log::error('Error sending call notification: ' . $e->getMessage());
         }
