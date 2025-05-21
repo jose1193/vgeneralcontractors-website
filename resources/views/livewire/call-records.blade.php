@@ -1,5 +1,9 @@
 <div>
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        @php
+            use App\Helpers\PhoneHelper;
+        @endphp
+
         @if (session()->has('message'))
             <x-alerts.success :message="session('message')" />
         @endif
@@ -10,11 +14,12 @@
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
             <div class="p-6">
                 <div
-                    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
-                    <x-input-search />
+                    class="flex flex-col md:flex-row justify-center items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="w-full md:w-1/3">
+                        <x-input-search />
+                    </div>
 
-                    <div
-                        class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
                         <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32">
                             <option value="10">10 per page</option>
                             <option value="25">25 per page</option>
@@ -29,7 +34,7 @@
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                 </path>
                             </svg>
-                            Sync Calls
+                            Refresh List
                         </button>
                     </div>
                 </div>
@@ -37,9 +42,9 @@
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
-                            <tr>
+                            <tr class="text-center bg-gray-50 dark:bg-gray-800">
                                 <th wire:click="sort('start_timestamp')"
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer bg-gray-100 dark:bg-gray-700">
                                     Date/Time
                                     @if ($sortField === 'start_timestamp')
                                         @if ($sortDirection === 'asc')
@@ -50,28 +55,28 @@
                                     @endif
                                 </th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     From</th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     To</th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     Duration</th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     Status</th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     Sentiment</th>
                                 <th
-                                    class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    class="px-6 py-3 text-xs leading-4 font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700">
                                     Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse ($callRecords as $call)
-                                <tr>
+                                <tr class="text-center">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if (isset($call['start_timestamp']))
                                             {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('Y-m-d H:i:s') }}
@@ -79,8 +84,12 @@
                                             N/A
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4">{{ $call['from_number'] ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4">{{ $call['to_number'] ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4">
+                                        {{ isset($call['from_number']) ? PhoneHelper::format($call['from_number']) : 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ isset($call['to_number']) ? PhoneHelper::format($call['to_number']) : 'N/A' }}
+                                    </td>
                                     <td class="px-6 py-4">
                                         {{ isset($call['duration_ms']) ? round($call['duration_ms'] / 1000) . 's' : 'N/A' }}
                                     </td>
@@ -112,24 +121,27 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium">
-                                        <button wire:click="showCallDetails('{{ $call['call_id'] ?? '' }}')"
-                                            class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
-                                            View Details
-                                        </button>
-                                        @if (isset($call['recording_url']) && $call['recording_url'])
-                                            <a href="{{ $call['recording_url'] }}" target="_blank"
-                                                class="ml-4 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
-                                                    </path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                            </a>
-                                        @endif
+                                        <div class="flex justify-center space-x-4">
+                                            <button wire:click="showCallDetails('{{ $call['call_id'] ?? '' }}')"
+                                                class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                                View Details
+                                            </button>
+                                            @if (isset($call['recording_url']) && $call['recording_url'])
+                                                <a href="{{ $call['recording_url'] }}" target="_blank"
+                                                    class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                                                        </path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                        </path>
+                                                    </svg>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -143,7 +155,7 @@
                     </table>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 flex justify-center">
                     {{ $callRecords->links() }}
                 </div>
             </div>
@@ -174,6 +186,22 @@
                                 </div>
                                 <div class="relative mt-6 flex-1 px-4 sm:px-6">
                                     <div class="space-y-6">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">From
+                                                </h3>
+                                                <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                    {{ isset($selectedCall['from_number']) ? PhoneHelper::format($selectedCall['from_number']) : 'N/A' }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">To</h3>
+                                                <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                                                    {{ isset($selectedCall['to_number']) ? PhoneHelper::format($selectedCall['to_number']) : 'N/A' }}
+                                                </p>
+                                            </div>
+                                        </div>
+
                                         @if (isset($selectedCall['call_analysis']) && isset($selectedCall['call_analysis']['call_summary']))
                                             <div>
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Summary

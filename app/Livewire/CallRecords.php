@@ -19,7 +19,7 @@ class CallRecords extends Component
     public $sortDirection = 'desc';
     public $selectedCall = null;
     public $showTranscript = false;
-    public $calls = []; // Cambiado a public para debugging
+    public $calls = [];
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -39,7 +39,6 @@ class CallRecords extends Component
         $filteredCalls = $this->filterAndSortCalls();
         $paginatedCalls = $this->paginateCalls($filteredCalls);
 
-        // Log para debugging
         Log::info('Rendering calls:', [
             'total_calls' => count($this->calls),
             'filtered_calls' => $filteredCalls->count(),
@@ -58,32 +57,26 @@ class CallRecords extends Component
             $retellService = new RetellAIService();
             $apiResponse = $retellService->listCalls();
             
-            // Log de la respuesta de la API
-            Log::info('API Response:', ['response' => $apiResponse]);
-
-            // Asegurarse de que la respuesta sea un array y convertirla a collection
-            if (is_array($apiResponse)) {
-                $this->calls = collect($apiResponse);
-                Log::info('Calls loaded successfully', ['count' => $this->calls->count()]);
-            } else {
-                Log::warning('API response is not an array', ['type' => gettype($apiResponse)]);
-                $this->calls = collect([]);
+            $this->calls = collect($apiResponse);
+            
+            if ($this->calls->isEmpty()) {
+                Log::info('No calls found in API response');
             }
-
-            session()->flash('message', 'Call records loaded successfully.');
+            
+            session()->flash('message', 'Calls loaded successfully.');
         } catch (\Exception $e) {
             Log::error('Error loading calls from RetellAI', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            session()->flash('error', 'Error loading call records: ' . $e->getMessage());
+            session()->flash('error', 'Error loading calls: ' . $e->getMessage());
             $this->calls = collect([]);
         }
     }
 
     protected function filterAndSortCalls()
     {
-        $filtered = collect($this->calls)
+        return collect($this->calls)
             ->when($this->search, function ($collection) {
                 return $collection->filter(function ($call) {
                     $searchLower = strtolower($this->search);
@@ -92,22 +85,10 @@ class CallRecords extends Component
                         str_contains(strtolower($call['to_number'] ?? ''), $searchLower) ||
                         str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), $searchLower);
                 });
+            })
+            ->when($this->sortField, function ($collection) {
+                return $collection->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection === 'desc');
             });
-
-        // Log para debugging del filtrado
-        Log::info('Filtering calls:', [
-            'before_filter' => count($this->calls),
-            'after_filter' => $filtered->count(),
-            'search_term' => $this->search
-        ]);
-
-        if ($this->sortField) {
-            $filtered = $filtered->sortBy(function ($call) {
-                return $call[$this->sortField] ?? '';
-            }, SORT_REGULAR, $this->sortDirection === 'desc');
-        }
-
-        return $filtered;
     }
 
     protected function paginateCalls($calls)
@@ -130,7 +111,7 @@ class CallRecords extends Component
 
     public function showCallDetails($callId)
     {
-        Log::info('Showing call details', ['call_id' => $callId, 'total_calls' => count($this->calls)]);
+        Log::info('Showing call details', ['call_id' => $callId]);
         
         $this->selectedCall = collect($this->calls)->first(function ($call) use ($callId) {
             return isset($call['call_id']) && $call['call_id'] == $callId;
@@ -140,7 +121,7 @@ class CallRecords extends Component
             Log::info('Call found', ['call' => $this->selectedCall]);
             $this->showTranscript = true;
         } else {
-            Log::warning('Call not found', ['call_id' => $callId, 'available_ids' => collect($this->calls)->pluck('call_id')]);
+            Log::warning('Call not found', ['call_id' => $callId]);
             session()->flash('error', 'Call record not found.');
         }
     }
