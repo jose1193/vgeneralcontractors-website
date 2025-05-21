@@ -4,9 +4,6 @@
             use App\Helpers\PhoneHelper;
         @endphp
 
-        @if (session()->has('message'))
-            <x-alerts.success :message="session('message')" />
-        @endif
         @if (session()->has('error'))
             <x-alerts.error :message="session('error')" />
         @endif
@@ -14,13 +11,13 @@
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
             <div class="p-6">
                 <div
-                    class="flex flex-col md:flex-row justify-center items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+                    class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 mb-4">
                     <div class="w-full md:w-1/3">
                         <x-input-search />
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                        <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32">
+                    <div class="flex items-center space-x-4">
+                        <x-select-input-per-pages name="perPage" wireModel="perPage" class="w-32">
                             <option value="10">10 per page</option>
                             <option value="25">25 per page</option>
                             <option value="50">50 per page</option>
