@@ -4,9 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\CallRecord;
 use App\Services\RetellAIService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CallRecords extends Component
 {
@@ -18,6 +19,7 @@ class CallRecords extends Component
     public $sortDirection = 'desc';
     public $selectedCall = null;
     public $showTranscript = false;
+    public $calls = [];
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -28,60 +30,57 @@ class CallRecords extends Component
 
     public function mount()
     {
-        $this->syncCallsWithRetellAI();
+        $this->loadCallsFromAPI();
     }
 
     public function render()
     {
-        $query = CallRecord::query()
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('from_number', 'like', '%' . $this->search . '%')
-                        ->orWhere('to_number', 'like', '%' . $this->search . '%')
-                        ->orWhere('call_summary', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->orderBy($this->sortField, $this->sortDirection);
+        $filteredCalls = $this->filterAndSortCalls();
+        $paginatedCalls = $this->paginateCalls($filteredCalls);
 
         return view('livewire.call-records', [
-            'calls' => $query->paginate($this->perPage)
+            'calls' => $paginatedCalls
         ]);
     }
 
-    public function syncCallsWithRetellAI()
+    protected function loadCallsFromAPI()
     {
         try {
             $retellService = new RetellAIService();
-            $calls = $retellService->listCalls();
-
-            foreach ($calls as $call) {
-                CallRecord::updateOrCreate(
-                    ['call_id' => $call['call_id']],
-                    [
-                        'user_id' => auth()->id(),
-                        'agent_id' => $call['agent_id'],
-                        'from_number' => $call['from_number'],
-                        'to_number' => $call['to_number'],
-                        'direction' => $call['direction'],
-                        'call_status' => $call['call_status'],
-                        'start_timestamp' => $call['start_timestamp'],
-                        'end_timestamp' => $call['end_timestamp'],
-                        'duration_ms' => $call['duration_ms'],
-                        'transcript' => $call['transcript'],
-                        'recording_url' => $call['recording_url'],
-                        'call_summary' => $call['call_analysis']['call_summary'] ?? null,
-                        'user_sentiment' => $call['call_analysis']['user_sentiment'] ?? null,
-                        'call_successful' => $call['call_analysis']['call_successful'] ?? false,
-                        'metadata' => $call['metadata'],
-                    ]
-                );
-            }
-
-            session()->flash('message', 'Call records synchronized successfully.');
+            $this->calls = collect($retellService->listCalls());
+            session()->flash('message', 'Call records loaded successfully.');
         } catch (\Exception $e) {
-            Log::error('Error syncing calls with RetellAI: ' . $e->getMessage());
-            session()->flash('error', 'Error synchronizing call records.');
+            Log::error('Error loading calls from RetellAI: ' . $e->getMessage());
+            session()->flash('error', 'Error loading call records.');
+            $this->calls = collect([]);
         }
+    }
+
+    protected function filterAndSortCalls()
+    {
+        return $this->calls
+            ->when($this->search, function ($collection) {
+                return $collection->filter(function ($call) {
+                    return str_contains(strtolower($call['from_number']), strtolower($this->search)) ||
+                           str_contains(strtolower($call['to_number']), strtolower($this->search)) ||
+                           str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), strtolower($this->search));
+                });
+            })
+            ->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection === 'desc');
+    }
+
+    protected function paginateCalls($calls)
+    {
+        $page = $this->page ?? 1;
+        $items = $calls->forPage($page, $this->perPage);
+        
+        return new LengthAwarePaginator(
+            $items,
+            $calls->count(),
+            $this->perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
     }
 
     public function sort($field)
@@ -96,7 +95,7 @@ class CallRecords extends Component
 
     public function showCallDetails($callId)
     {
-        $this->selectedCall = CallRecord::where('call_id', $callId)->first();
+        $this->selectedCall = $this->calls->firstWhere('call_id', $callId);
         $this->showTranscript = true;
     }
 
@@ -108,6 +107,6 @@ class CallRecords extends Component
 
     public function refreshCallList()
     {
-        $this->syncCallsWithRetellAI();
+        $this->loadCallsFromAPI();
     }
 } 

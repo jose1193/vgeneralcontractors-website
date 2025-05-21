@@ -73,35 +73,35 @@
                             @forelse ($calls as $call)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $call->start_timestamp->format('Y-m-d H:i:s') }}
+                                        {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('Y-m-d H:i:s') }}
                                     </td>
-                                    <td class="px-6 py-4">{{ $call->from_number }}</td>
-                                    <td class="px-6 py-4">{{ $call->to_number }}</td>
-                                    <td class="px-6 py-4">{{ round($call->duration_ms / 1000) }}s</td>
+                                    <td class="px-6 py-4">{{ $call['from_number'] }}</td>
+                                    <td class="px-6 py-4">{{ $call['to_number'] }}</td>
+                                    <td class="px-6 py-4">{{ round($call['duration_ms'] / 1000) }}s</td>
                                     <td class="px-6 py-4">
                                         <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $call->call_successful ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $call->call_status }}
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $call['call_analysis']['call_successful'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $call['call_status'] }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            @if ($call->user_sentiment === 'Positive') bg-emerald-100 text-emerald-800
-                                            @elseif($call->user_sentiment === 'Negative')
+                                            @if (($call['call_analysis']['user_sentiment'] ?? '') === 'Positive') bg-emerald-100 text-emerald-800
+                                            @elseif(($call['call_analysis']['user_sentiment'] ?? '') === 'Negative')
                                                 bg-rose-100 text-rose-800
                                             @else
                                                 bg-slate-100 text-slate-800 @endif">
-                                            {{ $call->user_sentiment ?? 'Unknown' }}
+                                            {{ $call['call_analysis']['user_sentiment'] ?? 'Unknown' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium">
-                                        <button wire:click="showCallDetails('{{ $call->call_id }}')"
+                                        <button wire:click="showCallDetails('{{ $call['call_id'] }}')"
                                             class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
                                             View Details
                                         </button>
-                                        @if ($call->recording_url)
-                                            <a href="{{ $call->recording_url }}" target="_blank"
+                                        @if (isset($call['recording_url']))
+                                            <a href="{{ $call['recording_url'] }}" target="_blank"
                                                 class="ml-4 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -158,12 +158,13 @@
                                 </div>
                                 <div class="relative mt-6 flex-1 px-4 sm:px-6">
                                     <div class="space-y-6">
-                                        @if ($selectedCall->call_summary)
+                                        @if (isset($selectedCall['call_analysis']['call_summary']))
                                             <div>
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Summary
                                                 </h3>
                                                 <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    {{ $selectedCall->call_summary }}</p>
+                                                    {{ $selectedCall['call_analysis']['call_summary'] }}
+                                                </p>
                                             </div>
                                         @endif
 
@@ -171,23 +172,24 @@
                                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Transcript
                                             </h3>
                                             <div class="mt-2 space-y-4">
-                                                @foreach (explode("\n", $selectedCall->transcript) as $line)
+                                                @foreach (explode("\n", $selectedCall['transcript']) as $line)
                                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         {{ $line }}</p>
                                                 @endforeach
                                             </div>
                                         </div>
 
-                                        @if ($selectedCall->metadata)
+                                        @if (isset($selectedCall['metadata']) && !empty($selectedCall['metadata']))
                                             <div>
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                                     Additional Information</h3>
                                                 <dl class="mt-2 space-y-2">
-                                                    @foreach ($selectedCall->metadata as $key => $value)
+                                                    @foreach ($selectedCall['metadata'] as $key => $value)
                                                         <div>
                                                             <dt
                                                                 class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                                {{ ucfirst(str_replace('_', ' ', $key)) }}</dt>
+                                                                {{ ucfirst(str_replace('_', ' ', $key)) }}
+                                                            </dt>
                                                             <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
                                                                 {{ is_array($value) ? json_encode($value) : $value }}
                                                             </dd>
