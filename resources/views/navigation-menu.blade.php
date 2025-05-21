@@ -108,6 +108,13 @@
                                                 {{ __('Service Categories') }}
                                             </a>
                                         @endcan
+
+                                        @can('READ_USER')
+                                            <a href="{{ route('call-records') }}"
+                                                class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('call-records') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
+                                                {{ __('Call Records') }}
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
@@ -418,6 +425,12 @@
                         <x-responsive-nav-link href="{{ route('service-categories') }}" :active="request()->routeIs('service-categories')"
                             class="pl-8">
                             {{ __('Service Categories') }}
+                        </x-responsive-nav-link>
+                    @endcan
+
+                    @can('READ_USER')
+                        <x-responsive-nav-link href="{{ route('call-records') }}" :active="request()->routeIs('call-records')" class="pl-8">
+                            {{ __('Call Records') }}
                         </x-responsive-nav-link>
                     @endcan
                 </div>

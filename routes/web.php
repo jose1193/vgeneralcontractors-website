@@ -102,6 +102,11 @@ Route::middleware([
         return view('posts');
     })->name('admin.posts');
 
+    // Call Records Route
+    Route::get('/call-records', function () {
+        return view('call-records');
+    })->name('call-records');
+
     // Appointment Resource Routes (CRUD)
     Route::prefix('appointments')->name('appointments.')->group(function () {
         Route::get('/', [AppointmentController::class, 'index'])->name('index');

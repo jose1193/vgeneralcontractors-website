@@ -61,4 +61,8 @@ return [
         'api_key' => env('FACEBOOK_LEAD_API_KEY', 'v3KQ7bHcP8fLTjGxE5mRnZ2sAyXu6pDwY9NVtJW4qrMzF'),
     ],
 
+    'retellai' => [
+        'api_key' => env('RETELL_AI_API_KEY'),
+    ],
+
 ];

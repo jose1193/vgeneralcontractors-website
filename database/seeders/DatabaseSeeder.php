@@ -174,7 +174,7 @@ class DatabaseSeeder extends Seeder
         $emailsData = [
             [
                 'description' => 'Correo para colecciones y pagos',
-                'email' => 'collections@vgeneralcontractors.com',
+                'email' => 'collection@vgeneralcontractors.com',
                 'phone' => '+17133646240',
                 'type' => 'Collections',
                 'user_id' => $adminUser->id,
