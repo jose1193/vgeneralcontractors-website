@@ -73,24 +73,33 @@
                             @forelse ($calls as $call)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ \Carbon\Carbon::parse($call['start_timestamp'] ?? '')->format('Y-m-d H:i:s') }}
+                                        @if (isset($call['start_timestamp']))
+                                            {{ \Carbon\Carbon::parse($call['start_timestamp'])->format('Y-m-d H:i:s') }}
+                                        @else
+                                            N/A
+                                        @endif
                                     </td>
-                                    <td class="px-6 py-4">{{ $call['from_number'] ?? '' }}</td>
-                                    <td class="px-6 py-4">{{ $call['to_number'] ?? '' }}</td>
+                                    <td class="px-6 py-4">{{ $call['from_number'] ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4">{{ $call['to_number'] ?? 'N/A' }}</td>
                                     <td class="px-6 py-4">
-                                        {{ isset($call['duration_ms']) ? round($call['duration_ms'] / 1000) . 's' : '-' }}
+                                        {{ isset($call['duration_ms']) ? round($call['duration_ms'] / 1000) . 's' : 'N/A' }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ isset($call['call_analysis']) && ($call['call_analysis']['call_successful'] ?? false) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {{ isset($call['call_analysis']) && ($call['call_analysis']['call_successful'] ?? false)
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800' }}">
                                             {{ $call['call_status'] ?? 'Unknown' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
                                         @php
-                                            $sentiment = isset($call['call_analysis'])
-                                                ? $call['call_analysis']['user_sentiment'] ?? ''
-                                                : '';
+                                            $sentiment =
+                                                isset($call['call_analysis']) &&
+                                                isset($call['call_analysis']['user_sentiment'])
+                                                    ? $call['call_analysis']['user_sentiment']
+                                                    : null;
                                         @endphp
                                         <span
                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -99,7 +108,7 @@
                                                 bg-rose-100 text-rose-800
                                             @else
                                                 bg-slate-100 text-slate-800 @endif">
-                                            {{ $sentiment ?: 'Unknown' }}
+                                            {{ $sentiment ?? 'Unknown' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium">

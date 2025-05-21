@@ -19,7 +19,7 @@ class CallRecords extends Component
     public $sortDirection = 'desc';
     public $selectedCall = null;
     public $showTranscript = false;
-    protected $calls = [];
+    public $calls = []; // Cambiado a public para debugging
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -38,6 +38,14 @@ class CallRecords extends Component
         $filteredCalls = $this->filterAndSortCalls();
         $paginatedCalls = $this->paginateCalls($filteredCalls);
 
+        // Log para debugging
+        Log::info('Rendering calls:', [
+            'total_calls' => count($this->calls),
+            'filtered_calls' => $filteredCalls->count(),
+            'paginated_calls' => $paginatedCalls->count(),
+            'current_page' => $paginatedCalls->currentPage(),
+        ]);
+
         return view('livewire.call-records', [
             'calls' => $paginatedCalls
         ]);
@@ -49,16 +57,24 @@ class CallRecords extends Component
             $retellService = new RetellAIService();
             $apiResponse = $retellService->listCalls();
             
-            // Asegurarse de que la respuesta sea un array
-            $this->calls = is_array($apiResponse) ? collect($apiResponse) : collect([]);
-            
-            if ($this->calls->isEmpty()) {
-                Log::info('No call records found in API response');
+            // Log de la respuesta de la API
+            Log::info('API Response:', ['response' => $apiResponse]);
+
+            // Asegurarse de que la respuesta sea un array y convertirla a collection
+            if (is_array($apiResponse)) {
+                $this->calls = collect($apiResponse);
+                Log::info('Calls loaded successfully', ['count' => $this->calls->count()]);
+            } else {
+                Log::warning('API response is not an array', ['type' => gettype($apiResponse)]);
+                $this->calls = collect([]);
             }
-            
+
             session()->flash('message', 'Call records loaded successfully.');
         } catch (\Exception $e) {
-            Log::error('Error loading calls from RetellAI: ' . $e->getMessage());
+            Log::error('Error loading calls from RetellAI', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             session()->flash('error', 'Error loading call records: ' . $e->getMessage());
             $this->calls = collect([]);
         }
@@ -66,7 +82,7 @@ class CallRecords extends Component
 
     protected function filterAndSortCalls()
     {
-        return collect($this->calls)
+        $filtered = collect($this->calls)
             ->when($this->search, function ($collection) {
                 return $collection->filter(function ($call) {
                     $searchLower = strtolower($this->search);
@@ -75,10 +91,22 @@ class CallRecords extends Component
                         str_contains(strtolower($call['to_number'] ?? ''), $searchLower) ||
                         str_contains(strtolower($call['call_analysis']['call_summary'] ?? ''), $searchLower);
                 });
-            })
-            ->when($this->sortField, function ($collection) {
-                return $collection->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection === 'desc');
             });
+
+        // Log para debugging del filtrado
+        Log::info('Filtering calls:', [
+            'before_filter' => count($this->calls),
+            'after_filter' => $filtered->count(),
+            'search_term' => $this->search
+        ]);
+
+        if ($this->sortField) {
+            $filtered = $filtered->sortBy(function ($call) {
+                return $call[$this->sortField] ?? '';
+            }, SORT_REGULAR, $this->sortDirection === 'desc');
+        }
+
+        return $filtered;
     }
 
     protected function paginateCalls($calls)
@@ -98,25 +126,21 @@ class CallRecords extends Component
         );
     }
 
-    public function sort($field)
-    {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
-        }
-    }
-
     public function showCallDetails($callId)
     {
-        $this->selectedCall = collect($this->calls)->firstWhere('call_id', $callId);
-        if (!$this->selectedCall) {
-            Log::warning('Call record not found for ID: ' . $callId);
+        Log::info('Showing call details', ['call_id' => $callId, 'total_calls' => count($this->calls)]);
+        
+        $this->selectedCall = collect($this->calls)->first(function ($call) use ($callId) {
+            return isset($call['call_id']) && $call['call_id'] == $callId;
+        });
+
+        if ($this->selectedCall) {
+            Log::info('Call found', ['call' => $this->selectedCall]);
+            $this->showTranscript = true;
+        } else {
+            Log::warning('Call not found', ['call_id' => $callId, 'available_ids' => collect($this->calls)->pluck('call_id')]);
             session()->flash('error', 'Call record not found.');
-            return;
         }
-        $this->showTranscript = true;
     }
 
     public function closeTranscript()
