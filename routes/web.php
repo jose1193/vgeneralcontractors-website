@@ -102,10 +102,10 @@ Route::middleware([
         return view('posts');
     })->name('admin.posts');
 
-    // Call Records Route
-    Route::get('/call-records', function () {
-        return view('call-records');
-    })->name('call-records');
+    // Call Records Routes
+    Route::get('/call-records', [App\Http\Controllers\CallRecordsController::class, 'index'])->name('call-records');
+    Route::get('/api/call-records', [App\Http\Controllers\CallRecordsController::class, 'getCalls'])->name('api.call-records');
+    Route::get('/api/call-records/{callId}', [App\Http\Controllers\CallRecordsController::class, 'getCallDetails'])->name('api.call-records.details');
 
     // Appointment Resource Routes (CRUD)
     Route::prefix('appointments')->name('appointments.')->group(function () {

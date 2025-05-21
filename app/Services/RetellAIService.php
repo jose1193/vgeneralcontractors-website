@@ -21,14 +21,20 @@ class RetellAIService
     public function listCalls($filters = [])
     {
         try {
+            $payload = [
+                'limit' => 100,
+                'offset' => 0,
+            ];
+            
+            // Only add filters if there are any to prevent empty filters object
+            if (!empty($filters)) {
+                $payload['filters'] = $filters;
+            }
+            
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
-            ])->post($this->baseUrl . '/list-calls', [
-                'limit' => 100,
-                'offset' => 0,
-                'filters' => $filters
-            ]);
+            ])->post($this->baseUrl . '/list-calls', $payload);
 
             if (!$response->successful()) {
                 Log::error('RetellAI API Error', [
@@ -39,7 +45,7 @@ class RetellAIService
             }
 
             $data = $response->json();
-            Log::info('RetellAI API Response', ['data' => $data]);
+            Log::info('RetellAI API Response', ['data_count' => is_array($data) ? count($data) : 0]);
 
             return is_array($data) ? $data : [];
 
@@ -72,7 +78,7 @@ class RetellAIService
             }
 
             $data = $response->json();
-            Log::info('RetellAI API Response', ['data' => $data]);
+            Log::info('RetellAI API Response', ['call_id' => $callId]);
 
             return $data;
 
