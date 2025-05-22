@@ -19,10 +19,16 @@ class PostController extends Controller
     public function index()
     {
         try {
-            // Primero intentamos con post_status si existe
-            $posts = Post::where('post_status', 'published')
-                ->latest()
-                ->paginate(9);
+            // Get published posts and scheduled posts that have reached their publication date
+            $posts = Post::where(function($query) {
+                $query->where('post_status', 'published')
+                      ->orWhere(function($q) {
+                          $q->where('post_status', 'scheduled')
+                            ->where('scheduled_at', '<=', now());
+                      });
+            })
+            ->latest()
+            ->paginate(9);
         } catch (QueryException $e) {
             // Si post_status no existe, simplemente obtenemos los posts más recientes
             $posts = Post::latest()
@@ -38,7 +44,13 @@ class PostController extends Controller
     public function show($slug)
     {
         $post = Post::where('post_title_slug', $slug)
-            ->where('post_status', 'published')
+            ->where(function($query) {
+                $query->where('post_status', 'published')
+                      ->orWhere(function($q) {
+                          $q->where('post_status', 'scheduled')
+                            ->where('scheduled_at', '<=', now());
+                      });
+            })
             ->firstOrFail();
             
         // Obtener posts relacionados (misma categoría)
@@ -98,7 +110,13 @@ class PostController extends Controller
             ->orWhere('id', $categorySlug)
             ->firstOrFail();
             
-        $posts = Post::where('post_status', 'published')
+        $posts = Post::where(function($query) {
+                $query->where('post_status', 'published')
+                      ->orWhere(function($q) {
+                          $q->where('post_status', 'scheduled')
+                            ->where('scheduled_at', '<=', now());
+                      });
+            })
             ->where('category_id', $category->id)
             ->latest()
             ->paginate(9);
@@ -121,7 +139,13 @@ class PostController extends Controller
             return redirect()->route('blog.index');
         }
         
-        $posts = Post::where('post_status', 'published')
+        $posts = Post::where(function($query) {
+                $query->where('post_status', 'published')
+                      ->orWhere(function($q) {
+                          $q->where('post_status', 'scheduled')
+                            ->where('scheduled_at', '<=', now());
+                      });
+            })
             ->where(function($q) use ($query) {
                 $q->where('post_title', 'like', '%' . $query . '%')
                   ->orWhere('post_content', 'like', '%' . $query . '%')
@@ -144,12 +168,18 @@ class PostController extends Controller
     public function showLatestPosts()
     {
         try {
-            // Intentamos primero con post_status si existe
-            $posts = Post::where('post_status', 'published')
-                ->latest()
-                ->paginate(9);
+            // Get published posts and scheduled posts that have reached their publication date
+            $posts = Post::where(function($query) {
+                $query->where('post_status', 'published')
+                      ->orWhere(function($q) {
+                          $q->where('post_status', 'scheduled')
+                            ->where('scheduled_at', '<=', now());
+                      });
+            })
+            ->latest()
+            ->paginate(9);
         } catch (QueryException $e) {
-            // Si post_status no existe, simplemente obtenemos los más recientes
+            // Si post_status no existe, simplemente obtenemos los posts más recientes
             $posts = Post::latest()
                 ->paginate(9);
         }

@@ -125,4 +125,20 @@
             <x-input-error for="meta_keywords" class="mt-2" />
         </div>
     </div>
+
+    <!-- Post Scheduling Section -->
+    <div class="border-t pt-4">
+        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-4">Post Scheduling</h3>
+
+        <!-- Scheduled At -->
+        <div>
+            <x-label for="scheduled_at" value="{{ __('Schedule Publication') }}" />
+            <x-input id="scheduled_at" type="datetime-local" class="mt-1 block w-full" wire:model.lazy="scheduled_at"
+                x-model="form.scheduled_at" @input="$wire.set('scheduled_at', $event.target.value)" />
+            <div class="mt-1 text-sm text-gray-500">
+                Leave empty to publish immediately. Set a future date to schedule publication.
+            </div>
+            <x-input-error for="scheduled_at" class="mt-2" />
+        </div>
+    </div>
 </div>

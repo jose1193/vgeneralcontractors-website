@@ -14,6 +14,9 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Generate sitemap daily at midnight
 0 0 * * * www-data cd /var/www/html && php artisan sitemap:generate >> /var/www/html/storage/logs/sitemap.log 2>&1
 
+# Publish scheduled posts every minute
+* * * * * www-data cd /var/www/html && php artisan app:publish-scheduled-posts >> /var/www/html/storage/logs/scheduled-posts.log 2>&1
+
 # Crear un archivo de registro para verificar que cron esté funcionando
 * * * * * root echo "Cron ejecutado a: $(date)" >> /var/www/html/storage/logs/cron.log
 

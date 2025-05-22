@@ -21,7 +21,8 @@ class Post extends Model
         'post_title_slug',
         'category_id',
         'user_id',
-        'post_status'
+        'post_status',
+        'scheduled_at'
     ];
 
     // Agrega atributo virtual para post_status

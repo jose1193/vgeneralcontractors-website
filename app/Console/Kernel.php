@@ -30,6 +30,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('retell:check-calls')
                  ->everyFifteenMinutes()
                  ->appendOutputTo(storage_path('logs/retell-calls.log'));
+
+        // Publish scheduled posts every minute
+        $schedule->command('app:publish-scheduled-posts')
+                 ->everyMinute()
+                 ->appendOutputTo(storage_path('logs/scheduled-posts.log'));
     }
 
     /**

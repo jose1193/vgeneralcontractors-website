@@ -32,6 +32,8 @@ class Posts extends Component
     public $meta_title;
     public $meta_keywords;
     public $category_id;
+    public $scheduled_at;
+    public $post_status;
     
     // Component control properties
     public $isOpen = false;
@@ -73,6 +75,7 @@ class Posts extends Component
         'meta_title' => 'nullable|string|max:100',
         'meta_keywords' => 'nullable|string|max:255',
         'category_id' => 'required|exists:blog_categories,id',
+        'scheduled_at' => 'nullable|date|after_or_equal:now',
     ];
 
     protected $postImageService;
@@ -165,6 +168,7 @@ class Posts extends Component
             'meta_title' => '',
             'meta_keywords' => '',
             'category_id' => '',
+            'scheduled_at' => '',
             'action' => 'store'
         ]);
     }
@@ -207,11 +211,19 @@ class Posts extends Component
                 $imageUrl = $this->postImageService->storePostImage($this->temp_image);
             }
 
+            // Determine post status based on scheduled_at
+            $post_status = 'published';
+            if ($this->scheduled_at) {
+                $post_status = 'scheduled';
+            }
+
             \Log::info('Storing post with data:', [
                 'post_title' => $this->post_title,
                 'category_id' => $this->category_id,
                 'image_url' => $imageUrl,
-                'content_length' => strlen($formattedContent)
+                'content_length' => strlen($formattedContent),
+                'post_status' => $post_status,
+                'scheduled_at' => $this->scheduled_at
             ]);
 
             Post::create([
@@ -224,7 +236,9 @@ class Posts extends Component
                 'meta_keywords' => $this->meta_keywords,
                 'post_title_slug' => $slug,
                 'category_id' => $this->category_id,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
+                'post_status' => $post_status,
+                'scheduled_at' => $this->scheduled_at
             ]);
             
             // Clear cache using the generic method
@@ -263,6 +277,8 @@ class Posts extends Component
             $this->meta_title = $post->meta_title;
             $this->meta_keywords = $post->meta_keywords;
             $this->category_id = $post->category_id;
+            $this->scheduled_at = $post->scheduled_at;
+            $this->post_status = $post->post_status;
             
             $this->modalTitle = 'Edit Post';
             $this->modalAction = 'update';
@@ -276,12 +292,15 @@ class Posts extends Component
                 'meta_title' => $this->meta_title,
                 'meta_keywords' => $this->meta_keywords,
                 'category_id' => $this->category_id,
+                'scheduled_at' => $this->scheduled_at,
                 'action' => 'update'
             ]);
             
             \Log::info('Post data loaded successfully', [
                 'uuid' => $this->uuid,
-                'post_title' => $this->post_title
+                'post_title' => $this->post_title,
+                'post_status' => $this->post_status,
+                'scheduled_at' => $this->scheduled_at
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading post data', [
@@ -326,8 +345,12 @@ class Posts extends Component
                 $imageUrl = $this->postImageService->storePostImage($this->temp_image);
             }
             
-            $allowedTags = '<p><br><strong><b><em><i><u><ul><ol><li><a><h1><h2><h3><h4><h5><h6><blockquote>';
-
+            // Determine post status based on scheduled_at
+            $post_status = 'published';
+            if ($this->scheduled_at) {
+                $post_status = 'scheduled';
+            }
+            
             $post->update([
                 'post_title' => $this->post_title,
                 'post_content' => $this->formatPostContentForSaving($this->post_content),
@@ -337,7 +360,9 @@ class Posts extends Component
                 'meta_keywords' => $this->meta_keywords,
                 'post_title_slug' => $slug,
                 'category_id' => $this->category_id,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
+                'post_status' => $post_status,
+                'scheduled_at' => $this->scheduled_at
             ]);
 
             // Clear cache
@@ -481,7 +506,8 @@ class Posts extends Component
             'meta_description',
             'meta_title',
             'meta_keywords',
-            'category_id'
+            'category_id',
+            'scheduled_at'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
