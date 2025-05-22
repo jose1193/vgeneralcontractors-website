@@ -13,15 +13,15 @@ RUN apt-get update && apt-get install -y \
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql zip
 
-# Crear directorio para logs
+# Crear directorios para logs y asegurar permisos
 RUN mkdir -p /var/www/html/storage/logs && \
-    chown -R www-data:www-data /var/www/html/storage
+    mkdir -p /var/www/html/bootstrap/cache && \
+    touch /var/log/cron.log && \
+    chmod 0666 /var/log/cron.log
 
 # Configurar crontab
 COPY crontab.docker /etc/cron.d/laravel-cron
-RUN chmod 0644 /etc/cron.d/laravel-cron && \
-    touch /var/log/cron.log && \
-    chmod 0666 /var/log/cron.log
+RUN chmod 0644 /etc/cron.d/laravel-cron
 
 # Directorio de trabajo
 WORKDIR /var/www/html
