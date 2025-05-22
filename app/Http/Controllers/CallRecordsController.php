@@ -40,7 +40,21 @@ class CallRecordsController extends Controller
             $this->perPage = $request->input('per_page', 10);
             
             $page = $request->input('page', 1);
-            $cacheKey = $this->generateCacheKey('call_records', $page);
+            // Include filters in cache key to ensure unique caches for different filters
+            $cacheParams = [
+                'page' => $page,
+                'search' => $this->search,
+                'sort' => $this->sortField . '-' . $this->sortDirection,
+                'per_page' => $this->perPage
+            ];
+            
+            // Add date filters to cache params if they exist
+            if ($request->has('start_date') && !empty($request->start_date) && 
+                $request->has('end_date') && !empty($request->end_date)) {
+                $cacheParams['date_range'] = $request->start_date . '_to_' . $request->end_date;
+            }
+            
+            $cacheKey = $this->generateCacheKey('call_records', json_encode($cacheParams));
             
             // Use cache to improve performance
             $response = Cache::remember($cacheKey, 15, function() use ($request, $page) {
