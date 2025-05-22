@@ -38,6 +38,19 @@ services:
             - mysql
             - redis
 
+    # Nuevo servicio para los cronjobs
+    cron:
+        build:
+            context: .
+            dockerfile: Dockerfile.cron
+        volumes:
+            - ".:/var/www/html"
+        networks:
+            - sail
+        depends_on:
+            - mysql
+            - redis
+
     # Servicio simple de queue (como alternativa a Supervisor)
     queue:
         build:

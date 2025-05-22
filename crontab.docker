@@ -1,0 +1,8 @@
+# Ejecutar el programador de Laravel cada minuto
+* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1
+
+# Crear un archivo de registro para verificar que cron esté funcionando
+* * * * * echo "Cron ejecutado a: $(date)" >> /var/www/html/storage/logs/cron.log
+
+# Vaciar el archivo de registro al comenzar un nuevo mes para evitar que crezca demasiado
+0 0 1 * * echo "" > /var/www/html/storage/logs/cron.log 
