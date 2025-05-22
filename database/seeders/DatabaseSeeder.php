@@ -71,6 +71,9 @@ class DatabaseSeeder extends Seeder
             'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT'
         ];
 
+        // Add READ_USER permission to allow access to call records
+        $appointmentPermissions[] = 'READ_USER';
+
         // Todos los permisos excepto los de gestión de usuarios
         $nonUserManagementPermissions = array_diff($allPermissions, $userManagementPermissions);
 
@@ -106,6 +109,8 @@ class DatabaseSeeder extends Seeder
             'terms_and_conditions' => true
         ]);
         $adminAppointmentUser->assignRole('Admin');
+        
+        // Give the appointment admin user access only to appointments and call records
         $adminAppointmentUser->syncPermissions($appointmentPermissions);
         // END APPOINTMENT ADMIN USER
 
