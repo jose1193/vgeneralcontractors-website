@@ -7,18 +7,29 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql zip
 
+# Crear directorio para logs
+RUN mkdir -p /var/www/html/storage/logs && \
+    chown -R www-data:www-data /var/www/html/storage
+
 # Configurar crontab
 COPY crontab.docker /etc/cron.d/laravel-cron
-RUN chmod 0644 /etc/cron.d/laravel-cron
-RUN crontab /etc/cron.d/laravel-cron
+RUN chmod 0644 /etc/cron.d/laravel-cron && \
+    touch /var/log/cron.log && \
+    chmod 0666 /var/log/cron.log
 
 # Directorio de trabajo
 WORKDIR /var/www/html
 
+# Copiar el script de inicio
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Comando para iniciar cron en primer plano
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["cron", "-f"] 
