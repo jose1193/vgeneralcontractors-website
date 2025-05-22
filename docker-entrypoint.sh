@@ -10,5 +10,8 @@ mkdir -p /var/www/html/storage/logs
 chown -R www-data:www-data /var/www/html/storage/logs
 chmod -R 775 /var/www/html/storage/logs
 
+# Remove the PID file if it exists
+rm -f /var/run/crond.pid
+
 # Start cron in foreground
-exec "$@" 
+exec "$@"
