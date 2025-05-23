@@ -43,6 +43,11 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.cron
+            args:
+                WWWGROUP: "${WWWGROUP}"
+        environment:
+            WWWUSER: "${WWWUSER}"
+            WWWGROUP: "${WWWGROUP}"
         volumes:
             - ".:/var/www/html"
         networks:
