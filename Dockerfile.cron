@@ -1,8 +1,5 @@
 FROM php:8.2-fpm
 
-# Argumentos para configurar usuario
-ARG WWWGROUP=1000
-
 # Instalar dependencias
 RUN apt-get update && apt-get install -y \
     cron \
@@ -11,15 +8,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql zip
-
-# Crear grupo y usuario www-data con los IDs correctos
-RUN groupmod -g ${WWWGROUP} www-data \
-    && usermod -u 1000 -g ${WWWGROUP} www-data
 
 # Crear directorio para logs
 RUN mkdir -p /var/www/html/storage/logs && \
