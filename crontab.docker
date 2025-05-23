@@ -1,24 +1,21 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# Ejecutar el programador de Laravel cada minuto
-* * * * * www-data cd /var/www/html && php artisan schedule:run >> /var/www/html/storage/logs/scheduler.log 2>&1
+# Ejecutar el programador de Laravel cada minuto (sin logs específicos)
+* * * * * www-data cd /var/www/html && php artisan schedule:run >/proc/1/fd/1 2>/proc/1/fd/2
 
-# Ejecutar comandos específicos
+# Ejecutar comandos específicos (redirigiendo a stdout/stderr del contenedor)
 # Check new calls every 5 minutes
-*/5 * * * * www-data cd /var/www/html && php artisan retell:check-calls >> /var/www/html/storage/logs/calls.log 2>&1
+*/5 * * * * www-data cd /var/www/html && php artisan retell:check-calls >/proc/1/fd/1 2>/proc/1/fd/2
 
 # Send appointment reminders daily at 9 AM
-0 9 * * * www-data cd /var/www/html && php artisan app:send-appointment-reminders >> /var/www/html/storage/logs/appointments.log 2>&1
+0 9 * * * www-data cd /var/www/html && php artisan app:send-appointment-reminders >/proc/1/fd/1 2>/proc/1/fd/2
 
 # Generate sitemap daily at midnight
-0 0 * * * www-data cd /var/www/html && php artisan sitemap:generate >> /var/www/html/storage/logs/sitemap.log 2>&1
+0 0 * * * www-data cd /var/www/html && php artisan sitemap:generate >/proc/1/fd/1 2>/proc/1/fd/2
 
 # Publish scheduled posts every minute
-* * * * * www-data cd /var/www/html && php artisan app:publish-scheduled-posts >> /var/www/html/storage/logs/scheduled-posts.log 2>&1
+* * * * * www-data cd /var/www/html && php artisan app:publish-scheduled-posts >/proc/1/fd/1 2>/proc/1/fd/2
 
-# Crear un archivo de registro para verificar que cron esté funcionando
-* * * * * root echo "Cron ejecutado a: $(date)" >> /var/www/html/storage/logs/cron.log
-
-# Vaciar los archivos de registro al comenzar un nuevo mes
-0 0 1 * * root find /var/www/html/storage/logs -name "*.log" -exec truncate -s 0 {} \; 
+# Health check - log to single file que siempre se puede escribir
+* * * * * root echo "Cron ejecutado a: $(date)" >/proc/1/fd/1 

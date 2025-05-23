@@ -1,14 +1,10 @@
 #!/bin/bash
 set -e
 
-# Ensure proper permissions
-sudo chown -R www-data:www-data /var/www/html/storage
-sudo chmod -R 775 /var/www/html/storage
-
-# Ensure cron log directory exists and has proper permissions
-mkdir -p /var/www/html/storage/logs
-sudo chown -R www-data:www-data /var/www/html/storage/logs
-sudo chmod -R 775 /var/www/html/storage/logs
+# Ensure basic storage directory exists with proper permissions
+mkdir -p /var/www/html/storage
+chown -R www-data:www-data /var/www/html/storage
+chmod -R 775 /var/www/html/storage
 
 # Remove the PID file if it exists
 rm -f /var/run/crond.pid
