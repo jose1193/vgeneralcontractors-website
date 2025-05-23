@@ -1,24 +1,29 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOME=/var/www/html
 
+# Configurar variables de entorno de Laravel
 # Ejecutar el programador de Laravel cada minuto
-* * * * * www-data cd /var/www/html && php artisan schedule:run >> /var/www/html/storage/logs/scheduler.log 2>&1
+* * * * * www-data cd /var/www/html && /usr/local/bin/php artisan schedule:run >> /var/www/html/storage/logs/scheduler.log 2>&1
 
-# Ejecutar comandos específicos
+# Ejecutar comandos específicos con mejor manejo de errores
 # Check new calls every 5 minutes
-*/5 * * * * www-data cd /var/www/html && php artisan retell:check-calls >> /var/www/html/storage/logs/calls.log 2>&1
+*/5 * * * * www-data cd /var/www/html && /usr/local/bin/php artisan retell:check-calls >> /var/www/html/storage/logs/calls.log 2>&1
 
 # Send appointment reminders daily at 9 AM
-0 9 * * * www-data cd /var/www/html && php artisan app:send-appointment-reminders >> /var/www/html/storage/logs/appointments.log 2>&1
+0 9 * * * www-data cd /var/www/html && /usr/local/bin/php artisan app:send-appointment-reminders >> /var/www/html/storage/logs/appointments.log 2>&1
 
 # Generate sitemap daily at midnight
-0 0 * * * www-data cd /var/www/html && php artisan sitemap:generate >> /var/www/html/storage/logs/sitemap.log 2>&1
+0 0 * * * www-data cd /var/www/html && /usr/local/bin/php artisan sitemap:generate >> /var/www/html/storage/logs/sitemap.log 2>&1
 
 # Publish scheduled posts every minute
-* * * * * www-data cd /var/www/html && php artisan app:publish-scheduled-posts >> /var/www/html/storage/logs/scheduled-posts.log 2>&1
+* * * * * www-data cd /var/www/html && /usr/local/bin/php artisan app:publish-scheduled-posts >> /var/www/html/storage/logs/scheduled-posts.log 2>&1
 
-# Crear un archivo de registro para verificar que cron esté funcionando
-* * * * * root echo "Cron ejecutado a: $(date)" >> /var/www/html/storage/logs/cron.log
+# Verificar que cron esté funcionando (cada 5 minutos para no llenar el log)
+*/5 * * * * www-data echo "$(date '+\%Y-\%m-\%d \%H:\%M:\%S') - Cron is running" >> /var/www/html/storage/logs/cron.log 2>&1
 
-# Vaciar los archivos de registro al comenzar un nuevo mes
-0 0 1 * * root find /var/www/html/storage/logs -name "*.log" -exec truncate -s 0 {} \; 
+# Limpiar logs antiguos semanalmente (domingos a las 2 AM)
+0 2 * * 0 www-data find /var/www/html/storage/logs -name "*.log" -mtime +7 -exec truncate -s 0 {} \; 2>/dev/null
+
+# Asegurar permisos cada hora
+0 * * * * root /bin/chown -R www-data:www-data /var/www/html/storage/logs 2>/dev/null || true 
