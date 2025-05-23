@@ -350,7 +350,7 @@ class Posts extends Component
             if ($this->scheduled_at) {
                 $post_status = 'scheduled';
             }
-            
+
             $post->update([
                 'post_title' => $this->post_title,
                 'post_content' => $this->formatPostContentForSaving($this->post_content),
