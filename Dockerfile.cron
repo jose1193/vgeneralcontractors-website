@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Instalar dependencias incluyendo sudo
+# Instalar dependencias
 RUN apt-get update && apt-get install -y \
     cron \
     libzip-dev \
@@ -8,14 +8,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql zip
-
-# Asegurar que www-data pueda usar sudo sin contraseña
-RUN echo "www-data ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Crear directorio para logs
 RUN mkdir -p /var/www/html/storage/logs && \
@@ -33,9 +29,6 @@ WORKDIR /var/www/html
 # Copiar el script de inicio
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# Ejecutar como root inicialmente para configurar permisos
-USER root
 
 # Comando para iniciar cron en primer plano
 ENTRYPOINT ["docker-entrypoint.sh"]
