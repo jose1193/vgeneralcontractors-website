@@ -70,12 +70,17 @@ AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
+VITE_PORT=5173
 
 # Variables para Docker Sail
 WWWUSER=1000
 WWWGROUP=1000
 SAIL_XDEBUG_MODE=develop,debug
 SAIL_SKIP_CHECKS=true
+
+# Puertos externos para evitar conflictos
+FORWARD_DB_PORT=3307
+FORWARD_REDIS_PORT=6380
 EOF
 fi
 
@@ -87,6 +92,14 @@ if ! grep -q "WWWGROUP=" .env; then
     echo "WWWGROUP=1000" >> .env
 fi
 
+# Agregar variables de puerto si no existen
+if ! grep -q "FORWARD_DB_PORT=" .env; then
+    echo "FORWARD_DB_PORT=3307" >> .env
+fi
+if ! grep -q "FORWARD_REDIS_PORT=" .env; then
+    echo "FORWARD_REDIS_PORT=6380" >> .env
+fi
+
 # Generar APP_KEY si está vacío
 if grep -q "APP_KEY=$" .env || ! grep -q "APP_KEY=" .env; then
     echo "🔑 Generando APP_KEY..."
@@ -94,5 +107,9 @@ if grep -q "APP_KEY=$" .env || ! grep -q "APP_KEY=" .env; then
 fi
 
 echo "✅ Archivo .env configurado"
-echo "📄 Contenido de variables Docker:"
-grep -E "WWWUSER|WWWGROUP" .env 
+echo "📄 Configuración de puertos:"
+echo "  - Laravel: http://localhost:8080"
+echo "  - MySQL: localhost:3307"
+echo "  - Redis: localhost:6380"
+echo "📄 Variables Docker:"
+grep -E "WWWUSER|WWWGROUP|FORWARD_" .env 
