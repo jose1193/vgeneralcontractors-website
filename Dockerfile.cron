@@ -17,9 +17,15 @@ RUN apt-get update && apt-get install -y \
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql zip
 
-# Crear grupo y usuario www-data con los IDs correctos
-RUN groupmod -g ${WWWGROUP} www-data \
-    && usermod -u 1000 -g ${WWWGROUP} www-data
+# Configurar usuario y grupo www-data de manera segura
+RUN if [ "${WWWGROUP}" != "33" ] && [ "${WWWGROUP}" != "0" ]; then \
+        groupmod -g ${WWWGROUP} www-data; \
+    fi \
+    && if [ "${WWWGROUP}" != "0" ]; then \
+        usermod -u 1000 -g ${WWWGROUP} www-data; \
+    else \
+        usermod -u 1000 www-data; \
+    fi
 
 # Crear directorio para logs
 RUN mkdir -p /var/www/html/storage/logs && \
