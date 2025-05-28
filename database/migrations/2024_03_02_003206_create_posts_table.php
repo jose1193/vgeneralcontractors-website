@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->string('post_title');
             $table->longText('post_content');
-            $table->string('post_image');
+            $table->string('post_image')->nullable();
            
             
             $table->string('meta_description');
