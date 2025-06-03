@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FacebookLeadFormController;
+use App\Http\Controllers\RetellAIController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -33,4 +34,27 @@ Route::prefix('facebook-leads')->group(function () {
     
     // Delete appointment (soft delete)
     Route::delete('/{uuid}', [FacebookLeadFormController::class, 'deleteAppointment']);
+});
+
+// Retell AI API Routes - Public endpoints without auth middleware
+Route::prefix('retell')->group(function () {
+    // Lead management
+    Route::post('/leads', [RetellAIController::class, 'storeLead']);
+    
+    // Appointment availability - Changed from GET to POST
+    Route::post('/appointments/availability', [RetellAIController::class, 'getAvailability']);
+    
+    // Client appointments lookup - Changed from GET to POST
+    Route::post('/appointments/client', [RetellAIController::class, 'getClientAppointments']);
+    
+    // Appointment management - UUID sent in body instead of URL
+    Route::post('/appointments/get', [RetellAIController::class, 'getAppointment']);
+    Route::patch('/appointments/update', [RetellAIController::class, 'updateAppointment']);
+    Route::delete('/appointments/delete', [RetellAIController::class, 'deleteAppointment']);
+    
+    // Reschedule appointment - UUID sent in body
+    Route::post('/appointments/reschedule', [RetellAIController::class, 'rescheduleAppointment']);
+    
+    // Update appointment status - UUID sent in body
+    Route::patch('/appointments/status', [RetellAIController::class, 'updateAppointmentStatus']);
 });
