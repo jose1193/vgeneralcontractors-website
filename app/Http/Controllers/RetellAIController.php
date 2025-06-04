@@ -139,8 +139,8 @@ class RetellAIController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'last_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
-            'phone' => 'required|regex:/^\(\d{3}\)\s\d{3}-\d{4}$/',
-            'email' => 'required|email',
+            'phone' => ['required', 'string', 'min:10', 'max:15'], // Required phone validation
+            'email' => 'nullable|email', // Email is now optional
             'address' => 'required|min:5',
             'address_2' => 'nullable|string',
             'city' => 'required|string',
@@ -170,17 +170,38 @@ class RetellAIController extends Controller
 
         $validatedData = $validator->validated();
 
+        // Format and validate phone number
+        $formattedPhone = $this->formatPhoneNumber($validatedData['phone']);
+        
+        // Validate formatted phone number
+        if (!preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $formattedPhone)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid phone number format',
+                'errors' => [
+                    'phone' => [
+                        'Phone number must be a valid 10-digit US number. Received: ' . $validatedData['phone'] . ', Formatted: ' . $formattedPhone
+                    ]
+                ]
+            ], 422);
+        }
+        
+        // Update validated data with formatted phone
+        $validatedData['phone'] = $formattedPhone;
+
         try {
-            // Check if email already exists
-            $existingAppointment = Appointment::where('email', $validatedData['email'])->first();
-            
-            if ($existingAppointment) {
-                return response()->json([
-                    'success' => false,
-                    'duplicate_email' => true,
-                    'message' => 'This email is already registered in our system.',
-                    'data' => new AppointmentResource($existingAppointment)
-                ], 422);
+            // Check if email already exists (only if email is provided)
+            if (!empty($validatedData['email'])) {
+                $existingAppointment = Appointment::where('email', $validatedData['email'])->first();
+                
+                if ($existingAppointment) {
+                    return response()->json([
+                        'success' => false,
+                        'duplicate_email' => true,
+                        'message' => 'This email is already registered in our system.',
+                        'data' => new AppointmentResource($existingAppointment)
+                    ], 422);
+                }
             }
 
             // Check for schedule conflicts if inspection date/time provided
@@ -741,6 +762,27 @@ class RetellAIController extends Controller
             unset($validatedData['uuid']);
             unset($validatedData['api_key']);
 
+            // Format phone number if provided
+            if (isset($validatedData['phone'])) {
+                $formattedPhone = $this->formatPhoneNumber($validatedData['phone']);
+                
+                // Validate formatted phone number
+                if (!preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $formattedPhone)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid phone number format',
+                        'errors' => [
+                            'phone' => [
+                                'Phone number must be a valid 10-digit US number. Received: ' . $validatedData['phone'] . ', Formatted: ' . $formattedPhone
+                            ]
+                        ]
+                    ], 422);
+                }
+                
+                // Update validated data with formatted phone
+                $validatedData['phone'] = $formattedPhone;
+            }
+
             $updatedAppointment = $this->transactionService->run(
                 // Database operations
                 function () use ($appointment, $validatedData) {
@@ -1247,5 +1289,31 @@ class RetellAIController extends Controller
         ];
         
         return $calendar;
+    }
+
+    /**
+     * Format phone number to (XXX) XXX-XXXX format
+     */
+    private function formatPhoneNumber($phone)
+    {
+        if (empty($phone)) {
+            return $phone;
+        }
+
+        // Remove all non-numeric characters
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        
+        // Remove leading 1 if present (US country code)
+        if (strlen($phone) == 11 && substr($phone, 0, 1) == '1') {
+            $phone = substr($phone, 1);
+        }
+        
+        // Format to (XXX) XXX-XXXX if we have exactly 10 digits
+        if (strlen($phone) == 10) {
+            return '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4);
+        }
+        
+        // Return original if not 10 digits
+        return $phone;
     }
 } 

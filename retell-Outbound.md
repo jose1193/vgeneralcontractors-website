@@ -247,8 +247,8 @@ Si dice SI: Escuchar y responder hasta que no haya más preguntas. Finalizar con
 {
   "first_name": "Nombre del cliente",
   "last_name": "Apellido del cliente",
-  "phone": "Teléfono sin el 1 inicial - formato (XXX) XXX-XXXX",
-  "email": "email@cliente.com",
+  "phone": "Teléfono (se formatea automáticamente) - acepta: 3466920757, (346) 692-0757, 346-692-0757",
+  "email": "email@cliente.com (OPCIONAL)",
   "address": "Dirección de la calle",
   "city": "Ciudad",
   "state": "Estado",
@@ -266,6 +266,13 @@ Si dice SI: Escuchar y responder hasta que no haya más preguntas. Finalizar con
 }
 ```
 
+**IMPORTANTES - Formateo Automático de Teléfono:**
+
+-   **Acepta múltiples formatos**: 3466920757, (346) 692-0757, 346-692-0757, 1-346-692-0757
+-   **Se formatea automáticamente** al formato estándar: (346) 692-0757
+-   **Remueve automáticamente** el código de país "1" si está presente
+-   **Válido para números de 10 dígitos** de EE.UU.
+
 **IMPORTANTES - Valores de lead_source:**
 
 -   **"Facebook Ads"** - Para campañas de Facebook/Instagram
@@ -278,6 +285,11 @@ Si dice SI: Escuchar y responder hasta que no haya más preguntas. Finalizar con
 -   **inspection_date**: Convertir al formato YYYY-MM-DD (ejemplo: "2025-01-15")
 -   **inspection_time**: Formato HH:MM en 24 horas (ejemplo: "10:00", "14:30")
 -   **Usar la fecha/hora seleccionada por el cliente**, NO la fecha actual
+
+**IMPORTANTES - Campos Obligatorios vs Opcionales:**
+
+-   **OBLIGATORIOS**: first_name, last_name, phone, address, city, state, zipcode, country, insurance_property
+-   **OPCIONALES**: email, address_2, intent_to_claim, notes, damage_detail, inspection_date, inspection_time
 
 # MANEJO DE SITUACIONES ESPECIALES
 
