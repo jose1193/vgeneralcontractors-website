@@ -26,6 +26,7 @@ touch /var/www/html/storage/logs/calls.log 2>/dev/null || true
 touch /var/www/html/storage/logs/appointments.log 2>/dev/null || true
 touch /var/www/html/storage/logs/sitemap.log 2>/dev/null || true
 touch /var/www/html/storage/logs/scheduled-posts.log 2>/dev/null || true
+touch /var/www/html/storage/logs/retell-followup.log 2>/dev/null || true
 touch /var/www/html/storage/logs/cron.log 2>/dev/null || true
 
 chown www-data:www-data /var/www/html/storage/logs/*.log 2>/dev/null || true

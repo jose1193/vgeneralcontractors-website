@@ -16,6 +16,62 @@ class RetellAIService
     }
 
     /**
+     * Create an outbound call
+     */
+    public function createCall($callData)
+    {
+        try {
+            $payload = [
+                'from_number' => $callData['from_number'],
+                'to_number' => $callData['to_number'],
+                'agent_id' => $callData['agent_id'],
+            ];
+
+            // Add optional metadata if provided
+            if (isset($callData['metadata'])) {
+                $payload['metadata'] = $callData['metadata'];
+            }
+
+            Log::info('RetellAI - Creating outbound call', [
+                'to_number' => $callData['to_number'],
+                'from_number' => $callData['from_number'],
+                'agent_id' => $callData['agent_id'],
+                'metadata' => $callData['metadata'] ?? null
+            ]);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
+            ])->post($this->baseUrl . '/create-phone-call', $payload);
+
+            if (!$response->successful()) {
+                Log::error('RetellAI API Error - Create Call', [
+                    'status' => $response->status(),
+                    'body' => $response->json(),
+                    'request_payload' => $payload
+                ]);
+                return null;
+            }
+
+            $data = $response->json();
+            Log::info('RetellAI - Call created successfully', [
+                'call_id' => $data['call_id'] ?? null,
+                'to_number' => $callData['to_number']
+            ]);
+
+            return $data;
+
+        } catch (\Exception $e) {
+            Log::error('RetellAI - Error creating call', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'call_data' => $callData
+            ]);
+            return null;
+        }
+    }
+
+    /**
      * List all calls
      */
     public function listCalls($filters = [])

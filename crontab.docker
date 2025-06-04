@@ -11,6 +11,10 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Send appointment reminders daily at 9 AM
 0 9 * * * www-data cd /var/www/html && php artisan app:send-appointment-reminders >> /var/www/html/storage/logs/appointments.log 2>&1
 
+# Retell AI Follow-up calls - Morning (9 AM) and Afternoon (4 PM) Central Time
+0 9 * * * www-data cd /var/www/html && php artisan retell:follow-up-calls --time=09:00 >> /var/www/html/storage/logs/retell-followup.log 2>&1
+0 16 * * * www-data cd /var/www/html && php artisan retell:follow-up-calls --time=16:00 >> /var/www/html/storage/logs/retell-followup.log 2>&1
+
 # Generate sitemap daily at midnight
 0 0 * * * www-data cd /var/www/html && php artisan sitemap:generate >> /var/www/html/storage/logs/sitemap.log 2>&1
 

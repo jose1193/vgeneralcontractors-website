@@ -30,6 +30,7 @@ return new class extends Migration
             $table->enum('inspection_status', ['Confirmed', 'Completed', 'Pending', 'Declined'])->nullable();
             $table->enum('status_lead', ['New', 'Called','Pending', 'Declined'])->nullable();
             $table->enum('lead_source', ['Website', 'Facebook Ads', 'Reference', 'Retell AI'])->nullable();
+            $table->json('follow_up_calls')->nullable()->comment('JSON array storing follow-up call attempts and details');
             $table->text('notes')->nullable();
             $table->string('owner')->nullable();
             $table->text('damage_detail')->nullable();
