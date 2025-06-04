@@ -136,16 +136,7 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        // Parse JSON data from Retell AI
-        $requestData = $this->parseRetellAIRequest($request);
-        
-        // Fix phone format if needed (convert from "3466920757" to "(346) 692-0757")
-        if (isset($requestData['phone']) && preg_match('/^\d{10}$/', $requestData['phone'])) {
-            $phone = $requestData['phone'];
-            $requestData['phone'] = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6);
-        }
-
-        $validator = Validator::make($requestData, [
+        $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'last_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'phone' => 'required|regex:/^\(\d{3}\)\s\d{3}-\d{4}$/',
@@ -170,13 +161,6 @@ class RetellAIController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Log::error('RetellAI Validation Failed', [
-                'errors' => $validator->errors(),
-                'received_data' => $requestData,
-                'original_request' => $request->all(),
-                'raw_content' => $request->getContent()
-            ]);
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
@@ -325,10 +309,7 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        // Parse JSON data from Retell AI
-        $requestData = $this->parseRetellAIRequest($request);
-
-        $validator = Validator::make($requestData, [
+        $validator = Validator::make($request->all(), [
             'start_date' => 'nullable|date|after_or_equal:today',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'date' => 'nullable|date|after_or_equal:today', // Single date search
@@ -352,25 +333,25 @@ class RetellAIController extends Controller
             $searchDescription = '';
 
             // Priority 1: Single date search
-            if (isset($requestData['date']) && !empty($requestData['date'])) {
-                $singleDate = $this->convertDateFormat($requestData['date']);
+            if ($request->has('date') && !empty($request->input('date'))) {
+                $singleDate = $this->convertDateFormat($request->input('date'));
                 $startDate = $singleDate;
                 $endDate = $singleDate;
                 $periodType = 'single_date';
                 $searchDescription = 'Single date: ' . $singleDate;
             }
             // Priority 2: Date range search (start_date + end_date)
-            elseif (isset($requestData['start_date']) && !empty($requestData['start_date']) && 
-                    isset($requestData['end_date']) && !empty($requestData['end_date'])) {
-                $startDate = $this->convertDateFormat($requestData['start_date']);
-                $endDate = $this->convertDateFormat($requestData['end_date']);
+            elseif ($request->has('start_date') && !empty($request->input('start_date')) && 
+                    $request->has('end_date') && !empty($request->input('end_date'))) {
+                $startDate = $this->convertDateFormat($request->input('start_date'));
+                $endDate = $this->convertDateFormat($request->input('end_date'));
                 $periodType = 'date_range';
                 $searchDescription = 'Date range: ' . $startDate . ' to ' . $endDate;
             }
             // Priority 3: From start_date with days_ahead
-            elseif (isset($requestData['start_date']) && !empty($requestData['start_date'])) {
-                $startDate = $this->convertDateFormat($requestData['start_date']);
-                $daysAhead = $requestData['days_ahead'] ?? 7; // Default 7 days if not specified
+            elseif ($request->has('start_date') && !empty($request->input('start_date'))) {
+                $startDate = $this->convertDateFormat($request->input('start_date'));
+                $daysAhead = $request->input('days_ahead', 7); // Default 7 days if not specified
                 $endDate = Carbon::parse($startDate)->addDays($daysAhead)->format('Y-m-d');
                 $periodType = 'start_date_with_days';
                 $searchDescription = 'From ' . $startDate . ' for ' . $daysAhead . ' days';
@@ -378,7 +359,7 @@ class RetellAIController extends Controller
             // Priority 4: Default behavior (current month + following months)
             else {
                 $today = Carbon::now();
-                $monthsAhead = $requestData['months_ahead'] ?? 2;
+                $monthsAhead = $request->input('months_ahead', 2);
                 $startDate = $today->format('Y-m-d');
                 $endDate = $today->copy()->addMonths($monthsAhead)->endOfMonth()->format('Y-m-d');
                 $periodType = 'current_and_following_months';
@@ -1266,48 +1247,5 @@ class RetellAIController extends Controller
         ];
         
         return $calendar;
-    }
-
-    /**
-     * Parse request data from Retell AI (handles JSON parsing issues)
-     */
-    private function parseRetellAIRequest(Request $request)
-    {
-        // Try Laravel's built-in request parsing first
-        $data = $request->all();
-        
-        // If data is empty, try JSON parsing
-        if (empty($data)) {
-            try {
-                $jsonData = $request->json()->all();
-                if (!empty($jsonData)) {
-                    $data = $jsonData;
-                }
-            } catch (\Exception $e) {
-                // JSON parsing failed, try raw content
-                Log::info('JSON parsing failed, trying raw content', ['error' => $e->getMessage()]);
-            }
-        }
-        
-        // If still empty, try raw JSON decode
-        if (empty($data)) {
-            $content = $request->getContent();
-            if (!empty($content)) {
-                $decoded = json_decode($content, true);
-                if (is_array($decoded)) {
-                    $data = $decoded;
-                }
-            }
-        }
-        
-        Log::info('RetellAI Request Parsing', [
-            'method' => $request->method(),
-            'content_type' => $request->header('Content-Type'),
-            'raw_content' => $request->getContent(),
-            'parsed_data' => $data,
-            'data_count' => count($data),
-        ]);
-        
-        return $data;
     }
 } 
