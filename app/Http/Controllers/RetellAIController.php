@@ -869,23 +869,34 @@ class RetellAIController extends Controller
 
         $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
-            'first_name' => ['sometimes', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
-            'last_name' => ['sometimes', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
-            'phone' => 'sometimes|regex:/^\(\d{3}\)\s\d{3}-\d{4}$/',
-            'email' => 'sometimes|email',
-            'address' => 'sometimes|min:5',
-            'city' => 'sometimes|string',
-            'state' => 'sometimes|string',
-            'zipcode' => 'sometimes|digits:5',
+            'first_name' => 'nullable|string|min:1', // More flexible for updates
+            'last_name' => 'nullable|string|min:1',  // More flexible for updates
+            'phone' => 'nullable|string|min:10|max:15', // Accept any phone format, will be formatted later
+            'email' => 'nullable|email',
+            'address' => 'nullable|string|min:1', // More flexible for updates
+            'city' => 'nullable|string|min:1',
+            'state' => 'nullable|string|min:1',
+            'zipcode' => 'nullable|string|size:5', // Changed from digits to string to allow leading zeros
             'notes' => 'nullable|string',
             'damage_detail' => 'nullable|string',
             'api_key' => 'nullable|string', // Allow api_key in body as well
         ]);
 
         if ($validator->fails()) {
+            Log::error('Retell AI update validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'received_data' => $requestData,
+                'data_keys' => array_keys($requestData),
+                'uuid' => $requestData['uuid'] ?? 'N/A'
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
+                'debug_info' => [
+                    'received_fields' => array_keys($requestData),
+                    'uuid_provided' => isset($requestData['uuid'])
+                ]
             ], 422);
         }
 
@@ -906,24 +917,41 @@ class RetellAIController extends Controller
             unset($validatedData['api_key']);
 
             // Format phone number if provided
-            if (isset($validatedData['phone'])) {
-                $formattedPhone = $this->formatPhoneNumber($validatedData['phone']);
+            if (isset($validatedData['phone']) && !empty($validatedData['phone'])) {
+                $originalPhone = $validatedData['phone'];
+                $formattedPhone = $this->formatPhoneNumber($originalPhone);
                 
-                // Validate formatted phone number
-                if (!preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $formattedPhone)) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Invalid phone number format',
-                        'errors' => [
-                            'phone' => [
-                                'Phone number must be a valid 10-digit US number. Received: ' . $validatedData['phone'] . ', Formatted: ' . $formattedPhone
+                Log::info('Retell AI: Update phone formatting', [
+                    'original_phone' => $originalPhone,
+                    'formatted_phone' => $formattedPhone
+                ]);
+                
+                // Only validate if we successfully formatted to the expected pattern
+                if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $formattedPhone)) {
+                    $validatedData['phone'] = $formattedPhone;
+                } else {
+                    // If formatting failed, keep original but log warning
+                    Log::warning('Phone formatting failed in update, keeping original', [
+                        'original' => $originalPhone,
+                        'formatted_attempt' => $formattedPhone
+                    ]);
+                    
+                    // Only proceed if the original looks like a valid phone number (10-15 digits)
+                    $digitsOnly = preg_replace('/[^0-9]/', '', $originalPhone);
+                    if (strlen($digitsOnly) < 10 || strlen($digitsOnly) > 15) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Invalid phone number format',
+                            'errors' => [
+                                'phone' => [
+                                    'Phone number must contain 10-15 digits. Received: ' . $originalPhone
+                                ]
                             ]
-                        ]
-                    ], 422);
+                        ], 422);
+                    }
+                    // Keep original phone if it has valid digit count
+                    $validatedData['phone'] = $originalPhone;
                 }
-                
-                // Update validated data with formatted phone
-                $validatedData['phone'] = $formattedPhone;
             }
 
             $updatedAppointment = $this->transactionService->run(
