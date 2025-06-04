@@ -228,35 +228,6 @@ class RetellAIController extends Controller
      */
     public function storeLead(Request $request)
     {
-        // EXTREME DEBUG: Log everything about the request
-        Log::info('=== RETELL AI REQUEST DEBUG START ===');
-        Log::info('Request Method: ' . $request->method());
-        Log::info('Request URL: ' . $request->fullUrl());
-        Log::info('Request Headers: ', $request->headers->all());
-        Log::info('Request Query: ', $request->query->all());
-        Log::info('Request Input (all): ', $request->all());
-        Log::info('Request Content Type: ' . $request->header('Content-Type'));
-        Log::info('Request Content Length: ' . strlen($request->getContent()));
-        Log::info('Raw Request Content: ' . $request->getContent());
-        
-        // Try different parsing methods
-        try {
-            $jsonMethod = $request->json();
-            Log::info('JSON method result: ', $jsonMethod ? $jsonMethod->all() : ['NULL']);
-        } catch (\Exception $e) {
-            Log::info('JSON method failed: ' . $e->getMessage());
-        }
-        
-        // Try manual JSON decode
-        $rawContent = $request->getContent();
-        if (!empty($rawContent)) {
-            $manualDecode = json_decode($rawContent, true);
-            Log::info('Manual JSON decode: ', $manualDecode ?: ['FAILED']);
-            Log::info('JSON decode error: ' . json_last_error_msg());
-        }
-        
-        Log::info('=== RETELL AI REQUEST DEBUG END ===');
-
         // Validate API key
         if ($response = $this->validateApiKey($request)) {
             return $response;
@@ -641,8 +612,22 @@ class RetellAIController extends Controller
 
             // Priority 2: Search by phone
             if (isset($requestData['phone']) && !empty($requestData['phone'])) {
-                $query->where('phone', $requestData['phone']);
+                // Format the phone number to match database format before searching
+                $formattedPhone = $this->formatPhoneNumber($requestData['phone']);
+                
+                Log::info('Retell AI: Phone search formatting', [
+                    'original_phone' => $requestData['phone'],
+                    'formatted_phone' => $formattedPhone
+                ]);
+                
+                // Search with both original and formatted phone for maximum compatibility
+                $query->where(function($phoneQuery) use ($requestData, $formattedPhone) {
+                    $phoneQuery->where('phone', $requestData['phone'])  // Try original format
+                               ->orWhere('phone', $formattedPhone);        // Try formatted version
+                });
+                
                 $searchCriteria['phone'] = $requestData['phone'];
+                $searchCriteria['formatted_phone'] = $formattedPhone;
                 $searchType = empty($searchType) ? 'phone' : $searchType . '+phone';
             }
 
@@ -763,7 +748,11 @@ class RetellAIController extends Controller
             case 'email':
                 return 'No clients found with email: ' . $searchCriteria['email'];
             case 'phone':
-                return 'No clients found with phone: ' . $searchCriteria['phone'];
+                $phoneMessage = 'No clients found with phone: ' . $searchCriteria['phone'];
+                if (isset($searchCriteria['formatted_phone']) && $searchCriteria['formatted_phone'] !== $searchCriteria['phone']) {
+                    $phoneMessage .= ' (also searched as: ' . $searchCriteria['formatted_phone'] . ')';
+                }
+                return $phoneMessage;
             case 'name':
                 return 'No clients found with name: ' . $searchCriteria['first_name'] . ' ' . $searchCriteria['last_name'];
             case 'date':
