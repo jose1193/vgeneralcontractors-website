@@ -30,18 +30,40 @@ class RetellAIController extends Controller
      */
     private function validateApiKey(Request $request)
     {
-        $apiKey = $request->header('X-API-KEY') ?? $request->input('api_key');
+        // Try multiple ways to get the API key
+        $apiKey = $request->header('X-API-KEY') ?? 
+                  $request->input('api_key') ?? 
+                  $request->get('api_key');
+        
+        // If still null, try to get from JSON body directly
+        if (is_null($apiKey)) {
+            $jsonData = $request->json()->all();
+            $apiKey = $jsonData['api_key'] ?? null;
+        }
+        
+        // If still null, try raw input
+        if (is_null($apiKey)) {
+            $content = $request->getContent();
+            if (!empty($content)) {
+                $decoded = json_decode($content, true);
+                if (is_array($decoded) && isset($decoded['api_key'])) {
+                    $apiKey = $decoded['api_key'];
+                }
+            }
+        }
+        
         $validApiKey = env('API_KEY_STORE_API_REST');
         
         // Temporary debug logs
         Log::info('RetellAI API Key Debug', [
             'received_api_key' => $apiKey,
             'valid_api_key' => $validApiKey,
-            'request_headers' => $request->headers->all(),
-            'request_body' => $request->all(),
-            'user_agent' => $request->userAgent(),
-            'method' => $request->method(),
-            'url' => $request->fullUrl()
+            'request_method' => $request->method(),
+            'content_type' => $request->header('Content-Type'),
+            'request_has_json' => $request->isJson(),
+            'raw_content' => $request->getContent(),
+            'parsed_input' => $request->all(),
+            'json_all' => $request->json() ? $request->json()->all() : null,
         ]);
         
         if ($apiKey !== $validApiKey) {
