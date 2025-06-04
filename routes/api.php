@@ -49,12 +49,14 @@ Route::prefix('retell')->group(function () {
     
     // Appointment management - UUID sent in body instead of URL
     Route::post('/appointments/get', [RetellAIController::class, 'getAppointment']);
-    Route::patch('/appointments/update', [RetellAIController::class, 'updateAppointment']);
-    Route::delete('/appointments/delete', [RetellAIController::class, 'deleteAppointment']);
+    Route::post('/appointments/update', [RetellAIController::class, 'updateAppointment']);
+    Route::post('/appointments/update', [RetellAIController::class, 'updateAppointment']);
+    Route::post('/appointments/delete', [RetellAIController::class, 'deleteAppointment']);
     
     // Reschedule appointment - UUID sent in body
     Route::post('/appointments/reschedule', [RetellAIController::class, 'rescheduleAppointment']);
     
     // Update appointment status - UUID sent in body
-    Route::patch('/appointments/status', [RetellAIController::class, 'updateAppointmentStatus']);
+    Route::post('/appointments/status', [RetellAIController::class, 'updateAppointmentStatus']);
+    Route::post('/appointments/status', [RetellAIController::class, 'updateAppointmentStatus']);
 });

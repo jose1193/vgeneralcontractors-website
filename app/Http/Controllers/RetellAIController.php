@@ -133,15 +133,6 @@ class RetellAIController extends Controller
         // First try standard Laravel parsing
         $data = $request->all();
         
-        Log::info('Retell AI: Initial parsing attempt', [
-            'standard_data' => $data,
-            'standard_keys' => array_keys($data),
-            'has_first_name' => isset($data['first_name']),
-            'method' => $request->method(),
-            'content_type' => $request->header('Content-Type'),
-            'content_length' => strlen($request->getContent())
-        ]);
-        
         // If data is empty or missing required fields, try manual parsing
         if (empty($data) || !isset($data['first_name'])) {
             Log::info('Standard parsing failed, trying manual JSON parsing for Retell AI');
@@ -151,7 +142,6 @@ class RetellAIController extends Controller
                 $jsonData = $request->json()->all();
                 if (!empty($jsonData)) {
                     $data = $jsonData;
-                    Log::info('Laravel json() parsing', ['data_keys' => array_keys($data)]);
                     
                     // Check if data is in 'args' structure (common with Retell AI)
                     if (isset($data['args']) && is_array($data['args'])) {
@@ -175,16 +165,11 @@ class RetellAIController extends Controller
             // If still empty, try raw content parsing
             if (empty($data) || !isset($data['first_name'])) {
                 $content = $request->getContent();
-                Log::info('Trying raw content parsing', [
-                    'content_preview' => substr($content, 0, 200),
-                    'content_length' => strlen($content)
-                ]);
                 
                 if (!empty($content)) {
                     $decoded = json_decode($content, true);
                     if (is_array($decoded) && !empty($decoded)) {
                         $data = $decoded;
-                        Log::info('Raw JSON decoded', ['data_keys' => array_keys($data)]);
                         
                         // Check for args structure in raw parsing too
                         if (isset($data['args']) && is_array($data['args'])) {
@@ -211,12 +196,9 @@ class RetellAIController extends Controller
         }
         
         Log::info('Final parsed data for Retell AI', [
-            'has_first_name' => isset($data['first_name']),
-            'has_api_key' => isset($data['api_key']),
             'data_count' => count($data),
-            'final_keys' => array_keys($data),
-            'method' => $request->method(),
-            'content_type' => $request->header('Content-Type')
+            'has_required_fields' => isset($data['first_name']) || isset($data['uuid']) || isset($data['api_key']),
+            'method' => $request->method()
         ]);
         
         return $data;
