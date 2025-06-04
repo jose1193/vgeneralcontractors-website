@@ -133,6 +133,15 @@ class RetellAIController extends Controller
         // First try standard Laravel parsing
         $data = $request->all();
         
+        Log::info('Retell AI: Initial parsing attempt', [
+            'standard_data' => $data,
+            'standard_keys' => array_keys($data),
+            'has_first_name' => isset($data['first_name']),
+            'method' => $request->method(),
+            'content_type' => $request->header('Content-Type'),
+            'content_length' => strlen($request->getContent())
+        ]);
+        
         // If data is empty or missing required fields, try manual parsing
         if (empty($data) || !isset($data['first_name'])) {
             Log::info('Standard parsing failed, trying manual JSON parsing for Retell AI');
@@ -142,22 +151,59 @@ class RetellAIController extends Controller
                 $jsonData = $request->json()->all();
                 if (!empty($jsonData)) {
                     $data = $jsonData;
-                    Log::info('Successfully parsed with Laravel json() method', ['data_keys' => array_keys($data)]);
+                    Log::info('Laravel json() parsing', ['data_keys' => array_keys($data)]);
+                    
+                    // Check if data is in 'args' structure (common with Retell AI)
+                    if (isset($data['args']) && is_array($data['args'])) {
+                        Log::info('Found args structure, extracting data');
+                        $data = $data['args'];
+                    }
+                    
+                    // Check if data is in some other nested structure
+                    if (!isset($data['first_name']) && count($data) === 1) {
+                        $firstKey = array_keys($data)[0];
+                        if (is_array($data[$firstKey]) && isset($data[$firstKey]['first_name'])) {
+                            Log::info("Found nested structure under key: {$firstKey}");
+                            $data = $data[$firstKey];
+                        }
+                    }
                 }
             } catch (\Exception $e) {
-                Log::info('Laravel json() method failed, trying raw content parsing');
+                Log::info('Laravel json() method failed', ['error' => $e->getMessage()]);
             }
             
             // If still empty, try raw content parsing
             if (empty($data) || !isset($data['first_name'])) {
                 $content = $request->getContent();
+                Log::info('Trying raw content parsing', [
+                    'content_preview' => substr($content, 0, 200),
+                    'content_length' => strlen($content)
+                ]);
+                
                 if (!empty($content)) {
                     $decoded = json_decode($content, true);
                     if (is_array($decoded) && !empty($decoded)) {
                         $data = $decoded;
-                        Log::info('Successfully parsed raw JSON content', [
-                            'data_keys' => array_keys($data),
-                            'raw_content_length' => strlen($content)
+                        Log::info('Raw JSON decoded', ['data_keys' => array_keys($data)]);
+                        
+                        // Check for args structure in raw parsing too
+                        if (isset($data['args']) && is_array($data['args'])) {
+                            Log::info('Found args structure in raw parsing');
+                            $data = $data['args'];
+                        }
+                        
+                        // Check for other nested structures
+                        if (!isset($data['first_name']) && count($data) === 1) {
+                            $firstKey = array_keys($data)[0];
+                            if (is_array($data[$firstKey]) && isset($data[$firstKey]['first_name'])) {
+                                Log::info("Found nested structure in raw parsing under key: {$firstKey}");
+                                $data = $data[$firstKey];
+                            }
+                        }
+                    } else {
+                        Log::error('Failed to decode JSON content', [
+                            'json_error' => json_last_error_msg(),
+                            'content_sample' => substr($content, 0, 100)
                         ]);
                     }
                 }
@@ -168,6 +214,7 @@ class RetellAIController extends Controller
             'has_first_name' => isset($data['first_name']),
             'has_api_key' => isset($data['api_key']),
             'data_count' => count($data),
+            'final_keys' => array_keys($data),
             'method' => $request->method(),
             'content_type' => $request->header('Content-Type')
         ]);
@@ -181,6 +228,35 @@ class RetellAIController extends Controller
      */
     public function storeLead(Request $request)
     {
+        // EXTREME DEBUG: Log everything about the request
+        Log::info('=== RETELL AI REQUEST DEBUG START ===');
+        Log::info('Request Method: ' . $request->method());
+        Log::info('Request URL: ' . $request->fullUrl());
+        Log::info('Request Headers: ', $request->headers->all());
+        Log::info('Request Query: ', $request->query->all());
+        Log::info('Request Input (all): ', $request->all());
+        Log::info('Request Content Type: ' . $request->header('Content-Type'));
+        Log::info('Request Content Length: ' . strlen($request->getContent()));
+        Log::info('Raw Request Content: ' . $request->getContent());
+        
+        // Try different parsing methods
+        try {
+            $jsonMethod = $request->json();
+            Log::info('JSON method result: ', $jsonMethod ? $jsonMethod->all() : ['NULL']);
+        } catch (\Exception $e) {
+            Log::info('JSON method failed: ' . $e->getMessage());
+        }
+        
+        // Try manual JSON decode
+        $rawContent = $request->getContent();
+        if (!empty($rawContent)) {
+            $manualDecode = json_decode($rawContent, true);
+            Log::info('Manual JSON decode: ', $manualDecode ?: ['FAILED']);
+            Log::info('JSON decode error: ' . json_last_error_msg());
+        }
+        
+        Log::info('=== RETELL AI REQUEST DEBUG END ===');
+
         // Validate API key
         if ($response = $this->validateApiKey($request)) {
             return $response;
