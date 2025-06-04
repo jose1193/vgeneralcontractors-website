@@ -37,8 +37,12 @@ class RetellAIController extends Controller
         
         // If still null, try to get from JSON body directly
         if (is_null($apiKey)) {
-            $jsonData = $request->json()->all();
-            $apiKey = $jsonData['api_key'] ?? null;
+            try {
+                $jsonData = $request->json()->all();
+                $apiKey = $jsonData['api_key'] ?? null;
+            } catch (\Exception $e) {
+                // JSON parsing failed, will try raw content
+            }
         }
         
         // If still null, try raw input
@@ -54,16 +58,25 @@ class RetellAIController extends Controller
         
         $validApiKey = env('API_KEY_STORE_API_REST');
         
-        // Temporary debug logs
-        Log::info('RetellAI API Key Debug', [
-            'received_api_key' => $apiKey,
+        // DETAILED debug logs
+        Log::info('RetellAI DETAILED API Key Debug', [
+            'step1_header_x_api_key' => $request->header('X-API-KEY'),
+            'step2_input_api_key' => $request->input('api_key'),
+            'step3_get_api_key' => $request->get('api_key'),
+            'step4_json_available' => $request->json() !== null,
+            'step4_json_data' => $request->json() ? $request->json()->all() : 'JSON_NULL',
+            'step5_raw_content' => $request->getContent(),
+            'step5_raw_content_length' => strlen($request->getContent()),
+            'step5_json_decode' => json_decode($request->getContent(), true),
+            'final_api_key' => $apiKey,
             'valid_api_key' => $validApiKey,
             'request_method' => $request->method(),
             'content_type' => $request->header('Content-Type'),
             'request_has_json' => $request->isJson(),
-            'raw_content' => $request->getContent(),
-            'parsed_input' => $request->all(),
-            'json_all' => $request->json() ? $request->json()->all() : null,
+            'all_headers' => $request->headers->all(),
+            'all_input' => $request->all(),
+            'query_params' => $request->query->all(),
+            'request_format' => $request->format(),
         ]);
         
         if ($apiKey !== $validApiKey) {
