@@ -38,6 +38,9 @@ Route::prefix('facebook-leads')->group(function () {
 
 // Retell AI API Routes - Public endpoints without auth middleware
 Route::prefix('retell')->group(function () {
+    // Test endpoint for debugging
+    Route::post('/test', [RetellAIController::class, 'testEndpoint']);
+    
     // Lead management
     Route::post('/leads', [RetellAIController::class, 'storeLead']);
     

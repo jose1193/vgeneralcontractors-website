@@ -105,6 +105,26 @@ class RetellAIController extends Controller
     }
 
     /**
+     * Helper method to extract request data from both JSON and form requests
+     */
+    private function getRequestData(Request $request)
+    {
+        $requestData = $request->all();
+        
+        // If request->all() is empty but we have content, try JSON parsing
+        if (empty($requestData) && !empty($request->getContent())) {
+            $content = $request->getContent();
+            $decoded = json_decode($content, true);
+            
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $requestData = $decoded;
+            }
+        }
+        
+        return $requestData;
+    }
+
+    /**
      * Clear appointments cache - Consistent with AppointmentCalendarController
      */
     private function clearAppointmentsCache()
@@ -136,7 +156,10 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        // Get request data - handle both form data and JSON
+        $requestData = $this->getRequestData($request);
+        
+        $validator = Validator::make($requestData, [
             'first_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'last_name' => ['required', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'phone' => ['required', 'string', 'min:10', 'max:15'], // Required phone validation
@@ -330,7 +353,9 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        $requestData = $this->getRequestData($request);
+
+        $validator = Validator::make($requestData, [
             'start_date' => 'nullable|date|after_or_equal:today',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'date' => 'nullable|date|after_or_equal:today', // Single date search
@@ -354,25 +379,25 @@ class RetellAIController extends Controller
             $searchDescription = '';
 
             // Priority 1: Single date search
-            if ($request->has('date') && !empty($request->input('date'))) {
-                $singleDate = $this->convertDateFormat($request->input('date'));
+            if (isset($requestData['date']) && !empty($requestData['date'])) {
+                $singleDate = $this->convertDateFormat($requestData['date']);
                 $startDate = $singleDate;
                 $endDate = $singleDate;
                 $periodType = 'single_date';
                 $searchDescription = 'Single date: ' . $singleDate;
             }
             // Priority 2: Date range search (start_date + end_date)
-            elseif ($request->has('start_date') && !empty($request->input('start_date')) && 
-                    $request->has('end_date') && !empty($request->input('end_date'))) {
-                $startDate = $this->convertDateFormat($request->input('start_date'));
-                $endDate = $this->convertDateFormat($request->input('end_date'));
+            elseif (isset($requestData['start_date']) && !empty($requestData['start_date']) && 
+                    isset($requestData['end_date']) && !empty($requestData['end_date'])) {
+                $startDate = $this->convertDateFormat($requestData['start_date']);
+                $endDate = $this->convertDateFormat($requestData['end_date']);
                 $periodType = 'date_range';
                 $searchDescription = 'Date range: ' . $startDate . ' to ' . $endDate;
             }
             // Priority 3: From start_date with days_ahead
-            elseif ($request->has('start_date') && !empty($request->input('start_date'))) {
-                $startDate = $this->convertDateFormat($request->input('start_date'));
-                $daysAhead = $request->input('days_ahead', 7); // Default 7 days if not specified
+            elseif (isset($requestData['start_date']) && !empty($requestData['start_date'])) {
+                $startDate = $this->convertDateFormat($requestData['start_date']);
+                $daysAhead = $requestData['days_ahead'] ?? 7; // Default 7 days if not specified
                 $endDate = Carbon::parse($startDate)->addDays($daysAhead)->format('Y-m-d');
                 $periodType = 'start_date_with_days';
                 $searchDescription = 'From ' . $startDate . ' for ' . $daysAhead . ' days';
@@ -380,7 +405,7 @@ class RetellAIController extends Controller
             // Priority 4: Default behavior (current month + following months)
             else {
                 $today = Carbon::now();
-                $monthsAhead = $request->input('months_ahead', 2);
+                $monthsAhead = $requestData['months_ahead'] ?? 2;
                 $startDate = $today->format('Y-m-d');
                 $endDate = $today->copy()->addMonths($monthsAhead)->endOfMonth()->format('Y-m-d');
                 $periodType = 'current_and_following_months';
@@ -434,7 +459,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to fetch availability via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'request_data' => $request->all()
+                'request_data' => $requestData
             ]);
 
             return response()->json([
@@ -461,7 +486,9 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        $requestData = $this->getRequestData($request);
+
+        $validator = Validator::make($requestData, [
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'first_name' => 'nullable|string|min:2',
@@ -485,44 +512,44 @@ class RetellAIController extends Controller
             $searchType = '';
 
             // Priority 1: Search by email (most specific)
-            if ($request->has('email') && !empty($request->input('email'))) {
-                $query->where('email', $request->input('email'));
-                $searchCriteria['email'] = $request->input('email');
+            if (isset($requestData['email']) && !empty($requestData['email'])) {
+                $query->where('email', $requestData['email']);
+                $searchCriteria['email'] = $requestData['email'];
                 $searchType = 'email';
             }
 
             // Priority 2: Search by phone
-            if ($request->has('phone') && !empty($request->input('phone'))) {
-                $query->where('phone', $request->input('phone'));
-                $searchCriteria['phone'] = $request->input('phone');
+            if (isset($requestData['phone']) && !empty($requestData['phone'])) {
+                $query->where('phone', $requestData['phone']);
+                $searchCriteria['phone'] = $requestData['phone'];
                 $searchType = empty($searchType) ? 'phone' : $searchType . '+phone';
             }
 
             // Priority 3: Search by first_name and last_name (both required if provided)
-            if ($request->has('first_name') && !empty($request->input('first_name')) && 
-                $request->has('last_name') && !empty($request->input('last_name'))) {
-                $query->where('first_name', 'LIKE', '%' . $request->input('first_name') . '%')
-                      ->where('last_name', 'LIKE', '%' . $request->input('last_name') . '%');
-                $searchCriteria['first_name'] = $request->input('first_name');
-                $searchCriteria['last_name'] = $request->input('last_name');
+            if (isset($requestData['first_name']) && !empty($requestData['first_name']) && 
+                isset($requestData['last_name']) && !empty($requestData['last_name'])) {
+                $query->where('first_name', 'LIKE', '%' . $requestData['first_name'] . '%')
+                      ->where('last_name', 'LIKE', '%' . $requestData['last_name'] . '%');
+                $searchCriteria['first_name'] = $requestData['first_name'];
+                $searchCriteria['last_name'] = $requestData['last_name'];
                 $searchType = empty($searchType) ? 'name' : $searchType . '+name';
             }
 
             // Priority 4: Search by inspection date and time
-            if ($request->has('inspection_date') && !empty($request->input('inspection_date'))) {
-                $inspectionDate = $this->convertDateFormat($request->input('inspection_date'));
+            if (isset($requestData['inspection_date']) && !empty($requestData['inspection_date'])) {
+                $inspectionDate = $this->convertDateFormat($requestData['inspection_date']);
                 $query->whereDate('inspection_date', $inspectionDate);
                 $searchCriteria['inspection_date'] = $inspectionDate;
                 $searchType = empty($searchType) ? 'date' : $searchType . '+date';
                 
                 Log::info('Retell AI: Searching by inspection_date', [
-                    'original_date' => $request->input('inspection_date'),
+                    'original_date' => $requestData['inspection_date'],
                     'converted_date' => $inspectionDate
                 ]);
 
                 // If time is also provided, add it to search
-            if ($request->has('inspection_time') && !empty($request->input('inspection_time'))) {
-                $inspectionTime = $request->input('inspection_time');
+            if (isset($requestData['inspection_time']) && !empty($requestData['inspection_time'])) {
+                $inspectionTime = $requestData['inspection_time'];
                 // Convert from HH:MM:SS to HH:MM if needed
                 if (strlen($inspectionTime) === 8) {
                     $inspectionTime = substr($inspectionTime, 0, 5);
@@ -532,13 +559,13 @@ class RetellAIController extends Controller
                     $searchType = str_replace('date', 'date+time', $searchType);
                 
                 Log::info('Retell AI: Searching by inspection_time', [
-                    'original_time' => $request->input('inspection_time'),
+                    'original_time' => $requestData['inspection_time'],
                     'converted_time' => $inspectionTime
                 ]);
                 }
-            } elseif ($request->has('inspection_time') && !empty($request->input('inspection_time'))) {
+            } elseif (isset($requestData['inspection_time']) && !empty($requestData['inspection_time'])) {
                 // Time only search (without date)
-                $inspectionTime = $request->input('inspection_time');
+                $inspectionTime = $requestData['inspection_time'];
                 if (strlen($inspectionTime) === 8) {
                     $inspectionTime = substr($inspectionTime, 0, 5);
                 }
@@ -595,7 +622,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to fetch client appointments via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'search_params' => $request->all(),
+                'search_params' => $requestData,
                 'stack_trace' => $e->getTraceAsString()
             ]);
 
@@ -671,8 +698,10 @@ class RetellAIController extends Controller
             return $response;
         }
 
+        $requestData = $this->getRequestData($request);
+
         // Validate request body
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
             'api_key' => 'nullable|string', // Allow api_key in body as well
         ]);
@@ -685,7 +714,7 @@ class RetellAIController extends Controller
         }
 
         try {
-            $uuid = $request->input('uuid');
+            $uuid = $requestData['uuid'];
             $appointment = Appointment::where('uuid', $uuid)->first();
 
             if (!$appointment) {
@@ -703,7 +732,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to fetch appointment via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'uuid' => $request->input('uuid')
+                'uuid' => $requestData['uuid'] ?? 'N/A'
             ]);
 
             return response()->json([
@@ -724,7 +753,9 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        $requestData = $this->getRequestData($request);
+
+        $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
             'first_name' => ['sometimes', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
             'last_name' => ['sometimes', 'min:2', 'regex:/^[A-Za-z\s\'-]+$/'],
@@ -747,7 +778,7 @@ class RetellAIController extends Controller
         }
 
         try {
-            $uuid = $request->input('uuid');
+            $uuid = $requestData['uuid'];
             $appointment = Appointment::where('uuid', $uuid)->first();
 
             if (!$appointment) {
@@ -811,7 +842,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to update appointment personal data via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'uuid' => $request->input('uuid')
+                'uuid' => $requestData['uuid'] ?? 'N/A'
             ]);
 
             return response()->json([
@@ -832,8 +863,10 @@ class RetellAIController extends Controller
             return $response;
         }
 
+        $requestData = $this->getRequestData($request);
+
         // Validate request body
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
             'api_key' => 'nullable|string', // Allow api_key in body as well
         ]);
@@ -846,7 +879,7 @@ class RetellAIController extends Controller
         }
 
         try {
-            $uuid = $request->input('uuid');
+            $uuid = $requestData['uuid'];
             $appointment = Appointment::where('uuid', $uuid)->first();
 
             if (!$appointment) {
@@ -900,7 +933,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to decline appointment via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'uuid' => $request->input('uuid')
+                'uuid' => $requestData['uuid'] ?? 'N/A'
             ]);
 
             return response()->json([
@@ -921,7 +954,9 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        $requestData = $this->getRequestData($request);
+
+        $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
             'new_date' => 'required|date|after_or_equal:today',
             'new_time' => 'required|date_format:H:i',
@@ -936,7 +971,7 @@ class RetellAIController extends Controller
         }
 
         try {
-            $uuid = $request->input('uuid');
+            $uuid = $requestData['uuid'];
             $appointment = Appointment::where('uuid', $uuid)->first();
 
             if (!$appointment) {
@@ -992,7 +1027,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to reschedule appointment via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'uuid' => $request->input('uuid')
+                'uuid' => $requestData['uuid'] ?? 'N/A'
             ]);
 
             return response()->json([
@@ -1013,7 +1048,9 @@ class RetellAIController extends Controller
             return $response;
         }
 
-        $validator = Validator::make($request->all(), [
+        $requestData = $this->getRequestData($request);
+
+        $validator = Validator::make($requestData, [
             'uuid' => 'required|string',
             'inspection_status' => 'required|in:Pending,Confirmed,Completed,Declined',
             'status_lead' => 'nullable|in:New,Called,Pending,Declined',
@@ -1028,7 +1065,7 @@ class RetellAIController extends Controller
         }
 
         try {
-            $uuid = $request->input('uuid');
+            $uuid = $requestData['uuid'];
             $appointment = Appointment::where('uuid', $uuid)->first();
 
             if (!$appointment) {
@@ -1111,7 +1148,7 @@ class RetellAIController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to update appointment status via Retell AI.', [
                 'error_message' => $e->getMessage(),
-                'uuid' => $request->input('uuid')
+                'uuid' => $requestData['uuid'] ?? 'N/A'
             ]);
 
             return response()->json([
