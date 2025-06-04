@@ -33,7 +33,28 @@ class RetellAIController extends Controller
         $apiKey = $request->header('X-API-KEY') ?? $request->input('api_key');
         $validApiKey = env('API_KEY_STORE_API_REST');
         
+        // Temporary debug logs
+        Log::info('RetellAI API Key Debug', [
+            'received_api_key' => $apiKey,
+            'valid_api_key' => $validApiKey,
+            'request_headers' => $request->headers->all(),
+            'request_body' => $request->all(),
+            'user_agent' => $request->userAgent(),
+            'method' => $request->method(),
+            'url' => $request->fullUrl()
+        ]);
+        
         if ($apiKey !== $validApiKey) {
+            Log::warning('RetellAI API Key Validation Failed', [
+                'received' => $apiKey,
+                'expected' => $validApiKey,
+                'are_equal' => $apiKey === $validApiKey,
+                'received_length' => strlen($apiKey ?? ''),
+                'expected_length' => strlen($validApiKey ?? ''),
+                'received_type' => gettype($apiKey),
+                'expected_type' => gettype($validApiKey)
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized access - Invalid API key'
@@ -196,7 +217,7 @@ class RetellAIController extends Controller
                         ]);
                     } else {
                         // Otherwise, send the standard new lead notification
-                        ProcessNewLead::dispatch($createdAppointment);
+                    ProcessNewLead::dispatch($createdAppointment);
                         Log::info('Retell AI: New lead notification dispatched', [
                             'appointment_uuid' => $createdAppointment->uuid,
                             'email' => $createdAppointment->email
@@ -439,20 +460,20 @@ class RetellAIController extends Controller
                 ]);
 
                 // If time is also provided, add it to search
-                if ($request->has('inspection_time') && !empty($request->input('inspection_time'))) {
-                    $inspectionTime = $request->input('inspection_time');
-                    // Convert from HH:MM:SS to HH:MM if needed
-                    if (strlen($inspectionTime) === 8) {
-                        $inspectionTime = substr($inspectionTime, 0, 5);
-                    }
-                    $query->whereTime('inspection_time', $inspectionTime);
-                    $searchCriteria['inspection_time'] = $inspectionTime;
+            if ($request->has('inspection_time') && !empty($request->input('inspection_time'))) {
+                $inspectionTime = $request->input('inspection_time');
+                // Convert from HH:MM:SS to HH:MM if needed
+                if (strlen($inspectionTime) === 8) {
+                    $inspectionTime = substr($inspectionTime, 0, 5);
+                }
+                $query->whereTime('inspection_time', $inspectionTime);
+                $searchCriteria['inspection_time'] = $inspectionTime;
                     $searchType = str_replace('date', 'date+time', $searchType);
-                    
-                    Log::info('Retell AI: Searching by inspection_time', [
-                        'original_time' => $request->input('inspection_time'),
-                        'converted_time' => $inspectionTime
-                    ]);
+                
+                Log::info('Retell AI: Searching by inspection_time', [
+                    'original_time' => $request->input('inspection_time'),
+                    'converted_time' => $inspectionTime
+                ]);
                 }
             } elseif ($request->has('inspection_time') && !empty($request->input('inspection_time'))) {
                 // Time only search (without date)
