@@ -9,10 +9,13 @@ use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Str;
 use App\Helpers\StringHelper;
+use App\Helpers\LanguageHelper;
 use App\Services\FacebookConversionApi;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,11 +35,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set locale from session
+        $this->setLocaleFromSession();
+        
         // Definir rate limiters
         $this->configureRateLimiting();
         
         // Inicializar el controlador de datos de la compañía
         $companyDataController = new CompanyDataController();
+
+        // Share language data with all views
+        $this->shareLanguageDataWithViews();
 
         // Monitoreo de jobs
         Queue::before(function (JobProcessing $event) {
@@ -79,6 +88,40 @@ class AppServiceProvider extends ServiceProvider
 
         Str::macro('readDuration', function ($content, $wordsPerMinute = 200) {
             return StringHelper::readDuration($content, $wordsPerMinute);
+        });
+
+        // Register custom translation macro
+        Str::macro('trans', function ($key, $replace = [], $locale = null) {
+            return LanguageHelper::trans($key, $replace, $locale);
+        });
+    }
+
+    /**
+     * Set locale from session
+     */
+    protected function setLocaleFromSession(): void
+    {
+        if (request()->has('lang')) {
+            $language = request()->get('lang');
+            LanguageHelper::setLanguage($language);
+        } else {
+            $locale = LanguageHelper::getLanguageFromSession();
+            App::setLocale($locale);
+        }
+    }
+
+    /**
+     * Share language data with all views
+     */
+    protected function shareLanguageDataWithViews(): void
+    {
+        View::composer('*', function ($view) {
+            $view->with([
+                'currentLanguage' => LanguageHelper::getCurrentLanguageData(),
+                'availableLanguages' => LanguageHelper::getAvailableLanguages(),
+                'currentLocale' => LanguageHelper::getCurrentLanguage(),
+                'languageDirection' => LanguageHelper::getDirection()
+            ]);
         });
     }
 
