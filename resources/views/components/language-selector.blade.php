@@ -83,7 +83,7 @@
             <img src="{{ asset(LanguageHelper::getLanguageFlagImage(LanguageHelper::getCurrentLanguage())) }}"
                 alt="{{ LanguageHelper::getLanguageName(LanguageHelper::getCurrentLanguage()) }}"
                 class="w-5 h-4 rounded-sm shadow-sm">
-            <span>{{ __('language') }}</span>
+            <span>{{ __('messages.language') }}</span>
         </div>
         <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none"
             stroke="currentColor" viewBox="0 0 24 24">

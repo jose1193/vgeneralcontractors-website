@@ -75,24 +75,25 @@ class LanguageHelper
     {
         $locale = $locale ?? self::getCurrentLanguage();
         
-        // Try to get from messages file first
-        $translation = __("messages.{$key}", $replace, $locale);
+        // First try with full key including messages.
+        $fullKey = str_starts_with($key, 'messages.') ? $key : "messages.{$key}";
+        $translation = trans($fullKey, $replace, $locale);
         
-        // If not found in messages, try the key directly
-        if ($translation === "messages.{$key}") {
-            $translation = __($key, $replace, $locale);
+        // If not found in messages file, try the key directly
+        if ($translation === $fullKey) {
+            $translation = trans($key, $replace, $locale);
         }
         
-        // If still not found, try English as fallback
+        // If still not found and not English, try English as fallback
         if ($translation === $key && $locale !== 'en') {
-            $translation = __("messages.{$key}", $replace, 'en');
+            $translation = trans($fullKey, $replace, 'en');
             
-            if ($translation === "messages.{$key}") {
-                $translation = __($key, $replace, 'en');
+            if ($translation === $fullKey) {
+                $translation = trans($key, $replace, 'en');
             }
         }
         
-        return $translation !== $key ? $translation : $key;
+        return $translation !== $key && $translation !== $fullKey ? $translation : $key;
     }
 
     /**
