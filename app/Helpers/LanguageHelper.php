@@ -71,14 +71,14 @@ class LanguageHelper
     /**
      * Get translation with fallback
      */
-    public static function trans(string $key, array $replace = [], string $locale = null): string
+    public static function trans(string $key, array $replace = [], string $locale = null, bool $capitalize = true): string
     {
         $locale = $locale ?? self::getCurrentLanguage();
         
         // Try to get from messages file first
         $translation = __("messages.{$key}", $replace, $locale);
         
-        // If not found in messages, try the key directly
+        // If not found in messages, try the key directly (for JSON fallback)
         if ($translation === "messages.{$key}") {
             $translation = __($key, $replace, $locale);
         }
@@ -92,7 +92,12 @@ class LanguageHelper
             }
         }
         
-        return $translation !== $key ? $translation : $key;
+        // Apply capitalization if requested and translation was found
+        if ($capitalize && $translation !== $key) {
+            $translation = ucfirst($translation);
+        }
+        
+        return $translation !== $key ? $translation : ucfirst($key);
     }
 
     /**
