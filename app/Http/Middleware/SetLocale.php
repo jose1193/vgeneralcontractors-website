@@ -19,14 +19,30 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
+        // Get the default locale
+        $defaultLocale = config('app.locale', 'en');
+        
         // Check for language parameter in request
         if ($request->has('lang')) {
             $language = $request->get('lang');
-            LanguageHelper::setLanguage($language);
+            $availableLanguages = array_keys(LanguageHelper::getAvailableLanguages());
+            
+            if (in_array($language, $availableLanguages)) {
+                LanguageHelper::setLanguage($language);
+            }
         } else {
-            // Set locale from session or default
-            $locale = LanguageHelper::getLanguageFromSession();
-            App::setLocale($locale);
+            // Get locale from session or use default
+            $locale = Session::get('locale', $defaultLocale);
+            $availableLanguages = array_keys(LanguageHelper::getAvailableLanguages());
+            
+            // Validate the locale from session
+            if (in_array($locale, $availableLanguages)) {
+                App::setLocale($locale);
+            } else {
+                // Fallback to default and store it
+                App::setLocale($defaultLocale);
+                Session::put('locale', $defaultLocale);
+            }
         }
 
         return $next($request);

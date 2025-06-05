@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use App\Helpers\LanguageHelper;
+use Illuminate\Support\Facades\Log;
 
 class LanguageController extends Controller
 {
@@ -15,15 +16,29 @@ class LanguageController extends Controller
      */
     public function switch(Request $request, string $language): RedirectResponse
     {
+        // Log the attempt
+        Log::info('Language switch attempt', [
+            'requested_language' => $language,
+            'current_locale' => App::getLocale(),
+            'session_locale' => Session::get('locale')
+        ]);
+
         // Validate language
         $availableLanguages = array_keys(LanguageHelper::getAvailableLanguages());
         
         if (!in_array($language, $availableLanguages)) {
+            Log::warning('Invalid language requested', ['language' => $language]);
             return redirect()->back()->withErrors(['language' => 'Invalid language selected']);
         }
 
         // Set language in session
         LanguageHelper::setLanguage($language);
+        
+        // Verify the change
+        Log::info('Language set', [
+            'new_locale' => App::getLocale(),
+            'session_locale' => Session::get('locale')
+        ]);
 
         // Get redirect URL from request or fallback to previous page
         $redirectUrl = $request->get('redirect', url()->previous());
@@ -51,6 +66,11 @@ class LanguageController extends Controller
     public function ajaxSwitch(Request $request): \Illuminate\Http\JsonResponse
     {
         $language = $request->input('language');
+        
+        Log::info('AJAX Language switch attempt', [
+            'requested_language' => $language,
+            'current_locale' => App::getLocale()
+        ]);
         
         // Validate language
         $availableLanguages = array_keys(LanguageHelper::getAvailableLanguages());

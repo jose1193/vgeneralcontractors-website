@@ -55,8 +55,13 @@ class LanguageHelper
         $availableLanguages = array_keys(self::getAvailableLanguages());
         
         if (in_array($language, $availableLanguages)) {
+            // Set in session first
             Session::put('locale', $language);
+            // Then set the app locale
             App::setLocale($language);
+            
+            // Force session save
+            Session::save();
         }
     }
 
