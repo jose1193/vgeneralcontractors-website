@@ -27,7 +27,7 @@
             </svg>
         </button>
 
-        <nav class="hidden md:flex space-x-6 items-center capitalize">
+        <nav class="hidden md:flex space-x-6 items-center">
             <a href="{{ route('home') }}"
                 :class="{
                     'text-white': !isScrolled && '{{ request()->routeIs('home') }}',
@@ -194,7 +194,7 @@
         x-transition:leave-end="-translate-x-full"
         class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform md:hidden z-50"
         @click.away="isDrawerOpen = false">
-        <div class="p-6 space-y-4 capitalize">
+        <div class="p-6 space-y-4">
             <!-- Logo centered at top -->
             <div class="flex justify-center mb-8">
                 <img src="{{ asset('assets/logo/logo3.webp') }}" alt="V General Contractors Logo" class="h-12">
