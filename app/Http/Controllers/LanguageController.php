@@ -15,22 +15,21 @@ class LanguageController extends Controller
      */
     public function switch(Request $request, string $language): RedirectResponse
     {
-        // Available languages
-        $availableLanguages = ['en', 'es'];
+        // Validate language
+        $availableLanguages = array_keys(LanguageHelper::getAvailableLanguages());
         
         if (!in_array($language, $availableLanguages)) {
             return redirect()->back()->withErrors(['language' => 'Invalid language selected']);
         }
 
         // Set language in session
-        Session::put('locale', $language);
-        App::setLocale($language);
+        LanguageHelper::setLanguage($language);
 
         // Get redirect URL from request or fallback to previous page
         $redirectUrl = $request->get('redirect', url()->previous());
         
         // Flash success message
-        Session::flash('language_changed', true);
+        Session::flash('language_changed', LanguageHelper::trans('language_changed_successfully'));
 
         return redirect($redirectUrl);
     }

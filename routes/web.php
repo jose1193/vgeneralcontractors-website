@@ -25,11 +25,6 @@ Route::get('/language/switch/{language}', [LanguageController::class, 'switch'])
 Route::post('/language/ajax-switch', [LanguageController::class, 'ajaxSwitch'])->name('language.ajax-switch');
 Route::get('/api/language/current', [LanguageController::class, 'current'])->name('language.current');
 
-// Test route for translation debugging
-Route::get('/test-translation', function () {
-    return view('test-translation');
-})->name('test.translation');
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');

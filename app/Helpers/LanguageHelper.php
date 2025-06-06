@@ -52,7 +52,7 @@ class LanguageHelper
      */
     public static function setLanguage(string $language): void
     {
-        $availableLanguages = ['en', 'es'];
+        $availableLanguages = array_keys(self::getAvailableLanguages());
         
         if (in_array($language, $availableLanguages)) {
             Session::put('locale', $language);
@@ -71,29 +71,28 @@ class LanguageHelper
     /**
      * Get translation with fallback
      */
-    public static function trans(string $key, array $replace = [], string $locale = null, bool $capitalize = true): string
+    public static function trans(string $key, array $replace = [], string $locale = null): string
     {
         $locale = $locale ?? self::getCurrentLanguage();
         
-        // Try to get from messages file with the current locale
-        $translation = trans("messages.{$key}", $replace, $locale);
+        // Try to get from messages file first
+        $translation = __("messages.{$key}", $replace, $locale);
         
-        // If not found, try English as fallback
-        if ($translation === "messages.{$key}" && $locale !== 'en') {
-            $translation = trans("messages.{$key}", $replace, 'en');
-        }
-        
-        // If still not found, return the key with capitalization
+        // If not found in messages, try the key directly
         if ($translation === "messages.{$key}") {
-            return $capitalize ? ucfirst(str_replace('_', ' ', $key)) : str_replace('_', ' ', $key);
+            $translation = __($key, $replace, $locale);
         }
         
-        // Apply capitalization if requested
-        if ($capitalize) {
-            $translation = ucfirst($translation);
+        // If still not found, try English as fallback
+        if ($translation === $key && $locale !== 'en') {
+            $translation = __("messages.{$key}", $replace, 'en');
+            
+            if ($translation === "messages.{$key}") {
+                $translation = __($key, $replace, 'en');
+            }
         }
         
-        return $translation;
+        return $translation !== $key ? $translation : $key;
     }
 
     /**

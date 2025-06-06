@@ -2,9 +2,6 @@
     use App\Helpers\PhoneHelper;
     use App\Helpers\LanguageHelper;
 @endphp
-
-<!-- Debug: Locale={{ app()->getLocale() }} Session={{ session('locale', 'none') }} -->
-
 <header x-data="{ isScrolled: false, isDrawerOpen: false }" @scroll.window="isScrolled = (window.pageYOffset > 20)"
     :class="{ 'bg-white shadow-md': isScrolled, 'bg-transparent': !isScrolled }"
     class="fixed w-full top-0 z-40 transition-all duration-300">
@@ -38,7 +35,7 @@
                     'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('home') }}',
                     'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('home') }}'
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">{{ trans('messages.home') }}</a>
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">{{ __('home') }}</a>
 
             <a href="{{ route('about') }}"
                 :class="{
@@ -47,7 +44,7 @@
                     'text-gray-700 hover:text-gray-900': isScrolled && !'{{ request()->routeIs('about') }}',
                     'text-yellow-400 hover:text-yellow-300': !isScrolled && !'{{ request()->routeIs('about') }}'
                 }"
-                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">{{ trans('messages.about_us') }}</a>
+                class="font-semibold transition-colors duration-300 ease-in-out relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-current after:transition-all after:duration-300">{{ __('about_us') }}</a>
 
             <!-- Services Dropdown -->
             <div x-data="{ open: false }" class="relative">

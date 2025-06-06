@@ -35,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set locale from session
+        $this->setLocaleFromSession();
+        
         // Definir rate limiters
         $this->configureRateLimiting();
         
@@ -93,7 +96,19 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-
+    /**
+     * Set locale from session
+     */
+    protected function setLocaleFromSession(): void
+    {
+        if (request()->has('lang')) {
+            $language = request()->get('lang');
+            LanguageHelper::setLanguage($language);
+        } else {
+            $locale = LanguageHelper::getLanguageFromSession();
+            App::setLocale($locale);
+        }
+    }
 
     /**
      * Share language data with all views
