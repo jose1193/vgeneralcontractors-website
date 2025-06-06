@@ -15,9 +15,11 @@
     <meta name="theme-color" content="#1F2937" />
 
     <!-- Primary Meta Tags -->
-    <title>V General Contractors | {{ __('professional_roofing_texas') }}</title>
-    <meta name="title" content="{{ __('professional_roofing_texas') }} | V General Contractors">
-    <meta name="description" content="{{ __('expert_roofing_houston_dallas') }}">
+    <title>V General Contractors | Professional Commercial & Residential Roofing Services in Texas </title>
+    <meta name="title"
+        content="Professional Commercial & Residential Roofing Services in Texas | V General Contractors">
+    <meta name="description"
+        content="Expert commercial and residential roofing in Texas. GAF certified contractors specializing in roof installation, repairs, and storm damage restoration in Houston & Dallas. Free inspections available.">
     <meta name="keywords"
         content="commercial roofing texas, residential roofing houston, roofing contractors dallas, texas roof repair services, commercial roof installation houston, business roofing solutions dallas, emergency roof repair texas, storm damage restoration houston, gaf certified commercial roofer, commercial roof maintenance, industrial roofing services, commercial roof inspection, flat roof specialists texas, commercial roofing company houston, metal roofing contractors dallas, commercial roof replacement texas">
     <meta name="robots" content="index,follow">
@@ -25,8 +27,9 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="{{ __('hero_title') }} | V General Contractors">
-    <meta property="og:description" content="{{ __('expert_roofing_houston_dallas') }}">
+    <meta property="og:title" content="Texas Commercial & Residential Roofing Experts | V General Contractors">
+    <meta property="og:description"
+        content="Leading commercial and residential roofing contractors in Texas. Expert installation, repair, and maintenance services for businesses and homes in Houston & Dallas.">
     <meta property="og:image" content="{{ asset('assets/logo/logo3.webp') }}">
     <meta property="og:site_name" content="V General Contractors">
     <meta property="fb:app_id" content="123456789">
@@ -34,8 +37,9 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="{{ __('hero_title') }}">
-    <meta property="twitter:description" content="{{ __('expert_roofing_houston_dallas') }}">
+    <meta property="twitter:title" content="Expert Commercial & Residential Roofing Services in Texas">
+    <meta property="twitter:description"
+        content="Professional roofing solutions for Texas businesses and homes. GAF certified experts in installation, repair, and storm damage restoration. Free consultations available.">
     <meta property="twitter:image" content="{{ asset('assets/logo/logo3.webp') }}">
     <meta name="twitter:site" content="@VGeneralContractors">
     <meta name="twitter:creator" content="@VGeneralContractors">

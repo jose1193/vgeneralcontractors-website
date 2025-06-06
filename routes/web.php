@@ -14,16 +14,10 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FacebookLeadFormController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\ContactSupportController;
-use App\Http\Controllers\LanguageController;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppointmentController;
-
-// Language Routes
-Route::get('/language/switch/{language}', [LanguageController::class, 'switch'])->name('language.switch');
-Route::post('/language/ajax-switch', [LanguageController::class, 'ajaxSwitch'])->name('language.ajax-switch');
-Route::get('/api/language/current', [LanguageController::class, 'current'])->name('language.current');
 
 Route::get('/', function () {
     return view('welcome');
@@ -227,3 +221,8 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
+
+// Test multilingual functionality
+Route::get('/test-multilang', function () {
+    return view('example-multilang');
+})->name('test.multilang');
