@@ -13,20 +13,24 @@ class TranslationHelper
     {
         $locale = $locale ?? App::getLocale();
         
-        // Try to get translation from JSON files first
-        $translation = __("app.{$key}", $parameters, $locale);
+        // Try different translation methods in order of preference:
         
-        // If translation not found, try without app prefix
-        if ($translation === "app.{$key}") {
-            $translation = __($key, $parameters, $locale);
+        // 1. Try messages.{key} (PHP files)
+        $translation = __("messages.{$key}", $parameters, $locale);
+        if ($translation !== "messages.{$key}") {
+            return $translation;
         }
         
-        // If still not found, return the key
-        if ($translation === $key) {
-            return ucfirst(str_replace('_', ' ', $key));
+        // 2. Try direct key from JSON files
+        $translation = __($key, $parameters, $locale);
+        if ($translation !== $key) {
+            return $translation;
         }
         
-        return $translation;
+        // 3. Try converting snake_case to spaces for better readability
+        $fallback = ucwords(str_replace(['_', '-'], ' ', $key));
+        
+        return $fallback;
     }
     
     /**
@@ -53,6 +57,11 @@ class TranslationHelper
         $localeInfo = self::getCurrentLocaleInfo();
         $format = $format ?? $localeInfo['date_format'];
         
+        // Convert Carbon instance if needed
+        if (is_string($date)) {
+            $date = \Carbon\Carbon::parse($date);
+        }
+        
         return $date->format($format);
     }
     
@@ -65,6 +74,11 @@ class TranslationHelper
         
         $localeInfo = self::getCurrentLocaleInfo();
         $format = $format ?? $localeInfo['time_format'];
+        
+        // Convert Carbon instance if needed
+        if (is_string($time)) {
+            $time = \Carbon\Carbon::parse($time);
+        }
         
         return $time->format($format);
     }
@@ -86,5 +100,14 @@ class TranslationHelper
         $rtlLocales = ['ar', 'he', 'fa', 'ur'];
         
         return in_array($locale, $rtlLocales);
+    }
+    
+    /**
+     * Helper method to get message translation specifically
+     */
+    public static function message($key, $parameters = [], $locale = null)
+    {
+        $locale = $locale ?? App::getLocale();
+        return __("messages.{$key}", $parameters, $locale);
     }
 } 

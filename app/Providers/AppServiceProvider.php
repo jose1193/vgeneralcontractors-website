@@ -134,23 +134,25 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerTranslationHelper(): void
     {
-        // Make TranslationHelper available globally
-        if (!function_exists('trans_app')) {
-            function trans_app($key, $parameters = [], $locale = null) {
-                return \App\Helpers\TranslationHelper::trans($key, $parameters, $locale);
-            }
-        }
-        
-        if (!function_exists('format_locale_date')) {
-            function format_locale_date($date, $format = null) {
-                return \App\Helpers\TranslationHelper::formatDate($date, $format);
-            }
-        }
-        
-        if (!function_exists('format_locale_time')) {
-            function format_locale_time($time, $format = null) {
-                return \App\Helpers\TranslationHelper::formatTime($time, $format);
-            }
-        }
+        // Translation helper functions are now loaded automatically from app/helpers.php
+        // This method is kept for future custom translation logic if needed
+    }
+
+    /**
+     * Register custom Blade directives
+     */
+    protected function registerBladeDirectives(): void
+    {
+        // Add any custom Blade directives here if needed
+        // For now, this method exists to prevent the error
+    }
+
+    /**
+     * Register custom string macros
+     */
+    protected function registerStringMacros(): void
+    {
+        // String macros are already registered in the boot method
+        // This method exists to prevent the error and can be used for additional macros
     }
 }
