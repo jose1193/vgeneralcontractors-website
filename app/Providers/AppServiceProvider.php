@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -92,12 +91,9 @@ class AppServiceProvider extends ServiceProvider
         Str::macro('trans', function ($key, $replace = [], $locale = null) {
             return LanguageHelper::trans($key, $replace, $locale);
         });
-
-        // Register global helper for translations
-        Blade::directive('trans', function ($expression) {
-            return "<?php echo \\App\\Helpers\\LanguageHelper::trans({$expression}); ?>";
-        });
     }
+
+
 
     /**
      * Share language data with all views
