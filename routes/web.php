@@ -19,8 +19,6 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppointmentController;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\App;
 
 // Language Routes
 Route::get('/language/switch/{language}', [LanguageController::class, 'switch'])->name('language.switch');
@@ -31,13 +29,6 @@ Route::get('/api/language/current', [LanguageController::class, 'current'])->nam
 Route::get('/test-translation', function () {
     return view('test-translation');
 })->name('test.translation');
-
-// Route to clear language session
-Route::get('/clear-language-session', function () {
-    Session::forget('locale');
-    App::setLocale('en');
-    return redirect('/test-translation')->with('message', 'Language session cleared');
-});
 
 Route::get('/', function () {
     return view('welcome');

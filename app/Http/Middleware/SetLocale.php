@@ -21,17 +21,24 @@ class SetLocale
         // Available languages
         $availableLanguages = ['en', 'es'];
         
-        // Get language from session first
-        $locale = Session::get('locale', config('app.locale', 'en'));
-        
-        // Ensure it's a valid language
-        if (!in_array($locale, $availableLanguages)) {
-            $locale = 'en';
-            Session::put('locale', $locale);
+        // Check for language parameter in request first (for manual switches)
+        if ($request->has('lang')) {
+            $language = $request->get('lang');
+            if (in_array($language, $availableLanguages)) {
+                Session::put('locale', $language);
+                App::setLocale($language);
+            }
+        } else {
+            // Get language from session or default to 'en'
+            $locale = Session::get('locale', config('app.locale', 'en'));
+            
+            // Ensure it's a valid language
+            if (!in_array($locale, $availableLanguages)) {
+                $locale = 'en';
+            }
+            
+            App::setLocale($locale);
         }
-        
-        // Set the application locale
-        App::setLocale($locale);
 
         return $next($request);
     }

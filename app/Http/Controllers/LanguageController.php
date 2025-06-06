@@ -22,20 +22,12 @@ class LanguageController extends Controller
             return redirect()->back()->withErrors(['language' => 'Invalid language selected']);
         }
 
-        // Set language in session and locale immediately
+        // Set language in session
         Session::put('locale', $language);
         App::setLocale($language);
 
-        // Get redirect URL from request or fallback to current page
-        $redirectUrl = $request->get('redirect');
-        
-        // If no redirect URL, use the current URL without parameters
-        if (!$redirectUrl) {
-            $redirectUrl = url()->current();
-        }
-        
-        // Remove any language parameters from the redirect URL
-        $redirectUrl = strtok($redirectUrl, '?');
+        // Get redirect URL from request or fallback to previous page
+        $redirectUrl = $request->get('redirect', url()->previous());
         
         // Flash success message
         Session::flash('language_changed', true);
