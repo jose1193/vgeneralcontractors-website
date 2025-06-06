@@ -29,12 +29,13 @@ class SetLocale
                 App::setLocale($language);
             }
         } else {
-            // Get language from session or default to 'en'
+            // Get language from session or default to config
             $locale = Session::get('locale', config('app.locale', 'en'));
             
             // Ensure it's a valid language
             if (!in_array($locale, $availableLanguages)) {
                 $locale = 'en';
+                Session::put('locale', $locale); // Update session with valid locale
             }
             
             App::setLocale($locale);
