@@ -21,25 +21,39 @@ class SetLocale
         // Available languages
         $availableLanguages = ['en', 'es'];
         
+        $locale = null;
+        
         // Check for language parameter in request first (for manual switches)
         if ($request->has('lang')) {
             $language = $request->get('lang');
             if (in_array($language, $availableLanguages)) {
+                $locale = $language;
                 Session::put('locale', $language);
-                App::setLocale($language);
+                \Log::info("SetLocale: Language switched via parameter", ['language' => $language]);
             }
-        } else {
-            // Get language from session or default to config
-            $locale = Session::get('locale', config('app.locale', 'en'));
-            
-            // Ensure it's a valid language
-            if (!in_array($locale, $availableLanguages)) {
-                $locale = 'en';
-                Session::put('locale', $locale); // Update session with valid locale
-            }
-            
-            App::setLocale($locale);
         }
+        
+        // If no request parameter, get from session
+        if (!$locale) {
+            $locale = Session::get('locale', config('app.locale', 'en'));
+        }
+        
+        // Ensure it's a valid language
+        if (!in_array($locale, $availableLanguages)) {
+            $locale = 'en';
+            Session::put('locale', $locale);
+        }
+        
+        // Force set the locale
+        App::setLocale($locale);
+        
+        // Double check and log
+        \Log::info("SetLocale: Final locale set", [
+            'requested_locale' => $locale,
+            'session_locale' => Session::get('locale'),
+            'app_locale' => App::getLocale(),
+            'config_locale' => config('app.locale')
+        ]);
 
         return $next($request);
     }
