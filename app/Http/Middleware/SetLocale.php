@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
-use App\Helpers\LanguageHelper;
 
 class SetLocale
 {
@@ -19,13 +18,25 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check for language parameter in request
+        // Available languages
+        $availableLanguages = ['en', 'es'];
+        
+        // Check for language parameter in request first (for manual switches)
         if ($request->has('lang')) {
             $language = $request->get('lang');
-            LanguageHelper::setLanguage($language);
+            if (in_array($language, $availableLanguages)) {
+                Session::put('locale', $language);
+                App::setLocale($language);
+            }
         } else {
-            // Set locale from session or default
-            $locale = LanguageHelper::getLanguageFromSession();
+            // Get language from session or default to 'en'
+            $locale = Session::get('locale', config('app.locale', 'en'));
+            
+            // Ensure it's a valid language
+            if (!in_array($locale, $availableLanguages)) {
+                $locale = 'en';
+            }
+            
             App::setLocale($locale);
         }
 

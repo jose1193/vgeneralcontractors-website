@@ -52,7 +52,7 @@ class LanguageHelper
      */
     public static function setLanguage(string $language): void
     {
-        $availableLanguages = array_keys(self::getAvailableLanguages());
+        $availableLanguages = ['en', 'es'];
         
         if (in_array($language, $availableLanguages)) {
             Session::put('locale', $language);
