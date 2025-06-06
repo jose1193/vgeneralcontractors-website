@@ -13,7 +13,6 @@ use App\Services\FacebookConversionApi;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,23 +32,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS in production
-        if (config('app.env') === 'production') {
-            URL::forceScheme('https');
-        }
-
-        // Configure rate limiting
+        // Definir rate limiters
         $this->configureRateLimiting();
-
-        // Register custom Blade directives
-        $this->registerBladeDirectives();
-
-        // Register custom string macros
-        $this->registerStringMacros();
         
-        // Register translation helper
-        $this->registerTranslationHelper();
-
         // Inicializar el controlador de datos de la compañía
         $companyDataController = new CompanyDataController();
 
@@ -127,30 +112,5 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('global', function (Request $request) {
             return Limit::perMinute(300)->by($request->ip());
         });
-    }
-
-    /**
-     * Register translation helper methods
-     */
-    protected function registerTranslationHelper(): void
-    {
-        // Make TranslationHelper available globally
-        if (!function_exists('trans_app')) {
-            function trans_app($key, $parameters = [], $locale = null) {
-                return \App\Helpers\TranslationHelper::trans($key, $parameters, $locale);
-            }
-        }
-        
-        if (!function_exists('format_locale_date')) {
-            function format_locale_date($date, $format = null) {
-                return \App\Helpers\TranslationHelper::formatDate($date, $format);
-            }
-        }
-        
-        if (!function_exists('format_locale_time')) {
-            function format_locale_time($time, $format = null) {
-                return \App\Helpers\TranslationHelper::formatTime($time, $format);
-            }
-        }
     }
 }

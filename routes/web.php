@@ -221,8 +221,3 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
-
-// Test multilingual functionality
-Route::get('/test-multilang', function () {
-    return view('example-multilang');
-})->name('test.multilang');
