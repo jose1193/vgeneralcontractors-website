@@ -43,18 +43,24 @@
     <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center mt-12 lg:mt-0">
         <!-- Left Text Content -->
         <div class="text-white md:w-1/2 mt-8 sm:mt-32 md:mt-0">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
-                {{ __('Hero Title') }}</h1>
-            <h2 class="text-xl sm:text-2xl md:text-3xl text-yellow-400 mb-3 md:mb-4">{{ __('Hero Subtitle') }}</h2>
-            <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8">{{ __('Hero Description') }}</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">Professional
+                Commercial & Residential Roofing Services
+                in Texas</h1>
+            <h2 class="text-xl sm:text-2xl md:text-3xl text-yellow-400 mb-3 md:mb-4">Expert Roofing Solutions for
+                Businesses and Homes</h2>
+            <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8">GAF certified contractors providing
+                superior <b>roofing services in
+                    Houston, Dallas, and surrounding areas.</b> Specializing in commercial installations, repairs, and
+                storm
+                damage restoration.</p>
             <div class="flex flex-col sm:flex-row gap-4">
                 <x-primary-button @click="$dispatch('open-appointment-modal')"
                     class="w-full sm:w-auto text-center justify-center">
-                    {{ __('Book A Free Inspection') }}
+                    Book A Free Inspection
                 </x-primary-button>
                 <a href="{{ route('roof-repair') }}"
                     class="w-full sm:w-auto text-center justify-center border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black">
-                    {{ __('Explore Our Services') }}
+                    Explore Our Services
                 </a>
             </div>
         </div>
@@ -63,8 +69,12 @@
         <div class="w-full md:w-3/6 mt-8 md:mt-0 md:ml-0 lg:ml-10 lg:mt-20 mb-8 md:mb-0">
             <!-- Added lg:mt-20, mb-8, md:mb-0 -->
             <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
-                <h3 class="font-bold text-lg mb-2">{{ __('Emergency Roof Repair Title') }}</h3>
-                <p class="text-sm">{{ __('Emergency Roof Repair Description') }}</p>
+                <h3 class="font-bold text-lg mb-2">Emergency Roof Repair Needed?</h3>
+                <p class="text-sm">Don't wait until it's too late! Roof damage can lead to costly repairs if left
+                    unchecked. Schedule
+                    your free inspection now and protect your home. <b>Plus, we work with certified public adjusters and
+                        manage the insurance claim process for you, helping maximize your coverage and minimize
+                        stress.</b></p>
             </div>
         </div>
     </div>

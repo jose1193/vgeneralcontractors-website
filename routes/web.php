@@ -222,30 +222,7 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
 
-// Language switching route
-Route::post('/set-locale', function (Request $request) {
-    $locale = $request->input('locale');
-    $availableLocales = ['es', 'en'];
-    
-    if (in_array($locale, $availableLocales)) {
-        // Store in session
-        session(['locale' => $locale]);
-        
-        // If user is authenticated, save to user preference
-        if (auth()->check()) {
-            auth()->user()->update(['locale' => $locale]);
-        }
-    }
-    
-    return redirect()->back();
-})->name('set-locale');
-
 // Test multilingual functionality
 Route::get('/test-multilang', function () {
     return view('example-multilang');
 })->name('test.multilang');
-
-// Test translation system
-Route::get('/test-translation', function () {
-    return view('test-translation');
-})->name('test.translation');

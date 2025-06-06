@@ -5,9 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('messages.welcome') }} - V General Contractors</title>
+    <title>{{ __('app.Welcome') }} - V General Contractors</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body class="bg-gray-100">
@@ -20,128 +19,121 @@
         <!-- Main Content -->
         <div class="bg-white rounded-lg shadow-lg p-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">
-                {{ __('messages.welcome') }} - {{ __('messages.hero_title') }}
+                {{ __('app.Welcome') }} - {{ __('app.Roof Inspection') }}
             </h1>
 
-            <!-- Navigation Demo -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4">{{ __('messages.services') }}</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="p-4 bg-gray-50 rounded text-center">
-                        <h3 class="font-semibold">{{ __('messages.new_roof') }}</h3>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded text-center">
-                        <h3 class="font-semibold">{{ __('messages.roof_repair') }}</h3>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded text-center">
-                        <h3 class="font-semibold">{{ __('messages.storm_damage') }}</h3>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded text-center">
-                        <h3 class="font-semibold">{{ __('messages.hail_damage') }}</h3>
-                    </div>
+            <!-- Services Section -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-3">
+                        {{ __('app.Free Inspection') }}
+                    </h3>
+                    <p class="text-gray-600">
+                        {{ __('app.Quality Materials') }} {{ __('app.Licensed & Insured') }}
+                    </p>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-green-800 mb-3">
+                        {{ __('app.Storm Damage') }}
+                    </h3>
+                    <p class="text-gray-600">
+                        {{ __('app.24/7 Emergency Service') }}
+                    </p>
+                </div>
+
+                <div class="bg-yellow-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-3">
+                        {{ __('app.Insurance Claims') }}
+                    </h3>
+                    <p class="text-gray-600">
+                        {{ __('app.Satisfaction Guaranteed') }}
+                    </p>
                 </div>
             </div>
 
-            <!-- Hero Section Demo -->
-            <div class="mb-8 p-6 bg-blue-50 rounded-lg">
-                <h2 class="text-xl font-semibold text-blue-800 mb-2">{{ __('messages.hero_subtitle') }}</h2>
-                <p class="text-blue-700 mb-4">{{ __('messages.hero_description') }}</p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">
-                        {{ __('messages.book_a_free_inspection') }}
-                    </button>
-                    <button
-                        class="border border-blue-500 text-blue-500 px-6 py-2 rounded hover:bg-blue-500 hover:text-white">
-                        {{ __('messages.explore_our_services') }}
-                    </button>
-                </div>
-            </div>
+            <!-- Contact Form -->
+            <div class="bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                    {{ __('app.Contact') }}
+                </h2>
 
-            <!-- Emergency Section Demo -->
-            <div class="mb-8 p-6 bg-red-50 rounded-lg">
-                <h3 class="text-lg font-semibold text-red-800 mb-2">{{ __('messages.emergency_roof_repair_title') }}
-                </h3>
-                <p class="text-red-700">{{ __('messages.emergency_roof_repair_description') }}</p>
-            </div>
-
-            <!-- Form Demo -->
-            <div class="mb-8 p-6 bg-green-50 rounded-lg">
-                <h3 class="text-lg font-semibold text-green-800 mb-4">{{ __('messages.contact') }}
-                    {{ __('messages.support') }}</h3>
                 <form class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid md:grid-cols-2 gap-4">
                         <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700">{{ __('messages.first_name') }}</label>
-                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('app.First Name') }}
+                            </label>
+                            <input type="text"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
+
                         <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700">{{ __('messages.last_name') }}</label>
-                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('app.Last Name') }}
+                            </label>
+                            <input type="text"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">{{ __('messages.email') }}</label>
-                        <input type="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('app.Email') }}
+                        </label>
+                        <input type="email"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">{{ __('messages.phone') }}</label>
-                        <input type="tel" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('app.Phone') }}
+                        </label>
+                        <input type="tel"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">{{ __('messages.message') }}</label>
-                        <textarea rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('app.Message') }}
+                        </label>
+                        <textarea rows="4"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
-                        {{ __('messages.send_message') }}
+
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {{ __('app.Send Message') }}
                     </button>
                 </form>
             </div>
 
-            <!-- Navigation Demo -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('messages.resources') }}</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <a href="#" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100">
-                        {{ __('messages.products') }}
-                    </a>
-                    <a href="#" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100">
-                        {{ __('messages.financing') }}
-                    </a>
-                    <a href="#" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100">
-                        {{ __('messages.insurance_claims') }}
-                    </a>
-                    <a href="#" class="p-4 bg-gray-50 rounded text-center hover:bg-gray-100">
-                        {{ __('messages.warranties') }}
-                    </a>
+            <!-- Business Hours -->
+            <div class="mt-8 bg-blue-50 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4">
+                    {{ __('app.Business Hours') }}
+                </h3>
+                <div class="space-y-2 text-gray-700">
+                    <div class="flex justify-between">
+                        <span>{{ __('app.Monday - Friday') }}:</span>
+                        <span>8:00 AM - 6:00 PM</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>{{ __('app.Saturday') }}:</span>
+                        <span>9:00 AM - 4:00 PM</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>{{ __('app.Sunday') }}:</span>
+                        <span>{{ __('app.Closed') }}</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Current Language Info -->
-            <div class="bg-yellow-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-yellow-800 mb-2">{{ __('messages.language') }}
-                    {{ __('messages.current_date') }}</h3>
-                <p class="text-yellow-700">
-                    <strong>{{ __('messages.current_date') }}:</strong>
-                    {{ \App\Helpers\TranslationHelper::formatDate(now()) }}<br>
-                    <strong>{{ __('messages.current_time') }}:</strong>
-                    {{ \App\Helpers\TranslationHelper::formatTime(now()) }}<br>
-                    <strong>{{ __('messages.language') }}:</strong>
-                    {{ app()->getLocale() === 'es' ? __('messages.spanish') : __('messages.english') }}
-                </p>
-            </div>
-
-            <!-- Footer Links Demo -->
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <div class="text-center text-sm text-gray-600">
-                    <a href="#" class="hover:text-gray-800">{{ __('messages.privacy_policy') }}</a> |
-                    <a href="#" class="hover:text-gray-800">{{ __('messages.terms_of_service') }}</a> |
-                    <a href="#" class="hover:text-gray-800">{{ __('messages.cookie_policy') }}</a>
-                </div>
-                <div class="text-center text-xs text-gray-500 mt-2">
-                    © {{ date('Y') }} V General Contractors. {{ __('messages.all_rights_reserved') }}.
-                </div>
+            <!-- Current Locale Info -->
+            <div class="mt-6 text-sm text-gray-500">
+                <p>{{ __('app.Language') }}: {{ \App\Helpers\TranslationHelper::getCurrentLocaleInfo()['name'] }}</p>
+                <p>{{ __('app.Current Time') }}: {{ format_locale_time(now()) }}</p>
+                <p>{{ __('app.Current Date') }}: {{ format_locale_date(now()) }}</p>
             </div>
         </div>
     </div>
