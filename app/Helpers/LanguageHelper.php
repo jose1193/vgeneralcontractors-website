@@ -75,29 +75,25 @@ class LanguageHelper
     {
         $locale = $locale ?? self::getCurrentLanguage();
         
-        // Try to get from messages file first
-        $translation = __("messages.{$key}", $replace, $locale);
+        // Try to get from messages file with the current locale
+        $translation = trans("messages.{$key}", $replace, $locale);
         
-        // If not found in messages, try the key directly (for JSON fallback)
+        // If not found, try English as fallback
+        if ($translation === "messages.{$key}" && $locale !== 'en') {
+            $translation = trans("messages.{$key}", $replace, 'en');
+        }
+        
+        // If still not found, return the key with capitalization
         if ($translation === "messages.{$key}") {
-            $translation = __($key, $replace, $locale);
+            return $capitalize ? ucfirst(str_replace('_', ' ', $key)) : str_replace('_', ' ', $key);
         }
         
-        // If still not found, try English as fallback
-        if ($translation === $key && $locale !== 'en') {
-            $translation = __("messages.{$key}", $replace, 'en');
-            
-            if ($translation === "messages.{$key}") {
-                $translation = __($key, $replace, 'en');
-            }
-        }
-        
-        // Apply capitalization if requested and translation was found
-        if ($capitalize && $translation !== $key) {
+        // Apply capitalization if requested
+        if ($capitalize) {
             $translation = ucfirst($translation);
         }
         
-        return $translation !== $key ? $translation : ucfirst($key);
+        return $translation;
     }
 
     /**
