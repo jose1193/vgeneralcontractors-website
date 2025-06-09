@@ -1,7 +1,8 @@
 @extends('layouts.main')
 
 @section('title', 'About V General Contractors - Your Trusted Roofing Partner in Texas')
-@section('meta_description', 'Leading roofing contractor in Houston & Dallas with certified public adjusters, free
+@section('meta_description',
+    'Leading roofing contractor in Houston & Dallas with certified public adjusters, free
     inspections, and expert insurance claim documentation. GAF Master Elite certified.')
 
 @section('content')
