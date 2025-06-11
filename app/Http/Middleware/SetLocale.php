@@ -9,11 +9,21 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
+        // Primero establecer un idioma por defecto
+        $defaultLocale = config('app.locale', 'en');
+        
         if (session()->has('locale')) {
-            app()->setLocale(session()->get('locale'));
+            $locale = session()->get('locale');
+            // Validar que el idioma sea soportado
+            if (in_array($locale, ['en', 'es'])) {
+                app()->setLocale($locale);
+            } else {
+                app()->setLocale($defaultLocale);
+            }
         } else {
-            app()->setLocale(config('app.fallback_locale')); // Usa el idioma predeterminado
+            app()->setLocale($defaultLocale);
         }
+        
         return $next($request);
     }
 }

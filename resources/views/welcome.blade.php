@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#1F2937" />
 
     <!-- Primary Meta Tags -->
-    <title>V General Contractors | {{ __('messages.professional_roofing_texas') }} </title>
+    <title>V General Contractors | {{ __('professional_roofing_texas') }} </title>
     <meta name="title"
         content="Professional Commercial & Residential Roofing Services in Texas | V General Contractors">
     <meta name="description"

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('messages.language') }} {{ __('messages.demo') }}
+            {{ __('language') }} {{ __('demo') }}
         </h2>
     </x-slot>
 
@@ -11,35 +11,35 @@
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <div class="mt-6 text-gray-500 dark:text-gray-400">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-                            {{ __('messages.welcome_title') }}
+                            {{ __('welcome_title') }}
                         </h3>
 
                         <p class="mb-4">
-                            {{ __('messages.welcome_description') }}
+                            {{ __('welcome_description') }}
                         </p>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                             <!-- Navigation Section -->
                             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
                                 <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                                    {{ __('messages.navigation') }}
+                                    {{ __('navigation') }}
                                 </h4>
                                 <ul class="space-y-2">
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                                        {{ __('messages.home') }}
+                                        {{ __('home') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                                        {{ __('messages.about_us') }}
+                                        {{ __('about_us') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                                        {{ __('messages.services') }}
+                                        {{ __('services') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                                        {{ __('messages.contact') }}
+                                        {{ __('contact') }}
                                     </li>
                                 </ul>
                             </div>
@@ -47,24 +47,24 @@
                             <!-- Services Section -->
                             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
                                 <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                                    {{ __('messages.services') }}
+                                    {{ __('services') }}
                                 </h4>
                                 <ul class="space-y-2">
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                                        {{ __('messages.new_roof') }}
+                                        {{ __('new_roof') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                                        {{ __('messages.roof_repair') }}
+                                        {{ __('roof_repair') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                                        {{ __('messages.storm_damage') }}
+                                        {{ __('storm_damage') }}
                                     </li>
                                     <li class="flex items-center">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                                        {{ __('messages.insurance_claims') }}
+                                        {{ __('insurance_claims') }}
                                     </li>
                                 </ul>
                             </div>
@@ -79,8 +79,8 @@
                                         clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-blue-700 dark:text-blue-300">
-                                    <strong>{{ __('messages.current_language') }}:</strong>
-                                    {{ app()->getLocale() === 'en' ? __('messages.english') : __('messages.spanish') }}
+                                    <strong>{{ __('current_language') }}:</strong>
+                                    {{ app()->getLocale() === 'en' ? __('english') : __('spanish') }}
                                 </span>
                             </div>
                         </div>
@@ -89,35 +89,35 @@
                         <div class="mt-8 flex flex-wrap gap-4">
                             <button
                                 class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                {{ __('messages.schedule_free_inspection') }}
+                                {{ __('schedule_free_inspection') }}
                             </button>
                             <button
                                 class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                                {{ __('messages.get_quote') }}
+                                {{ __('get_quote') }}
                             </button>
                             <button
                                 class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                {{ __('messages.call_us') }}
+                                {{ __('call_us') }}
                             </button>
                         </div>
 
                         <!-- Business Hours -->
                         <div class="mt-8 bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
                             <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                                {{ __('messages.business_hours') }}
+                                {{ __('business_hours') }}
                             </h4>
                             <div class="space-y-2">
                                 <div class="flex justify-between">
-                                    <span>{{ __('messages.monday_friday') }}:</span>
+                                    <span>{{ __('monday_friday') }}:</span>
                                     <span class="font-medium">8:00 AM - 6:00 PM</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span>{{ __('messages.saturday') }}:</span>
+                                    <span>{{ __('saturday') }}:</span>
                                     <span class="font-medium">9:00 AM - 4:00 PM</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span>{{ __('messages.sunday') }}:</span>
-                                    <span class="font-medium">{{ __('messages.closed') }}</span>
+                                    <span>{{ __('sunday') }}:</span>
+                                    <span class="font-medium">{{ __('closed') }}</span>
                                 </div>
                             </div>
                         </div>

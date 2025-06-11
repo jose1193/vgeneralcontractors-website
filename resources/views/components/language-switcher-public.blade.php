@@ -2,12 +2,12 @@
     $currentLocale = app()->getLocale();
     $languages = [
         'en' => [
-            'name' => __('messages.english'),
+            'name' => __('english'),
             'flag' => '🇺🇸',
             'code' => 'en',
         ],
         'es' => [
-            'name' => __('messages.spanish'),
+            'name' => __('spanish'),
             'flag' => '🇪🇸',
             'code' => 'es',
         ],

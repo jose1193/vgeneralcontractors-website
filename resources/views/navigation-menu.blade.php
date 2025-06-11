@@ -263,7 +263,7 @@
                     <!-- Translation Demo Link -->
                     @auth
                         <x-nav-link href="{{ route('translation-demo') }}" :active="request()->routeIs('translation-demo')">
-                            {{ __('messages.language') }} {{ __('messages.demo') }}
+                            {{ __('language') }} {{ __('demo') }}
                         </x-nav-link>
                     @endauth
             </div>
@@ -586,7 +586,7 @@
         <!-- Translation Demo Link (Mobile) -->
         @auth
             <x-responsive-nav-link href="{{ route('translation-demo') }}" :active="request()->routeIs('translation-demo')">
-                {{ __('messages.language') }} {{ __('messages.demo') }}
+                {{ __('language') }} {{ __('demo') }}
             </x-responsive-nav-link>
         @endauth
 </div>
@@ -612,7 +612,7 @@
     <!-- Language Switcher (Mobile) -->
     <div class="px-4 py-2">
         <div class="text-xs text-gray-400 uppercase tracking-wide">
-            {{ __('messages.language') }}
+            {{ __('language') }}
         </div>
         <div class="mt-2">
             <x-language-switcher />

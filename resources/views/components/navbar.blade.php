@@ -316,14 +316,14 @@
             <!-- Language Switcher Mobile -->
             <div class="mt-6">
                 <div class="text-xs text-gray-500 uppercase tracking-wide px-4 mb-2">
-                    {{ __('messages.language') }}
+                    {{ __('language') }}
                 </div>
                 <div class="px-4 space-y-2">
                     <a href="{{ route('lang.switch', 'en') }}"
                         class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded
                               {{ app()->getLocale() === 'en' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
                         <span class="mr-3">🇺🇸</span>
-                        <span>{{ __('messages.english') }}</span>
+                        <span>{{ __('english') }}</span>
                         @if (app()->getLocale() === 'en')
                             <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -336,7 +336,7 @@
                         class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded
                               {{ app()->getLocale() === 'es' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
                         <span class="mr-3">🇪🇸</span>
-                        <span>{{ __('messages.spanish') }}</span>
+                        <span>{{ __('spanish') }}</span>
                         @if (app()->getLocale() === 'es')
                             <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
