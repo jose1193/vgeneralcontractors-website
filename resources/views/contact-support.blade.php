@@ -123,7 +123,11 @@
                         <input type="checkbox" name="sms_consent" id="sms_consent"
                             class="form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500 input-field">
                         <span class="ml-2 text-sm text-gray-600">
-                            {!! __('sms_consent_text_page', ['phone' => PhoneHelper::format($companyData->phone)]) !!}
+                            {!! __('sms_consent_text_page', [
+                                'phone' => PhoneHelper::format($companyData->phone),
+                                'privacy_url' => route('privacy-policy'),
+                                'terms_url' => route('terms-and-conditions'),
+                            ]) !!}
                         </span>
                     </label>
                     <p class="mt-1 text-sm text-red-600 error-message" data-field="sms_consent"></p>
