@@ -1,6 +1,6 @@
 <!-- Why Us Section -->
 <div class="flex justify-center mt-10 py-5 ">
-    <h2 class="text-4xl font-bold text-gray-900">Why Choose <span class="text-yellow-500">Us?</span></h2>
+    <h2 class="text-4xl font-bold text-gray-900">{{ __('why_choose_us') }}</h2>
 </div>
 <section class="text-gray-700 body-font py-5">
     <div class="container px-5 py-12 mx-auto">
@@ -20,10 +20,9 @@
                             </div>
                         </div>
                         <h2 class="title-font font-semibold text-2xl text-gray-900">
-                            Latest Roofing Technology
+                            {{ __('latest_roofing_technology') }}
                         </h2>
-                        <p class="mt-2 text-gray-600">State-of-the-art equipment for
-                            superior results</p>
+                        <p class="mt-2 text-gray-600">{{ __('state_of_art_equipment') }}</p>
                     </div>
                 </div>
             </div>
@@ -43,10 +42,9 @@
                             </div>
                         </div>
                         <h2 class="title-font font-semibold text-2xl text-gray-900">
-                            Insurance Claims Management & Emergency Services
+                            {{ __('insurance_claims_management') }}
                         </h2>
-                        <p class="mt-2 text-gray-600">Expert assistance with claims and prompt emergency roof response
-                        </p>
+                        <p class="mt-2 text-gray-600">{{ __('expert_assistance_claims') }}</p>
                     </div>
                 </div>
             </div>
@@ -66,9 +64,8 @@
                             </div>
                         </div>
                         <h2 class="title-font font-semibold text-2xl text-gray-900">
-                            Time Efficiency</h2>
-                        <p class="mt-2 text-gray-600">Quick turnaround without
-                            compromising quality</p>
+                            {{ __('time_efficiency') }}</h2>
+                        <p class="mt-2 text-gray-600">{{ __('quick_turnaround') }}</p>
                     </div>
                 </div>
             </div>
@@ -88,9 +85,8 @@
                             </div>
                         </div>
                         <h2 class="title-font font-semibold text-2xl text-gray-900">
-                            Industry Expertise</h2>
-                        <p class="mt-2 text-gray-600">Years of specialized roofing
-                            experience</p>
+                            {{ __('industry_expertise') }}</h2>
+                        <p class="mt-2 text-gray-600">{{ __('years_specialized_experience') }}</p>
                     </div>
                 </div>
             </div>
