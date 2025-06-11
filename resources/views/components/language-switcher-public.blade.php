@@ -27,17 +27,16 @@
     ];
 @endphp
 
-<div class="relative overflow-visible" x-data="{ open: false }">
+<div class="relative" x-data="{ open: false }">
     <button @click="open = !open" type="button"
-        class="inline-flex items-center w-full px-3 py-3 text-sm leading-4 font-medium transition-colors duration-300 ease-in-out text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md md:w-auto md:py-2 md:hover:bg-transparent"
         :class="{
-            'text-gray-700 hover:text-gray-900': typeof isScrolled !== 'undefined' && isScrolled,
-            'text-yellow-400 hover:text-yellow-300': typeof isScrolled !== 'undefined' && !isScrolled
-        }">
+            'text-gray-700 hover:text-gray-900': isScrolled,
+            'text-yellow-400 hover:text-yellow-300': !isScrolled
+        }"
+        class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium transition-colors duration-300 ease-in-out">
         <span class="mr-2">{!! $languages[$currentLocale]['flag'] !!}</span>
         <span class="font-semibold">{{ $languages[$currentLocale]['name'] }}</span>
-        <svg class="ml-auto md:ml-2 h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': open }"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                 clip-rule="evenodd" />
@@ -48,15 +47,13 @@
         x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="fixed md:absolute z-[9999] mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none
-                left-4 right-4 md:left-0 md:right-auto
-                md:origin-top-right md:w-44"
+        class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
         style="display: none;">
         <div class="py-1">
             @foreach ($languages as $code => $language)
                 <a href="{{ route('lang.switch', $code) }}"
-                    class="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 font-semibold transition-colors duration-200
-                          {{ $currentLocale === $code ? 'bg-gray-100 text-yellow-400' : '' }}">
+                    class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold
+                          {{ $currentLocale === $code ? 'bg-gray-100' : '' }}">
                     <span class="mr-3">{!! $language['flag'] !!}</span>
                     <span>{{ $language['name'] }}</span>
                     @if ($currentLocale === $code)

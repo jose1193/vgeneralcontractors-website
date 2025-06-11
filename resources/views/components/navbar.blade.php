@@ -311,8 +311,13 @@
             </div>
 
             <!-- Language Switcher Mobile -->
-            <div class="mt-6 px-4">
-                <x-language-switcher-public />
+            <div class="mt-6">
+                <div class="text-xs text-gray-500 uppercase tracking-wide px-4 mb-2">
+                    {{ __('language') }}
+                </div>
+                <div class="px-4">
+                    <x-language-switcher-public />
+                </div>
             </div>
 
             <!-- Mobile Call Button -->
