@@ -12,10 +12,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon_io/favicon-16x16.png') }}">
     <link rel="manifest" href="{{ asset('assets/favicon_io/site.webmanifest') }}">
 
-    <meta name="theme-color" content="#1F2937" />
+    <meta name="theme-color" content="transparent" />
 
     <!-- Primary Meta Tags -->
-    <title>V General Contractors | {{ __('professional_roofing_texas') }} </title>
+    <title>{{ $companyData->name }} | {{ __('professional_roofing_texas') }}</title>
     <meta name="title" content="{{ __('meta_title') }}">
     <meta name="description" content="{{ __('meta_description') }}">
     <meta name="keywords" content="{{ __('meta_keywords') }}">
@@ -27,7 +27,7 @@
     <meta property="og:title" content="{{ __('og_title') }}">
     <meta property="og:description" content="{{ __('og_description') }}">
     <meta property="og:image" content="{{ asset('assets/logo/logo3.webp') }}">
-    <meta property="og:site_name" content="V General Contractors">
+    <meta property="og:site_name" content="{{ $companyData->name }}">
     <meta property="fb:app_id" content="123456789">
 
     <!-- Twitter -->
@@ -47,7 +47,7 @@
     {
         "@context": "https://schema.org",
         "@type": "RoofingContractor",
-        "name": "V General Contractors",
+        "name": "{{ $companyData->name }}",
         "description": "Leading commercial and residential roofing contractor in Texas. GAF certified experts providing professional installation, repair, and maintenance services for businesses and homes in Houston & Dallas.",
         "image": "{{ asset('assets/logo/logo3.webp') }}",
         "url": "{{ url()->current() }}",
