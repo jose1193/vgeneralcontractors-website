@@ -45,12 +45,12 @@
 
                         <!-- Header -->
                         <div class="px-4 py-3 mb-4 bg-yellow-500 sm:px-6 rounded-lg">
-                            <h3 class="text-xl font-bold leading-6 text-center text-white">Get Your Free Inspection</h3>
+                            <h3 class="text-xl font-bold leading-6 text-center text-white">
+                                {{ __('get_your_free_inspection') }}</h3>
                         </div>
 
                         <p class="mt-6 mb-4 text-sm text-gray-600 text-center">
-                            Fill out the form below and our team will contact you shortly to schedule your free
-                            inspection.
+                            {{ __('fill_form_below') }}
                         </p>
 
                         <!-- Success/Error Messages -->
@@ -78,7 +78,8 @@
                             <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
                                 <!-- First Name -->
                                 <div>
-                                    <label for="first_name" class="block text-sm font-medium text-gray-700">First Name
+                                    <label for="first_name"
+                                        class="block text-sm font-medium text-gray-700">{{ __('first_name') }}
                                         <span class="text-red-500">*</span></label>
                                     <input type="text" id="first_name" name="first_name"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -89,7 +90,8 @@
 
                                 <!-- Last Name -->
                                 <div>
-                                    <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name
+                                    <label for="last_name"
+                                        class="block text-sm font-medium text-gray-700">{{ __('last_name') }}
                                         <span class="text-red-500">*</span></label>
                                     <input type="text" id="last_name" name="last_name"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -102,9 +104,11 @@
                             <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
                                 <!-- Phone -->
                                 <div>
-                                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone <span
+                                    <label for="phone"
+                                        class="block text-sm font-medium text-gray-700">{{ __('phone') }} <span
                                             class="text-red-500">*</span></label>
-                                    <input type="tel" id="phone" name="phone" placeholder="(XXX) XXX-XXXX"
+                                    <input type="tel" id="phone" name="phone"
+                                        placeholder="{{ __('phone_placeholder') }}"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                                         autocomplete="tel" required maxlength="14">
                                     <span class="error-message text-xs text-red-500 mt-1 block h-4"
@@ -113,7 +117,8 @@
 
                                 <!-- Email -->
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Email <span
+                                    <label for="email"
+                                        class="block text-sm font-medium text-gray-700">{{ __('email') }} <span
                                             class="text-red-500">*</span></label>
                                     <input type="email" id="email" name="email"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -125,10 +130,11 @@
 
                             <!-- Address Map Input Field -->
                             <div>
-                                <label for="address_map_input" class="block text-sm font-medium text-gray-700">Address
+                                <label for="address_map_input"
+                                    class="block text-sm font-medium text-gray-700">{{ __('address') }}
                                     <span class="text-red-500">*</span></label>
                                 <input type="text" id="address_map_input" name="address_map_input"
-                                    placeholder="Enter your complete address"
+                                    placeholder="{{ __('enter_complete_address') }}"
                                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                                     autocomplete="off" required>
                                 <span class="error-message text-xs text-red-500 mt-1 block h-4"
@@ -144,10 +150,11 @@
 
                             <!-- Address 2 -->
                             <div>
-                                <label for="address_2" class="block text-sm font-medium text-gray-700">Address 2 <span
-                                        class="text-xs text-gray-500">(Optional, e.g., Apt, Suite, Unit)</span></label>
+                                <label for="address_2"
+                                    class="block text-sm font-medium text-gray-700">{{ __('address_2') }} <span
+                                        class="text-xs text-gray-500">{{ __('optional_apt_suite') }}</span></label>
                                 <input type="text" id="address_2" name="address_2"
-                                    placeholder="Apt #, Suite #, etc."
+                                    placeholder="{{ __('apt_suite_placeholder') }}"
                                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                                     autocomplete="address-line2">
                                 <span class="error-message text-xs text-red-500 mt-1 block h-4"
@@ -156,7 +163,8 @@
 
                             <!-- Map Display -->
                             <div class="mt-4 mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Location Map</label>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2">{{ __('location_map') }}</label>
                                 <div id="location-map"
                                     class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300">
                                     <!-- Map will be initialized here -->
@@ -165,8 +173,9 @@
 
                             <!-- Comment/Message -->
                             <div>
-                                <label for="message" class="block mt-8 text-sm font-medium text-gray-700">Comment or
-                                    Message <span class="text-xs text-gray-500">(Optional)</span></label>
+                                <label for="message"
+                                    class="block mt-8 text-sm font-medium text-gray-700">{{ __('comment_or_message') }}
+                                    <span class="text-xs text-gray-500">{{ __('optional_label') }}</span></label>
                                 <textarea id="message" name="message" rows="4"
                                     class="input-field block w-full  border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></textarea>
                                 <span class="error-message text-xs text-red-500 mt-1 block h-4"
@@ -175,8 +184,9 @@
 
                             <!-- Property Insurance -->
                             <div class="mt-6 text-center md:text-center sm:text-center">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Do you have property
-                                    insurance? <span class="text-red-500">*</span></label>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2">{{ __('property_insurance_question') }}
+                                    <span class="text-red-500">*</span></label>
                                 <fieldset class="mt-2">
                                     <legend class="sr-only">Property Insurance</legend>
                                     <div class="flex items-center justify-center space-x-4">
@@ -185,7 +195,7 @@
                                                 value="yes" class="radio-field sr-only" required>
                                             <label for="insurance_yes"
                                                 class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                                Yes
+                                                {{ __('yes') }}
                                             </label>
                                         </div>
                                         <div class="radio-option flex items-center">
@@ -193,7 +203,7 @@
                                                 value="no" class="radio-field sr-only" required>
                                             <label for="insurance_no"
                                                 class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                                No
+                                                {{ __('no') }}
                                             </label>
                                         </div>
                                     </div>
@@ -208,20 +218,13 @@
                                     <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                                         class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                                     <span class="ml-2 text-sm text-gray-600">
-                                        Yes, I would like to receive text messages from <span class="font-semibold">V
-                                            GENERAL CONTRACTORS</span> with offers, appointment reminders, and updates
-                                        on roofing services. <span class="font-semibold">Messaging Frequency may
-                                            vary</span>. I understand that I can cancel my subscription at any time by
-                                        replying <span class="font-semibold">STOP</span>. Reply <span
-                                            class="font-semibold">HELP
-                                            {{ PhoneHelper::format($companyData->phone) }}</span> for assistance.
-                                        Message and data rates apply. Information obtained as part of the SMS consent
-                                        process will not be shared with third parties.
+                                        {!! __('sms_consent_text') !!}
+                                        <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
                                         <a href="{{ route('privacy-policy') }}" target="_blank"
-                                            class="text-yellow-500 hover:text-yellow-600 underline">Privacy Policy</a>
-                                        and <a href="{{ route('terms-and-conditions') }}" target="_blank"
-                                            class="text-yellow-500 hover:text-yellow-600 underline">Terms of
-                                            Service</a>.
+                                            class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a>
+                                        {{ __('and') }} <a href="{{ route('terms-and-conditions') }}"
+                                            target="_blank"
+                                            class="text-yellow-500 hover:text-yellow-600 underline">{{ __('terms_of_service') }}</a>.
                                     </span>
                                 </label>
                                 <span class="error-message text-xs text-red-500 mt-1 block h-4"
@@ -243,7 +246,7 @@
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
                                     </svg>
-                                    <span id="submit-button-text" class="z-40">Send Request</span>
+                                    <span id="submit-button-text" class="z-40">{{ __('send_request') }}</span>
                                     <div
                                         class="absolute inset-0 h-[200%] w-[200%] rotate-45 translate-x-[-70%] transition-all group-hover:scale-100 bg-white/30 group-hover:translate-x-[50%] z-20 duration-1000">
                                     </div>
@@ -800,12 +803,12 @@
                     submitButton.disabled = isLoading;
                     if (isLoading) {
                         submitSpinner.classList.remove('hidden');
-                        submitButtonText.textContent = 'Sending...';
+                        submitButtonText.textContent = '{{ __('sending') }}';
                         submitButton.setAttribute('aria-busy', 'true');
                         submitButton.setAttribute('aria-label', 'Sending');
                     } else {
                         submitSpinner.classList.add('hidden');
-                        submitButtonText.textContent = 'Send Request';
+                        submitButtonText.textContent = '{{ __('send_request') }}';
                         submitButton.removeAttribute('aria-busy');
                         submitButton.removeAttribute('aria-label');
                         checkFormValidity();
@@ -979,7 +982,7 @@
                         // setLoadingState(false); // Assuming setLoadingState is accessible
                         document.getElementById('submit-button').disabled = false; // Directly disable/enable
                         document.getElementById('submit-spinner').classList.add('hidden');
-                        document.getElementById('submit-button-text').textContent = 'Send Request';
+                        document.getElementById('submit-button-text').textContent = '{{ __('send_request') }}';
                     });
             }
 
