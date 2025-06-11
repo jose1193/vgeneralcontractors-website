@@ -322,7 +322,19 @@
                     <a href="{{ route('lang.switch', 'en') }}"
                         class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded
                               {{ app()->getLocale() === 'en' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
-                        <span class="mr-3">🇺🇸</span>
+                        <span class="mr-3">
+                            <svg class="h-5 w-5" viewBox="0 0 20 15" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="20" height="15" fill="#B22234" />
+                                <rect width="20" height="1.15" y="1.15" fill="white" />
+                                <rect width="20" height="1.15" y="3.46" fill="white" />
+                                <rect width="20" height="1.15" y="5.77" fill="white" />
+                                <rect width="20" height="1.15" y="8.08" fill="white" />
+                                <rect width="20" height="1.15" y="10.39" fill="white" />
+                                <rect width="20" height="1.15" y="12.69" fill="white" />
+                                <rect width="8" height="8.08" fill="#3C3B6E" />
+                            </svg>
+                        </span>
                         <span>{{ __('english') }}</span>
                         @if (app()->getLocale() === 'en')
                             <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">

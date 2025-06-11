@@ -3,12 +3,25 @@
     $languages = [
         'en' => [
             'name' => __('english'),
-            'flag' => '🇺🇸',
+            'flag' => '<svg class="h-4 w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <rect width="20" height="15" fill="#B22234"/>
+                           <rect width="20" height="1.15" y="1.15" fill="white"/>
+                           <rect width="20" height="1.15" y="3.46" fill="white"/>
+                           <rect width="20" height="1.15" y="5.77" fill="white"/>
+                           <rect width="20" height="1.15" y="8.08" fill="white"/>
+                           <rect width="20" height="1.15" y="10.39" fill="white"/>
+                           <rect width="20" height="1.15" y="12.69" fill="white"/>
+                           <rect width="8" height="8.08" fill="#3C3B6E"/>
+                       </svg>',
             'code' => 'en',
         ],
         'es' => [
             'name' => __('spanish'),
-            'flag' => '🇪🇸',
+            'flag' => '<svg class="h-4 w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <rect width="20" height="5" fill="#C60B1E"/>
+                           <rect width="20" height="5" y="5" fill="#FFC400"/>
+                           <rect width="20" height="5" y="10" fill="#C60B1E"/>
+                       </svg>',
             'code' => 'es',
         ],
     ];
@@ -20,7 +33,7 @@
                    text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 
                    focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 
                    transition ease-in-out duration-150">
-        <span class="mr-2">{{ $languages[$currentLocale]['flag'] }}</span>
+        <span class="mr-2">{!! $languages[$currentLocale]['flag'] !!}</span>
         <span>{{ $languages[$currentLocale]['name'] }}</span>
         <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd"
@@ -40,7 +53,7 @@
                 <a href="{{ route('lang.switch', $code) }}"
                     class="group flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 
                           {{ $currentLocale === $code ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                    <span class="mr-3">{{ $language['flag'] }}</span>
+                    <span class="mr-3">{!! $language['flag'] !!}</span>
                     <span>{{ $language['name'] }}</span>
                     @if ($currentLocale === $code)
                         <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
