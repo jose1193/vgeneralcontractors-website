@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
-@section('title', 'About V General Contractors - Your Trusted Roofing Partner in Texas')
-@section('meta_description',
-    'Leading roofing contractor in Houston & Dallas with certified public adjusters, free
-    inspections, and expert insurance claim documentation. GAF Master Elite certified.')
+@section('title', __('about_page_title'))
+@section('meta_description', __('about_meta_description'))
 
 @section('content')
     <!-- Hero Section -->
@@ -14,10 +12,8 @@
         </div>
         <div class="relative container mx-auto px-4">
             <div class="max-w-3xl">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">Your Trusted Roofing Partner in Texas</h1>
-                <p class="text-xl text-gray-300">Serving <strong>Houston</strong>, <strong>Dallas</strong>, and surrounding
-                    areas with exceptional craftsmanship, superior customer service, and maximum insurance claim assistance.
-                </p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('trusted_roofing_partner') }}</h1>
+                <p class="text-xl text-gray-300">{!! __('about_hero_description') !!}</p>
             </div>
         </div>
     </section>
@@ -26,9 +22,9 @@
     <nav class="bg-gray-100 py-3">
         <div class="container mx-auto px-4">
             <div class="flex items-center space-x-2 text-gray-500">
-                <a href="{{ route('home') }}" class="hover:text-yellow-500">Home</a>
+                <a href="{{ route('home') }}" class="hover:text-yellow-500">{{ __('home') }}</a>
                 <span>/</span>
-                <span class="text-yellow-500">About Us</span>
+                <span class="text-yellow-500">{{ __('about_us') }}</span>
             </div>
         </div>
     </nav>
@@ -39,37 +35,27 @@
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Left Column: Image -->
                 <div class="relative">
-                    <img src="{{ asset('assets/img/about-team.webp') }}" alt="Our expert roofing team"
+                    <img src="{{ asset('assets/img/about-team.webp') }}" alt="{{ __('our_expert_roofing_team') }}"
                         class="rounded-lg shadow-xl" />
                     <div class="absolute -bottom-6 -right-6 bg-yellow-500 text-white p-6 rounded-lg shadow-lg">
-                        <p class="text-2xl font-bold">15+ Years</p>
-                        <p>of Excellence</p>
+                        <p class="text-2xl font-bold">{{ __('years_of_excellence') }}</p>
+                        <p>{{ __('of_excellence') }}</p>
                     </div>
                 </div>
 
                 <!-- Right Column: Content -->
                 <div>
-                    <h2 class="text-3xl font-bold mb-6">Our Commitment to Excellence</h2>
-                    <p class="text-gray-600 mb-6">
-                        At V General Contractors, we're more than just a roofing company. We're your trusted partner in
-                        protecting
-                        your most valuable asset. Our team includes <strong>CERTIFIED public adjusters</strong> who work
-                        tirelessly
-                        to ensure you receive the maximum compensation for your roofing claims.
-                    </p>
-                    <p class="text-gray-600 mb-6">
-                        We offer <strong>FREE Professional Roof Inspections</strong> and provide comprehensive insurance
-                        claim
-                        documentation to make the process as smooth as possible for our clients.
-                    </p>
+                    <h2 class="text-3xl font-bold mb-6">{{ __('our_commitment_to_excellence') }}</h2>
+                    <p class="text-gray-600 mb-6">{!! __('about_commitment_p1') !!}</p>
+                    <p class="text-gray-600 mb-6">{!! __('about_commitment_p2') !!}</p>
                     <div class="grid grid-cols-2 gap-6 mb-8">
                         <div class="text-center p-4 bg-gray-50 rounded-lg">
                             <p class="text-3xl font-bold text-yellow-500">2,500+</p>
-                            <p class="text-gray-600">Projects Completed</p>
+                            <p class="text-gray-600">{{ __('projects_completed') }}</p>
                         </div>
                         <div class="text-center p-4 bg-gray-50 rounded-lg">
                             <p class="text-3xl font-bold text-yellow-500">98%</p>
-                            <p class="text-gray-600">Client Satisfaction</p>
+                            <p class="text-gray-600">{{ __('client_satisfaction') }}</p>
                         </div>
                     </div>
                 </div>
@@ -81,13 +67,8 @@
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">Our Vision for 2030</h2>
-                <p class="text-gray-600 mb-8">
-                    To be recognized as the leading roofing company in Texas, known for our exceptional quality,
-                    <strong>FREE professional inspections</strong>, and comprehensive insurance claim documentation.
-                    We aim to continue working with <strong>CERTIFIED public adjusters</strong> to ensure our clients
-                    receive the best possible outcome for their roofing claims.
-                </p>
+                <h2 class="text-3xl font-bold mb-6">{{ __('our_vision_2030') }}</h2>
+                <p class="text-gray-600 mb-8">{!! __('vision_description') !!}</p>
             </div>
         </div>
     </section>
@@ -95,7 +76,7 @@
     <!-- Why Choose Us -->
     <section class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Why Choose V General Contractors</h2>
+            <h2 class="text-3xl font-bold text-center mb-12">{{ __('why_choose_v_general') }}</h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
                 <div class="text-center p-6 rounded-lg shadow-lg bg-white">
@@ -106,8 +87,8 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4"><strong>FREE Professional Inspections</strong></h3>
-                    <p class="text-gray-600">Thorough evaluations by certified experts at no cost to you</p>
+                    <h3 class="text-xl font-semibold mb-4">{!! __('free_professional_inspections') !!}</h3>
+                    <p class="text-gray-600">{{ __('free_inspections_description') }}</p>
                 </div>
 
                 <!-- Feature 2 -->
@@ -118,8 +99,8 @@
                                 d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4"><strong>Expert Insurance Claim Support</strong></h3>
-                    <p class="text-gray-600">Working with certified public adjusters for maximum coverage</p>
+                    <h3 class="text-xl font-semibold mb-4">{!! __('expert_insurance_claim_support') !!}</h3>
+                    <p class="text-gray-600">{{ __('insurance_support_description') }}</p>
                 </div>
 
                 <!-- Feature 3 -->
@@ -131,8 +112,8 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4"><strong>Comprehensive Documentation</strong></h3>
-                    <p class="text-gray-600">Detailed documentation for insurance claims and warranties</p>
+                    <h3 class="text-xl font-semibold mb-4">{!! __('comprehensive_documentation') !!}</h3>
+                    <p class="text-gray-600">{{ __('documentation_description') }}</p>
                 </div>
             </div>
         </div>
@@ -141,14 +122,14 @@
     <!-- CTA Section -->
     <section class="py-16 bg-gray-900 text-white">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold mb-8">Ready for Your <span class="text-yellow-500">Free Inspection?</span></h2>
-            <p class="text-xl mb-8">Let our experts assess your roof and help with insurance documentation</p>
+            <h2 class="text-4xl font-bold mb-8">{!! __('ready_for_free_inspection') !!}</h2>
+            <p class="text-xl mb-8">{{ __('assessment_help_description') }}</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <x-primary-button @click="$dispatch('open-modal', 'schedule-inspection')" class="text-lg px-8 py-4">
-                    Schedule Free Inspection
+                    {{ __('schedule_free_inspection') }}
                 </x-primary-button>
                 <x-secondary-button href="{{ route('contact-support') }}" class="text-lg px-8 py-4">
-                    Contact Support
+                    {{ __('contact_support') }}
                 </x-secondary-button>
             </div>
         </div>
@@ -157,7 +138,7 @@
     <!-- Schedule Inspection Modal -->
     <x-modal name="schedule-inspection" :show="false">
         <div class="p-6">
-            <h2 class="text-2xl font-bold mb-4">Schedule Your Free Inspection</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ __('schedule_your_free_inspection') }}</h2>
             <livewire:contact-form />
         </div>
     </x-modal>
