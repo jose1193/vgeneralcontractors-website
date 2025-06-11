@@ -63,7 +63,7 @@
                     <li>{!! __('definition_you') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('acknowledgment') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('acknowledgment') !!}</h2>
                 <p class="mb-6">
                     {{ __('acknowledgment_paragraph_1') }}
                 </p>
