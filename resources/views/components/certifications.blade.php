@@ -6,37 +6,33 @@
             <div class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/img/v-constructor-certificated-02.webp') }}"
-                        alt="V General Contractors Professional Certification Badge" class="h-24 w-auto" width="200"
-                        height="96" loading="lazy">
+                        alt="{{ __('certification_badge_alt') }}" class="h-24 w-auto" width="200" height="96"
+                        loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Certified Excellence</h3>
-                <p class="text-gray-600 text-center">Our team holds industry-leading certifications, ensuring the
-                    highest standards of roofing expertise.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('certified_excellence') }}</h3>
+                <p class="text-gray-600 text-center">{{ __('certified_excellence_description') }}</p>
             </div>
 
             <!-- Financial Options Card -->
             <div class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/img/v-constructor-financial-02.webp') }}"
-                        alt="Flexible Financial Options Available at V General Contractors" class="h-24 w-auto"
-                        width="200" height="96" loading="lazy">
+                        alt="{{ __('financial_options_alt') }}" class="h-24 w-auto" width="200" height="96"
+                        loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Flexible Financing</h3>
-                <p class="text-gray-600 text-center">If you want to finance your roofing project, we can help you
-                    find a suitable option for your needs. Getting an affordable monthly payment is easier than you
-                    may think.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('flexible_financing') }}</h3>
+                <p class="text-gray-600 text-center">{{ __('flexible_financing_description') }}</p>
             </div>
 
             <!-- Warranty Card -->
             <div class="bg-white p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/img/v-constructor-roof-02-warranty.webp') }}"
-                        alt="GAF Certified Warranty Program Badge" class="h-24 w-auto" width="200" height="96"
+                        alt="{{ __('gaf_warranty_badge_alt') }}" class="h-24 w-auto" width="200" height="96"
                         loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">GAF Certified Warranty</h3>
-                <p class="text-gray-600 text-center">GAF certified roofing companies can provide some of the best
-                    warranties in the market. You will be amazed by how great our warranties are.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('gaf_certified_warranty') }}</h3>
+                <p class="text-gray-600 text-center">{{ __('gaf_warranty_description') }}</p>
             </div>
         </div>
     </div>
@@ -62,7 +58,8 @@
                         x-transition:leave="transition transform duration-500" x-transition:leave-start="translate-x-0"
                         x-transition:leave-end="-translate-x-full"
                         class="absolute inset-0 flex justify-center items-center">
-                        <img :src="slide" :alt="'Certification ' + (index + 1)" class="h-32 object-contain">
+                        <img :src="slide" :alt="'{{ __('certification_alt') }} ' + (index + 1)"
+                            class="h-32 object-contain">
                     </div>
                 </template>
 

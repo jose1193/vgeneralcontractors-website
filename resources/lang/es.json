@@ -215,5 +215,31 @@
     "time_efficiency": "Eficiencia en Tiempo",
     "quick_turnaround_quality": "Respuesta rápida sin comprometer la calidad",
     "industry_expertise": "Experiencia en la Industria",
-    "years_specialized_experience": "Años de experiencia especializada en techado"
+    "years_specialized_experience": "Años de experiencia especializada en techado",
+
+    "_comment_about_us_component": "=== COMPONENTE ACERCA DE NOSOTROS ===",
+    "about_us_section_label": "Acerca de Nosotros",
+    "your_trusted_roofing_partner_texas": "Su Socio de Confianza en Techado en Texas",
+    "about_us_description_p1": "Con años de experiencia sirviendo a <strong>Houston, Dallas y áreas circundantes</strong>, hemos construido nuestra reputación en tres principios fundamentales: <strong>artesanía excepcional</strong>, <strong>servicio al cliente superior</strong> y <strong>máxima asistencia en reclamos de seguros</strong>. <b>Trabajamos de la mano con ajustadores públicos CERTIFICADOS para asegurar que reciba la compensación completa que merece por sus reclamos de techado.</b>",
+    "about_us_description_p2": "Nuestra visión es ser reconocidos para 2030 como la empresa líder en techado en Texas, ofreciendo <strong>inspecciones profesionales GRATUITAS</strong>, proporcionando <strong>documentación integral de reclamos de seguros</strong>, y ofreciendo las soluciones de techado más avanzadas. Nos enorgullecemos de ayudar a nuestros clientes a navegar todo el proceso de reclamos de seguros mientras aseguramos que su techo reciba el cuidado de calidad que merece.",
+    "free_professional_roof_inspections": "Inspecciones Profesionales de Techo <strong>GRATUITAS</strong>",
+    "certified_public_adjusters": "Trabajamos con <strong>Ajustadores Públicos CERTIFICADOS</strong>",
+    "expert_insurance_claim_documentation": "<strong>Documentación Experta de Reclamos de Seguros</strong> y Soporte",
+    "learn_more_about_expertise": "Conozca Más Sobre Nuestra Experiencia",
+    "professional_roofing_installation_alt": "Proceso de instalación profesional de techado por V General Contractors",
+    "detailed_roof_inspection_alt": "Inspección detallada de techo siendo realizada por expertos certificados",
+    "experienced_roofing_team_alt": "Nuestro equipo experimentado de techado en el trabajo",
+    "completed_roofing_project_alt": "Proyecto de techado completado recientemente mostrando artesanía de calidad",
+
+    "_comment_certifications": "=== SECCIÓN DE CERTIFICACIONES ===",
+    "certified_excellence": "Excelencia Certificada",
+    "certified_excellence_description": "Nuestro equipo posee certificaciones líderes en la industria, asegurando los más altos estándares de experiencia en techado.",
+    "flexible_financing": "Financiamiento Flexible",
+    "flexible_financing_description": "Si desea financiar su proyecto de techado, podemos ayudarle a encontrar una opción adecuada para sus necesidades. Obtener un pago mensual asequible es más fácil de lo que puede pensar.",
+    "gaf_certified_warranty": "Garantía Certificada GAF",
+    "gaf_warranty_description": "Las empresas de techado certificadas por GAF pueden proporcionar algunas de las mejores garantías del mercado. Se sorprenderá de lo excelentes que son nuestras garantías.",
+    "certification_badge_alt": "Insignia de Certificación Profesional de V General Contractors",
+    "financial_options_alt": "Opciones Financieras Flexibles Disponibles en V General Contractors",
+    "gaf_warranty_badge_alt": "Insignia del Programa de Garantía Certificado GAF",
+    "certification_alt": "Certificación"
 }

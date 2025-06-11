@@ -215,5 +215,31 @@
     "time_efficiency": "Time Efficiency",
     "quick_turnaround_quality": "Quick turnaround without compromising quality",
     "industry_expertise": "Industry Expertise",
-    "years_specialized_experience": "Years of specialized roofing experience"
+    "years_specialized_experience": "Years of specialized roofing experience",
+
+    "_comment_about_us_component": "=== ABOUT US COMPONENT ===",
+    "about_us_section_label": "About Us",
+    "your_trusted_roofing_partner_texas": "Your Trusted Roofing Partner in Texas",
+    "about_us_description_p1": "With years of experience serving <strong>Houston, Dallas, and surrounding areas</strong>, we've built our reputation on three core principles: <strong>exceptional craftsmanship</strong>, <strong>superior customer service</strong>, and <strong>maximum insurance claim assistance</strong>. <b>We work hand in hand with CERTIFIED public adjusters to ensure you receive the full compensation you deserve for your roofing claims.</b>",
+    "about_us_description_p2": "Our vision is to be recognized by 2030 as the leading roofing company in Texas, delivering <strong>FREE professional inspections</strong>, providing comprehensive <strong>insurance claim documentation</strong>, and offering the most advanced roofing solutions. We take pride in helping our clients navigate the entire insurance claim process while ensuring your roof receives the quality care it deserves.",
+    "free_professional_roof_inspections": "<strong>FREE</strong> Professional Roof Inspections",
+    "certified_public_adjusters": "We Work with <strong>CERTIFIED Public Adjusters</strong>",
+    "expert_insurance_claim_documentation": "<strong>Expert Insurance Claim</strong> Documentation & Support",
+    "learn_more_about_expertise": "Learn More About Our Expertise",
+    "professional_roofing_installation_alt": "Professional roofing installation process by V General Contractors",
+    "detailed_roof_inspection_alt": "Detailed roof inspection being performed by certified experts",
+    "experienced_roofing_team_alt": "Our experienced roofing team at work",
+    "completed_roofing_project_alt": "Recently completed roofing project showcasing quality workmanship",
+
+    "_comment_certifications": "=== CERTIFICATIONS SECTION ===",
+    "certified_excellence": "Certified Excellence",
+    "certified_excellence_description": "Our team holds industry-leading certifications, ensuring the highest standards of roofing expertise.",
+    "flexible_financing": "Flexible Financing",
+    "flexible_financing_description": "If you want to finance your roofing project, we can help you find a suitable option for your needs. Getting an affordable monthly payment is easier than you may think.",
+    "gaf_certified_warranty": "GAF Certified Warranty",
+    "gaf_warranty_description": "GAF certified roofing companies can provide some of the best warranties in the market. You will be amazed by how great our warranties are.",
+    "certification_badge_alt": "V General Contractors Professional Certification Badge",
+    "financial_options_alt": "Flexible Financial Options Available at V General Contractors",
+    "gaf_warranty_badge_alt": "GAF Certified Warranty Program Badge",
+    "certification_alt": "Certification"
 }
