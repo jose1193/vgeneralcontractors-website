@@ -1,11 +1,10 @@
 @extends('layouts.main')
 
-@section('title', 'Roofing Warranties | V General Contractors')
+@section('title', __('warranties_meta_title'))
 
 @section('meta')
-    <meta name="description"
-        content="Comprehensive roofing warranties for your peace of mind. V General Contractors offers industry-leading warranty coverage for all roofing installations and repairs.">
-    <meta name="keywords" content="roofing warranties, roof guarantee, GAF warranty, lifetime warranty, roofing protection">
+    <meta name="description" content="{{ __('warranties_meta_description') }}">
+    <meta name="keywords" content="{{ __('warranties_meta_keywords') }}">
 @endsection
 
 @push('styles')
@@ -34,7 +33,7 @@
     <!-- Hero Section with Image Overlay -->
     <div class="relative h-[500px] w-full hero-section">
         <!-- Background Image -->
-        <img src="{{ asset('assets/img/warranty-hero.webp') }}" alt="Roofing Warranties Houston Dallas"
+        <img src="{{ asset('assets/img/warranty-hero.webp') }}" alt="{{ __('roofing_warranties_houston_dallas_alt') }}"
             class="absolute inset-0 w-full h-full object-cover">
 
         <!-- Dark Overlay -->
@@ -43,22 +42,23 @@
         <!-- Content -->
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">Roofing Warranties</h1>
-                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">Industry-Leading Coverage
-                    in Houston,
-                    Dallas and Surrounding Areas</p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                    {{ __('roofing_warranties') }}</h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">
+                    {{ __('industry_leading_coverage_areas') }}</p>
 
                 <!-- Breadcrumb Navigation -->
                 <nav class="px-4 md:px-8 mt-8">
                     <div class="mx-auto">
                         <ol class="flex items-center justify-center space-x-2 text-white">
                             <li>
-                                <a href="{{ route('home') }}" class="hover:text-yellow-500 transition-colors">Home</a>
+                                <a href="{{ route('home') }}"
+                                    class="hover:text-yellow-500 transition-colors">{{ __('home') }}</a>
                             </li>
                             <li>
                                 <span class="mx-2">/</span>
                             </li>
-                            <li class="text-yellow-500 font-medium">Warranties</li>
+                            <li class="text-yellow-500 font-medium">{{ __('warranties') }}</li>
                         </ol>
                     </div>
                 </nav>
@@ -73,7 +73,7 @@
                 <!-- Warranty Image 1 -->
                 <div class="w-full md:w-1/2 px-4 mb-12">
                     <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image h-full">
-                        <img src="{{ asset('assets/img/warranty1.webp') }}" alt="Roofing Warranty Coverage"
+                        <img src="{{ asset('assets/img/warranty1.webp') }}" alt="{{ __('roofing_warranty_coverage_alt') }}"
                             class="w-full h-full object-contain">
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <!-- Warranty Image 2 -->
                 <div class="w-full md:w-1/2 px-4 mb-12">
                     <div class="relative overflow-hidden rounded-lg shadow-lg warranty-image h-full">
-                        <img src="{{ asset('assets/img/warranty2.webp') }}" alt="Warranty Certificate"
+                        <img src="{{ asset('assets/img/warranty2.webp') }}" alt="{{ __('warranty_certificate_alt') }}"
                             class="w-full h-full object-contain">
                     </div>
                 </div>
