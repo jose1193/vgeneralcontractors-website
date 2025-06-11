@@ -221,10 +221,10 @@
                                         {!! __('sms_consent_text') !!}
                                         <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
                                         <a href="{{ route('privacy-policy') }}" target="_blank"
-                                            class="text-yellow-500 hover:text-yellow-600 no-underline">{{ __('privacy_policy') }}</a>
+                                            class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">{{ __('privacy_policy') }}</a>
                                         {{ __('and') }} <a href="{{ route('terms-and-conditions') }}"
                                             target="_blank"
-                                            class="text-yellow-500 hover:text-yellow-600 no-underline">{{ __('terms_of_service') }}</a>.
+                                            class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">{{ __('terms_of_service') }}</a>.
                                     </span>
                                 </label>
                                 <span class="error-message text-xs text-red-500 mt-1 block h-4"
