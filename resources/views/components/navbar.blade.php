@@ -315,52 +315,8 @@
                 <div class="text-xs text-gray-500 uppercase tracking-wide px-4 mb-2">
                     {{ __('language') }}
                 </div>
-                <div class="px-4 space-y-2">
-                    <a href="{{ route('lang.switch', 'en') }}"
-                        class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded transition duration-200
-                              {{ app()->getLocale() === 'en' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
-                        <span class="mr-3">
-                            <svg class="h-5 w-5" viewBox="0 0 20 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect width="20" height="15" fill="#B22234" />
-                                <rect width="20" height="1.15" y="1.15" fill="white" />
-                                <rect width="20" height="1.15" y="3.46" fill="white" />
-                                <rect width="20" height="1.15" y="5.77" fill="white" />
-                                <rect width="20" height="1.15" y="8.08" fill="white" />
-                                <rect width="20" height="1.15" y="10.39" fill="white" />
-                                <rect width="20" height="1.15" y="12.69" fill="white" />
-                                <rect width="8" height="8.08" fill="#3C3B6E" />
-                            </svg>
-                        </span>
-                        <span>{{ __('english') }}</span>
-                        @if (app()->getLocale() === 'en')
-                            <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        @endif
-                    </a>
-                    <a href="{{ route('lang.switch', 'es') }}"
-                        class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded transition duration-200
-                              {{ app()->getLocale() === 'es' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
-                        <span class="mr-3">
-                            <svg class="h-5 w-5" viewBox="0 0 20 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect width="20" height="5" fill="#C60B1E" />
-                                <rect width="20" height="5" y="5" fill="#FFC400" />
-                                <rect width="20" height="5" y="10" fill="#C60B1E" />
-                            </svg>
-                        </span>
-                        <span>{{ __('spanish') }}</span>
-                        @if (app()->getLocale() === 'es')
-                            <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        @endif
-                    </a>
+                <div class="px-4">
+                    <x-language-switcher-public />
                 </div>
             </div>
 
