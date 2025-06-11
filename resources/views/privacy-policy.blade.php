@@ -1,9 +1,7 @@
 @extends('layouts.main')
 
-@section('title', 'Privacy Policy - V General Contractors')
-@section('meta_description',
-    'Read our privacy policy to understand how V General Contractors handles and protects your
-    personal information. Learn about your data rights and our security measures.')
+@section('title', __('privacy_policy_page_title', ['company' => 'V General Contractors']))
+@section('meta_description', __('privacy_policy_meta_description', ['company' => 'V General Contractors']))
 
 @section('content')
     <!-- Hero Section -->
@@ -12,8 +10,8 @@
             <div class="absolute inset-0 bg-black opacity-60"></div>
         </div>
         <div class="relative container mx-auto px-4">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
-            <p class="text-xl text-gray-300">Last updated: 01-23-2025 | Version 1.1</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">{!! __('privacy_policy_page') !!}</h1>
+            <p class="text-xl text-gray-300">{!! __('privacy_last_updated_january_23_2025') !!}</p>
         </div>
     </section>
 
@@ -21,9 +19,9 @@
     <nav class="bg-gray-100 py-3">
         <div class="container mx-auto px-4">
             <div class="flex items-center space-x-2 text-gray-500">
-                <a href="{{ route('home') }}" class="hover:text-yellow-500">Home</a>
+                <a href="{{ route('home') }}" class="hover:text-yellow-500">{{ __('home') }}</a>
                 <span>/</span>
-                <span class="text-yellow-500">Privacy Policy</span>
+                <span class="text-yellow-500">{!! __('privacy_policy_page') !!}</span>
             </div>
         </div>
     </nav>
@@ -32,181 +30,164 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="prose max-w-none">
-                <h2 class="text-2xl font-bold mb-6">1. General Information</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_general_information') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">1.1 Identification of the Data Controller</h3>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_data_controller_identification') !!}</h3>
                 <p class="mb-6">
-                    VG General Contractors - with fiscal address at 1302 Waugh Dr., No. 810, Houston, Texas 77019 is
-                    responsible
-                    for the processing of the personal data you provide to us.
+                    {!! __('privacy_company_responsibility', [
+                        'company' => 'VG General Contractors',
+                        'address' => '1302 Waugh Dr., No. 810, Houston, Texas 77019',
+                    ]) !!}
                 </p>
 
-                <h3 class="text-xl font-semibold mb-4">1.2 Privacy Contact</h3>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_contact_section') !!}</h3>
                 <p class="mb-6">
-                    You can contact our Data Protection Officer at:<br>
-                    Email: <a href="mailto:info@vgeneralcontractors.com"
-                        class="text-yellow-600 hover:text-yellow-700">info@vgeneralcontractors.com</a><br>
-                    Phone: <a href="tel:+13466920757" class="text-yellow-600 hover:text-yellow-700">(346) 692-0757</a>
+                    {!! __('privacy_contact_dpo') !!}<br>
+                    {!! __('by_email') !!}: <a href="mailto:info@vgeneralcontractors.com"
+                        class="text-yellow-600 hover:text-yellow-700 no-underline">info@vgeneralcontractors.com</a><br>
+                    {!! __('by_phone') !!}: <a href="tel:+13466920757"
+                        class="text-yellow-600 hover:text-yellow-700 no-underline">(346) 692-0757</a>
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">2. Data Collected</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_data_collected') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">2.1 Types of Data</h3>
-                <p class="mb-4">The Company may collect the following personal data:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_types_of_data') !!}</h3>
+                <p class="mb-4">{!! __('privacy_company_may_collect') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Full name of the property owner</li>
-                    <li>Property address</li>
-                    <li>Phone number</li>
-                    <li>Email address</li>
-                    <li>Information about the roof structure</li>
-                    <li>Property insurance details</li>
-                    <li>Photographs of the property for inspection</li>
+                    <li>{!! __('privacy_full_name_owner') !!}</li>
+                    <li>{!! __('privacy_property_address') !!}</li>
+                    <li>{!! __('privacy_phone_number') !!}</li>
+                    <li>{!! __('privacy_email_address') !!}</li>
+                    <li>{!! __('privacy_roof_structure_info') !!}</li>
+                    <li>{!! __('privacy_insurance_details') !!}</li>
+                    <li>{!! __('privacy_property_photographs') !!}</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">2.2 Collection Methods</h3>
-                <p class="mb-4">Data may be collected through:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_collection_methods') !!}</h3>
+                <p class="mb-4">{!! __('privacy_data_collected_through') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Roof inspection forms</li>
-                    <li>Online quote requests</li>
-                    <li>On-site technical visits</li>
-                    <li>Telephone communications</li>
-                    <li>Emails</li>
-                    <li>Web contact form</li>
+                    <li>{!! __('privacy_roof_inspection_forms') !!}</li>
+                    <li>{!! __('privacy_online_quote_requests') !!}</li>
+                    <li>{!! __('privacy_onsite_technical_visits') !!}</li>
+                    <li>{!! __('privacy_telephone_communications') !!}</li>
+                    <li>{!! __('privacy_emails') !!}</li>
+                    <li>{!! __('privacy_web_contact_form') !!}</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">2.3 SMS Opt-in Data (Text Messages)</h3>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_sms_optin_data') !!}</h3>
                 <p class="mb-6">
-                    If you choose to consent (opt-in) to receive text messages (SMS) from us for marketing, promotions, or
-                    service
-                    updates, we will collect and store your consent and your phone number associated with that consent (SMS
-                    opt-in data).<br><br>
-                    We want to explicitly assure you that we will NOT share this SMS opt-in and consent data with any third
-                    parties
-                    for their own marketing purposes or for any purpose other than strictly necessary to send you the text
-                    messages
-                    you have requested and consented to.<br><br>
-                    We may use SMS sending service providers to facilitate the sending of these messages, but these
-                    providers are
-                    contractually obligated to protect the confidentiality of this data and to use it only to send you
-                    messages on
-                    our behalf, in accordance with your consent.
+                    {!! __('privacy_sms_consent_collection') !!}<br><br>
+                    {!! __('privacy_sms_no_sharing_assurance') !!}<br><br>
+                    {!! __('privacy_sms_service_providers') !!}
                     <br><br>
-                    <b>SMS opt-in and phone numbers collected for SMS communication purposes will not be shared with any
-                        third
-                        party and affiliates for marketing purposes.</b>
+                    {!! __('privacy_sms_no_sharing_bold') !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">3. Purposes of Processing</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_purposes_processing') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">3.1 Main Objectives</h3>
-                <p class="mb-4">Your data will be used for:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_main_objectives') !!}</h3>
+                <p class="mb-4">{!! __('privacy_data_used_for') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Scheduling roof inspections</li>
-                    <li>Preparing repair or replacement quotes</li>
-                    <li>Managing the repair or installation process</li>
-                    <li>Warranty follow-up</li>
-                    <li>Communications related to roofing services</li>
-                    <li>Administrative and accounting management</li>
-                    <li>Sending text messages (SMS) to those customers who have given their consent (opt-in)</li>
+                    <li>{!! __('privacy_scheduling_inspections') !!}</li>
+                    <li>{!! __('privacy_preparing_quotes') !!}</li>
+                    <li>{!! __('privacy_managing_repair_process') !!}</li>
+                    <li>{!! __('privacy_warranty_followup') !!}</li>
+                    <li>{!! __('privacy_roofing_communications') !!}</li>
+                    <li>{!! __('privacy_admin_accounting') !!}</li>
+                    <li>{!! __('privacy_sms_consent_customers') !!}</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">3.2 Legal Basis</h3>
-                <p class="mb-4">Data processing is carried out under the following legal bases:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_legal_basis') !!}</h3>
+                <p class="mb-4">{!! __('privacy_processing_legal_bases') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Consent of the data subject (especially for sending marketing SMS)</li>
-                    <li>Performance of a service contract</li>
-                    <li>Compliance with legal obligations</li>
+                    <li>{!! __('privacy_consent_data_subject') !!}</li>
+                    <li>{!! __('privacy_service_contract_performance') !!}</li>
+                    <li>{!! __('privacy_legal_obligations_compliance') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">4. Rights of the Data Subject</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_data_subject_rights') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">4.1 ARCO Rights</h3>
-                <p class="mb-4">You have the right to:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_arco_rights') !!}</h3>
+                <p class="mb-4">{!! __('privacy_you_have_right_to') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Access your personal data</li>
-                    <li>Rectify inaccurate information</li>
-                    <li>Cancel your data</li>
-                    <li>Object to processing</li>
-                    <li>Limit the use of your data</li>
+                    <li>{!! __('privacy_access_personal_data') !!}</li>
+                    <li>{!! __('privacy_rectify_inaccurate_info') !!}</li>
+                    <li>{!! __('privacy_cancel_your_data') !!}</li>
+                    <li>{!! __('privacy_object_to_processing') !!}</li>
+                    <li>{!! __('privacy_limit_data_use') !!}</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">4.2 Exercising Rights</h3>
-                <p class="mb-4">To exercise your rights, you must:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_exercising_rights') !!}</h3>
+                <p class="mb-4">{!! __('privacy_to_exercise_rights') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Send a written request</li>
-                    <li>Attach documentation that proves your identity</li>
-                    <li>Describe in a precise manner the right you wish to exercise</li>
+                    <li>{!! __('privacy_send_written_request') !!}</li>
+                    <li>{!! __('privacy_attach_identity_docs') !!}</li>
+                    <li>{!! __('privacy_describe_precise_right') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">5. Security Measures</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_security_measures') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">5.1 Data Protection</h3>
-                <p class="mb-4">We implement technical and organizational measures to protect your data:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_data_protection') !!}</h3>
+                <p class="mb-4">{!! __('privacy_implement_measures') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Encryption of inspection information</li>
-                    <li>Restricted access to customer data</li>
-                    <li>Secure backups of documentation</li>
-                    <li>Confidentiality protocols for technical personnel</li>
-                    <li>Secure management of photographs and roof reports</li>
-                    <li>Specific security measures to protect SMS opt-in data</li>
+                    <li>{!! __('privacy_encryption_inspection_info') !!}</li>
+                    <li>{!! __('privacy_restricted_access_data') !!}</li>
+                    <li>{!! __('privacy_secure_backups') !!}</li>
+                    <li>{!! __('privacy_confidentiality_protocols') !!}</li>
+                    <li>{!! __('privacy_secure_photo_management') !!}</li>
+                    <li>{!! __('privacy_sms_security_measures') !!}</li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">5.2 Data Transfers</h3>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_data_transfers') !!}</h3>
                 <p class="mb-6">
-                    We do not sell or transfer personal data to third parties without your express consent, except in the
-                    following cases:
+                    {!! __('privacy_no_sell_transfer') !!}
                 </p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Insurance companies (with customer authorization)</li>
-                    <li>Construction material suppliers (strictly for service execution)</li>
-                    <li>Competent authorities (by legal requirement)</li>
-                    <li>SMS sending service providers (for consented text messages)</li>
+                    <li>{!! __('privacy_insurance_companies') !!}</li>
+                    <li>{!! __('privacy_material_suppliers') !!}</li>
+                    <li>{!! __('privacy_competent_authorities') !!}</li>
+                    <li>{!! __('privacy_sms_service_providers_transfer') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">6. Cookies and Tracking Technologies</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_cookies_tracking') !!}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">6.1 Use of Cookies</h3>
-                <p class="mb-4">Our website uses cookies to:</p>
+                <h3 class="text-xl font-semibold mb-4">{!! __('privacy_use_of_cookies') !!}</h3>
+                <p class="mb-4">{!! __('privacy_website_uses_cookies') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Improve the browsing experience</li>
-                    <li>Analyze site traffic</li>
-                    <li>Personalize quote content</li>
-                    <li>Manage contact forms</li>
+                    <li>{!! __('privacy_improve_browsing') !!}</li>
+                    <li>{!! __('privacy_analyze_site_traffic') !!}</li>
+                    <li>{!! __('privacy_personalize_quote_content') !!}</li>
+                    <li>{!! __('privacy_manage_contact_forms') !!}</li>
                 </ul>
-                <p class="mb-6">You can configure your browser to reject cookies.</p>
+                <p class="mb-6">{!! __('privacy_configure_browser_reject') !!}</p>
 
-                <h2 class="text-2xl font-bold mb-6">7. Data Retention</h2>
-                <p class="mb-4">We will retain your data:</p>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_data_retention') !!}</h2>
+                <p class="mb-4">{!! __('privacy_retain_data') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Contact data: 5 years after the last service</li>
-                    <li>Inspection reports: 10 years</li>
-                    <li>Billing data: according to accounting requirements</li>
-                    <li>SMS opt-in data: as long as consent is valid</li>
+                    <li>{!! __('privacy_contact_data_5_years') !!}</li>
+                    <li>{!! __('privacy_inspection_reports_10_years') !!}</li>
+                    <li>{!! __('privacy_billing_data_accounting') !!}</li>
+                    <li>{!! __('privacy_sms_data_consent_valid') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">8. Modifications to the Policy</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_policy_modifications') !!}</h2>
                 <p class="mb-6">
-                    We reserve the right to modify this policy. We will notify you of significant changes.
+                    {!! __('privacy_reserve_right_modify') !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">9. Consent</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_consent') !!}</h2>
                 <p class="mb-6">
-                    By requesting our services or using our website, you accept the terms of this privacy policy.
-                    Specifically,
-                    by providing your phone number and giving your consent to receive SMS messages, you accept the
-                    processing of
-                    your data for this purpose, as described in this policy.
+                    {!! __('privacy_by_requesting_services') !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">10. Applicable Legislation</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('privacy_applicable_legislation') !!}</h2>
                 <p class="mb-6">
-                    This policy is governed by the laws of Houston, Texas USA, with special reference to the regulations on
-                    personal data protection and construction.
+                    {!! __('privacy_governed_by_laws') !!}
                 </p>
 
                 <div class="text-sm text-gray-600 mt-12 pt-6 border-t">
-                    <p>Last updated: 01-23-2025</p>
-                    <p>Version: 1.1</p>
+                    <p>{!! __('privacy_last_updated_january_23_2025') !!}</p>
+                    <p>{!! __('privacy_version_1_1') !!}</p>
                 </div>
             </div>
         </div>
