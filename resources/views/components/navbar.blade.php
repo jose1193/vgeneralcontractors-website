@@ -162,6 +162,11 @@
                         class="block px-4 py-2 text-sm text-gray-700 font-semibold hover:bg-gray-100">Support</a>
                 </div>
             </div>
+
+            <!-- Language Switcher -->
+            <div class="ml-4">
+                <x-language-switcher-public />
+            </div>
         </nav>
 
         <!-- Fixed Phone Button -->
@@ -305,6 +310,41 @@
                             'text-gray-700 hover:bg-gray-100': !'{{ request()->routeIs('contact-support') }}'
                         }"
                         class="block py-2 px-4 rounded">Support</a>
+                </div>
+            </div>
+
+            <!-- Language Switcher Mobile -->
+            <div class="mt-6">
+                <div class="text-xs text-gray-500 uppercase tracking-wide px-4 mb-2">
+                    {{ __('messages.language') }}
+                </div>
+                <div class="px-4 space-y-2">
+                    <a href="{{ route('lang.switch', 'en') }}"
+                        class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded
+                              {{ app()->getLocale() === 'en' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
+                        <span class="mr-3">🇺🇸</span>
+                        <span>{{ __('messages.english') }}</span>
+                        @if (app()->getLocale() === 'en')
+                            <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        @endif
+                    </a>
+                    <a href="{{ route('lang.switch', 'es') }}"
+                        class="flex items-center py-2 text-gray-800 hover:bg-gray-100 rounded
+                              {{ app()->getLocale() === 'es' ? 'bg-gray-100 text-yellow-400 font-semibold' : '' }}">
+                        <span class="mr-3">🇪🇸</span>
+                        <span>{{ __('messages.spanish') }}</span>
+                        @if (app()->getLocale() === 'es')
+                            <svg class="ml-auto h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        @endif
+                    </a>
                 </div>
             </div>
 

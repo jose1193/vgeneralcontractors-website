@@ -18,6 +18,10 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\LanguageController;
+
+// Language switching routes
+Route::get('/lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
 
 Route::get('/', function () {
     return view('welcome');
@@ -129,6 +133,11 @@ Route::middleware([
     Route::patch('/appointment-calendar/events/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'update'])->name('appointment-calendar.update');
     Route::patch('/appointment-calendar/status/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'updateStatus'])->name('appointment-calendar.status');
     Route::post('/appointment-calendar/create', [\App\Http\Controllers\AppointmentCalendarController::class, 'create'])->name('appointment-calendar.create');
+    
+    // Translation Demo Route
+    Route::get('/translation-demo', function () {
+        return view('translation-demo');
+    })->name('translation-demo');
 });
 
 Route::get('/new-roof', function () {

@@ -199,4 +199,9 @@ return [
     
     // Language switching
     'language_changed_successfully' => 'Language changed successfully',
+    
+    // Translation Demo
+    'demo' => 'Demo',
+    'current_language' => 'Current Language',
+    'navigation' => 'Navigation',
 ]; 

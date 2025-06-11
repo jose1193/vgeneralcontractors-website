@@ -259,10 +259,22 @@
                             {{ __('Portfolio') }}
                         </x-nav-link>
                     @endif
+
+                    <!-- Translation Demo Link -->
+                    @auth
+                        <x-nav-link href="{{ route('translation-demo') }}" :active="request()->routeIs('translation-demo')">
+                            {{ __('messages.language') }} {{ __('messages.demo') }}
+                        </x-nav-link>
+                    @endauth
             </div>
         </div>
 
         <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Language Switcher -->
+            <div class="me-3">
+                <x-language-switcher />
+            </div>
+
             <!-- Teams Dropdown -->
             @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                 <div class="ms-3 relative">
@@ -570,6 +582,13 @@
                 {{ __('Portfolio') }}
             </x-responsive-nav-link>
         @endcan
+
+        <!-- Translation Demo Link (Mobile) -->
+        @auth
+            <x-responsive-nav-link href="{{ route('translation-demo') }}" :active="request()->routeIs('translation-demo')">
+                {{ __('messages.language') }} {{ __('messages.demo') }}
+            </x-responsive-nav-link>
+        @endauth
 </div>
 
 <!-- Responsive Settings Options -->
@@ -583,12 +602,25 @@
     @endif
 
     <div>
-        <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+        <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}
+        </div>
         <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
     </div>
 </div>
 
 <div class="mt-3 space-y-1">
+    <!-- Language Switcher (Mobile) -->
+    <div class="px-4 py-2">
+        <div class="text-xs text-gray-400 uppercase tracking-wide">
+            {{ __('messages.language') }}
+        </div>
+        <div class="mt-2">
+            <x-language-switcher />
+        </div>
+    </div>
+
+    <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+
     <!-- Account Management -->
     <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
         {{ __('Profile') }}
