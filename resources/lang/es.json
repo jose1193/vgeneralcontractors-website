@@ -16,8 +16,8 @@
     "_comment_language": "=== IDIOMA Y LOCALIZACIÓN ===",
     "language": "Idioma",
     "change_language": "Cambiar Idioma",
-    "english": "Inglés",
-    "spanish": "Español",
+    "english": "EN",
+    "spanish": "ES",
     "current_language": "Idioma Actual",
 
     "_comment_services_categories": "=== CATEGORÍAS DE SERVICIOS ===",
@@ -259,7 +259,7 @@
     "_comment_blog_posts": "=== SECCIÓN DE BLOG ===",
     "latest_from_our_blog": "Lo Último de Nuestro Blog",
     "blog_section_description": "Manténgase actualizado con las últimas tendencias en techado, consejos de mantenimiento y perspectivas de la industria de nuestro equipo experto en V General Contractors.",
-    "read_more": "Leer más",
+    "read_more_blog": "Leer más",
     "check_back_soon_blog": "¡Vuelva pronto para ver nuestras últimas publicaciones del blog!",
     "view_all_articles": "Ver Todos los Artículos",
 
@@ -558,5 +558,17 @@
     "blog_article": "artículo|artículos",
     "blog_in_this_category": "en esta categoría",
     "blog_no_posts_in_category": "No hay artículos en esta categoría",
-    "blog_no_posts_category_message": "Aún no hemos publicado ningún artículo en esta categoría."
+    "blog_no_posts_category_message": "Aún no hemos publicado ningún artículo en esta categoría.",
+
+    "_comment_blog_search_components": "--- Componentes de Búsqueda del Blog ---",
+    "search_articles": "Buscar artículos...",
+    "result": "resultado",
+    "for": "para",
+    "clear_search": "Limpiar búsqueda",
+    "read_more": "Leer Más",
+    "no_results_found_for": "No se encontraron resultados para",
+    "no_posts_available": "No hay artículos disponibles",
+    "try_different_search_term": "Intenta con un término de búsqueda diferente o navega por nuestras categorías.",
+    "working_on_content": "Estamos trabajando en crear contenido valioso para ti.",
+    "back_to_blog": "Volver al Blog"
 }

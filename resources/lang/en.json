@@ -16,8 +16,8 @@
     "_comment_language": "=== LANGUAGE AND LOCALIZATION ===",
     "language": "Language",
     "change_language": "Change Language",
-    "english": "English",
-    "spanish": "Spanish",
+    "english": "EN",
+    "spanish": "ES",
     "current_language": "Current Language",
 
     "_comment_services_categories": "=== SERVICE CATEGORIES ===",
@@ -259,7 +259,7 @@
     "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
     "latest_from_our_blog": "Latest From Our Blog",
     "blog_section_description": "Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.",
-    "read_more": "Read more",
+    "read_more_blog": "Read more",
     "check_back_soon_blog": "Check back soon for our latest blog posts!",
     "view_all_articles": "View All Articles",
 
@@ -560,5 +560,17 @@
     "blog_article": "article|articles",
     "blog_in_this_category": "in this category",
     "blog_no_posts_in_category": "No posts in this category",
-    "blog_no_posts_category_message": "We haven't published any posts in this category yet."
+    "blog_no_posts_category_message": "We haven't published any posts in this category yet.",
+
+    "_comment_blog_search_components": "--- Blog Search Components ---",
+    "search_articles": "Search articles...",
+    "result": "result",
+    "for": "for",
+    "clear_search": "Clear search",
+    "read_more": "Read More",
+    "no_results_found_for": "No results found for",
+    "no_posts_available": "No posts available",
+    "try_different_search_term": "Try a different search term or browse our categories.",
+    "working_on_content": "We're working on creating valuable content for you.",
+    "back_to_blog": "Back to Blog"
 }

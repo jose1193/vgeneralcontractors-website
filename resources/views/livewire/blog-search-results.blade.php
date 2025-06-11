@@ -3,10 +3,11 @@
     @if ($isSearching)
         <div class="mb-8 text-center">
             <h2 class="text-2xl font-bold text-gray-700">
-                {{ $posts->total() }} {{ Str::plural('result', $posts->total()) }} for "{{ $query }}"
+                {{ $posts->total() }} {{ Str::plural(__('result'), $posts->total()) }} {{ __('for') }}
+                "{{ $query }}"
             </h2>
             <button wire:click="clearSearch" class="mt-2 text-yellow-600 hover:text-yellow-700 inline-flex items-center">
-                <span>Clear search</span>
+                <span>{{ __('clear_search') }}</span>
                 <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>
@@ -76,7 +77,7 @@
 
                     <a href="{{ route('blog.show', $post->post_title_slug) }}"
                         class="inline-flex items-center mt-4 text-yellow-600 hover:text-yellow-700">
-                        Read More
+                        {{ __('read_more_blog') }}
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -93,16 +94,16 @@
                 </svg>
                 <h3 class="text-xl font-medium text-gray-700 mb-2">
                     @if ($isSearching)
-                        No results found for "{{ $query }}"
+                        {{ __('no_results_found_for') }} "{{ $query }}"
                     @else
-                        No posts available
+                        {{ __('no_posts_available') }}
                     @endif
                 </h3>
                 <p class="text-gray-500 mb-6">
                     @if ($isSearching)
-                        Try a different search term or browse our categories.
+                        {{ __('try_different_search_term') }}
                     @else
-                        We're working on creating valuable content for you.
+                        {{ __('working_on_content') }}
                     @endif
                 </p>
                 @if ($isSearching)
@@ -112,7 +113,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 17l-5-5m0 0l5-5m-5 5h12"></path>
                         </svg>
-                        Back to Blog
+                        {{ __('back_to_blog') }}
                     </button>
                 @endif
             </div>
