@@ -58,7 +58,7 @@
                 {{ __('financing_opportunities') }}</h2>
 
             <div class="prose prose-lg max-w-none">
-                <p class="mb-6">{{ __('financing_intro_description') }}</p>
+                <p class="mb-6">{!! __('financing_intro_description') !!}</p>
 
                 <ul class="space-y-4 mb-8">
                     <li class="flex items-start">
