@@ -13,7 +13,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('dashboard') }}
                     </x-nav-link>
 
                     <!-- Administration Dropdown Menu -->
@@ -26,7 +26,7 @@
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
-                                    {{ __('Administration') }}
+                                    {{ __('administration') }}
                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -49,14 +49,14 @@
                                         @can('READ_COMPANY_DATA')
                                             <a href="{{ route('company-data') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('company-data') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Company Data') }}
+                                                {{ __('company_data') }}
                                             </a>
                                         @endcan
 
                                         @can('READ_USER')
                                             <a href="{{ route('users') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('users') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Users') }}
+                                                {{ __('users') }}
                                             </a>
                                         @endcan
                                     </div>
@@ -75,7 +75,7 @@
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
-                                    {{ __('Services') }}
+                                    {{ __('services') }}
                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -98,14 +98,14 @@
                                         @can('READ_EMAIL_DATA')
                                             <a href="{{ route('email-datas') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('email-datas') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Emails') }}
+                                                {{ __('emails') }}
                                             </a>
                                         @endcan
 
                                         @can('READ_SERVICE_CATEGORY')
                                             <a href="{{ route('service-categories') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('service-categories') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Service Categories') }}
+                                                {{ __('service_categories') }}
                                             </a>
                                         @endcan
 
@@ -131,7 +131,7 @@
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
-                                    {{ __('Retell AI') }}
+                                    {{ __('retell_ai') }}
                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -171,7 +171,7 @@
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
-                                    {{ __('Appointments') }}
+                                    {{ __('appointments') }}
                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -193,11 +193,11 @@
                                         class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-gray-700">
                                         <a href="{{ route('appointments.index') }}"
                                             class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('appointments.index') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                            {{ __('Manage Appointments') }}
+                                            {{ __('manage_appointments') }}
                                         </a>
                                         <a href="{{ route('appointment-calendar') }}"
                                             class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('appointment-calendar') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                            {{ __('Calendar View') }}
+                                            {{ __('calendar_view') }}
                                         </a>
                                     </div>
                                 </div>
@@ -215,7 +215,7 @@
                                         ? 'border-gray-400 dark:border-indigo-600 text-gray-900 dark:text-gray-100'
                                         : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700' }}
                                     text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out">
-                                    {{ __('Blog Management') }}
+                                    {{ __('blog_management') }}
                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -238,14 +238,14 @@
                                         @can('READ_POST')
                                             <a href="{{ route('admin.posts') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('admin.posts') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Posts') }}
+                                                {{ __('posts') }}
                                             </a>
                                         @endcan
 
                                         @can('READ_BLOG_CATEGORY')
                                             <a href="{{ route('blog-categories') }}"
                                                 class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 {{ request()->routeIs('blog-categories') ? 'bg-gray-100 dark:bg-gray-600' : '' }}">
-                                                {{ __('Blog Categories') }}
+                                                {{ __('blog_categories') }}
                                             </a>
                                         @endcan
                                     </div>
@@ -256,7 +256,7 @@
 
                     @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
                         <x-nav-link href="{{ route('portfolios') }}" :active="request()->routeIs('portfolios')">
-                            {{ __('Portfolio') }}
+                            {{ __('portfolio') }}
                         </x-nav-link>
                     @endif
 
@@ -304,12 +304,12 @@
 
                                 <!-- Team Settings -->
                                 <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                    {{ __('Team Settings') }}
+                                    {{ __('team_settings') }}
                                 </x-dropdown-link>
 
                                 @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                                     <x-dropdown-link href="{{ route('teams.create') }}">
-                                        {{ __('Create New Team') }}
+                                        {{ __('create_new_team') }}
                                     </x-dropdown-link>
                                 @endcan
 
@@ -362,16 +362,16 @@
                     <x-slot name="content">
                         <!-- Account Management -->
                         <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('Manage Account') }}
+                            {{ __('manage_account') }}
                         </div>
 
                         <x-dropdown-link href="{{ route('profile.show') }}">
-                            {{ __('Profile') }}
+                            {{ __('profile') }}
                         </x-dropdown-link>
 
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                {{ __('API Tokens') }}
+                                {{ __('api_tokens') }}
                             </x-dropdown-link>
                         @endif
 
@@ -383,7 +383,7 @@
 
                             <x-dropdown-link href="{{ secure_url(route('logout', [], false)) }}"
                                 @click.prevent="$root.submit();">
-                                {{ __('Log Out') }}
+                                {{ __('log_out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -412,7 +412,7 @@
 <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
     <div class="pt-2 pb-3 space-y-1">
         <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-            {{ __('Dashboard') }}
+            {{ __('dashboard') }}
         </x-responsive-nav-link>
 
         <!-- Administration Dropdown (Mobile) -->
@@ -504,7 +504,7 @@
 
                 <div x-show="open" class="mt-2 space-y-1" style="display: none;">
                     <x-responsive-nav-link href="{{ route('call-records') }}" :active="request()->routeIs('call-records')" class="pl-8">
-                        {{ __('Call Records') }}
+                        {{ __('call_records') }}
                     </x-responsive-nav-link>
                 </div>
             </div>
@@ -623,12 +623,12 @@
 
     <!-- Account Management -->
     <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-        {{ __('Profile') }}
+        {{ __('profile') }}
     </x-responsive-nav-link>
 
     @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
         <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
-            {{ __('API Tokens') }}
+            {{ __('api_tokens') }}
         </x-responsive-nav-link>
     @endif
 
@@ -638,7 +638,7 @@
 
         <x-responsive-nav-link href="{{ secure_url(route('logout', [], false)) }}"
             @click.prevent="$root.submit();">
-            {{ __('Log Out') }}
+            {{ __('log_out') }}
         </x-responsive-nav-link>
     </form>
 
@@ -647,7 +647,7 @@
         <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
         <div class="block px-4 py-2 text-xs text-gray-400">
-            {{ __('Manage Team') }}
+            {{ __('manage_team') }}
         </div>
 
         <!-- Team Settings -->
@@ -667,7 +667,7 @@
             <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
             <div class="block px-4 py-2 text-xs text-gray-400">
-                {{ __('Switch Teams') }}
+                {{ __('switch_teams') }}
             </div>
 
             @foreach (Auth::user()->allTeams() as $team)
