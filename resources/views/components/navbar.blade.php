@@ -313,10 +313,10 @@
             <!-- Language Switcher Mobile -->
             <div class="mt-6">
                 <div class="text-xs text-gray-500 uppercase tracking-wide px-4 mb-2">
-                    {{ __('language') }}
+                    <x-language-switcher-public />
                 </div>
                 <div class="px-4">
-                    <x-language-switcher-public />
+
                 </div>
             </div>
 
