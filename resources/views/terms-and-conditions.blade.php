@@ -40,6 +40,8 @@
                     <em>"{!! __('sms_consent_full_text', [
                         'company' => $companyData->company_name,
                         'phone' => PhoneHelper::format($companyData->phone),
+                        'privacy_url' => route('privacy-policy'),
+                        'terms_url' => route('terms-and-conditions'),
                     ]) !!}"</em>
                 </p>
 
@@ -101,7 +103,11 @@
 
                 <h2 class="text-2xl font-bold mb-6">{!! __('help_support_sms_service') !!}</h2>
                 <p class="mb-6">
-                    {!! __('sms_assistance_help', ['phone' => PhoneHelper::format($companyData->phone)]) !!}
+                    {!! __('sms_assistance_help', [
+                        'phone' => PhoneHelper::format($companyData->phone),
+                        'privacy_url' => route('privacy-policy'),
+                        'terms_url' => route('terms-and-conditions'),
+                    ]) !!}
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">{{ __('links_to_other_websites') }}</h2>
