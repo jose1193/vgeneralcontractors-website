@@ -29,11 +29,11 @@
 
 <div class="relative" x-data="{ open: false }">
     <button @click="open = !open" type="button"
+        class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium transition-colors duration-300 ease-in-out text-gray-700 hover:text-gray-900 md:text-inherit"
         :class="{
-            'text-gray-700 hover:text-gray-900': isScrolled,
-            'text-yellow-400 hover:text-yellow-300': !isScrolled
-        }"
-        class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium transition-colors duration-300 ease-in-out">
+            'text-gray-700 hover:text-gray-900': typeof isScrolled !== 'undefined' && isScrolled,
+            'text-yellow-400 hover:text-yellow-300': typeof isScrolled !== 'undefined' && !isScrolled
+        }">
         <span class="mr-2">{!! $languages[$currentLocale]['flag'] !!}</span>
         <span class="font-semibold">{{ $languages[$currentLocale]['name'] }}</span>
         <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
