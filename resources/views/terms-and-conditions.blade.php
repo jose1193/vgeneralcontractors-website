@@ -31,7 +31,7 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="prose max-w-none">
-                <h2 class="text-2xl font-bold mb-6">{{ __('sms_messaging_service_terms') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('sms_messaging_service_terms') !!}</h2>
 
                 <h3 class="text-xl font-semibold mb-4">{{ __('consent_to_receive_text_messages') }}</h3>
                 <p class="mb-6">
@@ -77,29 +77,29 @@
                     {{ __('acknowledgment_paragraph_4') }}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('types_of_sms_communications') }}</h2>
-                <p class="mb-4">{{ __('if_consented_receive_text_messages') }}</p>
+                <h2 class="text-2xl font-bold mb-6">{!! __('types_of_sms_communications') !!}</h2>
+                <p class="mb-4">{!! __('if_consented_receive_text_messages') !!}</p>
                 <ul class="list-disc pl-6 mb-6">
                     <li>{!! __('customers_guests_sms_updates') !!}</li>
                     <li>{!! __('job_applicants_sms_updates') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('frequency_of_sms_messages') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('frequency_of_sms_messages') !!}</h2>
                 <p class="mb-6">
-                    {{ __('frequency_sms_messages_vary', ['company' => $companyData->company_name]) }}
+                    {!! __('frequency_sms_messages_vary', ['company' => $companyData->company_name]) !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('message_data_rates_sms_service') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('message_data_rates_sms_service') !!}</h2>
                 <p class="mb-6">
-                    {{ __('message_data_rates_apply', ['company' => $companyData->company_name]) }}
+                    {!! __('message_data_rates_apply', ['company' => $companyData->company_name]) !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('opt_out_sms_messages') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('opt_out_sms_messages') !!}</h2>
                 <p class="mb-6">
-                    {{ __('unsubscribe_sms_service', ['company' => $companyData->company_name]) }}
+                    {!! __('unsubscribe_sms_service', ['company' => $companyData->company_name]) !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">{{ __('help_support_sms_service') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{!! __('help_support_sms_service') !!}</h2>
                 <p class="mb-6">
                     {!! __('sms_assistance_help', ['phone' => PhoneHelper::format($companyData->phone)]) !!}
                 </p>
