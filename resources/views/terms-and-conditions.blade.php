@@ -68,7 +68,7 @@
                     {{ __('acknowledgment_paragraph_1') }}
                 </p>
                 <p class="mb-6">
-                    {{ __('acknowledgment_paragraph_2') }}
+                    {!! __('acknowledgment_paragraph_2') !!}
                 </p>
                 <p class="mb-6">
                     {{ __('acknowledgment_paragraph_3') }}
