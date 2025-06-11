@@ -621,5 +621,18 @@
     "faq_replacement_time_question": "How long does a roof replacement take?",
     "faq_replacement_time_answer": "Project duration depends on factors like roof size, complexity, and weather. However, our <strong>efficient and experienced crews</strong> work diligently without compromising quality. For most standard residential roof replacements, we aim to complete the job within <strong>1-2 days</strong>.",
     "faq_stay_in_house_question": "Can I stay in my house while you replace my roof?",
-    "faq_stay_in_house_answer": "Yes, in almost all cases, you can remain comfortably in your home during the roof replacement. We understand it's a significant project, and our team prioritizes minimizing disruption to your daily routine. We take care to protect your property and clean up thoroughly. We're happy to discuss any specific concerns or requests you may have."
+    "faq_stay_in_house_answer": "Yes, in almost all cases, you can remain comfortably in your home during the roof replacement. We understand it's a significant project, and our team prioritizes minimizing disruption to your daily routine. We take care to protect your property and clean up thoroughly. We're happy to discuss any specific concerns or requests you may have.",
+
+    "_comment_contact_support_page": "--- Contact Support Page ---",
+    "contact_support_page_title": "Contact Support - V General Contractors | Expert Roofing Services",
+    "contact_support_meta_description": "Get in touch with V General Contractors' support team. We're here to answer your questions about our roofing services in Houston, Dallas and surrounding areas.",
+    "contact_support_meta_keywords": "roofing support, customer service, roofing help, contact us, V General Contractors, Houston roofing, Dallas roofing",
+    "contact_support_og_title": "Contact Support - V General Contractors | Expert Roofing Services",
+    "contact_support_og_description": "Get in touch with V General Contractors' support team. We're here to answer your questions about our roofing services.",
+    "contact_support_hero_alt": "Contact V General Contractors Support",
+    "contact_support_page": "Contact Support",
+    "here_to_help_roofing_needs": "We're Here to Help with All Your Roofing Needs",
+    "phone_placeholder": "(XXX) XXX-XXXX",
+    "sending_page": "Sending...",
+    "sms_consent_text_page": "Yes, I would like to receive text messages from <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services. <span class=\"font-semibold\">Messaging Frequency may vary</span>. I understand that I can cancel my subscription at any time by replying <span class=\"font-semibold\">STOP</span>. Reply <span class=\"font-semibold\">HELP :phone</span> for assistance. Message and data rates apply. Information obtained as part of the SMS consent process will not be shared with third parties. <a href=\"{{ route('privacy-policy') }}\" target=\"_blank\" class=\"text-yellow-500 hover:text-yellow-600\">Privacy Policy</a> and <a href=\"{{ route('terms-and-conditions') }}\" target=\"_blank\" class=\"text-yellow-500 hover:text-yellow-600\">Terms of Service</a>."
 }

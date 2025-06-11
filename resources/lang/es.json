@@ -619,5 +619,18 @@
     "faq_replacement_time_question": "¿Cuánto tiempo toma un reemplazo de techo?",
     "faq_replacement_time_answer": "La duración del proyecto depende de factores como el tamaño del techo, complejidad y clima. Sin embargo, nuestros <strong>equipos eficientes y experimentados</strong> trabajan diligentemente sin comprometer la calidad. Para la mayoría de reemplazos de techos residenciales estándar, nuestro objetivo es completar el trabajo dentro de <strong>1-2 días</strong>.",
     "faq_stay_in_house_question": "¿Puedo quedarme en mi casa mientras reemplazan mi techo?",
-    "faq_stay_in_house_answer": "Sí, en casi todos los casos, puede permanecer cómodamente en su hogar durante el reemplazo del techo. Entendemos que es un proyecto significativo, y nuestro equipo prioriza minimizar la interrupción de su rutina diaria. Nos encargamos de proteger su propiedad y limpiar exhaustivamente. Estamos felices de discutir cualquier preocupación específica o solicitud que pueda tener."
+    "faq_stay_in_house_answer": "Sí, en casi todos los casos, puede permanecer cómodamente en su hogar durante el reemplazo del techo. Entendemos que es un proyecto significativo, y nuestro equipo prioriza minimizar la interrupción de su rutina diaria. Nos encargamos de proteger su propiedad y limpiar exhaustivamente. Estamos felices de discutir cualquier preocupación específica o solicitud que pueda tener.",
+
+    "_comment_contact_support_page": "--- Página de Contactar Soporte ---",
+    "contact_support_page_title": "Contactar Soporte - V General Contractors | Servicios Expertos de Techado",
+    "contact_support_meta_description": "Ponte en contacto con el equipo de soporte de V General Contractors. Estamos aquí para responder tus preguntas sobre nuestros servicios de techado en Houston, Dallas y áreas circundantes.",
+    "contact_support_meta_keywords": "soporte de techado, servicio al cliente, ayuda de techado, contáctanos, V General Contractors, techado Houston, techado Dallas",
+    "contact_support_og_title": "Contactar Soporte - V General Contractors | Servicios Expertos de Techado",
+    "contact_support_og_description": "Ponte en contacto con el equipo de soporte de V General Contractors. Estamos aquí para responder tus preguntas sobre nuestros servicios de techado.",
+    "contact_support_hero_alt": "Contactar Soporte V General Contractors",
+    "contact_support_page": "Contactar Soporte",
+    "here_to_help_roofing_needs": "Estamos Aquí para Ayudar con Todas tus Necesidades de Techado",
+    "phone_placeholder": "(XXX) XXX-XXXX",
+    "sending_page": "Enviando...",
+    "sms_consent_text_page": "Sí, me gustaría recibir mensajes de texto de <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> con ofertas, recordatorios de citas y actualizaciones sobre servicios de techado. <span class=\"font-semibold\">La frecuencia de mensajes puede variar</span>. Entiendo que puedo cancelar mi suscripción en cualquier momento respondiendo <span class=\"font-semibold\">STOP</span>. Responde <span class=\"font-semibold\">HELP :phone</span> para asistencia. Se aplican tarifas de mensajes y datos. La información obtenida como parte del proceso de consentimiento de SMS no será compartida con terceros. <a href=\"{{ route('privacy-policy') }}\" target=\"_blank\" class=\"text-yellow-500 hover:text-yellow-600\">Política de Privacidad</a> y <a href=\"{{ route('terms-and-conditions') }}\" target=\"_blank\" class=\"text-yellow-500 hover:text-yellow-600\">Términos de Servicio</a>."
 }

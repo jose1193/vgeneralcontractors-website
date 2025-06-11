@@ -1,15 +1,12 @@
 @extends('layouts.main')
 
-@section('title', 'Contact Support - V General Contractors | Expert Roofing Services')
+@section('title', __('contact_support_page_title'))
 
 @section('meta')
-    <meta name="description"
-        content="Get in touch with V General Contractors' support team. We're here to answer your questions about our roofing services in Houston, Dallas and surrounding areas.">
-    <meta name="keywords"
-        content="roofing support, customer service, roofing help, contact us, V General Contractors, Houston roofing, Dallas roofing">
-    <meta property="og:title" content="Contact Support - V General Contractors | Expert Roofing Services">
-    <meta property="og:description"
-        content="Get in touch with V General Contractors' support team. We're here to answer your questions about our roofing services.">
+    <meta name="description" content="{{ __('contact_support_meta_description') }}">
+    <meta name="keywords" content="{{ __('contact_support_meta_keywords') }}">
+    <meta property="og:title" content="{{ __('contact_support_og_title') }}">
+    <meta property="og:description" content="{{ __('contact_support_og_description') }}">
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/contact-support') }}">
@@ -27,7 +24,7 @@
     <!-- Hero Section with Image Overlay -->
     <div class="relative h-[500px] w-full hero-section">
         <!-- Background Image -->
-        <img src="{{ asset('assets/img/contact-support.webp') }}" alt="Contact V General Contractors Support"
+        <img src="{{ asset('assets/img/contact-support.webp') }}" alt="{{ __('contact_support_hero_alt') }}"
             class="absolute inset-0 w-full h-full object-cover object-[center_25%]">
 
         <!-- Dark Overlay -->
@@ -36,21 +33,23 @@
         <!-- Content -->
         <div class="relative z-10 h-full flex items-center justify-center">
             <div class="text-center">
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">Contact Support</h1>
-                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">We're Here to Help with
-                    All Your Roofing Needs</p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                    {{ __('contact_support') }}</h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-white max-w-2xl mx-auto px-4 mb-12">
+                    {{ __('here_to_help_roofing_needs') }}</p>
 
                 <!-- Breadcrumb Navigation -->
                 <nav class="px-4 md:px-8 mt-8">
                     <div class="mx-auto">
                         <ol class="flex items-center justify-center space-x-2 text-white">
                             <li>
-                                <a href="{{ route('home') }}" class="hover:text-yellow-500 transition-colors">Home</a>
+                                <a href="{{ route('home') }}"
+                                    class="hover:text-yellow-500 transition-colors">{{ __('home') }}</a>
                             </li>
                             <li>
                                 <span class="mx-2">/</span>
                             </li>
-                            <li class="text-yellow-500 font-medium">Contact Support</li>
+                            <li class="text-yellow-500 font-medium">{{ __('contact_support_page') }}</li>
                         </ol>
                     </div>
                 </nav>
@@ -77,7 +76,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- First Name -->
                     <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <label for="first_name"
+                            class="block text-sm font-medium text-gray-700">{{ __('first_name') }}</label>
                         <input type="text" id="first_name" name="first_name"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="first_name"></p>
@@ -85,7 +85,8 @@
 
                     <!-- Last Name -->
                     <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <label for="last_name"
+                            class="block text-sm font-medium text-gray-700">{{ __('last_name') }}</label>
                         <input type="text" id="last_name" name="last_name"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="last_name"></p>
@@ -93,7 +94,7 @@
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700">{{ __('email') }}</label>
                         <input type="email" id="email" name="email"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="email"></p>
@@ -101,8 +102,8 @@
 
                     <!-- Phone -->
                     <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                        <input type="tel" id="phone" name="phone" placeholder="(XXX) XXX-XXXX"
+                        <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('phone') }}</label>
+                        <input type="tel" id="phone" name="phone" placeholder="{{ __('phone_placeholder') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="phone"></p>
                     </div>
@@ -110,7 +111,7 @@
 
                 <!-- Message -->
                 <div>
-                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <label for="message" class="block text-sm font-medium text-gray-700">{{ __('message') }}</label>
                     <textarea id="message" name="message" rows="4"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field"></textarea>
                     <p class="mt-1 text-sm text-red-600 error-message" data-field="message"></p>
@@ -122,21 +123,7 @@
                         <input type="checkbox" name="sms_consent" id="sms_consent"
                             class="form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500 input-field">
                         <span class="ml-2 text-sm text-gray-600">
-                            Yes, I would like to receive text messages from <span class="font-semibold">V GENERAL
-                                CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services.
-                            <span class="font-semibold">Messaging Frequency may vary</span>. I understand that I can cancel
-                            my
-                            subscription at any time by replying <span class="font-semibold">STOP</span>. Reply <span
-                                class="font-semibold">HELP {{ PhoneHelper::format($companyData->phone) }}</span> for
-                            assistance.
-                            Message and data rates apply. Information obtained as part of the SMS consent process will not
-                            be
-                            shared with third parties.
-                            <a href="{{ route('privacy-policy') }}" target="_blank"
-                                class="text-yellow-500 hover:text-yellow-600">Privacy Policy</a>
-                            and <a href="{{ route('terms-and-conditions') }}" target="_blank"
-                                class="text-yellow-500 hover:text-yellow-600">Terms
-                                of Service</a>.
+                            {!! __('sms_consent_text_page', ['phone' => PhoneHelper::format($companyData->phone)]) !!}
                         </span>
                     </label>
                     <p class="mt-1 text-sm text-red-600 error-message" data-field="sms_consent"></p>
@@ -155,7 +142,7 @@
                                 </path>
                             </svg>
                         </span>
-                        <span id="submit-button-text" class="z-40">Send Message</span>
+                        <span id="submit-button-text" class="z-40">{{ __('send_message') }}</span>
                         <div
                             class="absolute inset-0 h-[200%] w-[200%] rotate-45 translate-x-[-70%] transition-all group-hover:scale-100 bg-white/30 group-hover:translate-x-[50%] z-20 duration-1000">
                         </div>
@@ -168,8 +155,8 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async defer>
-    </script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}&onload=onRecaptchaLoad" async
+        defer></script>
     <script>
         // Global variables for reCAPTCHA
         window.recaptchaSiteKey = '{{ $recaptchaSiteKey ?? '' }}';
@@ -323,12 +310,12 @@
                 submitButton.disabled = isLoading;
                 if (isLoading) {
                     submitSpinner.classList.remove('hidden');
-                    submitButtonText.textContent = 'Sending...';
+                    submitButtonText.textContent = '{{ __('sending_page') }}';
                     submitButton.setAttribute('aria-busy', 'true');
-                    submitButton.setAttribute('aria-label', 'Sending');
+                    submitButton.setAttribute('aria-label', '{{ __('sending_page') }}');
                 } else {
                     submitSpinner.classList.add('hidden');
-                    submitButtonText.textContent = 'Send Message';
+                    submitButtonText.textContent = '{{ __('send_message') }}';
                     submitButton.removeAttribute('aria-busy');
                     submitButton.removeAttribute('aria-label');
                     checkFormValidity();
