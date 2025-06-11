@@ -78,14 +78,12 @@
     "welcome_title": "Welcome to V General Contractors!",
     "welcome_description": "Your trusted partner for all construction needs. We're dedicated to delivering high-quality construction services with a focus on customer satisfaction, innovation, and excellence in every project we undertake.",
     "welcome_to_company": "Welcome to V General Contractors!",
-    "company_description": "Your trusted partner for all construction needs. We're dedicated to delivering high-quality construction services with a focus on customer satisfaction, innovation, and excellence in every project we undertake.",
     "business_hours": "Business Hours",
     "monday_friday": "Monday - Friday",
     "saturday": "Saturday",
     "sunday": "Sunday",
     "closed": "Closed",
     "open": "Open",
-    "professional_roofing_texas": "Professional Commercial & Residential Roofing Services in Texas",
 
     "_comment_admin_dashboard": "=== DASHBOARD AND ADMINISTRATION ===",
     "create_post": "Create Post",
@@ -256,5 +254,26 @@
     "financing": "Financing",
     "financing_description_p1": "If you want to finance your roofing project, we can help you find a suitable option for your needs.",
     "financing_description_p2": "Getting an affordable monthly payment is easier than you may think.",
-    "call_us_now": "Call Us Now"
+    "call_us_now": "Call Us Now",
+
+    "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
+    "latest_from_our_blog": "Latest From Our Blog",
+    "blog_section_description": "Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.",
+    "read_more": "Read more",
+    "check_back_soon_blog": "Check back soon for our latest blog posts!",
+    "view_all_articles": "View All Articles",
+
+    "_comment_footer": "=== FOOTER SECTION ===",
+    "contact_us": "Contact Us",
+    "quick_links": "Quick Links",
+    "legal_and_help": "Legal & Help",
+    "find_us": "Find Us",
+    "cookie_policy": "Cookie Policy",
+    "sitemap": "Sitemap",
+    "terms_and_conditions": "Terms & Conditions",
+    "copyright_text": "Copyright © :year :company - All Rights Reserved",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn"
 }

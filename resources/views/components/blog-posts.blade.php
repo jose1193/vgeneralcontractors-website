@@ -3,11 +3,11 @@
     <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
         <!-- text - start -->
         <div class="mb-10 md:mb-16">
-            <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">Latest From Our Blog
+            <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
+                {{ __('latest_from_our_blog') }}
             </h2>
-            <p class="mx-auto max-w-screen-md text-center text-gray-600 md:text-lg">Stay updated with the latest
-                roofing trends, maintenance tips, and industry insights from our expert team at V General
-                Contractors.</p>
+            <p class="mx-auto max-w-screen-md text-center text-gray-600 md:text-lg">{{ __('blog_section_description') }}
+            </p>
         </div>
         <!-- text - end -->
 
@@ -36,14 +36,14 @@
                         <span class="block text-sm text-gray-200">{{ $post->created_at->format('F d, Y') }}</span>
                         <h2 class="mb-2 text-xl font-semibold text-white transition duration-100">
                             {{ \Illuminate\Support\Str::limit($post->post_title, 40) }}</h2>
-                        <span class="font-semibold text-yellow-400">Read more</span>
+                        <span class="font-semibold text-yellow-400">{{ __('read_more') }}</span>
                     </div>
                 </a>
                 <!-- article - end -->
             @empty
                 <!-- Fallback content if no posts -->
                 <div class="col-span-full text-center py-8">
-                    <p class="text-lg text-gray-600">Check back soon for our latest blog posts!</p>
+                    <p class="text-lg text-gray-600">{{ __('check_back_soon_blog') }}</p>
                 </div>
             @endforelse
         </div>
@@ -51,7 +51,7 @@
         <div class="mt-10 text-center">
             <a href="{{ route('blog.index') }}"
                 class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition">
-                View All Articles
+                {{ __('view_all_articles') }}
                 <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
                     </path>

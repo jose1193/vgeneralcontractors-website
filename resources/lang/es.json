@@ -32,7 +32,7 @@
     "construction": "Construcción",
 
     "_comment_actions_buttons": "=== BOTONES Y ACCIONES ===",
-    "schedule_appointment": "Agendar Cita",
+    "schedule_appointment": "Programar Cita",
     "schedule_inspection": "Agendar Inspección",
     "schedule_free_inspection": "Agendar Inspección Gratuita",
     "get_free_inspection": "Obtener Inspección Gratuita",
@@ -78,14 +78,12 @@
     "welcome_title": "¡Bienvenido a V General Contractors!",
     "welcome_description": "Su socio de confianza para todas sus necesidades de construcción. Nos dedicamos a ofrecer servicios de construcción de alta calidad con un enfoque en la satisfacción del cliente, la innovación y la excelencia en cada proyecto que emprendemos.",
     "welcome_to_company": "¡Bienvenido a V General Contractors!",
-    "company_description": "Su socio de confianza para todas sus necesidades de construcción. Nos dedicamos a ofrecer servicios de construcción de alta calidad con un enfoque en la satisfacción del cliente, la innovación y la excelencia en cada proyecto que emprendemos.",
     "business_hours": "Horario Comercial",
     "monday_friday": "Lunes - Viernes",
     "saturday": "Sábado",
     "sunday": "Domingo",
     "closed": "Cerrado",
     "open": "Abierto",
-    "professional_roofing_texas": "Servicios Profesionales de Techado Comercial y Residencial en Texas",
 
     "_comment_admin_dashboard": "=== DASHBOARD Y ADMINISTRACIÓN ===",
     "create_post": "Crear Publicación",
@@ -256,5 +254,26 @@
     "financing": "Financiamiento",
     "financing_description_p1": "Si desea financiar su proyecto de techado, podemos ayudarle a encontrar una opción adecuada para sus necesidades.",
     "financing_description_p2": "Obtener un pago mensual asequible es más fácil de lo que puede pensar.",
-    "call_us_now": "Llámenos Ahora"
+    "call_us_now": "Llámenos Ahora",
+
+    "_comment_blog_posts": "=== SECCIÓN DE BLOG ===",
+    "latest_from_our_blog": "Lo Último de Nuestro Blog",
+    "blog_section_description": "Manténgase actualizado con las últimas tendencias en techado, consejos de mantenimiento y perspectivas de la industria de nuestro equipo experto en V General Contractors.",
+    "read_more": "Leer más",
+    "check_back_soon_blog": "¡Vuelva pronto para ver nuestras últimas publicaciones del blog!",
+    "view_all_articles": "Ver Todos los Artículos",
+
+    "_comment_footer": "=== SECCIÓN DE PIE DE PÁGINA ===",
+    "contact_us": "Contáctanos",
+    "quick_links": "Enlaces Rápidos",
+    "legal_and_help": "Legal y Ayuda",
+    "find_us": "Encuéntranos",
+    "cookie_policy": "Política de Cookies",
+    "sitemap": "Mapa del Sitio",
+    "terms_and_conditions": "Términos y Condiciones",
+    "copyright_text": "Derechos de Autor © :year :company - Todos los Derechos Reservados",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn"
 }
