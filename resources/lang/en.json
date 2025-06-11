@@ -275,5 +275,27 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "twitter": "Twitter",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+
+    "_comment_service_cards": "=== SERVICE CARDS SECTION ===",
+    "our_solutions": "Our Solutions",
+    "comprehensive_roofing_services": "Comprehensive <span class=\"text-yellow-500\">Roofing Services</span>",
+    "service_cards_description": "Discover our full range of professional roofing services designed to protect and enhance your property.",
+    "new_roof_installation": "New Roof Installation",
+    "new_roof_installation_description": "Expert installation of high-quality roofing systems with industry-leading warranties.",
+    "roof_repair_replacement": "Roof Repair & Replacement",
+    "roof_repair_replacement_description": "Quick and reliable repairs to fix leaks, damage, and maintain your roof's integrity.",
+    "storm_damage_repair_replacement": "Storm Damage Repair & Replacement",
+    "storm_damage_repair_replacement_description": "Emergency repairs and restoration services for storm-damaged roofs.",
+    "hail_damage_repair_replacement": "Hail Damage Repair & Replacement",
+    "hail_damage_repair_replacement_description": "Specialized repair services for hail-damaged roofs with insurance claim assistance.",
+
+    "new_roof_process_alt": "New roof installation process in progress",
+    "new_roof_completed_alt": "Completed new roof installation showing superior quality",
+    "roof_repair_service_alt": "Professional roof repair service in action",
+    "roof_repair_completed_alt": "Successfully completed roof repair project",
+    "storm_damage_assessment_alt": "Storm damage assessment on residential roof",
+    "storm_damage_completion_alt": "Storm damage repair completion showing restored roof",
+    "hail_damage_inspection_alt": "Hail damage inspection and assessment process",
+    "hail_damage_completed_alt": "Completed hail damage repair showcasing durability"
 }

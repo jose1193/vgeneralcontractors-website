@@ -275,5 +275,26 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "twitter": "Twitter",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+
+    "_comment_service_cards": "=== SECCIÓN DE TARJETAS DE SERVICIOS ===",
+    "our_solutions": "Nuestras Soluciones",
+    "comprehensive_roofing_services": "Servicios Integrales de <span class=\"text-yellow-500\">Techado</span>",
+    "service_cards_description": "Descubra nuestra gama completa de servicios profesionales de techado diseñados para proteger y mejorar su propiedad.",
+    "new_roof_installation": "Instalación de Techo Nuevo",
+    "new_roof_installation_description": "Instalación experta de sistemas de techado de alta calidad con garantías líderes en la industria.",
+    "roof_repair_replacement": "Reparación y Reemplazo de Techos",
+    "roof_repair_replacement_description": "Reparaciones rápidas y confiables para arreglar filtraciones, daños y mantener la integridad de su techo.",
+    "storm_damage_repair_replacement": "Reparación y Reemplazo por Daños de Tormenta",
+    "storm_damage_repair_replacement_description": "Servicios de reparación de emergencia y restauración para techos dañados por tormentas.",
+    "hail_damage_repair_replacement": "Reparación y Reemplazo por Daños de Granizo",
+    "hail_damage_repair_replacement_description": "Servicios especializados de reparación para techos dañados por granizo con asistencia en reclamos de seguros.",
+    "new_roof_process_alt": "Proceso de instalación de techo nuevo en progreso",
+    "new_roof_completed_alt": "Instalación de techo nuevo completada mostrando calidad superior",
+    "roof_repair_service_alt": "Servicio profesional de reparación de techos en acción",
+    "roof_repair_completed_alt": "Proyecto de reparación de techo completado exitosamente",
+    "storm_damage_assessment_alt": "Evaluación de daños por tormenta en techo residencial",
+    "storm_damage_completion_alt": "Finalización de reparación de daños por tormenta mostrando techo restaurado",
+    "hail_damage_inspection_alt": "Proceso de inspección y evaluación de daños por granizo",
+    "hail_damage_completed_alt": "Reparación de daños por granizo completada mostrando durabilidad"
 }
