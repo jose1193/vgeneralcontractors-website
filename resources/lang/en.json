@@ -529,5 +529,36 @@
     "industry_leading_coverage_areas": "Industry-Leading Coverage in Houston, Dallas and Surrounding Areas",
     "roofing_warranties_houston_dallas_alt": "Roofing Warranties Houston Dallas",
     "roofing_warranty_coverage_alt": "Roofing Warranty Coverage",
-    "warranty_certificate_alt": "Warranty Certificate"
+    "warranty_certificate_alt": "Warranty Certificate",
+    "warranty_alt_happy_customers": "Happy customers with warranty coverage",
+
+    "_comment_blog_section": "=== BLOG SECTION ===",
+
+    "_comment_blog_index": "--- Blog Index Page ---",
+    "blog_our_blog": "Our Blog",
+    "blog_stay_informed_subtitle": "Stay informed with the latest roofing trends, industry insights, and home improvement tips.",
+
+    "_comment_blog_show": "--- Blog Show Page (Individual Post) ---",
+    "blog_author": "Author",
+    "blog_min_read": "min read",
+    "blog_tags": "Tags",
+    "blog_you_might_also_like": "You might also like",
+    "blog_back_to_blog": "Back to Blog",
+
+    "_comment_blog_search": "--- Blog Search Page ---",
+    "blog_search_results": "Search Results",
+    "blog_result": "result|results",
+    "blog_found_for": "found for",
+    "blog_search_articles_placeholder": "Search articles...",
+    "blog_search": "Search",
+    "blog_read_more": "Read More",
+    "blog_no_results_found": "No results found",
+    "blog_no_results_message": "We couldn't find any posts matching",
+
+    "_comment_blog_category": "--- Blog Category Page ---",
+    "blog_category": "Category",
+    "blog_article": "article|articles",
+    "blog_in_this_category": "in this category",
+    "blog_no_posts_in_category": "No posts in this category",
+    "blog_no_posts_category_message": "We haven't published any posts in this category yet."
 }

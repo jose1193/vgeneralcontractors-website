@@ -48,7 +48,8 @@
                             <div class="flex items-center justify-center text-sm">
                                 <span class="font-bold ">{{ $post->formatted_date }}</span>
                                 <span class="mx-2">•</span>
-                                <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }} min read</span>
+                                <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }}
+                                    {{ __('blog_min_read') }}</span>
                             </div>
                         </div>
                     </div>
@@ -70,7 +71,8 @@
                         <div class="flex items-center justify-center text-sm text-gray-600">
                             <span class="font-bold text-yellow-600">{{ $post->formatted_date }}</span>
                             <span class="mx-2">•</span>
-                            <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }} min read</span>
+                            <span>{{ \Illuminate\Support\Str::readDuration($post->post_content) }}
+                                {{ __('blog_min_read') }}</span>
                         </div>
                     </div>
                 </div>
@@ -90,7 +92,7 @@
                         </div>
                         <div class="ml-4">
                             <div class="font-medium text-gray-900">{{ $post->user->name ?? 'Admin' }}</div>
-                            <div class="text-gray-500 text-sm">Author</div>
+                            <div class="text-gray-500 text-sm">{{ __('blog_author') }}</div>
                         </div>
 
                         <!-- Share buttons -->
@@ -130,7 +132,7 @@
                     <!-- Tags -->
                     @if ($post->meta_keywords)
                         <div class="mt-12 pt-6 border-t border-gray-200">
-                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Tags</h4>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">{{ __('blog_tags') }}</h4>
                             <div class="flex flex-wrap gap-2">
                                 @foreach (explode(',', $post->meta_keywords) as $tag)
                                     <a href="{{ route('blog.search', ['q' => trim($tag)]) }}"
@@ -145,7 +147,7 @@
                     <!-- Related posts -->
                     @if (isset($relatedPosts) && $relatedPosts->count() > 0)
                         <div class="mt-12 pt-6 border-t border-gray-200">
-                            <h4 class="text-2xl font-semibold text-gray-900 mb-6">You might also like</h4>
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('blog_you_might_also_like') }}</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 @foreach ($relatedPosts as $relatedPost)
                                     <a href="{{ route('blog.show', $relatedPost->post_title_slug) }}" class="group">
@@ -192,7 +194,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                             </svg>
-                            Back to Blog
+                            {{ __('blog_back_to_blog') }}
                         </a>
                     </div>
                 </div>

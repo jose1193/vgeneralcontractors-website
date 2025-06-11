@@ -6,9 +6,9 @@
         <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-28 blog-hero-section">
             <div class="container mx-auto px-4">
                 <div class="max-w-4xl mx-auto text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6">Our Blog</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('blog_our_blog') }}</h1>
                     <p class="text-lg md:text-xl text-gray-300 mb-8">
-                        Stay informed with the latest roofing trends, industry insights, and home improvement tips.
+                        {{ __('blog_stay_informed_subtitle') }}
                     </p>
 
                     <!-- Livewire Search Component - Solo el formulario -->

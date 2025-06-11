@@ -528,5 +528,35 @@
     "industry_leading_coverage_areas": "Cobertura Líder en la Industria en Houston, Dallas y Áreas Circundantes",
     "roofing_warranties_houston_dallas_alt": "Garantías de Techado Houston Dallas",
     "roofing_warranty_coverage_alt": "Cobertura de Garantía de Techado",
-    "warranty_certificate_alt": "Certificado de Garantía"
+    "warranty_certificate_alt": "Certificado de Garantía",
+
+    "_comment_blog_section": "=== SECCIÓN DEL BLOG ===",
+
+    "_comment_blog_index": "--- Página Principal del Blog ---",
+    "blog_our_blog": "Nuestro Blog",
+    "blog_stay_informed_subtitle": "Manténgase informado con las últimas tendencias de techado, conocimientos de la industria y consejos de mejora del hogar.",
+
+    "_comment_blog_show": "--- Página Individual del Blog (Post Individual) ---",
+    "blog_author": "Autor",
+    "blog_min_read": "min de lectura",
+    "blog_tags": "Etiquetas",
+    "blog_you_might_also_like": "También te podría gustar",
+    "blog_back_to_blog": "Volver al Blog",
+
+    "_comment_blog_search": "--- Página de Búsqueda del Blog ---",
+    "blog_search_results": "Resultados de Búsqueda",
+    "blog_result": "resultado|resultados",
+    "blog_found_for": "encontrados para",
+    "blog_search_articles_placeholder": "Buscar artículos...",
+    "blog_search": "Buscar",
+    "blog_read_more": "Leer Más",
+    "blog_no_results_found": "No se encontraron resultados",
+    "blog_no_results_message": "No pudimos encontrar ningún artículo que coincida con",
+
+    "_comment_blog_category": "--- Página de Categoría del Blog ---",
+    "blog_category": "Categoría",
+    "blog_article": "artículo|artículos",
+    "blog_in_this_category": "en esta categoría",
+    "blog_no_posts_in_category": "No hay artículos en esta categoría",
+    "blog_no_posts_category_message": "Aún no hemos publicado ningún artículo en esta categoría."
 }
