@@ -7,11 +7,9 @@
     <!-- Content -->
     <div class="relative container mx-auto px-4 text-center">
         <div class="max-w-2xl mx-auto">
-            <h2 class="text-4xl font-bold text-white mb-6">Financing</h2>
-            <p class="text-xl text-gray-100 mb-2">If you want to finance your roofing project, we can help you find
-                a suitable option for your needs.</p>
-            <p class="text-xl text-gray-100 mb-8">Getting an affordable monthly payment is easier than you may
-                think.</p>
+            <h2 class="text-4xl font-bold text-white mb-6">{{ __('financing') }}</h2>
+            <p class="text-xl text-gray-100 mb-2">{{ __('financing_description_p1') }}</p>
+            <p class="text-xl text-gray-100 mb-8">{{ __('financing_description_p2') }}</p>
 
         </div>
     </div>
@@ -23,7 +21,7 @@
 <section class="bg-yellow-500 py-12">
     <div class="container mx-auto px-4">
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-            <h3 class="text-2xl sm:text-3xl font-bold text-black">Call Us Now</h3>
+            <h3 class="text-2xl sm:text-3xl font-bold text-black">{{ __('call_us_now') }}</h3>
             <a href="tel:+13466920757"
                 class="inline-flex items-center bg-black text-white text-xl sm:text-2xl font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-gray-900 transition-colors duration-300">
                 <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" fill="none" stroke="currentColor"

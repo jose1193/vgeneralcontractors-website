@@ -241,5 +241,19 @@
     "certification_badge_alt": "V General Contractors Professional Certification Badge",
     "financial_options_alt": "Flexible Financial Options Available at V General Contractors",
     "gaf_warranty_badge_alt": "GAF Certified Warranty Program Badge",
-    "certification_alt": "Certification"
+    "certification_alt": "Certification",
+
+    "_comment_video_section": "=== VIDEO SECTION ===",
+    "watch_our_story": "Watch Our Story",
+    "see_how_we_transform_homes": "See How We <span class=\"text-yellow-500\">Transform Homes</span>",
+    "video_section_description": "Experience our commitment to quality and excellence through our work. Watch how we protect and enhance homes across Texas.",
+    "ready_transform_roof_free_inspection": "Ready to transform your roof? Get your free inspection today!",
+    "call_phone_number": "Call",
+    "video_not_supported": "Your browser does not support the video tag.",
+
+    "_comment_financing_section": "=== FINANCING SECTION ===",
+    "financing": "Financing",
+    "financing_description_p1": "If you want to finance your roofing project, we can help you find a suitable option for your needs.",
+    "financing_description_p2": "Getting an affordable monthly payment is easier than you may think.",
+    "call_us_now": "Call Us Now"
 }

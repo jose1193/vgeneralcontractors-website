@@ -5,11 +5,9 @@
 <section class="py-16 bg-gray-900 fade-in-section" x-data="{ showAppointmentModal: false }">
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
-            <span class="text-yellow-500 font-semibold">Watch Our Story</span>
-            <h2 class="text-4xl font-bold mt-2 mb-4 text-white">See How We <span class="text-yellow-500">Transform
-                    Homes</span></h2>
-            <p class="text-gray-300 max-w-3xl mx-auto">Experience our commitment to quality and excellence through
-                our work. Watch how we protect and enhance homes across Texas.</p>
+            <span class="text-yellow-500 font-semibold">{{ __('watch_our_story') }}</span>
+            <h2 class="text-4xl font-bold mt-2 mb-4 text-white">{!! __('see_how_we_transform_homes') !!}</h2>
+            <p class="text-gray-300 max-w-3xl mx-auto">{{ __('video_section_description') }}</p>
         </div>
 
         <div class="max-w-4xl mx-auto relative rounded-xl overflow-hidden shadow-2xl">
@@ -19,17 +17,17 @@
                     <source src="{{ asset('assets/video/VIDEO_VGENERALCONTRACTORS.COM_1080p.webm') }}"
                         type="video/webm">
                     <source src="{{ asset('assets/video/VIDEO_VGENERALCONTRACTORS.COM_1080p.mp4') }}" type="video/mp4">
-                    Your browser does not support the video tag.
+                    {{ __('video_not_supported') }}
                 </video>
             </div>
         </div>
 
         <!-- Call to Action bajo el video -->
         <div class="text-center mt-12">
-            <p class="text-gray-300 text-lg mb-6">Ready to transform your roof? Get your free inspection today!</p>
+            <p class="text-gray-300 text-lg mb-6">{{ __('ready_transform_roof_free_inspection') }}</p>
             <div class="flex justify-center gap-4">
                 <x-primary-button @click="showAppointmentModal = true" class="text-lg px-8 py-4">
-                    Schedule Free Inspection
+                    {{ __('schedule_free_inspection') }}
                 </x-primary-button>
                 <a href="tel:{{ $companyData->phone }}"
                     class="inline-flex items-center bg-transparent border-2 border-yellow-500 text-yellow-500 px-8 py-4 rounded hover:bg-yellow-500 hover:text-white transition-all duration-300">
@@ -37,7 +35,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                    Call {{ PhoneHelper::format($companyData->phone) }}
+                    {{ __('call_phone_number') }} {{ PhoneHelper::format($companyData->phone) }}
                 </a>
             </div>
         </div>

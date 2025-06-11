@@ -26,7 +26,7 @@
     "storm_damage": "Daños por Tormenta",
     "hail_damage": "Daños por Granizo",
     "products": "Productos",
-    "financing": "Financiamiento",
+
     "virtual_remodeler": "Remodelador Virtual",
     "insurance_claims": "Reclamos de Seguros",
     "construction": "Construcción",
@@ -177,7 +177,7 @@
     "expert_roofing_solutions": "Soluciones Expertas de Techado",
     "services_description": "Proporcionamos soluciones integrales de techado en <strong>Houston, Dallas y áreas circundantes</strong>. Nuestro equipo trabaja con <strong>ajustadores públicos CERTIFICADOS</strong> para asegurar la máxima cobertura de reclamos de seguros para sus necesidades de techado.",
     "comprehensive_roofing_solutions": "Soluciones Integrales de Techado",
-    "services_intro_description": "En V General Contractors, nos especializamos en proporcionar <strong>inspecciones profesionales GRATUITAS</strong> y trabajamos con <strong>ajustadores públicos CERTIFICADOS</strong> para maximizar sus reclamos de seguros. Nuestro equipo experto maneja la <strong>documentación completa de reclamos de seguros</strong> y lo guía durante todo el proceso.",
+    "services_intro_description": "En <strong>V General Contractors</strong>, nos especializamos en proporcionar <strong>inspecciones profesionales GRATUITAS</strong> y trabajamos con <strong>ajustadores públicos CERTIFICADOS</strong> para maximizar sus reclamos de seguros. Nuestro equipo experto maneja la <strong>documentación completa de reclamos de seguros</strong> y lo guía durante todo el proceso.",
     "professional_roof_replacement": "Reemplazo Profesional de Techo",
     "roof_replacement_description": "Instalación experta con <strong>garantía de durabilidad de 30+ años</strong>. Como contratistas <strong>Certificados por GAF</strong>, aseguramos materiales e instalación de primera calidad, respaldados por garantías integrales.",
     "insurance_claim_assistance": "Asistencia en Reclamos de Seguros",
@@ -241,5 +241,19 @@
     "certification_badge_alt": "Insignia de Certificación Profesional de V General Contractors",
     "financial_options_alt": "Opciones Financieras Flexibles Disponibles en V General Contractors",
     "gaf_warranty_badge_alt": "Insignia del Programa de Garantía Certificado GAF",
-    "certification_alt": "Certificación"
+    "certification_alt": "Certificación",
+
+    "_comment_video_section": "=== SECCIÓN DE VIDEO ===",
+    "watch_our_story": "Vea Nuestra Historia",
+    "see_how_we_transform_homes": "Vea Cómo <span class=\"text-yellow-500\">Transformamos Hogares</span>",
+    "video_section_description": "Experimente nuestro compromiso con la calidad y excelencia a través de nuestro trabajo. Vea cómo protegemos y mejoramos hogares en todo Texas.",
+    "ready_transform_roof_free_inspection": "¿Listo para transformar su techo? ¡Obtenga su inspección gratuita hoy!",
+    "call_phone_number": "Llamar",
+    "video_not_supported": "Su navegador no soporta la etiqueta de video.",
+
+    "_comment_financing_section": "=== SECCIÓN DE FINANCIAMIENTO ===",
+    "financing": "Financiamiento",
+    "financing_description_p1": "Si desea financiar su proyecto de techado, podemos ayudarle a encontrar una opción adecuada para sus necesidades.",
+    "financing_description_p2": "Obtener un pago mensual asequible es más fácil de lo que puede pensar.",
+    "call_us_now": "Llámenos Ahora"
 }
