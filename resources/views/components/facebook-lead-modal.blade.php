@@ -783,15 +783,15 @@
                             // Show error with SweetAlert if available
                             if (typeof Swal !== 'undefined') {
                                 Swal.fire({
-                                    title: 'Verification Error',
-                                    text: 'Could not verify your request. Please try again.',
+                                    title: '{{ __('swal_verification_error') }}',
+                                    text: '{{ __('swal_could_not_verify') }}',
                                     icon: 'error',
-                                    confirmButtonText: 'OK',
+                                    confirmButtonText: '{{ __('swal_ok') }}',
                                     confirmButtonColor: '#f59e0b'
                                 });
                             } else {
                                 // Fallback to alert if SweetAlert is not available
-                                alert('Could not verify request. Please try again.');
+                                alert('{{ __('swal_could_not_verify') }}');
                             }
 
                             setLoadingState(false); // Re-enable button on reCAPTCHA error
@@ -846,10 +846,10 @@
                     // show an error message
                     if (missingFields) {
                         Swal.fire({
-                            title: 'Address Incomplete',
-                            text: 'Please select a complete address from the dropdown suggestions.',
+                            title: '{{ __('swal_address_incomplete') }}',
+                            text: '{{ __('swal_select_complete_address') }}',
                             icon: 'warning',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: '{{ __('swal_ok') }}',
                             confirmButtonColor: '#f59e0b'
                         });
                         // Find setLoadingState or define it within scope if needed
@@ -893,19 +893,18 @@
                         if (status === 422 && body.errors) {
                             if (body.errors['g-recaptcha-response']) {
                                 Swal.fire({
-                                    title: 'Error',
-                                    text: 'reCAPTCHA validation failed. Please try again.',
+                                    title: '{{ __('swal_error') }}',
+                                    text: '{{ __('swal_recaptcha_failed') }}',
                                     icon: 'error'
                                 });
                             }
                             // Check for duplicate email error
                             else if (body.duplicate_email) {
                                 Swal.fire({
-                                    title: 'Email Already Registered',
-                                    html: 'This email is already in our system.<br><br>' +
-                                        'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                    title: '{{ __('swal_email_already_registered') }}',
+                                    html: '{!! __('swal_email_in_system') !!}',
                                     icon: 'info',
-                                    confirmButtonText: 'OK',
+                                    confirmButtonText: '{{ __('swal_ok') }}',
                                     confirmButtonColor: '#f59e0b'
                                 });
                             } else {
@@ -928,16 +927,16 @@
 
                                 Toast.fire({
                                     icon: 'warning',
-                                    title: 'Please correct the errors marked below'
+                                    title: '{{ __('swal_correct_errors') }}'
                                 });
                             }
                         } else if (body.success) {
                             // Show success message (e.g., using SweetAlert)
                             Swal.fire({
-                                title: 'Thank You!',
-                                text: body.message || 'Your request has been submitted successfully!',
+                                title: '{{ __('swal_thank_you') }}',
+                                text: body.message || '{{ __('swal_request_submitted') }}',
                                 icon: 'success',
-                                confirmButtonText: 'OK',
+                                confirmButtonText: '{{ __('swal_ok') }}',
                                 confirmButtonColor: '#f59e0b',
                                 timer: 4000,
                                 timerProgressBar: true,
@@ -956,10 +955,10 @@
                             });
                         } else {
                             Swal.fire({
-                                title: 'Oops!',
-                                text: body.message || 'An error occurred on the server. Please try again.',
+                                title: '{{ __('swal_oops') }}',
+                                text: body.message || '{{ __('swal_server_error') }}',
                                 icon: 'error',
-                                confirmButtonText: 'OK',
+                                confirmButtonText: '{{ __('swal_ok') }}',
                                 confirmButtonColor: '#f59e0b'
                             });
                         }
@@ -967,12 +966,11 @@
                     .catch(error => {
                         console.error('Modal Submission failed:', error);
                         Swal.fire({
-                            title: 'Submission Error',
+                            title: '{{ __('swal_submission_error') }}',
                             text: error.message.includes('Security check failed') ?
-                                'Security check failed. Please refresh and try again.' :
-                                'Could not submit the form due to a network or server issue. Please try again later.',
+                                '{{ __('swal_security_check_failed') }}' : '{{ __('swal_network_error') }}',
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: '{{ __('swal_ok') }}',
                             confirmButtonColor: '#f59e0b'
                         });
                     })

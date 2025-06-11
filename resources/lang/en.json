@@ -831,5 +831,23 @@
     "privacy_consent": "9. Consent",
     "privacy_by_requesting_services": "By requesting our services or using our <strong>website</strong>, you accept the terms of this <strong>privacy policy</strong>. Specifically, by providing your <strong>phone number</strong> and giving your consent to receive <strong>SMS</strong> messages, you accept the processing of your <strong>data</strong> for this purpose, as described in this policy.",
     "privacy_applicable_legislation": "10. Applicable Legislation",
-    "privacy_governed_by_laws": "This policy is governed by the laws of <strong>Houston, Texas USA</strong>, with special reference to the regulations on personal <strong>data</strong> protection and construction."
+    "privacy_governed_by_laws": "This policy is governed by the laws of <strong>Houston, Texas USA</strong>, with special reference to the regulations on personal <strong>data</strong> protection and construction.",
+
+    "swal_verification_error": "Verification Error",
+    "swal_could_not_verify": "Could not verify your request. Please try again.",
+    "swal_address_incomplete": "Address Incomplete",
+    "swal_select_complete_address": "Please select a complete address from the dropdown suggestions.",
+    "swal_error": "Error",
+    "swal_recaptcha_failed": "reCAPTCHA validation failed. Please try again.",
+    "swal_email_already_registered": "Email Already Registered",
+    "swal_email_in_system": "This email is already in our system.<br><br>Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.",
+    "swal_correct_errors": "Please correct the errors marked below",
+    "swal_thank_you": "Thank You!",
+    "swal_request_submitted": "Your request has been submitted successfully!",
+    "swal_oops": "Oops!",
+    "swal_server_error": "An error occurred on the server. Please try again.",
+    "swal_submission_error": "Submission Error",
+    "swal_security_check_failed": "Security check failed. Please refresh and try again.",
+    "swal_network_error": "Could not submit the form due to a network or server issue. Please try again later.",
+    "swal_ok": "OK"
 }
