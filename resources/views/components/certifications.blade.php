@@ -9,8 +9,9 @@
                         alt="V General Contractors Professional Certification Badge" class="h-24 w-auto" width="200"
                         height="96" loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('certified_excellence') }}</h3>
-                <p class="text-gray-600 text-center">{{ __('certified_excellence_description') }}</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Certified Excellence</h3>
+                <p class="text-gray-600 text-center">Our team holds industry-leading certifications, ensuring the
+                    highest standards of roofing expertise.</p>
             </div>
 
             <!-- Financial Options Card -->
@@ -20,8 +21,10 @@
                         alt="Flexible Financial Options Available at V General Contractors" class="h-24 w-auto"
                         width="200" height="96" loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('flexible_financing') }}</h3>
-                <p class="text-gray-600 text-center">{{ __('flexible_financing_description') }}</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Flexible Financing</h3>
+                <p class="text-gray-600 text-center">If you want to finance your roofing project, we can help you
+                    find a suitable option for your needs. Getting an affordable monthly payment is easier than you
+                    may think.</p>
             </div>
 
             <!-- Warranty Card -->
@@ -31,8 +34,9 @@
                         alt="GAF Certified Warranty Program Badge" class="h-24 w-auto" width="200" height="96"
                         loading="lazy">
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">{{ __('gaf_certified_warranty') }}</h3>
-                <p class="text-gray-600 text-center">{{ __('gaf_warranty_description') }}</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">GAF Certified Warranty</h3>
+                <p class="text-gray-600 text-center">GAF certified roofing companies can provide some of the best
+                    warranties in the market. You will be amazed by how great our warranties are.</p>
             </div>
         </div>
     </div>

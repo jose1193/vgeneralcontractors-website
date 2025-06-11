@@ -9,97 +9,73 @@
             <div class="absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100': currentSlide === 0, 'opacity-0': currentSlide !== 0 }">
                 <img src="{{ asset('assets/img/hero-1.webp') }}"
-                    alt="Professional commercial and residential roofing services in Texas by V General Contractors"
-                    class="w-full h-full object-cover" width="1920" height="1080" loading="eager">
+                    alt="Professional roofing contractors working on residential property in Texas"
+                    class="w-full h-full object-cover" width="1920" height="1080" loading="eager"
+                    fetchpriority="high">
             </div>
             <!-- Slide 2 -->
             <div class="absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100': currentSlide === 1, 'opacity-0': currentSlide !== 1 }">
                 <img src="{{ asset('assets/img/hero-2.webp') }}"
-                    alt="Expert roofing installation and repair services for homes and businesses"
-                    class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
+                    alt="High-quality shingle installation on modern Texas home" class="w-full h-full object-cover"
+                    width="1920" height="1080" loading="lazy">
             </div>
             <!-- Slide 3 -->
             <div class="absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100': currentSlide === 2, 'opacity-0': currentSlide !== 2 }">
                 <img src="{{ asset('assets/img/hero-3.webp') }}"
-                    alt="GAF certified roofing contractors providing superior quality services"
-                    class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
+                    alt="Expert roofing team performing professional installation" class="w-full h-full object-cover"
+                    width="1920" height="1080" loading="lazy">
             </div>
             <!-- Slide 4 -->
             <div class="absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100': currentSlide === 3, 'opacity-0': currentSlide !== 3 }">
                 <img src="{{ asset('assets/img/hero-4.webp') }}"
-                    alt="Storm damage repair and insurance claim assistance by certified professionals"
-                    class="w-full h-full object-cover" width="1920" height="1080" loading="lazy">
+                    alt="Completed roofing project showcasing superior craftsmanship" class="w-full h-full object-cover"
+                    width="1920" height="1080" loading="lazy">
             </div>
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-black/70"></div>
         </div>
     </div>
 
-    <!-- Dark overlay for better text readability -->
-    <div class="absolute inset-0 bg-black/60"></div>
-
-    <!-- Content Container -->
-    <div class="relative z-10 container mx-auto px-4 text-center text-white">
-        <!-- Hero Text -->
-        <div class="max-w-5xl mx-auto">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 leading-tight">
-                {{ __('professional_commercial_residential_roofing') }}
-            </h1>
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 max-w-4xl mx-auto leading-relaxed">
-                {{ __('gaf_certified_contractors') }}
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-                <x-primary-button class="text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3 sm:py-4">
-                    {{ __('book_free_inspection') }}
+    <!-- Content -->
+    <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center mt-12 lg:mt-0">
+        <!-- Left Text Content -->
+        <div class="text-white md:w-1/2 mt-8 sm:mt-32 md:mt-0">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">Professional
+                Commercial & Residential Roofing Services
+                in Texas</h1>
+            <h2 class="text-xl sm:text-2xl md:text-3xl text-yellow-400 mb-3 md:mb-4">Expert Roofing Solutions for
+                Businesses and Homes</h2>
+            <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8">GAF certified contractors providing
+                superior <b>roofing services in
+                    Houston, Dallas, and surrounding areas.</b> Specializing in commercial installations, repairs, and
+                storm
+                damage restoration.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <x-primary-button @click="$dispatch('open-appointment-modal')"
+                    class="w-full sm:w-auto text-center justify-center">
+                    Book A Free Inspection
                 </x-primary-button>
-                <x-secondary-button href="#services" class="text-base sm:text-lg md:text-xl px-6 sm:px-8 py-3 sm:py-4">
-                    {{ __('explore_our_services') }}
-                </x-secondary-button>
+                <a href="{{ route('roof-repair') }}"
+                    class="w-full sm:w-auto text-center justify-center border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black">
+                    Explore Our Services
+                </a>
             </div>
         </div>
 
-        <!-- Emergency Banner -->
-        <div class="absolute bottom-0 left-0 right-0 bg-red-600/90 text-white py-3 sm:py-4 px-4">
-            <div class="container mx-auto">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
-                    <div class="text-center lg:text-left">
-                        <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-1">
-                            {{ __('emergency_roof_repair_needed') }}</h2>
-                        <p class="text-sm sm:text-base md:text-lg opacity-90">
-                            {{ __('emergency_repair_description') }}
-                        </p>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                        <a href="tel:{{ $companyData->phone }}"
-                            class="bg-white text-red-600 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 text-sm sm:text-base text-center">
-                            {{ __('call_now') }} {{ $companyData->phone }}
-                        </a>
-                        <x-primary-button class="text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3">
-                            {{ __('schedule_free_inspection') }}
-                        </x-primary-button>
-                    </div>
-                </div>
+        <!-- Right Emergency Box (MODIFIED AGAIN) -->
+        <div class="w-full md:w-3/6 mt-8 md:mt-0 md:ml-0 lg:ml-10 lg:mt-20 mb-8 md:mb-0">
+            <!-- Added lg:mt-20, mb-8, md:mb-0 -->
+            <div class="bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+                <h3 class="font-bold text-lg mb-2">Emergency Roof Repair Needed?</h3>
+                <p class="text-sm">Don't wait until it's too late! Roof damage can lead to costly repairs if left
+                    unchecked. Schedule
+                    your free inspection now and protect your home. <b>Plus, we work with certified public adjusters and
+                        manage the insurance claim process for you, helping maximize your coverage and minimize
+                        stress.</b></p>
             </div>
         </div>
-    </div>
-
-    <!-- Slide Indicators -->
-    <div class="absolute bottom-20 sm:bottom-24 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20"
-        x-data="{ currentSlide: 0 }" x-init="setInterval(() => currentSlide = currentSlide === 3 ? 0 : currentSlide + 1, 5000)">
-        <button @click="currentSlide = 0"
-            :class="{ 'bg-yellow-500': currentSlide === 0, 'bg-white/50': currentSlide !== 0 }"
-            class="w-3 h-3 rounded-full transition-colors duration-300"></button>
-        <button @click="currentSlide = 1"
-            :class="{ 'bg-yellow-500': currentSlide === 1, 'bg-white/50': currentSlide !== 1 }"
-            class="w-3 h-3 rounded-full transition-colors duration-300"></button>
-        <button @click="currentSlide = 2"
-            :class="{ 'bg-yellow-500': currentSlide === 2, 'bg-white/50': currentSlide !== 2 }"
-            class="w-3 h-3 rounded-full transition-colors duration-300"></button>
-        <button @click="currentSlide = 3"
-            :class="{ 'bg-yellow-500': currentSlide === 3, 'bg-white/50': currentSlide !== 3 }"
-            class="w-3 h-3 rounded-full transition-colors duration-300"></button>
     </div>
 </section>

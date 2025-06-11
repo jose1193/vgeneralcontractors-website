@@ -8,7 +8,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
                 <!-- Contact Information -->
                 <div class="text-center md:text-left">
-                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">{{ __('contact_us') }}</h4>
+                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Contact Us</h4>
                     <div class="space-y-3">
                         <p class="flex items-start justify-center md:justify-start">
                             <svg class="w-5 h-5 mr-2 mt-1 text-yellow-500 flex-shrink-0" fill="none"
@@ -46,49 +46,51 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            {{ __('schedule_appointment') }}
+                            Schedule Appointment
                         </a>
                     </div>
                 </div>
 
                 <!-- Quick Links -->
                 <div class="text-center md:text-left">
-                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">{{ __('quick_links') }}</h4>
+                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('about') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('about_us') }}</a>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">About
+                                Us</a>
                         </li>
                         <li><a href="{{ route('portfolio') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('portfolio') }}</a>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Portfolio</a>
                         </li>
                         <li><a href="{{ route('new-roof') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('new_roof') }}</a>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">New
+                                Roof</a>
                         </li>
                         <li><a href="{{ route('roof-repair') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('roof_repair') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Roof
+                                Repair</a></li>
                         <li><a href="{{ route('storm-damage') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('storm_damage') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Storm
+                                Damage</a></li>
                         <li><a href="{{ route('hail-damage') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('hail_damage') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Hail
+                                Damage</a></li>
                     </ul>
                 </div>
 
                 <!-- Legal & Help -->
                 <div class="text-center md:text-left">
-                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">{{ __('legal_help') }}</h4>
+                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Legal & Help</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('faqs') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('faqs') }}</a>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">FAQs</a>
                         </li>
                         <li><a href="{{ route('privacy-policy') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('privacy_policy') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Privacy
+                                Policy</a></li>
                         <li><a href="{{ route('terms-and-conditions') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('terms_of_service') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Terms &
+                                Conditions</a></li>
                         <li><a href="{{ route('cookies-policy') }}"
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Cookie
                                 Policy</a></li>
@@ -96,14 +98,14 @@
                                 class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Sitemap</a>
                         </li>
                         <li><a href="{{ route('contact-support') }}"
-                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">{{ __('support') }}</a>
-                        </li>
+                                class="hover:text-yellow-500 transition-colors text-sm sm:text-base md:text-lg">Contact
+                                Support</a></li>
                     </ul>
                 </div>
 
                 <!-- Google Map -->
                 <div class="text-center md:text-left">
-                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">{{ __('find_us') }}</h4>
+                    <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-4">Find Us</h4>
                     <div class="h-48 rounded-lg overflow-hidden">
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3463.6617472292933!2d-95.40117182572651!3d29.758501132064385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c0a6728f8879%3A0x87e6d62cceb4acef!2s810%20Waugh%20Dr%2C%20Houston%2C%20TX%2077019%2C%20EE.%20UU.!5e0!3m2!1ses!2spt!4v1741305902297!5m2!1ses!2spt"
@@ -155,7 +157,8 @@
             <!-- Copyright -->
             <div class="border-t border-gray-800 pt-8 mt-4 text-center">
                 <p class="text-sm sm:text-base md:text-lg text-gray-400">Copyright © {{ date('Y') }}
-                    {{ $companyData->company_name }} - {{ __('all_rights_reserved') }}</p>
+                    {{ $companyData->company_name }} - All Rights
+                    Reserved</p>
             </div>
         </div>
     </footer>

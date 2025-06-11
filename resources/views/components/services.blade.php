@@ -2,9 +2,12 @@
 <section class="py-16 bg-gray-50 fade-in-section">
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
-            <span class="text-yellow-500 font-semibold">{{ __('our_services') }}</span>
-            <h2 class="text-4xl font-bold mt-2 mb-4">{{ __('expert_roofing_solutions_title') }}</h2>
-            <p class="text-gray-600 max-w-3xl mx-auto">{{ __('comprehensive_roofing_description') }}</p>
+            <span class="text-yellow-500 font-semibold">Our Services</span>
+            <h2 class="text-4xl font-bold mt-2 mb-4">Expert <span class="text-yellow-500">Roofing Solutions</span></h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">We provide comprehensive roofing solutions in <strong>Houston,
+                    Dallas, and surrounding areas</strong>.
+                Our team works with <strong>CERTIFIED public adjusters</strong> to ensure maximum insurance claim
+                coverage for your roofing needs.</p>
         </div>
 
         <div class="flex flex-col md:flex-row gap-8 items-start">
@@ -21,8 +24,14 @@
             <!-- Right Side: Services List with Expand/Collapse -->
             <div class="w-full md:w-1/2" x-data="{ openItems: {} }" x-init="openItems = { 'roof-replacement': false, 'roof-restoration': false, 'storm-damage': false, 'hail-damage': false }">
                 <div class="space-y-6">
-                    <h3 class="text-3xl font-bold text-gray-900">{{ __('comprehensive_roofing_solutions') }}</h3>
-                    <p class="text-gray-600 mb-6">{{ __('free_professional_inspections') }}</p>
+                    <h3 class="text-3xl font-bold text-gray-900">Comprehensive Roofing Solutions</h3>
+                    <p class="text-gray-600 mb-6">At V General Contractors, we specialize in providing <strong>FREE
+                            professional inspections</strong>
+                        and we work with with <strong>CERTIFIED public adjusters</strong> to maximize your insurance
+                        claims.
+                        Our expert team handles
+                        complete <strong>insurance claim documentation</strong> and guides you through the entire
+                        process.</p>
 
                     <!-- Service 1: Roof Replacement -->
                     <div class="border-b border-gray-200">
@@ -30,8 +39,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">01</span>
-                            <h4 class="text-xl font-semibold text-gray-900">{{ __('professional_roof_replacement') }}
-                            </h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Professional Roof Replacement</h4>
                             <svg x-show="!openItems['roof-replacement']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +55,9 @@
                         </button>
                         <div x-show="openItems['roof-replacement']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            {{ __('roof_replacement_description') }}
+                            Expert installation with <strong>30+ year durability guarantee</strong>. As <strong>GAF
+                                Certified</strong> contractors,
+                            we ensure top-quality materials and installation, backed by comprehensive warranties.
                         </div>
                     </div>
 
@@ -57,7 +67,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">02</span>
-                            <h4 class="text-xl font-semibold text-gray-900">{{ __('insurance_claim_assistance') }}</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Insurance Claim Assistance</h4>
                             <svg x-show="!openItems['roof-restoration']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,7 +83,9 @@
                         </button>
                         <div x-show="openItems['roof-restoration']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            {{ __('insurance_claim_description') }}
+                            We work with <strong>CERTIFIED public adjusters</strong> to handle your insurance claims.
+                            Our team provides detailed
+                            documentation and expert guidance throughout the entire claim process.
                         </div>
                     </div>
 
@@ -83,7 +95,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">03</span>
-                            <h4 class="text-xl font-semibold text-gray-900">{{ __('storm_damage_repair') }}</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Storm Damage Repair</h4>
                             <svg x-show="!openItems['storm-damage']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +111,9 @@
                         </button>
                         <div x-show="openItems['storm-damage']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            {{ __('storm_damage_description') }}
+                            <strong>FREE comprehensive inspection</strong> after storms. Our experts document all damage
+                            thoroughly
+                            for insurance claims and provide emergency repair services when needed.
                         </div>
                     </div>
 
@@ -109,7 +123,7 @@
                             class="w-full text-left flex items-start gap-4 py-4 focus:outline-none">
                             <span
                                 class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500 text-white font-semibold">04</span>
-                            <h4 class="text-xl font-semibold text-gray-900">{{ __('hail_damage_expertise') }}</h4>
+                            <h4 class="text-xl font-semibold text-gray-900">Hail Damage Expertise</h4>
                             <svg x-show="!openItems['hail-damage']" x-cloak
                                 class="ml-auto w-5 h-5 text-gray-500 transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +139,9 @@
                         </button>
                         <div x-show="openItems['hail-damage']" x-collapse x-cloak
                             class="text-gray-600 mt-2 pl-12 pr-4 pb-4">
-                            {{ __('hail_damage_description') }}
+                            Specialized in hail damage assessment and repair. We provide <strong>detailed documentation
+                                for insurance claims</strong>
+                            and work with <strong>CERTIFIED adjusters</strong> to maximize your claim.
                         </div>
                     </div>
                 </div>
