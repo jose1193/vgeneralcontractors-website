@@ -319,11 +319,6 @@
                 </div>
             @endif
 
-            <!-- Language Switcher -->
-            <div class="ms-3 relative">
-                <x-language-switcher />
-            </div>
-
             <!-- Settings Dropdown -->
             <div class="ms-3 relative">
                 <x-dropdown align="right" width="48">

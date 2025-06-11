@@ -14,7 +14,6 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FacebookLeadFormController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\ContactSupportController;
-use App\Http\Controllers\LanguageController;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
@@ -222,8 +221,3 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
-
-// Language switching routes
-Route::get('/language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
-Route::get('/api/language/current', [LanguageController::class, 'current'])->name('language.current');
-Route::post('/api/language/switch', [LanguageController::class, 'ajaxSwitch'])->name('language.ajax.switch');

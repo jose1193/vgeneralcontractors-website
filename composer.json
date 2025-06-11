@@ -47,9 +47,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/PhoneHelper.php",
-            "app/Helpers/LanguageHelper.php",
-            "app/Helpers/DateHelper.php"
+            "app/Helpers/PhoneHelper.php"
         ]
     },
     "autoload-dev": {

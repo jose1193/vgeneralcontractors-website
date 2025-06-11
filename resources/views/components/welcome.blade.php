@@ -1,17 +1,18 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 p-6 lg:p-8">
     <div class="bg-white dark:bg-gray-800">
         <div class="flex items-center">
-            <span class="text-gray-600 font-semibold">{{ __('Construction') }}</span>
+            <span class="text-gray-600 font-semibold">Construction</span>
         </div>
         <h1 class="mt-4 text-3xl font-bold text-gray-800 dark:text-white">
-            {{ __('Welcome to V General Contractors!') }}
+            Welcome to V General Contractors!
         </h1>
         <p class="mt-6 text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
-            {{ __('Your trusted partner for all construction needs. We\'re dedicated to delivering high-quality construction services with a focus on customer satisfaction, innovation, and excellence in every project we undertake.') }}
+            Your trusted partner for all construction needs. We're dedicated to delivering high-quality construction
+            services with a focus on customer satisfaction, innovation, and excellence in every project we undertake.
         </p>
         <div class="mt-8">
             <x-button class="px-6 py-3 text-sm bg-gray-600 text-white">
-                {{ __('Create Post') }}
+                Create Post
             </x-button>
 
         </div>
