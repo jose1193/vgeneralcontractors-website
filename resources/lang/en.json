@@ -149,7 +149,7 @@
     "projects_completed": "Projects Completed",
     "client_satisfaction": "Client Satisfaction",
     "our_vision_2030": "Our Vision for 2030",
-    "vision_description": "To be recognized as the leading roofing company in Texas, known for our exceptional quality, <strong>FREE professional inspections</strong>, and comprehensive insurance claim documentation. We aim to continue working with <strong>CERTIFIED public adjusters</strong> to ensure our clients receive the best possible outcome for their roofing claims.",
+    "vision_description_about": "To be recognized as the leading roofing company in Texas, known for our exceptional quality, <strong>FREE professional inspections</strong>, and comprehensive insurance claim documentation. We aim to continue working with <strong>CERTIFIED public adjusters</strong> to ensure our clients receive the best possible outcome for their roofing claims.",
     "why_choose_v_general": "Why Choose V General Contractors",
     "free_professional_inspections": "FREE Professional Inspections",
     "free_inspections_description": "Thorough evaluations by certified experts at no cost to you",
@@ -297,5 +297,16 @@
     "storm_damage_assessment_alt": "Storm damage assessment on residential roof",
     "storm_damage_completion_alt": "Storm damage repair completion showing restored roof",
     "hail_damage_inspection_alt": "Hail damage inspection and assessment process",
-    "hail_damage_completed_alt": "Completed hail damage repair showcasing durability"
+    "hail_damage_completed_alt": "Completed hail damage repair showcasing durability",
+
+    "_comment_about_page_individual": "=== ABOUT PAGE INDIVIDUAL ===",
+    "about_us_page_title": "About Us",
+    "trusted_partner_commercial_residential": "Your Trusted Partner in Commercial & Residential Roofing Solutions",
+    "passion_quality_10_years": "A passion for quality going back more than 10 years",
+    "vision": "Vision",
+    "vision_description": "To be recognized in 2030 as the leading company in specialized roofing services, achieving the highest quality of work and for the commitment to our clients.",
+    "mission": "Mission",
+    "mission_description": "Offer our clients the most advanced and innovative services in technical advice, high-quality roofing products and guarantee the work carried out.",
+    "about_v_general_contractors_alt": "About V General Contractors",
+    "v_general_contractors_team_alt": "V General Contractors Team"
 }

@@ -149,7 +149,7 @@
     "projects_completed": "Proyectos Completados",
     "client_satisfaction": "Satisfacción del Cliente",
     "our_vision_2030": "Nuestra Visión para 2030",
-    "vision_description": "Ser reconocidos como la empresa líder en techado en Texas, conocida por nuestra calidad excepcional, <strong>inspecciones profesionales GRATUITAS</strong> y documentación integral de reclamos de seguros. Aspiramos a continuar trabajando con <strong>ajustadores públicos CERTIFICADOS</strong> para asegurar que nuestros clientes reciban el mejor resultado posible para sus reclamos de techado.",
+    "vision_description_about": "Ser reconocidos como la empresa líder en techado en Texas, conocida por nuestra calidad excepcional, <strong>inspecciones profesionales GRATUITAS</strong> y documentación integral de reclamos de seguros. Aspiramos a continuar trabajando con <strong>ajustadores públicos CERTIFICADOS</strong> para asegurar que nuestros clientes reciban el mejor resultado posible para sus reclamos de techado.",
     "why_choose_v_general": "Por Qué Elegir V General Contractors",
     "free_professional_inspections": "Inspecciones Profesionales GRATUITAS",
     "free_inspections_description": "Evaluaciones exhaustivas por expertos certificados sin costo para usted",
@@ -296,5 +296,16 @@
     "storm_damage_assessment_alt": "Evaluación de daños por tormenta en techo residencial",
     "storm_damage_completion_alt": "Finalización de reparación de daños por tormenta mostrando techo restaurado",
     "hail_damage_inspection_alt": "Proceso de inspección y evaluación de daños por granizo",
-    "hail_damage_completed_alt": "Reparación de daños por granizo completada mostrando durabilidad"
+    "hail_damage_completed_alt": "Reparación de daños por granizo completada mostrando durabilidad",
+
+    "_comment_about_page_individual": "=== PÁGINA ACERCA DE INDIVIDUAL ===",
+    "about_us_page_title": "Acerca de Nosotros",
+    "trusted_partner_commercial_residential": "Su Socio de Confianza en Soluciones de Techado Comercial y Residencial",
+    "passion_quality_10_years": "Una pasión por la calidad que se remonta a más de 10 años",
+    "vision": "Visión",
+    "vision_description": "Ser reconocidos en 2030 como la empresa líder en servicios especializados de techado, logrando la más alta calidad de trabajo y por el compromiso con nuestros clientes.",
+    "mission": "Misión",
+    "mission_description": "Ofrecer a nuestros clientes los servicios más avanzados e innovadores en asesoría técnica, productos de techado de alta calidad y garantizar el trabajo realizado.",
+    "about_v_general_contractors_alt": "Acerca de V General Contractors",
+    "v_general_contractors_team_alt": "Equipo de V General Contractors"
 }
