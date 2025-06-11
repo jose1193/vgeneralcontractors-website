@@ -157,10 +157,10 @@
                 <input id="inline_sms_consent" name="sms_consent" type="checkbox" value="1"
                     class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                 <span class="ml-2 text-sm text-gray-600">
-                    {!! __('sms_consent_text') !!} {{ PhoneHelper::format($companyData->phone) }}
+                    {!! __('sms_consent_text') !!} <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
                     <a href="{{ route('privacy-policy') }}" target="_blank"
-                        class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a> and <a
-                        href="{{ route('terms-and-conditions') }}" target="_blank"
+                        class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a>
+                    {{ __('and') }} <a href="{{ route('terms-and-conditions') }}" target="_blank"
                         class="text-yellow-500 hover:text-yellow-600 underline">{{ __('terms_of_service') }}</a>.
                 </span>
             </label>

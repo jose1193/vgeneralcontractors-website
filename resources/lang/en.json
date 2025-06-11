@@ -26,7 +26,7 @@
     "storm_damage": "Storm Damage",
     "hail_damage": "Hail Damage",
     "products": "Products",
-    "financing": "Financing",
+
     "virtual_remodeler": "Virtual Remodeler",
     "insurance_claims": "Insurance Claims",
     "construction": "Construction",
@@ -200,9 +200,10 @@
     "property_insurance_question": "Do you have property insurance?",
     "yes": "Yes",
     "no": "No",
-    "sms_consent_text": "Yes, I would like to receive text messages from <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services. <span class=\"font-semibold\">Messaging Frequency may vary</span>. I understand that I can cancel my subscription at any time by replying <span class=\"font-semibold\">STOP</span>. Reply <span class=\"font-semibold\">HELP</span> for assistance. Message and data rates apply. Information obtained as part of the SMS consent process will not be shared with third parties.",
+    "sms_consent_text": "Yes, I would like to receive text messages from <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services. <span class=\"font-semibold\">Messaging Frequency may vary</span>. I understand that I can cancel my subscription at any time by replying <span class=\"font-semibold\">STOP</span>. Reply <span class=\"font-semibold\">HELP</span> for assistance. Message and data rates apply. Information obtained as part of the <span class=\"font-semibold\">SMS consent process</span> will not be shared with third parties.",
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
+    "and": "and",
     "send_request": "Send Request",
     "sending": "Sending...",
 

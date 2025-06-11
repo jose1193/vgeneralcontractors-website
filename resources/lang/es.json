@@ -200,9 +200,10 @@
     "property_insurance_question": "¿Tiene seguro de propiedad?",
     "yes": "Sí",
     "no": "No",
-    "sms_consent_text": "Sí, me gustaría recibir mensajes de texto de <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> con ofertas, recordatorios de citas y actualizaciones sobre servicios de techado. <span class=\"font-semibold\">La frecuencia de mensajes puede variar</span>. Entiendo que puedo cancelar mi suscripción en cualquier momento respondiendo <span class=\"font-semibold\">STOP</span>. Responda <span class=\"font-semibold\">HELP</span> para asistencia. Se aplican tarifas de mensajes y datos. La información obtenida como parte del proceso de consentimiento de SMS no será compartida con terceros.",
+    "sms_consent_text": "Sí, me gustaría recibir mensajes de texto de <span class=\"font-semibold\">V GENERAL CONTRACTORS</span> con ofertas, recordatorios de citas y actualizaciones sobre servicios de techado. <span class=\"font-semibold\">La frecuencia de mensajes puede variar</span>. Entiendo que puedo cancelar mi suscripción en cualquier momento respondiendo <span class=\"font-semibold\">STOP</span>. Responda <span class=\"font-semibold\">HELP</span> para asistencia. Se aplican tarifas de mensajes y datos. La información obtenida como parte del proceso de consentimiento de <span class=\"font-semibold\">SMS</span> no será compartida con terceros.",
     "privacy_policy": "Política de Privacidad",
     "terms_of_service": "Términos de Servicio",
+    "and": "y",
     "send_request": "Enviar Solicitud",
     "sending": "Enviando...",
 
