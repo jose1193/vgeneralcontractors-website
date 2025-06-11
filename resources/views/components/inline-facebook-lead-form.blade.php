@@ -11,12 +11,12 @@
     <!-- Header -->
     <div class="px-4 py-3 mb-4 bg-yellow-500 sm:px-6 rounded-lg">
         <h3 class="font-bold leading-6 text-center text-white text-lg sm:text-xl md:text-2xl">
-            Get Your Free Inspection
+            {{ __('get_your_free_inspection') }}
         </h3>
     </div>
 
     <p class="mt-6 mb-4 text-gray-600 text-center text-sm sm:text-base">
-        Fill out the form below and our team will contact you shortly to schedule your free inspection.
+        {{ __('fill_form_below') }}
     </p>
 
     <!-- Success/Error Messages -->
@@ -44,7 +44,8 @@
         <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             <!-- First Name -->
             <div>
-                <label for="inline_first_name" class="block font-medium text-gray-700 text-sm sm:text-base">First Name
+                <label for="inline_first_name"
+                    class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('first_name') }}
                     <span class="text-red-500">*</span></label>
                 <input type="text" id="inline_first_name" name="first_name"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -53,7 +54,8 @@
             </div>
             <!-- Last Name -->
             <div>
-                <label for="inline_last_name" class="block font-medium text-gray-700 text-sm sm:text-base">Last Name
+                <label for="inline_last_name"
+                    class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('last_name') }}
                     <span class="text-red-500">*</span></label>
                 <input type="text" id="inline_last_name" name="last_name"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -64,7 +66,8 @@
         <div class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             <!-- Phone -->
             <div>
-                <label for="inline_phone" class="block font-medium text-gray-700 text-sm sm:text-base">Phone <span
+                <label for="inline_phone"
+                    class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('phone') }} <span
                         class="text-red-500">*</span></label>
                 <input type="tel" id="inline_phone" name="phone" placeholder="(XXX) XXX-XXXX"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -73,7 +76,8 @@
             </div>
             <!-- Email -->
             <div>
-                <label for="inline_email" class="block font-medium text-gray-700 text-sm sm:text-base">Email <span
+                <label for="inline_email"
+                    class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('email') }} <span
                         class="text-red-500">*</span></label>
                 <input type="email" id="inline_email" name="email"
                     class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
@@ -83,10 +87,11 @@
         </div>
         <!-- Address Map Input Field -->
         <div>
-            <label for="inline_address_map_input" class="block font-medium text-gray-700 text-sm sm:text-base">Address
+            <label for="inline_address_map_input"
+                class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('address') }}
                 <span class="text-red-500">*</span></label>
             <input type="text" id="inline_address_map_input" name="address_map_input"
-                placeholder="Enter your complete address"
+                placeholder="{{ __('enter_complete_address') }}"
                 class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                 autocomplete="off" required>
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_map_input"></span>
@@ -99,29 +104,33 @@
         <input type="hidden" id="inline_country" name="country" value="USA">
         <!-- Address 2 -->
         <div>
-            <label for="inline_address_2" class="block font-medium text-gray-700 text-sm sm:text-base">Address 2 <span
-                    class="text-xs text-gray-500">(Optional, e.g., Apt, Suite, Unit)</span></label>
-            <input type="text" id="inline_address_2" name="address_2" placeholder="Apt #, Suite #, etc."
+            <label for="inline_address_2"
+                class="block font-medium text-gray-700 text-sm sm:text-base">{{ __('address_2') }} <span
+                    class="text-xs text-gray-500">{{ __('optional_apt_suite') }}</span></label>
+            <input type="text" id="inline_address_2" name="address_2"
+                placeholder="{{ __('apt_suite_placeholder') }}"
                 class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                 autocomplete="address-line2">
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_2"></span>
         </div>
         <!-- Map Display -->
         <div class="mt-4 mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Location Map</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('location_map') }}</label>
             <div id="inline-location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300"></div>
         </div>
         <!-- Comment/Message -->
         <div>
-            <label for="inline_message" class="block mt-8 font-medium text-gray-700 text-sm sm:text-base">Comment or
-                Message <span class="text-xs text-gray-500">(Optional)</span></label>
+            <label for="inline_message"
+                class="block mt-8 font-medium text-gray-700 text-sm sm:text-base">{{ __('comment_or_message') }} <span
+                    class="text-xs text-gray-500">{{ __('optional_label') }}</span></label>
             <textarea id="inline_message" name="message" rows="4"
                 class="input-field block w-full  border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"></textarea>
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="message"></span>
         </div>
         <!-- Property Insurance -->
         <div class="mt-6 text-center md:text-center sm:text-center">
-            <label class="block font-medium text-gray-700 mb-2 text-sm sm:text-base">Do you have property insurance?
+            <label
+                class="block font-medium text-gray-700 mb-2 text-sm sm:text-base">{{ __('property_insurance_question') }}
                 <span class="text-red-500">*</span></label>
             <fieldset class="mt-2">
                 <legend class="sr-only">Property Insurance</legend>
@@ -130,13 +139,13 @@
                         <input id="inline_insurance_yes" name="insurance_property" type="radio" value="yes"
                             class="radio-field sr-only" required>
                         <label for="inline_insurance_yes"
-                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">Yes</label>
+                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">{{ __('yes') }}</label>
                     </div>
                     <div class="radio-option flex items-center">
                         <input id="inline_insurance_no" name="insurance_property" type="radio" value="no"
                             class="radio-field sr-only" required>
                         <label for="inline_insurance_no"
-                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">No</label>
+                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">{{ __('no') }}</label>
                     </div>
                 </div>
             </fieldset>
@@ -148,17 +157,11 @@
                 <input id="inline_sms_consent" name="sms_consent" type="checkbox" value="1"
                     class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                 <span class="ml-2 text-sm text-gray-600">
-                    Yes, I would like to receive text messages from <span class="font-semibold">V GENERAL
-                        CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services. <span
-                        class="font-semibold">Messaging Frequency may vary</span>. I understand that I can cancel my
-                    subscription at any time by replying <span class="font-semibold">STOP</span>. Reply <span
-                        class="font-semibold">HELP {{ PhoneHelper::format($companyData->phone) }}</span> for
-                    assistance. Message and data rates apply. Information obtained as part of the SMS consent process
-                    will not be shared with third parties.
+                    {!! __('sms_consent_text') !!} {{ PhoneHelper::format($companyData->phone) }}
                     <a href="{{ route('privacy-policy') }}" target="_blank"
-                        class="text-yellow-500 hover:text-yellow-600 underline">Privacy Policy</a> and <a
+                        class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a> and <a
                         href="{{ route('terms-and-conditions') }}" target="_blank"
-                        class="text-yellow-500 hover:text-yellow-600 underline">Terms of Service</a>.
+                        class="text-yellow-500 hover:text-yellow-600 underline">{{ __('terms_of_service') }}</a>.
                 </span>
             </label>
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="sms_consent"></span>
@@ -177,7 +180,7 @@
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                     </path>
                 </svg>
-                <span id="inline-submit-button-text" class="z-40">Send Request</span>
+                <span id="inline-submit-button-text" class="z-40">{{ __('send_request') }}</span>
                 <div
                     class="absolute inset-0 h-[200%] w-[200%] rotate-45 translate-x-[-70%] transition-all group-hover:scale-100 bg-white/30 group-hover:translate-x-[50%] z-20 duration-1000">
                 </div>
@@ -604,12 +607,12 @@
                     submitButton.disabled = isLoading;
                     if (isLoading) {
                         submitSpinner.classList.remove('hidden');
-                        submitButtonText.textContent = 'Sending...';
+                        submitButtonText.textContent = '{{ __('sending') }}';
                         submitButton.setAttribute('aria-busy', 'true');
                         submitButton.setAttribute('aria-label', 'Sending');
                     } else {
                         submitSpinner.classList.add('hidden');
-                        submitButtonText.textContent = 'Send Request';
+                        submitButtonText.textContent = '{{ __('send_request') }}';
                         submitButton.removeAttribute('aria-busy');
                         submitButton.removeAttribute('aria-label');
                         checkFormValidity();
@@ -820,7 +823,8 @@
                     .finally(() => {
                         document.getElementById('inline-submit-button').disabled = false;
                         document.getElementById('inline-submit-spinner').classList.add('hidden');
-                        document.getElementById('inline-submit-button-text').textContent = 'Send Request';
+                        document.getElementById('inline-submit-button-text').textContent =
+                            '{{ __('send_request') }}';
                     });
             }
         });
