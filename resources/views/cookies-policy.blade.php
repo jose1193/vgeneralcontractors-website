@@ -4,12 +4,8 @@
     use App\Helpers\PhoneHelper;
 @endphp
 
-@section('title', 'Cookies Policy - ' . $companyData->company_name)
-@section('meta_description',
-    'Learn about how ' .
-    $companyData->company_name .
-    ' uses cookies to enhance your browsing
-    experience and improve our services.')
+@section('title', __('cookies_policy_page_title', ['company' => $companyData->company_name]))
+@section('meta_description', __('cookies_policy_meta_description', ['company' => $companyData->company_name]))
 
 @section('content')
     <!-- Hero Section -->
@@ -18,8 +14,8 @@
             <div class="absolute inset-0 bg-black opacity-60"></div>
         </div>
         <div class="relative container mx-auto px-4">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Cookies Policy</h1>
-            <p class="text-xl text-gray-300">Last updated: March 10, 2025</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('cookies_policy_page') }}</h1>
+            <p class="text-xl text-gray-300">{{ __('cookies_last_updated_march_10_2025') }}</p>
         </div>
     </section>
 
@@ -27,9 +23,9 @@
     <nav class="bg-gray-100 py-3">
         <div class="container mx-auto px-4">
             <div class="flex items-center space-x-2 text-gray-500">
-                <a href="{{ route('home') }}" class="hover:text-yellow-500">Home</a>
+                <a href="{{ route('home') }}" class="hover:text-yellow-500">{{ __('home') }}</a>
                 <span>/</span>
-                <span class="text-yellow-500">Cookies Policy</span>
+                <span class="text-yellow-500">{{ __('cookies_policy_page') }}</span>
             </div>
         </div>
     </nav>
@@ -39,128 +35,106 @@
         <div class="container mx-auto px-4 max-w-4xl">
             <div class="prose max-w-none">
                 <p class="mb-6">
-                    This Cookies Policy explains what Cookies are and how We use them. You should read this policy so You
-                    can understand what type of cookies We use, or the information We collect using Cookies and how that
-                    information is used.
+                    {{ __('cookies_policy_intro') }}
                 </p>
 
                 <p class="mb-6">
-                    Cookies do not typically contain any information that personally identifies a user, but personal
-                    information that we store about You may be linked to the information stored in and obtained from
-                    Cookies. For further information on how We use, store and keep your personal data secure, see our
-                    Privacy Policy.
+                    {!! __('cookies_personal_info_disclaimer') !!}
                 </p>
 
                 <p class="mb-6">
-                    We do not store sensitive personal information, such as mailing addresses, account passwords, etc. in
-                    the Cookies We use.
+                    {{ __('cookies_sensitive_info_disclaimer') }}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">Interpretation and Definitions</h2>
+                <h2 class="text-2xl font-bold mb-6">{{ __('interpretation_and_definitions') }}</h2>
 
-                <h3 class="text-xl font-semibold mb-4">Interpretation</h3>
+                <h3 class="text-xl font-semibold mb-4">{{ __('interpretation') }}</h3>
                 <p class="mb-6">
-                    The words of which the initial letter is capitalized have meanings defined under the following
-                    conditions. The following definitions shall have the same meaning regardless of whether they appear in
-                    singular or in plural.
+                    {{ __('words_capitalized_meanings_defined') }}
                 </p>
 
-                <h3 class="text-xl font-semibold mb-4">Definitions</h3>
-                <p class="mb-6">For the purposes of this Cookies Policy:</p>
+                <h3 class="text-xl font-semibold mb-4">{{ __('definitions') }}</h3>
+                <p class="mb-6">{{ __('cookies_definitions_intro') }}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Cookies
-                        Policy) refers to {{ $companyData->company_name }}, {{ $companyData->address }}.</li>
-                    <li><strong>Cookies</strong> means small files that are placed on Your computer, mobile device or any
-                        other device by a website, containing details of your browsing history on that website among its
-                        many uses.</li>
-                    <li><strong>Website</strong> refers to {{ $companyData->company_name }}, accessible from
-                        https://vgeneralcontractors.com/</li>
-                    <li><strong>You</strong> means the individual accessing or using the Website, or a company, or any legal
-                        entity on behalf of which such individual is accessing or using the Website, as applicable.</li>
+                    <li>{!! __('cookies_definition_company', [
+                        'company' => $companyData->company_name,
+                        'address' => $companyData->address,
+                    ]) !!}</li>
+                    <li>{!! __('cookies_definition_cookies') !!}</li>
+                    <li>{!! __('cookies_definition_website', ['company' => $companyData->company_name]) !!}</li>
+                    <li>{!! __('cookies_definition_you') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">The use of the Cookies</h2>
-                <h3 class="text-xl font-semibold mb-4">Type of Cookies We Use</h3>
+                <h2 class="text-2xl font-bold mb-6">{{ __('cookies_use_title') }}</h2>
+                <h3 class="text-xl font-semibold mb-4">{{ __('cookies_types_we_use') }}</h3>
                 <p class="mb-6">
-                    Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies remain on your personal computer or
-                    mobile device when You go offline, while Session Cookies are deleted as soon as You close your web
-                    browser.
+                    {!! __('cookies_persistent_session_explanation') !!}
                 </p>
 
-                <p class="mb-6">We use both session and persistent Cookies for the purposes set out below:</p>
+                <p class="mb-6">{{ __('cookies_both_types_usage') }}</p>
 
-                <h4 class="text-lg font-semibold mb-4">Necessary / Essential Cookies</h4>
+                <h4 class="text-lg font-semibold mb-4">{{ __('cookies_necessary_essential') }}</h4>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Type: Session Cookies</li>
-                    <li>Administered by: Us</li>
-                    <li>Purpose: These Cookies are essential to provide You with services available through the Website and
-                        to enable You to use some of its features. They help to authenticate users and prevent fraudulent
-                        use of user accounts. Without these Cookies, the services that You have asked for cannot be
-                        provided, and We only use these Cookies to provide You with those services.</li>
+                    <li>{!! __('cookies_necessary_type') !!}</li>
+                    <li>{!! __('cookies_necessary_administered') !!}</li>
+                    <li>{!! __('cookies_necessary_purpose') !!}</li>
                 </ul>
 
-                <h4 class="text-lg font-semibold mb-4">Functionality Cookies</h4>
+                <h4 class="text-lg font-semibold mb-4">{{ __('cookies_functionality') }}</h4>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>Type: Persistent Cookies</li>
-                    <li>Administered by: Us</li>
-                    <li>Purpose: These Cookies allow us to remember choices You make when You use the Website, such as
-                        remembering your login details or language preference. The purpose of these Cookies is to provide
-                        You with a more personal experience and to avoid You having to re-enter your preferences every time
-                        You use the Website.</li>
+                    <li>{!! __('cookies_functionality_type') !!}</li>
+                    <li>{!! __('cookies_functionality_administered') !!}</li>
+                    <li>{!! __('cookies_functionality_purpose') !!}</li>
                 </ul>
 
-                <h2 class="text-2xl font-bold mb-6">Your Choices Regarding Cookies</h2>
+                <h2 class="text-2xl font-bold mb-6">{{ __('cookies_your_choices') }}</h2>
                 <p class="mb-6">
-                    If You prefer to avoid the use of Cookies on the Website, first You must disable the use of Cookies in
-                    your browser and then delete the Cookies saved in your browser associated with this website. You may use
-                    this option for preventing the use of Cookies at any time.
+                    {!! __('cookies_disable_instructions') !!}
                 </p>
 
                 <p class="mb-6">
-                    If You do not accept Our Cookies, You may experience some inconvenience in your use of the Website and
-                    some features may not function properly.
+                    {!! __('cookies_inconvenience_warning') !!}
                 </p>
 
                 <p class="mb-6">
-                    If You'd like to delete Cookies or instruct your web browser to delete or refuse Cookies, please visit
-                    the help pages of your web browser:
+                    {{ __('cookies_browser_help_intro') }}
                 </p>
 
                 <ul class="list-disc pl-6 mb-6">
-                    <li>For the Chrome web browser, please visit this page from Google: <a
-                            href="https://support.google.com/accounts/answer/32050"
-                            class="text-yellow-600 hover:text-yellow-700">https://support.google.com/accounts/answer/32050</a>
+                    <li>{{ __('cookies_chrome_help') }} <a href="https://support.google.com/accounts/answer/32050"
+                            class="text-yellow-600 hover:text-yellow-700 no-underline">https://support.google.com/accounts/answer/32050</a>
                     </li>
-                    <li>For the Internet Explorer web browser, please visit this page from Microsoft: <a
-                            href="https://support.microsoft.com/kb/278835"
-                            class="text-yellow-600 hover:text-yellow-700">https://support.microsoft.com/kb/278835</a></li>
-                    <li>For the Firefox web browser, please visit this page from Mozilla: <a
+                    <li>{{ __('cookies_ie_help') }} <a href="https://support.microsoft.com/kb/278835"
+                            class="text-yellow-600 hover:text-yellow-700 no-underline">https://support.microsoft.com/kb/278835</a>
+                    </li>
+                    <li>{{ __('cookies_firefox_help') }} <a
                             href="https://support.mozilla.org/en-US/kb/delete-cookies-remove-info-websites-stored"
-                            class="text-yellow-600 hover:text-yellow-700">https://support.mozilla.org/en-US/kb/delete-cookies-remove-info-websites-stored</a>
+                            class="text-yellow-600 hover:text-yellow-700 no-underline">https://support.mozilla.org/en-US/kb/delete-cookies-remove-info-websites-stored</a>
                     </li>
-                    <li>For the Safari web browser, please visit this page from Apple: <a
+                    <li>{{ __('cookies_safari_help') }} <a
                             href="https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac"
-                            class="text-yellow-600 hover:text-yellow-700">https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac</a>
+                            class="text-yellow-600 hover:text-yellow-700 no-underline">https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac</a>
                     </li>
                 </ul>
 
-                <p class="mb-6">For any other web browser, please visit your web browser's official web pages.</p>
+                <p class="mb-6">{{ __('cookies_other_browsers') }}</p>
 
-                <h2 class="text-2xl font-bold mb-6">More Information about Cookies</h2>
-                <p class="mb-6">You can learn more about cookies: <a href="#"
-                        class="text-yellow-600 hover:text-yellow-700">Cookies: What Do They Do?</a></p>
+                <h2 class="text-2xl font-bold mb-6">{{ __('cookies_more_info') }}</h2>
+                <p class="mb-6">{{ __('cookies_learn_more') }} <a href="#"
+                        class="text-yellow-600 hover:text-yellow-700 no-underline">{{ __('cookies_what_do_they_do') }}</a>
+                </p>
 
-                <h2 class="text-2xl font-bold mb-6">Contact Us</h2>
-                <p class="mb-6">If you have any questions about this Cookies Policy, You can contact us:</p>
+                <h2 class="text-2xl font-bold mb-6">{{ __('contact_us') }}</h2>
+                <p class="mb-6">{{ __('cookies_contact_intro') }}</p>
                 <ul class="list-disc pl-6 mb-6">
-                    <li>By email: <a href="mailto:{{ $companyData->email }}"
-                            class="text-yellow-600 hover:text-yellow-700">{{ $companyData->email }}</a></li>
-                    <li>By phone number: {{ PhoneHelper::format($companyData->phone) }}</li>
+                    <li>{{ __('by_email') }}: <a href="mailto:{{ $companyData->email }}"
+                            class="text-yellow-600 hover:text-yellow-700 no-underline">{{ $companyData->email }}</a></li>
+                    <li>{{ __('cookies_by_phone') }}: {{ PhoneHelper::format($companyData->phone) }}</li>
                 </ul>
 
                 <div class="text-sm text-gray-600 mt-12 pt-6 border-t">
-                    <p>Last updated: March 10, 2025</p>
-                    <p>Version: 1.1</p>
+                    <p>{{ __('cookies_last_updated_march_10_2025') }}</p>
+                    <p>{{ __('cookies_version_1_1') }}</p>
                 </div>
             </div>
         </div>
