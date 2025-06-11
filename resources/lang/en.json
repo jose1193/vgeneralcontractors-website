@@ -738,8 +738,8 @@
     "privacy_policy_page_title": "<strong>Privacy Policy</strong> - :company",
     "privacy_policy_meta_description": "Read our <strong>privacy policy</strong> to understand how :company handles and protects your personal information. Learn about your <strong>data</strong> rights and our security measures.",
     "privacy_policy_page": "<strong>Privacy Policy</strong>",
-    "privacy_last_updated_january_23_2025": "Last updated: 01-23-2025 | Version 1.1",
-    "privacy_version_1_1": "Version: 1.1",
+    "privacy_last_updated_january_23_2025": "<strong>Last updated: January 23, 2025</strong> | <strong>Version: 1.1</strong>",
+    "privacy_version_1_1": "<strong>Version: 1.1</strong>",
     "privacy_general_information": "1. General Information",
     "privacy_data_controller_identification": "1.1 Identification of the <strong>Data</strong> Controller",
     "privacy_company_responsibility": ":company - with fiscal address at :address is responsible for the processing of the personal <strong>data</strong> you provide to us.",
@@ -831,5 +831,5 @@
     "privacy_consent": "9. Consent",
     "privacy_by_requesting_services": "By requesting our services or using our <strong>website</strong>, you accept the terms of this <strong>privacy policy</strong>. Specifically, by providing your <strong>phone number</strong> and giving your consent to receive <strong>SMS</strong> messages, you accept the processing of your <strong>data</strong> for this purpose, as described in this policy.",
     "privacy_applicable_legislation": "10. Applicable Legislation",
-    "privacy_governed_by_laws": "This policy is governed by the laws of Houston, Texas USA, with special reference to the regulations on personal <strong>data</strong> protection and construction."
+    "privacy_governed_by_laws": "This policy is governed by the laws of <strong>Houston, Texas USA</strong>, with special reference to the regulations on personal <strong>data</strong> protection and construction."
 }

@@ -736,8 +736,8 @@
     "privacy_policy_page_title": "<strong>Política de Privacidad</strong> - :company",
     "privacy_policy_meta_description": "Lee nuestra <strong>política de privacidad</strong> para entender cómo :company maneja y protege tu información personal. Aprende sobre tus derechos de <strong>datos</strong> y nuestras medidas de seguridad.",
     "privacy_policy_page": "<strong>Política de Privacidad</strong>",
-    "privacy_last_updated_january_23_2025": "Última actualización: 01-23-2025 | Versión 1.1",
-    "privacy_version_1_1": "Versión: 1.1",
+    "privacy_last_updated_january_23_2025": "<strong>Última actualización: 23 de Enero, 2025</strong> | <strong>Versión: 1.1</strong>",
+    "privacy_version_1_1": "<strong>Versión: 1.1</strong>",
     "privacy_general_information": "1. Información General",
     "privacy_data_controller_identification": "1.1 Identificación del Controlador de <strong>Datos</strong>",
     "privacy_company_responsibility": ":company - con dirección fiscal en :address es responsable del procesamiento de los <strong>datos</strong> personales que nos proporcionas.",
@@ -829,5 +829,5 @@
     "privacy_consent": "9. Consentimiento",
     "privacy_by_requesting_services": "Al solicitar nuestros servicios o usar nuestro <strong>sitio web</strong>, aceptas los términos de esta <strong>política de privacidad</strong>. Específicamente, al proporcionar tu <strong>número de teléfono</strong> y dar tu consentimiento para recibir mensajes <strong>SMS</strong>, aceptas el procesamiento de tus <strong>datos</strong> para este propósito, como se describe en esta política.",
     "privacy_applicable_legislation": "10. Legislación Aplicable",
-    "privacy_governed_by_laws": "Esta política se rige por las leyes de Houston, Texas EE.UU., con referencia especial a las regulaciones sobre protección de <strong>datos</strong> personales y construcción."
+    "privacy_governed_by_laws": "Esta política se rige por las leyes de <strong>Houston, Texas EE.UU.</strong>, con referencia especial a las regulaciones sobre protección de <strong>datos</strong> personales y construcción."
 }
