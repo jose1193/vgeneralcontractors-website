@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@php use App\Helpers\PhoneHelper; @endphp
+
 
 @section('title', __('terms_conditions_page_title', ['company' => $companyData->company_name]))
 @section('meta_description', __('terms_conditions_meta_description', ['company' => $companyData->company_name]))
@@ -39,7 +39,7 @@
                     <br>
                     <em>"{!! __('sms_consent_full_text', [
                         'company' => $companyData->company_name,
-                        'phone' => PhoneHelper::format($companyData->phone),
+                        'phone' => \App\Helpers\PhoneHelper::format($companyData->phone),
                         'privacy_url' => route('privacy-policy'),
                         'terms_url' => route('terms-and-conditions'),
                     ]) !!}"</em>
@@ -104,7 +104,7 @@
                 <h2 class="text-2xl font-bold mb-6">{!! __('help_support_sms_service') !!}</h2>
                 <p class="mb-6">
                     {!! __('sms_assistance_help', [
-                        'phone' => PhoneHelper::format($companyData->phone),
+                        'phone' => \App\Helpers\PhoneHelper::format($companyData->phone),
                         'privacy_url' => route('privacy-policy'),
                         'terms_url' => route('terms-and-conditions'),
                     ]) !!}
