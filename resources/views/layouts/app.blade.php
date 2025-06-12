@@ -94,43 +94,33 @@
 
 </head>
 
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
+<body class="font-sans antialiased">
     <x-banner />
 
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <x-drawer-menu />
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        @livewire('navigation-menu')
 
-        <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden lg:ml-0">
-            <!-- Header -->
-            <x-app-header :title="$header ?? ''" />
-
-            <!-- Page Content -->
-            <main class="flex-1 overflow-y-auto">
-                <div class="p-6">
-                    @hasSection('content')
-                        @yield('content')
-                    @else
-                        {{ $slot ?? '' }}
-                    @endif
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header class="bg-white dark:bg-gray-800 shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
                 </div>
-            </main>
+            </header>
+        @endif
 
-            <!-- Footer -->
-            <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-4 px-6">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
-                        &copy; {{ date('Y') }} V General Contractors. All rights reserved.
-                    </p>
-                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                        <span>Version 2.0.0</span>
-                        <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300">Help</a>
-                        <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300">Support</a>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        <!-- Page Content -->
+        <main>
+            @hasSection('content')
+                @yield('content')
+            @else
+                {{ $slot ?? '' }}
+            @endif
+        </main>
+
+        <footer class="bg-transparent py-4 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
+        </footer>
     </div>
     @stack('modals')
 
