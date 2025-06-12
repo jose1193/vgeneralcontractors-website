@@ -15,7 +15,7 @@
     <meta name="theme-color" content="transparent" />
 
     <!-- Primary Meta Tags -->
-    <title>{{ $companyData->name }} | {{ __('professional_roofing_texas') }}</title>
+    <title>{{ $companyData->company_name }} | {{ __('professional_roofing_texas') }}</title>
     <meta name="title" content="{{ __('meta_title') }}">
     <meta name="description" content="{{ __('meta_description') }}">
     <meta name="keywords" content="{{ __('meta_keywords') }}">
