@@ -260,7 +260,7 @@
         <div class="flex-1 transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-60' : 'ml-16'">
             <!-- Top Navigation -->
             <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-                <div class="px-6 py-4">
+                <div class="px-8 py-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -314,7 +314,7 @@
             </div>
 
             <!-- Page Content -->
-            <main class="p-6">
+            <main class="p-8">
                 @hasSection('content')
                     @yield('content')
                 @else

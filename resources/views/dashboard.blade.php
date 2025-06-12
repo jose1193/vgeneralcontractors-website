@@ -2,39 +2,33 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Analytics & Insights') }}
+                {{ __('Dashboard') }}
             </h2>
             <div class="flex items-center space-x-4">
-                <select
-                    class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm">
-                    <option>Monthly</option>
-                    <option>Weekly</option>
-                    <option>Daily</option>
-                </select>
                 <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                    + New Project
+                    + Create Appointment
                 </button>
             </div>
         </div>
     </x-slot>
 
-    <div class="space-y-6">
+    <div class="space-y-8">
         <!-- Top Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Total Projects -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Projects</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">215.6k</p>
-                        <div class="flex items-center mt-2">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Total Projects</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">215.6k</p>
+                        <div class="flex items-center mt-3">
                             <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                 +14.2%
                             </span>
                         </div>
                     </div>
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
                             </path>
@@ -44,19 +38,19 @@
             </div>
 
             <!-- Revenue -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Revenue</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">$584.2k</p>
-                        <div class="flex items-center mt-2">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Revenue</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">$584.2k</p>
+                        <div class="flex items-center mt-3">
                             <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                 +8.5%
                             </span>
                         </div>
                     </div>
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
                             </path>
@@ -66,19 +60,19 @@
             </div>
 
             <!-- Active Projects -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Active Projects</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">42</p>
-                        <div class="flex items-center mt-2">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Active Projects</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">42</p>
+                        <div class="flex items-center mt-3">
                             <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                 +3.2%
                             </span>
                         </div>
                     </div>
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
@@ -87,19 +81,19 @@
             </div>
 
             <!-- Team Members -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Team Members</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">24</p>
-                        <div class="flex items-center mt-2">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Team Members</p>
+                        <p class="text-3xl font-bold text-gray-900 dark:text-white">24</p>
+                        <div class="flex items-center mt-3">
                             <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                                 -1.2%
                             </span>
                         </div>
                     </div>
-                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
                             </path>
@@ -110,10 +104,10 @@
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Chart -->
-            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+                <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Project Analytics</h3>
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-500">Sort by:</span>
@@ -127,7 +121,7 @@
 
                 <!-- Chart Container -->
                 <div
-                    class="h-80 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-lg flex items-center justify-center relative overflow-hidden">
+                    class="h-80 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-lg flex items-center justify-center relative overflow-hidden mb-6">
                     <!-- Simulated Chart Background -->
                     <div class="absolute inset-0 opacity-20">
                         <svg class="w-full h-full" viewBox="0 0 400 200">
@@ -150,7 +144,7 @@
                 </div>
 
                 <!-- Chart Legend -->
-                <div class="flex items-center justify-center space-x-6 mt-4">
+                <div class="flex items-center justify-center space-x-8">
                     <div class="flex items-center space-x-2">
                         <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
                         <span class="text-sm text-gray-600 dark:text-gray-400">Projects</span>
@@ -167,15 +161,15 @@
             </div>
 
             <!-- Audience Insights -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+                <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Audience Insights</h3>
                     <span class="text-sm text-gray-500">All</span>
                 </div>
 
                 <!-- Donut Chart -->
-                <div class="flex items-center justify-center mb-6">
-                    <div class="relative w-32 h-32">
+                <div class="flex items-center justify-center mb-8">
+                    <div class="relative w-36 h-36">
                         <svg class="transform -rotate-90 w-full h-full" viewBox="0 0 36 36">
                             <path class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="3"
                                 fill="none"
@@ -200,23 +194,23 @@
                 </div>
 
                 <!-- Stats -->
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
                             <span class="text-sm text-gray-600 dark:text-gray-400">Active</span>
                         </div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">45%</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
                             <span class="text-sm text-gray-600 dark:text-gray-400">Completed</span>
                         </div>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">38%</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
                             <span class="text-sm text-gray-600 dark:text-gray-400">Pending</span>
                         </div>
@@ -227,20 +221,20 @@
         </div>
 
         <!-- Bottom Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Platform Engagement -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+                <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Platform Engagement</h3>
                     <span class="text-sm text-gray-500">Sort by: Engagement</span>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div
-                        class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <div class="flex items-center space-x-3">
+                        class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <div class="flex items-center space-x-4">
                             <div
-                                class="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
+                                class="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
                                 <span class="text-white font-bold text-sm">IG</span>
                             </div>
                             <div>
@@ -255,9 +249,9 @@
                     </div>
 
                     <div
-                        class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        class="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
                                 <span class="text-white font-bold text-sm">TK</span>
                             </div>
                             <div>
@@ -274,22 +268,22 @@
             </div>
 
             <!-- Project Status & Timeline -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+                <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Current Project Status</h3>
                     <span class="text-sm text-gray-500">Weekly</span>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-8">
                     <!-- Timeline Item -->
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 w-3 h-3 bg-green-400 rounded-full mt-2"></div>
                         <div class="flex-1">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mb-2">
                                 <p class="font-medium text-gray-900 dark:text-white">In Progress</p>
                                 <span class="text-sm text-gray-500">Today 09:30</span>
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Schedule and manage your posts
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Schedule and manage your posts
                                 effectively.</p>
                         </div>
                     </div>
@@ -297,11 +291,11 @@
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 w-3 h-3 bg-yellow-400 rounded-full mt-2"></div>
                         <div class="flex-1">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mb-2">
                                 <p class="font-medium text-gray-900 dark:text-white">On Hold</p>
                                 <span class="text-sm text-gray-500">Yesterday 14:20</span>
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Review and approve pending
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Review and approve pending
                                 proposals.</p>
                         </div>
                     </div>
@@ -309,11 +303,11 @@
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 w-3 h-3 bg-red-400 rounded-full mt-2"></div>
                         <div class="flex-1">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mb-2">
                                 <p class="font-medium text-gray-900 dark:text-white">Pending</p>
                                 <span class="text-sm text-gray-500">Dec 18, 16:45</span>
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Update project timeline and
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Update project timeline and
                                 deliverables.</p>
                         </div>
                     </div>
