@@ -97,7 +97,7 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-900">
+    <div class="min-h-screen bg-gray-50">
         @livewire('navigation-menu')
 
         <!-- Page Content -->
@@ -109,7 +109,7 @@
             @endif
         </main>
 
-        <footer class="bg-transparent py-4 text-center text-gray-600 dark:text-gray-400">
+        <footer class="bg-transparent py-4 text-center text-gray-600">
             <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>
