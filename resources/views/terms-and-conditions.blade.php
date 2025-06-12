@@ -79,13 +79,6 @@
                     {!! __('acknowledgment_paragraph_4') !!}
                 </p>
 
-                <h2 class="text-2xl font-bold mb-6">{!! __('types_of_sms_communications') !!}</h2>
-                <p class="mb-4">{!! __('if_consented_receive_text_messages') !!}</p>
-                <ul class="list-disc pl-6 mb-6">
-                    <li>{!! __('customers_guests_sms_updates') !!}</li>
-                    <li>{!! __('job_applicants_sms_updates') !!}</li>
-                </ul>
-
                 <h2 class="text-2xl font-bold mb-6">{!! __('frequency_of_sms_messages') !!}</h2>
                 <p class="mb-6">
                     {!! __('frequency_sms_messages_vary', ['company' => $companyData->company_name]) !!}
