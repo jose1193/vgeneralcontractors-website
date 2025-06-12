@@ -98,9 +98,27 @@
     <x-banner />
 
     <div class="min-h-screen flex" x-data="{ sidebarOpen: true, mobileSidebarOpen: false }">
+        <!-- Mobile Overlay -->
+        <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false"
+            x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden">
+        </div>
+
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ease-in-out"
-            :class="sidebarOpen ? 'w-60' : 'w-16'">
+        <div class="fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ease-in-out lg:z-30"
+            :class="{
+                'w-60': sidebarOpen || mobileSidebarOpen,
+                'w-16': !sidebarOpen && !mobileSidebarOpen && window
+                    .innerWidth >= 1024
+            }"
+            x-show="mobileSidebarOpen || window.innerWidth >= 1024"
+            @resize.window="if (window.innerWidth >= 1024) mobileSidebarOpen = false"
+            x-transition:enter="transform transition ease-in-out duration-300"
+            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full">
             <!-- Sidebar component -->
             <div class="flex flex-col h-full bg-gray-900 text-white shadow-xl">
                 <!-- Logo and Toggle -->
@@ -111,13 +129,24 @@
                         </div>
                         <span class="font-semibold text-lg">VGC</span>
                     </div>
-                    <button @click="sidebarOpen = !sidebarOpen"
-                        class="p-1.5 rounded-lg hover:bg-gray-700 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+                    <div class="flex items-center space-x-2">
+                        <!-- Close button for mobile -->
+                        <button @click="mobileSidebarOpen = false"
+                            class="lg:hidden p-1.5 rounded-lg hover:bg-gray-700 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <!-- Toggle button for desktop -->
+                        <button @click="sidebarOpen = !sidebarOpen"
+                            class="hidden lg:block p-1.5 rounded-lg hover:bg-gray-700 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Navigation -->
@@ -257,12 +286,28 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-60' : 'ml-16'">
+        <div class="flex-1 transition-all duration-300 ease-in-out lg:ml-60"
+            :class="{
+                'ml-60': sidebarOpen && window.innerWidth >= 1024,
+                'ml-16': !sidebarOpen && window.innerWidth >=
+                    1024,
+                'ml-0': window.innerWidth < 1024
+            }">
             <!-- Top Navigation -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+            <div
+                class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-20">
                 <div class="px-8 py-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
+                            <!-- Mobile Menu Button -->
+                            <button @click="mobileSidebarOpen = true"
+                                class="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                            </button>
+
                             <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
                                 @if (isset($header))
                                     {{ $header }}
@@ -314,7 +359,7 @@
             </div>
 
             <!-- Page Content -->
-            <main class="p-8">
+            <main class="p-8 relative z-10">
                 @hasSection('content')
                     @yield('content')
                 @else
