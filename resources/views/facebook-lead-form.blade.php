@@ -171,7 +171,8 @@
                         <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                             class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                         <span class="ml-2 text-sm text-gray-600">
-                            {!! __('sms_consent_text') !!} <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
+                            {!! __('sms_consent_text') !!}
+                            <strong>{{ \App\Helpers\PhoneHelper::format($companyData->phone) }}</strong>
                             <a href="{{ route('privacy-policy') }}" target="_blank"
                                 class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">{{ __('privacy_policy') }}</a>
                             {{ __('and') }} <a href="{{ route('terms-and-conditions') }}" target="_blank"
@@ -1076,12 +1077,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                                                                                    .grecaptcha-badge {
-                                                                                        right: 14px !important;
-                                                                                        visibility: visible !important;
-                                                                                        opacity: 1 !important;
-                                                                                        z-index: 9999 !important;
-                                                                                    }
-                                                                                    */
+                                                                                            .grecaptcha-badge {
+                                                                                                right: 14px !important;
+                                                                                                visibility: visible !important;
+                                                                                                opacity: 1 !important;
+                                                                                                z-index: 9999 !important;
+                                                                                            }
+                                                                                            */
     </style>
 @endpush

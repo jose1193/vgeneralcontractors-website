@@ -196,7 +196,8 @@
                         <input type="checkbox" name="sms_consent" x-model="formData.sms_consent"
                             class="form-checkbox text-yellow-500 mt-1">
                         <span class="ml-2 text-sm text-gray-600">
-                            {!! __('sms_consent_text') !!} <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
+                            {!! __('sms_consent_text') !!}
+                            <strong>{{ \App\Helpers\PhoneHelper::format($companyData->phone) }}</strong>
                             <a href="{{ route('privacy-policy') }}" target="_blank"
                                 class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a>
                             {{ __('and') }} <a href="{{ route('terms-and-conditions') }}" target="_blank"
