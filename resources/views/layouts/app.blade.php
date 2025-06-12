@@ -31,6 +31,22 @@
         [x-cloak] {
             display: none !important;
         }
+
+        /* Fix navigation spacing issue */
+        nav {
+            margin-bottom: 0 !important;
+        }
+
+        header {
+            margin-top: 0 !important;
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+        }
+
+        main {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+        }
     </style>
     <style>
         ::-webkit-scrollbar {
@@ -103,7 +119,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
