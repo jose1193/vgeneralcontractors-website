@@ -34,11 +34,11 @@
     </style>
     <style>
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background-color: #1f2937;
+            background-color: #e5e7eb;
             border-radius: 9px;
         }
 
@@ -97,234 +97,43 @@
 <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
     <x-banner />
 
-    <div class="min-h-screen flex" x-data="{ sidebarOpen: true, mobileSidebarOpen: false }">
+    <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ease-in-out"
-            :class="sidebarOpen ? 'w-60' : 'w-16'">
-            <!-- Sidebar component -->
-            <div class="flex flex-col h-full bg-gray-900 text-white shadow-xl">
-                <!-- Logo and Toggle -->
-                <div class="flex items-center justify-between p-4 border-b border-gray-700">
-                    <div class="flex items-center space-x-3" x-show="sidebarOpen" x-transition>
-                        <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                            <span class="text-gray-900 font-bold text-sm">V</span>
-                        </div>
-                        <span class="font-semibold text-lg">VGC</span>
-                    </div>
-                    <button @click="sidebarOpen = !sidebarOpen"
-                        class="p-1.5 rounded-lg hover:bg-gray-700 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
+        <x-drawer-menu />
 
-                <!-- Navigation -->
-                <nav class="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
-                    <!-- Dashboard -->
-                    <a href="{{ route('dashboard') }}"
-                        class="flex items-center px-3 py-2.5 rounded-lg transition-colors hover:bg-gray-700 
-                              {{ request()->routeIs('dashboard') ? 'bg-gray-700 text-yellow-400' : 'text-gray-300' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
-                        </svg>
-                        <span class="ml-3" x-show="sidebarOpen" x-transition>{{ __('Dashboard') }}</span>
-                    </a>
-
-                    <!-- Administration -->
-                    @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
-                        <div x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors hover:bg-gray-700 text-gray-300">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                                    </path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <span class="ml-3 flex-1 text-left" x-show="sidebarOpen"
-                                    x-transition>{{ __('Administration') }}</span>
-                                <svg class="w-4 h-4 transition-transform" x-show="sidebarOpen"
-                                    :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div x-show="open" x-transition class="ml-6 mt-2 space-y-2">
-                                @can('READ_COMPANY_DATA')
-                                    <a href="{{ route('company-data') }}"
-                                        class="flex items-center px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-700">
-                                        <span>{{ __('Company Data') }}</span>
-                                    </a>
-                                @endcan
-                                @can('READ_USER')
-                                    <a href="{{ route('users') }}"
-                                        class="flex items-center px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-700">
-                                        <span>{{ __('Users') }}</span>
-                                    </a>
-                                @endcan
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Services -->
-                    @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                        <div x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors hover:bg-gray-700 text-gray-300">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                    </path>
-                                </svg>
-                                <span class="ml-3 flex-1 text-left" x-show="sidebarOpen"
-                                    x-transition>{{ __('Services') }}</span>
-                                <svg class="w-4 h-4 transition-transform" x-show="sidebarOpen"
-                                    :class="{ 'rotate-180': open }" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div x-show="open" x-transition class="ml-6 mt-2 space-y-2">
-                                @can('READ_EMAIL_DATA')
-                                    <a href="{{ route('email-datas') }}"
-                                        class="flex items-center px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-700">
-                                        <span>{{ __('Emails') }}</span>
-                                    </a>
-                                @endcan
-                                @can('READ_SERVICE_CATEGORY')
-                                    <a href="{{ route('service-categories') }}"
-                                        class="flex items-center px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-700">
-                                        <span>{{ __('Service Categories') }}</span>
-                                    </a>
-                                @endcan
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Appointments -->
-                    @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
-                        <a href="{{ route('appointments.index') }}"
-                            class="flex items-center px-3 py-2.5 rounded-lg transition-colors hover:bg-gray-700 
-                                  {{ request()->routeIs('appointments*') ? 'bg-gray-700 text-yellow-400' : 'text-gray-300' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span class="ml-3" x-show="sidebarOpen" x-transition>{{ __('Appointments') }}</span>
-                        </a>
-                    @endif
-
-                    <!-- Portfolio -->
-                    @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
-                        <a href="{{ route('portfolios') }}"
-                            class="flex items-center px-3 py-2.5 rounded-lg transition-colors hover:bg-gray-700 
-                                  {{ request()->routeIs('portfolios') ? 'bg-gray-700 text-yellow-400' : 'text-gray-300' }}">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                </path>
-                            </svg>
-                            <span class="ml-3" x-show="sidebarOpen" x-transition>{{ __('Portfolio') }}</span>
-                        </a>
-                    @endif
-                </nav>
-
-                <!-- User Profile -->
-                <div class="p-4 border-t border-gray-700">
-                    <div class="flex items-center space-x-3">
-                        <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->profile_photo_url }}"
-                            alt="{{ Auth::user()->name }}">
-                        <div x-show="sidebarOpen" x-transition class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-white truncate">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-60' : 'ml-16'">
-            <!-- Top Navigation -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-                <div class="px-8 py-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                @if (isset($header))
-                                    {{ $header }}
-                                @else
-                                    {{ __('Dashboard') }}
-                                @endif
-                            </h1>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <!-- Language Switcher -->
-                            <x-language-switcher />
-
-                            <!-- Profile Dropdown -->
-                            <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open"
-                                    class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                                    <span class="text-sm">{{ Auth::user()->name }}</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </button>
-                                <div x-show="open" @click.away="open = false" x-transition
-                                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                    <div class="py-1">
-                                        <a href="{{ route('profile.show') }}"
-                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                            {{ __('Profile') }}
-                                        </a>
-                                        @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                            <a href="{{ route('api-tokens.index') }}"
-                                                class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                {{ __('API Tokens') }}
-                                            </a>
-                                        @endif
-                                        <form method="POST" action="{{ secure_url(route('logout', [], false)) }}">
-                                            @csrf
-                                            <button type="submit"
-                                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                {{ __('Log Out') }}
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden lg:ml-0">
+            <!-- Header -->
+            <x-app-header :title="$header ?? ''" />
 
             <!-- Page Content -->
-            <main class="p-8">
-                @hasSection('content')
-                    @yield('content')
-                @else
-                    {{ $slot ?? '' }}
-                @endif
+            <main class="flex-1 overflow-y-auto">
+                <div class="p-6">
+                    @hasSection('content')
+                        @yield('content')
+                    @else
+                        {{ $slot ?? '' }}
+                    @endif
+                </div>
             </main>
+
+            <!-- Footer -->
+            <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-4 px-6">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        &copy; {{ date('Y') }} V General Contractors. All rights reserved.
+                    </p>
+                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                        <span>Version 2.0.0</span>
+                        <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300">Help</a>
+                        <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300">Support</a>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
-
     @stack('modals')
+
     @livewireScripts
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -332,6 +141,8 @@
         window.addEventListener('notify', event => {
             const type = event.detail.type;
             const message = event.detail.message;
+
+            // You can implement your own notification system here
             alert(message);
         });
 
