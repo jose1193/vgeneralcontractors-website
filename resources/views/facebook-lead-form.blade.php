@@ -171,18 +171,11 @@
                         <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                             class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
                         <span class="ml-2 text-sm text-gray-600">
-                            Yes, I would like to receive text messages from <span class="font-semibold">V GENERAL
-                                CONTRACTORS</span> with offers, appointment reminders, and updates on roofing services.
-                            <span class="font-semibold">Messaging Frequency may vary</span>. I understand that I can cancel
-                            my subscription at any time by replying <span class="font-semibold">STOP</span>. Reply <span
-                                class="font-semibold">HELP {{ PhoneHelper::format($companyData->phone) }}</span> for
-                            assistance. Message and data rates apply. Information obtained as part of the SMS consent
-                            process will not be shared with third parties.
+                            {!! __('sms_consent_text') !!} <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
                             <a href="{{ route('privacy-policy') }}" target="_blank"
-                                class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">Privacy Policy</a>
-                            and <a href="{{ route('terms-and-conditions') }}" target="_blank"
-                                class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">Terms
-                                of Service</a>.
+                                class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">{{ __('privacy_policy') }}</a>
+                            {{ __('and') }} <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                                class="text-yellow-500 font-bold hover:text-yellow-600 no-underline">{{ __('terms_of_service') }}</a>.
                         </span>
                     </label>
                     {{-- Error message outside the label --}}
@@ -1083,12 +1076,12 @@
         /* Ensure reCAPTCHA badge is visible */
         /* Removing custom styles as requested */
         /*
-                                                                    .grecaptcha-badge {
-                                                                        right: 14px !important;
-                                                                        visibility: visible !important;
-                                                                        opacity: 1 !important;
-                                                                        z-index: 9999 !important;
-                                                                    }
-                                                                    */
+                                                                                    .grecaptcha-badge {
+                                                                                        right: 14px !important;
+                                                                                        visibility: visible !important;
+                                                                                        opacity: 1 !important;
+                                                                                        z-index: 9999 !important;
+                                                                                    }
+                                                                                    */
     </style>
 @endpush

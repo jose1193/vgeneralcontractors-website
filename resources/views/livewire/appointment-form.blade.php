@@ -510,15 +510,11 @@
                         <input type="checkbox" x-model="formData.sms_consent" wire:model="sms_consent"
                             class="form-checkbox text-yellow-500 mt-1 h-5 w-5">
                         <span class="ml-2 text-sm text-gray-600">
-                            Yes, I would like to receive text messages from <span class="font-bold">V GENERAL
-                                CONTRACTORS</span>
-                            with offers, appointment reminders, and updates on roofing services.
-                            <span class="font-bold">Messaging Frequency may vary</span>. I understand that I can cancel
-                            my subscription at any time by replying <span class="font-bold">STOP. Reply HELP for
-                                assistance</span>.
-                            Message and data rates apply.
-                            <a href="#" class="text-yellow-500 hover:text-yellow-600">Privacy Policy</a> and
-                            <a href="#" class="text-yellow-500 hover:text-yellow-600">Terms of Service</a>.
+                            {!! __('sms_consent_text') !!} <strong>{{ PhoneHelper::format($companyData->phone) }}</strong>
+                            <a href="{{ route('privacy-policy') }}" target="_blank"
+                                class="text-yellow-500 hover:text-yellow-600 underline">{{ __('privacy_policy') }}</a>
+                            {{ __('and') }} <a href="{{ route('terms-and-conditions') }}" target="_blank"
+                                class="text-yellow-500 hover:text-yellow-600 underline">{{ __('terms_of_service') }}</a>.
                         </span>
                     </label>
                     @error('sms_consent')
