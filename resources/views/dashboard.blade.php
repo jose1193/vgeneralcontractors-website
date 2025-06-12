@@ -33,7 +33,7 @@
                         </svg></span>
                     <span class="quick-card-label">Citas</span>
                 </a>
-                <a href="{{ route('call-records.index') }}" class="quick-card">
+                <a href="" class="quick-card">
                     <span class="quick-card-icon bg-yellow-100 text-yellow-600"><svg class="w-6 h-6" fill="none"
                             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
