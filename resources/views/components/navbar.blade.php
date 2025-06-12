@@ -8,7 +8,7 @@
         <div class="flex items-center">
             <a href="{{ route('home') }}">
                 <img :src="isScrolled ? '{{ asset('assets/logo/logo3.webp') }}' : '{{ asset('assets/logo/logo4-white.webp') }}'"
-                    alt="V General Contractors Logo" class="h-10 lg:h-14  transition-all duration-300">
+                    alt="V General Contractors Logo" class="h-14  transition-all duration-300">
             </a>
             <span class="ml-2 text-xl font-bold"
                 :class="{ 'text-gray-800': isScrolled, 'text-white': !isScrolled }"></span>
