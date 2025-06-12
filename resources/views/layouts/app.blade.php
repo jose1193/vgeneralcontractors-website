@@ -31,28 +31,68 @@
         [x-cloak] {
             display: none !important;
         }
-    </style>
-    <style>
+
+        /* Modern Dashboard Styling */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background-color: #e5e7eb;
-            border-radius: 9px;
+            background-color: #1e293b;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background-color: #6b7280;
-            border-radius: 7px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background-color: #e7c104;
-            border-radius: 7px;
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        /* Dashboard Cards Animation */
+        .dashboard-card {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glowing Effect */
+        .glow-green {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .glow-orange {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
         }
     </style>
-    <!-- En la sección head -->
+
+    <!-- Meta tags and other head content remain the same -->
     <meta name="generator" content="V General Contractors Blog">
     <meta name="robots" content="index, follow">
     @if (isset($post))
@@ -94,23 +134,37 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-slate-900">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         @livewire('navigation-menu')
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
+            <header class="bg-slate-800/50 backdrop-blur-lg border-b border-slate-700/50 shadow-xl">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+                    <div class="flex items-center justify-between">
+                        <div>
+                            {{ $header }}
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button
+                                class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-green-500/25">
+                                <span class="text-sm font-medium">Export Data</span>
+                            </button>
+                            <button
+                                class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-emerald-500/25">
+                                <span class="text-sm font-medium">Team Member</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </header>
         @endif
 
         <!-- Page Content -->
-        <main>
+        <main class="relative">
             @hasSection('content')
                 @yield('content')
             @else
@@ -118,8 +172,8 @@
             @endif
         </main>
 
-        <footer class="bg-transparent py-4 text-center text-gray-600 dark:text-gray-400">
-            <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
+        <footer class="bg-slate-800/30 backdrop-blur-sm py-6 text-center border-t border-slate-700/50 mt-12">
+            <p class="text-slate-400">&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>
     @stack('modals')
