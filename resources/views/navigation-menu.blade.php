@@ -270,9 +270,18 @@
         </div>
 
         <div class="hidden sm:flex sm:items-center sm:ms-6">
-            <!-- Language Switcher -->
+            <!-- Display Date -->
             <div class="me-3">
-                <x-language-switcher />
+                <button
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                    <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Display Date
+                </button>
             </div>
 
             <!-- Teams Dropdown -->
@@ -283,8 +292,7 @@
                             <span class="inline-flex rounded-md">
                                 <button type="button"
                                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                    {{ Auth::user()->currentTeam->name }}
-
+                                    Team Member
                                     <svg class="ms-2 -me-0.5 size-4" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                         stroke="currentColor">
@@ -304,12 +312,12 @@
 
                                 <!-- Team Settings -->
                                 <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                    {{ __('team_settings') }}
+                                    {{ __('Team Settings') }}
                                 </x-dropdown-link>
 
                                 @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                                     <x-dropdown-link href="{{ route('teams.create') }}">
-                                        {{ __('create_new_team') }}
+                                        {{ __('Create New Team') }}
                                     </x-dropdown-link>
                                 @endcan
 
@@ -362,16 +370,16 @@
                     <x-slot name="content">
                         <!-- Account Management -->
                         <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('manage_account') }}
+                            {{ __('Manage Account') }}
                         </div>
 
                         <x-dropdown-link href="{{ route('profile.show') }}">
-                            {{ __('profile') }}
+                            {{ __('Profile') }}
                         </x-dropdown-link>
 
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                             <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                {{ __('api_tokens') }}
+                                {{ __('API Tokens') }}
                             </x-dropdown-link>
                         @endif
 
@@ -383,7 +391,7 @@
 
                             <x-dropdown-link href="{{ secure_url(route('logout', [], false)) }}"
                                 @click.prevent="$root.submit();">
-                                {{ __('log_out') }}
+                                {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>

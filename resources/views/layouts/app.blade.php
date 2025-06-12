@@ -97,33 +97,80 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        @livewire('navigation-menu')
+    <div x-data="{ sidebarOpen: true }" class="flex h-screen bg-gray-200 dark:bg-gray-900">
+        <!-- Sidebar -->
+        <aside class="flex-shrink-0 w-64 py-4 px-6 lg:block" :class="{ 'block': sidebarOpen, 'hidden': !sidebarOpen }">
+            <div class="flex items-center">
+                <a href="{{ route('dashboard') }}">
+                    <x-application-mark />
+                </a>
+                <h1 class="text-lg font-bold text-gray-800 dark:text-white ml-2">
+                    {{ config('app.name', 'VGeneralContractors') }}</h1>
+            </div>
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+            <nav class="mt-8">
+                <a class="flex items-center mt-4 py-2 px-6 bg-gray-300 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-200"
+                    href="{{ route('dashboard') }}">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                    </svg>
+                    <span class="mx-3">{{ __('Dashboard') }}</span>
+                </a>
+                {{-- Add other nav links here --}}
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Navbar -->
+            <header
+                class="flex justify-between items-center py-4 px-6 bg-white dark:bg-gray-800 border-b-4 border-indigo-600">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6H20M4 12H20M4 18H11Z" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <!-- Search bar -->
+                    <div class="relative mx-4 lg:mx-0">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+                        <input class="w-full pl-10 pr-4 py-2 border rounded-md" type="text"
+                            placeholder="Start Search Here...">
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    @livewire('navigation-menu')
                 </div>
             </header>
-        @endif
 
-        <!-- Page Content -->
-        <main>
-            @hasSection('content')
-                @yield('content')
-            @else
-                {{ $slot ?? '' }}
-            @endif
-        </main>
+            <!-- Main content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 dark:bg-gray-900">
+                <div class="container mx-auto px-6 py-8">
+                    @if (isset($header))
+                        <div>
+                            {{ $header }}
+                        </div>
+                    @endif
 
-        <footer class="bg-transparent py-4 text-center text-gray-600 dark:text-gray-400">
-            <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
-        </footer>
+                    {{ $slot }}
+                </div>
+            </main>
+        </div>
     </div>
-    @stack('modals')
 
+    @stack('modals')
     @livewireScripts
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
