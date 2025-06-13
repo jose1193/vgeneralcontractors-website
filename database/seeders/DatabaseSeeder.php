@@ -66,13 +66,17 @@ class DatabaseSeeder extends Seeder
             // Añade más según sea necesario
         ];
 
-        // Permisos solo para appointment
-        $appointmentPermissions = [
-            'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT'
+        // Permisos limitados para admin@vgeneralcontractors.com
+        // Solo appointments, call records y blog posts - SIN administración, services ni portfolio
+        $limitedAdminPermissions = [
+            // Appointments - acceso completo
+            'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT',
+            // Call Records - solo lectura de usuarios para acceder a call records
+            'READ_USER',
+            // Blog Posts - acceso completo para gestionar contenido
+            'CREATE_POST', 'READ_POST', 'UPDATE_POST', 'DELETE_POST', 'RESTORE_POST',
+            'CREATE_BLOG_CATEGORY', 'READ_BLOG_CATEGORY', 'UPDATE_BLOG_CATEGORY', 'DELETE_BLOG_CATEGORY', 'RESTORE_BLOG_CATEGORY'
         ];
-
-        // Add READ_USER permission to allow access to call records
-        $appointmentPermissions[] = 'READ_USER';
 
         // Todos los permisos excepto los de gestión de usuarios
         $nonUserManagementPermissions = array_diff($allPermissions, $userManagementPermissions);
@@ -99,8 +103,8 @@ class DatabaseSeeder extends Seeder
         $adminUser2->assignRole('Admin');
         // END SECOND ADMIN
 
-        // APPOINTMENT ADMIN USER
-        $adminAppointmentUser = User::factory()->create([
+        // LIMITED ADMIN USER - Solo appointments, call records y blog
+        $limitedAdminUser = User::factory()->create([
             'name' => 'Administrator',
             'email' => 'admin@vgeneralcontractors.com',
             'username' => 'adminAppointment',
@@ -108,11 +112,11 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $adminAppointmentUser->assignRole('Admin');
+        $limitedAdminUser->assignRole('Admin');
         
-        // Give the appointment admin user access only to appointments and call records
-        $adminAppointmentUser->syncPermissions($appointmentPermissions);
-        // END APPOINTMENT ADMIN USER
+        // Asignar solo permisos limitados (SIN administración, services ni portfolio)
+        $limitedAdminUser->syncPermissions($limitedAdminPermissions);
+        // END LIMITED ADMIN USER
 
         $userUser = User::factory()->create([
             'name' => 'User',
@@ -133,7 +137,7 @@ class DatabaseSeeder extends Seeder
         $otherUser->assignRole('Other');
 
         // Asignar permisos a los roles
-        // Para Admin: todos los permisos
+        // Para Admin: todos los permisos (solo para info@vgeneralcontractors.com y josegonzalezcr2794@gmail.com)
         $adminRole->givePermissionTo($allPermissions);
         
         // Para User: todos excepto gestión de usuarios
@@ -196,7 +200,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@vgeneralcontractors.com',
                 'phone' => '+13466920757',
                 'type' => 'Admin',
-                'user_id' => $adminAppointmentUser->id,
+                'user_id' => $limitedAdminUser->id,
             ]
         ];
 
