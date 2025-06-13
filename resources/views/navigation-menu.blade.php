@@ -197,7 +197,7 @@
                     </svg>
                 </a>
                 @if (!request()->routeIs('dashboard'))
-                    <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
+                    <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
                         style="background-color: #2C2E36;">
                         {{ __('dashboard') }}
                         <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -221,7 +221,7 @@
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300"
+                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -258,7 +258,7 @@
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300"
+                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -301,7 +301,7 @@
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300"
+                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -334,7 +334,7 @@
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300"
+                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -371,7 +371,7 @@
                         </svg>
                     </a>
                     @if (!request()->routeIs('portfolios'))
-                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
+                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
                             {{ __('portfolio') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -381,28 +381,7 @@
                 </div>
             @endif
 
-            <!-- Translation Demo -->
-            @auth
-                <div class="relative group">
-                    <a href="{{ route('translation-demo') }}"
-                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('translation-demo') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !request()->routeIs('translation-demo') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !request()->routeIs('translation-demo') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
-                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                        </svg>
-                    </a>
-                    @if (!request()->routeIs('translation-demo'))
-                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
-                            style="background-color: #2C2E36;">
-                            {{ __('language') }} {{ __('demo') }}
-                            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
-                                style="background-color: #2C2E36;"></div>
-                        </div>
-                    @endif
-                </div>
-            @endauth
+
         </div>
     </div>
 </div>
