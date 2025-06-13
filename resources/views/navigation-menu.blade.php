@@ -362,7 +362,7 @@
             @endif
 
             <!-- Call Records -->
-            @if (auth()->check() && auth()->user()->can('READ_USER'))
+            @if (auth()->check() && auth()->user()->can('READ_CALL_RECORD'))
                 <div class="relative group">
                     <a href="{{ route('call-records') }}"
                         class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
@@ -586,7 +586,7 @@
             @endif
 
             <!-- Call Records -->
-            @if (auth()->check() && auth()->user()->can('READ_USER'))
+            @if (auth()->check() && auth()->user()->can('READ_CALL_RECORD'))
                 <a href="{{ route('call-records') }}"
                     class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
                     <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

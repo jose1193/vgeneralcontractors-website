@@ -19,24 +19,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear los roles principales (Capitalize format)
+        // Crear los roles principales
+        $superAdminRole = Role::create([
+            'name' => 'Super Admin',
+            'uuid' => Uuid::uuid4()->toString()
+        ]);
+        
         $adminRole = Role::create([
             'name' => 'Admin',
             'uuid' => Uuid::uuid4()->toString()
         ]);
+        
         $userRole = Role::create([
             'name' => 'User',
-            'uuid' => Uuid::uuid4()->toString()
-        ]);
-        $otherRole = Role::create([
-            'name' => 'Other',
             'uuid' => Uuid::uuid4()->toString()
         ]);
 
         // Definir modelos para permisos
         $models = [
             'USER', 'EMAIL_DATA', 'SERVICE_CATEGORY', 'PORTFOLIO', 'COMPANY_DATA', 
-            'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO'
+            'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO', 'CALL_RECORD'
         ];
 
         // Definir acciones para permisos
@@ -55,32 +57,22 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Permisos para gestionar usuarios (SOLO para admins completos)
-        $userManagementPermissions = [
-            'CREATE_USER', 'READ_USER', 'UPDATE_USER', 'DELETE_USER', 'RESTORE_USER'
-        ];
+        // Permisos para Super Admin (acceso completo a todo)
+        $superAdminPermissions = $allPermissions; // Todos los permisos
 
-        // Permisos para "Other" (muy limitados)
-        $otherPermissions = [
-            'READ_POST'  // Solo leer posts
-        ];
-
-        // Permisos limitados para admin@vgeneralcontractors.com
-        // Solo appointments y call records - SIN administración, services, portfolio ni blog
-        $limitedAdminPermissions = [
-            // Appointments - acceso completo
+        // Permisos para Admin (solo Appointments y Call Records)
+        $adminPermissions = [
             'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT',
-            // Call Records - necesita READ_USER para acceder a call records
-            'READ_USER'
+            'CREATE_CALL_RECORD', 'READ_CALL_RECORD', 'UPDATE_CALL_RECORD', 'DELETE_CALL_RECORD', 'RESTORE_CALL_RECORD'
         ];
 
-        // Permisos para user@user.com (SOLO lectura de appointments - SIN call records, SIN administración, SIN services, SIN portfolio, SIN blog)
-        $basicUserPermissions = [
-            'READ_APPOINTMENT'  // Solo ver appointments, nada más
+        // Permisos para User (solo Call Records)
+        $userPermissions = [
+            'CREATE_CALL_RECORD', 'READ_CALL_RECORD', 'UPDATE_CALL_RECORD', 'DELETE_CALL_RECORD', 'RESTORE_CALL_RECORD'
         ];
 
         // Crear usuarios para cada rol
-        $adminUser = User::factory()->create([
+        $superAdminUser = User::factory()->create([
             'name' => 'Victor Lara',
             'email' => 'info@vgeneralcontractors.com',
             'username' => 'vgeneralcontractors',
@@ -88,21 +80,21 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $adminUser->assignRole('Admin');
+        $superAdminUser->assignRole('Super Admin');
 
-        // SECOND ADMIN
-        $adminUser2 = User::factory()->create([
+        // SECOND SUPER ADMIN
+        $superAdminUser2 = User::factory()->create([
             'name' => 'Argenis Gonzalez',
             'email' => 'josegonzalezcr2794@gmail.com',
             'username' => 'argenis692',
             'password' => bcrypt('argenis01='),
             'uuid' => Uuid::uuid4()->toString()
         ]);
-        $adminUser2->assignRole('Admin');
-        // END SECOND ADMIN
+        $superAdminUser2->assignRole('Super Admin');
+        // END SECOND SUPER ADMIN
 
-        // LIMITED ADMIN USER - Solo appointments y call records
-        $limitedAdminUser = User::factory()->create([
+        // ADMIN USER - Solo appointments y call records
+        $adminUser = User::factory()->create([
             'name' => 'Administrator',
             'email' => 'admin@vgeneralcontractors.com',
             'username' => 'adminAppointment',
@@ -110,13 +102,10 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $limitedAdminUser->assignRole('User'); // Cambiar a 'User' para evitar herencia de permisos de Admin
-        
-        // Asignar solo permisos limitados (SIN administración, services, portfolio ni blog)
-        $limitedAdminUser->syncPermissions($limitedAdminPermissions);
-        // END LIMITED ADMIN USER
+        $adminUser->assignRole('Admin');
+        // END ADMIN USER
 
-        // BASIC USER - Solo lectura de appointments
+        // USER - Solo call records
         $userUser = User::factory()->create([
             'name' => 'User',
             'email' => 'user@user.com',
@@ -126,28 +115,12 @@ class DatabaseSeeder extends Seeder
             'terms_and_conditions' => true
         ]);
         $userUser->assignRole('User');
-        
-        // Asignar solo permisos básicos (SOLO lectura de appointments)
-        $userUser->syncPermissions($basicUserPermissions);
-        // END BASIC USER
-
-        $otherUser = User::factory()->create([
-            'name' => 'Other User',
-            'email' => 'other@example.com',
-            'password' => bcrypt('password'),
-            'uuid' => Uuid::uuid4()->toString()
-        ]);
-        $otherUser->assignRole('Other');
+        // END USER
 
         // Asignar permisos a los roles
-        // Para Admin: todos los permisos (solo para info@vgeneralcontractors.com y josegonzalezcr2794@gmail.com)
-        $adminRole->givePermissionTo($allPermissions);
-        
-        // Para User: NO asignar permisos al rol, se asignan individualmente a cada usuario
-        // $userRole->givePermissionTo($basicUserPermissions);  // Comentado para control individual
-        
-        // Para Other: solo permisos específicos
-        $otherRole->givePermissionTo($otherPermissions);
+        $superAdminRole->givePermissionTo($superAdminPermissions);
+        $adminRole->givePermissionTo($adminPermissions);
+        $userRole->givePermissionTo($userPermissions);
 
         // Crear la categoría "General" para blog
         BlogCategory::create([
@@ -189,21 +162,21 @@ class DatabaseSeeder extends Seeder
                 'email' => 'collection@vgeneralcontractors.com',
                 'phone' => '+17133646240',
                 'type' => 'Collections',
-                'user_id' => $adminUser->id,
+                'user_id' => $superAdminUser->id,
             ],
             [
                 'description' => 'Correo para información general',
                 'email' => 'info@vgeneralcontractors.com',
                 'phone' => '+13466920757',
                 'type' => 'Info',
-                'user_id' => $adminUser->id,
+                'user_id' => $superAdminUser->id,
             ],
             [
                 'description' => 'Correo para citas y agendamiento',
                 'email' => 'admin@vgeneralcontractors.com',
                 'phone' => '+13466920757',
                 'type' => 'Admin',
-                'user_id' => $limitedAdminUser->id,
+                'user_id' => $adminUser->id,
             ]
         ];
 
@@ -230,7 +203,7 @@ class DatabaseSeeder extends Seeder
             ServiceCategory::create([
                 'uuid' => (string) Str::uuid(),
                 'category' => $category,
-                'user_id' => $adminUser->id,
+                'user_id' => $superAdminUser->id,
             ]);
         }
     }
