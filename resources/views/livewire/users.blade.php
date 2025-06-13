@@ -9,7 +9,7 @@
         @endif
 
         <!-- Main container -->
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
             <div class="p-6">
                 <!-- Add user button -->
                 <div
