@@ -20,8 +20,8 @@
         </div>
 
         {{-- Main content area --}}
-        <div class="py-2 sm:py-12 md:py-6 lg:py-8">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:py-10 sm:px-6 lg:px-8">
+        <div class="py-2 sm:py-4 md:py-2 lg:py-2">
+            <div class="max-w-7xl mx-auto py-2 px-4 sm:py-4 sm:px-6 lg:px-8">
                 <!-- Main container -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
                     <div class="p-6">
