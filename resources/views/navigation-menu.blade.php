@@ -224,7 +224,7 @@
                     <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
-                            <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
+                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
                                 {{ __('administration') }}</div>
                             @can('READ_COMPANY_DATA')
                                 <a href="{{ route('company-data') }}"
@@ -261,7 +261,7 @@
                     <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
-                            <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
+                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
                                 {{ __('services') }}</div>
                             @can('READ_EMAIL_DATA')
                                 <a href="{{ route('email-datas') }}"
@@ -304,7 +304,7 @@
                     <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
-                            <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
+                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
                                 {{ __('appointments') }}</div>
                             <a href="{{ route('appointments.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('appointments.index') ? 'bg-gray-700 text-white' : '' }}">
@@ -337,7 +337,7 @@
                     <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
-                            <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
+                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
                                 {{ __('blog_management') }}</div>
                             @can('READ_POST')
                                 <a href="{{ route('admin.posts') }}"
