@@ -1105,5 +1105,6 @@
     "view_google_maps": "Ver en Google Maps:",
     "open_maps": "Abrir en Maps",
     "copy_link": "Copiar Enlace",
-    "copied": "¡Copiado!"
+    "copied": "¡Copiado!",
+    "scheduling_conflict": "Conflicto de Programación"
 }

@@ -1111,5 +1111,6 @@
     "view_google_maps": "View on Google Maps:",
     "open_maps": "Open in Maps",
     "copy_link": "Copy Link",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "scheduling_conflict": "Scheduling Conflict"
 }

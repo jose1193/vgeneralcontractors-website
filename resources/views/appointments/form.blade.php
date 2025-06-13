@@ -5,11 +5,11 @@
         <div class="py-8">
             <div class="flex justify-between my-5">
                 <h2 class="text-2xl font-semibold leading-tight text-white">
-                    {{ isset($appointment->uuid) ? 'Edit Appointment' : 'Create Appointment' }}
+                    {{ isset($appointment->uuid) ? __('edit_appointment') : __('create_appointment') }}
                 </h2>
                 <a href="{{ route('appointments.index') }}"
                     class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    Back to List
+                    {{ __('back_to_list') }}
                 </a>
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
@@ -36,7 +36,7 @@
                             </svg>
 
                             <span
-                                id="submit-button-text">{{ isset($appointment->uuid) ? 'UPDATE APPOINTMENT' : 'CREATE APPOINTMENT' }}</span>
+                                id="submit-button-text">{{ isset($appointment->uuid) ? __('update_appointment_btn') : __('create_appointment_btn') }}</span>
                         </button>
                     </div>
                 </form>
@@ -61,11 +61,11 @@
                 submitButton.disabled = isLoading;
                 if (isLoading) {
                     submitSpinner.classList.remove('hidden');
-                    submitButtonText.textContent = 'Sending...';
+                    submitButtonText.textContent = '{{ __('sending') }}...';
                 } else {
                     submitSpinner.classList.add('hidden');
                     submitButtonText.textContent =
-                        '{{ isset($appointment->uuid) ? 'Update Appointment' : 'Create Appointment' }}';
+                        '{{ isset($appointment->uuid) ? __('update_appointment_btn') : __('create_appointment_btn') }}';
                 }
             }
 
@@ -93,10 +93,10 @@
                             setLoadingState(false);
 
                             Swal.fire({
-                                title: 'Success!',
+                                title: '{{ __('success_title') }}',
                                 text: data.message,
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: '{{ __('swal_ok') }}'
                             }).then(() => {
                                 // Use redirectUrl from response if available
                                 window.location.href = data.redirectUrl ||
@@ -106,10 +106,10 @@
                             // Check specifically for scheduling conflicts
                             if (data.errors && data.errors.schedule_conflict) {
                                 Swal.fire({
-                                    title: 'Scheduling Conflict',
+                                    title: '{{ __('scheduling_conflict') }}',
                                     text: data.errors.schedule_conflict,
                                     icon: 'warning',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: '{{ __('swal_ok') }}'
                                 });
                             } else {
                                 let errorMessage = data.message;
@@ -121,10 +121,10 @@
                                 }
 
                                 Swal.fire({
-                                    title: 'Error!',
+                                    title: '{{ __('error_title') }}',
                                     text: errorMessage,
                                     icon: 'error',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: '{{ __('swal_ok') }}'
                                 });
                             }
 
@@ -135,10 +135,10 @@
                     .catch(error => {
                         console.error('Error:', error);
                         Swal.fire({
-                            title: 'Error!',
-                            text: 'An unexpected error occurred. Please try again.',
+                            title: '{{ __('error_title') }}',
+                            text: '{{ __('unexpected_error_occurred') }}',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: '{{ __('swal_ok') }}'
                         });
 
                         // Hide spinner and enable button on error
@@ -177,13 +177,14 @@
 
                     // WhatsApp
                     shareWhatsApp.href =
-                        `https://wa.me/?text=Ubicación para inspección: ${encodeURIComponent(address)} - ${encodeURIComponent(mapsUrl)}`;
+                        `https://wa.me/?text={{ __('location_for_inspection') }}: ${encodeURIComponent(address)} - ${encodeURIComponent(mapsUrl)}`;
                     shareWhatsApp.target = '_blank';
 
                     // Email
-                    const subject = encodeURIComponent('Ubicación para inspección');
+                    const subject = encodeURIComponent('{{ __('location_for_inspection') }}');
                     const body = encodeURIComponent(
-                        `La ubicación para la inspección es: ${address}\n\nVer en Google Maps: ${mapsUrl}`);
+                        `{{ __('location_for_inspection') }}: ${address}\n\n{{ __('view_google_maps') }}: ${mapsUrl}`
+                    );
                     shareEmail.href = `mailto:?subject=${subject}&body=${body}`;
 
                     // Maps
@@ -197,7 +198,7 @@
                             // Mostrar mensaje de confirmación
                             const originalText = this.innerHTML;
                             this.innerHTML =
-                                '<svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ¡Copiado!';
+                                '<svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> {{ __('copied') }}';
                             setTimeout(() => {
                                 this.innerHTML = originalText;
                             }, 2000);
