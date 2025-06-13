@@ -226,108 +226,197 @@
 
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Sales Overview Chart -->
+            <!-- Monthly Leads Chart -->
             <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">Sales Overview</h3>
-                    <div class="flex space-x-2">
-                        <button
-                            class="px-3 py-1 text-xs bg-yellow-500 text-gray-900 rounded-full font-medium">7D</button>
-                        <button class="px-3 py-1 text-xs text-gray-400 hover:text-white rounded-full">30D</button>
-                        <button class="px-3 py-1 text-xs text-gray-400 hover:text-white rounded-full">90D</button>
-                    </div>
+                    <h3 class="text-lg font-semibold text-white">Monthly Leads</h3>
+                    <div class="text-xs text-gray-400">{{ date('Y') }}</div>
                 </div>
+
+                @php
+                    $currentYear = date('Y');
+                    $monthlyData = [];
+                    $maxLeads = 0;
+
+                    // Get leads count for each month of current year
+                    for ($month = 1; $month <= 12; $month++) {
+                        $leadsCount = \App\Models\Appointment::whereYear('created_at', $currentYear)
+                            ->whereMonth('created_at', $month)
+                            ->count();
+
+                        $monthlyData[] = [
+                            'month' => $month,
+                            'count' => $leadsCount,
+                            'name' => date('M', mktime(0, 0, 0, $month, 1)),
+                        ];
+
+                        if ($leadsCount > $maxLeads) {
+                            $maxLeads = $leadsCount;
+                        }
+                    }
+
+                    // Calculate heights as percentages
+                    foreach ($monthlyData as &$data) {
+                        $data['height'] = $maxLeads > 0 ? ($data['count'] / $maxLeads) * 100 : 0;
+                    }
+                @endphp
 
                 <!-- Chart Area -->
-                <div class="h-64 bg-gray-900 rounded-lg flex items-end justify-between p-4">
-                    <!-- Simulated Bar Chart -->
-                    <div class="flex items-end space-x-2 w-full">
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 60%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 80%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 45%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 90%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 70%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 85%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 95%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 75%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 65%"></div>
-                        <div class="bg-yellow-500 rounded-t w-8" style="height: 88%"></div>
+                <div class="h-64 bg-gray-900 rounded-lg flex items-end justify-between p-4 relative">
+                    <!-- Y-axis labels -->
+                    <div class="absolute left-2 top-4 bottom-4 flex flex-col justify-between text-xs text-gray-500">
+                        <span>{{ $maxLeads }}</span>
+                        <span>{{ intval($maxLeads * 0.75) }}</span>
+                        <span>{{ intval($maxLeads * 0.5) }}</span>
+                        <span>{{ intval($maxLeads * 0.25) }}</span>
+                        <span>0</span>
+                    </div>
+
+                    <!-- Bar Chart with Real Data -->
+                    <div class="flex items-end justify-between w-full ml-8 space-x-1">
+                        @foreach ($monthlyData as $data)
+                            <div class="flex flex-col items-center group relative">
+                                <div class="bg-yellow-500 rounded-t transition-all duration-500 hover:bg-yellow-400 cursor-pointer"
+                                    style="height: {{ $data['height'] }}%; width: 20px; min-height: 2px;"
+                                    title="{{ $data['name'] }}: {{ $data['count'] }} leads">
+                                </div>
+
+                                <!-- Tooltip on hover -->
+                                <div
+                                    class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+                                    {{ $data['count'] }} leads
+                                    <div
+                                        class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
-                <div class="flex justify-between text-xs text-gray-400 mt-4">
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                    <span>Sun</span>
+                <!-- Month labels -->
+                <div class="flex justify-between text-xs text-gray-400 mt-4 ml-8">
+                    @foreach ($monthlyData as $data)
+                        <span class="text-center" style="width: 20px;">{{ $data['name'] }}</span>
+                    @endforeach
+                </div>
+
+                <!-- Summary stats -->
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <div class="flex justify-between text-sm">
+                        <div class="text-gray-400">
+                            Total Leads: <span
+                                class="text-white font-semibold">{{ array_sum(array_column($monthlyData, 'count')) }}</span>
+                        </div>
+                        <div class="text-gray-400">
+                            Peak Month: <span class="text-yellow-400 font-semibold">
+                                @php
+                                    $peakMonth = collect($monthlyData)->sortByDesc('count')->first();
+                                    echo $peakMonth['name'] . ' (' . $peakMonth['count'] . ')';
+                                @endphp
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Customer Analytics -->
+            <!-- Lead Sources Analytics -->
             <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">Customer Analytics</h3>
-                    <button class="text-gray-400 hover:text-white">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                        </svg>
-                    </button>
+                    <h3 class="text-lg font-semibold text-white">Lead Sources</h3>
+                    <div class="text-xs text-gray-400">Current Year</div>
                 </div>
 
-                <!-- Donut Chart Simulation -->
+                @php
+                    $leadSources = \App\Models\Appointment::selectRaw('lead_source, COUNT(*) as count')
+                        ->whereYear('created_at', date('Y'))
+                        ->whereNotNull('lead_source')
+                        ->groupBy('lead_source')
+                        ->get();
+
+                    $totalLeads = $leadSources->sum('count');
+                    $sourceData = [];
+                    $colors = [
+                        'Website' => ['bg' => 'bg-blue-500', 'text' => 'text-blue-400'],
+                        'Facebook Ads' => ['bg' => 'bg-green-500', 'text' => 'text-green-400'],
+                        'Retell AI' => ['bg' => 'bg-purple-500', 'text' => 'text-purple-400'],
+                        'Reference' => ['bg' => 'bg-yellow-500', 'text' => 'text-yellow-400'],
+                    ];
+
+                    foreach ($leadSources as $source) {
+                        $percentage = $totalLeads > 0 ? round(($source->count / $totalLeads) * 100, 1) : 0;
+                        $sourceData[] = [
+                            'name' => $source->lead_source,
+                            'count' => $source->count,
+                            'percentage' => $percentage,
+                            'color' => $colors[$source->lead_source] ?? [
+                                'bg' => 'bg-gray-500',
+                                'text' => 'text-gray-400',
+                            ],
+                        ];
+                    }
+
+                    // Calculate stroke-dasharray values for donut chart
+                    $circumference = 2 * pi() * 15.9155;
+                    $currentOffset = 0;
+                @endphp
+
+                <!-- Donut Chart with Real Data -->
                 <div class="flex items-center justify-center mb-6">
                     <div class="relative w-32 h-32">
                         <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
                             <!-- Background circle -->
                             <path class="text-gray-900" stroke="currentColor" stroke-width="4" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <!-- Progress circles -->
-                            <path class="text-blue-500" stroke="currentColor" stroke-width="4" fill="none"
-                                stroke-dasharray="40, 100"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="text-green-500" stroke="currentColor" stroke-width="4" fill="none"
-                                stroke-dasharray="30, 100" stroke-dashoffset="-40"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="text-yellow-500" stroke="currentColor" stroke-width="4" fill="none"
-                                stroke-dasharray="30, 100" stroke-dashoffset="-70"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+
+                            @foreach ($sourceData as $index => $data)
+                                @php
+                                    $strokeLength = ($data['percentage'] / 100) * $circumference;
+                                    $strokeDasharray = $strokeLength . ', ' . $circumference;
+                                    $strokeDashoffset = -$currentOffset;
+                                    $currentOffset += $strokeLength;
+
+                                    $colorClass = match ($data['name']) {
+                                        'Website' => 'text-blue-500',
+                                        'Facebook Ads' => 'text-green-500',
+                                        'Retell AI' => 'text-purple-500',
+                                        'Reference' => 'text-yellow-500',
+                                        default => 'text-gray-500',
+                                    };
+                                @endphp
+
+                                <path class="{{ $colorClass }}" stroke="currentColor" stroke-width="4"
+                                    fill="none" stroke-dasharray="{{ $strokeDasharray }}"
+                                    stroke-dashoffset="{{ $strokeDashoffset }}"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    style="transition: stroke-dasharray 1s ease-in-out;" />
+                            @endforeach
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-white">2.4K</div>
+                                <div class="text-2xl font-bold text-white">{{ $totalLeads }}</div>
                                 <div class="text-xs text-gray-400">Total</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Legend -->
+                <!-- Legend with Real Data -->
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-300">New Customers</span>
+                    @forelse($sourceData as $data)
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 {{ $data['color']['bg'] }} rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-300">{{ $data['name'] }}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-semibold text-white">{{ $data['percentage'] }}%</span>
+                                <div class="text-xs {{ $data['color']['text'] }}">{{ $data['count'] }} leads</div>
+                            </div>
                         </div>
-                        <span class="text-sm font-semibold text-white">40%</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-300">Returning</span>
-                        </div>
-                        <span class="text-sm font-semibold text-white">30%</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                            <span class="text-sm text-gray-300">Referrals</span>
-                        </div>
-                        <span class="text-sm font-semibold text-white">30%</span>
-                    </div>
+                    @empty
+                        <div class="text-center text-gray-400 text-sm">No lead source data available</div>
+                    @endforelse
                 </div>
             </div>
         </div>
