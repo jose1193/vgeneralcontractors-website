@@ -100,14 +100,14 @@
     <div class="min-h-screen" style="background-color: #141414;">
         @livewire('navigation-menu')
 
-        <!-- Page Header (if provided) -->
-        @isset($header)
-            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4" style="background-color: #141414;">
+        <!-- Page Heading - Only show if header slot is provided -->
+        @if (isset($header))
+            <header class="bg-white dark:bg-gray-800 shadow hidden">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
-        @endisset
+        @endif
 
         <!-- Page Content with sidebar margin -->
         <main class="ml-18 sm:ml-20 lg:ml-22 {{ isset($header) ? '' : 'pt-16' }}">

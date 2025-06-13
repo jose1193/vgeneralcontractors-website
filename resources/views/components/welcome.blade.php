@@ -29,9 +29,9 @@
                     <div class="flex-1 min-w-0">
                         <h3
                             class="text-sm font-semibold text-white group-hover:text-green-300 transition-colors duration-300">
-                            Create Appointment</h3>
+                            {{ __('create_appointment') }}</h3>
                         <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-                            Schedule new client meeting</p>
+                            {{ __('schedule_new_client_meeting') }}</p>
                     </div>
                 </div>
                 <div
@@ -56,9 +56,9 @@
                     <div class="flex-1 min-w-0">
                         <h3
                             class="text-sm font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
-                            Calendar View</h3>
-                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">View
-                            all appointments</p>
+                            {{ __('calendar_view_dashboard') }}</h3>
+                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                            {{ __('view_all_appointments') }}</p>
                     </div>
                 </div>
                 <div
@@ -84,9 +84,9 @@
                     <div class="flex-1 min-w-0">
                         <h3
                             class="text-sm font-semibold text-white group-hover:text-yellow-300 transition-colors duration-300">
-                            Manage Posts</h3>
-                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Create
-                            & edit blog posts</p>
+                            {{ __('manage_posts') }}</h3>
+                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                            {{ __('create_edit_blog_posts') }}</p>
                     </div>
                 </div>
                 <div
@@ -112,9 +112,9 @@
                     <div class="flex-1 min-w-0">
                         <h3
                             class="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors duration-300">
-                            Portfolio</h3>
-                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Manage
-                            project gallery</p>
+                            {{ __('portfolio_dashboard') }}</h3>
+                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                            {{ __('manage_project_gallery') }}</p>
                     </div>
                 </div>
                 <div
@@ -129,7 +129,7 @@
             <div style="background-color: #2C2E36;"
                 class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">Pending Appointments</h3>
+                    <h3 class="text-gray-300 text-sm font-medium">{{ __('pending_appointments') }}</h3>
                     <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -143,7 +143,7 @@
                     @endphp
                     <div class="text-3xl font-bold text-white mb-1">{{ $pendingAppointments }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">Awaiting confirmation</span>
+                        <span class="text-gray-400">{{ __('awaiting_confirmation') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -163,7 +163,7 @@
             <div style="background-color: #2C2E36;"
                 class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">New Leads</h3>
+                    <h3 class="text-gray-300 text-sm font-medium">{{ __('new_leads') }}</h3>
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -177,7 +177,7 @@
                     @endphp
                     <div class="text-3xl font-bold text-white mb-1">{{ $newLeads }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">Require follow-up</span>
+                        <span class="text-gray-400">{{ __('require_follow_up') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -197,7 +197,7 @@
             <div style="background-color: #2C2E36;"
                 class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">Published Posts</h3>
+                    <h3 class="text-gray-300 text-sm font-medium">{{ __('published_posts') }}</h3>
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -211,7 +211,7 @@
                     @endphp
                     <div class="text-3xl font-bold text-white mb-1">{{ $publishedPosts }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">Blog articles live</span>
+                        <span class="text-gray-400">{{ __('blog_articles_live') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -234,7 +234,7 @@
             <div style="background-color: #2C2E36;"
                 class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">Monthly Leads</h3>
+                    <h3 class="text-lg font-semibold text-white">{{ __('monthly_leads') }}</h3>
                     <div class="text-xs text-gray-400">{{ date('Y') }}</div>
                 </div>
 
@@ -283,13 +283,13 @@
                             <div class="flex flex-col items-center group relative">
                                 <div class="bg-yellow-500 rounded-t transition-all duration-500 hover:bg-yellow-400 cursor-pointer"
                                     style="height: {{ $data['height'] }}%; width: 20px; min-height: 2px;"
-                                    title="{{ $data['name'] }}: {{ $data['count'] }} leads">
+                                    title="{{ $data['name'] }}: {{ $data['count'] }} {{ __('leads') }}">
                                 </div>
 
                                 <!-- Tooltip on hover -->
                                 <div
                                     class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
-                                    {{ $data['count'] }} leads
+                                    {{ $data['count'] }} {{ __('leads') }}
                                     <div
                                         class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800">
                                     </div>
@@ -310,11 +310,11 @@
                 <div class="mt-4 pt-4 border-t border-gray-700">
                     <div class="flex justify-between text-sm">
                         <div class="text-gray-400">
-                            Total Leads: <span
+                            {{ __('total_leads') }}: <span
                                 class="text-white font-semibold">{{ array_sum(array_column($monthlyData, 'count')) }}</span>
                         </div>
                         <div class="text-gray-400">
-                            Peak Month: <span class="text-yellow-400 font-semibold">
+                            {{ __('peak_month') }}: <span class="text-yellow-400 font-semibold">
                                 @php
                                     $peakMonth = collect($monthlyData)->sortByDesc('count')->first();
                                     echo $peakMonth['name'] . ' (' . $peakMonth['count'] . ')';
@@ -329,8 +329,8 @@
             <div style="background-color: #2C2E36;"
                 class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">Lead Sources</h3>
-                    <div class="text-xs text-gray-400">Current Year</div>
+                    <h3 class="text-lg font-semibold text-white">{{ __('lead_sources') }}</h3>
+                    <div class="text-xs text-gray-400">{{ __('current_year') }}</div>
                 </div>
 
                 @php
@@ -401,7 +401,7 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
                                 <div class="text-3xl font-bold text-white">{{ $totalLeads }}</div>
-                                <div class="text-sm text-gray-400">Total</div>
+                                <div class="text-sm text-gray-400">{{ __('total') }}</div>
                             </div>
                         </div>
                     </div>
@@ -417,11 +417,12 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-sm font-semibold text-white">{{ $data['percentage'] }}%</span>
-                                <div class="text-xs {{ $data['color']['text'] }}">{{ $data['count'] }} leads</div>
+                                <div class="text-xs {{ $data['color']['text'] }}">{{ $data['count'] }}
+                                    {{ __('leads') }}</div>
                             </div>
                         </div>
                     @empty
-                        <div class="text-center text-gray-400 text-sm">No lead source data available</div>
+                        <div class="text-center text-gray-400 text-sm">{{ __('no_lead_source_data') }}</div>
                     @endforelse
                 </div>
             </div>
@@ -431,8 +432,8 @@
         <div class="w-full rounded-lg border border-gray-900 shadow-lg shadow-gray-900/50"
             style="background-color: #2C2E36;">
             <div class="px-6 py-4 border-b border-gray-900">
-                <h3 class="text-lg font-semibold text-white">Recent Leads Activity</h3>
-                <p class="text-sm text-gray-400">Live updates from your latest appointments</p>
+                <h3 class="text-lg font-semibold text-white">{{ __('recent_leads_activity') }}</h3>
+                <p class="text-sm text-gray-400">{{ __('live_updates_latest_appointments') }}</p>
             </div>
             <div class="relative h-80 overflow-hidden">
                 @php
