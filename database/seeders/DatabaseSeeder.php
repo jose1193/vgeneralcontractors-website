@@ -113,7 +113,7 @@ class DatabaseSeeder extends Seeder
             'uuid' => Uuid::uuid4()->toString(),
             'terms_and_conditions' => true
         ]);
-        $limitedAdminUser->assignRole('Admin');
+        $limitedAdminUser->assignRole('User'); // Cambiar a 'User' para evitar herencia de permisos de Admin
         
         // Asignar solo permisos limitados (SIN administración, services ni portfolio)
         $limitedAdminUser->syncPermissions($limitedAdminPermissions);
