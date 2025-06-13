@@ -2,9 +2,10 @@
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Dashboard Header -->
-        <div class="mb-8 text-center">
-            <h2 class="text-xs font-bold text-white mb-2">Your Sales Insights</h2>
-            <p class="text-xs text-gray-400">Track your performance and grow your business</p>
+        <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+            <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">Your Sales Insights</h2>
+            <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">Track your performance and grow your
+                business</p>
         </div>
 
         <!-- KPI Cards -->

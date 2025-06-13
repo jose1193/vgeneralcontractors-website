@@ -101,7 +101,7 @@
         @livewire('navigation-menu')
 
         <!-- Page Content with sidebar margin -->
-        <main class="lg:ml-22 pt-16">
+        <main class="ml-0 sm:ml-0 md:ml-0 lg:ml-24 pt-16">
             @hasSection('content')
                 @yield('content')
             @else
@@ -109,7 +109,7 @@
             @endif
         </main>
 
-        <footer class="lg:ml-22 bg-transparent py-4 text-center text-gray-600">
+        <footer class="ml-0 sm:ml-0 md:ml-0 lg:ml-24 bg-transparent py-4 text-center text-gray-600">
             <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>
