@@ -4,10 +4,10 @@
     <div class="container mx-auto px-4 sm:px-8">
         <div class="py-8">
             <div class="flex justify-between">
-                <h2 class="text-2xl font-semibold leading-tight">Create Appointment</h2>
+                <h2 class="text-2xl font-semibold leading-tight">{{ __('create_appointment') }}</h2>
                 <a href="{{ route('appointments.index') }}"
                     class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    Back to List
+                    {{ __('back_to_list') }}
                 </a>
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
@@ -29,7 +29,7 @@
                                 </path>
                             </svg>
 
-                            <span id="submit-button-text">CREATE APPOINTMENT</span>
+                            <span id="submit-button-text">{{ __('create_appointment_btn') }}</span>
                         </button>
                     </div>
                 </form>
@@ -101,10 +101,10 @@
                 submitButton.disabled = isLoading;
                 if (isLoading) {
                     submitSpinner.classList.remove('hidden');
-                    submitButtonText.textContent = 'Sending...';
+                    submitButtonText.textContent = '{{ __('sending') }}...';
                 } else {
                     submitSpinner.classList.add('hidden');
-                    submitButtonText.textContent = 'Create Appointment';
+                    submitButtonText.textContent = '{{ __('create_appointment_btn') }}';
                 }
             }
 
@@ -132,10 +132,10 @@
                             setLoadingState(false);
 
                             Swal.fire({
-                                title: 'Success!',
+                                title: '{{ __('success_title') }}',
                                 text: data.message,
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: '{{ __('swal_ok') }}'
                             }).then(() => {
                                 // Use redirectUrl from response if available
                                 window.location.href = data.redirectUrl ||
@@ -151,10 +151,10 @@
                             }
 
                             Swal.fire({
-                                title: 'Error!',
+                                title: '{{ __('error_occurred') }}',
                                 text: errorMessage,
                                 icon: 'error',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: '{{ __('swal_ok') }}'
                             });
 
                             // Hide spinner and enable button on error
@@ -164,10 +164,10 @@
                     .catch(error => {
                         console.error('Error:', error);
                         Swal.fire({
-                            title: 'Error!',
-                            text: 'An unexpected error occurred. Please try again.',
+                            title: '{{ __('error_occurred') }}',
+                            text: '{{ __('unexpected_error_occurred') }}',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: '{{ __('swal_ok') }}'
                         });
 
                         // Hide spinner and enable button on error
