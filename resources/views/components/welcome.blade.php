@@ -124,99 +124,100 @@
 
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- New Patient Leads Card -->
+            <!-- Pending Appointments Card -->
             <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">New Patient Leads</h3>
-                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <h3 class="text-gray-300 text-sm font-medium">Pending Appointments</h3>
+                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <div class="text-3xl font-bold text-white mb-1">1,234</div>
+                    @php
+                        $pendingAppointments = \App\Models\Appointment::where('inspection_status', 'Pending')->count();
+                    @endphp
+                    <div class="text-3xl font-bold text-white mb-1">{{ $pendingAppointments }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-green-400 mr-1">↗ +12%</span>
-                        <span class="text-gray-400">vs last month</span>
+                        <span class="text-gray-400">Awaiting confirmation</span>
                     </div>
                 </div>
-                <!-- Mini Chart -->
-                <div class="h-16 bg-gray-900 rounded flex items-end justify-between px-2 py-2">
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 30%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 45%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 60%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 40%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 80%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 70%"></div>
-                    <div class="w-2 bg-green-500 rounded-t" style="height: 90%"></div>
-                </div>
-            </div>
-
-            <!-- Revenue Card -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">Total Revenue</h3>
-                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-3xl font-bold text-white mb-1">$89,421</div>
-                    <div class="flex items-center text-sm">
-                        <span class="text-green-400 mr-1">↗ +8.2%</span>
-                        <span class="text-gray-400">vs last month</span>
-                    </div>
-                </div>
-                <!-- Mini Chart -->
-                <div class="h-16 bg-gray-900 rounded flex items-end justify-between px-2 py-2">
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 50%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 65%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 40%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 75%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 55%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 85%"></div>
-                    <div class="w-2 bg-blue-500 rounded-t" style="height: 95%"></div>
-                </div>
-            </div>
-
-            <!-- Active Projects Card -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">Active Projects</h3>
-                    <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-3xl font-bold text-white mb-1">56</div>
-                    <div class="flex items-center text-sm">
-                        <span class="text-red-400 mr-1">↘ -2.1%</span>
-                        <span class="text-gray-400">vs last month</span>
-                    </div>
-                </div>
-                <!-- Progress Ring -->
                 <div class="flex items-center justify-center h-16">
-                    <div class="relative w-12 h-12">
-                        <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                            <path class="text-gray-900" stroke="currentColor" stroke-width="3" fill="none"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="text-yellow-500" stroke="currentColor" stroke-width="3" fill="none"
-                                stroke-dasharray="75, 100"
-                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Leads Card -->
+            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-300 text-sm font-medium">New Leads</h3>
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="text-xs font-semibold text-white">75%</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    @php
+                        $newLeads = \App\Models\Appointment::where('status_lead', 'New')->count();
+                    @endphp
+                    <div class="text-3xl font-bold text-white mb-1">{{ $newLeads }}</div>
+                    <div class="flex items-center text-sm">
+                        <span class="text-gray-400">Require follow-up</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center h-16">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Published Posts Card -->
+            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-300 text-sm font-medium">Published Posts</h3>
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    @php
+                        $publishedPosts = \App\Models\Post::where('post_status', 'published')->count();
+                    @endphp
+                    <div class="text-3xl font-bold text-white mb-1">{{ $publishedPosts }}</div>
+                    <div class="flex items-center text-sm">
+                        <span class="text-gray-400">Blog articles live</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center h-16">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                            </svg>
                         </div>
                     </div>
                 </div>
