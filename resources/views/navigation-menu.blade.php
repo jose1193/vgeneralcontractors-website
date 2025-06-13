@@ -105,101 +105,157 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="fixed left-0 top-16 bottom-0 w-16 bg-gray-900 z-40 group hover:w-48 transition-all duration-300">
-        <div class="flex flex-col py-4 space-y-4">
+    <div class="fixed left-0 top-16 bottom-0 w-16 bg-gray-900 z-40">
+        <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
-            <a href="{{ route('dashboard') }}"
-                class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v4" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v4" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 5v4" />
-                </svg>
-                <span
-                    class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('dashboard') ? 'hidden' : '' }}">Dashboard</span>
-            </a>
+            <div class="relative group">
+                <a href="{{ route('dashboard') }}"
+                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 5v4" />
+                    </svg>
+                </a>
+                @if (!request()->routeIs('dashboard'))
+                    <div
+                        class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                        Dashboard
+                        <div
+                            class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                        </div>
+                    </div>
+                @endif
+            </div>
 
             <!-- Analytics -->
-            <a href="#"
-                class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4">
-                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <span
-                    class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap">Analytics</span>
-            </a>
+            <div class="relative group">
+                <a href="#"
+                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </a>
+                <div
+                    class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                    Analytics
+                    <div
+                        class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                    </div>
+                </div>
+            </div>
 
             <!-- Users -->
             @can('READ_USER')
-                <a href="{{ route('users') }}"
-                    class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                    </svg>
-                    <span
-                        class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('users') ? 'hidden' : '' }}">Users</span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ route('users') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('users'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Users
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endcan
 
             <!-- Services -->
             @can('READ_SERVICE_CATEGORY')
-                <a href="{{ route('service-categories') }}"
-                    class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('service-categories') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span
-                        class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('service-categories') ? 'hidden' : '' }}">Services</span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ route('service-categories') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('service-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('service-categories'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Services
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endcan
 
             <!-- Appointments -->
             @can('READ_APPOINTMENT')
-                <a href="{{ route('appointments.index') }}"
-                    class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span
-                        class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'hidden' : '' }}">Appointments</span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ route('appointments.index') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('appointments.index') && !request()->routeIs('appointment-calendar'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Appointments
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endcan
 
             <!-- Portfolio -->
             @can('READ_PORTFOLIO')
-                <a href="{{ route('portfolios') }}"
-                    class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <span
-                        class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('portfolios') ? 'hidden' : '' }}">Portfolio</span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ route('portfolios') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('portfolios'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Portfolio
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endcan
 
             <!-- Blog -->
             @can('READ_POST')
-                <div class="relative" x-data="{ open: false }">
+                <div class="relative group" x-data="{ open: false }">
                     <button @click="open = !open"
-                        class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 w-full {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <span
-                            class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'hidden' : '' }}">Blog</span>
-                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover/item:opacity-100 transition-all duration-300 transform {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'hidden' : '' }}"
-                            :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
                     </button>
+
+                    @if (!request()->routeIs('admin.posts') && !request()->routeIs('blog-categories'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Blog
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
 
                     <div x-show="open" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 transform scale-95"
@@ -221,17 +277,26 @@
 
             <!-- Settings -->
             @can('READ_COMPANY_DATA')
-                <a href="{{ route('company-data') }}"
-                    class="group/item relative flex items-center h-10 mx-3 transition-all duration-300 {{ request()->routeIs('company-data') ? 'bg-yellow-400 text-gray-900 rounded-full w-10 justify-center' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full w-10 justify-center hover:w-40 hover:rounded-lg hover:pl-4' }}">
-                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span
-                        class="ml-3 font-medium opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('company-data') ? 'hidden' : '' }}">Settings</span>
-                </a>
+                <div class="relative group">
+                    <a href="{{ route('company-data') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('company-data') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent hover:bg-gray-800/50 rounded-full' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('company-data'))
+                        <div
+                            class="absolute left-12 top-0 bg-gray-800 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50">
+                            Settings
+                            <div
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45">
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endcan
         </div>
     </div>
