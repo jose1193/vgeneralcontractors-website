@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="themeManager()" x-bind:class="theme">
 
 <head>
     <meta charset="utf-8">
@@ -51,6 +51,19 @@
             background-color: #e7c104;
             border-radius: 7px;
         }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background-color: #374151;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #6b7280;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background-color: #e7c104;
+        }
     </style>
     <!-- En la sección head -->
     <meta name="generator" content="V General Contractors Blog">
@@ -92,17 +105,55 @@
     <x-google-analytics />
     <x-facebook-pixel />
 
+    <!-- Theme Manager Script -->
+    <script>
+        function themeManager() {
+            return {
+                theme: localStorage.getItem('theme') || 'dark', // Default to dark
+
+                init() {
+                    // Set initial theme
+                    this.setTheme(this.theme);
+                },
+
+                toggleTheme() {
+                    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+                    this.setTheme(this.theme);
+                },
+
+                setTheme(newTheme) {
+                    this.theme = newTheme;
+                    localStorage.setItem('theme', newTheme);
+
+                    // Update document class
+                    if (newTheme === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+
+                    // Update meta theme-color
+                    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                    if (metaThemeColor) {
+                        metaThemeColor.setAttribute('content', newTheme === 'dark' ? '#141414' : '#ffffff');
+                    }
+                }
+            }
+        }
+    </script>
+
 </head>
 
-<body class="font-sans antialiased" style="background-color: #141414;">
+<body
+    class="font-sans antialiased bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <x-banner />
 
-    <div class="min-h-screen" style="background-color: #141414;">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
         @livewire('navigation-menu')
 
         <!-- Page Header (if provided) -->
         @isset($header)
-            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4" style="background-color: #141414;">
+            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4 bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
@@ -110,7 +161,8 @@
         @endisset
 
         <!-- Page Content with sidebar margin -->
-        <main class="ml-18 sm:ml-20 lg:ml-22 {{ isset($header) ? '' : 'pt-16' }}">
+        <main
+            class="ml-18 sm:ml-20 lg:ml-22 {{ isset($header) ? '' : 'pt-16' }} bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
             @hasSection('content')
                 @yield('content')
             @else
@@ -118,7 +170,8 @@
             @endif
         </main>
 
-        <footer class="ml-18 sm:ml-20 lg:ml-22 bg-transparent py-4 text-center text-gray-600">
+        <footer
+            class="ml-18 sm:ml-20 lg:ml-22 bg-transparent py-4 text-center text-gray-600 dark:text-gray-400 transition-colors duration-300">
             <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>

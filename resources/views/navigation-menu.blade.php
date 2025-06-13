@@ -11,13 +11,15 @@
     }
 }" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
+    <nav
+        class="fixed top-0 left-0 right-0 z-50 border-b bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-4">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                    <button @click="$store.sidebar.toggle()"
+                        class="lg:hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -35,22 +37,39 @@
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block">
                         <input type="text" placeholder="Start Search Here..."
-                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                            style="background-color: #2C2E36; border: 1px solid #2C2E36;">
-                        <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                            class="text-gray-900 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 absolute left-3 top-2.5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                 </div>
 
-                <!-- Right side - Language, Notifications, Messages, User menu -->
+                <!-- Right side - Theme, Language, Notifications, Messages, User menu -->
                 <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <button @click="$root.toggleTheme()"
+                        class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                        :title="theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                        <!-- Sun Icon (Light Mode) -->
+                        <svg x-show="theme === 'dark'" class="w-5 h-5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <!-- Moon Icon (Dark Mode) -->
+                        <svg x-show="theme === 'light'" class="w-5 h-5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
@@ -96,12 +115,12 @@
                             x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            style="background-color: #2C2E36; display: none;">
+                            class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors duration-300"
+                            style="display: none;">
                             <div class="py-1">
                                 @foreach ($languages as $code => $language)
                                     <a href="{{ route('lang.switch', $code) }}"
-                                        class="group flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 {{ $currentLocale === $code ? 'bg-gray-700' : '' }}">
+                                        class="group flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $currentLocale === $code ? 'bg-gray-100 dark:bg-gray-700' : '' }} transition-colors duration-300">
                                         <span class="mr-3">{!! $language['flag'] !!}</span>
                                         <span>{{ $language['name'] }}</span>
                                         @if ($currentLocale === $code)
@@ -120,7 +139,8 @@
 
                     <!-- Search Icon - Mobile -->
                     <div class="md:hidden relative" x-data="{ searchOpen: false }">
-                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-2">
+                        <button @click="searchOpen = !searchOpen"
+                            class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 transition-colors duration-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -134,12 +154,11 @@
                             x-transition:leave="transition ease-in duration-200"
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4"
-                            style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
+                            class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300"
+                            style="display: none;">
                             <div class="relative">
                                 <input type="text" placeholder="Start Search Here..."
-                                    class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    style="background-color: #141414; border: 1px solid #2C2E36;">
+                                    class="w-full text-gray-900 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 transition-colors duration-300">
                                 <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -150,7 +169,8 @@
                     </div>
 
                     <!-- Notifications -->
-                    <button class="text-gray-400 hover:text-white p-2">
+                    <button
+                        class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 transition-colors duration-300">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 17h5l-5 5v-5zM10.5 3.5a6 6 0 0 1 6 6v2l1.5 3h-15l1.5-3v-2a6 6 0 0 1 6-6z" />
@@ -158,7 +178,8 @@
                     </button>
 
                     <!-- Messages -->
-                    <button class="text-gray-400 hover:text-white p-2">
+                    <button
+                        class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2 transition-colors duration-300">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -168,14 +189,15 @@
                     <!-- User Profile -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"
-                            class="flex items-center space-x-2 text-gray-300 hover:text-white">
+                            class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <img class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
+                                <img class="w-8 h-8 rounded-full object-cover border-2 border-gray-300 dark:border-gray-700"
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             @else
-                                <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <div
+                                    class="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center">
                                     <span
-                                        class="text-sm font-medium text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        class="text-sm font-medium text-gray-700 dark:text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
                                 </div>
                             @endif
                         </button>
@@ -187,32 +209,33 @@
                             x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border z-50"
-                            style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
+                            class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border z-50 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300"
+                            style="display: none;">
                             <div class="py-2">
-                                <div class="px-4 py-2 border-b" style="border-color: #2C2E36;">
-                                    <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
-                                    <p class="text-xs text-gray-400">{{ Auth::user()->email }}</p>
+                                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ Auth::user()->name }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</p>
                                 </div>
 
                                 <a href="{{ route('profile.show') }}"
-                                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
                                     {{ __('profile') }}
                                 </a>
 
                                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                     <a href="{{ route('api-tokens.index') }}"
-                                        class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
                                         {{ __('api_tokens') }}
                                     </a>
                                 @endif
 
-                                <div class="border-t mt-2" style="border-color: #2C2E36;"></div>
+                                <div class="border-t mt-2 border-gray-200 dark:border-gray-700"></div>
 
                                 <form method="POST" action="{{ secure_url(route('logout', [], false)) }}" x-data>
                                     @csrf
                                     <button type="submit"
-                                        class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
                                         {{ __('log_out') }}
                                     </button>
                                 </form>
@@ -225,13 +248,13 @@
     </nav>
 
     <!-- Desktop Sidebar -->
-    <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
-        style="background-color: #141414;">
+    <div
+        class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40 bg-white dark:bg-gray-800 transition-colors duration-300">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
                 <a href="{{ route('dashboard') }}"
-                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                     onmouseover="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                     onmouseout="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                     <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,11 +266,12 @@
                     </svg>
                 </a>
                 @if (!request()->routeIs('dashboard'))
-                    <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
-                        style="background-color: #2C2E36;">
+                    <div
+                        class="absolute left-12 top-0 text-gray-900 dark:text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
                         {{ __('dashboard') }}
-                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
-                            style="background-color: #2C2E36;"></div>
+                        <div
+                            class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45 bg-gray-100 dark:bg-gray-700 border-l border-b border-gray-200 dark:border-gray-600">
+                        </div>
                     </div>
                 @endif
             </div>
