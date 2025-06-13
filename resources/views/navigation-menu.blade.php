@@ -10,6 +10,14 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-4">
+                    <!-- Mobile Menu Button -->
+                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
                     <!-- Logo -->
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="flex items-center">
@@ -210,8 +218,9 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <div class="fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40" style="background-color: #141414;">
+    <!-- Desktop Sidebar -->
+    <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
+        style="background-color: #141414;">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
@@ -413,6 +422,207 @@
             @endif
 
 
+        </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div x-data="{ sidebarOpen: false }" x-init="$store.sidebar = {
+        open: false,
+        toggle() {
+            this.open = !this.open;
+            sidebarOpen = this.open
+        }
+    }" x-effect="sidebarOpen = $store.sidebar.open">
+
+        <!-- Overlay -->
+        <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="$store.sidebar.toggle()"
+            class="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50" style="display: none;"></div>
+
+        <!-- Mobile Drawer -->
+        <div x-show="sidebarOpen" x-transition:enter="transition ease-in-out duration-300 transform"
+            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in-out duration-300 transform"
+            x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+            class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto"
+            style="background-color: #141414; display: none;">
+
+            <div class="p-4 space-y-4">
+                <!-- Dashboard -->
+                <a href="{{ route('dashboard') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 5v4" />
+                    </svg>
+                    <span class="font-medium">{{ __('dashboard') }}</span>
+                </a>
+
+                <!-- Administration Group -->
+                @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
+                    <div x-data="{ adminOpen: false }">
+                        <button @click="adminOpen = !adminOpen"
+                            class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span class="font-medium text-yellow-400">{{ __('administration') }}</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform" :class="adminOpen ? 'rotate-180' : ''"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="adminOpen" x-transition class="ml-9 mt-2 space-y-2">
+                            @can('READ_COMPANY_DATA')
+                                <a href="{{ route('company-data') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('company-data') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('company_data') }}
+                                </a>
+                            @endcan
+                            @can('READ_USER')
+                                <a href="{{ route('users') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('users') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('users') }}
+                                </a>
+                            @endcan
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Services Group -->
+                @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
+                    <div x-data="{ servicesOpen: false }">
+                        <button @click="servicesOpen = !servicesOpen"
+                            class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="font-medium text-yellow-400">{{ __('services') }}</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform" :class="servicesOpen ? 'rotate-180' : ''"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="servicesOpen" x-transition class="ml-9 mt-2 space-y-2">
+                            @can('READ_EMAIL_DATA')
+                                <a href="{{ route('email-datas') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('emails') }}
+                                </a>
+                            @endcan
+                            @can('READ_SERVICE_CATEGORY')
+                                <a href="{{ route('service-categories') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('service-categories') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('service_categories') }}
+                                </a>
+                            @endcan
+                            @can('READ_USER')
+                                <a href="{{ route('call-records') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('call-records') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('Call Records') }}
+                                </a>
+                            @endcan
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Appointments Group -->
+                @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
+                    <div x-data="{ appointmentsOpen: false }">
+                        <button @click="appointmentsOpen = !appointmentsOpen"
+                            class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span class="font-medium text-yellow-400">{{ __('appointments') }}</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform" :class="appointmentsOpen ? 'rotate-180' : ''"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="appointmentsOpen" x-transition class="ml-9 mt-2 space-y-2">
+                            <a href="{{ route('appointments.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointments.index') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('manage_appointments') }}
+                            </a>
+                            <a href="{{ route('appointment-calendar') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointment-calendar') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('calendar_view') }}
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Blog Management Group -->
+                @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
+                    <div x-data="{ blogOpen: false }">
+                        <button @click="blogOpen = !blogOpen"
+                            class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                                <span class="font-medium text-yellow-400">{{ __('blog_management') }}</span>
+                            </div>
+                            <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="blogOpen" x-transition class="ml-9 mt-2 space-y-2">
+                            @can('READ_POST')
+                                <a href="{{ route('admin.posts') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('admin.posts') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('posts') }}
+                                </a>
+                            @endcan
+                            @can('READ_BLOG_CATEGORY')
+                                <a href="{{ route('blog-categories') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('blog-categories') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('blog_categories') }}
+                                </a>
+                            @endcan
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Portfolio -->
+                @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
+                    <a href="{{ route('portfolios') }}"
+                        class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <span class="font-medium">{{ __('portfolio') }}</span>
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
 </div>
