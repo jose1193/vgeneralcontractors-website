@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 sm:px-6 lg:px-8 min-h-screen pb-20">
+    <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 sm:px-6 lg:px-8 pb-8">
         <!-- Success and error messages -->
         @if (session()->has('message'))
             <x-alerts.success :message="session('message')" />
