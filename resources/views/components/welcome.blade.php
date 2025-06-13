@@ -1,13 +1,12 @@
 @props(['title' => 'Your Sales Insights', 'subtitle' => 'Track your performance and grow your business'])
 
-<div class="theme-bg-primary theme-text-primary min-h-screen transition-colors duration-300">
+<div style="background-color: #141414;" class="text-white min-h-screen">
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Dashboard Header -->
         <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
-            <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold theme-text-primary mb-2">{{ $title }}
-            </h2>
-            <p class="text-xs sm:text-xs md:text-base lg:text-base theme-text-secondary">{{ $subtitle }}</p>
+            <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">{{ $title }}</h2>
+            <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">{{ $subtitle }}</p>
         </div>
 
         <!-- Quick Action Cards -->
@@ -29,10 +28,9 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3
-                            class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-green-500 dark:group-hover:text-green-300 transition-colors duration-300">
+                            class="text-sm font-semibold text-white group-hover:text-green-300 transition-colors duration-300">
                             {{ __('create_appointment') }}</h3>
-                        <p
-                            class="text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300">
+                        <p class="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
                             {{ __('schedule_new_client_meeting') }}</p>
                     </div>
                 </div>
@@ -128,9 +126,10 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Pending Appointments Card -->
-            <div class="theme-bg-secondary rounded-lg p-6 theme-border shadow-lg transition-colors duration-300">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="theme-text-secondary text-sm font-medium">{{ __('pending_appointments') }}</h3>
+                    <h3 class="text-gray-300 text-sm font-medium">{{ __('pending_appointments') }}</h3>
                     <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -142,9 +141,9 @@
                     @php
                         $pendingAppointments = \App\Models\Appointment::where('inspection_status', 'Pending')->count();
                     @endphp
-                    <div class="text-3xl font-bold theme-text-primary mb-1">{{ $pendingAppointments }}</div>
+                    <div class="text-3xl font-bold text-white mb-1">{{ $pendingAppointments }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="theme-text-secondary">{{ __('awaiting_confirmation') }}</span>
+                        <span class="text-gray-400">{{ __('awaiting_confirmation') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
