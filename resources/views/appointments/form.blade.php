@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 sm:px-8">
         <div class="py-8">
             <div class="flex justify-between my-5">
-                <h2 class="text-2xl font-semibold leading-tight">
+                <h2 class="text-2xl font-semibold leading-tight text-white">
                     {{ isset($appointment->uuid) ? 'Edit Appointment' : 'Create Appointment' }}
                 </h2>
                 <a href="{{ route('appointments.index') }}"
