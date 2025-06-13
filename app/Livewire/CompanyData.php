@@ -31,7 +31,7 @@ class CompanyData extends Component
     public $sortDirection = 'desc';
     public $page = 1;
     public $isOpen = false;
-    public $modalTitle = 'Create Company Data';
+    public $modalTitle = '';
     public $modalAction = 'store';
     public $isSubmitting = false;
     public $showDeleted = false; // New property to toggle deleted records
@@ -117,7 +117,7 @@ class CompanyData extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->modalTitle = 'Create New Company';
+        $this->modalTitle = __('create_new_company');
         $this->modalAction = 'store';
         $this->openModal();
     }
@@ -208,7 +208,7 @@ class CompanyData extends Component
             $this->latitude = $company->latitude;
             $this->longitude = $company->longitude;
 
-            $this->modalTitle = 'Edit Company: ' . $company->company_name;
+            $this->modalTitle = __('edit_company') . ': ' . $company->company_name;
             $this->modalAction = 'update';
             $this->openModal();
 
