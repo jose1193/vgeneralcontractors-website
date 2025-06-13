@@ -56,7 +56,7 @@
     <!-- Modal Form -->
     @if ($isOpen)
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="formValidation({
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 p-2" x-data="formValidation({
                 initialValues: {
                     company_name: '{{ $company_name }}',
                     name: '{{ $name }}',

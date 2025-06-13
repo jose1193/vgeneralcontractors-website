@@ -6,7 +6,7 @@
             <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
         </div>
 
-        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full lg:w-3/4 sm:w-full"
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl w-full sm:min-w-[640px] md:w-5/6 lg:w-4/5 xl:w-3/4 2xl:w-2/3"
             {{ $attributes }}>
             <form wire:submit.prevent="{{ $modalAction }}">
                 <!-- Encabezado -->
@@ -25,7 +25,7 @@
                 </div>
 
                 <!-- Cuerpo -->
-                <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="bg-white dark:bg-gray-800 px-6 pt-6 pb-6 sm:p-8 sm:pb-6">
                     {{ $slot }}
                 </div>
 
