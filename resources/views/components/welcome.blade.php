@@ -1,4 +1,4 @@
-<div class="bg-black text-white min-h-screen">
+<div class="bg-gray-900 text-white min-h-screen">
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Dashboard Header -->
@@ -10,7 +10,7 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- New Patient Leads Card -->
-            <div class="bg-gray-950 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">New Patient Leads</h3>
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <!-- Mini Chart -->
-                <div class="h-16 bg-gray-900 rounded flex items-end justify-between px-2 py-2">
+                <div class="h-16 bg-gray-700 rounded flex items-end justify-between px-2 py-2">
                     <div class="w-2 bg-green-500 rounded-t" style="height: 30%"></div>
                     <div class="w-2 bg-green-500 rounded-t" style="height: 45%"></div>
                     <div class="w-2 bg-green-500 rounded-t" style="height: 60%"></div>
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Revenue Card -->
-            <div class="bg-gray-950 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">Total Revenue</h3>
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <!-- Mini Chart -->
-                <div class="h-16 bg-gray-900 rounded flex items-end justify-between px-2 py-2">
+                <div class="h-16 bg-gray-700 rounded flex items-end justify-between px-2 py-2">
                     <div class="w-2 bg-blue-500 rounded-t" style="height: 50%"></div>
                     <div class="w-2 bg-blue-500 rounded-t" style="height: 65%"></div>
                     <div class="w-2 bg-blue-500 rounded-t" style="height: 40%"></div>
@@ -72,7 +72,7 @@
             </div>
 
             <!-- Active Projects Card -->
-            <div class="bg-gray-950 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">Active Projects</h3>
                     <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
@@ -94,7 +94,7 @@
                 <div class="flex items-center justify-center h-16">
                     <div class="relative w-12 h-12">
                         <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                            <path class="text-gray-800" stroke="currentColor" stroke-width="3" fill="none"
+                            <path class="text-gray-700" stroke="currentColor" stroke-width="3" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                             <path class="text-yellow-500" stroke="currentColor" stroke-width="3" fill="none"
                                 stroke-dasharray="75, 100"
@@ -111,7 +111,7 @@
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Sales Overview Chart -->
-            <div class="bg-gray-950 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-semibold text-white">Sales Overview</h3>
                     <div class="flex space-x-2">
@@ -123,7 +123,7 @@
                 </div>
 
                 <!-- Chart Area -->
-                <div class="h-64 bg-gray-900 rounded-lg flex items-end justify-between p-4">
+                <div class="h-64 bg-gray-700 rounded-lg flex items-end justify-between p-4">
                     <!-- Simulated Bar Chart -->
                     <div class="flex items-end space-x-2 w-full">
                         <div class="bg-yellow-500 rounded-t w-8" style="height: 60%"></div>
@@ -151,7 +151,7 @@
             </div>
 
             <!-- Customer Analytics -->
-            <div class="bg-gray-950 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-semibold text-white">Customer Analytics</h3>
                     <button class="text-gray-400 hover:text-white">
@@ -167,7 +167,7 @@
                     <div class="relative w-32 h-32">
                         <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
                             <!-- Background circle -->
-                            <path class="text-gray-800" stroke="currentColor" stroke-width="4" fill="none"
+                            <path class="text-gray-700" stroke="currentColor" stroke-width="4" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                             <!-- Progress circles -->
                             <path class="text-blue-500" stroke="currentColor" stroke-width="4" fill="none"
@@ -219,8 +219,8 @@
         <!-- Recent Activity & Quick Actions -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Recent Activity -->
-            <div class="lg:col-span-2 bg-gray-950 rounded-lg border border-gray-800">
-                <div class="px-6 py-4 border-b border-gray-800">
+            <div class="lg:col-span-2 bg-gray-800 rounded-lg border border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-700">
                     <h3 class="text-lg font-semibold text-white">Recent Activity</h3>
                 </div>
                 <div class="p-6">
@@ -287,8 +287,8 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="bg-gray-950 rounded-lg border border-gray-800">
-                <div class="px-6 py-4 border-b border-gray-800">
+            <div class="bg-gray-800 rounded-lg border border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-700">
                     <h3 class="text-lg font-semibold text-white">Quick Actions</h3>
                 </div>
                 <div class="p-6 space-y-4">
@@ -297,15 +297,15 @@
                         Schedule Appointment
                     </button>
                     <button
-                        class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
                         Add New Project
                     </button>
                     <button
-                        class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
                         Create Invoice
                     </button>
                     <button
-                        class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                        class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition-colors">
                         View Reports
                     </button>
                 </div>

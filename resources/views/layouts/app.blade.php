@@ -97,11 +97,11 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-black">
+    <div class="min-h-screen bg-gray-50">
         @livewire('navigation-menu')
 
         <!-- Page Content with sidebar margin -->
-        <main class="ml-20 pt-20">
+        <main class="ml-16 pt-16">
             @hasSection('content')
                 @yield('content')
             @else
@@ -109,7 +109,7 @@
             @endif
         </main>
 
-        <footer class="ml-20 bg-transparent py-4 text-center text-gray-600">
+        <footer class="ml-16 bg-transparent py-4 text-center text-gray-600">
             <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>
