@@ -120,7 +120,7 @@
                             x-transition:leave="transition ease-in duration-200"
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute left-1/2 transform -translate-x-1/2 top-12 w-80 rounded-lg shadow-lg border z-50 p-4"
+                            class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4"
                             style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
                             <div class="relative">
                                 <input type="text" placeholder="Start Search Here..."
