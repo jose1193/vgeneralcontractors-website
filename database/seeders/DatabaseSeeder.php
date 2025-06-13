@@ -66,15 +66,12 @@ class DatabaseSeeder extends Seeder
         ];
 
         // Permisos limitados para admin@vgeneralcontractors.com
-        // Solo appointments, call records y blog posts - SIN administración, services ni portfolio
+        // Solo appointments y call records - SIN administración, services, portfolio ni blog
         $limitedAdminPermissions = [
             // Appointments - acceso completo
             'CREATE_APPOINTMENT', 'READ_APPOINTMENT', 'UPDATE_APPOINTMENT', 'DELETE_APPOINTMENT', 'RESTORE_APPOINTMENT',
-            // Call Records - solo lectura de usuarios para acceder a call records
-            'READ_USER',
-            // Blog Posts - acceso completo para gestionar contenido
-            'CREATE_POST', 'READ_POST', 'UPDATE_POST', 'DELETE_POST', 'RESTORE_POST',
-            'CREATE_BLOG_CATEGORY', 'READ_BLOG_CATEGORY', 'UPDATE_BLOG_CATEGORY', 'DELETE_BLOG_CATEGORY', 'RESTORE_BLOG_CATEGORY'
+            // Call Records - necesita READ_USER para acceder a call records
+            'READ_USER'
         ];
 
         // Permisos para user@user.com (SOLO lectura de appointments - SIN call records, SIN administración, SIN services, SIN portfolio, SIN blog)
@@ -104,7 +101,7 @@ class DatabaseSeeder extends Seeder
         $adminUser2->assignRole('Admin');
         // END SECOND ADMIN
 
-        // LIMITED ADMIN USER - Solo appointments, call records y blog
+        // LIMITED ADMIN USER - Solo appointments y call records
         $limitedAdminUser = User::factory()->create([
             'name' => 'Administrator',
             'email' => 'admin@vgeneralcontractors.com',
@@ -115,7 +112,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $limitedAdminUser->assignRole('User'); // Cambiar a 'User' para evitar herencia de permisos de Admin
         
-        // Asignar solo permisos limitados (SIN administración, services ni portfolio)
+        // Asignar solo permisos limitados (SIN administración, services, portfolio ni blog)
         $limitedAdminUser->syncPermissions($limitedAdminPermissions);
         // END LIMITED ADMIN USER
 
