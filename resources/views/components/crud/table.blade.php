@@ -3,7 +3,7 @@
     'items' => [],
     'actionColumn' => true,
     'tableClass' => 'table table-striped table-hover',
-    'theadClass' => 'bg-gray-50 dark:bg-gray-800',
+    'theadClass' => 'table-light',
     'id' => 'crud-table',
     'responsive' => true,
     'searchable' => false,
@@ -12,52 +12,43 @@
     'showDeleteModal' => false,
 ])
 
-<div class="{{ $responsive ? 'overflow-x-auto  dark:bg-gray-800 shadow-md rounded-lg' : '' }}">
-    <table id="{{ $id }}" class="{{ $tableClass }} min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+<div class="{{ $responsive ? 'table-responsive' : '' }}">
+    <table id="{{ $id }}" class="{{ $tableClass }}">
         <thead class="{{ $theadClass }}">
             <tr>
                 @foreach ($columns as $column)
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        {{ $column['label'] ?? ucfirst($column['key']) }}</th>
+                    <th scope="col">{{ $column['label'] ?? ucfirst($column['key']) }}</th>
                 @endforeach
 
                 @if ($actionColumn)
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Actions</th>
+                    <th scope="col" class="text-end">Actions</th>
                 @endif
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+        <tbody>
             @forelse($items as $item)
                 <tr>
                     @foreach ($columns as $column)
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            <div class="text-sm text-gray-900 dark:text-gray-100">
-                                @if (isset($column['format']) && is_callable($column['format']))
-                                    {!! $column['format']($item, $column['key']) !!}
-                                @elseif(isset($column['raw']) && $column['raw'])
-                                    {!! data_get($item, $column['key']) !!}
-                                @else
-                                    {{ data_get($item, $column['key']) }}
-                                @endif
-                            </div>
+                        <td>
+                            @if (isset($column['format']) && is_callable($column['format']))
+                                {!! $column['format']($item, $column['key']) !!}
+                            @elseif(isset($column['raw']) && $column['raw'])
+                                {!! data_get($item, $column['key']) !!}
+                            @else
+                                {{ data_get($item, $column['key']) }}
+                            @endif
                         </td>
                     @endforeach
 
                     @if ($actionColumn)
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            <div class="inline-flex items-center justify-center space-x-4">
-                                {{ $slot }}
-                            </div>
+                        <td class="text-end">
+                            {{ $slot }}
                         </td>
                     @endif
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ count($columns) + ($actionColumn ? 1 : 0) }}"
-                        class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td colspan="{{ count($columns) + ($actionColumn ? 1 : 0) }}" class="text-center">
                         {{ $noDataText }}
                     </td>
                 </tr>
