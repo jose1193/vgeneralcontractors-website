@@ -5,7 +5,7 @@
 
 <div>
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #1A1C22; border-color: #2C2E36;">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
@@ -109,7 +109,7 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="fixed left-0 top-16 bottom-0 w-16 z-40" style="background-color: #1A1C22;">
+    <div class="fixed left-0 top-16 bottom-0 w-16 z-40" style="background-color: #141414;">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">

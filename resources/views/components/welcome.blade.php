@@ -1,4 +1,4 @@
-<div style="background-color: #1A1C22;" class="text-white min-h-screen">
+<div style="background-color: #141414;" class="text-white min-h-screen">
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Dashboard Header -->

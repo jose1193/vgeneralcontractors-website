@@ -94,10 +94,10 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" style="background-color: #141414;">
     <x-banner />
 
-    <div class="min-h-screen" style="background-color: #1A1C22;">
+    <div class="min-h-screen" style="background-color: #141414;">
         @livewire('navigation-menu')
 
         <!-- Page Content with sidebar margin -->
