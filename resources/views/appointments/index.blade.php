@@ -128,7 +128,7 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
@@ -182,7 +182,7 @@
                                 </tr>
                             </thead>
                             <tbody id="appointmentsTable"
-                                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                class=" dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 <tr id="loadingRow">
                                     <td colspan="10" class="px-6 py-4 text-center">
                                         <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
