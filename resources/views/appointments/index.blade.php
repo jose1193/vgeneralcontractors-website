@@ -30,7 +30,7 @@
             @endif
 
             <!-- Main container -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg">
                 <div class="p-6">
                     <!-- Filter and action bar -->
                     <div
@@ -128,7 +128,8 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div class="overflow-x-auto rounded-lg">
+                    <div
+                        class="overflow-x-auto bg-gray-50 dark:bg-gray-700 rounded-lg shadow-inner border border-gray-200 dark:border-gray-600">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
