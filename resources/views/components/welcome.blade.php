@@ -368,8 +368,8 @@
 
                 <!-- Donut Chart with Real Data -->
                 <div class="flex items-center justify-center mb-6">
-                    <div class="relative w-32 h-32">
-                        <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                    <div class="relative w-48 h-48">
+                        <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 36 36">
                             <!-- Background circle -->
                             <path class="text-gray-900" stroke="currentColor" stroke-width="4" fill="none"
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -399,8 +399,8 @@
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-white">{{ $totalLeads }}</div>
-                                <div class="text-xs text-gray-400">Total</div>
+                                <div class="text-3xl font-bold text-white">{{ $totalLeads }}</div>
+                                <div class="text-sm text-gray-400">Total</div>
                             </div>
                         </div>
                     </div>
