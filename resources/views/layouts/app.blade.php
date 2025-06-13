@@ -157,7 +157,7 @@
 
 </head>
 
-<body class="font-sans antialiased dark" x-data="themeSwitch()" x-init="initTheme()" :class="{ 'dark': isDark }">
+<body class="font-sans antialiased dark">
     <x-banner />
 
     <div class="min-h-screen theme-bg-primary transition-colors duration-300">
@@ -216,39 +216,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- Theme Switch Script -->
-    <script>
-        function themeSwitch() {
-            return {
-                isDark: true, // Default to dark theme
 
-                initTheme() {
-                    // Check if theme is stored in localStorage
-                    const savedTheme = localStorage.getItem('theme');
-                    if (savedTheme) {
-                        this.isDark = savedTheme === 'dark';
-                    }
-
-                    // Apply theme to html element
-                    this.updateTheme();
-                },
-
-                toggleTheme() {
-                    this.isDark = !this.isDark;
-                    this.updateTheme();
-                    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-                },
-
-                updateTheme() {
-                    if (this.isDark) {
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                    }
-                }
-            }
-        }
-    </script>
 </body>
 
 </html>

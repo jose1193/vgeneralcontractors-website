@@ -161,10 +161,10 @@
             </div>
 
             <!-- New Leads Card -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">{{ __('new_leads') }}</h3>
+                    <h3 class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{ __('new_leads') }}</h3>
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -176,9 +176,9 @@
                     @php
                         $newLeads = \App\Models\Appointment::where('status_lead', 'New')->count();
                     @endphp
-                    <div class="text-3xl font-bold text-white mb-1">{{ $newLeads }}</div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $newLeads }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">{{ __('require_follow_up') }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('require_follow_up') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -195,10 +195,10 @@
             </div>
 
             <!-- Published Posts Card -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">{{ __('published_posts') }}</h3>
+                    <h3 class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{ __('published_posts') }}</h3>
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -210,9 +210,9 @@
                     @php
                         $publishedPosts = \App\Models\Post::where('post_status', 'published')->count();
                     @endphp
-                    <div class="text-3xl font-bold text-white mb-1">{{ $publishedPosts }}</div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $publishedPosts }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">{{ __('blog_articles_live') }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('blog_articles_live') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
