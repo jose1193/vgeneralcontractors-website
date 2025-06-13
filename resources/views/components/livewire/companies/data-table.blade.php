@@ -4,13 +4,13 @@
             <tr>
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    NRO
+                    {{ __('NRO') }}
                 </th>
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('company_name')">
                     <div class="flex items-center justify-center">
-                        COMPANY NAME
+                        {{ __('company_name') }}
                         @if ($sortField === 'company_name')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -32,7 +32,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('name')">
                     <div class="flex items-center justify-center">
-                        CEO
+                        {{ __('ceo') }}
                         @if ($sortField === 'name')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -54,7 +54,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('email')">
                     <div class="flex items-center justify-center">
-                        EMAIL
+                        {{ __('email') }}
                         @if ($sortField === 'email')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -76,7 +76,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('phone')">
                     <div class="flex items-center justify-center">
-                        PHONE
+                        {{ __('phone') }}
                         @if ($sortField === 'phone')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -98,7 +98,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('address')">
                     <div class="flex items-center justify-center">
-                        ADDRESS
+                        {{ __('address') }}
                         @if ($sortField === 'address')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -120,7 +120,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('created_at')">
                     <div class="flex items-center justify-center">
-                        CREATED AT
+                        {{ __('created_at') }}
                         @if ($sortField === 'created_at')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -142,7 +142,7 @@
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
                     wire:click="sort('deleted_at')">
                     <div class="flex items-center justify-center">
-                        STATUS
+                        {{ __('status') }}
                         @if ($sortField === 'deleted_at')
                             @if ($sortDirection === 'asc')
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -162,7 +162,7 @@
                 </th>
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    ACTIONS
+                    {{ __('actions') }}
                 </th>
             </tr>
         </thead>
@@ -264,7 +264,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td class="px-6 py-4 text-center" colspan="9">No companies available</td>
+                    <td class="px-6 py-4 text-center" colspan="9">{{ __('no_companies_available') }}</td>
                 </tr>
             @endforelse
         </tbody>

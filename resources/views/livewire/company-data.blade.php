@@ -19,21 +19,21 @@
                     <div
                         class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show inactive companies -->
-                        <x-toggle label="Show Inactive Companies" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
+                        <x-toggle :label="__('show_inactive_companies')" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
 
                         <!-- Per page dropdown -->
                         <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32">
-                            <option value="10">10 per page</option>
-                            <option value="25">25 per page</option>
-                            <option value="50">50 per page</option>
-                            <option value="100">100 per page</option>
+                            <option value="10">10 {{ __('per_page') }}</option>
+                            <option value="25">25 {{ __('per_page') }}</option>
+                            <option value="50">50 {{ __('per_page') }}</option>
+                            <option value="100">100 {{ __('per_page') }}</option>
                         </x-select-input-per-pages>
 
                         <!-- Add company button -->
                         <div class="w-full sm:w-auto">
                             @if (!$hasExistingCompany)
                                 <x-add-button :wireClick="'create'">
-                                    Add Company
+                                    {{ __('add_company') }}
                                 </x-add-button>
                             @endif
                         </div>
