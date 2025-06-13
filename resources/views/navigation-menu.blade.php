@@ -185,7 +185,7 @@
             <!-- Dashboard -->
             <div class="relative group">
                 <a href="{{ route('dashboard') }}"
-                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                     onmouseover="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                     onmouseout="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                     <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,7 +209,7 @@
             <!-- Administration Group -->
             @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('company-data') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('company-data') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('company-data') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,7 +248,7 @@
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,7 +291,7 @@
             <!-- Appointments Group -->
             @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +324,7 @@
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,7 +362,7 @@
             @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
                 <div class="relative group">
                     <a href="{{ route('portfolios') }}"
-                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
