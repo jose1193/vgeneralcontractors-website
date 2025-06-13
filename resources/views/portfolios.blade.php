@@ -9,16 +9,12 @@
     {{-- Dark background container with consistent styling --}}
     <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
         {{-- Header section with title and subtitle --}}
-        <div class="bg-gray-900 py-8" style="background-color: #141414;">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                        {{ __('portfolios_title') }}
-                    </h1>
-                    <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto">
-                        {{ __('portfolios_subtitle') }}
-                    </p>
-                </div>
+        <div class="p-6">
+            <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('portfolios_title') }}</h2>
+                <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">{{ __('portfolios_subtitle') }}
+                </p>
             </div>
         </div>
 
