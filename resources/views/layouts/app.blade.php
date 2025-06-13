@@ -119,7 +119,7 @@
         </main>
 
         <footer class="ml-18 sm:ml-20 lg:ml-22 bg-transparent py-4 text-center text-gray-600">
-            <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} V General Contractors. {{ __('all_rights_reserved') }}</p>
         </footer>
     </div>
     @stack('modals')
