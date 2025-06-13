@@ -100,8 +100,8 @@
     <div class="min-h-screen bg-gray-50">
         @livewire('navigation-menu')
 
-        <!-- Page Content -->
-        <main>
+        <!-- Page Content with sidebar margin -->
+        <main class="ml-16 pt-16">
             @hasSection('content')
                 @yield('content')
             @else
@@ -109,7 +109,7 @@
             @endif
         </main>
 
-        <footer class="bg-transparent py-4 text-center text-gray-600">
+        <footer class="ml-16 bg-transparent py-4 text-center text-gray-600">
             <p>&copy; {{ date('Y') }} V General Contractors. All rights reserved.</p>
         </footer>
     </div>
