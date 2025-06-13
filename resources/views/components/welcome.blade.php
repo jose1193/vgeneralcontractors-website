@@ -332,72 +332,210 @@
             </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="w-full" style="background-color: #2C2E36;" class="rounded-lg border border-gray-900">
+        <!-- Recent Activity - Live Leads Marquee -->
+        <div class="w-full rounded-lg border border-gray-900" style="background-color: #2C2E36;">
             <div class="px-6 py-4 border-b border-gray-900">
-                <h3 class="text-lg font-semibold text-white">Recent Activity</h3>
+                <h3 class="text-lg font-semibold text-white">Recent Leads Activity</h3>
+                <p class="text-sm text-gray-400">Live updates from your latest appointments</p>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">New appointment scheduled</p>
-                            <p class="text-xs text-gray-400">John Doe - Kitchen Renovation</p>
-                            <p class="text-xs text-gray-500">2 minutes ago</p>
-                        </div>
+            <div class="relative h-80 overflow-hidden">
+                @php
+                    $recentLeads = \App\Models\Appointment::orderBy('created_at', 'desc')->take(20)->get();
+                @endphp
+
+                <!-- Scrolling Container -->
+                <div class="absolute inset-0 animate-marquee-vertical">
+                    <div class="space-y-4 p-6">
+                        @foreach ($recentLeads as $lead)
+                            <div
+                                class="flex items-center space-x-4 bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                                <!-- Status Icon -->
+                                <div
+                                    class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+                                    @if ($lead->status_lead === 'New') bg-green-500
+                                    @elseif($lead->status_lead === 'Called') bg-blue-500
+                                    @elseif($lead->status_lead === 'Pending') bg-yellow-500
+                                    @elseif($lead->status_lead === 'Declined') bg-red-500
+                                    @else bg-gray-500 @endif">
+                                    @if ($lead->status_lead === 'New')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Called')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Pending')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Declined')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    @else
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @endif
+                                </div>
+
+                                <!-- Lead Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <p class="text-sm font-medium text-white truncate">
+                                            {{ $lead->full_name }}
+                                        </p>
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full
+                                            @if ($lead->status_lead === 'New') bg-green-500/20 text-green-400
+                                            @elseif($lead->status_lead === 'Called') bg-blue-500/20 text-blue-400
+                                            @elseif($lead->status_lead === 'Pending') bg-yellow-500/20 text-yellow-400
+                                            @elseif($lead->status_lead === 'Declined') bg-red-500/20 text-red-400
+                                            @else bg-gray-500/20 text-gray-400 @endif">
+                                            {{ $lead->status_lead ?? 'Unknown' }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-xs text-gray-400 truncate">
+                                            {{ $lead->city }}, {{ $lead->state }} • {{ $lead->phone }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 flex-shrink-0 ml-2">
+                                            {{ $lead->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                    @if ($lead->lead_source)
+                                        <div class="mt-1">
+                                            <span class="text-xs px-2 py-0.5 bg-gray-700 text-gray-300 rounded">
+                                                {{ $lead->lead_source }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <!-- Duplicate content for seamless loop -->
+                        @foreach ($recentLeads as $lead)
+                            <div
+                                class="flex items-center space-x-4 bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                                <!-- Status Icon -->
+                                <div
+                                    class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+                                    @if ($lead->status_lead === 'New') bg-green-500
+                                    @elseif($lead->status_lead === 'Called') bg-blue-500
+                                    @elseif($lead->status_lead === 'Pending') bg-yellow-500
+                                    @elseif($lead->status_lead === 'Declined') bg-red-500
+                                    @else bg-gray-500 @endif">
+                                    @if ($lead->status_lead === 'New')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Called')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Pending')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @elseif($lead->status_lead === 'Declined')
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    @else
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @endif
+                                </div>
+
+                                <!-- Lead Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <p class="text-sm font-medium text-white truncate">
+                                            {{ $lead->full_name }}
+                                        </p>
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full
+                                            @if ($lead->status_lead === 'New') bg-green-500/20 text-green-400
+                                            @elseif($lead->status_lead === 'Called') bg-blue-500/20 text-blue-400
+                                            @elseif($lead->status_lead === 'Pending') bg-yellow-500/20 text-yellow-400
+                                            @elseif($lead->status_lead === 'Declined') bg-red-500/20 text-red-400
+                                            @else bg-gray-500/20 text-gray-400 @endif">
+                                            {{ $lead->status_lead ?? 'Unknown' }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-xs text-gray-400 truncate">
+                                            {{ $lead->city }}, {{ $lead->state }} • {{ $lead->phone }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 flex-shrink-0 ml-2">
+                                            {{ $lead->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                    @if ($lead->lead_source)
+                                        <div class="mt-1">
+                                            <span class="text-xs px-2 py-0.5 bg-gray-700 text-gray-300 rounded">
+                                                {{ $lead->lead_source }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">Portfolio updated</p>
-                            <p class="text-xs text-gray-400">Added 3 new project images</p>
-                            <p class="text-xs text-gray-500">15 minutes ago</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
-                                    clip-rule="evenodd" />
-                                <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V9a1 1 0 00-1-1h-1v-1z" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">New blog post published</p>
-                            <p class="text-xs text-gray-400">"Top 10 Home Renovation Tips"</p>
-                            <p class="text-xs text-gray-500">1 hour ago</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">Payment received</p>
-                            <p class="text-xs text-gray-400">$2,500 from ABC Construction</p>
-                            <p class="text-xs text-gray-500">3 hours ago</p>
-                        </div>
-                    </div>
+                </div>
+
+                <!-- Gradient Overlays for fade effect -->
+                <div
+                    class="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-gray-800 to-transparent pointer-events-none z-10">
+                </div>
+                <div
+                    class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-800 to-transparent pointer-events-none z-10">
                 </div>
             </div>
         </div>
+
+        <!-- Custom CSS for vertical marquee animation -->
+        <style>
+            @keyframes marquee-vertical {
+                0% {
+                    transform: translateY(100%);
+                }
+
+                100% {
+                    transform: translateY(-100%);
+                }
+            }
+
+            .animate-marquee-vertical {
+                animation: marquee-vertical 60s linear infinite;
+            }
+
+            .animate-marquee-vertical:hover {
+                animation-play-state: paused;
+            }
+        </style>
     </div>
 </div>
