@@ -12,7 +12,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <!-- Create Appointment Card -->
             <a href="{{ route('appointments.create') }}"
-                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/25"
+                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/25 shadow-lg shadow-gray-900/50"
                 style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.2);">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -40,7 +40,7 @@
 
             <!-- Calendar View Card -->
             <a href="{{ route('appointment-calendar') }}"
-                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
+                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 shadow-lg shadow-gray-900/50"
                 style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -67,7 +67,7 @@
 
             <!-- Create Post Card -->
             <a href="{{ route('admin.posts') }}"
-                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/25"
+                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/25 shadow-lg shadow-gray-900/50"
                 style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.05) 100%); border: 1px solid rgba(234, 179, 8, 0.2);">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -95,7 +95,7 @@
 
             <!-- View Portfolio Card -->
             <a href="{{ route('portfolios') }}"
-                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25"
+                class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 shadow-lg shadow-gray-900/50"
                 style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%); border: 1px solid rgba(147, 51, 234, 0.2);">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -125,7 +125,8 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Pending Appointments Card -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">Pending Appointments</h3>
                     <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
@@ -158,7 +159,8 @@
             </div>
 
             <!-- New Leads Card -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">New Leads</h3>
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -191,7 +193,8 @@
             </div>
 
             <!-- Published Posts Card -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-gray-300 text-sm font-medium">Published Posts</h3>
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -227,7 +230,8 @@
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Monthly Leads Chart -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-semibold text-white">Monthly Leads</h3>
                     <div class="text-xs text-gray-400">{{ date('Y') }}</div>
@@ -321,7 +325,8 @@
             </div>
 
             <!-- Lead Sources Analytics -->
-            <div style="background-color: #2C2E36;" class="rounded-lg p-6 border border-gray-900">
+            <div style="background-color: #2C2E36;"
+                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-semibold text-white">Lead Sources</h3>
                     <div class="text-xs text-gray-400">Current Year</div>
@@ -422,7 +427,8 @@
         </div>
 
         <!-- Recent Activity - Live Leads Marquee -->
-        <div class="w-full rounded-lg border border-gray-900" style="background-color: #2C2E36;">
+        <div class="w-full rounded-lg border border-gray-900 shadow-lg shadow-gray-900/50"
+            style="background-color: #2C2E36;">
             <div class="px-6 py-4 border-b border-gray-900">
                 <h3 class="text-lg font-semibold text-white">Recent Leads Activity</h3>
                 <p class="text-sm text-gray-400">Live updates from your latest appointments</p>
