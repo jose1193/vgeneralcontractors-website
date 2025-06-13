@@ -36,7 +36,7 @@
                         wire:loading.attr="disabled" wire:target="{{ $modalAction }}"
                         x-bind:disabled="Object.keys(errors).length > 0">
                         <span wire:loading.remove wire:target="{{ $modalAction }}">
-                            {{ $modalAction === 'store' ? 'Save' : 'Update' }}
+                            {{ $modalAction === 'store' ? __('save') : __('update') }}
                         </span>
                         <span wire:loading wire:target="{{ $modalAction }}" class="inline-flex items-center">
                             <svg class="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -47,12 +47,12 @@
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                 </path>
                             </svg>
-                            Saving...
+                            {{ __('saving') }}
                         </span>
                     </button>
                     <button type="button" wire:click="closeModal"
                         class="mr-3 hidden lg:inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
+                        {{ __('cancel') }}
                     </button>
                 </div>
             </form>

@@ -52,7 +52,7 @@
             <div class="bg-red-600 px-4 py-3">
                 <div class="flex items-center justify-center">
                     <h3 class="text-lg font-medium text-white text-center" id="modal-headline">
-                        Confirm Deletion
+                        {{ __('confirm_deletion') }}
                     </h3>
                     <button @click="showDeleteModal = false; itemToDelete = null;"
                         class="absolute right-0 mr-4 text-white hover:text-gray-200 focus:outline-none">
@@ -78,12 +78,12 @@
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100" id="modal-headline">
-                            Delete {{ ucfirst($itemType) }}
+                            {{ __('delete') }} {{ ucfirst($itemType) }}
                         </h3>
                         <div class="mt-2">
                             <p class="text-sm text-gray-500 dark:text-gray-400" x-show="itemToDelete">
-                                Are you sure you want to delete the {{ $itemType }} <span class="font-bold"
-                                    x-text="itemToDelete?.name"></span>? This action cannot be undone.
+                                {{ __('are_you_sure_delete') }} {{ $itemType }} <span class="font-bold"
+                                    x-text="itemToDelete?.name"></span>{{ __('this_action_cannot_be_undone') }}
                             </p>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                     });"
                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                     :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
-                    <span x-show="!isDeleting">Delete</span>
+                    <span x-show="!isDeleting">{{ __('delete') }}</span>
                     <span x-show="isDeleting" class="flex items-center">
                         <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
@@ -114,13 +114,13 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        Deleting...
+                        {{ __('deleting') }}
                     </span>
                 </button>
                 <button type="button" @click="showDeleteModal = false; itemToDelete = null;"
                     class="hidden lg:inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-600 text-base font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     :disabled="isDeleting" :class="{ 'opacity-75 cursor-not-allowed': isDeleting }">
-                    Cancel
+                    {{ __('cancel') }}
                 </button>
             </div>
         </div>
