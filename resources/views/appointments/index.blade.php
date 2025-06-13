@@ -128,7 +128,7 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                    <div class="overflow-x-auto rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
