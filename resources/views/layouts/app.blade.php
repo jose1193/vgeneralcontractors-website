@@ -31,6 +31,69 @@
         [x-cloak] {
             display: none !important;
         }
+
+        /* Custom Theme System */
+        :root {
+            --bg-primary: #f9fafb;
+            /* Light theme background */
+            --bg-secondary: #ffffff;
+            /* Light theme cards */
+            --bg-sidebar: #f3f4f6;
+            /* Light theme sidebar */
+            --text-primary: #111827;
+            /* Light theme text */
+            --text-secondary: #6b7280;
+            /* Light theme secondary text */
+            --border-color: #e5e7eb;
+            /* Light theme borders */
+            --header-bg: #ffffff;
+            /* Light theme header */
+        }
+
+        .dark {
+            --bg-primary: #141414;
+            /* Your original dark background */
+            --bg-secondary: #2C2E36;
+            /* Your original card background */
+            --bg-sidebar: #141414;
+            /* Your original sidebar */
+            --text-primary: #ffffff;
+            /* Dark theme text */
+            --text-secondary: #9ca3af;
+            /* Dark theme secondary text */
+            --border-color: #374151;
+            /* Dark theme borders */
+            --header-bg: #141414;
+            /* Your original header */
+        }
+
+        .theme-bg-primary {
+            background-color: var(--bg-primary);
+        }
+
+        .theme-bg-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .theme-bg-sidebar {
+            background-color: var(--bg-sidebar);
+        }
+
+        .theme-text-primary {
+            color: var(--text-primary);
+        }
+
+        .theme-text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .theme-border {
+            border-color: var(--border-color);
+        }
+
+        .theme-header-bg {
+            background-color: var(--header-bg);
+        }
     </style>
     <style>
         ::-webkit-scrollbar {
@@ -94,10 +157,10 @@
 
 </head>
 
-<body class="font-sans antialiased" style="background-color: #141414;">
+<body class="font-sans antialiased dark" x-data="themeSwitch()" x-init="initTheme()" :class="{ 'dark': isDark }">
     <x-banner />
 
-    <div class="min-h-screen" style="background-color: #141414;">
+    <div class="min-h-screen theme-bg-primary transition-colors duration-300">
         @livewire('navigation-menu')
 
         <!-- Page Heading - Hidden while using custom titles -->
@@ -118,7 +181,8 @@
             @endif
         </main>
 
-        <footer class="ml-18 sm:ml-20 lg:ml-22 bg-transparent py-4 text-center text-gray-600">
+        <footer
+            class="ml-18 sm:ml-20 lg:ml-22 bg-transparent py-4 text-center text-gray-600 dark:text-gray-400 transition-colors duration-300">
             <p>&copy; {{ date('Y') }} V General Contractors. {{ __('all_rights_reserved') }}</p>
         </footer>
     </div>
@@ -151,6 +215,40 @@
     @stack('scripts')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Theme Switch Script -->
+    <script>
+        function themeSwitch() {
+            return {
+                isDark: true, // Default to dark theme
+
+                initTheme() {
+                    // Check if theme is stored in localStorage
+                    const savedTheme = localStorage.getItem('theme');
+                    if (savedTheme) {
+                        this.isDark = savedTheme === 'dark';
+                    }
+
+                    // Apply theme to html element
+                    this.updateTheme();
+                },
+
+                toggleTheme() {
+                    this.isDark = !this.isDark;
+                    this.updateTheme();
+                    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+                },
+
+                updateTheme() {
+                    if (this.isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>

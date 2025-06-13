@@ -1,8 +1,3 @@
-@php
-    $customStyle = 'background-color: #2C2E36;';
-    $customHoverStyle = 'background-color: rgba(44, 46, 54, 0.5);';
-@endphp
-
 <div x-data="{ sidebarOpen: false }" x-init="$store.sidebar = {
     open: false,
     toggle() {
@@ -11,13 +6,14 @@
     }
 }" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b theme-header-bg theme-border transition-colors duration-300">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-4">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                    <button @click="$store.sidebar.toggle()"
+                        class="lg:hidden theme-text-secondary hover:theme-text-primary p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -35,10 +31,9 @@
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block">
                         <input type="text" placeholder="Start Search Here..."
-                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                            style="background-color: #2C2E36; border: 1px solid #2C2E36;">
-                        <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                            class="theme-bg-secondary theme-text-primary placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400 theme-border transition-colors duration-300">
+                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 absolute left-3 top-2.5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -50,7 +45,7 @@
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
@@ -96,12 +91,12 @@
                             x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
-                            class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            style="background-color: #2C2E36; display: none;">
+                            class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white dark:bg-gray-800 transition-colors duration-300"
+                            style="display: none;">
                             <div class="py-1">
                                 @foreach ($languages as $code => $language)
                                     <a href="{{ route('lang.switch', $code) }}"
-                                        class="group flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 {{ $currentLocale === $code ? 'bg-gray-700' : '' }}">
+                                        class="group flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 {{ $currentLocale === $code ? 'bg-gray-100 dark:bg-gray-700' : '' }} transition-colors duration-200">
                                         <span class="mr-3">{!! $language['flag'] !!}</span>
                                         <span>{{ $language['name'] }}</span>
                                         @if ($currentLocale === $code)
@@ -116,6 +111,27 @@
                                 @endforeach
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Theme Switcher -->
+                    <div class="relative">
+                        <button @click="$parent.toggleTheme()" type="button"
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md theme-text-secondary hover:theme-text-primary focus:outline-none transition ease-in-out duration-150">
+                            <template x-if="$parent.isDark">
+                                <!-- Sun icon for light mode -->
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </template>
+                            <template x-if="!$parent.isDark">
+                                <!-- Moon icon for dark mode -->
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            </template>
+                        </button>
                     </div>
 
                     <!-- Search Icon - Mobile -->
@@ -225,8 +241,8 @@
     </nav>
 
     <!-- Desktop Sidebar -->
-    <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
-        style="background-color: #141414;">
+    <div
+        class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40 theme-bg-sidebar transition-colors duration-300">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
@@ -462,8 +478,8 @@
         x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
         x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
         x-transition:leave-end="-translate-x-full"
-        class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto"
-        style="background-color: #141414; display: none;">
+        class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto theme-bg-sidebar transition-colors duration-300"
+        style="display: none;">
 
         <div class="p-4 space-y-4">
             <!-- Dashboard -->
