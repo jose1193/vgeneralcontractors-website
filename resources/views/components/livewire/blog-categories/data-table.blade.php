@@ -1,4 +1,4 @@
-<div class="overflow-x-auto -mx-4 sm:mx-0 sm:rounded-lg">
+<div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
@@ -21,7 +21,7 @@
                     'sortDirection' => $sortDirection,
                 ])
                 <th scope="col"
-                    class="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     {{ strtoupper(__('actions')) }}
                 </th>
             </tr>
@@ -29,22 +29,21 @@
         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
             @forelse ($categories as $category)
                 <tr class="{{ $category->trashed() ? 'bg-red-100 dark:bg-red-900/30' : '' }}">
-                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-center">
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
                         <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ $category->blog_category_name }}
                         </div>
                     </td>
-                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-center">
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             {{ Str::limit($category->blog_category_description, 50) }}
                         </div>
                     </td>
-                    <td
-                        class="px-3 sm:px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <td class="px-6 py-4 whitespace-no-wrap text-sm text-gray-500 dark:text-gray-400 text-center">
                         {{ $category->created_at->format('F d, Y h:i A') }}
                     </td>
-                    <td class="px-3 sm:px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
-                        <div class="inline-flex items-center justify-center space-x-2 sm:space-x-4">
+                    <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
+                        <div class="inline-flex items-center justify-center space-x-4">
                             @if ($category->trashed())
                                 <!-- Restore button -->
                                 <button
@@ -89,7 +88,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td class="px-3 sm:px-6 py-4 text-center" colspan="4">{{ __('no_blog_categories_found') }}</td>
+                    <td class="px-6 py-4 text-center" colspan="4">{{ __('no_blog_categories_found') }}</td>
                 </tr>
             @endforelse
         </tbody>

@@ -9,8 +9,8 @@
         @endif
 
         <!-- Main container -->
-        <div class=" dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg mx-4 sm:mx-0 sm:rounded-lg">
-            <div class="p-4 sm:p-6">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="p-6">
                 <!-- Add category button -->
                 <div
                     class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
