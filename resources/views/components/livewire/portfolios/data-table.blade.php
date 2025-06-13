@@ -17,33 +17,33 @@
                 {{-- START: Added Sequence Number Column Header --}}
                 <th scope="col"
                     class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Nro
+                    {{ __('nro') }}
                 </th>
                 {{-- END: Added Sequence Number Column Header --}}
 
                 {{-- Imagen --}}
                 <th scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Image
+                    {{ __('image') }}
                 </th>
                 {{-- Project Name --}}
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Project Name
+                    {{ __('project_name') }}
                 </th>
                 {{-- Service Category --}}
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Service Category
+                    {{ __('service_category') }}
                 </th>
 
                 {{-- Created At --}}
-                <x-sort-position :field="'created_at'" :label="'CREATED AT'" :sortField="$sortField" :sortDirection="$sortDirection" />
+                <x-sort-position :field="'created_at'" :label="strtoupper(__('created_at'))" :sortField="$sortField" :sortDirection="$sortDirection" />
 
                 {{-- Actions --}}
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                    {{ __('actions') }}
                 </th>
             </tr>
         </thead>
@@ -158,12 +158,12 @@
                     {{-- Adjusted colspan to 6 (Added 1 for the new '#' column) --}}
                     <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                         @if (trim($search ?? '') !== '')
-                            No portfolios found matching "{{ $search }}".
+                            {{ __('no_portfolios_matching') }} "{{ $search }}".
                         @else
-                            No portfolios found.
+                            {{ __('no_portfolios_found') }}.
                             @can('CREATE_PORTFOLIO')
-                                <button wire:click="$parent.create()" class="text-blue-500 hover:underline ml-1">Add one
-                                    now?</button>
+                                <button wire:click="$parent.create()"
+                                    class="text-blue-500 hover:underline ml-1">{{ __('add_one_now') }}</button>
                             @endcan
                         @endif
                     </td>

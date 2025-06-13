@@ -48,28 +48,27 @@
 {{-- Wrapper div for consistent spacing --}}
 <div class="space-y-6">
 
-    <x-input-2 name="title" label="Project Name" {{-- Explicitly add wire:model.live to control update frequency --}} wire:model.live="title" {{-- Keep 'model' if x-input-2 uses it for other things like id/name/label linking --}}
-        model="title" :required="true" :error="$errors->first('title')" autocomplete="off" placeholder="Enter project name"
-        {{-- The @input for capitalization can remain --}}
+    <x-input-2 name="title" label="{{ __('project_name') }}" {{-- Explicitly add wire:model.live to control update frequency --}} wire:model.live="title"
+        {{-- Keep 'model' if x-input-2 uses it for other things like id/name/label linking --}} model="title" :required="true" :error="$errors->first('title')" autocomplete="off"
+        placeholder="{{ __('enter_project_name') }}" {{-- The @input for capitalization can remain --}}
         @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
     {{-- Campo Description --}}
-    <x-text-area-2 name="description" label="Description" model="description" :required="true" :error="$errors->first('description')"
-        rows="4" placeholder="Enter project description"
+    <x-text-area-2 name="description" label="{{ __('description') }}" model="description" :required="true"
+        :error="$errors->first('description')" rows="4" placeholder="{{ __('enter_project_description') }}"
         @input="$event.target.value = $event.target.value.charAt(0).toUpperCase() + $event.target.value.slice(1)" />
 
     {{-- Campo Service Category Select --}}
-    <x-select-input-2 name="service_category_id" label="Service Category" model="service_category_id" :required="true"
-        :error="$errors->first('service_category_id')" :options="$serviceCategoriesList" placeholder="Select a Service Category" value-field="id"
-        text-field="category" />
+    <x-select-input-2 name="service_category_id" label="{{ __('service_category') }}" model="service_category_id"
+        :required="true" :error="$errors->first('service_category_id')" :options="$serviceCategoriesList" placeholder="{{ __('select_service_category') }}"
+        value-field="id" text-field="category" />
 
     {{-- ========== SECCIÓN IMÁGENES ========== --}}
     <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Images
+            {{ __('images_management') }}
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
-            (Max {{ $maxFiles }} total. Max {{ $maxSizeKb / 1024 }}MB/image. Max {{ $maxTotalSizeKb / 1024 }}MB
-            total new. Drag to reorder.)
+            ({{ __('max_images_info', ['maxFiles' => $maxFiles, 'maxSize' => round($maxSizeKb / 1024, 1), 'maxTotal' => round($maxTotalSizeKb / 1024, 1)]) }})
         </p>
 
         {{-- Input File Múltiple --}}
@@ -86,12 +85,12 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                 $newPendingCount = count($pendingNewImages);
                 $canAddMore = ($currentVisibleExistingCount + $newPendingCount) < $maxFiles; @endphp
             {{ $canAddMore ? '' : 'disabled' }}
-            title="{{ $canAddMore ? 'Select images to add' : 'Maximum number of images reached (' . $maxFiles . ')' }}">
+            title="{{ $canAddMore ? __('select_images_to_add') : __('maximum_images_reached', ['maxFiles' => $maxFiles]) }}">
 
         {{-- Indicador de carga for file input --}}
         <div wire:loading wire:target="image_files"
             class="mt-2 text-sm text-indigo-600 dark:text-indigo-400 animate-pulse">
-            Processing selection...
+            {{ __('processing_selection') }}
         </div>
 
         {{-- Errores Específicos del Input (`image_files.*`) --}}
@@ -113,7 +112,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @if (!empty($pendingNewImages))
             <div class="mt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-                    New Images Pending Upload ({{ count($pendingNewImages) }}):
+                    {{ __('new_images_pending_upload', ['count' => count($pendingNewImages)]) }}
                 </p>
                 {{-- wire:sortable pointing to the method for pending images --}}
                 <div wire:sortable="updatePendingImageOrder"
@@ -136,7 +135,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                     wire:loading.attr="disabled"
                                     wire:target="$parent.removePendingNewImage({{ $index }})"
                                     class="absolute -top-2 -right-2 z-10 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md transition-all duration-150 ease-in-out opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    title="Remove this pending image">
+                                    title="{{ __('remove_pending_image') }}">
                                     <span wire:loading.remove
                                         wire:target="$parent.removePendingNewImage({{ $index }})">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -169,7 +168,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
         @if ($isEditing && $existing_images instanceof \Illuminate\Support\Collection && $existing_images->isNotEmpty())
             <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-                    Current Images ({{ $existing_images->whereNotIn('id', $images_to_delete)->count() }} visible):
+                    {{ __('current_images', ['count' => $existing_images->whereNotIn('id', $images_to_delete)->count()]) }}
                 </p>
                 {{-- wire:sortable pointing to the method for existing images --}}
                 <div wire:sortable="updateExistingImageOrder"
@@ -189,7 +188,7 @@ $currentVisibleExistingCount = $isEditing && $existing_images instanceof \Illumi
                                 @if ($visibleImageIndex === 0)
                                     <span
                                         class="absolute top-1 left-1 z-10 bg-indigo-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded shadow">
-                                        MAIN
+                                        {{ __('main_image') }}
                                     </span>
                                 @endif
                                 @php $visibleImageIndex++; @endphp {{-- Increment only for visible images --}}

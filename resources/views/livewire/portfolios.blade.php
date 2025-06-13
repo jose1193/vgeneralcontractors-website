@@ -22,7 +22,8 @@
                     class="mb-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     {{-- Search Input --}}
                     <div class="relative w-full sm:w-1/3 md:w-1/4">
-                        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search portfolios..."
+                        <input wire:model.live.debounce.300ms="search" type="text"
+                            placeholder="{{ __('search_portfolios') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:focus:ring-indigo-600 dark:focus:border-indigo-600 sm:text-sm">
                         <div wire:loading wire:target="search"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -41,12 +42,12 @@
                     {{-- Action Buttons --}}
                     <div class="flex items-center space-x-3">
                         {{-- Toggle Show Deleted --}}
-                        <x-toggle label="Show Inactive" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
+                        <x-toggle label="{{ __('show_inactive') }}" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
                         {{-- Per Page Selector (Optional - Add if needed) --}}
                         {{-- <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32"> ... </x-select-input-per-pages> --}}
                         @can('CREATE_PORTFOLIO')
                             <x-add-button wireClick="create">
-                                Add New
+                                {{ __('add_new') }}
                             </x-add-button>
                         @endcan
                     </div>
@@ -82,7 +83,7 @@
             The button text inside the form-modal component might need adjustment
             if it solely relies on modalAction, or you could pass a separate prop for button text.
         --}}
-        <x-modals.form-modal :isOpen="$showModal" :modalTitle="$isEditing ? 'Edit Portfolio' : 'Add New Portfolio'" :modalAction="'save'">
+        <x-modals.form-modal :isOpen="$showModal" :modalTitle="$isEditing ? __('edit_portfolio') : __('add_new_portfolio')" :modalAction="'save'">
             {{--
                 Optional x-data wrapper. Useful if you add client-side validation
                 or need Alpine state within the modal body later.
