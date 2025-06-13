@@ -916,5 +916,27 @@
     "swal_submission_error": "Submission Error",
     "swal_security_check_failed": "Security check failed. Please refresh and try again.",
     "swal_network_error": "Could not submit the form due to a network or server issue. Please try again later.",
-    "swal_ok": "OK"
+    "swal_ok": "OK",
+
+    "date_of_birth": "Date of Birth",
+    "email_datas_title": "Email Management",
+    "email_datas_subtitle": "Manage email addresses and contact information for your business",
+    "description": "Description",
+    "email_address": "Email Address",
+    "phone_number": "Phone Number",
+    "type": "Type",
+    "appointment": "Appointment",
+    "info": "Info",
+    "collections": "Collections",
+    "personal": "Personal",
+    "work": "Work",
+    "business": "Business",
+    "other": "Other",
+    "no_email_data_found": "No email data found. Start by adding a new one.",
+    "edit_email_data": "Edit Email Data",
+    "delete_email_data": "Delete Email Data",
+    "restore_email_data": "Restore Email Data",
+    "add_email_data": "Add Email Data",
+    "create_new_email_data": "Create New Email Data",
+    "NRO": "No."
 }

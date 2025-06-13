@@ -6,42 +6,42 @@
             <tr>
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    NRO
+                    {{ __('NRO') }}
                 </th>
                 @include('components.sort-position', [
                     'field' => 'description',
-                    'label' => 'DESCRIPTION',
+                    'label' => __('description'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                     'model' => 'emailData',
                 ])
                 @include('components.sort-position', [
                     'field' => 'email',
-                    'label' => 'EMAIL',
+                    'label' => __('email'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'phone',
-                    'label' => 'PHONE',
+                    'label' => __('phone'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'type',
-                    'label' => 'TYPE',
+                    'label' => __('type'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'created_at',
-                    'label' => 'CREATED AT',
+                    'label' => __('created_at'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    ACTIONS
+                    {{ __('actions') }}
                 </th>
             </tr>
         </thead>
@@ -78,49 +78,49 @@
                                 @case('Appointment')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100">
-                                        {{ $emailData->type }}
+                                        {{ __('appointment') }}
                                     </span>
                                 @break
 
                                 @case('Collections')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                        {{ $emailData->type }}
+                                        {{ __('collections') }}
                                     </span>
                                 @break
 
                                 @case('Info')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
-                                        {{ $emailData->type }}
+                                        {{ __('info') }}
                                     </span>
                                 @break
 
                                 @case('Personal')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-100">
-                                        {{ $emailData->type }}
+                                        {{ __('personal') }}
                                     </span>
                                 @break
 
                                 @case('Work')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-100">
-                                        {{ $emailData->type }}
+                                        {{ __('work') }}
                                     </span>
                                 @break
 
                                 @case('Business')
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-800 dark:text-cyan-100">
-                                        {{ $emailData->type }}
+                                        {{ __('business') }}
                                     </span>
                                 @break
 
                                 @default
                                     <span
                                         class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
-                                        {{ $emailData->type }}
+                                        {{ __('other') }}
                                     </span>
                             @endswitch
                         </div>
@@ -172,7 +172,7 @@
                     <tr>
                         <td colspan="7"
                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
-                            No email data found. Start by adding a new one.
+                            {{ __('no_email_data_found') }}
                         </td>
                     </tr>
                 @endforelse
