@@ -6,9 +6,18 @@
         </h2>
     </x-slot> --}}
 
-    <x-welcome title="{{ __('company_data_title') }}" subtitle="{{ __('company_data_subtitle') }}">
-        <div class="py-6">
+    <div style="background-color: #141414;" class="text-white min-h-screen">
+        <!-- Page Header -->
+        <div class="p-6">
+            <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('company_data_title') }}</h2>
+                <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">{{ __('company_data_subtitle') }}
+                </p>
+            </div>
+
+            <!-- Company Data Content -->
             <livewire:company-data />
         </div>
-    </x-welcome>
+    </div>
 </x-app-layout>
