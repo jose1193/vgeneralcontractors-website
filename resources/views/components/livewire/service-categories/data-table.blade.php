@@ -4,19 +4,19 @@
             <tr>
                 @include('components.sort-position', [
                     'field' => 'category',
-                    'label' => 'CATEGORY',
+                    'label' => __('category'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'created_at',
-                    'label' => 'CREATED AT',
+                    'label' => __('created_at'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    ACTIONS
+                    {{ __('actions') }}
                 </th>
             </tr>
         </thead>
@@ -77,7 +77,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td class="px-6 py-4 text-center" colspan="3">No service categories found.</td>
+                    <td class="px-6 py-4 text-center" colspan="3">{{ __('no_service_categories_found') }}</td>
                 </tr>
             @endforelse
         </tbody>

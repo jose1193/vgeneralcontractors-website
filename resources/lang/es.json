@@ -937,5 +937,16 @@
     "delete_email_data": "Eliminar Datos de Correo",
     "restore_email_data": "Restaurar Datos de Correo",
     "add_email_data": "Agregar Datos de Correo",
-    "create_new_email_data": "Crear Nuevos Datos de Correo"
+    "create_new_email_data": "Crear Nuevos Datos de Correo",
+    "service_categories_title": "Categorías de Servicios",
+    "service_categories_subtitle": "Gestione y organice sus categorías de servicios para una mejor clasificación empresarial",
+    "category": "Categoría",
+    "category_name": "Nombre de Categoría",
+    "no_service_categories_found": "No se encontraron categorías de servicios.",
+    "add_category": "Agregar Categoría",
+    "create_new_category": "Crear Nueva Categoría",
+    "edit_category": "Editar Categoría",
+    "delete_category": "Eliminar Categoría",
+    "restore_category": "Restaurar Categoría",
+    "show_inactive_categories": "Mostrar Categorías Inactivas"
 }

@@ -1,5 +1,5 @@
 <div class="mb-4">
-    <x-label for="category" value="Category Name" />
+    <x-label for="category" value="{{ __('category_name') }}" />
     <x-input id="category" type="text" class="mt-1 block w-full" x-model="form.category"
         @input="
             // Only allow letters, spaces and hyphens

@@ -938,5 +938,16 @@
     "restore_email_data": "Restore Email Data",
     "add_email_data": "Add Email Data",
     "create_new_email_data": "Create New Email Data",
-    "NRO": "No."
+    "NRO": "No.",
+    "service_categories_title": "Service Categories",
+    "service_categories_subtitle": "Manage and organize your service categories for better business classification",
+    "category": "Category",
+    "category_name": "Category Name",
+    "no_service_categories_found": "No service categories found.",
+    "add_category": "Add Category",
+    "create_new_category": "Create New Category",
+    "edit_category": "Edit Category",
+    "delete_category": "Delete Category",
+    "restore_category": "Restore Category",
+    "show_inactive_categories": "Show Inactive Categories"
 }
