@@ -1,7 +1,7 @@
 {{-- resources/views/livewire/portfolios.blade.php --}}
 <div>
     {{-- Outer Container --}}
-    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-4 px-4 sm:py-10 sm:px-6 lg:px-8">
 
         {{-- Flash Messages --}}
         <div class="mb-4 space-y-3">
@@ -14,8 +14,8 @@
         </div>
 
         {{-- Card Container --}}
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-            <div class="p-6">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
+            <div class="p-4 sm:p-6">
 
                 {{-- Controls Bar --}}
                 <div
