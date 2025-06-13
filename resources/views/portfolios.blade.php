@@ -19,7 +19,7 @@
         </div>
 
         {{-- Main content area --}}
-        <div class="py-2 sm:py-12">
+        <div class="py-2 sm:py-12 md:py-6 lg:py-8">
             <livewire:portfolios />
         </div>
     </div>
