@@ -55,15 +55,14 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Permisos para gestionar usuarios
+        // Permisos para gestionar usuarios (SOLO para admins completos)
         $userManagementPermissions = [
             'CREATE_USER', 'READ_USER', 'UPDATE_USER', 'DELETE_USER', 'RESTORE_USER'
         ];
 
-        // Permisos para "Other" (ajusta según tus necesidades)
+        // Permisos para "Other" (muy limitados)
         $otherPermissions = [
-            'READ_POST', 'READ_PORTFOLIO', 'READ_SERVICE_CATEGORY'
-            // Añade más según sea necesario
+            'READ_POST'  // Solo leer posts
         ];
 
         // Permisos limitados para admin@vgeneralcontractors.com
@@ -78,8 +77,10 @@ class DatabaseSeeder extends Seeder
             'CREATE_BLOG_CATEGORY', 'READ_BLOG_CATEGORY', 'UPDATE_BLOG_CATEGORY', 'DELETE_BLOG_CATEGORY', 'RESTORE_BLOG_CATEGORY'
         ];
 
-        // Todos los permisos excepto los de gestión de usuarios
-        $nonUserManagementPermissions = array_diff($allPermissions, $userManagementPermissions);
+        // Permisos para user@user.com (SOLO lectura de appointments - SIN call records, SIN administración, SIN services, SIN portfolio, SIN blog)
+        $basicUserPermissions = [
+            'READ_APPOINTMENT'  // Solo ver appointments, nada más
+        ];
 
         // Crear usuarios para cada rol
         $adminUser = User::factory()->create([
@@ -118,6 +119,7 @@ class DatabaseSeeder extends Seeder
         $limitedAdminUser->syncPermissions($limitedAdminPermissions);
         // END LIMITED ADMIN USER
 
+        // BASIC USER - Solo lectura de appointments
         $userUser = User::factory()->create([
             'name' => 'User',
             'email' => 'user@user.com',
@@ -127,6 +129,10 @@ class DatabaseSeeder extends Seeder
             'terms_and_conditions' => true
         ]);
         $userUser->assignRole('User');
+        
+        // Asignar solo permisos básicos (SOLO lectura de appointments)
+        $userUser->syncPermissions($basicUserPermissions);
+        // END BASIC USER
 
         $otherUser = User::factory()->create([
             'name' => 'Other User',
@@ -140,8 +146,8 @@ class DatabaseSeeder extends Seeder
         // Para Admin: todos los permisos (solo para info@vgeneralcontractors.com y josegonzalezcr2794@gmail.com)
         $adminRole->givePermissionTo($allPermissions);
         
-        // Para User: todos excepto gestión de usuarios
-        $userRole->givePermissionTo($nonUserManagementPermissions);
+        // Para User: NO asignar permisos al rol, se asignan individualmente a cada usuario
+        // $userRole->givePermissionTo($basicUserPermissions);  // Comentado para control individual
         
         // Para Other: solo permisos específicos
         $otherRole->givePermissionTo($otherPermissions);
