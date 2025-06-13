@@ -33,37 +33,6 @@
 
                 <!-- Right side - Language, Notifications, Messages, User menu -->
                 <div class="flex items-center space-x-4">
-                    <!-- Search Icon - Mobile -->
-                    <div class="md:hidden relative" x-data="{ searchOpen: false }">
-                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-2">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
-
-                        <!-- Mobile Search Dropdown -->
-                        <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 transform scale-95"
-                            x-transition:enter-end="opacity-100 transform scale-100"
-                            x-transition:leave="transition ease-in duration-200"
-                            x-transition:leave-start="opacity-100 transform scale-100"
-                            x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute right-0 top-12 w-80 rounded-lg shadow-lg border z-50 p-4"
-                            style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
-                            <div class="relative">
-                                <input type="text" placeholder="Start Search Here..."
-                                    class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                    style="background-color: #141414; border: 1px solid #2C2E36;">
-                                <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
@@ -131,6 +100,37 @@
                                         @endif
                                     </a>
                                 @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Icon - Mobile -->
+                    <div class="md:hidden relative" x-data="{ searchOpen: false }">
+                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+
+                        <!-- Mobile Search Dropdown -->
+                        <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 transform scale-95"
+                            x-transition:enter-end="opacity-100 transform scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 transform scale-100"
+                            x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
+                            class="absolute left-1/2 transform -translate-x-1/2 top-12 w-80 rounded-lg shadow-lg border z-50 p-4"
+                            style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
+                            <div class="relative">
+                                <input type="text" placeholder="Start Search Here..."
+                                    class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                    style="background-color: #141414; border: 1px solid #2C2E36;">
+                                <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
                             </div>
                         </div>
                     </div>
