@@ -97,7 +97,7 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-900">
+    <div class="min-h-screen" style="background-color: #1A1C22;">
         @livewire('navigation-menu')
 
         <!-- Page Content with sidebar margin -->
