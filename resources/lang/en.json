@@ -1112,5 +1112,20 @@
     "open_maps": "Open in Maps",
     "copy_link": "Copy Link",
     "copied": "Copied!",
-    "scheduling_conflict": "Scheduling Conflict"
+    "scheduling_conflict": "Scheduling Conflict",
+
+    "_comment_blog_categories": "=== BLOG CATEGORIES ===",
+    "blog_categories_title": "Blog Categories Management",
+    "blog_categories_subtitle": "Manage and organize your blog categories for better content classification",
+    "show_inactive_blog_categories": "Show Inactive Blog Categories",
+    "add_blog_category": "Add Blog Category",
+    "blog_category_name": "Category Name",
+    "enter_blog_category_name": "Enter category name",
+    "enter_blog_category_description": "Enter category description",
+    "blog_category_name_min_3_chars": "Category name must be at least 3 characters",
+    "description_max_500_chars": "Description must be 500 characters or less",
+    "no_blog_categories_found": "No blog categories found.",
+    "edit_blog_category": "Edit Blog Category",
+    "delete_blog_category": "Delete Blog Category",
+    "restore_blog_category": "Restore Blog Category"
 }

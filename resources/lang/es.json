@@ -510,7 +510,7 @@
     "project_name": "Nombre del Proyecto",
     "description": "Descripción",
     "service_category": "Categoría de Servicio",
-    "created_at": "Fecha de Creación",
+
     "add_new": "Agregar Nuevo",
     "edit_portfolio": "Editar Portafolio",
     "add_new_portfolio": "Agregar Nuevo Portafolio",
@@ -1106,5 +1106,21 @@
     "open_maps": "Abrir en Maps",
     "copy_link": "Copiar Enlace",
     "copied": "¡Copiado!",
-    "scheduling_conflict": "Conflicto de Programación"
+    "scheduling_conflict": "Conflicto de Programación",
+
+    "_comment_blog_categories": "=== CATEGORÍAS DE BLOG ===",
+    "blog_categories_title": "Gestión de Categorías de Blog",
+    "blog_categories_subtitle": "Gestione y organice sus categorías de blog para una mejor clasificación de contenido",
+    "show_inactive_blog_categories": "Mostrar Categorías Inactivas",
+    "add_blog_category": "Agregar Categoría de Blog",
+    "blog_category_name": "Nombre de Categoría",
+    "enter_blog_category_name": "Ingrese el nombre de la categoría",
+    "enter_blog_category_description": "Ingrese la descripción de la categoría",
+    "blog_category_name_min_3_chars": "El nombre de la categoría debe tener al menos 3 caracteres",
+    "description_max_500_chars": "La descripción debe tener 500 caracteres o menos",
+    "no_blog_categories_found": "No se encontraron categorías de blog.",
+    "edit_blog_category": "Editar Categoría de Blog",
+    "delete_blog_category": "Eliminar Categoría de Blog",
+    "restore_blog_category": "Restaurar Categoría de Blog",
+    "created_at": "Creado el"
 }

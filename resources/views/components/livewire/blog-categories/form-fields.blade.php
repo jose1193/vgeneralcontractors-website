@@ -1,7 +1,7 @@
 <div>
     <div class="mb-4">
-        <label for="blog_category_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category
-            Name</label>
+        <label for="blog_category_name"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('blog_category_name') }}</label>
         <input type="text" id="blog_category_name" wire:model="blog_category_name" x-model="form.blog_category_name"
             @input="
                 // Only allow letters, spaces and hyphens
@@ -14,7 +14,7 @@
                 $wire.set('blog_category_name', $event.target.value);
                 validateField('blog_category_name');
             "
-            placeholder="Enter category name"
+            placeholder="{{ __('enter_blog_category_name') }}"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
         <div x-show="errors.blog_category_name" x-text="errors.blog_category_name" class="text-red-500 text-xs mt-1">
         </div>
@@ -25,7 +25,7 @@
 
     <div class="mb-4">
         <label for="blog_category_description"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('description') }}</label>
         <textarea id="blog_category_description" wire:model="blog_category_description" x-model="form.blog_category_description"
             @input="
                 // Capitalize first letter of the description
@@ -34,7 +34,7 @@
                 $wire.set('blog_category_description', $event.target.value);
                 validateField('blog_category_description');
             "
-            placeholder="Enter category description" rows="3"
+            placeholder="{{ __('enter_blog_category_description') }}" rows="3"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
         <div x-show="errors.blog_category_description" x-text="errors.blog_category_description"
             class="text-red-500 text-xs mt-1"></div>
@@ -58,7 +58,7 @@
                 // Basic validation - this can be expanded
                 if (field === 'blog_category_name') {
                     if (!this.form.blog_category_name || this.form.blog_category_name.length < 3) {
-                        this.errors.blog_category_name = 'Category name must be at least 3 characters';
+                        this.errors.blog_category_name = '{{ __('blog_category_name_min_3_chars') }}';
                     } else {
                         delete this.errors.blog_category_name;
                     }
@@ -66,7 +66,7 @@
 
                 if (field === 'blog_category_description') {
                     if (this.form.blog_category_description && this.form.blog_category_description.length > 500) {
-                        this.errors.blog_category_description = 'Description must be 500 characters or less';
+                        this.errors.blog_category_description = '{{ __('description_max_500_chars') }}';
                     } else {
                         delete this.errors.blog_category_description;
                     }

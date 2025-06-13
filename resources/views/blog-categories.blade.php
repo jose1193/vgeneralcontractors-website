@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Blog Categories') }}
-        </h2>
+        <div class="bg-gray-800" style="background-color: #141414;">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="text-2xl font-semibold leading-tight text-white">
+                    {{ __('blog_categories_title') }}
+                </h2>
+                <p class="mt-2 text-sm text-gray-300">
+                    {{ __('blog_categories_subtitle') }}
+                </p>
+            </div>
+        </div>
     </x-slot>
 
     @livewire('blog-categories')

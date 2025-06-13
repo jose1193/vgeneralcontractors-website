@@ -4,25 +4,25 @@
             <tr>
                 @include('components.sort-position', [
                     'field' => 'blog_category_name',
-                    'label' => 'CATEGORY NAME',
+                    'label' => strtoupper(__('blog_category_name')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'blog_category_description',
-                    'label' => 'DESCRIPTION',
+                    'label' => strtoupper(__('description')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'created_at',
-                    'label' => 'CREATED AT',
+                    'label' => strtoupper(__('created_at')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    ACTIONS
+                    {{ strtoupper(__('actions')) }}
                 </th>
             </tr>
         </thead>
@@ -49,7 +49,7 @@
                                 <button
                                     @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $category->uuid }}', name: '{{ $category->blog_category_name }}'}}))"
                                     class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 focus:outline-none"
-                                    title="Restore Category">
+                                    title="{{ __('restore_blog_category') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +61,7 @@
                                 <!-- Edit button -->
                                 <button wire:click="edit('{{ $category->uuid }}')"
                                     class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 focus:outline-none"
-                                    title="Edit Category">
+                                    title="{{ __('edit_blog_category') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -74,7 +74,7 @@
                                 <button
                                     @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $category->uuid }}', name: '{{ $category->blog_category_name }}'}}))"
                                     class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 focus:outline-none"
-                                    title="Delete Category">
+                                    title="{{ __('delete_blog_category') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -88,7 +88,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td class="px-6 py-4 text-center" colspan="4">No blog categories found.</td>
+                    <td class="px-6 py-4 text-center" colspan="4">{{ __('no_blog_categories_found') }}</td>
                 </tr>
             @endforelse
         </tbody>
