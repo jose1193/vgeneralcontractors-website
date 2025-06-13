@@ -105,7 +105,7 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="fixed left-0 top-16 bottom-0 w-16 bg-gray-900 border-r border-gray-800 z-40">
+    <div class="fixed left-0 top-16 bottom-0 w-16 bg-gray-900 z-40">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <a href="{{ route('dashboard') }}"
