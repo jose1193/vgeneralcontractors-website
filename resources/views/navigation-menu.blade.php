@@ -11,17 +11,24 @@
     },
 
     toggleTheme() {
+        console.log('Toggle theme clicked, current isDark:', this.isDark);
         this.isDark = !this.isDark;
+        console.log('New isDark value:', this.isDark);
         this.updateTheme();
         localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+        console.log('Theme saved to localStorage:', localStorage.getItem('theme'));
     },
 
     updateTheme() {
+        console.log('Updating theme, isDark:', this.isDark);
         if (this.isDark) {
             document.documentElement.classList.add('dark');
+            console.log('Added dark class to html');
         } else {
             document.documentElement.classList.remove('dark');
+            console.log('Removed dark class from html');
         }
+        console.log('HTML classes now:', document.documentElement.className);
     }
 }" x-init="$store.sidebar = {
     open: false,
@@ -32,7 +39,8 @@
 };
 initTheme()" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b theme-header-bg theme-border transition-colors duration-300">
+    <nav
+        class="fixed top-0 left-0 right-0 z-50 border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
@@ -140,9 +148,13 @@ initTheme()" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Theme Switcher -->
-                    <div class="relative">
+                    <div class="relative flex items-center space-x-2">
+                        <!-- Theme indicator -->
+                        <span class="text-xs text-gray-600 dark:text-gray-300"
+                            x-text="isDark ? 'Dark' : 'Light'"></span>
+
                         <button @click="toggleTheme()" type="button"
-                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150">
                             <template x-if="isDark">
                                 <!-- Sun icon for light mode -->
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
