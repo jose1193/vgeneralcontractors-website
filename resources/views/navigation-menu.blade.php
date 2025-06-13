@@ -180,7 +180,7 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="fixed left-0 top-16 bottom-0 w-16 z-40" style="background-color: #141414;">
+    <div class="fixed left-4 sm:left-6 lg:left-8 top-16 bottom-0 w-16 z-40" style="background-color: #141414;">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
