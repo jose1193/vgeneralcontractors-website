@@ -1,11 +1,23 @@
 <x-app-layout>
-    <x-slot name="header">
+    {{-- Commenting out Jetstream header to avoid duplicate titles --}}
+    {{-- <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Users Management') }}
         </h2>
-    </x-slot>
+    </x-slot> --}}
 
-    <div class="py-12">
-        <livewire:users />
+    <div style="background-color: #141414;" class="text-white min-h-screen">
+        <!-- Page Header -->
+        <div class="p-6">
+            <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('users_title') }}</h2>
+                <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">{{ __('users_subtitle') }}
+                </p>
+            </div>
+
+            <!-- Users Content -->
+            <livewire:users />
+        </div>
     </div>
 </x-app-layout>

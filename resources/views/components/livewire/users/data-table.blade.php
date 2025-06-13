@@ -6,47 +6,47 @@
             <tr>
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    NRO
+                    {{ __('NRO') }}
                 </th>
                 @include('components.sort-position', [
                     'field' => 'name',
-                    'label' => 'NAME',
+                    'label' => __('name'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'email',
-                    'label' => 'EMAIL',
+                    'label' => __('email'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'username',
-                    'label' => 'USERNAME',
+                    'label' => __('username'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'phone',
-                    'label' => 'PHONE',
+                    'label' => __('phone'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'created_at',
-                    'label' => 'CREATED AT',
+                    'label' => __('created_at'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'deleted_at',
-                    'label' => 'STATUS',
+                    'label' => __('status'),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 <th scope="col"
                     class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    ACTIONS
+                    {{ __('actions') }}
                 </th>
             </tr>
         </thead>
@@ -85,12 +85,12 @@
                         @if ($user->deleted_at)
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
-                                Inactive
+                                {{ __('inactive') }}
                             </span>
                         @else
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                Active
+                                {{ __('active') }}
                             </span>
                         @endif
                     </td>
@@ -142,7 +142,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td class="px-6 py-4 text-center" colspan="9">No users available</td>
+                    <td class="px-6 py-4 text-center" colspan="9">{{ __('no_users_available') }}</td>
                 </tr>
             @endforelse
         </tbody>
