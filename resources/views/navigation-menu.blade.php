@@ -180,12 +180,12 @@
     </nav>
 
     <!-- Sidebar -->
-    <div class="fixed left-0 top-16 bottom-0 w-20 z-40" style="background-color: #141414;">
-        <div class="flex flex-col items-center py-6 space-y-6">
+    <div class="fixed left-0 top-16 bottom-0 w-16 z-40" style="background-color: #141414;">
+        <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
                 <a href="{{ route('dashboard') }}"
-                    class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                     onmouseover="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                     onmouseout="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                     <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +197,7 @@
                     </svg>
                 </a>
                 @if (!request()->routeIs('dashboard'))
-                    <div class="absolute left-16 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
+                    <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
                         style="background-color: #2C2E36;">
                         {{ __('dashboard') }}
                         <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -209,8 +209,8 @@
             <!-- Administration Group -->
             @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
                 <div class="relative group" x-data="{ subOpen: false }">
-                    <button @click="subOpen = !subOpen"
-                        class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('company-data') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <button @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('company-data') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('company-data') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('company-data') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,14 +221,8 @@
                         </svg>
                     </button>
 
-                    <div x-show="subOpen" @click.away="subOpen = false"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform scale-95"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute left-16 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="subOpen" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36; display: none;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -255,8 +249,8 @@
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
                 <div class="relative group" x-data="{ subOpen: false }">
-                    <button @click="subOpen = !subOpen"
-                        class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <button @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories') || request()->routeIs('call-records')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,14 +259,8 @@
                         </svg>
                     </button>
 
-                    <div x-show="subOpen" @click.away="subOpen = false"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform scale-95"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute left-16 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="subOpen" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36; display: none;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -305,8 +293,8 @@
             <!-- Appointments Group -->
             @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
                 <div class="relative group" x-data="{ subOpen: false }">
-                    <button @click="subOpen = !subOpen"
-                        class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <button @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -315,14 +303,8 @@
                         </svg>
                     </button>
 
-                    <div x-show="subOpen" @click.away="subOpen = false"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform scale-95"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute left-16 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="subOpen" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36; display: none;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -345,8 +327,8 @@
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
                 <div class="relative group" x-data="{ subOpen: false }">
-                    <button @click="subOpen = !subOpen"
-                        class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                    <button @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,14 +337,8 @@
                         </svg>
                     </button>
 
-                    <div x-show="subOpen" @click.away="subOpen = false"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform scale-95"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute left-16 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="subOpen" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36; display: none;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-gray-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -390,7 +366,7 @@
             @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
                 <div class="relative group">
                     <a href="{{ route('portfolios') }}"
-                        class="flex items-center justify-center w-12 h-12 transition-all duration-300 {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,7 +375,7 @@
                         </svg>
                     </a>
                     @if (!request()->routeIs('portfolios'))
-                        <div class="absolute left-16 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
+                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
                             {{ __('portfolio') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -408,6 +384,29 @@
                     @endif
                 </div>
             @endif
+
+            <!-- Translation Demo -->
+            @auth
+                <div class="relative group">
+                    <a href="{{ route('translation-demo') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 {{ request()->routeIs('translation-demo') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !request()->routeIs('translation-demo') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !request()->routeIs('translation-demo') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('translation-demo'))
+                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-50"
+                            style="background-color: #2C2E36;">
+                            {{ __('language') }} {{ __('demo') }}
+                            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                                style="background-color: #2C2E36;"></div>
+                        </div>
+                    @endif
+                </div>
+            @endauth
         </div>
     </div>
 </div>
