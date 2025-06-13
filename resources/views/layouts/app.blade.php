@@ -100,9 +100,9 @@
     <div class="min-h-screen" style="background-color: #141414;">
         @livewire('navigation-menu')
 
-        <!-- Page Heading - Only show if header slot is provided -->
+        <!-- Page Heading - Show when header slot is provided -->
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow hidden">
+            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4" style="background-color: #141414;">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
