@@ -37,12 +37,14 @@
                     </div>
                 </div>
 
-                <!-- Email data table -->
-                @include('components.livewire.email-datas.data-table', [
-                    'emailDatas' => $emailDatas,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <!-- Email data table with extra spacing on mobile -->
+                <div class="mt-8 sm:mt-6">
+                    @include('components.livewire.email-datas.data-table', [
+                        'emailDatas' => $emailDatas,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$emailDatas" />

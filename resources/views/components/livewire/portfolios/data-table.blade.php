@@ -104,7 +104,7 @@
 
                     {{-- Actions --}}
                     <td class="px-6 py-4 whitespace-no-wrap text-sm font-medium text-center">
-                        <div class="inline-flex items-center justify-center space-x-4">
+                        <div class="flex items-center justify-center space-x-2 sm:space-x-4">
                             @if ($portfolio->trashed())
                                 {{-- Restore Button --}}
                                 @can('RESTORE_PORTFOLIO')

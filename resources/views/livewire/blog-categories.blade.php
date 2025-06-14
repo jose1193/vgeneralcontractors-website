@@ -37,12 +37,14 @@
                     </div>
                 </div>
 
-                <!-- Categories table -->
-                @include('components.livewire.blog-categories.data-table', [
-                    'categories' => $categories,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <!-- Categories table with extra spacing on mobile -->
+                <div class="mt-8 sm:mt-6">
+                    @include('components.livewire.blog-categories.data-table', [
+                        'categories' => $categories,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$categories" />
