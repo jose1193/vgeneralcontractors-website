@@ -19,7 +19,7 @@
                     <div
                         class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show inactive posts -->
-                        <x-toggle :label="__('show_inactive_posts')" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
+                        <x-toggle :label="__('_post_crud_show_inactive')" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
 
                         <!-- Per page dropdown with better spacing -->
                         <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32">
@@ -31,7 +31,7 @@
 
                         <div class="w-full sm:w-auto">
                             <x-add-button :wireClick="'create'">
-                                {{ __('add_post') }}
+                                {{ __('_post_crud_add') }}
                             </x-add-button>
                         </div>
                     </div>

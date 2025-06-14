@@ -8,25 +8,25 @@
                 </th>
                 @include('components.sort-position', [
                     'field' => 'post_title',
-                    'label' => strtoupper(__('title')),
+                    'label' => strtoupper(__('_post_crud_table_title')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'category_id',
-                    'label' => strtoupper(__('category')),
+                    'label' => strtoupper(__('_post_crud_table_category')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'created_at',
-                    'label' => strtoupper(__('created')),
+                    'label' => strtoupper(__('_post_crud_table_created')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
                 @include('components.sort-position', [
                     'field' => 'updated_at',
-                    'label' => strtoupper(__('updated')),
+                    'label' => strtoupper(__('_post_crud_table_updated')),
                     'sortField' => $sortField,
                     'sortDirection' => $sortDirection,
                 ])
@@ -84,7 +84,7 @@
                             <!-- View Button -->
                             <a href="{{ route('blog.show', $post->post_title_slug) }}" target="_blank"
                                 class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200"
-                                title="{{ __('view_published_post') }}">
+                                title="{{ __('_post_crud_view_published') }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -99,7 +99,7 @@
                                 <!-- Edit Button -->
                                 <button wire:click="edit('{{ $post->uuid }}')"
                                     class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-200"
-                                    title="{{ __('edit_post') }}">
+                                    title="{{ __('_post_crud_edit') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -112,7 +112,7 @@
                                 <button
                                     @click="window.dispatchEvent(new CustomEvent('delete-confirmation', {detail: {uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}'}}))"
                                     class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200"
-                                    title="{{ __('delete_post') }}">
+                                    title="{{ __('_post_crud_delete') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -125,7 +125,7 @@
                                 <button
                                     @click="window.dispatchEvent(new CustomEvent('restore-confirmation', {detail: {uuid: '{{ $post->uuid }}', name: '{{ $post->post_title }}'}}))"
                                     class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-200"
-                                    title="{{ __('restore_post') }}">
+                                    title="{{ __('_post_crud_restore') }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -140,7 +140,7 @@
             @empty
                 <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
-                        {{ __('no_posts_found') }}
+                        {{ __('_post_crud_no_posts_found') }}
                     </td>
                 </tr>
             @endforelse
