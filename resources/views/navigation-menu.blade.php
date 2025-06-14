@@ -509,7 +509,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             <!-- Theme Toggle - Mobile Only -->
             <div class="md:hidden pb-4 border-b border-gray-700">
                 <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-300">{{ __('theme') }}</span>
+                    <span class="text-sm font-medium text-gray-300">{{ __('Theme') }}</span>
                     <button @click="$store.darkMode.toggle()"
                         class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                         :class="$store.darkMode.on ? 'bg-yellow-400' : 'bg-gray-600'">
