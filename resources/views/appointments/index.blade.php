@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 px-4 sm:px-6 lg:px-8">
             <!-- Success and error messages -->
             <div id="alertContainer"></div>
             @if (session()->has('message'))
@@ -129,7 +129,7 @@
 
                     <!-- Appointments table -->
                     <div
-                        class="overflow-x-auto bg-gray-50 dark:bg-gray-700 rounded-lg shadow-inner border border-gray-200 dark:border-gray-600 mx-4 sm:mx-0">
+                        class="overflow-x-auto bg-gray-50 dark:bg-gray-700 rounded-lg shadow-inner border border-gray-200 dark:border-gray-600">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
