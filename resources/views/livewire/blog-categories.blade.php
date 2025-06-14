@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 sm:px-6 lg:px-8 pb-12">
+    <div class="max-w-7xl mx-auto py-10">
         <!-- Success and error messages -->
         @if (session()->has('message'))
             <x-alerts.success :message="session('message')" />
@@ -37,8 +37,8 @@
                     </div>
                 </div>
 
-                <!-- Categories table with extra spacing on mobile -->
-                <div class="mt-8 sm:mt-6">
+                <!-- Categories table -->
+                <div class="mt-6 sm:mt-4">
                     @include('components.livewire.blog-categories.data-table', [
                         'categories' => $categories,
                         'sortField' => $sortField,

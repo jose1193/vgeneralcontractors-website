@@ -39,11 +39,13 @@
                 </div>
 
                 <!-- Categories table -->
-                @include('components.livewire.service-categories.data-table', [
-                    'categories' => $categories,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <div class="mt-6 sm:mt-4">
+                    @include('components.livewire.service-categories.data-table', [
+                        'categories' => $categories,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$categories" />

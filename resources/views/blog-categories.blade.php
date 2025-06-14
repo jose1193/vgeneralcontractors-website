@@ -1,14 +1,24 @@
 <x-app-layout>
-    <div class="bg-gray-800" style="background-color: #141414;">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-semibold leading-tight text-white">
-                {{ __('blog_categories_title') }}
-            </h2>
-            <p class="mt-2 text-sm text-gray-300">
-                {{ __('blog_categories_subtitle') }}
-            </p>
+    {{-- Commenting out Jetstream header to avoid duplicate titles --}}
+    {{-- <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Blog Categories') }}
+        </h2>
+    </x-slot> --}}
+
+    <div style="background-color: #141414;" class="text-white min-h-screen">
+        <!-- Page Header -->
+        <div class="p-6">
+            <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('blog_categories_title') }}</h2>
+                <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">
+                    {{ __('blog_categories_subtitle') }}
+                </p>
+            </div>
+
+            <!-- Blog Categories Content -->
+            @livewire('blog-categories')
         </div>
     </div>
-
-    @livewire('blog-categories')
 </x-app-layout>
