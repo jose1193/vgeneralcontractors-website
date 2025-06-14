@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-10">
         <!-- Success and error messages -->
         @if (session()->has('message'))
             <x-alerts.success :message="session('message')" />
@@ -37,14 +37,12 @@
                     </div>
                 </div>
 
-                <!-- Email data table with extra spacing on mobile -->
-                <div class="mt-8 sm:mt-6">
-                    @include('components.livewire.email-datas.data-table', [
-                        'emailDatas' => $emailDatas,
-                        'sortField' => $sortField,
-                        'sortDirection' => $sortDirection,
-                    ])
-                </div>
+                <!-- Email data table -->
+                @include('components.livewire.email-datas.data-table', [
+                    'emailDatas' => $emailDatas,
+                    'sortField' => $sortField,
+                    'sortDirection' => $sortDirection,
+                ])
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$emailDatas" />
