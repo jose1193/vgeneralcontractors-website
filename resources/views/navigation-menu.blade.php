@@ -14,7 +14,7 @@ $store.sidebar = {
 
 // Dark Mode Store
 $store.darkMode = {
-    on: JSON.parse(localStorage.getItem('darkMode')) || false,
+    on: localStorage.getItem('darkMode') !== null ? JSON.parse(localStorage.getItem('darkMode')) : true,
     toggle() {
         this.on = !this.on;
         localStorage.setItem('darkMode', this.on);
@@ -22,11 +22,17 @@ $store.darkMode = {
     },
     updateTheme() {
         if (this.on) {
+            // Dark mode: mantener colores base oscuros y activar clases dark:
             document.documentElement.classList.add('dark');
             document.body.style.backgroundColor = '#141414';
+            document.body.className = 'font-sans antialiased';
+            document.body.style.color = '#ffffff';
         } else {
+            // Light mode: cambiar a colores claros y desactivar clases dark:
             document.documentElement.classList.remove('dark');
             document.body.style.backgroundColor = '#f9fafb';
+            document.body.className = 'font-sans antialiased';
+            document.body.style.color = '#111827';
         }
     }
 };
@@ -34,7 +40,10 @@ $store.darkMode = {
 // Initialize theme on load
 $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b dark:bg-gray-900 bg-white dark:border-gray-700 border-gray-200"
+        style="background-color: #141414; border-color: #2C2E36;"
+        x-bind:style="$store.darkMode.on ? 'background-color: #141414; border-color: #2C2E36;' :
+            'background-color: #ffffff; border-color: #e5e7eb;'">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
@@ -265,8 +274,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     </nav>
 
     <!-- Desktop Sidebar -->
-    <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
-        style="background-color: #141414;">
+    <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40 dark:bg-gray-900 bg-white"
+        x-bind:style="$store.darkMode.on ? 'background-color: #141414;' : 'background-color: #ffffff;'">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
@@ -502,14 +511,15 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
         x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
         x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
         x-transition:leave-end="-translate-x-full"
-        class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto"
-        style="background-color: #141414; display: none;">
+        class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto dark:bg-gray-900 bg-white"
+        x-bind:style="$store.darkMode.on ? 'background-color: #141414;' : 'background-color: #ffffff;'"
+        style="display: none;">
 
         <div class="p-4 space-y-4">
             <!-- Theme Toggle - Mobile Only -->
             <div class="md:hidden pb-4 border-b border-gray-700">
                 <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-300">{{ __('theme') }}</span>
+                    <span class="text-sm font-medium text-gray-300">{{ __('Theme') }}</span>
                     <button @click="$store.darkMode.toggle()"
                         class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                         :class="$store.darkMode.on ? 'bg-yellow-400' : 'bg-gray-600'">
