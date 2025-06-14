@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 px-4 sm:px-6 lg:px-8 pb-12">
         <!-- Success and error messages -->
         @if (session()->has('message'))
             <x-alerts.success :message="session('message')" />
@@ -40,12 +40,14 @@
                     </div>
                 </div>
 
-                <!-- Companies table -->
-                @include('components.livewire.companies.data-table', [
-                    'companies' => $companies,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <!-- Companies table with extra spacing on mobile -->
+                <div class="mt-8 sm:mt-6">
+                    @include('components.livewire.companies.data-table', [
+                        'companies' => $companies,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$companies" />
