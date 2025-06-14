@@ -14,42 +14,33 @@ $store.sidebar = {
 
 // Dark Mode Store
 $store.darkMode = {
-    on: localStorage.getItem('darkMode') !== null ? JSON.parse(localStorage.getItem('darkMode')) : true,
+    on: JSON.parse(localStorage.getItem('darkMode')) || false,
     toggle() {
         this.on = !this.on;
-        localStorage.setItem('darkMode', JSON.stringify(this.on));
+        localStorage.setItem('darkMode', this.on);
         this.updateTheme();
     },
     updateTheme() {
         if (this.on) {
-            // Dark mode: mantener colores base oscuros y activar clases dark:
             document.documentElement.classList.add('dark');
             document.body.style.backgroundColor = '#141414';
-            document.body.style.color = '#ffffff';
         } else {
-            // Light mode: cambiar a colores claros y desactivar clases dark:
             document.documentElement.classList.remove('dark');
             document.body.style.backgroundColor = '#f9fafb';
-            document.body.style.color = '#111827';
         }
     }
 };
 
 // Initialize theme on load
-$nextTick(() => {
-    $store.darkMode.updateTheme();
-});" x-effect="sidebarOpen = $store.sidebar.open">
+$store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b"
-        x-bind:style="$store.darkMode.on ? 'background-color: #141414; border-color: #2C2E36;' :
-            'background-color: #ffffff; border-color: #e5e7eb;'">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-4">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()" class="lg:hidden p-2"
-                        x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -59,22 +50,18 @@ $nextTick(() => {
                     <!-- Logo -->
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="flex items-center">
-                            <img x-bind:src="$store.darkMode.on ? '{{ asset('assets/logo/logo4-white.webp') }}' :
-                                '{{ asset('assets/logo/logo4-dark.webp') }}'"
-                                alt="V General Contractors Logo" class="h-8 mr-3">
+                            <img src="{{ asset('assets/logo/logo4-white.webp') }}" alt="V General Contractors Logo"
+                                class="h-8 mr-3">
                         </a>
                     </div>
 
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block">
                         <input type="text" placeholder="Start Search Here..."
-                            class="rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                            x-bind:class="$store.darkMode.on ? 'text-gray-300 placeholder-gray-500' :
-                                'text-gray-700 placeholder-gray-400'"
-                            x-bind:style="$store.darkMode.on ? 'background-color: #2C2E36; border: 1px solid #2C2E36;' :
-                                'background-color: #f3f4f6; border: 1px solid #d1d5db;'">
-                        <svg class="w-5 h-5 absolute left-3 top-2.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24" x-bind:class="$store.darkMode.on ? 'text-gray-500' : 'text-gray-400'">
+                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            style="background-color: #2C2E36; border: 1px solid #2C2E36;">
+                        <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -86,9 +73,7 @@ $nextTick(() => {
                     <!-- Theme Toggle - Desktop Only -->
                     <div class="hidden md:block">
                         <button @click="$store.darkMode.toggle()"
-                            class="flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-lg"
-                            x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white hover:bg-gray-700' :
-                                'text-gray-600 hover:text-gray-900 hover:bg-gray-100'">
+                            class="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-700">
                             <svg x-show="!$store.darkMode.on" class="w-5 h-5" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -105,8 +90,7 @@ $nextTick(() => {
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md focus:outline-none transition ease-in-out duration-150"
-                            x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
@@ -153,14 +137,11 @@ $nextTick(() => {
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            x-bind:style="$store.darkMode.on ? 'background-color: #2C2E36;' : 'background-color: #ffffff;'"
-                            style="display: none;">
+                            style="background-color: #2C2E36; display: none;">
                             <div class="py-1">
                                 @foreach ($languages as $code => $language)
                                     <a href="{{ route('lang.switch', $code) }}"
-                                        class="group flex items-center px-4 py-2 text-sm {{ $currentLocale === $code ? 'active-lang' : '' }}"
-                                        x-bind:class="$store.darkMode.on ? 'text-gray-300 hover:bg-gray-700' :
-                                            'text-gray-700 hover:bg-gray-100'">
+                                        class="group flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 {{ $currentLocale === $code ? 'bg-gray-700' : '' }}">
                                         <span class="mr-3">{!! $language['flag'] !!}</span>
                                         <span>{{ $language['name'] }}</span>
                                         @if ($currentLocale === $code)
@@ -179,8 +160,7 @@ $nextTick(() => {
 
                     <!-- Search Icon - Mobile -->
                     <div class="md:hidden relative" x-data="{ searchOpen: false }">
-                        <button @click="searchOpen = !searchOpen" class="p-2"
-                            x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-2">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -195,9 +175,7 @@ $nextTick(() => {
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
                             class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4"
-                            x-bind:style="$store.darkMode.on ? 'background-color: #2C2E36; border-color: #2C2E36;' :
-                                'background-color: #ffffff; border-color: #e5e7eb;'"
-                            style="display: none;">
+                            style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
                             <div class="relative">
                                 <input type="text" placeholder="Start Search Here..."
                                     class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -212,8 +190,7 @@ $nextTick(() => {
                     </div>
 
                     <!-- Notifications -->
-                    <button class="p-2"
-                        x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+                    <button class="text-gray-400 hover:text-white p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 17h5l-5 5v-5zM10.5 3.5a6 6 0 0 1 6 6v2l1.5 3h-15l1.5-3v-2a6 6 0 0 1 6-6z" />
@@ -221,8 +198,7 @@ $nextTick(() => {
                     </button>
 
                     <!-- Messages -->
-                    <button class="p-2"
-                        x-bind:class="$store.darkMode.on ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+                    <button class="text-gray-400 hover:text-white p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -231,8 +207,8 @@ $nextTick(() => {
 
                     <!-- User Profile -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="flex items-center space-x-2"
-                            x-bind:class="$store.darkMode.on ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'">
+                        <button @click="open = !open"
+                            class="flex items-center space-x-2 text-gray-300 hover:text-white">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <img class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
@@ -290,7 +266,7 @@ $nextTick(() => {
 
     <!-- Desktop Sidebar -->
     <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
-        x-bind:style="$store.darkMode.on ? 'background-color: #141414;' : 'background-color: #ffffff;'">
+        style="background-color: #141414;">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
             <div class="relative group">
@@ -527,14 +503,13 @@ $nextTick(() => {
         x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
         x-transition:leave-end="-translate-x-full"
         class="lg:hidden fixed left-0 top-16 bottom-0 w-64 z-50 overflow-y-auto"
-        x-bind:style="$store.darkMode.on ? 'background-color: #141414;' : 'background-color: #ffffff;'"
-        style="display: none;">
+        style="background-color: #141414; display: none;">
 
         <div class="p-4 space-y-4">
             <!-- Theme Toggle - Mobile Only -->
             <div class="md:hidden pb-4 border-b border-gray-700">
                 <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-300">{{ __('Theme') }}</span>
+                    <span class="text-sm font-medium text-gray-300">{{ __('theme') }}</span>
                     <button @click="$store.darkMode.toggle()"
                         class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                         :class="$store.darkMode.on ? 'bg-yellow-400' : 'bg-gray-600'">
@@ -700,8 +675,8 @@ $nextTick(() => {
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('blog_management') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
