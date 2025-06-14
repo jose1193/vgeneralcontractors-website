@@ -72,24 +72,24 @@
                     </div>
 
                     <!-- Date range filters -->
-                    <div class="flex flex-wrap items-end gap-3 py-5 mb-4">
-                        <div>
+                    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 py-5 mb-4">
+                        <div class="w-full sm:w-auto">
                             <label for="start_date"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('start_date') }}</label>
                             <input type="date" id="start_date" name="start_date"
-                                class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                class="w-full sm:w-44 md:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                         </div>
-                        <div>
+                        <div class="w-full sm:w-auto">
                             <label for="end_date"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('end_date') }}</label>
                             <input type="date" id="end_date" name="end_date"
-                                class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                class="w-full sm:w-44 md:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                         </div>
-                        <div>
+                        <div class="w-full sm:w-auto">
                             <label for="status_lead_filter"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('lead_status') }}</label>
                             <select id="status_lead_filter" name="status_lead_filter"
-                                class="w-44 sm:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                class="w-full sm:w-44 md:w-48 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                 <option value="">{{ __('all_statuses') }}</option>
                                 <option value="New">{{ __('new_status') }}</option>
                                 <option value="Called">{{ __('called_status') }}</option>
@@ -98,12 +98,12 @@
                             </select>
                         </div>
                         <button id="clearDateFilters" type="button"
-                            class="px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                            class="w-full sm:w-auto px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
                             {{ __('clear') }}
                         </button>
-                        <div class="ml-auto flex space-x-2">
+                        <div class="w-full sm:ml-auto flex flex-col sm:flex-row gap-2 sm:space-x-2 sm:gap-0">
                             <button id="sendRejectionBtn" disabled
-                                class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-200 disabled:opacity-25">
+                                class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring focus:ring-red-200 disabled:opacity-25">
                                 <span class="mr-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +114,7 @@
                                 {{ __('send_rejection') }}
                             </button>
                             <button id="exportToExcel"
-                                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
+                                class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
                                 <span class="mr-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
