@@ -1,12 +1,14 @@
 @props(['title' => 'Your Sales Insights', 'subtitle' => 'Track your performance and grow your business'])
 
-<div style="background-color: #141414;" class="text-white min-h-screen">
+<div class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen" style="background-color: #141414;">
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Dashboard Header -->
         <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
-            <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-white mb-2">{{ $title }}</h2>
-            <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-400">{{ $subtitle }}</p>
+            <h2 class="text-xs sm:text-xs md:text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                {{ $title }}</h2>
+            <p class="text-xs sm:text-xs md:text-base lg:text-base text-gray-600 dark:text-gray-400">{{ $subtitle }}
+            </p>
         </div>
 
         <!-- Quick Action Cards -->
@@ -126,10 +128,11 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Pending Appointments Card -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50"
+                style="background-color: #2C2E36;">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">{{ __('pending_appointments') }}</h3>
+                    <h3 class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{ __('pending_appointments') }}
+                    </h3>
                     <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -141,9 +144,9 @@
                     @php
                         $pendingAppointments = \App\Models\Appointment::where('inspection_status', 'Pending')->count();
                     @endphp
-                    <div class="text-3xl font-bold text-white mb-1">{{ $pendingAppointments }}</div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $pendingAppointments }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">{{ __('awaiting_confirmation') }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('awaiting_confirmation') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -160,10 +163,10 @@
             </div>
 
             <!-- New Leads Card -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50"
+                style="background-color: #2C2E36;">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">{{ __('new_leads') }}</h3>
+                    <h3 class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{ __('new_leads') }}</h3>
                     <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -175,9 +178,9 @@
                     @php
                         $newLeads = \App\Models\Appointment::where('status_lead', 'New')->count();
                     @endphp
-                    <div class="text-3xl font-bold text-white mb-1">{{ $newLeads }}</div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $newLeads }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">{{ __('require_follow_up') }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('require_follow_up') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -194,10 +197,10 @@
             </div>
 
             <!-- Published Posts Card -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50"
+                style="background-color: #2C2E36;">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-gray-300 text-sm font-medium">{{ __('published_posts') }}</h3>
+                    <h3 class="text-gray-700 dark:text-gray-300 text-sm font-medium">{{ __('published_posts') }}</h3>
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -209,9 +212,9 @@
                     @php
                         $publishedPosts = \App\Models\Post::where('post_status', 'published')->count();
                     @endphp
-                    <div class="text-3xl font-bold text-white mb-1">{{ $publishedPosts }}</div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">{{ $publishedPosts }}</div>
                     <div class="flex items-center text-sm">
-                        <span class="text-gray-400">{{ __('blog_articles_live') }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('blog_articles_live') }}</span>
                     </div>
                 </div>
                 <div class="flex items-center justify-center h-16">
@@ -231,11 +234,11 @@
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Monthly Leads Chart -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50"
+                style="background-color: #2C2E36;">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">{{ __('monthly_leads') }}</h3>
-                    <div class="text-xs text-gray-400">{{ date('Y') }}</div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('monthly_leads') }}</h3>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">{{ date('Y') }}</div>
                 </div>
 
                 @php
@@ -326,11 +329,11 @@
             </div>
 
             <!-- Lead Sources Analytics -->
-            <div style="background-color: #2C2E36;"
-                class="rounded-lg p-6 border border-gray-900 shadow-lg shadow-gray-900/50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50"
+                style="background-color: #2C2E36;">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-semibold text-white">{{ __('lead_sources') }}</h3>
-                    <div class="text-xs text-gray-400">{{ __('current_year') }}</div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('lead_sources') }}</h3>
+                    <div class="text-xs text-gray-600 dark:text-gray-400">{{ __('current_year') }}</div>
                 </div>
 
                 @php
@@ -429,11 +432,11 @@
         </div>
 
         <!-- Recent Activity - Live Leads Marquee -->
-        <div class="w-full rounded-lg border border-gray-900 shadow-lg shadow-gray-900/50"
+        <div class="w-full rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 bg-white dark:bg-gray-800"
             style="background-color: #2C2E36;">
-            <div class="px-6 py-4 border-b border-gray-900">
-                <h3 class="text-lg font-semibold text-white">{{ __('recent_leads_activity') }}</h3>
-                <p class="text-sm text-gray-400">{{ __('live_updates_latest_appointments') }}</p>
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('recent_leads_activity') }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('live_updates_latest_appointments') }}</p>
             </div>
             <div class="relative h-80 overflow-hidden">
                 @php

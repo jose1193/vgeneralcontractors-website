@@ -14,7 +14,7 @@ $store.sidebar = {
 
 // Dark Mode Store
 $store.darkMode = {
-    on: JSON.parse(localStorage.getItem('darkMode')) || false,
+    on: JSON.parse(localStorage.getItem('darkMode')) || true,
     toggle() {
         this.on = !this.on;
         localStorage.setItem('darkMode', this.on);
@@ -34,13 +34,15 @@ $store.darkMode = {
 // Initialize theme on load
 $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+        style="background-color: #141414; border-color: #2C2E36;">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-4">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                    <button @click="$store.sidebar.toggle()"
+                        class="lg:hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -58,7 +60,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block">
                         <input type="text" placeholder="Start Search Here..."
-                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            class="text-gray-900 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600"
                             style="background-color: #2C2E36; border: 1px solid #2C2E36;">
                         <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -73,7 +75,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- Theme Toggle - Desktop Only -->
                     <div class="hidden md:block">
                         <button @click="$store.darkMode.toggle()"
-                            class="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-700">
+                            class="flex items-center justify-center w-8 h-8 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
                             <svg x-show="!$store.darkMode.on" class="w-5 h-5" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -90,7 +92,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
