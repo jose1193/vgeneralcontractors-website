@@ -94,10 +94,10 @@
 
 </head>
 
-<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900" style="background-color: #141414;">
+<body class="font-sans antialiased" style="background-color: #141414;">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900" style="background-color: #141414;">
+    <div class="min-h-screen" style="background-color: #141414;">
         @livewire('navigation-menu')
 
         <!-- Page Heading - Hidden while using custom titles -->
