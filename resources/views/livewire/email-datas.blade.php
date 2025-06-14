@@ -38,11 +38,13 @@
                 </div>
 
                 <!-- Email data table -->
-                @include('components.livewire.email-datas.data-table', [
-                    'emailDatas' => $emailDatas,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <div class="mt-6 sm:mt-4">
+                    @include('components.livewire.email-datas.data-table', [
+                        'emailDatas' => $emailDatas,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$emailDatas" />

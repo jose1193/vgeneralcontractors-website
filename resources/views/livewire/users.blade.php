@@ -38,11 +38,13 @@
                 </div>
 
                 <!-- Users table -->
-                @include('components.livewire.users.data-table', [
-                    'users' => $users,
-                    'sortField' => $sortField,
-                    'sortDirection' => $sortDirection,
-                ])
+                <div class="mt-6 sm:mt-4">
+                    @include('components.livewire.users.data-table', [
+                        'users' => $users,
+                        'sortField' => $sortField,
+                        'sortDirection' => $sortDirection,
+                    ])
+                </div>
 
                 <!-- Pagination -->
                 <x-pagination :paginator="$users" />
