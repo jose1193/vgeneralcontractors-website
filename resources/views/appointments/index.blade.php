@@ -421,13 +421,14 @@
                                 name: 'Actions',
                                 sortable: false,
                                 getter: (appointment) => {
-                                    const editUrl = `{{ url('/appointments') }}/${appointment.uuid}/edit`;
+                                    const editUrl = `/appointments/${appointment.uuid}/edit`;
+                                    console.log('Generated edit URL:', editUrl); // Debug log
 
                                     let actionsHtml = `
                                 <div class="flex justify-center space-x-1">
-                                    <a href="${editUrl}" class="inline-flex items-center justify-center p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200" title="Edit">
+                                    <a href="${editUrl}" class="inline-flex items-center justify-center p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200" title="Edit" onclick="console.log('Edit link clicked:', '${editUrl}');">
                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002 2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                          </svg>
                                     </a>`;
 
@@ -558,7 +559,7 @@
                             },
                             data: requestData,
                             success: (response) => {
-                                this.renderTable(response);
+                                this.renderAppointmentsTable(response);
                                 this.renderPagination(response);
                             },
                             error: (xhr) => {
@@ -576,6 +577,64 @@
                             complete: () => {
                                 $(this.tableSelector + ' #loadingRow').hide();
                             }
+                        });
+                    };
+
+                    // Custom render table method for appointments
+                    window.appointmentManager.renderAppointmentsTable = function(data) {
+                        const self = this;
+                        const entities = data.data;
+                        let html = "";
+
+                        if (entities.length === 0) {
+                            html =
+                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">No appointments found matching your search criteria.</td></tr>`;
+                        } else {
+                            entities.forEach((entity) => {
+                                const isDeleted = entity.deleted_at !== null;
+                                const rowClass = isDeleted ? "bg-red-50 dark:bg-red-900 opacity-60" : "";
+
+                                html += `<tr class="${rowClass}">`;
+
+                                // Use the table headers to render each cell
+                                self.tableHeaders.forEach((header) => {
+                                    if (header.field === 'checkbox') {
+                                        const checkboxHtml = header.getter ? header.getter(entity) : '';
+                                        html +=
+                                            `<td class="px-4 py-3 text-center">${checkboxHtml}</td>`;
+                                    } else if (header.field === 'actions') {
+                                        const actionsHtml = header.getter ? header.getter(entity) : '';
+                                        html +=
+                                            `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">${actionsHtml}</td>`;
+                                    } else {
+                                        let value = header.getter ? header.getter(entity) : entity[
+                                            header.field];
+                                        html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">
+                                        ${value}
+                                        ${header.field === "first_name" && isDeleted ? '<span class="ml-2 text-xs text-red-500 dark:text-red-400">(Inactive)</span>' : ""}
+                                    </td>`;
+                                    }
+                                });
+
+                                html += `</tr>`;
+                            });
+                        }
+
+                        // Replace table content
+                        $(self.tableSelector).html(html);
+
+                        // Don't attach edit-btn event handlers since we're using direct links
+                        // But still attach delete and restore handlers
+                        $(self.tableSelector + " .delete-btn").off('click').on("click", function(e) {
+                            e.preventDefault();
+                            const id = $(this).data("id");
+                            self.deleteEntity(id);
+                        });
+
+                        $(self.tableSelector + " .restore-btn").off('click').on("click", function(e) {
+                            e.preventDefault();
+                            const id = $(this).data("id");
+                            self.restoreEntity(id);
                         });
                     };
 
