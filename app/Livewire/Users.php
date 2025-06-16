@@ -161,33 +161,15 @@ class Users extends Component
             return;
         }
         
-        // Asegurarse de que todos los campos estén limpios
-        $this->resetInputFields();
+        // IMPROVED: Clean state properly before opening create modal
+        $this->cleanModalState(false); // Don't close modal, just clean state
         
-        // Establecer el título y la acción del modal
+        // Set modal properties
         $this->modalTitle = 'Create New User';
         $this->modalAction = 'store';
         
-        // Abrir el modal
-        $this->isOpen = true;
-        
-        // Emitir evento para actualizar Alpine.js - make sure ALL fields are empty
-        $this->dispatch('user-edit', [
-            'name' => '',
-            'last_name' => '',
-            'email' => '',
-            'username' => '',
-            'phone' => '',
-            'address' => '',
-            'zip_code' => '',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'gender' => '',
-            'date_of_birth' => '',
-            'role' => '',
-            'action' => 'store'
-        ]);
+        // Open modal with clean state
+        $this->openModalWithData();
     }
 
     public function store()
@@ -259,11 +241,14 @@ class Users extends Component
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
 
+            // IMPROVED: Clean modal state properly and sync with Alpine.js
+            $this->cleanModalState();
+            
             session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
-            $this->closeModal();
-            $this->resetInputFields();
-            $this->dispatch('refreshComponent');
+            
+            // Single event dispatch to notify success
             $this->dispatch('user-created-success');
+            
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -338,6 +323,11 @@ class Users extends Component
             \Log::info('Attempting to edit user', ['uuid' => $uuid]);
             
             $user = User::where('uuid', $uuid)->firstOrFail();
+            
+            // IMPROVED: Ensure clean state before loading data
+            $this->cleanModalState(false); // Don't close modal, just clean state
+            
+            // Set user data
             $this->uuid = $user->uuid;
             $this->name = $user->name;
             $this->last_name = $user->last_name;
@@ -362,24 +352,9 @@ class Users extends Component
             
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
-            $this->openModal();
             
-            // Dispatch event with user data
-            $this->dispatch('user-edit', [
-                'name' => $this->name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'username' => $this->username,
-                'phone' => $this->phone,
-                'address' => $this->address,
-                'zip_code' => $this->zip_code,
-                'city' => $this->city,
-                'country' => $this->country,
-                'gender' => $this->gender,
-                'date_of_birth' => $this->date_of_birth,
-                'role' => $this->role,
-                'action' => 'update'
-            ]);
+            // IMPROVED: Open modal with proper state synchronization
+            $this->openModalWithData();
             
             \Log::info('User data loaded successfully', [
                 'uuid' => $this->uuid,
@@ -600,8 +575,45 @@ class Users extends Component
 
     public function openModal()
     {
+        // IMPROVED: Use the standardized method
+        $this->openModalWithData();
+    }
+
+    public function closeModal()
+    {
+        $this->cleanModalState();
+    }
+
+    /**
+     * Clean modal state properly to avoid Alpine.js/Livewire desync
+     * @param bool $closeModal Whether to close the modal
+     */
+    private function cleanModalState($closeModal = true)
+    {
+        if ($closeModal) {
+            $this->isOpen = false;
+        }
+        
+        // Reset all input fields
+        $this->resetInputFields();
+        $this->resetValidation();
+        $this->resetErrorBag();
+        
+        // Dispatch clean state event to Alpine.js
+        $this->dispatch('modal-state-cleaned', [
+            'shouldClose' => $closeModal
+        ]);
+    }
+    
+    /**
+     * Open modal with proper data synchronization
+     */
+    private function openModalWithData()
+    {
         $this->isOpen = true;
-        $this->dispatch('user-edit', [
+        
+        // Dispatch event with current form data for Alpine.js
+        $this->dispatch('modal-data-loaded', [
             'name' => $this->name,
             'last_name' => $this->last_name,
             'email' => $this->email,
@@ -610,38 +622,12 @@ class Users extends Component
             'address' => $this->address,
             'zip_code' => $this->zip_code,
             'city' => $this->city,
+            'state' => $this->state,
             'country' => $this->country,
             'gender' => $this->gender,
             'date_of_birth' => $this->date_of_birth,
             'role' => $this->role,
             'action' => $this->modalAction
-        ]);
-    }
-
-    public function closeModal()
-    {
-        $this->isOpen = false;
-        
-        // Reset fields always when closing the modal
-        $this->resetInputFields();
-        $this->resetValidation();
-        
-        // Explicitly send empty data for ALL fields to reset Alpine.js form
-        $this->dispatch('user-edit', [
-            'name' => '',
-            'last_name' => '',
-            'email' => '',
-            'username' => '',
-            'phone' => '',
-            'address' => '',
-            'zip_code' => '',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'gender' => '',
-            'date_of_birth' => '',
-            'role' => '',
-            'action' => ''
         ]);
     }
 
@@ -815,5 +801,14 @@ class Users extends Component
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
         $this->clearCache('users');
+    }
+
+    /**
+     * Clean all state - DEPRECATED: Use cleanModalState() instead
+     * Kept for backward compatibility
+     */
+    public function cleanState()
+    {
+        $this->cleanModalState();
     }
 }

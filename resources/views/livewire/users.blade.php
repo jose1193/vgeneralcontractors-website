@@ -76,7 +76,8 @@
                 },
                 modalAction: '{{ $modalAction }}'
             })" x-init="modalAction = '{{ $modalAction }}';
-            // Inicializar valores del formulario
+            
+            // IMPROVED: Simplified initialization
             form = {
                 name: '{{ $name }}',
                 last_name: '{{ $last_name }}',
@@ -95,38 +96,50 @@
                 send_password_reset: false
             };
             
-            // Escuchar eventos de actualización
-            $wire.on('user-edit', (event) => {
+            // IMPROVED: Single event listener for modal data loading
+            $wire.on('modal-data-loaded', (event) => {
                 const data = event.detail;
-                console.log('Received user data:', data);
+                console.log('Modal data loaded:', data);
             
-                // Limpiar completamente el formulario primero
-                Object.keys(form).forEach(key => {
-                    form[key] = '';
-                });
+                // Update modalAction
+                modalAction = data.action || 'store';
             
-                // Actualizar el formulario con los nuevos datos
+                // Update form with data
                 Object.keys(data).forEach(key => {
-                    if (key in form) {
-                        form[key] = data[key];
+                    if (key in form && key !== 'action') {
+                        form[key] = data[key] || '';
                     }
                 });
             
-                // Sincronizar con Livewire
-                $wire.set('name', data.name || '');
-                $wire.set('last_name', data.last_name || '');
-                $wire.set('email', data.email || '');
-                $wire.set('phone', data.phone || '');
-                $wire.set('address', data.address || '');
-                $wire.set('city', data.city || '');
-                $wire.set('zip_code', data.zip_code || '');
-                $wire.set('country', data.country || '');
-                $wire.set('gender', data.gender || '');
-                $wire.set('date_of_birth', data.date_of_birth || '');
-                $wire.set('username', data.username || '');
-                $wire.set('role', data.role || '');
-            
+                // Clear any previous errors
                 clearErrors();
+            });
+            
+            // IMPROVED: Single event listener for modal state cleaning
+            $wire.on('modal-state-cleaned', (event) => {
+                const data = event.detail;
+                console.log('Modal state cleaned, shouldClose:', data.shouldClose);
+            
+                // Reset form to empty state
+                Object.keys(form).forEach(key => {
+                    if (key !== 'password' && key !== 'password_confirmation' && key !== 'send_password_reset') {
+                        form[key] = '';
+                    } else {
+                        form[key] = key === 'send_password_reset' ? false : '';
+                    }
+                });
+            
+                // Clear errors
+                clearErrors();
+            
+                // Reset modal action
+                modalAction = 'store';
+            });
+            
+            // IMPROVED: Clean success event handling
+            $wire.on('user-created-success', () => {
+                console.log('User created successfully');
+                // State is already cleaned by modal-state-cleaned event
             });">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
