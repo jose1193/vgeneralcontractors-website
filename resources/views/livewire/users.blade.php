@@ -55,111 +55,26 @@
 
     <!-- Modal Form -->
     @if ($isOpen)
-        <div>
-            <script>
-                console.log('🔴 [BLADE DEBUG] Modal is rendering - isOpen:', @json($isOpen), 'modalAction:',
-                    @json($modalAction));
-            </script>
-        </div>
+        <script>
+            console.log('🔴 MODAL DEBUG: Modal is being rendered', {
+                isOpen: @json($isOpen),
+                modalAction: @json($modalAction),
+                modalTitle: @json($modalTitle),
+                name: @json($name),
+                email: @json($email)
+            });
+        </script>
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
-                initialValues: {
-                    name: '{{ $name }}',
-                    last_name: '{{ $last_name }}',
-                    email: '{{ $email }}',
-                    phone: '{{ $phone }}',
-                    address: '{{ $address }}',
-                    city: '{{ $city }}',
-                    zip_code: '{{ $zip_code }}',
-                    country: '{{ $country }}',
-                    gender: '{{ $gender }}',
-                    date_of_birth: '{{ $date_of_birth }}',
-                    username: '{{ $username }}',
-                    role: '{{ $role }}',
-                    password: '',
-                    password_confirmation: '',
-                    send_password_reset: false
-                },
-                modalAction: '{{ $modalAction }}'
-            })" x-init="modalAction = '{{ $modalAction }}';
-            
-            // IMPROVED: Simplified initialization
-            form = {
-                name: '{{ $name }}',
-                last_name: '{{ $last_name }}',
-                email: '{{ $email }}',
-                phone: '{{ $phone }}',
-                address: '{{ $address }}',
-                city: '{{ $city }}',
-                zip_code: '{{ $zip_code }}',
-                country: '{{ $country }}',
-                gender: '{{ $gender }}',
-                date_of_birth: '{{ $date_of_birth }}',
-                username: '{{ $username }}',
-                role: '{{ $role }}',
-                password: '',
-                password_confirmation: '',
-                send_password_reset: false
-            };
-            
-            // IMPROVED: Single event listener for modal data loading
-            $wire.on('modal-data-loaded', (event) => {
-                const data = event.detail;
-                console.log('🚀 [ALPINE DEBUG] Modal data loaded:', data);
-                console.log('🚀 [ALPINE DEBUG] Current form state before update:', form);
-                console.log('🚀 [ALPINE DEBUG] Current modalAction before update:', modalAction);
-            
-                // Update modalAction
-                modalAction = data.action || 'store';
-            
-                // Update form with data
-                Object.keys(data).forEach(key => {
-                    if (key in form && key !== 'action') {
-                        form[key] = data[key] || '';
-                    }
-                });
-            
-                // Clear any previous errors
-                clearErrors();
-            
-                console.log('🚀 [ALPINE DEBUG] Form state after update:', form);
-                console.log('🚀 [ALPINE DEBUG] ModalAction after update:', modalAction);
-                console.log('🚀 [ALPINE DEBUG] Livewire isOpen:', $wire.isOpen);
-            });
-            
-            // IMPROVED: Single event listener for modal state cleaning
-            $wire.on('modal-state-cleaned', (event) => {
-                const data = event.detail;
-                console.log('🧹 [ALPINE DEBUG] Modal state cleaned, shouldClose:', data.shouldClose);
-                console.log('🧹 [ALPINE DEBUG] Form state before cleaning:', form);
-            
-                // Reset form to empty state
-                Object.keys(form).forEach(key => {
-                    if (key !== 'password' && key !== 'password_confirmation' && key !== 'send_password_reset') {
-                        form[key] = '';
-                    } else {
-                        form[key] = key === 'send_password_reset' ? false : '';
-                    }
-                });
-            
-                // Clear errors
-                clearErrors();
-            
-                // Reset modal action
-                modalAction = 'store';
-            
-                console.log('🧹 [ALPINE DEBUG] Form state after cleaning:', form);
-                console.log('🧹 [ALPINE DEBUG] ModalAction after cleaning:', modalAction);
-            });
-            
-            // IMPROVED: Clean success event handling
-            $wire.on('user-created-success', () => {
-                console.log('User created successfully');
-                // State is already cleaned by modal-state-cleaned event
-            });">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
         </x-modals.form-modal>
+    @else
+        <script>
+            console.log('🔴 MODAL DEBUG: Modal is NOT being rendered', {
+                isOpen: @json($isOpen)
+            });
+        </script>
     @endif
 
     <!-- Usar los componentes genéricos para modales de confirmación -->

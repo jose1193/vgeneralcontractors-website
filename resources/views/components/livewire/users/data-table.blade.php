@@ -99,7 +99,6 @@
                             <!-- Edit button - only show if user is not deleted -->
                             @if (!$user->deleted_at)
                                 <button wire:click="edit('{{ $user->uuid }}')"
-                                    onclick="console.log('🔵 [BUTTON DEBUG] Edit button clicked for UUID:', '{{ $user->uuid }}')"
                                     class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 focus:outline-none"
                                     title="Edit User">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"

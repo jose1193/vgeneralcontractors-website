@@ -157,26 +157,32 @@ class Users extends Component
 
     public function create()
     {
+        \Log::info('🟢 CREATE DEBUG: Method called');
+        
         if (!$this->checkPermissionWithMessage('CREATE_USER', 'No tienes permiso para crear usuarios')) {
+            \Log::warning('🟢 CREATE DEBUG: Permission denied');
             return;
         }
         
-        // IMPROVED: Clean state properly before opening create modal
-        $this->cleanModalState(false); // Don't close modal, just clean state
+        \Log::info('🟢 CREATE DEBUG: Resetting fields');
+        $this->resetInputFields();
         
-        // Set modal properties
+        \Log::info('🟢 CREATE DEBUG: Setting modal properties');
         $this->modalTitle = 'Create New User';
         $this->modalAction = 'store';
+        $this->isOpen = true;
         
-        // Open modal with clean state
-        $this->openModalWithData();
+        \Log::info('🟢 CREATE DEBUG: Modal should be open now', [
+            'isOpen' => $this->isOpen,
+            'modalTitle' => $this->modalTitle,
+            'modalAction' => $this->modalAction
+        ]);
     }
 
     public function store()
     {
         try {
             if (!$this->checkPermissionWithMessage('CREATE_USER', 'No tienes permiso para crear usuarios')) {
-                $this->dispatch('validation-failed');
                 return;
             }
             
@@ -185,14 +191,6 @@ class Users extends Component
             $validationRules['role'] = 'required|string|exists:roles,name';
             
             $this->validate($validationRules);
-
-            \Log::info('Storing user with data:', [
-                'name' => $this->name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'role' => $this->role
-            ]);
 
             // Generate username from name and last_name
             $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $this->name)) . 
@@ -210,7 +208,7 @@ class Users extends Component
                 'username' => $username,
                 'date_of_birth' => $this->date_of_birth,
                 'email' => $this->email,
-                'password' => $randomPassword, // Will be hashed in formatUserData
+                'password' => $randomPassword,
                 'phone' => $this->phone,
                 'address' => $this->address,
                 'zip_code' => $this->zip_code,
@@ -226,7 +224,7 @@ class Users extends Component
 
             // Format data and create user
             $formattedData = $this->formatUserData($data);
-            $formattedData['password'] = Hash::make($randomPassword); // Hash the password
+            $formattedData['password'] = Hash::make($randomPassword);
             
             $user = User::create($formattedData);
             
@@ -234,32 +232,24 @@ class Users extends Component
             $user->assignRole($this->role);
             
             $this->significantDataChange = true;
-            
-            // Use the generic method with 'users' parameter
             $this->clearCache('users');
 
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
 
-            // IMPROVED: Clean modal state properly and sync with Alpine.js
-            $this->cleanModalState();
+            // Close modal and reset
+            $this->closeModal();
             
             session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
             
-            // Single event dispatch to notify success
-            $this->dispatch('user-created-success');
-            
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
-            $this->dispatch('validation-failed');
             \Log::error('Error creating user', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error creating user: ' . $e->getMessage());
-            $this->dispatch('user-created-error');
         }
     }
 
@@ -320,36 +310,18 @@ class Users extends Component
                 return;
             }
             
-            \Log::info('=== EDIT DEBUG START ===', [
-                'uuid' => $uuid,
-                'current_isOpen' => $this->isOpen,
-                'current_modalAction' => $this->modalAction
-            ]);
-            
             $user = User::where('uuid', $uuid)->firstOrFail();
             
-            \Log::info('User found for edit', [
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'user_email' => $user->email
-            ]);
+            // Reset and load user data
+            $this->resetInputFields();
             
-            // IMPROVED: Ensure clean state before loading data
-            $this->cleanModalState(false); // Don't close modal, just clean state
-            
-            \Log::info('State cleaned, setting user data');
-            
-            // Set user data
             $this->uuid = $user->uuid;
             $this->name = $user->name;
             $this->last_name = $user->last_name;
             $this->username = $user->username;
             $this->email = $user->email;
             $this->date_of_birth = $user->date_of_birth;
-            
-            // Format phone number for display
             $this->phone = $this->formatPhoneForDisplay($user->phone);
-            
             $this->address = $user->address;
             $this->zip_code = $user->zip_code;
             $this->city = $user->city;
@@ -358,28 +330,11 @@ class Users extends Component
             $this->latitude = $user->latitude;
             $this->longitude = $user->longitude;
             $this->state = $user->state;
-            
-            // Get the user's role
             $this->role = $user->roles->first()->name ?? '';
             
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
-            
-            \Log::info('Data set, about to open modal', [
-                'modalTitle' => $this->modalTitle,
-                'modalAction' => $this->modalAction,
-                'name' => $this->name,
-                'email' => $this->email,
-                'role' => $this->role
-            ]);
-            
-            // IMPROVED: Open modal with proper state synchronization
-            $this->openModalWithData();
-            
-            \Log::info('=== EDIT DEBUG END ===', [
-                'final_isOpen' => $this->isOpen,
-                'final_modalAction' => $this->modalAction
-            ]);
+            $this->isOpen = true;
             
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [
@@ -388,8 +343,26 @@ class Users extends Component
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error loading user data: ' . $e->getMessage());
-            $this->dispatch('user-edit-error');
         }
+    }
+
+    public function closeModal()
+    {
+        $this->isOpen = false;
+        $this->resetInputFields();
+    }
+    
+    private function resetInputFields()
+    {
+        $this->reset([
+            'uuid', 'name', 'last_name', 'username', 'date_of_birth', 
+            'email', 'password', 'password_confirmation', 'phone', 
+            'address', 'zip_code', 'city', 'country', 'gender', 
+            'profile_photo_path', 'terms_and_conditions', 'latitude', 'longitude',
+            'send_password_reset', 'state', 'role'
+        ]);
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 
     public function update()
@@ -591,96 +564,6 @@ class Users extends Component
         }
     }
 
-    public function openModal()
-    {
-        // IMPROVED: Use the standardized method
-        $this->openModalWithData();
-    }
-
-    public function closeModal()
-    {
-        $this->cleanModalState();
-    }
-
-    /**
-     * Clean modal state properly to avoid Alpine.js/Livewire desync
-     * @param bool $closeModal Whether to close the modal
-     */
-    private function cleanModalState($closeModal = true)
-    {
-        if ($closeModal) {
-            $this->isOpen = false;
-        }
-        
-        // Reset all input fields
-        $this->resetInputFields();
-        $this->resetValidation();
-        $this->resetErrorBag();
-        
-        // Dispatch clean state event to Alpine.js
-        $this->dispatch('modal-state-cleaned', [
-            'shouldClose' => $closeModal
-        ]);
-    }
-    
-    /**
-     * Open modal with proper data synchronization
-     */
-    private function openModalWithData()
-    {
-        \Log::info('🚀 [MODAL DEBUG] Opening modal with data', [
-            'before_isOpen' => $this->isOpen,
-            'modalAction' => $this->modalAction,
-            'name' => $this->name,
-            'email' => $this->email
-        ]);
-        
-        $this->isOpen = true;
-        
-        \Log::info('🚀 [MODAL DEBUG] isOpen set to true', [
-            'after_isOpen' => $this->isOpen
-        ]);
-        
-        // Dispatch event with current form data for Alpine.js
-        $eventData = [
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'username' => $this->username,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'state' => $this->state,
-            'country' => $this->country,
-            'gender' => $this->gender,
-            'date_of_birth' => $this->date_of_birth,
-            'role' => $this->role,
-            'action' => $this->modalAction
-        ];
-        
-        \Log::info('🚀 [MODAL DEBUG] Dispatching modal-data-loaded event', [
-            'eventData' => $eventData
-        ]);
-        
-        $this->dispatch('modal-data-loaded', $eventData);
-        
-        \Log::info('🚀 [MODAL DEBUG] Event dispatched, modal should be open');
-    }
-
-    private function resetInputFields()
-    {
-        $this->reset([
-            'uuid', 'name', 'last_name', 'username', 'date_of_birth', 
-            'email', 'password', 'password_confirmation', 'phone', 
-            'address', 'zip_code', 'city', 'country', 'gender', 
-            'profile_photo_path', 'terms_and_conditions', 'latitude', 'longitude',
-            'send_password_reset', 'state', 'role'
-        ]);
-        $this->resetErrorBag();
-        $this->resetValidation();
-    }
-
     /**
      * Check if an email already exists in the database
      * 
@@ -841,11 +724,10 @@ class Users extends Component
     }
 
     /**
-     * Clean all state - DEPRECATED: Use cleanModalState() instead
-     * Kept for backward compatibility
+     * Clean all state - Simple version
      */
     public function cleanState()
     {
-        $this->cleanModalState();
+        $this->closeModal();
     }
 }
