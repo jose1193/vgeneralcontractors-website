@@ -35,31 +35,30 @@ $store.darkMode = {
 $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
     <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
-        <div class="px-2 sm:px-4 lg:px-8">
-            <div class="flex justify-between items-center h-14 sm:h-16">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
                 <!-- Left side - Logo and search -->
-                <div class="flex items-center space-x-2 sm:space-x-4 flex-1">
+                <div class="flex items-center space-x-4">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()"
-                        class="lg:hidden text-gray-400 hover:text-white p-1.5 sm:p-2">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
 
                     <!-- Logo -->
-                    <div class="flex items-center flex-shrink-0">
+                    <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="flex items-center">
                             <img src="{{ asset('assets/logo/logo4-white.webp') }}" alt="V General Contractors Logo"
-                                class="h-6 sm:h-8 mr-1 sm:mr-3">
+                                class="h-8 mr-3">
                         </a>
                     </div>
 
                     <!-- Search Bar - Desktop -->
-                    <div class="relative hidden md:block flex-1 max-w-md">
+                    <div class="relative hidden md:block">
                         <input type="text" placeholder="{{ __('search') }}"
-                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                             style="background-color: #2C2E36; border: 1px solid #2C2E36;">
                         <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -70,7 +69,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 </div>
 
                 <!-- Right side - Theme Toggle, Language, Notifications, Messages, User menu -->
-                <div class="flex items-center space-x-1 sm:space-x-2 md:space-x-4 flex-shrink-0">
+                <div class="flex items-center space-x-4">
                     <!-- Theme Toggle - Desktop Only -->
                     <div class="hidden md:block">
                         <button @click="$store.darkMode.toggle()"
@@ -91,13 +90,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-1 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
                                     'en' => [
                                         'name' => __('english'),
-                                        'flag' => '<svg class="h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        'flag' => '<svg class="h-4 w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                        <rect width="20" height="15" fill="#B22234"/>
                                                        <rect width="20" height="1.15" y="1.15" fill="white"/>
                                                        <rect width="20" height="1.15" y="3.46" fill="white"/>
@@ -111,7 +110,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                     ],
                                     'es' => [
                                         'name' => __('spanish'),
-                                        'flag' => '<svg class="h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        'flag' => '<svg class="h-4 w-4" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                        <rect width="20" height="5" fill="#C60B1E"/>
                                                        <rect width="20" height="5" y="5" fill="#FFC400"/>
                                                        <rect width="20" height="5" y="10" fill="#C60B1E"/>
@@ -120,10 +119,10 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                     ],
                                 ];
                             @endphp
-                            <span class="mr-1 sm:mr-2">{!! $languages[$currentLocale]['flag'] !!}</span>
-                            <span class="hidden sm:inline">{{ $languages[$currentLocale]['name'] }}</span>
-                            <svg class="ml-1 sm:ml-2 -mr-0.5 h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20" fill="currentColor">
+                            <span class="mr-2">{!! $languages[$currentLocale]['flag'] !!}</span>
+                            <span>{{ $languages[$currentLocale]['name'] }}</span>
+                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
                                 <path fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                     clip-rule="evenodd" />
@@ -161,8 +160,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- Search Icon - Mobile -->
                     <div class="md:hidden relative" x-data="{ searchOpen: false }">
-                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-1.5">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -175,7 +174,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:leave="transition ease-in duration-200"
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute right-0 top-12 w-[calc(100vw-2rem)] max-w-sm rounded-lg shadow-lg border z-50 p-4"
+                            class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4"
                             style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
                             <div class="relative">
                                 <input type="text" placeholder="{{ __('search') }}"
@@ -191,16 +190,16 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Notifications -->
-                    <button class="text-gray-400 hover:text-white p-1.5 sm:p-2">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button class="text-gray-400 hover:text-white p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 17h5l-5 5v-5zM10.5 3.5a6 6 0 0 1 6 6v2l1.5 3h-15l1.5-3v-2a6 6 0 0 1 6-6z" />
                         </svg>
                     </button>
 
                     <!-- Messages -->
-                    <button class="hidden sm:block text-gray-400 hover:text-white p-1.5 sm:p-2">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button class="text-gray-400 hover:text-white p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
@@ -209,15 +208,14 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- User Profile -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"
-                            class="flex items-center space-x-1 sm:space-x-2 text-gray-300 hover:text-white">
+                            class="flex items-center space-x-2 text-gray-300 hover:text-white">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <img class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-gray-700"
+                                <img class="w-8 h-8 rounded-full object-cover border-2 border-gray-700"
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             @else
-                                <div
-                                    class="w-6 h-6 sm:w-8 sm:h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
                                     <span
-                                        class="text-xs sm:text-sm font-medium text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        class="text-sm font-medium text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
                                 </div>
                             @endif
                         </button>
