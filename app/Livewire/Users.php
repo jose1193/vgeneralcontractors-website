@@ -62,7 +62,9 @@ class Users extends Component
         'delete',
         'restore', 
         'closeModal', 
-        'refreshComponent' => '$refresh'
+        'refreshComponent' => '$refresh',
+        'userDeleteError',
+        'userRestoreError'
     ];
 
     protected $queryString = [
@@ -168,6 +170,24 @@ class Users extends Component
         
         // Abrir el modal
         $this->isOpen = true;
+        
+        // Emitir evento para actualizar Alpine.js - make sure ALL fields are empty
+        $this->dispatch('user-edit', [
+            'name' => '',
+            'last_name' => '',
+            'email' => '',
+            'username' => '',
+            'phone' => '',
+            'address' => '',
+            'zip_code' => '',
+            'city' => '',
+            'state' => '',
+            'country' => '',
+            'gender' => '',
+            'date_of_birth' => '',
+            'role' => '',
+            'action' => 'store'
+        ]);
     }
 
     public function store()
@@ -243,14 +263,18 @@ class Users extends Component
             $this->closeModal();
             $this->resetInputFields();
             $this->dispatch('refreshComponent');
+            $this->dispatch('user-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
             \Log::error('Error creating user', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error creating user: ' . $e->getMessage());
+            $this->dispatch('user-created-error');
         }
     }
 
@@ -338,7 +362,24 @@ class Users extends Component
             
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
-            $this->isOpen = true;
+            $this->openModal();
+            
+            // Dispatch event with user data
+            $this->dispatch('user-edit', [
+                'name' => $this->name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'username' => $this->username,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'zip_code' => $this->zip_code,
+                'city' => $this->city,
+                'country' => $this->country,
+                'gender' => $this->gender,
+                'date_of_birth' => $this->date_of_birth,
+                'role' => $this->role,
+                'action' => 'update'
+            ]);
             
             \Log::info('User data loaded successfully', [
                 'uuid' => $this->uuid,
@@ -433,15 +474,19 @@ class Users extends Component
             $this->closeModal();
             $this->resetInputFields();
             $this->dispatch('refreshComponent');
+            $this->dispatch('user-updated-success');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('validation-failed');
             throw $e;
         } catch (\Exception $e) {
+            $this->dispatch('validation-failed');
             \Log::error('Error updating user', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             session()->flash('error', 'Error updating user: ' . $e->getMessage());
+            $this->dispatch('user-updated-error');
         }
     }
 
@@ -449,6 +494,7 @@ class Users extends Component
     {
         try {
             if (!$this->checkPermissionWithMessage('DELETE_USER', 'No tienes permiso para eliminar usuarios')) {
+                $this->dispatch('userDeleteError', ['message' => 'No tienes permiso para eliminar usuarios']);
                 return false;
             }
             
@@ -460,6 +506,7 @@ class Users extends Component
             if (!$user) {
                 \Log::warning('User not found for deletion', ['uuid' => $uuid]);
                 session()->flash('error', 'User not found.');
+                $this->dispatch('userDeleteError', ['message' => 'User not found.']);
                 return false;
             }
             
@@ -482,6 +529,7 @@ class Users extends Component
             $this->clearCache('users');
             
             session()->flash('message', 'User deleted successfully.');
+            $this->dispatch('userDeleted');
             return true;
         } catch (\Exception $e) {
             \Log::error('Error deleting user', [
@@ -491,6 +539,7 @@ class Users extends Component
             ]);
             
             session()->flash('error', 'Error deleting user: ' . $e->getMessage());
+            $this->dispatch('userDeleteError', ['message' => $e->getMessage()]);
             return false;
         }
     }
@@ -499,6 +548,7 @@ class Users extends Component
     {
         try {
             if (!$this->checkPermissionWithMessage('RESTORE_USER', 'No tienes permiso para restaurar usuarios')) {
+                $this->dispatch('userRestoreError', ['message' => 'No tienes permiso para restaurar usuarios']);
                 return false;
             }
             
@@ -510,6 +560,7 @@ class Users extends Component
             if (!$user) {
                 \Log::warning('User not found for restoration', ['uuid' => $uuid]);
                 session()->flash('error', 'User not found.');
+                $this->dispatch('userRestoreError', ['message' => 'User not found.']);
                 return false;
             }
             
@@ -532,6 +583,7 @@ class Users extends Component
             $this->clearCache('users');
             
             session()->flash('message', 'User restored successfully.');
+            $this->dispatch('userRestored');
             return true;
         } catch (\Exception $e) {
             \Log::error('Error restoring user', [
@@ -541,6 +593,7 @@ class Users extends Component
             ]);
             
             session()->flash('error', 'Error restoring user: ' . $e->getMessage());
+            $this->dispatch('userRestoreError', ['message' => $e->getMessage()]);
             return false;
         }
     }
@@ -548,6 +601,21 @@ class Users extends Component
     public function openModal()
     {
         $this->isOpen = true;
+        $this->dispatch('user-edit', [
+            'name' => $this->name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'username' => $this->username,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'zip_code' => $this->zip_code,
+            'city' => $this->city,
+            'country' => $this->country,
+            'gender' => $this->gender,
+            'date_of_birth' => $this->date_of_birth,
+            'role' => $this->role,
+            'action' => $this->modalAction
+        ]);
     }
 
     public function closeModal()
@@ -557,6 +625,24 @@ class Users extends Component
         // Reset fields always when closing the modal
         $this->resetInputFields();
         $this->resetValidation();
+        
+        // Explicitly send empty data for ALL fields to reset Alpine.js form
+        $this->dispatch('user-edit', [
+            'name' => '',
+            'last_name' => '',
+            'email' => '',
+            'username' => '',
+            'phone' => '',
+            'address' => '',
+            'zip_code' => '',
+            'city' => '',
+            'state' => '',
+            'country' => '',
+            'gender' => '',
+            'date_of_birth' => '',
+            'role' => '',
+            'action' => ''
+        ]);
     }
 
     private function resetInputFields()
@@ -631,26 +717,56 @@ class Users extends Component
             ->exists();
     }
 
-    // Simplified real-time validation
+    // Add this method for real-time email validation
     public function updatedEmail()
     {
-        if (!empty($this->email)) {
-            $this->validateOnly('email');
+        $emailRule = ['required', 'string', 'email', 'max:255'];
+        
+        if ($this->uuid) {
+            $emailRule[] = Rule::unique('users', 'email')->ignore($this->uuid, 'uuid');
+        } else {
+            $emailRule[] = Rule::unique('users', 'email');
         }
+        
+        $this->validateOnly('email', ['email' => $emailRule]);
     }
 
+    // Add this method for real-time phone validation
     public function updatedPhone()
     {
-        if (!empty($this->phone)) {
-            $this->validateOnly('phone');
+        if (empty($this->phone)) {
+            return;
         }
+        
+        $phoneRule = ['nullable', 'string', 'max:20'];
+        
+        if ($this->uuid) {
+            $phoneRule[] = Rule::unique('users', 'phone')->ignore($this->uuid, 'uuid');
+        } else {
+            $phoneRule[] = Rule::unique('users', 'phone');
+        }
+        
+        $this->validateOnly('phone', ['phone' => $phoneRule]);
     }
 
+    // Add this method for real-time username validation
     public function updatedUsername()
     {
-        if (!empty($this->username) && $this->modalAction === 'update') {
-            $this->validateOnly('username');
+        $usernameRule = [
+            'required', 
+            'string', 
+            'min:7', 
+            'max:255',
+            'regex:/^.*[0-9].*[0-9].*$/' // Requires at least 2 numbers
+        ];
+        
+        if ($this->uuid) {
+            $usernameRule[] = Rule::unique('users', 'username')->ignore($this->uuid, 'uuid');
+        } else {
+            $usernameRule[] = Rule::unique('users', 'username');
         }
+        
+        $this->validateOnly('username', ['username' => $usernameRule]);
     }
 
     // Add this method for real-time search updates
