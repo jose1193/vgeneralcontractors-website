@@ -1,4 +1,4 @@
-@props(['name', 'label', 'value' => '', 'error' => null, 'required' => false])
+@props(['name', 'label', 'error' => null, 'required' => false])
 
 <div class="mb-4">
     <label for="{{ $name }}" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
@@ -7,7 +7,7 @@
         @endif:
     </label>
     <input type="tel" id="{{ $name }}" name="{{ $name }}" wire:model.live="{{ $name }}"
-        value="{{ $value }}" placeholder="(XXX) XXX-XXXX"
+        placeholder="(XXX) XXX-XXXX"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-300 dark:focus:border-blue-600 @error($name) border-red-500 @enderror"
         {{ $required ? 'required' : '' }} maxlength="14" x-data="{
             formatPhone() {
