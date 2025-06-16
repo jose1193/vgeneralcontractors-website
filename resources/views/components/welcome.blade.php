@@ -5,8 +5,8 @@
     <div class="p-6">
         <!-- Dashboard Header -->
         <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
-            <h2 class="text-sm sm:text-sm md:text-2xl lg:text-2xl font-bold text-white mb-2">{{ $title }}</h2>
-            <p class="text-sm sm:text-sm md:text-base lg:text-base text-gray-400">{{ $subtitle }}</p>
+            <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">{{ $title }}</h2>
+            <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">{{ $subtitle }}</p>
         </div>
 
         <!-- Quick Action Cards -->
