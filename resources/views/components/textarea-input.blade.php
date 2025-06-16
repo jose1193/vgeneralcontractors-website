@@ -1,4 +1,4 @@
-@props(['name', 'label', 'model', 'rows' => 4, 'error' => null, 'required' => false])
+@props(['name', 'label', 'model' => '', 'rows' => 4, 'error' => null, 'required' => false])
 
 <div>
     <label for="{{ $name }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
