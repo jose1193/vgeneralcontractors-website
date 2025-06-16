@@ -320,12 +320,24 @@ class Users extends Component
                 return;
             }
             
-            \Log::info('Attempting to edit user', ['uuid' => $uuid]);
+            \Log::info('=== EDIT DEBUG START ===', [
+                'uuid' => $uuid,
+                'current_isOpen' => $this->isOpen,
+                'current_modalAction' => $this->modalAction
+            ]);
             
             $user = User::where('uuid', $uuid)->firstOrFail();
             
+            \Log::info('User found for edit', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'user_email' => $user->email
+            ]);
+            
             // IMPROVED: Ensure clean state before loading data
             $this->cleanModalState(false); // Don't close modal, just clean state
+            
+            \Log::info('State cleaned, setting user data');
             
             // Set user data
             $this->uuid = $user->uuid;
@@ -353,16 +365,22 @@ class Users extends Component
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
             
+            \Log::info('Data set, about to open modal', [
+                'modalTitle' => $this->modalTitle,
+                'modalAction' => $this->modalAction,
+                'name' => $this->name,
+                'email' => $this->email,
+                'role' => $this->role
+            ]);
+            
             // IMPROVED: Open modal with proper state synchronization
             $this->openModalWithData();
             
-            \Log::info('User data loaded successfully', [
-                'uuid' => $this->uuid,
-                'name' => $this->name,
-                'email' => $this->email,
-                'username' => $this->username,
-                'role' => $this->role
+            \Log::info('=== EDIT DEBUG END ===', [
+                'final_isOpen' => $this->isOpen,
+                'final_modalAction' => $this->modalAction
             ]);
+            
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [
                 'uuid' => $uuid,
@@ -610,10 +628,21 @@ class Users extends Component
      */
     private function openModalWithData()
     {
+        \Log::info('🚀 [MODAL DEBUG] Opening modal with data', [
+            'before_isOpen' => $this->isOpen,
+            'modalAction' => $this->modalAction,
+            'name' => $this->name,
+            'email' => $this->email
+        ]);
+        
         $this->isOpen = true;
         
+        \Log::info('🚀 [MODAL DEBUG] isOpen set to true', [
+            'after_isOpen' => $this->isOpen
+        ]);
+        
         // Dispatch event with current form data for Alpine.js
-        $this->dispatch('modal-data-loaded', [
+        $eventData = [
             'name' => $this->name,
             'last_name' => $this->last_name,
             'email' => $this->email,
@@ -628,7 +657,15 @@ class Users extends Component
             'date_of_birth' => $this->date_of_birth,
             'role' => $this->role,
             'action' => $this->modalAction
+        ];
+        
+        \Log::info('🚀 [MODAL DEBUG] Dispatching modal-data-loaded event', [
+            'eventData' => $eventData
         ]);
+        
+        $this->dispatch('modal-data-loaded', $eventData);
+        
+        \Log::info('🚀 [MODAL DEBUG] Event dispatched, modal should be open');
     }
 
     private function resetInputFields()

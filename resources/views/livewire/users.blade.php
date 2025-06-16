@@ -55,6 +55,12 @@
 
     <!-- Modal Form -->
     @if ($isOpen)
+        <div>
+            <script>
+                console.log('🔴 [BLADE DEBUG] Modal is rendering - isOpen:', @json($isOpen), 'modalAction:',
+                    @json($modalAction));
+            </script>
+        </div>
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
                 initialValues: {
@@ -99,7 +105,9 @@
             // IMPROVED: Single event listener for modal data loading
             $wire.on('modal-data-loaded', (event) => {
                 const data = event.detail;
-                console.log('Modal data loaded:', data);
+                console.log('🚀 [ALPINE DEBUG] Modal data loaded:', data);
+                console.log('🚀 [ALPINE DEBUG] Current form state before update:', form);
+                console.log('🚀 [ALPINE DEBUG] Current modalAction before update:', modalAction);
             
                 // Update modalAction
                 modalAction = data.action || 'store';
@@ -113,12 +121,17 @@
             
                 // Clear any previous errors
                 clearErrors();
+            
+                console.log('🚀 [ALPINE DEBUG] Form state after update:', form);
+                console.log('🚀 [ALPINE DEBUG] ModalAction after update:', modalAction);
+                console.log('🚀 [ALPINE DEBUG] Livewire isOpen:', $wire.isOpen);
             });
             
             // IMPROVED: Single event listener for modal state cleaning
             $wire.on('modal-state-cleaned', (event) => {
                 const data = event.detail;
-                console.log('Modal state cleaned, shouldClose:', data.shouldClose);
+                console.log('🧹 [ALPINE DEBUG] Modal state cleaned, shouldClose:', data.shouldClose);
+                console.log('🧹 [ALPINE DEBUG] Form state before cleaning:', form);
             
                 // Reset form to empty state
                 Object.keys(form).forEach(key => {
@@ -134,6 +147,9 @@
             
                 // Reset modal action
                 modalAction = 'store';
+            
+                console.log('🧹 [ALPINE DEBUG] Form state after cleaning:', form);
+                console.log('🧹 [ALPINE DEBUG] ModalAction after cleaning:', modalAction);
             });
             
             // IMPROVED: Clean success event handling
