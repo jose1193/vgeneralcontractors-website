@@ -56,103 +56,80 @@
     <!-- Modal Form -->
     @if ($isOpen)
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
-                initialValues: {
-                    name: '{{ $name }}',
-                    last_name: '{{ $last_name }}',
-                    email: '{{ $email }}',
-                    phone: '{{ $phone }}',
-                    address: '{{ $address }}',
-                    city: '{{ $city }}',
-                    zip_code: '{{ $zip_code }}',
-                    country: '{{ $country }}',
-                    gender: '{{ $gender }}',
-                    date_of_birth: '{{ $date_of_birth }}',
-                    username: '{{ $username }}',
-                    role: '{{ $role }}',
-                    password: '',
-                    password_confirmation: '',
-                    send_password_reset: false
-                },
-                modalAction: '{{ $modalAction }}'
-            })" x-init="modalAction = '{{ $modalAction }}';
-            
-            // Initialize form values
-            form = {
-                name: '{{ $name }}',
-                last_name: '{{ $last_name }}',
-                email: '{{ $email }}',
-                phone: '{{ $phone }}',
-                address: '{{ $address }}',
-                city: '{{ $city }}',
-                zip_code: '{{ $zip_code }}',
-                country: '{{ $country }}',
-                gender: '{{ $gender }}',
-                date_of_birth: '{{ $date_of_birth }}',
-                username: '{{ $username }}',
-                role: '{{ $role }}',
-                password: '',
-                password_confirmation: '',
-                send_password_reset: false
-            };
-            
-            // Listen for user edit events
-            $wire.on('user-edit', (event) => {
-                const data = event.detail;
-                console.log('Received user data:', data);
-            
-                // Clear form completely first
-                Object.keys(form).forEach(key => {
-                    form[key] = '';
-                });
-            
-                // Update form with new data
-                Object.keys(data).forEach(key => {
-                    if (key in form) {
-                        form[key] = data[key];
-                    }
-                });
-            
-                // Sync with Livewire
-                $wire.set('name', data.name || '');
-                $wire.set('last_name', data.last_name || '');
-                $wire.set('email', data.email || '');
-                $wire.set('phone', data.phone || '');
-                $wire.set('address', data.address || '');
-                $wire.set('city', data.city || '');
-                $wire.set('zip_code', data.zip_code || '');
-                $wire.set('country', data.country || '');
-                $wire.set('gender', data.gender || '');
-                $wire.set('date_of_birth', data.date_of_birth || '');
-                $wire.set('username', data.username || '');
-                $wire.set('role', data.role || '');
-            
-                clearErrors();
-            });
-            
-            // Listen for state clean events
-            $wire.on('state-cleaned', () => {
-                console.log('State cleaned, resetting form');
-                Object.keys(form).forEach(key => {
-                    form[key] = '';
-                });
-                clearErrors();
-            });
-            
-            // Listen for success events to clean up state
-            $wire.on('user-created-success', () => {
-                console.log('User created successfully, cleaning state');
-                setTimeout(() => {
-                    Object.keys(form).forEach(key => {
-                        form[key] = '';
-                    });
-                    clearErrors();
-                }, 100);
-            });">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="userFormHandler()" x-init="initializeForm('{{ $modalAction }}')">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
         </x-modals.form-modal>
     @endif
+
+    <script>
+        function userFormHandler() {
+            return {
+                form: {
+                    name: '',
+                    last_name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    city: '',
+                    zip_code: '',
+                    state: '',
+                    country: '',
+                    gender: '',
+                    date_of_birth: '',
+                    username: '',
+                    role: '',
+                    password: '',
+                    password_confirmation: '',
+                    send_password_reset: false
+                },
+                errors: {},
+                modalAction: 'store',
+
+                initializeForm(action) {
+                    this.modalAction = action;
+                    this.clearErrors();
+
+                    // Listen for user edit events
+                    this.$wire.on('user-edit', (event) => {
+                        this.updateForm(event.detail);
+                    });
+
+                    // Listen for modal closed events
+                    this.$wire.on('modal-closed', () => {
+                        this.resetForm();
+                    });
+
+                    // Listen for success events
+                    this.$wire.on('user-created-success', () => {
+                        this.resetForm();
+                    });
+                },
+
+                updateForm(data) {
+                    // Update form with received data
+                    Object.keys(this.form).forEach(key => {
+                        this.form[key] = data[key] || '';
+                    });
+                    this.modalAction = data.action || 'store';
+                    this.clearErrors();
+                },
+
+                resetForm() {
+                    // Reset all form fields
+                    Object.keys(this.form).forEach(key => {
+                        this.form[key] = '';
+                    });
+                    this.clearErrors();
+                    this.modalAction = 'store';
+                },
+
+                clearErrors() {
+                    this.errors = {};
+                }
+            }
+        }
+    </script>
 
     <!-- Usar los componentes genéricos para modales de confirmación -->
     <x-modals.delete-confirmation itemType="user" />
