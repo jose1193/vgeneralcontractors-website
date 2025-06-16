@@ -18,7 +18,7 @@
                     <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </span>
-            <input type="text" id="searchInput" placeholder="Search {{ $entityName }}s..."
+            <input type="text" id="searchInput" placeholder="{{ __('search') }}"
                 class="pl-10 pr-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
         </div>
     @endif
@@ -28,8 +28,8 @@
         @if ($showInactiveToggle)
             <!-- Show Deleted Toggle -->
             <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto">
-                <label for="showDeleted" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">Show
-                    Inactive</label>
+                <label for="showDeleted"
+                    class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('show_inactive_items') }}</label>
                 <label for="showDeleted" class="flex items-center cursor-pointer">
                     <div class="relative">
                         <input type="checkbox" id="showDeleted" class="sr-only">
@@ -57,8 +57,8 @@
         @if ($showPerPage)
             <!-- Per Page Selector -->
             <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto">
-                <label for="perPage" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">Per
-                    Page:</label>
+                <label for="perPage"
+                    class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('per_page') }}:</label>
                 <select id="perPage"
                     class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm py-2 px-2 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
                     @foreach ($perPageOptions as $option)
@@ -78,7 +78,7 @@
                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                     clip-rule="evenodd" />
             </svg>
-            Add {{ $entityName }}
+            {{ __('add') }} {{ $entityName }}
         </button>
     </div>
 </div>

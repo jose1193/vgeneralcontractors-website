@@ -1155,5 +1155,7 @@
     "add_email_data": "Agregar Datos de Correo",
     "show_inactive_email_data": "Mostrar Datos de Correo Inactivos",
     "add_user": "Agregar Usuario",
-    "show_inactive_users": "Mostrar Usuarios Inactivos"
+    "show_inactive_users": "Mostrar Usuarios Inactivos",
+    "show_inactive_items": "Mostrar Elementos Inactivos",
+    "add": "Agregar"
 }

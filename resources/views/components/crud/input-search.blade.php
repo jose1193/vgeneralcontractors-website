@@ -1,7 +1,7 @@
 @props([
     'id',
     'name' => $id,
-    'placeholder' => 'Search...',
+    'placeholder' => '',
     'class' =>
         'block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 leading-5 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-700',
 ])
@@ -16,7 +16,7 @@
         </svg>
     </div>
     <input type="text" id="{{ $id }}" name="{{ $name }}" class="{{ $class }} pl-10 pr-10"
-        placeholder="{{ $placeholder }}" autocomplete="off" {{ $attributes }}>
+        placeholder="{{ $placeholder ?: __('search') }}" autocomplete="off" {{ $attributes }}>
     <div class="absolute inset-y-0 right-0 pr-3 top-2.5 items-center cursor-pointer hidden"
         id="{{ $id }}-clear">
         <svg class="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"

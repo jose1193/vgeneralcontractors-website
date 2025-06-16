@@ -1,12 +1,12 @@
 @props([
     'id' => 'showDeleted',
-    'label' => 'Show Inactive Items',
+    'label' => '',
     'hasLabel' => true,
 ])
 
 <div class="flex items-center justify-between md:justify-start space-x-2">
     @if ($hasLabel)
-        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $label }}</span>
+        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $label ?: __('show_inactive_items') }}</span>
     @endif
 
     <label for="{{ $id }}" class="relative inline-flex items-center cursor-pointer">

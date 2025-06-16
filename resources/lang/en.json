@@ -1030,6 +1030,8 @@
     "show_inactive_email_data": "Show Inactive Email Data",
     "add_user": "Add User",
     "show_inactive_users": "Show Inactive Users",
+    "show_inactive_items": "Show Inactive Items",
+    "add": "Add",
 
     "service_categories_title": "Service Categories",
     "service_categories_subtitle": "Manage and organize your service categories for better business classification",

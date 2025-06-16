@@ -57,7 +57,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block">
-                        <input type="text" placeholder="Start Search Here..."
+                        <input type="text" placeholder="{{ __('search') }}"
                             class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                             style="background-color: #2C2E36; border: 1px solid #2C2E36;">
                         <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
@@ -177,7 +177,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             class="absolute right-0 top-12 w-72 sm:w-80 rounded-lg shadow-lg border z-50 p-4"
                             style="background-color: #2C2E36; border-color: #2C2E36; display: none;">
                             <div class="relative">
-                                <input type="text" placeholder="Start Search Here..."
+                                <input type="text" placeholder="{{ __('search') }}"
                                     class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                     style="background-color: #141414; border: 1px solid #2C2E36;">
                                 <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
