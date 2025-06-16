@@ -174,7 +174,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:leave="transition ease-in duration-200"
                             x-transition:leave-start="opacity-100 transform scale-100"
                             x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute right-0 top-12 left-0 sm:left-auto sm:w-80 sm:right-0 rounded-lg shadow-lg border z-50 p-3 sm:p-4 mx-2 sm:mx-0"
+                            class="absolute top-12 left-1/2 transform -translate-x-1/2 w-80 max-w-[calc(100vw-2rem)] sm:left-auto sm:right-0 sm:transform-none sm:translate-x-0 rounded-lg shadow-lg border z-50 p-3 sm:p-4"
                             style="background-color: #2C2E36; border-color: #4B5563; display: none;">
                             <div class="relative">
                                 <input type="text" placeholder="{{ __('search') }}"
