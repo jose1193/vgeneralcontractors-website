@@ -139,6 +139,16 @@
                 clearErrors();
             });
             
+            // Listen for reset modal state event to ensure full reset
+            $wire.on('reset-modal-state', () => {
+                console.log('Resetting modal state completely');
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+                modalAction = '';
+                clearErrors();
+            });
+            
             // Listen for success events to clean up state
             $wire.on('user-created-success', () => {
                 console.log('User created successfully, cleaning state');

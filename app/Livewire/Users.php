@@ -678,6 +678,9 @@ class Users extends Component
             'action' => ''
         ]);
         
+        // Dispatch a specific event to notify Alpine.js to fully reset
+        $this->dispatch('reset-modal-state');
+        
         // Force a DOM update to ensure Alpine.js state is reset
         $this->js('setTimeout(() => { $wire.$refresh(); }, 50);');
     }
