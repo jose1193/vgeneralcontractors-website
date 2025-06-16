@@ -54,128 +54,105 @@
     </div>
 
     <!-- Modal Form -->
-    <div x-data="userFormHandler()" x-init="initializeForm()">
-        @if ($isOpen)
-            <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
-                </div>
-            </x-modals.form-modal>
-        @endif
-    </div>
-
-    <script>
-        function userFormHandler() {
-            return {
-                form: {
-                    name: '',
-                    last_name: '',
-                    email: '',
-                    phone: '',
-                    address: '',
-                    city: '',
-                    zip_code: '',
-                    state: '',
-                    country: '',
-                    gender: '',
-                    date_of_birth: '',
-                    username: '',
-                    role: '',
+    @if ($isOpen)
+        <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
+                initialValues: {
+                    name: '{{ $name }}',
+                    last_name: '{{ $last_name }}',
+                    email: '{{ $email }}',
+                    phone: '{{ $phone }}',
+                    address: '{{ $address }}',
+                    city: '{{ $city }}',
+                    zip_code: '{{ $zip_code }}',
+                    country: '{{ $country }}',
+                    gender: '{{ $gender }}',
+                    date_of_birth: '{{ $date_of_birth }}',
+                    username: '{{ $username }}',
+                    role: '{{ $role }}',
                     password: '',
                     password_confirmation: '',
                     send_password_reset: false
                 },
-                errors: {},
-                modalAction: 'store',
-
-                initializeForm() {
-                    this.modalAction = 'store';
-                    this.clearErrors();
-
-                    // Listen for user edit events
-                    this.$wire.on('user-edit', (event) => {
-                        console.log('Alpine.js received user-edit event:', event.detail);
-                        this.updateForm(event.detail);
-                    });
-
-                    // Listen for modal closed events
-                    this.$wire.on('modal-closed', () => {
-                        console.log('Alpine.js received modal-closed event');
-                        this.resetForm();
-                    });
-
-                    // Listen for success events
-                    this.$wire.on('user-created-success', () => {
-                        console.log('Alpine.js received user-created-success event');
-                        this.resetForm();
-                    });
-                },
-
-                updateForm(data) {
-                    console.log('Alpine.js updating form with data:', data);
-                    // Update form with received data
-                    Object.keys(this.form).forEach(key => {
-                        this.form[key] = data[key] || '';
-                    });
-                    this.modalAction = data.action || 'store';
-                    this.clearErrors();
-                    console.log('Alpine.js form updated:', this.form);
-                },
-
-                resetForm() {
-                    console.log('Alpine.js resetting form');
-                    // Reset all form fields
-                    Object.keys(this.form).forEach(key => {
-                        this.form[key] = '';
-                    });
-                    this.clearErrors();
-                    this.modalAction = 'store';
-                    console.log('Alpine.js form reset complete');
-                },
-
-                clearErrors() {
-                    this.errors = {};
-                },
-
-                // Validation functions that components expect
-                validateField(fieldName) {
-                    // Remove error for this field when user starts typing
-                    if (this.errors[fieldName]) {
-                        delete this.errors[fieldName];
+                modalAction: '{{ $modalAction }}'
+            })" x-init="modalAction = '{{ $modalAction }}';
+            
+            // Initialize form values
+            form = {
+                name: '{{ $name }}',
+                last_name: '{{ $last_name }}',
+                email: '{{ $email }}',
+                phone: '{{ $phone }}',
+                address: '{{ $address }}',
+                city: '{{ $city }}',
+                zip_code: '{{ $zip_code }}',
+                country: '{{ $country }}',
+                gender: '{{ $gender }}',
+                date_of_birth: '{{ $date_of_birth }}',
+                username: '{{ $username }}',
+                role: '{{ $role }}',
+                password: '',
+                password_confirmation: '',
+                send_password_reset: false
+            };
+            
+            // Listen for user edit events
+            $wire.on('user-edit', (event) => {
+                const data = event.detail;
+                console.log('Received user data:', data);
+            
+                // Clear form completely first
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+            
+                // Update form with new data
+                Object.keys(data).forEach(key => {
+                    if (key in form) {
+                        form[key] = data[key];
                     }
-                },
-
-                validateEmail(email) {
-                    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                        this.errors.email = 'Please enter a valid email address';
-                    } else {
-                        delete this.errors.email;
-                    }
-                },
-
-                checkEmailAvailability(email) {
-                    if (email && email.length > 0) {
-                        // Let Livewire handle the server-side validation
-                        this.$wire.set('email', email);
-                    }
-                },
-
-                checkUsernameAvailability(username) {
-                    if (username && username.length > 0) {
-                        // Let Livewire handle the server-side validation
-                        this.$wire.set('username', username);
-                    }
-                },
-
-                checkPhoneAvailability(phone) {
-                    if (phone && phone.length > 0) {
-                        // Let Livewire handle the server-side validation
-                        this.$wire.set('phone', phone);
-                    }
-                }
-            }
-        }
-    </script>
+                });
+            
+                // Sync with Livewire
+                $wire.set('name', data.name || '');
+                $wire.set('last_name', data.last_name || '');
+                $wire.set('email', data.email || '');
+                $wire.set('phone', data.phone || '');
+                $wire.set('address', data.address || '');
+                $wire.set('city', data.city || '');
+                $wire.set('zip_code', data.zip_code || '');
+                $wire.set('country', data.country || '');
+                $wire.set('gender', data.gender || '');
+                $wire.set('date_of_birth', data.date_of_birth || '');
+                $wire.set('username', data.username || '');
+                $wire.set('role', data.role || '');
+            
+                clearErrors();
+            });
+            
+            // Listen for state clean events
+            $wire.on('state-cleaned', () => {
+                console.log('State cleaned, resetting form');
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+                clearErrors();
+            });
+            
+            // Listen for success events to clean up state
+            $wire.on('user-created-success', () => {
+                console.log('User created successfully, cleaning state');
+                setTimeout(() => {
+                    Object.keys(form).forEach(key => {
+                        form[key] = '';
+                    });
+                    clearErrors();
+                }, 100);
+            });">
+                <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
+            </div>
+        </x-modals.form-modal>
+    @endif
 
     <!-- Usar los componentes genéricos para modales de confirmación -->
     <x-modals.delete-confirmation itemType="user" />

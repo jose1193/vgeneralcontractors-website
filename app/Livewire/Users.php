@@ -161,15 +161,40 @@ class Users extends Component
             return;
         }
         
-        // Clean state first
-        $this->cleanModalState();
+        // Ensure modal is completely closed first
+        $this->isOpen = false;
+        
+        // Clean state completely
+        $this->resetInputFields();
+        $this->resetValidation();
+        $this->resetErrorBag();
         
         // Set modal properties
         $this->modalTitle = 'Create New User';
         $this->modalAction = 'store';
         
-        // Open modal with empty data
-        $this->openModalWithData();
+        // Force a small delay to ensure state is clean before opening
+        $this->js('
+            setTimeout(() => { 
+                $wire.isOpen = true; 
+                $wire.dispatch("user-edit", {
+                    name: "",
+                    last_name: "",
+                    email: "",
+                    username: "",
+                    phone: "",
+                    address: "",
+                    zip_code: "",
+                    city: "",
+                    state: "",
+                    country: "",
+                    gender: "",
+                    date_of_birth: "",
+                    role: "",
+                    action: "store"
+                });
+            }, 50);
+        ');
     }
 
     public function store()
@@ -241,19 +266,18 @@ class Users extends Component
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
 
-            // Clean close: Close modal, reset, and notify success in single chain
-            $this->cleanCloseAndReset();
+            // Close modal first, then flash message to prevent state conflicts
+            $this->closeModal();
+            $this->resetInputFields();
             
             session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
             
-            // Single dispatch chain to prevent conflicts
+            // Dispatch events to refresh the component and notify success
+            $this->dispatch('refreshComponent');
             $this->dispatch('user-created-success');
             
-            // Log successful completion
-            \Log::info('User creation completed successfully', [
-                'user_id' => $user->id,
-                'modal_state' => $this->isOpen
-            ]);
+            // Force a re-render to ensure proper state synchronization
+            $this->js('setTimeout(() => { $wire.$refresh(); }, 100);');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
@@ -326,15 +350,12 @@ class Users extends Component
                 return;
             }
             
-            \Log::info('Attempting to edit user', [
-                'uuid' => $uuid,
-                'current_modal_state' => $this->isOpen
-            ]);
+            \Log::info('Attempting to edit user', ['uuid' => $uuid]);
             
             $user = User::where('uuid', $uuid)->firstOrFail();
             
-            // Clean state first - no concurrent operations
-            $this->cleanModalState();
+            // Reset all fields first to avoid stale data
+            $this->resetInputFields();
             
             // Set user data
             $this->uuid = $user->uuid;
@@ -362,16 +383,35 @@ class Users extends Component
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
             
-            // Open modal and dispatch data in single operation
-            $this->openModalWithData();
+            // Ensure modal is closed before opening
+            $this->isOpen = false;
+            
+            // Force a refresh to ensure state is clean
+            $this->js('setTimeout(() => { $wire.isOpen = true; }, 50);');
+            
+            // Dispatch event with user data
+            $this->dispatch('user-edit', [
+                'name' => $this->name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'username' => $this->username,
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'zip_code' => $this->zip_code,
+                'city' => $this->city,
+                'country' => $this->country,
+                'gender' => $this->gender,
+                'date_of_birth' => $this->date_of_birth,
+                'role' => $this->role,
+                'action' => 'update'
+            ]);
             
             \Log::info('User data loaded successfully', [
                 'uuid' => $this->uuid,
                 'name' => $this->name,
                 'email' => $this->email,
                 'username' => $this->username,
-                'role' => $this->role,
-                'modal_opened' => $this->isOpen
+                'role' => $this->role
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [
@@ -456,7 +496,9 @@ class Users extends Component
             $this->clearCache('users');
 
             session()->flash('message', 'User Updated Successfully.');
-            $this->cleanCloseAndReset();
+            $this->closeModal();
+            $this->resetInputFields();
+            $this->dispatch('refreshComponent');
             $this->dispatch('user-updated-success');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -583,19 +625,61 @@ class Users extends Component
 
     public function openModal()
     {
-        $this->openModalWithData();
+        // Ensure clean state before opening
+        $this->resetValidation();
+        $this->resetErrorBag();
+        
+        $this->isOpen = true;
+        
+        $this->dispatch('user-edit', [
+            'name' => $this->name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'username' => $this->username,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'zip_code' => $this->zip_code,
+            'city' => $this->city,
+            'country' => $this->country,
+            'gender' => $this->gender,
+            'date_of_birth' => $this->date_of_birth,
+            'role' => $this->role,
+            'action' => $this->modalAction
+        ]);
     }
 
     public function closeModal()
     {
-        // Simple, clean close
+        // Force close the modal first
         $this->isOpen = false;
+        
+        // Reset fields always when closing the modal
         $this->resetInputFields();
         $this->resetValidation();
+        
+        // Clear any error bags
         $this->resetErrorBag();
         
-        // Single dispatch to clear Alpine.js state
-        $this->dispatch('modal-closed');
+        // Explicitly send empty data for ALL fields to reset Alpine.js form
+        $this->dispatch('user-edit', [
+            'name' => '',
+            'last_name' => '',
+            'email' => '',
+            'username' => '',
+            'phone' => '',
+            'address' => '',
+            'zip_code' => '',
+            'city' => '',
+            'state' => '',
+            'country' => '',
+            'gender' => '',
+            'date_of_birth' => '',
+            'role' => '',
+            'action' => ''
+        ]);
+        
+        // Force a DOM update to ensure Alpine.js state is reset
+        $this->js('setTimeout(() => { $wire.$refresh(); }, 50);');
     }
 
     private function resetInputFields()
@@ -770,51 +854,21 @@ class Users extends Component
         $this->clearCache('users');
     }
 
-
-
     /**
-     * Clean modal state without conflicts
+     * Clean all state and force refresh
+     * This helps prevent conflicts between Livewire and Alpine.js
      */
-    private function cleanModalState()
+    public function cleanState()
     {
         $this->isOpen = false;
         $this->resetInputFields();
         $this->resetValidation();
         $this->resetErrorBag();
-    }
-    
-    /**
-     * Clean close and reset after successful operations
-     */
-    private function cleanCloseAndReset()
-    {
-        $this->cleanModalState();
-        $this->dispatch('modal-closed');
-    }
-    
-    /**
-     * Open modal with current data
-     */
-    private function openModalWithData()
-    {
-        $this->isOpen = true;
         
-        // Single dispatch with all data
-        $this->dispatch('user-edit', [
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'username' => $this->username,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'state' => $this->state,
-            'country' => $this->country,
-            'gender' => $this->gender,
-            'date_of_birth' => $this->date_of_birth,
-            'role' => $this->role,
-            'action' => $this->modalAction
-        ]);
+        // Dispatch a clean state event
+        $this->dispatch('state-cleaned');
+        
+        // Force refresh after a small delay
+        $this->js('setTimeout(() => { $wire.$refresh(); }, 100);');
     }
 }
