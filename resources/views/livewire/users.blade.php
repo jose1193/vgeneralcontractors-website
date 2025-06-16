@@ -77,79 +77,75 @@
                 modalAction: '{{ $modalAction }}'
             })" x-init="modalAction = '{{ $modalAction }}';
             
-            // Función para inicializar el formulario
-            function initializeForm() {
-                form = {
-                    name: '{{ $name }}',
-                    last_name: '{{ $last_name }}',
-                    email: '{{ $email }}',
-                    phone: '{{ $phone }}',
-                    address: '{{ $address }}',
-                    city: '{{ $city }}',
-                    zip_code: '{{ $zip_code }}',
-                    country: '{{ $country }}',
-                    gender: '{{ $gender }}',
-                    date_of_birth: '{{ $date_of_birth }}',
-                    username: '{{ $username }}',
-                    role: '{{ $role }}',
-                    password: '',
-                    password_confirmation: '',
-                    send_password_reset: false
-                };
-            }
+            // Initialize form values
+            form = {
+                name: '{{ $name }}',
+                last_name: '{{ $last_name }}',
+                email: '{{ $email }}',
+                phone: '{{ $phone }}',
+                address: '{{ $address }}',
+                city: '{{ $city }}',
+                zip_code: '{{ $zip_code }}',
+                country: '{{ $country }}',
+                gender: '{{ $gender }}',
+                date_of_birth: '{{ $date_of_birth }}',
+                username: '{{ $username }}',
+                role: '{{ $role }}',
+                password: '',
+                password_confirmation: '',
+                send_password_reset: false
+            };
             
-            // Inicializar el formulario
-            initializeForm();
-            
-            // Escuchar eventos de actualización con mejor manejo
+            // Listen for user edit events
             $wire.on('user-edit', (event) => {
-                const data = event.detail || event[0] || {};
+                const data = event.detail;
                 console.log('Received user data:', data);
             
-                // Limpiar completamente el formulario primero
+                // Clear form completely first
                 Object.keys(form).forEach(key => {
                     form[key] = '';
                 });
             
-                // Actualizar el formulario con los nuevos datos solo si están definidos
+                // Update form with new data
                 Object.keys(data).forEach(key => {
-                    if (key in form && data[key] !== undefined) {
-                        form[key] = data[key] || '';
+                    if (key in form) {
+                        form[key] = data[key];
                     }
                 });
             
-                // Sincronizar con Livewire de manera más robusta
-                $nextTick(() => {
-                    $wire.set('name', data.name || '');
-                    $wire.set('last_name', data.last_name || '');
-                    $wire.set('email', data.email || '');
-                    $wire.set('phone', data.phone || '');
-                    $wire.set('address', data.address || '');
-                    $wire.set('city', data.city || '');
-                    $wire.set('zip_code', data.zip_code || '');
-                    $wire.set('country', data.country || '');
-                    $wire.set('gender', data.gender || '');
-                    $wire.set('date_of_birth', data.date_of_birth || '');
-                    $wire.set('username', data.username || '');
-                    $wire.set('role', data.role || '');
+                // Sync with Livewire
+                $wire.set('name', data.name || '');
+                $wire.set('last_name', data.last_name || '');
+                $wire.set('email', data.email || '');
+                $wire.set('phone', data.phone || '');
+                $wire.set('address', data.address || '');
+                $wire.set('city', data.city || '');
+                $wire.set('zip_code', data.zip_code || '');
+                $wire.set('country', data.country || '');
+                $wire.set('gender', data.gender || '');
+                $wire.set('date_of_birth', data.date_of_birth || '');
+                $wire.set('username', data.username || '');
+                $wire.set('role', data.role || '');
             
-                    clearErrors();
+                clearErrors();
+            });
+            
+            // Listen for state clean events
+            $wire.on('state-cleaned', () => {
+                console.log('State cleaned, resetting form');
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
                 });
+                clearErrors();
             });
             
-            // Manejo de eventos de éxito para limpiar estado
+            // Listen for success events to clean up state
             $wire.on('user-created-success', () => {
-                // Forzar reinicialización del formulario después de crear usuario
+                console.log('User created successfully, cleaning state');
                 setTimeout(() => {
-                    initializeForm();
-                    clearErrors();
-                }, 100);
-            });
-            
-            $wire.on('user-updated-success', () => {
-                // Forzar reinicialización del formulario después de actualizar usuario
-                setTimeout(() => {
-                    initializeForm();
+                    Object.keys(form).forEach(key => {
+                        form[key] = '';
+                    });
                     clearErrors();
                 }, 100);
             });">

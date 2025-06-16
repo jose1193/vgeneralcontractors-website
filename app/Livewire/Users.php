@@ -62,6 +62,7 @@ class Users extends Component
         'delete',
         'restore', 
         'closeModal', 
+        'refreshComponent' => '$refresh',
         'userDeleteError',
         'userRestoreError'
     ];
@@ -100,10 +101,7 @@ class Users extends Component
     public function render()
     {
         if (!$this->checkPermission('READ_USER', true)) {
-            // Retornar una vista vacía con mensaje de error en lugar de null
-            return view('livewire.users', [
-                'users' => collect()->paginate(10)
-            ]);
+            return; // No continúa si no tiene permiso
         }
         
         $searchTerm = '%' . $this->search . '%';
@@ -163,33 +161,40 @@ class Users extends Component
             return;
         }
         
-        // Asegurarse de que todos los campos estén limpios
-        $this->resetInputFields();
+        // Ensure modal is completely closed first
+        $this->isOpen = false;
         
-        // Establecer el título y la acción del modal
+        // Clean state completely
+        $this->resetInputFields();
+        $this->resetValidation();
+        $this->resetErrorBag();
+        
+        // Set modal properties
         $this->modalTitle = 'Create New User';
         $this->modalAction = 'store';
         
-        // Abrir el modal
-        $this->isOpen = true;
-        
-        // Emitir evento para actualizar Alpine.js - make sure ALL fields are empty
-        $this->dispatch('user-edit', [
-            'name' => '',
-            'last_name' => '',
-            'email' => '',
-            'username' => '',
-            'phone' => '',
-            'address' => '',
-            'zip_code' => '',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'gender' => '',
-            'date_of_birth' => '',
-            'role' => '',
-            'action' => 'store'
-        ]);
+        // Force a small delay to ensure state is clean before opening
+        $this->js('
+            setTimeout(() => { 
+                $wire.isOpen = true; 
+                $wire.dispatch("user-edit", {
+                    name: "",
+                    last_name: "",
+                    email: "",
+                    username: "",
+                    phone: "",
+                    address: "",
+                    zip_code: "",
+                    city: "",
+                    state: "",
+                    country: "",
+                    gender: "",
+                    date_of_birth: "",
+                    role: "",
+                    action: "store"
+                });
+            }, 50);
+        ');
     }
 
     public function store()
@@ -261,10 +266,19 @@ class Users extends Component
             // Send email using queue job
             dispatch(new SendUserCredentialsEmail($user, $randomPassword, false));
 
-            session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
+            // Close modal first, then flash message to prevent state conflicts
             $this->closeModal();
             $this->resetInputFields();
+            
+            session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
+            
+            // Dispatch events to refresh the component and notify success
+            $this->dispatch('refreshComponent');
             $this->dispatch('user-created-success');
+            
+            // Force a re-render to ensure proper state synchronization
+            $this->js('setTimeout(() => { $wire.$refresh(); }, 100);');
+            
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -338,10 +352,12 @@ class Users extends Component
             
             \Log::info('Attempting to edit user', ['uuid' => $uuid]);
             
-            // Asegurar que el modal esté cerrado antes de cargar datos
-            $this->isOpen = false;
-            
             $user = User::where('uuid', $uuid)->firstOrFail();
+            
+            // Reset all fields first to avoid stale data
+            $this->resetInputFields();
+            
+            // Set user data
             $this->uuid = $user->uuid;
             $this->name = $user->name;
             $this->last_name = $user->last_name;
@@ -367,8 +383,11 @@ class Users extends Component
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
             
-            // Abrir el modal después de cargar los datos
-            $this->isOpen = true;
+            // Ensure modal is closed before opening
+            $this->isOpen = false;
+            
+            // Force a refresh to ensure state is clean
+            $this->js('setTimeout(() => { $wire.isOpen = true; }, 50);');
             
             // Dispatch event with user data
             $this->dispatch('user-edit', [
@@ -479,6 +498,7 @@ class Users extends Component
             session()->flash('message', 'User Updated Successfully.');
             $this->closeModal();
             $this->resetInputFields();
+            $this->dispatch('refreshComponent');
             $this->dispatch('user-updated-success');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -605,7 +625,12 @@ class Users extends Component
 
     public function openModal()
     {
+        // Ensure clean state before opening
+        $this->resetValidation();
+        $this->resetErrorBag();
+        
         $this->isOpen = true;
+        
         $this->dispatch('user-edit', [
             'name' => $this->name,
             'last_name' => $this->last_name,
@@ -625,11 +650,15 @@ class Users extends Component
 
     public function closeModal()
     {
+        // Force close the modal first
         $this->isOpen = false;
         
         // Reset fields always when closing the modal
         $this->resetInputFields();
         $this->resetValidation();
+        
+        // Clear any error bags
+        $this->resetErrorBag();
         
         // Explicitly send empty data for ALL fields to reset Alpine.js form
         $this->dispatch('user-edit', [
@@ -648,6 +677,9 @@ class Users extends Component
             'role' => '',
             'action' => ''
         ]);
+        
+        // Force a DOM update to ensure Alpine.js state is reset
+        $this->js('setTimeout(() => { $wire.$refresh(); }, 50);');
     }
 
     private function resetInputFields()
@@ -820,5 +852,23 @@ class Users extends Component
         $this->showDeleted = !$this->showDeleted;
         $this->resetPage();
         $this->clearCache('users');
+    }
+
+    /**
+     * Clean all state and force refresh
+     * This helps prevent conflicts between Livewire and Alpine.js
+     */
+    public function cleanState()
+    {
+        $this->isOpen = false;
+        $this->resetInputFields();
+        $this->resetValidation();
+        $this->resetErrorBag();
+        
+        // Dispatch a clean state event
+        $this->dispatch('state-cleaned');
+        
+        // Force refresh after a small delay
+        $this->js('setTimeout(() => { $wire.$refresh(); }, 100);');
     }
 }
