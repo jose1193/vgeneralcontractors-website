@@ -65,7 +65,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <!-- Search Bar - Desktop -->
                     <div class="relative hidden md:block flex-1 max-w-md">
                         <input type="text" placeholder="{{ __('search') }}"
-                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 border-0"
+                            class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                             style="background-color: #2C2E36;">
                         <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -537,7 +537,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-gray-300">{{ __('Theme') }}</span>
                     <button @click="$store.darkMode.toggle()"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                         :class="$store.darkMode.on ? 'bg-yellow-400' : 'bg-gray-600'">
                         <span class="sr-only">Toggle theme</span>
                         <span class="inline-block h-4 w-4 transform rounded-full bg-white transition"
