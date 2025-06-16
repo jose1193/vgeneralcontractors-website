@@ -47,12 +47,12 @@ $store.darkMode.updateTheme();
 
 // Handle window resize to close mobile search on larger screens
 window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 768 && $store.mobileSearch) {
         $store.mobileSearch.close();
     }
 });" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav x-show="!$store.mobileSearch.active || window.innerWidth >= 768"
+    <nav x-show="!$store.mobileSearch || !$store.mobileSearch.active"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="transform -translate-y-full opacity-0"
         x-transition:enter-end="transform translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-150"
@@ -185,7 +185,9 @@ window.addEventListener('resize', () => {
 
                     <!-- Search Icon - Mobile -->
                     <div class="md:hidden">
-                        <button @click="$store.mobileSearch.toggle()" class="text-gray-400 hover:text-white p-1 sm:p-2">
+                        <button @click="$store.mobileSearch && $store.mobileSearch.toggle()"
+                            class="text-gray-400 hover:text-white p-1 sm:p-2"
+                            :class="{ 'text-yellow-400': $store.mobileSearch && $store.mobileSearch.active }">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -270,19 +272,25 @@ window.addEventListener('resize', () => {
         </div>
     </nav>
 
+    <!-- Debug - Remove this line after testing -->
+    <div class="md:hidden fixed bottom-4 right-4 z-[70] bg-red-500 text-white p-2 rounded text-xs"
+        x-show="$store.mobileSearch && $store.mobileSearch.active" x-text="'Search Active'"></div>
+
     <!-- Mobile Search Bar - Replaces Header -->
-    <div x-show="$store.mobileSearch.active" x-transition:enter="transition ease-out duration-200"
+    <div x-show="$store.mobileSearch && $store.mobileSearch.active"
+        x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="transform -translate-y-full opacity-0"
         x-transition:enter-end="transform translate-y-0 opacity-100"
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="transform translate-y-0 opacity-100"
         x-transition:leave-end="transform -translate-y-full opacity-0"
         class="md:hidden fixed top-0 left-0 right-0 z-[60] border-b"
-        style="background-color: #141414; border-color: #2C2E36; display: none;">
+        style="background-color: #141414; border-color: #2C2E36;" x-cloak>
         <div class="px-2 sm:px-4">
             <div class="flex items-center h-14 sm:h-16 space-x-3">
                 <!-- Back Button -->
-                <button @click="$store.mobileSearch.close()" class="flex-shrink-0 text-gray-400 hover:text-white p-2">
+                <button @click="$store.mobileSearch && $store.mobileSearch.close()"
+                    class="flex-shrink-0 text-gray-400 hover:text-white p-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -292,9 +300,9 @@ window.addEventListener('resize', () => {
                 <!-- Search Input -->
                 <form class="flex-1 relative" @submit.prevent="/* Handle search submit here */">
                     <input type="text" placeholder="{{ __('search') }}" x-ref="mobileSearchInput"
-                        x-init="$nextTick(() => { if ($store.mobileSearch.active) $refs.mobileSearchInput.focus() })"
-                        x-effect="if ($store.mobileSearch.active) $nextTick(() => $refs.mobileSearchInput.focus())"
-                        @keydown.escape="$store.mobileSearch.close()"
+                        x-init="$nextTick(() => { if ($store.mobileSearch && $store.mobileSearch.active) $refs.mobileSearchInput.focus() })"
+                        x-effect="if ($store.mobileSearch && $store.mobileSearch.active) $nextTick(() => $refs.mobileSearchInput.focus())"
+                        @keydown.escape="$store.mobileSearch && $store.mobileSearch.close()"
                         class="w-full text-gray-300 placeholder-gray-500 rounded-full py-2.5 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-yellow-400 border-0 text-sm"
                         style="background-color: #2C2E36;">
 
