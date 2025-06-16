@@ -249,6 +249,12 @@ class Users extends Component
             // Single dispatch chain to prevent conflicts
             $this->dispatch('user-created-success');
             
+            // Log successful completion
+            \Log::info('User creation completed successfully', [
+                'user_id' => $user->id,
+                'modal_state' => $this->isOpen
+            ]);
+            
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
             throw $e;
@@ -320,7 +326,10 @@ class Users extends Component
                 return;
             }
             
-            \Log::info('Attempting to edit user', ['uuid' => $uuid]);
+            \Log::info('Attempting to edit user', [
+                'uuid' => $uuid,
+                'current_modal_state' => $this->isOpen
+            ]);
             
             $user = User::where('uuid', $uuid)->firstOrFail();
             
@@ -361,7 +370,8 @@ class Users extends Component
                 'name' => $this->name,
                 'email' => $this->email,
                 'username' => $this->username,
-                'role' => $this->role
+                'role' => $this->role,
+                'modal_opened' => $this->isOpen
             ]);
         } catch (\Exception $e) {
             \Log::error('Error loading user data', [

@@ -126,6 +126,43 @@
 
                 clearErrors() {
                     this.errors = {};
+                },
+
+                // Validation functions that components expect
+                validateField(fieldName) {
+                    // Remove error for this field when user starts typing
+                    if (this.errors[fieldName]) {
+                        delete this.errors[fieldName];
+                    }
+                },
+
+                validateEmail(email) {
+                    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        this.errors.email = 'Please enter a valid email address';
+                    } else {
+                        delete this.errors.email;
+                    }
+                },
+
+                checkEmailAvailability(email) {
+                    if (email && email.length > 0) {
+                        // Let Livewire handle the server-side validation
+                        this.$wire.set('email', email);
+                    }
+                },
+
+                checkUsernameAvailability(username) {
+                    if (username && username.length > 0) {
+                        // Let Livewire handle the server-side validation
+                        this.$wire.set('username', username);
+                    }
+                },
+
+                checkPhoneAvailability(phone) {
+                    if (phone && phone.length > 0) {
+                        // Let Livewire handle the server-side validation
+                        this.$wire.set('phone', phone);
+                    }
                 }
             }
         }
