@@ -139,16 +139,6 @@
                 clearErrors();
             });
             
-            // Listen for reset modal state event to ensure full reset
-            $wire.on('reset-modal-state', () => {
-                console.log('Resetting modal state completely');
-                Object.keys(form).forEach(key => {
-                    form[key] = '';
-                });
-                modalAction = '';
-                clearErrors();
-            });
-            
             // Listen for success events to clean up state
             $wire.on('user-created-success', () => {
                 console.log('User created successfully, cleaning state');
@@ -167,4 +157,32 @@
     <!-- Usar los componentes genéricos para modales de confirmación -->
     <x-modals.delete-confirmation itemType="user" />
     <x-modals.restore-confirmation itemType="user" />
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('form', {
+                values: {
+                    name: '',
+                    last_name: '',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    city: '',
+                    zip_code: '',
+                    country: '',
+                    gender: '',
+                    date_of_birth: '',
+                    username: '',
+                    role: '',
+                    password: '',
+                    password_confirmation: '',
+                    send_password_reset: false
+                },
+                reset() {
+                    Object.keys(this.values).forEach(key => {
+                        this.values[key] = '';
+                    });
+                }
+            });
+        });
+    </script>
 </div>

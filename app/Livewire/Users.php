@@ -650,17 +650,15 @@ class Users extends Component
 
     public function closeModal()
     {
-        // Force close the modal first
+        // Cerrar el modal
         $this->isOpen = false;
-        
-        // Reset fields always when closing the modal
+
+        // Limpiar campos y validación
         $this->resetInputFields();
         $this->resetValidation();
-        
-        // Clear any error bags
         $this->resetErrorBag();
-        
-        // Explicitly send empty data for ALL fields to reset Alpine.js form
+
+        // Disparar evento para limpiar el formulario en Alpine.js
         $this->dispatch('user-edit', [
             'name' => '',
             'last_name' => '',
@@ -670,19 +668,34 @@ class Users extends Component
             'address' => '',
             'zip_code' => '',
             'city' => '',
-            'state' => '',
             'country' => '',
             'gender' => '',
             'date_of_birth' => '',
             'role' => '',
             'action' => ''
         ]);
-        
-        // Dispatch a specific event to notify Alpine.js to fully reset
-        $this->dispatch('reset-modal-state');
-        
-        // Force a DOM update to ensure Alpine.js state is reset
-        $this->js('setTimeout(() => { $wire.$refresh(); }, 50);');
+
+        // Forzar un refresco del DOM y limpiar el estado de Alpine.js
+        $this->js('
+            setTimeout(() => {
+                $wire.$refresh();
+                if (Alpine.store("form")) {
+                    Alpine.store("form").reset();
+                }
+            }, 50);
+        ');
+    }
+
+    /**
+     * Método para limpiar el estado de Alpine.js
+     */
+    public function cleanAlpineState()
+    {
+        $this->js('
+            if (Alpine.store("form")) {
+                Alpine.store("form").reset();
+            }
+        ');
     }
 
     private function resetInputFields()
