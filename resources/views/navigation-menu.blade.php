@@ -37,10 +37,11 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
         <!-- Normal Header -->
         <div x-show="!mobileSearchOpen" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform scale-95"
-            x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 transform scale-100"
-            x-transition:leave-end="opacity-0 transform scale-95" class="px-2 sm:px-4 lg:px-8">
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-250"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform -translate-y-4" class="px-2 sm:px-4 lg:px-8">
             <div class="flex justify-between items-center h-14 sm:h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-2 sm:space-x-4 flex-1">
@@ -253,11 +254,11 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
         <!-- Mobile Search Header -->
         <div x-show="mobileSearchOpen" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform scale-95"
-            x-transition:enter-end="opacity-100 transform scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 transform scale-100"
-            x-transition:leave-end="opacity-0 transform scale-95" class="md:hidden px-2 sm:px-4"
+            x-transition:enter-start="opacity-0 transform -translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-250"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4" class="md:hidden px-2 sm:px-4"
             style="display: none;">
             <div class="flex items-center h-14 sm:h-16 space-x-3">
                 <!-- Back/Close Button -->
