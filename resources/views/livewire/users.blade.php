@@ -76,28 +76,34 @@
                 },
                 modalAction: '{{ $modalAction }}'
             })" x-init="modalAction = '{{ $modalAction }}';
-            // Inicializar valores del formulario
-            form = {
-                name: '{{ $name }}',
-                last_name: '{{ $last_name }}',
-                email: '{{ $email }}',
-                phone: '{{ $phone }}',
-                address: '{{ $address }}',
-                city: '{{ $city }}',
-                zip_code: '{{ $zip_code }}',
-                country: '{{ $country }}',
-                gender: '{{ $gender }}',
-                date_of_birth: '{{ $date_of_birth }}',
-                username: '{{ $username }}',
-                role: '{{ $role }}',
-                password: '',
-                password_confirmation: '',
-                send_password_reset: false
-            };
             
-            // Escuchar eventos de actualización
+            // Función para inicializar el formulario
+            function initializeForm() {
+                form = {
+                    name: '{{ $name }}',
+                    last_name: '{{ $last_name }}',
+                    email: '{{ $email }}',
+                    phone: '{{ $phone }}',
+                    address: '{{ $address }}',
+                    city: '{{ $city }}',
+                    zip_code: '{{ $zip_code }}',
+                    country: '{{ $country }}',
+                    gender: '{{ $gender }}',
+                    date_of_birth: '{{ $date_of_birth }}',
+                    username: '{{ $username }}',
+                    role: '{{ $role }}',
+                    password: '',
+                    password_confirmation: '',
+                    send_password_reset: false
+                };
+            }
+            
+            // Inicializar el formulario
+            initializeForm();
+            
+            // Escuchar eventos de actualización con mejor manejo
             $wire.on('user-edit', (event) => {
-                const data = event.detail;
+                const data = event.detail || event[0] || {};
                 console.log('Received user data:', data);
             
                 // Limpiar completamente el formulario primero
@@ -105,28 +111,47 @@
                     form[key] = '';
                 });
             
-                // Actualizar el formulario con los nuevos datos
+                // Actualizar el formulario con los nuevos datos solo si están definidos
                 Object.keys(data).forEach(key => {
-                    if (key in form) {
-                        form[key] = data[key];
+                    if (key in form && data[key] !== undefined) {
+                        form[key] = data[key] || '';
                     }
                 });
             
-                // Sincronizar con Livewire
-                $wire.set('name', data.name || '');
-                $wire.set('last_name', data.last_name || '');
-                $wire.set('email', data.email || '');
-                $wire.set('phone', data.phone || '');
-                $wire.set('address', data.address || '');
-                $wire.set('city', data.city || '');
-                $wire.set('zip_code', data.zip_code || '');
-                $wire.set('country', data.country || '');
-                $wire.set('gender', data.gender || '');
-                $wire.set('date_of_birth', data.date_of_birth || '');
-                $wire.set('username', data.username || '');
-                $wire.set('role', data.role || '');
+                // Sincronizar con Livewire de manera más robusta
+                $nextTick(() => {
+                    $wire.set('name', data.name || '');
+                    $wire.set('last_name', data.last_name || '');
+                    $wire.set('email', data.email || '');
+                    $wire.set('phone', data.phone || '');
+                    $wire.set('address', data.address || '');
+                    $wire.set('city', data.city || '');
+                    $wire.set('zip_code', data.zip_code || '');
+                    $wire.set('country', data.country || '');
+                    $wire.set('gender', data.gender || '');
+                    $wire.set('date_of_birth', data.date_of_birth || '');
+                    $wire.set('username', data.username || '');
+                    $wire.set('role', data.role || '');
             
-                clearErrors();
+                    clearErrors();
+                });
+            });
+            
+            // Manejo de eventos de éxito para limpiar estado
+            $wire.on('user-created-success', () => {
+                // Forzar reinicialización del formulario después de crear usuario
+                setTimeout(() => {
+                    initializeForm();
+                    clearErrors();
+                }, 100);
+            });
+            
+            $wire.on('user-updated-success', () => {
+                // Forzar reinicialización del formulario después de actualizar usuario
+                setTimeout(() => {
+                    initializeForm();
+                    clearErrors();
+                }, 100);
             });">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>

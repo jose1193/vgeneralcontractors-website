@@ -62,7 +62,6 @@ class Users extends Component
         'delete',
         'restore', 
         'closeModal', 
-        'refreshComponent' => '$refresh',
         'userDeleteError',
         'userRestoreError'
     ];
@@ -101,7 +100,10 @@ class Users extends Component
     public function render()
     {
         if (!$this->checkPermission('READ_USER', true)) {
-            return; // No continúa si no tiene permiso
+            // Retornar una vista vacía con mensaje de error en lugar de null
+            return view('livewire.users', [
+                'users' => collect()->paginate(10)
+            ]);
         }
         
         $searchTerm = '%' . $this->search . '%';
@@ -262,7 +264,6 @@ class Users extends Component
             session()->flash('message', 'User Created Successfully. Credentials will be sent by email.');
             $this->closeModal();
             $this->resetInputFields();
-            $this->dispatch('refreshComponent');
             $this->dispatch('user-created-success');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->dispatch('validation-failed');
@@ -337,6 +338,9 @@ class Users extends Component
             
             \Log::info('Attempting to edit user', ['uuid' => $uuid]);
             
+            // Asegurar que el modal esté cerrado antes de cargar datos
+            $this->isOpen = false;
+            
             $user = User::where('uuid', $uuid)->firstOrFail();
             $this->uuid = $user->uuid;
             $this->name = $user->name;
@@ -362,7 +366,9 @@ class Users extends Component
             
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
-            $this->openModal();
+            
+            // Abrir el modal después de cargar los datos
+            $this->isOpen = true;
             
             // Dispatch event with user data
             $this->dispatch('user-edit', [
@@ -473,7 +479,6 @@ class Users extends Component
             session()->flash('message', 'User Updated Successfully.');
             $this->closeModal();
             $this->resetInputFields();
-            $this->dispatch('refreshComponent');
             $this->dispatch('user-updated-success');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
