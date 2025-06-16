@@ -422,13 +422,12 @@
                                 sortable: false,
                                 getter: (appointment) => {
                                     const editUrl = `/appointments/${appointment.uuid}/edit`;
-                                    console.log('Generated edit URL:', editUrl); // Debug log
 
                                     let actionsHtml = `
-                                <div class="flex justify-center space-x-1">
-                                    <a href="${editUrl}" class="inline-flex items-center justify-center p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200" title="Edit" onclick="console.log('Edit link clicked:', '${editUrl}');">
-                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002 2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                <div class="flex justify-center space-x-2">
+                                    <a href="${editUrl}" class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Edit Appointment">
+                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                          </svg>
                                     </a>`;
 
@@ -437,35 +436,34 @@
                                         const address =
                                             `${appointment.address || ''}, ${appointment.city || ''}`;
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location btn btn-icon btn-sm btn-info" style="background-color: #4299e1; color: white; border-radius: 0.375rem; padding: 0.375rem;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Share Location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
                                     </button>`;
                                     } else {
                                         // Si no hay coordenadas, aún mostrar el botón pero con un comportamiento diferente
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location btn btn-icon btn-sm" style="background-color: #9CA3AF; color: white; border-radius: 0.375rem; padding: 0.375rem;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-lg cursor-not-allowed opacity-60" title="No Location Available">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"/>
                                         </svg>
                                     </button>`;
                                     }
 
                                     if (appointment.deleted_at) {
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" class="restore-btn btn btn-icon btn-sm btn-success">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    <button data-id="${appointment.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Restore Appointment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
                                     </button>`;
                                     } else {
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" class="delete-btn btn btn-icon btn-sm btn-danger">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    <button data-id="${appointment.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Delete Appointment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                     </button>`;
                                     }
@@ -1000,27 +998,61 @@
                         Swal.fire({
                             title: '{{ __('share_location_title') }}',
                             html: `
-                        <p class="mb-4">${address}</p>
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <a href="https://wa.me/?text=${encodeURIComponent('{{ __('location_for_inspection') }} ' + address + ' - ' + mapsUrl)}" target="_blank" class="px-3 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600">
-                                {{ __('whatsapp') }}
-                            </a>
-                            <a href="mailto:?subject=${encodeURIComponent('{{ __('location_for_inspection') }}')}&body=${encodeURIComponent('{{ __('location_for_inspection') }} ' + address + '\n\n{{ __('view_google_maps') }} ' + mapsUrl)}" class="px-3 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600">
-                                {{ __('email_share') }}
-                            </a>
-                            <a href="${mapsUrl}" target="_blank" class="px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600">
-                                {{ __('open_maps') }}
-                            </a>
-                            <button id="copy-map-link" class="px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">
-                                {{ __('copy_link') }}
-                            </button>
+                        <div class="p-6">
+                            <div class="mb-6 text-center">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">${address}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Choose how you want to share this location</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                <a href="https://wa.me/?text=${encodeURIComponent('{{ __('location_for_inspection') }} ' + address + ' - ' + mapsUrl)}" target="_blank" class="flex flex-col items-center justify-center p-6 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                    <svg class="w-8 h-8 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                                    </svg>
+                                    <span class="font-medium">{{ __('whatsapp') }}</span>
+                                </a>
+                                
+                                <a href="mailto:?subject=${encodeURIComponent('{{ __('location_for_inspection') }}')}&body=${encodeURIComponent('{{ __('location_for_inspection') }} ' + address + '\n\n{{ __('view_google_maps') }} ' + mapsUrl)}" class="flex flex-col items-center justify-center p-6 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                    <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span class="font-medium">{{ __('email_share') }}</span>
+                                </a>
+                                
+                                <a href="${mapsUrl}" target="_blank" class="flex flex-col items-center justify-center p-6 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                    <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                    </svg>
+                                    <span class="font-medium">{{ __('open_maps') }}</span>
+                                </a>
+                                
+                                <button id="copy-map-link" class="flex flex-col items-center justify-center p-6 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                    <svg class="w-8 h-8 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span class="font-medium">{{ __('copy_link') }}</span>
+                                </button>
+                            </div>
+                            
+                            <div class="text-center text-sm text-gray-500 dark:text-gray-400">
+                                <p>Coordinates: ${lat}, ${lng}</p>
+                            </div>
                         </div>
                     `,
                             showConfirmButton: false,
                             showCloseButton: true,
                             customClass: {
-                                container: 'swal-wide'
-                            }
+                                container: 'swal-fullscreen',
+                                popup: 'swal-fullscreen-popup'
+                            },
+                            width: '95%',
+                            heightAuto: false
                         });
 
                         // Copiar enlace
@@ -1038,14 +1070,46 @@
         @endpush
 
         <style>
-            .swal-wide {
-                width: 100%;
-                max-width: 800px;
+            .swal-fullscreen .swal2-container {
+                padding: 1rem !important;
             }
 
-            .swal-wide-popup {
-                width: 100%;
-                max-width: 800px !important;
+            .swal-fullscreen-popup {
+                width: 95vw !important;
+                max-width: none !important;
+                height: 90vh !important;
+                max-height: none !important;
+                margin: 0 !important;
+                border-radius: 1rem !important;
+                overflow-y: auto;
+            }
+
+            .swal-fullscreen .swal2-popup {
+                width: 95vw !important;
+                max-width: none !important;
+                height: 90vh !important;
+                max-height: none !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            .swal-fullscreen .swal2-html-container {
+                flex: 1 !important;
+                overflow-y: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            @media (max-width: 640px) {
+                .swal-fullscreen-popup {
+                    width: 98vw !important;
+                    height: 95vh !important;
+                }
+
+                .swal-fullscreen .swal2-popup {
+                    width: 98vw !important;
+                    height: 95vh !important;
+                }
             }
         </style>
     </div>
