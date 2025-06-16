@@ -19,19 +19,20 @@
                     <div
                         class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                         <!-- Toggle to show inactive email data -->
-                        <x-toggle label="Show Inactive Email Data" :isActive="$showDeleted" wireClick="toggleShowDeleted" />
+                        <x-toggle label="{{ __('show_inactive_email_data') }}" :isActive="$showDeleted"
+                            wireClick="toggleShowDeleted" />
 
                         <!-- Per page dropdown with better spacing -->
                         <x-select-input-per-pages name="perPage" wireModel="perPage" class="sm:w-32">
-                            <option value="10">10 per page</option>
-                            <option value="25">25 per page</option>
-                            <option value="50">50 per page</option>
-                            <option value="100">100 per page</option>
+                            <option value="10">10 {{ __('per_page') }}</option>
+                            <option value="25">25 {{ __('per_page') }}</option>
+                            <option value="50">50 {{ __('per_page') }}</option>
+                            <option value="100">100 {{ __('per_page') }}</option>
                         </x-select-input-per-pages>
 
                         <div class="w-full sm:w-auto">
                             <x-add-button :wireClick="'create'">
-                                Add Email Data
+                                {{ __('add_email_data') }}
                             </x-add-button>
                         </div>
                     </div>
