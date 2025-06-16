@@ -1,11 +1,14 @@
-@props(['model' => null, 'wireModel' => null])
+@props(['model'])
 
 <div class="mb-4 col-span-2">
     <label for="send_password_reset" class="flex items-center cursor-pointer">
-        <input type="checkbox"
-            @if ($wireModel) wire:model.blur="{{ $wireModel }}" @else wire:model.blur="send_password_reset" @endif
-            id="send_password_reset"
-            class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+        <div class="relative">
+            <input type="checkbox" x-model="{{ $model }}"
+                @change="$wire.set('send_password_reset', $event.target.checked)" id="send_password_reset" class="sr-only">
+            <div class="block bg-gray-600 dark:bg-gray-700 w-14 h-8 rounded-full"></div>
+            <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform"
+                :class="{ 'translate-x-6': {{ $model }} }"></div>
+        </div>
         <span class="ml-3 text-gray-700 dark:text-gray-300">Send password reset email to user</span>
     </label>
 </div>

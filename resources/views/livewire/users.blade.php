@@ -56,7 +56,78 @@
     <!-- Modal Form -->
     @if ($isOpen)
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
+                initialValues: {
+                    name: '{{ $name }}',
+                    last_name: '{{ $last_name }}',
+                    email: '{{ $email }}',
+                    phone: '{{ $phone }}',
+                    address: '{{ $address }}',
+                    city: '{{ $city }}',
+                    zip_code: '{{ $zip_code }}',
+                    country: '{{ $country }}',
+                    gender: '{{ $gender }}',
+                    date_of_birth: '{{ $date_of_birth }}',
+                    username: '{{ $username }}',
+                    role: '{{ $role }}',
+                    password: '',
+                    password_confirmation: '',
+                    send_password_reset: false
+                },
+                modalAction: '{{ $modalAction }}'
+            })" x-init="modalAction = '{{ $modalAction }}';
+            // Inicializar valores del formulario
+            form = {
+                name: '{{ $name }}',
+                last_name: '{{ $last_name }}',
+                email: '{{ $email }}',
+                phone: '{{ $phone }}',
+                address: '{{ $address }}',
+                city: '{{ $city }}',
+                zip_code: '{{ $zip_code }}',
+                country: '{{ $country }}',
+                gender: '{{ $gender }}',
+                date_of_birth: '{{ $date_of_birth }}',
+                username: '{{ $username }}',
+                role: '{{ $role }}',
+                password: '',
+                password_confirmation: '',
+                send_password_reset: false
+            };
+            
+            // Escuchar eventos de actualización
+            $wire.on('user-edit', (event) => {
+                const data = event.detail;
+                console.log('Received user data:', data);
+            
+                // Limpiar completamente el formulario primero
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+            
+                // Actualizar el formulario con los nuevos datos
+                Object.keys(data).forEach(key => {
+                    if (key in form) {
+                        form[key] = data[key];
+                    }
+                });
+            
+                // Sincronizar con Livewire
+                $wire.set('name', data.name || '');
+                $wire.set('last_name', data.last_name || '');
+                $wire.set('email', data.email || '');
+                $wire.set('phone', data.phone || '');
+                $wire.set('address', data.address || '');
+                $wire.set('city', data.city || '');
+                $wire.set('zip_code', data.zip_code || '');
+                $wire.set('country', data.country || '');
+                $wire.set('gender', data.gender || '');
+                $wire.set('date_of_birth', data.date_of_birth || '');
+                $wire.set('username', data.username || '');
+                $wire.set('role', data.role || '');
+            
+                clearErrors();
+            });">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
         </x-modals.form-modal>

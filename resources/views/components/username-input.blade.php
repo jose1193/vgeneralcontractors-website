@@ -1,4 +1,4 @@
-@props(['name', 'label', 'model' => null, 'mode', 'error' => null, 'wireModel' => null])
+@props(['name', 'label', 'model', 'mode', 'error' => null])
 
 <div class="mb-4">
     <label for="{{ $name }}"
@@ -12,9 +12,11 @@
                 Example: If name is "John Doe", username will be something like "johnd123"
             </div>
         @else
-            <input type="text" id="{{ $name }}"
-                @if ($wireModel) wire:model.blur="{{ $wireModel }}" @else wire:model.blur="{{ $name }}" @endif
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline @error($name) border-red-500 @enderror">
+            <input type="text" id="{{ $name }}" x-model="{{ $model }}"
+                @input="$wire.set('{{ $name }}', $event.target.value); validateUsername($event.target.value);"
+                @blur="checkUsernameAvailability($event.target.value)"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                :class="{ 'border-red-500': errors.{{ $name }} }">
             <div class="mt-1 text-xs text-gray-500 italic">
                 Username must be at least 7 characters and contain at least 2 numbers
             </div>
