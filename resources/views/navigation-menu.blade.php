@@ -273,7 +273,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 <!-- Search Input -->
                 <form class="flex-1 relative" onsubmit="handleMobileSearch(event)">
                     <input type="text" placeholder="{{ __('search') }}"
-                        class="w-full text-gray-100 placeholder-gray-400 bg-transparent border-0 outline-none text-base py-2 pr-12"
+                        class="w-full text-gray-100 placeholder-gray-400 bg-transparent border-0 outline-none focus:outline-none focus:ring-2 focus:ring-yellow-500 text-base py-2 pr-12"
                         style="background-color: transparent;" x-ref="mobileSearchInput"
                         x-effect="if (mobileSearchOpen) { $nextTick(() => $refs.mobileSearchInput?.focus()) }">
 
