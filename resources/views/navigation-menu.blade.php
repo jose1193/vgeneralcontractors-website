@@ -3,7 +3,7 @@
     $customHoverStyle = 'background-color: rgba(44, 46, 54, 0.5);';
 @endphp
 
-<div x-data="{ sidebarOpen: false }" x-init="// Sidebar Store
+<div x-data="{ sidebarOpen: false, mobileSearchOpen: false }" x-init="// Sidebar Store
 $store.sidebar = {
     open: false,
     toggle() {
@@ -35,12 +35,19 @@ $store.darkMode = {
 $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
     <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
-        <div class="px-2 sm:px-4 lg:px-8">
+        <!-- Normal Header -->
+        <div x-show="!mobileSearchOpen" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 transform translate-y-2"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform -translate-y-2" class="px-2 sm:px-4 lg:px-8">
             <div class="flex justify-between items-center h-14 sm:h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-2 sm:space-x-4 flex-1">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-1 sm:p-2">
+                    <button @click="$store.sidebar.toggle()"
+                        class="lg:hidden text-gray-400 hover:text-white p-1 sm:p-2">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -159,34 +166,15 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Search Icon - Mobile -->
-                    <div class="md:hidden relative" x-data="{ searchOpen: false }">
-                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-1 sm:p-2">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="md:hidden">
+                        <button @click="mobileSearchOpen = !mobileSearchOpen"
+                            class="text-gray-400 hover:text-white p-1 sm:p-2 transition-colors">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
-
-                        <!-- Mobile Search Dropdown -->
-                        <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 transform scale-95"
-                            x-transition:enter-end="opacity-100 transform scale-100"
-                            x-transition:leave="transition ease-in duration-200"
-                            x-transition:leave-start="opacity-100 transform scale-100"
-                            x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
-                            class="absolute top-12 left-1/2 transform -translate-x-1/2 w-80 max-w-[calc(100vw-2rem)] sm:left-auto sm:right-0 sm:transform-none sm:translate-x-0 rounded-lg shadow-lg border z-50 p-3 sm:p-4"
-                            style="background-color: #2C2E36; border-color: #4B5563; display: none;">
-                            <div class="relative">
-                                <input type="text" placeholder="{{ __('search') }}"
-                                    class="w-full text-gray-300 placeholder-gray-500 rounded-lg py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 border-0"
-                                    style="background-color: #141414;">
-                                <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Notifications -->
@@ -261,6 +249,43 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Search Header -->
+        <div x-show="mobileSearchOpen" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 transform -translate-y-2"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-2" class="md:hidden px-2 sm:px-4"
+            style="display: none;">
+            <div class="flex items-center h-14 sm:h-16 space-x-3">
+                <!-- Back/Close Button -->
+                <button @click="mobileSearchOpen = false"
+                    class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-800 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </button>
+
+                <!-- Search Input -->
+                <form class="flex-1 relative" onsubmit="handleMobileSearch(event)">
+                    <input type="text" placeholder="{{ __('search') }}"
+                        class="w-full text-gray-100 placeholder-gray-400 bg-transparent border-0 outline-none text-base py-2 pr-12"
+                        style="background-color: transparent;" x-ref="mobileSearchInput"
+                        x-effect="if (mobileSearchOpen) { $nextTick(() => $refs.mobileSearchInput?.focus()) }">
+
+                    <!-- Search Submit Button -->
+                    <button type="submit"
+                        class="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400 p-2 rounded-full hover:bg-gray-800 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
@@ -713,3 +738,26 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
         </div>
     </div>
 </div>
+
+<script>
+    function handleMobileSearch(event) {
+        event.preventDefault();
+        const searchInput = event.target.querySelector('input[type="text"]');
+        const searchTerm = searchInput.value.trim();
+
+        if (searchTerm) {
+            // Aquí puedes agregar la lógica de búsqueda
+            console.log('Searching for:', searchTerm);
+
+            // Ejemplo: redirigir a una página de búsqueda
+            // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+
+            // Por ahora, simplemente mostraremos un mensaje
+            alert(`Buscando: ${searchTerm}`);
+
+            // Cerrar el modal de búsqueda después de buscar
+            // Si usas Alpine.js store para manejar el estado
+            // Alpine.store('mobileSearch', false);
+        }
+    }
+</script>
