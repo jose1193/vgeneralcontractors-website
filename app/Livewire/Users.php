@@ -170,24 +170,6 @@ class Users extends Component
         
         // Abrir el modal
         $this->isOpen = true;
-        
-        // Emitir evento para actualizar Alpine.js - make sure ALL fields are empty
-        $this->dispatch('user-edit', [
-            'name' => '',
-            'last_name' => '',
-            'email' => '',
-            'username' => '',
-            'phone' => '',
-            'address' => '',
-            'zip_code' => '',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'gender' => '',
-            'date_of_birth' => '',
-            'role' => '',
-            'action' => 'store'
-        ]);
     }
 
     public function store()
@@ -362,24 +344,7 @@ class Users extends Component
             
             $this->modalTitle = 'Edit User: ' . $user->name . ' ' . $user->last_name;
             $this->modalAction = 'update';
-            $this->openModal();
-            
-            // Dispatch event with user data
-            $this->dispatch('user-edit', [
-                'name' => $this->name,
-                'last_name' => $this->last_name,
-                'email' => $this->email,
-                'username' => $this->username,
-                'phone' => $this->phone,
-                'address' => $this->address,
-                'zip_code' => $this->zip_code,
-                'city' => $this->city,
-                'country' => $this->country,
-                'gender' => $this->gender,
-                'date_of_birth' => $this->date_of_birth,
-                'role' => $this->role,
-                'action' => 'update'
-            ]);
+            $this->isOpen = true;
             
             \Log::info('User data loaded successfully', [
                 'uuid' => $this->uuid,
@@ -598,26 +563,6 @@ class Users extends Component
         }
     }
 
-    public function openModal()
-    {
-        $this->isOpen = true;
-        $this->dispatch('user-edit', [
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'username' => $this->username,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'country' => $this->country,
-            'gender' => $this->gender,
-            'date_of_birth' => $this->date_of_birth,
-            'role' => $this->role,
-            'action' => $this->modalAction
-        ]);
-    }
-
     public function closeModal()
     {
         $this->isOpen = false;
@@ -625,24 +570,6 @@ class Users extends Component
         // Reset fields always when closing the modal
         $this->resetInputFields();
         $this->resetValidation();
-        
-        // Explicitly send empty data for ALL fields to reset Alpine.js form
-        $this->dispatch('user-edit', [
-            'name' => '',
-            'last_name' => '',
-            'email' => '',
-            'username' => '',
-            'phone' => '',
-            'address' => '',
-            'zip_code' => '',
-            'city' => '',
-            'state' => '',
-            'country' => '',
-            'gender' => '',
-            'date_of_birth' => '',
-            'role' => '',
-            'action' => ''
-        ]);
     }
 
     private function resetInputFields()
