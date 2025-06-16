@@ -5,14 +5,13 @@
         <div class="py-8">
             <div class="flex justify-between">
                 <h2 class="text-2xl font-semibold leading-tight">{{ __('edit_appointment') }}</h2>
-                <a href="{{ secure_url(route('appointments.index', [], false)) }}"
+                <a href="{{ route('appointments.index') }}"
                     class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     {{ __('back_to_list') }}
                 </a>
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
-                <form id="appointmentEditForm"
-                    action="{{ secure_url(route('appointments.update', $appointment->uuid, false)) }}" method="POST"
+                <form id="appointmentEditForm" action="{{ route('appointments.update', $appointment->uuid) }}" method="POST"
                     class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
                     @csrf
                     @method('PUT')
@@ -141,7 +140,7 @@
                             }).then(() => {
                                 // Use redirectUrl from response if available
                                 window.location.href = data.redirectUrl ||
-                                    "{{ secure_url(route('appointments.index', [], false)) }}";
+                                    "{{ route('appointments.index') }}";
                             });
                         } else {
                             let errorMessage = data.message;

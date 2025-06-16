@@ -314,7 +314,7 @@ class AppointmentController extends BaseCrudController
     {
         try {
             if (!$this->checkPermissionWithMessage("CREATE_{$this->entityName}", "You don't have permission to create {$this->entityName}")) {
-                return redirect()->to(secure_url(route($this->routePrefix . '.index', [], false)))->with('error', "Permission denied");
+                return redirect()->route($this->routePrefix . '.index')->with('error', "Permission denied");
             }
             
             // Retorna la vista unificada de formulario sin un appointment
@@ -327,7 +327,7 @@ class AppointmentController extends BaseCrudController
                 'exception' => $e,
             ]);
             
-            return redirect()->to(secure_url(route($this->routePrefix . '.index', [], false)))->with('error', "Error loading create form");
+            return redirect()->route($this->routePrefix . '.index')->with('error', "Error loading create form");
         }
     }
 
@@ -357,11 +357,11 @@ class AppointmentController extends BaseCrudController
                     'success' => true,
                     'message' => "{$this->entityName} created successfully",
                     'appointment' => $appointment,
-                    'redirectUrl' => secure_url(route("{$this->routePrefix}.index", [], false)),
+                    'redirectUrl' => route("{$this->routePrefix}.index"),
                 ]);
             }
 
-            return redirect()->to(secure_url(route("{$this->routePrefix}.index", [], false)))
+            return redirect()->route("{$this->routePrefix}.index")
                 ->with('message', "{$this->entityName} created successfully");
         } catch (Throwable $e) {
             Log::error("Error creating {$this->entityName}: {$e->getMessage()}", [
@@ -462,11 +462,11 @@ class AppointmentController extends BaseCrudController
                     'success' => true,
                     'message' => "{$this->entityName} updated successfully",
                     'appointment' => $appointment,
-                    'redirectUrl' => secure_url(route("{$this->routePrefix}.index", [], false)),
+                    'redirectUrl' => route("{$this->routePrefix}.index"),
                 ]);
             }
 
-            return redirect()->to(secure_url(route("{$this->routePrefix}.index", [], false)))
+            return redirect()->route("{$this->routePrefix}.index")
                 ->with('message', "{$this->entityName} updated successfully");
         } catch (Throwable $e) {
             Log::error("Error updating {$this->entityName}: {$e->getMessage()}", [

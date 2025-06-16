@@ -56,7 +56,7 @@
 
                             <!-- Add appointment button -->
                             <div class="w-full sm:w-auto">
-                                <a href="{{ secure_url(route('appointments.create', [], false)) }}"
+                                <a href="{{ route('appointments.create') }}"
                                     class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-200 disabled:opacity-25">
                                     <span class="mr-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
@@ -421,8 +421,7 @@
                                 name: 'Actions',
                                 sortable: false,
                                 getter: (appointment) => {
-                                    const editUrl =
-                                        `{{ secure_url(url('/appointments'), [], false) }}/${appointment.uuid}/edit`;
+                                    const editUrl = `{{ url('/appointments') }}/${appointment.uuid}/edit`;
 
                                     let actionsHtml = `
                                 <div class="flex justify-center space-x-1">
