@@ -76,8 +76,7 @@
                 },
                 modalAction: '{{ $modalAction }}'
             })" x-init="modalAction = '{{ $modalAction }}';
-            
-            // Initialize form values
+            // Inicializar valores del formulario
             form = {
                 name: '{{ $name }}',
                 last_name: '{{ $last_name }}',
@@ -96,24 +95,24 @@
                 send_password_reset: false
             };
             
-            // Listen for user edit events
+            // Escuchar eventos de actualización
             $wire.on('user-edit', (event) => {
                 const data = event.detail;
                 console.log('Received user data:', data);
             
-                // Clear form completely first
+                // Limpiar completamente el formulario primero
                 Object.keys(form).forEach(key => {
                     form[key] = '';
                 });
             
-                // Update form with new data
+                // Actualizar el formulario con los nuevos datos
                 Object.keys(data).forEach(key => {
                     if (key in form) {
                         form[key] = data[key];
                     }
                 });
             
-                // Sync with Livewire
+                // Sincronizar con Livewire
                 $wire.set('name', data.name || '');
                 $wire.set('last_name', data.last_name || '');
                 $wire.set('email', data.email || '');
@@ -128,26 +127,6 @@
                 $wire.set('role', data.role || '');
             
                 clearErrors();
-            });
-            
-            // Listen for state clean events
-            $wire.on('state-cleaned', () => {
-                console.log('State cleaned, resetting form');
-                Object.keys(form).forEach(key => {
-                    form[key] = '';
-                });
-                clearErrors();
-            });
-            
-            // Listen for success events to clean up state
-            $wire.on('user-created-success', () => {
-                console.log('User created successfully, cleaning state');
-                setTimeout(() => {
-                    Object.keys(form).forEach(key => {
-                        form[key] = '';
-                    });
-                    clearErrors();
-                }, 100);
             });">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
@@ -157,32 +136,4 @@
     <!-- Usar los componentes genéricos para modales de confirmación -->
     <x-modals.delete-confirmation itemType="user" />
     <x-modals.restore-confirmation itemType="user" />
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('form', {
-                values: {
-                    name: '',
-                    last_name: '',
-                    email: '',
-                    phone: '',
-                    address: '',
-                    city: '',
-                    zip_code: '',
-                    country: '',
-                    gender: '',
-                    date_of_birth: '',
-                    username: '',
-                    role: '',
-                    password: '',
-                    password_confirmation: '',
-                    send_password_reset: false
-                },
-                reset() {
-                    Object.keys(this.values).forEach(key => {
-                        this.values[key] = '';
-                    });
-                }
-            });
-        });
-    </script>
 </div>
