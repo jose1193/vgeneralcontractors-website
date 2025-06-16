@@ -1,4 +1,4 @@
-@props(['model' => false])
+@props(['model'])
 
 <div class="mb-4 col-span-2">
     <label for="send_password_reset" class="flex items-center cursor-pointer">

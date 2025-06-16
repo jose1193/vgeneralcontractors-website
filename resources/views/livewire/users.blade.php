@@ -55,26 +55,103 @@
 
     <!-- Modal Form -->
     @if ($isOpen)
-        <script>
-            console.log('🔴 MODAL DEBUG: Modal is being rendered', {
-                isOpen: @json($isOpen),
-                modalAction: @json($modalAction),
-                modalTitle: @json($modalTitle),
-                name: @json($name),
-                email: @json($email)
-            });
-        </script>
         <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="formValidation({
+                initialValues: {
+                    name: '{{ $name }}',
+                    last_name: '{{ $last_name }}',
+                    email: '{{ $email }}',
+                    phone: '{{ $phone }}',
+                    address: '{{ $address }}',
+                    city: '{{ $city }}',
+                    zip_code: '{{ $zip_code }}',
+                    country: '{{ $country }}',
+                    gender: '{{ $gender }}',
+                    date_of_birth: '{{ $date_of_birth }}',
+                    username: '{{ $username }}',
+                    role: '{{ $role }}',
+                    password: '',
+                    password_confirmation: '',
+                    send_password_reset: false
+                },
+                modalAction: '{{ $modalAction }}'
+            })" x-init="modalAction = '{{ $modalAction }}';
+            
+            // Initialize form values
+            form = {
+                name: '{{ $name }}',
+                last_name: '{{ $last_name }}',
+                email: '{{ $email }}',
+                phone: '{{ $phone }}',
+                address: '{{ $address }}',
+                city: '{{ $city }}',
+                zip_code: '{{ $zip_code }}',
+                country: '{{ $country }}',
+                gender: '{{ $gender }}',
+                date_of_birth: '{{ $date_of_birth }}',
+                username: '{{ $username }}',
+                role: '{{ $role }}',
+                password: '',
+                password_confirmation: '',
+                send_password_reset: false
+            };
+            
+            // Listen for user edit events
+            $wire.on('user-edit', (event) => {
+                const data = event.detail;
+                console.log('Received user data:', data);
+            
+                // Clear form completely first
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+            
+                // Update form with new data
+                Object.keys(data).forEach(key => {
+                    if (key in form) {
+                        form[key] = data[key];
+                    }
+                });
+            
+                // Sync with Livewire
+                $wire.set('name', data.name || '');
+                $wire.set('last_name', data.last_name || '');
+                $wire.set('email', data.email || '');
+                $wire.set('phone', data.phone || '');
+                $wire.set('address', data.address || '');
+                $wire.set('city', data.city || '');
+                $wire.set('zip_code', data.zip_code || '');
+                $wire.set('country', data.country || '');
+                $wire.set('gender', data.gender || '');
+                $wire.set('date_of_birth', data.date_of_birth || '');
+                $wire.set('username', data.username || '');
+                $wire.set('role', data.role || '');
+            
+                clearErrors();
+            });
+            
+            // Listen for state clean events
+            $wire.on('state-cleaned', () => {
+                console.log('State cleaned, resetting form');
+                Object.keys(form).forEach(key => {
+                    form[key] = '';
+                });
+                clearErrors();
+            });
+            
+            // Listen for success events to clean up state
+            $wire.on('user-created-success', () => {
+                console.log('User created successfully, cleaning state');
+                setTimeout(() => {
+                    Object.keys(form).forEach(key => {
+                        form[key] = '';
+                    });
+                    clearErrors();
+                }, 100);
+            });">
                 <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
             </div>
         </x-modals.form-modal>
-    @else
-        <script>
-            console.log('🔴 MODAL DEBUG: Modal is NOT being rendered', {
-                isOpen: @json($isOpen)
-            });
-        </script>
     @endif
 
     <!-- Usar los componentes genéricos para modales de confirmación -->
