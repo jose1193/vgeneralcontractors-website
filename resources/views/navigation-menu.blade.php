@@ -64,12 +64,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
         <div class="px-2 sm:px-4 lg:px-8">
             <!-- Normal Header Content -->
             <div x-show="!$store.mobileSearch.active" class="flex justify-between items-center h-14 sm:h-16"
-                x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 transform scale-95"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-150"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-95">
+                x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-2 sm:space-x-4 flex-1">
                     <!-- Mobile Menu Button -->
@@ -194,7 +191,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- Search Icon - Mobile -->
                     <div class="md:hidden">
-                        <button @click="$store.mobileSearch.toggle()"
+                        <button
+                            @click="$store.mobileSearch.toggle(); console.log('Search clicked, active:', $store.mobileSearch.active)"
                             class="text-gray-400 hover:text-white p-1 sm:p-2 transition-colors duration-200">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -202,6 +200,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
+                        <!-- Debug info -->
+                        <div class="text-xs text-yellow-400 mt-1"
+                            x-text="'Search active: ' + $store.mobileSearch.active"></div>
                     </div>
 
                     <!-- Notifications -->
@@ -279,13 +280,10 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </div>
 
             <!-- Mobile Search Bar -->
-            <div x-show="$store.mobileSearch.active" class="flex items-center h-14 sm:h-16 px-2"
-                x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 transform scale-95"
-                x-transition:enter-end="opacity-100 transform scale-100"
-                x-transition:leave="transition ease-in duration-150"
-                x-transition:leave-start="opacity-100 transform scale-100"
-                x-transition:leave-end="opacity-0 transform scale-95">
+            <div x-show="$store.mobileSearch.active" class="flex items-center h-14 sm:h-16 px-2 bg-red-500">
+
+                <!-- Debug Info -->
+                <div class="text-white text-xs mr-2" x-text="'Active: ' + $store.mobileSearch.active"></div>
 
                 <!-- Back Button -->
                 <button @click="$store.mobileSearch.toggle()"
