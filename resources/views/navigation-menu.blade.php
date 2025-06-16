@@ -31,41 +31,16 @@ $store.darkMode = {
     }
 };
 
-// Mobile Search Store
-$store.mobileSearch = {
-    active: false,
-    toggle() {
-        this.active = !this.active;
-    },
-    close() {
-        this.active = false;
-    }
-};
-
 // Initialize theme on load
-$store.darkMode.updateTheme();
-
-// Handle window resize to close mobile search on larger screens
-window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768 && $store.mobileSearch) {
-        $store.mobileSearch.close();
-    }
-});" x-effect="sidebarOpen = $store.sidebar.open">
+$store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
     <!-- Top Header -->
-    <nav x-show="!$store.mobileSearch || !$store.mobileSearch.active"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="transform -translate-y-full opacity-0"
-        x-transition:enter-end="transform translate-y-0 opacity-100" x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="transform translate-y-0 opacity-100"
-        x-transition:leave-end="transform -translate-y-full opacity-0" class="fixed top-0 left-0 right-0 z-50 border-b"
-        style="background-color: #141414; border-color: #2C2E36;">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b" style="background-color: #141414; border-color: #2C2E36;">
         <div class="px-2 sm:px-4 lg:px-8">
             <div class="flex justify-between items-center h-14 sm:h-16">
                 <!-- Left side - Logo and search -->
                 <div class="flex items-center space-x-2 sm:space-x-4 flex-1">
                     <!-- Mobile Menu Button -->
-                    <button @click="$store.sidebar.toggle()"
-                        class="lg:hidden text-gray-400 hover:text-white p-1 sm:p-2">
+                    <button @click="$store.sidebar.toggle()" class="lg:hidden text-gray-400 hover:text-white p-1 sm:p-2">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
@@ -184,16 +159,34 @@ window.addEventListener('resize', () => {
                     </div>
 
                     <!-- Search Icon - Mobile -->
-                    <div class="md:hidden">
-                        <button @click="$store.mobileSearch && $store.mobileSearch.toggle()"
-                            class="text-gray-400 hover:text-white p-1 sm:p-2"
-                            :class="{ 'text-yellow-400': $store.mobileSearch && $store.mobileSearch.active }">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
+                    <div class="md:hidden relative" x-data="{ searchOpen: false }">
+                        <button @click="searchOpen = !searchOpen" class="text-gray-400 hover:text-white p-1 sm:p-2">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
+
+                        <!-- Mobile Search Dropdown -->
+                        <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 transform scale-95"
+                            x-transition:enter-end="opacity-100 transform scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 transform scale-100"
+                            x-transition:leave-end="opacity-0 transform scale-95" @click.away="searchOpen = false"
+                            class="absolute top-12 left-1/2 transform -translate-x-1/2 w-80 max-w-[calc(100vw-2rem)] sm:left-auto sm:right-0 sm:transform-none sm:translate-x-0 rounded-lg shadow-lg border z-50 p-3 sm:p-4"
+                            style="background-color: #2C2E36; border-color: #4B5563; display: none;">
+                            <div class="relative">
+                                <input type="text" placeholder="{{ __('search') }}"
+                                    class="w-full text-gray-300 placeholder-gray-500 rounded-lg py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 border-0"
+                                    style="background-color: #141414;">
+                                <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Notifications -->
@@ -271,53 +264,6 @@ window.addEventListener('resize', () => {
             </div>
         </div>
     </nav>
-
-    <!-- Debug - Remove this line after testing -->
-    <div class="md:hidden fixed bottom-4 right-4 z-[70] bg-red-500 text-white p-2 rounded text-xs"
-        x-show="$store.mobileSearch && $store.mobileSearch.active" x-text="'Search Active'"></div>
-
-    <!-- Mobile Search Bar - Replaces Header -->
-    <div x-show="$store.mobileSearch && $store.mobileSearch.active"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="transform -translate-y-full opacity-0"
-        x-transition:enter-end="transform translate-y-0 opacity-100"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="transform translate-y-0 opacity-100"
-        x-transition:leave-end="transform -translate-y-full opacity-0"
-        class="md:hidden fixed top-0 left-0 right-0 z-[60] border-b"
-        style="background-color: #141414; border-color: #2C2E36;" x-cloak>
-        <div class="px-2 sm:px-4">
-            <div class="flex items-center h-14 sm:h-16 space-x-3">
-                <!-- Back Button -->
-                <button @click="$store.mobileSearch && $store.mobileSearch.close()"
-                    class="flex-shrink-0 text-gray-400 hover:text-white p-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                </button>
-
-                <!-- Search Input -->
-                <form class="flex-1 relative" @submit.prevent="/* Handle search submit here */">
-                    <input type="text" placeholder="{{ __('search') }}" x-ref="mobileSearchInput"
-                        x-init="$nextTick(() => { if ($store.mobileSearch && $store.mobileSearch.active) $refs.mobileSearchInput.focus() })"
-                        x-effect="if ($store.mobileSearch && $store.mobileSearch.active) $nextTick(() => $refs.mobileSearchInput.focus())"
-                        @keydown.escape="$store.mobileSearch && $store.mobileSearch.close()"
-                        class="w-full text-gray-300 placeholder-gray-500 rounded-full py-2.5 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-yellow-400 border-0 text-sm"
-                        style="background-color: #2C2E36;">
-
-                    <!-- Submit Button -->
-                    <button type="submit"
-                        class="absolute right-1 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-yellow-400 transition-colors duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Desktop Sidebar -->
     <div class="hidden lg:block fixed left-2 sm:left-4 lg:left-6 top-16 bottom-0 w-16 z-40"
