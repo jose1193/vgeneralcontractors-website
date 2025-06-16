@@ -54,13 +54,15 @@
     </div>
 
     <!-- Modal Form -->
-    @if ($isOpen)
-        <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="userFormHandler()" x-init="initializeForm('{{ $modalAction }}')">
-                <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
-            </div>
-        </x-modals.form-modal>
-    @endif
+    <div x-data="userFormHandler()" x-init="initializeForm()">
+        @if ($isOpen)
+            <x-modals.form-modal :isOpen="$isOpen" :modalTitle="$modalTitle" :modalAction="$modalAction">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <x-livewire.users.form-fields :modalAction="$modalAction" :usernameAvailable="$usernameAvailable ?? null" :roles="$roles" />
+                </div>
+            </x-modals.form-modal>
+        @endif
+    </div>
 
     <script>
         function userFormHandler() {
@@ -86,42 +88,49 @@
                 errors: {},
                 modalAction: 'store',
 
-                initializeForm(action) {
-                    this.modalAction = action;
+                initializeForm() {
+                    this.modalAction = 'store';
                     this.clearErrors();
 
                     // Listen for user edit events
                     this.$wire.on('user-edit', (event) => {
+                        console.log('Alpine.js received user-edit event:', event.detail);
                         this.updateForm(event.detail);
                     });
 
                     // Listen for modal closed events
                     this.$wire.on('modal-closed', () => {
+                        console.log('Alpine.js received modal-closed event');
                         this.resetForm();
                     });
 
                     // Listen for success events
                     this.$wire.on('user-created-success', () => {
+                        console.log('Alpine.js received user-created-success event');
                         this.resetForm();
                     });
                 },
 
                 updateForm(data) {
+                    console.log('Alpine.js updating form with data:', data);
                     // Update form with received data
                     Object.keys(this.form).forEach(key => {
                         this.form[key] = data[key] || '';
                     });
                     this.modalAction = data.action || 'store';
                     this.clearErrors();
+                    console.log('Alpine.js form updated:', this.form);
                 },
 
                 resetForm() {
+                    console.log('Alpine.js resetting form');
                     // Reset all form fields
                     Object.keys(this.form).forEach(key => {
                         this.form[key] = '';
                     });
                     this.clearErrors();
                     this.modalAction = 'store';
+                    console.log('Alpine.js form reset complete');
                 },
 
                 clearErrors() {
