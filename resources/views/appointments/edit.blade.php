@@ -12,7 +12,7 @@
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
                 <form id="appointmentEditForm" action="{{ route('appointments.update', $appointment->uuid) }}" method="POST"
-                    class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    class=" dark:bg-gray-800 shadow-md rounded-lg p-6">
                     @csrf
                     @method('PUT')
                     @include('appointments._form')
