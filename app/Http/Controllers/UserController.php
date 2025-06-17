@@ -378,12 +378,18 @@ class UserController extends BaseCrudController
             $data = $request->validate($this->getValidationRules());
             Log::info('UserController::store - Validation passed');
 
-            $user = $this->transactionService->run(function () use ($request) {
+            $generatedPassword = null; // Declare outside transaction scope
+
+            $user = $this->transactionService->run(function () use ($request, &$generatedPassword) {
                 $preparedData = $this->prepareStoreData($request);
-                $generatedPassword = $preparedData['generated_password'] ?? null;
+                $generatedPassword = $preparedData['generated_password'] ?? null; // Store in outer scope
                 unset($preparedData['generated_password']); // Remove from data to be saved
                 
-                Log::info('UserController::store - Creating user', ['prepared_data' => collect($preparedData)->except(['password'])->toArray()]);
+                Log::info('UserController::store - Creating user', [
+                    'prepared_data' => collect($preparedData)->except(['password'])->toArray(),
+                    'has_generated_password' => !is_null($generatedPassword),
+                    'password_length' => $generatedPassword ? strlen($generatedPassword) : 0
+                ]);
                 
                 $user = $this->modelClass::create($preparedData);
                 
@@ -392,18 +398,26 @@ class UserController extends BaseCrudController
                     $user->assignRole($request->role);
                 }
                 
-                // Store password for email sending - assign it to the user object, not save to DB
-                if ($generatedPassword) {
-                    $user->generated_password = $generatedPassword;
-                }
-                
                 return $user;
-            }, function ($user) {
-                Log::info("{$this->entityName} created successfully", ['id' => $user->id]);
+            }, function ($user) use (&$generatedPassword) {
+                Log::info("{$this->entityName} created successfully", [
+                    'id' => $user->id,
+                    'has_generated_password' => !is_null($generatedPassword),
+                    'password_length' => $generatedPassword ? strlen($generatedPassword) : 0
+                ]);
                 
                 // Use new CRUD cache clearing
                 $this->markSignificantDataChange();
                 $this->clearCrudCache('users');
+                
+                // Store password for email sending - assign it to the user object, not save to DB
+                if ($generatedPassword) {
+                    $user->generated_password = $generatedPassword;
+                    Log::info('UserController::store - Password assigned to user object for afterStore', [
+                        'user_id' => $user->id,
+                        'password_length' => strlen($generatedPassword)
+                    ]);
+                }
                 
                 $this->afterStore($user);
             });
