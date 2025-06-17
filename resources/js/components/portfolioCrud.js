@@ -266,7 +266,7 @@ export default class PortfolioCrudManager {
 
         // Cargar categorías
         $.ajax({
-            url: "/service-categories",
+            url: "/api/service-categories",
             type: "GET",
             success(response) {
                 console.log("✅ Categories loaded:", response);

@@ -304,7 +304,7 @@ Route::middleware(['throttle:api'])->group(function () {
 });
 
 // Service Categories API route for JavaScript
-Route::get('/service-categories', function () {
+Route::get('/api/service-categories', function () {
     $categories = \App\Models\ServiceCategory::orderBy('service_category_name')->get();
     return response()->json([
         'success' => true,
