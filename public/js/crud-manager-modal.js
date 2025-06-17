@@ -995,15 +995,10 @@ class CrudManagerModal {
             formData[field.name] = value;
         });
 
-        // Asegurar que los campos checkbox siempre tengan un valor boolean explícito
+        // Asegurar que los campos checkbox que no están presentes en el formulario tengan valor false
         this.formFields.forEach((field) => {
-            if (field.type === "checkbox") {
-                if (!(field.name in formData)) {
-                    formData[field.name] = false;
-                } else {
-                    // Asegurar que el valor sea boolean
-                    formData[field.name] = Boolean(formData[field.name]);
-                }
+            if (field.type === "checkbox" && !(field.name in formData)) {
+                formData[field.name] = false;
             }
         });
 
