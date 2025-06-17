@@ -349,8 +349,10 @@
                                 required: false,
                                 showInCreate: true,
                                 showInEdit: true,
-                                readonly: true,
-                                help: `{!! __('username_generated_automatically') !!}`,
+                                readonly: false,
+                                help: function(mode) {
+                                    return mode === 'create' ? `{!! __('username_generated_automatically') !!}` : '';
+                                },
                                 validation: {
                                     minLength: 7,
                                     unique: {
