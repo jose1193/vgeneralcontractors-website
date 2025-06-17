@@ -108,10 +108,20 @@ Route::middleware([
         // TEMPORARY - Test CRUD cache functionality
         Route::get('/test-crud-cache', [App\Http\Controllers\ServiceCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
     });
-    
-    Route::get('/blog-categories', function () {
-        return view('blog-categories');
-    })->name('blog-categories');
+
+    // Blog Categories Resource Routes (CRUD) - NEW
+    Route::prefix('blog-categories')->name('blog-categories.')->group(function () {
+        Route::get('/', [App\Http\Controllers\BlogCategoryController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\BlogCategoryController::class, 'store'])->name('store');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\BlogCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\BlogCategoryController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\BlogCategoryController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\BlogCategoryController::class, 'restore'])->name('restore');
+        Route::post('/check-category-name', [App\Http\Controllers\BlogCategoryController::class, 'checkCategoryNameExists'])->name('check-category-name');
+        
+        // TEMPORARY - Test CRUD cache functionality
+        Route::get('/test-crud-cache', [App\Http\Controllers\BlogCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
+    });
 
     Route::get('/portfolios', function () {
         return view('portfolios');
