@@ -37,7 +37,7 @@ class BlogCategoryController extends BaseCrudController
      */
     protected function getValidationRules($id = null)
     {
-        $categoryNameRule = 'required|string|min:3|max:100|unique:blog_categories,category_name';
+        $categoryNameRule = 'required|string|min:3|max:100|unique:blog_categories,blog_category_name';
         
         // If we have an ID (UUID in this case), exclude it from the unique check
         if ($id) {
@@ -45,8 +45,8 @@ class BlogCategoryController extends BaseCrudController
         }
         
         return [
-            'category_name' => $categoryNameRule,
-            'description' => 'nullable|string|max:500',
+            'blog_category_name' => $categoryNameRule,
+            'blog_category_description' => 'nullable|string|max:500',
         ];
     }
 
@@ -56,13 +56,13 @@ class BlogCategoryController extends BaseCrudController
     protected function getValidationMessages()
     {
         return [
-            'category_name.required' => 'The category name is required.',
-            'category_name.string' => 'The category name must be a string.',
-            'category_name.min' => 'The category name must be at least 3 characters.',
-            'category_name.max' => 'The category name may not be greater than 100 characters.',
-            'category_name.unique' => 'This category name is already taken.',
-            'description.string' => 'The description must be a string.',
-            'description.max' => 'The description may not be greater than 500 characters.',
+            'blog_category_name.required' => 'The category name is required.',
+            'blog_category_name.string' => 'The category name must be a string.',
+            'blog_category_name.min' => 'The category name must be at least 3 characters.',
+            'blog_category_name.max' => 'The category name may not be greater than 100 characters.',
+            'blog_category_name.unique' => 'This category name is already taken.',
+            'blog_category_description.string' => 'The description must be a string.',
+            'blog_category_description.max' => 'The description may not be greater than 500 characters.',
         ];
     }
 
@@ -72,15 +72,14 @@ class BlogCategoryController extends BaseCrudController
     protected function prepareStoreData(Request $request)
     {
         Log::info('BlogCategoryController::prepareStoreData - Preparing data', [
-            'category_name' => $request->category_name,
-            'description' => $request->description
+            'blog_category_name' => $request->blog_category_name,
+            'blog_category_description' => $request->blog_category_description
         ]);
 
         return [
             'uuid' => (string) Str::uuid(),
-            'category_name' => trim($request->category_name),
-            'description' => $request->description ? trim($request->description) : null,
-            'slug' => Str::slug($request->category_name),
+            'blog_category_name' => trim($request->blog_category_name),
+            'blog_category_description' => $request->blog_category_description ? trim($request->blog_category_description) : null,
             'user_id' => auth()->id(), // Always set to current user
         ];
     }
@@ -91,19 +90,18 @@ class BlogCategoryController extends BaseCrudController
     protected function prepareUpdateData(Request $request)
     {
         Log::info('BlogCategoryController::prepareUpdateData - Preparing data', [
-            'category_name' => $request->category_name,
-            'description' => $request->description
+            'blog_category_name' => $request->blog_category_name,
+            'blog_category_description' => $request->blog_category_description
         ]);
 
         $data = array_filter([
-            'category_name' => trim($request->category_name),
-            'slug' => Str::slug($request->category_name),
+            'blog_category_name' => trim($request->blog_category_name),
             'user_id' => auth()->id(), // Always set to current user
         ], fn ($value) => !is_null($value));
 
         // Allow null description
-        if ($request->has('description')) {
-            $data['description'] = $request->description ? trim($request->description) : null;
+        if ($request->has('blog_category_description')) {
+            $data['blog_category_description'] = $request->blog_category_description ? trim($request->blog_category_description) : null;
         }
 
         return $data;
@@ -187,9 +185,8 @@ class BlogCategoryController extends BaseCrudController
         if (!empty($this->search)) {
             $searchTerm = '%' . $this->search . '%';
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('category_name', 'like', $searchTerm)
-                  ->orWhere('description', 'like', $searchTerm)
-                  ->orWhere('slug', 'like', $searchTerm);
+                $q->where('blog_category_name', 'like', $searchTerm)
+                  ->orWhere('blog_category_description', 'like', $searchTerm);
             });
         }
 
@@ -489,14 +486,14 @@ class BlogCategoryController extends BaseCrudController
     public function checkCategoryNameExists(Request $request)
     {
         try {
-            $categoryName = $request->input('category_name');
+            $categoryName = $request->input('blog_category_name');
             $uuid = $request->input('uuid');
 
             if (empty($categoryName)) {
                 return response()->json(['exists' => false]);
             }
 
-            $query = BlogCategory::where('category_name', trim($categoryName));
+            $query = BlogCategory::where('blog_category_name', trim($categoryName));
             
             if ($uuid) {
                 $query->where('uuid', '!=', $uuid);
@@ -516,7 +513,7 @@ class BlogCategoryController extends BaseCrudController
      */
     protected function getSearchField()
     {
-        return 'category_name';
+        return 'blog_category_name';
     }
 
     /**
@@ -524,7 +521,7 @@ class BlogCategoryController extends BaseCrudController
      */
     protected function getNameField()
     {
-        return 'category_name';
+        return 'blog_category_name';
     }
 
     /**
@@ -532,7 +529,7 @@ class BlogCategoryController extends BaseCrudController
      */
     protected function getEntityDisplayName($entity)
     {
-        return $entity->category_name;
+        return $entity->blog_category_name;
     }
 
     /**
@@ -541,7 +538,7 @@ class BlogCategoryController extends BaseCrudController
     protected function afterStore($blogCategory)
     {
         // Add any post-creation logic here
-        Log::info("BlogCategory created: {$blogCategory->category_name}");
+        Log::info("BlogCategory created: {$blogCategory->blog_category_name}");
     }
 
     /**
@@ -550,7 +547,7 @@ class BlogCategoryController extends BaseCrudController
     protected function afterUpdate($blogCategory)
     {
         // Add any post-update logic here
-        Log::info("BlogCategory updated: {$blogCategory->category_name}");
+        Log::info("BlogCategory updated: {$blogCategory->blog_category_name}");
     }
 
     /**
@@ -559,7 +556,7 @@ class BlogCategoryController extends BaseCrudController
     protected function afterDestroy($blogCategory)
     {
         // Add any post-deletion logic here
-        Log::info("BlogCategory deleted: {$blogCategory->category_name}");
+        Log::info("BlogCategory deleted: {$blogCategory->blog_category_name}");
     }
 
     /**
@@ -568,7 +565,7 @@ class BlogCategoryController extends BaseCrudController
     protected function afterRestore($blogCategory)
     {
         // Add any post-restoration logic here
-        Log::info("BlogCategory restored: {$blogCategory->category_name}");
+        Log::info("BlogCategory restored: {$blogCategory->blog_category_name}");
     }
 
     /**

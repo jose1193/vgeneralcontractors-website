@@ -73,18 +73,13 @@
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
-                                        data-field="category_name">
+                                        data-field="blog_category_name">
                                         {{ __('category_name') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
-                                        data-field="description">
+                                        data-field="blog_category_description">
                                         {{ __('description') }}
-                                        <span class="sort-icon"></span>
-                                    </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
-                                        data-field="slug">
-                                        {{ __('slug') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
@@ -101,7 +96,7 @@
                             <tbody id="blogCategoryTable"
                                 class=" dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 <tr id="loadingRow">
-                                    <td colspan="5" class="px-6 py-4 text-center">
+                                    <td colspan="4" class="px-6 py-4 text-center">
                                         <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
                                             viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -292,11 +287,11 @@
                         alertSelector: '#alertContainer',
                         createButtonSelector: '#createBlogCategoryBtn',
                         idField: 'uuid',
-                        searchFields: ['category_name', 'description', 'slug'],
+                        searchFields: ['blog_category_name', 'blog_category_description'],
                         // Establecer el valor inicial basado en localStorage
                         showDeleted: showDeletedState,
                         formFields: [{
-                                name: 'category_name',
+                                name: 'blog_category_name',
                                 type: 'text',
                                 label: '{{ __('category_name') }}',
                                 placeholder: '{{ __('enter_category_name') }}',
@@ -314,7 +309,7 @@
                                 capitalize: true
                             },
                             {
-                                name: 'description',
+                                name: 'blog_category_description',
                                 type: 'textarea',
                                 label: '{{ __('description') }}',
                                 placeholder: '{{ __('enter_description_optional') }}',
@@ -327,31 +322,24 @@
                             }
                         ],
                         tableHeaders: [{
-                                field: 'category_name',
+                                field: 'blog_category_name',
                                 name: '{{ __('category_name') }}',
                                 sortable: true
                             },
                             {
-                                field: 'description',
+                                field: 'blog_category_description',
                                 name: '{{ __('description') }}',
                                 sortable: true,
                                 getter: (entity) => {
-                                    if (!entity.description)
-                                    return '<span class="text-gray-400 italic">{{ __('no_description') }}</span>';
+                                    if (!entity.blog_category_description)
+                                        return '<span class="text-gray-400 italic">{{ __('no_description') }}</span>';
                                     // Truncar descripción si es muy larga
                                     const maxLength = 50;
-                                    if (entity.description.length > maxLength) {
-                                        return entity.description.substring(0, maxLength) + '...';
+                                    if (entity.blog_category_description.length > maxLength) {
+                                        return entity.blog_category_description.substring(0, maxLength) +
+                                            '...';
                                     }
-                                    return entity.description;
-                                }
-                            },
-                            {
-                                field: 'slug',
-                                name: '{{ __('slug') }}',
-                                sortable: true,
-                                getter: (entity) => {
-                                    return `<code class="px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded text-sm">${entity.slug}</code>`;
+                                    return entity.blog_category_description;
                                 }
                             },
                             {
@@ -423,13 +411,13 @@
                             no: '{{ __('no') }}'
                         },
                         entityConfig: {
-                            identifierField: 'category_name',
+                            identifierField: 'blog_category_name',
                             displayName: 'categoría de blog',
-                            fallbackFields: ['description', 'slug'],
+                            fallbackFields: ['blog_category_description'],
                             // Configuración adicional para mostrar información más detallada
                             detailFormat: (entity) => {
                                 // Mostrar categoría con información adicional si está disponible
-                                return entity.category_name || 'categoría de blog';
+                                return entity.blog_category_name || 'categoría de blog';
                             }
                         }
                     });

@@ -1236,6 +1236,7 @@
     "no_description": "No description",
     "slug": "Slug",
     "loading_blog_categories": "Loading blog categories...",
+    "search_blog_categories": "Search blog categories...",
 
     "_comment_jetstream_profile": "=== JETSTREAM PROFILE ===",
     "Profile Information": "Profile Information",

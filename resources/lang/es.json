@@ -1202,6 +1202,7 @@
     "no_description": "Sin descripción",
     "slug": "Slug",
     "loading_blog_categories": "Cargando categorías de blog...",
+    "search_blog_categories": "Buscar categorías de blog...",
     "created_at": "Creado el",
     "created": "Creado",
     "add_email_data": "Agregar Datos de Correo",
