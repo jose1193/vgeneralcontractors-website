@@ -258,11 +258,11 @@ class EmailDataController extends BaseCrudController
                 'request_data' => $request->all()
             ]);
 
-            $data = $this->validateRequest($request);
+            $data = $request->validate($this->getValidationRules());
             Log::info('EmailDataController::store - Validation passed', ['validated_data' => $data]);
 
-            $emailData = $this->transactionService->run(function () use ($data) {
-                $preparedData = $this->prepareStoreData($data);
+            $emailData = $this->transactionService->run(function () use ($request) {
+                $preparedData = $this->prepareStoreData($request);
                 Log::info('EmailDataController::store - Prepared data', ['prepared_data' => $preparedData]);
                 return $this->modelClass::create($preparedData);
             }, function ($emailData) {
@@ -374,14 +374,14 @@ class EmailDataController extends BaseCrudController
                 throw new \InvalidArgumentException('Invalid UUID');
             }
 
-            $data = $this->validateRequest($request, $uuid);
+            $data = $request->validate($this->getValidationRules($uuid));
             Log::info('EmailDataController::update - Validation passed', ['validated_data' => $data]);
 
-            $emailData = $this->transactionService->run(function () use ($uuid, $data) {
+            $emailData = $this->transactionService->run(function () use ($uuid, $request) {
                 $emailData = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
                 Log::info('EmailDataController::update - Found email data', ['current_data' => $emailData->toArray()]);
                 
-                $preparedData = $this->prepareUpdateData($data);
+                $preparedData = $this->prepareUpdateData($request);
                 Log::info('EmailDataController::update - Prepared data', ['prepared_data' => $preparedData]);
                 
                 $emailData->update($preparedData);
