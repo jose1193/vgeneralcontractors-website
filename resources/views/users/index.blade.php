@@ -348,7 +348,7 @@
                                 placeholder: '{{ __('username_will_be_generated') }}',
                                 required: true, // Requerido en edición
                                 showInCreate: false, // Solo mostrar en edición
-                                help: '{{ __('username_generated_automatically') }}',
+                                help: `{!! __('username_generated_automatically') !!}`,
                                 validation: {
                                     required: true,
                                     minLength: 7,
