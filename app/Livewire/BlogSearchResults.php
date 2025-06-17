@@ -39,7 +39,8 @@ class BlogSearchResults extends Component
         if ($this->isSearching && strlen($this->query) >= 3) {
             $searchTerm = '%' . $this->query . '%';
             
-            $posts = Post::where(function ($query) use ($searchTerm) {
+            $posts = Post::where('post_status', 'published')
+                ->where(function ($query) use ($searchTerm) {
                     $query->where('post_title', 'like', $searchTerm)
                         ->orWhere('post_content', 'like', $searchTerm)
                         ->orWhere('meta_keywords', 'like', $searchTerm)
@@ -49,8 +50,9 @@ class BlogSearchResults extends Component
                 ->orderBy('created_at', 'desc')
                 ->paginate(9);
         } else {
-            // If no search, show normal posts
-            $posts = Post::with(['category', 'user'])
+            // If no search, show only published posts
+            $posts = Post::where('post_status', 'published')
+                ->with(['category', 'user'])
                 ->orderBy('created_at', 'desc')
                 ->paginate(9);
         }
