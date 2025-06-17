@@ -43,10 +43,17 @@ class AppointmentController extends BaseCrudController
      */
     protected function getValidationRules($id = null)
     {
+        $emailRule = 'required|email|max:255|unique:appointments,email';
+        
+        // If we have an ID (UUID in this case), exclude it from the unique check
+        if ($id) {
+            $emailRule .= ',' . $id . ',uuid';
+        }
+        
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:appointments,email' . ($id ? ',' . $id : ''),
+            'email' => $emailRule,
             'phone' => 'required|string|max:20',
             'address' => 'nullable|string|max:255',
             'address_2' => 'nullable|string|max:255',
