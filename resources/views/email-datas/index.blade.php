@@ -130,6 +130,102 @@
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <!-- CrudManagerModal -->
             <script src="{{ asset('js/crud-manager-modal.js') }}"></script>
+
+            <!-- Estilos personalizados para SweetAlert2 -->
+            <style>
+                /* Estilos para modal de creación (verde) */
+                .swal2-popup.swal-create .swal2-header {
+                    background: linear-gradient(135deg, #10B981, #059669) !important;
+                    color: white !important;
+                }
+
+                /* Estilos para modal de edición (azul) */
+                .swal2-popup.swal-edit .swal2-header {
+                    background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
+                    color: white !important;
+                }
+
+                /* Estilos generales para el modal */
+                .swal2-popup {
+                    border-radius: 12px !important;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+                }
+
+                .swal2-title {
+                    font-size: 1.5rem !important;
+                    font-weight: 600 !important;
+                    margin: 0 !important;
+                    padding: 1rem !important;
+                }
+
+                .swal2-close {
+                    font-size: 1.5rem !important;
+                    font-weight: 300 !important;
+                    right: 1rem !important;
+                    top: 1rem !important;
+                }
+
+                .swal2-close:hover {
+                    background: rgba(255, 255, 255, 0.1) !important;
+                    border-radius: 50% !important;
+                }
+
+                /* Estilos para el formulario */
+                .crud-modal-form {
+                    padding: 1rem;
+                }
+
+                .form-group label {
+                    font-weight: 500 !important;
+                    color: #374151 !important;
+                }
+
+                .form-group input,
+                .form-group select,
+                .form-group textarea {
+                    transition: all 0.2s ease !important;
+                }
+
+                .form-group input:focus,
+                .form-group select:focus,
+                .form-group textarea:focus {
+                    ring: 2px !important;
+                    ring-color: #3B82F6 !important;
+                    border-color: #3B82F6 !important;
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+                }
+
+                /* Estilos para mensajes de validación */
+                .error-message {
+                    font-size: 0.875rem !important;
+                    margin-top: 0.25rem !important;
+                    transition: all 0.2s ease !important;
+                }
+
+                .error-message.text-red-500 {
+                    color: #EF4444 !important;
+                }
+
+                .error-message.text-green-500 {
+                    color: #10B981 !important;
+                }
+
+                /* Estilos para campos con error */
+                .form-group input.error,
+                .form-group select.error,
+                .form-group textarea.error {
+                    border-color: #EF4444 !important;
+                    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+                }
+
+                /* Estilos para campos válidos */
+                .form-group input.valid,
+                .form-group select.valid,
+                .form-group textarea.valid {
+                    border-color: #10B981 !important;
+                    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+                }
+            </style>
             <script>
                 $(document).ready(function() {
                     // Recuperar estado del toggle de localStorage antes de inicializar el manager
@@ -260,7 +356,26 @@
                             {
                                 field: 'phone',
                                 name: '{{ __('phone') }}',
-                                sortable: false
+                                sortable: false,
+                                getter: (entity) => {
+                                    if (!entity.phone) return 'N/A';
+
+                                    // Extraer solo los dígitos
+                                    const cleaned = entity.phone.replace(/\D/g, '');
+
+                                    // Si tiene 11 dígitos y empieza con 1 (formato +1XXXXXXXXXX)
+                                    if (cleaned.length === 11 && cleaned.startsWith('1')) {
+                                        const phoneDigits = cleaned.substring(1); // Remover el 1
+                                        return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(6, 10)}`;
+                                    }
+                                    // Si tiene 10 dígitos (formato XXXXXXXXXX)
+                                    else if (cleaned.length === 10) {
+                                        return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6, 10)}`;
+                                    }
+
+                                    // Para otros formatos, devolver tal como está
+                                    return entity.phone;
+                                }
                             },
                             {
                                 field: 'type',

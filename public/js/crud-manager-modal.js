@@ -48,6 +48,20 @@ class CrudManagerModal {
             },
         };
 
+        // Configuración de colores para diferentes modos
+        this.colorConfig = {
+            create: {
+                confirmButtonColor: "#10B981", // Verde
+                headerColor: "#10B981",
+                headerTextColor: "#FFFFFF",
+            },
+            edit: {
+                confirmButtonColor: "#3B82F6", // Azul
+                headerColor: "#3B82F6",
+                headerTextColor: "#FFFFFF",
+            },
+        };
+
         this.init();
     }
 
@@ -182,12 +196,14 @@ class CrudManagerModal {
             showCancelButton: this.modalConfig.showCancelButton,
             confirmButtonText: this.modalConfig.confirmButtonText,
             cancelButtonText: this.modalConfig.cancelButtonText,
+            confirmButtonColor: this.colorConfig.create.confirmButtonColor,
             customClass: this.modalConfig.customClass,
             preConfirm: () => {
                 return this.validateAndGetFormData();
             },
             didOpen: () => {
                 this.initializeFormElements();
+                this.applyHeaderColor("create");
             },
         });
 
@@ -227,6 +243,7 @@ class CrudManagerModal {
                 showCancelButton: this.modalConfig.showCancelButton,
                 confirmButtonText: "Actualizar",
                 cancelButtonText: this.modalConfig.cancelButtonText,
+                confirmButtonColor: this.colorConfig.edit.confirmButtonColor,
                 customClass: this.modalConfig.customClass,
                 preConfirm: () => {
                     return this.validateAndGetFormData();
@@ -234,6 +251,7 @@ class CrudManagerModal {
                 didOpen: () => {
                     this.initializeFormElements();
                     this.populateForm(this.currentEntity);
+                    this.applyHeaderColor("edit");
                 },
             });
 
@@ -340,19 +358,221 @@ class CrudManagerModal {
      * Inicializar elementos del formulario
      */
     initializeFormElements() {
-        // Aquí puedes agregar inicializaciones específicas como:
-        // - Selectores de fecha
-        // - Validaciones en tiempo real
-        // - Formateo de campos
+        // Configurar formato de teléfono en tiempo real
+        this.setupPhoneFormatting();
 
-        // Ejemplo: validación en tiempo real
-        this.formFields.forEach((field) => {
-            if (field.validation) {
-                $(`#${field.name}`).on("blur", () => {
-                    this.validateField(field.name);
-                });
+        // Configurar validación en tiempo real
+        this.setupRealTimeValidation();
+    }
+
+    /**
+     * Configurar formato de teléfono en tiempo real
+     */
+    setupPhoneFormatting() {
+        const phoneField = document.getElementById("phone");
+        if (phoneField) {
+            phoneField.addEventListener("input", (e) => {
+                this.formatPhoneInput(e);
+            });
+        }
+    }
+
+    /**
+     * Formatear entrada de teléfono
+     */
+    formatPhoneInput(event) {
+        const input = event.target;
+        const isBackspace = event.inputType === "deleteContentBackward";
+        let value = input.value.replace(/\D/g, "");
+
+        if (isBackspace) {
+            // Para backspace, mantener el valor actual sin agregar más caracteres
+        } else {
+            // Limitar a 10 dígitos
+            value = value.substring(0, 10);
+        }
+
+        let formattedValue = "";
+        if (value.length === 0) {
+            formattedValue = "";
+        } else if (value.length <= 3) {
+            formattedValue = `(${value}`;
+        } else if (value.length <= 6) {
+            formattedValue = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+        } else {
+            formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                3,
+                6
+            )}-${value.substring(6)}`;
+        }
+
+        input.value = formattedValue;
+
+        // Trigger validation after formatting
+        this.validatePhoneField(formattedValue);
+    }
+
+    /**
+     * Configurar validación en tiempo real
+     */
+    setupRealTimeValidation() {
+        // Validación de email
+        const emailField = document.getElementById("email");
+        if (emailField) {
+            let emailTimeout;
+            emailField.addEventListener("input", (e) => {
+                clearTimeout(emailTimeout);
+                emailTimeout = setTimeout(() => {
+                    this.validateEmailField(e.target.value);
+                }, 500); // Debounce de 500ms
+            });
+        }
+
+        // Validación de teléfono
+        const phoneField = document.getElementById("phone");
+        if (phoneField) {
+            let phoneTimeout;
+            phoneField.addEventListener("input", (e) => {
+                clearTimeout(phoneTimeout);
+                phoneTimeout = setTimeout(() => {
+                    this.validatePhoneField(e.target.value);
+                }, 500); // Debounce de 500ms
+            });
+        }
+    }
+
+    /**
+     * Validar campo de email en tiempo real
+     */
+    async validateEmailField(email) {
+        const errorElement = $(`#error-email`);
+
+        if (!email) {
+            this.clearFieldError("email");
+            return;
+        }
+
+        // Validación básica de formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.showFieldError("email", "Formato de email inválido");
+            return;
+        }
+
+        try {
+            const response = await $.ajax({
+                url: this.routes.checkEmail,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    email: email,
+                    uuid:
+                        this.isEditing && this.currentEntity
+                            ? this.currentEntity.uuid
+                            : null,
+                },
+            });
+
+            if (response.exists) {
+                this.showFieldError("email", "Este email ya está en uso");
+            } else {
+                this.clearFieldError("email");
+                this.showFieldSuccess("email", "Email disponible");
             }
-        });
+        } catch (error) {
+            console.error("Error validating email:", error);
+        }
+    }
+
+    /**
+     * Validar campo de teléfono en tiempo real
+     */
+    async validatePhoneField(phone) {
+        if (!phone) {
+            this.clearFieldError("phone");
+            return;
+        }
+
+        // Validación de formato completo (xxx) xxx-xxxx
+        const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+        if (!phoneRegex.test(phone)) {
+            if (phone.length > 0) {
+                this.showFieldError("phone", "Formato: (xxx) xxx-xxxx");
+            }
+            return;
+        }
+
+        try {
+            const response = await $.ajax({
+                url: this.routes.checkPhone,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    phone: phone,
+                    uuid:
+                        this.isEditing && this.currentEntity
+                            ? this.currentEntity.uuid
+                            : null,
+                },
+            });
+
+            if (response.exists) {
+                this.showFieldError("phone", "Este teléfono ya está en uso");
+            } else {
+                this.clearFieldError("phone");
+                this.showFieldSuccess("phone", "Teléfono disponible");
+            }
+        } catch (error) {
+            console.error("Error validating phone:", error);
+        }
+    }
+
+    /**
+     * Mostrar mensaje de éxito en campo
+     */
+    showFieldSuccess(fieldName, message) {
+        const errorElement = $(`#error-${fieldName}`);
+        const inputElement = $(`#${fieldName}`);
+
+        if (errorElement.length) {
+            errorElement
+                .removeClass("hidden text-red-500")
+                .addClass("text-green-500")
+                .text(message);
+        }
+
+        if (inputElement.length) {
+            inputElement.removeClass("error").addClass("valid");
+        }
+    }
+
+    /**
+     * Limpiar error de campo
+     */
+    clearFieldError(fieldName) {
+        const errorElement = $(`#error-${fieldName}`);
+        const inputElement = $(`#${fieldName}`);
+
+        if (errorElement.length) {
+            errorElement
+                .addClass("hidden")
+                .removeClass("text-red-500 text-green-500")
+                .text("");
+        }
+
+        if (inputElement.length) {
+            inputElement.removeClass("error valid");
+        }
     }
 
     /**
@@ -450,7 +670,19 @@ class CrudManagerModal {
      * Mostrar error de campo
      */
     showFieldError(fieldName, message) {
-        $(`#error-${fieldName}`).removeClass("hidden").text(message);
+        const errorElement = $(`#error-${fieldName}`);
+        const inputElement = $(`#${fieldName}`);
+
+        if (errorElement.length) {
+            errorElement
+                .removeClass("hidden text-green-500")
+                .addClass("text-red-500")
+                .text(message);
+        }
+
+        if (inputElement.length) {
+            inputElement.removeClass("valid").addClass("error");
+        }
     }
 
     /**
@@ -731,6 +963,22 @@ class CrudManagerModal {
         setTimeout(() => {
             $(this.alertSelector).fadeOut();
         }, 5000);
+    }
+
+    /**
+     * Aplicar color al header del modal
+     */
+    applyHeaderColor(mode) {
+        // Aplicar clase CSS al popup
+        setTimeout(() => {
+            const popup = document.querySelector(".swal2-popup");
+            if (popup) {
+                // Remover clases previas
+                popup.classList.remove("swal-create", "swal-edit");
+                // Agregar clase según el modo
+                popup.classList.add(`swal-${mode}`);
+            }
+        }, 10);
     }
 
     /**
