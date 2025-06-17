@@ -41,7 +41,15 @@ class UserController extends BaseCrudController
      */
     protected function getValidationRules($id = null)
     {
-        return $this->getUserValidationRules($id);
+        // Determine if we're in store or update mode
+        $modalAction = request()->isMethod('post') ? 'store' : 'update';
+        
+        $rules = $this->getUserValidationRules($id, $modalAction);
+        
+        // Add role validation
+        $rules['role'] = 'required|string|exists:roles,name';
+        
+        return $rules;
     }
 
     /**

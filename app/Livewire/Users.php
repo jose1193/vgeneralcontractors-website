@@ -114,7 +114,8 @@ class Users extends Component
         });
 
         return view('livewire.users', [
-            'users' => $users
+            'users' => $users,
+            'roles' => $this->roles
         ]);
     }
     
@@ -199,7 +200,7 @@ class Users extends Component
             }
             
             // Use validation trait
-            $validationRules = $this->getCreateValidationRules();
+            $validationRules = $this->getCreateValidationRules(null);
             $validationRules['role'] = 'required|string|exists:roles,name';
             
             $this->validate($validationRules);
@@ -408,7 +409,7 @@ class Users extends Component
             }
             
             // Use validation trait
-            $validationRules = $this->getUpdateValidationRules();
+            $validationRules = $this->getUpdateValidationRules($this->uuid);
             $validationRules['role'] = 'required|string|exists:roles,name';
             
             // Verificar si el teléfono ha cambiado
