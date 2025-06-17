@@ -948,7 +948,8 @@ class CrudManagerModal {
     validateAndGetFormData() {
         const formData = {};
         let isValid = true;
-        const isEditMode = $(".swal2-popup").hasClass("swal-edit");
+        // Usar this.isEditing en lugar de la clase CSS para evitar race conditions
+        const isEditMode = this.isEditing;
 
         // Limpiar errores previos
         $(".error-message").addClass("hidden").text("");
