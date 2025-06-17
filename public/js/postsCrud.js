@@ -1,0 +1,403 @@
+/**
+ * PostsCrudManager - CRUD Manager para posts con búsqueda en tiempo real
+ * Basado en CrudManagerModal pero adaptado para posts
+ */
+class PostsCrudManager {
+    constructor(options) {
+        // Configuración básica
+        this.entityName = "Post";
+        this.entityNamePlural = "Posts";
+        this.routes = options.routes || {};
+
+        // Selectores del DOM
+        this.tableSelector = "#postsTable tbody";
+        this.searchSelector = "#searchInput";
+        this.perPageSelector = "#perPage";
+        this.showDeletedSelector = "#showDeletedToggle";
+        this.paginationSelector = "#pagination";
+        this.alertSelector = "#alertMessage";
+
+        // Estado
+        this.currentPage = 1;
+        this.perPage = 10;
+        this.searchTerm = "";
+        this.showDeleted = false;
+        this.sortField = "created_at";
+        this.sortDirection = "desc";
+
+        // Debounce timer para búsqueda
+        this.searchTimeout = null;
+
+        // Inicializar
+        this.init();
+    }
+
+    init() {
+        this.setupEventHandlers();
+        this.loadPosts();
+    }
+
+    setupEventHandlers() {
+        const self = this;
+
+        // Búsqueda en tiempo real con debounce
+        $(this.searchSelector).on("input", function () {
+            clearTimeout(self.searchTimeout);
+            self.searchTimeout = setTimeout(() => {
+                self.searchTerm = $(this).val();
+                self.currentPage = 1;
+                self.loadPosts();
+            }, 300); // 300ms debounce
+        });
+
+        // Per page
+        $(this.perPageSelector).on("change", function () {
+            self.perPage = $(this).val();
+            self.currentPage = 1;
+            self.loadPosts();
+        });
+
+        // Show deleted
+        $(this.showDeletedSelector).on("change", function () {
+            self.showDeleted = $(this).is(":checked");
+            self.currentPage = 1;
+            self.loadPosts();
+
+            // Actualizar URL sin recargar la página
+            self.updateURL();
+
+            // Update toggle appearance
+            const background = this.nextElementSibling;
+            const dot = background.nextElementSibling;
+
+            if (this.checked) {
+                background.classList.remove("bg-gray-600");
+                background.classList.add("bg-yellow-500");
+                dot.classList.add("transform", "translate-x-6");
+            } else {
+                background.classList.remove("bg-yellow-500");
+                background.classList.add("bg-gray-600");
+                dot.classList.remove("transform", "translate-x-6");
+            }
+        });
+
+        // Dynamic buttons
+        $(document).on("click", ".delete-btn", function () {
+            const uuid = $(this).data("uuid");
+            const title = $(this).data("title");
+            if (confirm(`¿Está seguro de eliminar el post "${title}"?`)) {
+                self.deletePost(uuid);
+            }
+        });
+
+        $(document).on("click", ".restore-btn", function () {
+            const uuid = $(this).data("uuid");
+            const title = $(this).data("title");
+            if (confirm(`¿Está seguro de restaurar el post "${title}"?`)) {
+                self.restorePost(uuid);
+            }
+        });
+    }
+
+    loadPosts() {
+        const self = this;
+
+        const params = new URLSearchParams({
+            page: this.currentPage,
+            per_page: this.perPage,
+            search: this.searchTerm,
+            show_deleted: this.showDeleted ? "true" : "false",
+            sort_field: this.sortField,
+            sort_direction: this.sortDirection,
+        });
+
+        // Mostrar loading
+        $(this.tableSelector).html(
+            '<tr><td colspan="7" class="text-center py-4 text-gray-400">Loading...</td></tr>'
+        );
+
+        $.ajax({
+            url: `${this.routes.index}?${params.toString()}`,
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                Accept: "application/json",
+            },
+            success: function (response) {
+                self.renderTable(response.data || response);
+                self.renderPagination(response);
+            },
+            error: function (xhr) {
+                console.error("Error loading posts:", xhr);
+                $(self.tableSelector).html(
+                    '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading posts</td></tr>'
+                );
+            },
+        });
+    }
+
+    renderTable(posts) {
+        let html = "";
+
+        if (posts.length === 0) {
+            html =
+                '<tr><td colspan="7" class="text-center py-4 text-gray-400">No posts found</td></tr>';
+        } else {
+            posts.forEach((post) => {
+                const isDeleted = post.deleted_at !== null;
+                const rowClass = isDeleted ? "opacity-60" : "";
+
+                // Imagen
+                let imgHtml = `<div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
+                    </svg>
+                </div>`;
+
+                if (post.post_image) {
+                    const imageUrl = post.post_image.startsWith("http://")
+                        ? post.post_image.replace("http://", "https://")
+                        : post.post_image;
+                    imgHtml = `<img class="h-12 w-12 object-cover rounded-md" src="${imageUrl}" alt="Post image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md" style="display:none;">
+                            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
+                            </svg>
+                        </div>`;
+                }
+
+                // Status badge
+                let statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-500/20 text-gray-400">${post.post_status}</span>`;
+                if (post.post_status === "published") {
+                    statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">Published</span>`;
+                } else if (post.post_status === "scheduled") {
+                    statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-500/20 text-orange-400">Scheduled</span>`;
+                }
+
+                // Actions
+                let actionsHtml = '<div class="flex justify-center space-x-2">';
+
+                if (!isDeleted) {
+                    // View button (only for published posts)
+                    if (post.post_status === "published") {
+                        actionsHtml += `<a href="/blog/${post.post_title_slug}" target="_blank"
+                            class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                            title="View post">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>`;
+                    }
+
+                    // Edit button
+                    actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
+                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Edit post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </a>`;
+
+                    // Delete button
+                    actionsHtml += `<button data-uuid="${post.uuid}" data-title="${post.post_title}"
+                        class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Delete post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>`;
+                } else {
+                    // Restore button
+                    actionsHtml += `<button data-uuid="${post.uuid}" data-title="${post.post_title}"
+                        class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Restore post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>`;
+                }
+
+                actionsHtml += "</div>";
+
+                // Truncate content
+                const truncatedTitle =
+                    post.post_title.length > 50
+                        ? post.post_title.substring(0, 50) + "..."
+                        : post.post_title;
+                const truncatedContent = post.post_content
+                    ? post.post_content.replace(/<[^>]*>/g, "").length > 80
+                        ? post.post_content
+                              .replace(/<[^>]*>/g, "")
+                              .substring(0, 80) + "..."
+                        : post.post_content.replace(/<[^>]*>/g, "")
+                    : "";
+
+                html += `
+                    <tr class="hover:bg-gray-750 ${rowClass}">
+                        <td class="px-4 py-3 text-sm text-gray-400">${imgHtml}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-200">${truncatedTitle}</div>
+                            <div class="text-sm text-gray-400">${truncatedContent}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-400">
+                                ${post.category?.blog_category_name || "N/A"}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                            ${
+                                post.created_at
+                                    ? new Date(
+                                          post.created_at
+                                      ).toLocaleDateString()
+                                    : "N/A"
+                            }
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                            ${post.user?.name || "N/A"}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            ${actionsHtml}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        $(this.tableSelector).html(html);
+    }
+
+    renderPagination(data) {
+        // Simple pagination implementation
+        const { current_page, last_page, from, to, total } = data;
+        const self = this;
+
+        let html = `
+            <div class="text-sm text-gray-300">
+                Showing ${from || 0} to ${to || 0} of ${total} results
+            </div>
+            <div class="flex space-x-1">
+                <button class="px-3 py-1 rounded ${
+                    current_page === 1
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-gray-600"
+                }" ${current_page === 1 ? "disabled" : ""} data-page="${
+            current_page - 1
+        }">Previous</button>
+                <button class="px-3 py-1 rounded ${
+                    current_page === last_page
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-gray-600"
+                }" ${current_page === last_page ? "disabled" : ""} data-page="${
+            current_page + 1
+        }">Next</button>
+            </div>
+        `;
+
+        $(this.paginationSelector).html(html);
+
+        // Bind pagination events
+        $(this.paginationSelector + " button:not([disabled])").on(
+            "click",
+            function () {
+                self.currentPage = $(this).data("page");
+                self.loadPosts();
+            }
+        );
+    }
+
+    deletePost(uuid) {
+        const self = this;
+        $.ajax({
+            url: `/posts-crud/${uuid}`,
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            success: function (response) {
+                self.showAlert("Post deleted successfully", "success");
+                self.loadPosts();
+            },
+            error: function () {
+                self.showAlert("Error deleting post", "error");
+            },
+        });
+    }
+
+    restorePost(uuid) {
+        const self = this;
+        $.ajax({
+            url: `/posts-crud/${uuid}/restore`,
+            method: "PATCH",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            success: function (response) {
+                self.showAlert("Post restored successfully", "success");
+                self.loadPosts();
+            },
+            error: function () {
+                self.showAlert("Error restoring post", "error");
+            },
+        });
+    }
+
+    updateURL() {
+        const url = new URL(window.location);
+
+        if (this.searchTerm) {
+            url.searchParams.set("search", this.searchTerm);
+        } else {
+            url.searchParams.delete("search");
+        }
+
+        if (this.showDeleted) {
+            url.searchParams.set("show_deleted", "true");
+        } else {
+            url.searchParams.delete("show_deleted");
+        }
+
+        // Update URL without reloading
+        window.history.replaceState({}, "", url);
+    }
+
+    showAlert(message, type = "success") {
+        const alertClass =
+            type === "success"
+                ? "bg-green-500/20 text-green-400 border-green-400"
+                : "bg-red-500/20 text-red-400 border-red-400";
+
+        const alertHtml = `
+            <div class="mb-4 p-4 rounded-lg border ${alertClass}">
+                ${message}
+            </div>
+        `;
+
+        $(this.alertSelector).html(alertHtml);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            $(this.alertSelector).html("");
+        }, 5000);
+    }
+}
+
+// Initialize when DOM is ready
+$(document).ready(function () {
+    // Check if we're on the posts-crud index page
+    if (
+        window.location.pathname.includes("posts-crud") &&
+        !window.location.pathname.includes("edit") &&
+        !window.location.pathname.includes("create")
+    ) {
+        window.postsCrudManager = new PostsCrudManager({
+            routes: {
+                index: "/posts-crud",
+            },
+        });
+    }
+});

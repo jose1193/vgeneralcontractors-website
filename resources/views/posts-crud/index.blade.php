@@ -35,21 +35,15 @@
                         class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
                         {{-- Search bar --}}
                         <div class="relative flex-1 max-w-md">
-                            <form method="GET" action="{{ route('posts-crud.index') }}" class="flex">
-                                <input type="text" name="search" value="{{ request('search') }}"
-                                    placeholder="{{ __('search_posts') }}"
-                                    class="flex-1 text-gray-300 placeholder-gray-500 rounded-l-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
-                                    style="background-color: #2C2E36;">
-                                <button type="submit"
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded-r-lg font-medium transition-colors">
-                                    {{ __('search') }}
-                                </button>
-                                <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </form>
+                            <input type="text" id="searchInput" value="{{ request('search') }}"
+                                placeholder="{{ __('search_posts') }}"
+                                class="w-full text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                style="background-color: #2C2E36;">
+                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
                         </div>
 
                         {{-- Controls --}}
@@ -72,7 +66,7 @@
                             </label>
 
                             {{-- Per page dropdown --}}
-                            <select name="per_page" onchange="changePerPage(this.value)"
+                            <select id="perPage"
                                 class="text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                 style="background-color: #2C2E36;">
                                 <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10
@@ -152,7 +146,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-gray-800 divide-y divide-gray-700">
+                            <tbody id="postsTable" class="bg-gray-800 divide-y divide-gray-700">
                                 @forelse($posts as $post)
                                     <tr class="hover:bg-gray-750 {{ $post->deleted_at ? 'opacity-60' : '' }}">
                                         <td class="px-4 py-3 text-sm text-gray-400">
@@ -279,83 +273,59 @@
                         </table>
                     </div>
 
+                    {{-- Alert container --}}
+                    <div id="alertMessage"></div>
+
                     {{-- Pagination --}}
-                    @if ($posts->hasPages())
-                        <div class="mt-6">
-                            {{ $posts->appends(request()->query())->links() }}
-                        </div>
-                    @endif
+                    <div id="pagination" class="mt-4 flex justify-between items-center">
+                        @if ($posts->hasPages())
+                            <div class="mt-6">
+                                {{ $posts->appends(request()->query())->links() }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- JavaScript for CRUD operations --}}
+    {{-- Include PostsCrud JavaScript --}}
+    <script src="{{ asset('js/postsCrud.js') }}"></script>
+
+    {{-- Initialize PostsCrudManager --}}
     <script>
-        function toggleShowDeleted(checkbox) {
-            const url = new URL(window.location);
-            if (checkbox.checked) {
-                url.searchParams.set('show_deleted', 'true');
-            } else {
-                url.searchParams.delete('show_deleted');
-            }
-            window.location.href = url.toString();
-        }
+        $(document).ready(function() {
+            // Set initial state from URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const showDeleted = urlParams.get('show_deleted') === 'true';
+            const searchTerm = urlParams.get('search') || '';
 
-        function changePerPage(value) {
-            const url = new URL(window.location);
-            url.searchParams.set('per_page', value);
-            url.searchParams.delete('page'); // Reset to first page
-            window.location.href = url.toString();
-        }
+            // Update UI to match URL state
+            $('#showDeletedToggle').prop('checked', showDeleted);
+            $('#searchInput').val(searchTerm);
 
-        function deletePost(uuid, title) {
-            if (confirm(`{{ __('confirm_delete_post') }}`.replace('{title}', title))) {
-                fetch(`{{ route('posts-crud.index') }}/${uuid}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        alert('Error: ' + error.message);
-                    });
+            // Update toggle appearance
+            const toggle = document.getElementById('showDeletedToggle');
+            if (toggle && showDeleted) {
+                const background = toggle.nextElementSibling;
+                const dot = background.nextElementSibling;
+                background.classList.remove('bg-gray-600');
+                background.classList.add('bg-yellow-500');
+                dot.classList.add('transform', 'translate-x-6');
             }
-        }
 
-        function restorePost(uuid, title) {
-            if (confirm(`{{ __('confirm_restore_post') }}`.replace('{title}', title))) {
-                fetch(`{{ route('posts-crud.index') }}/${uuid}/restore`, {
-                        method: 'PATCH',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        alert('Error: ' + error.message);
-                    });
-            }
-        }
+            // Initialize PostsCrudManager
+            window.postsCrudManager = new PostsCrudManager({
+                routes: {
+                    index: "{{ route('posts-crud.index') }}"
+                }
+            });
+
+            // Set initial state
+            window.postsCrudManager.searchTerm = searchTerm;
+            window.postsCrudManager.showDeleted = showDeleted;
+            window.postsCrudManager.perPage = $('#perPage').val() || 10;
+        });
 
         // Auto-hide alerts after 5 seconds
         function autoHideAlerts() {
@@ -374,27 +344,6 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             autoHideAlerts();
-        });
-
-        // Toggle functionality for show deleted
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('showDeletedToggle');
-            if (toggle) {
-                toggle.addEventListener('change', function() {
-                    const background = this.nextElementSibling;
-                    const dot = background.nextElementSibling;
-
-                    if (this.checked) {
-                        background.classList.remove('bg-gray-600');
-                        background.classList.add('bg-yellow-500');
-                        dot.classList.add('transform', 'translate-x-6');
-                    } else {
-                        background.classList.remove('bg-yellow-500');
-                        background.classList.add('bg-gray-600');
-                        dot.classList.remove('transform', 'translate-x-6');
-                    }
-                });
-            }
         });
     </script>
 
