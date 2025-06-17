@@ -167,8 +167,20 @@ class UserController extends BaseCrudController
         ];
 
         // Handle password reset if requested
-        // Convert send_password_reset to boolean, defaulting to false if not present
-        $sendPasswordReset = filter_var($request->input('send_password_reset', false), FILTER_VALIDATE_BOOLEAN);
+        // Manejo robusto del campo checkbox que puede venir como boolean, string, número o null
+        $sendPasswordResetValue = $request->input('send_password_reset');
+        $sendPasswordReset = false;
+        
+        if ($sendPasswordResetValue !== null) {
+            // Convertir diferentes tipos de valores a boolean
+            if (is_bool($sendPasswordResetValue)) {
+                $sendPasswordReset = $sendPasswordResetValue;
+            } elseif (is_string($sendPasswordResetValue)) {
+                $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'on', 'yes']);
+            } elseif (is_numeric($sendPasswordResetValue)) {
+                $sendPasswordReset = (int)$sendPasswordResetValue === 1;
+            }
+        }
         
         if ($sendPasswordReset) {
             $newPassword = Str::random(12);
@@ -480,7 +492,21 @@ class UserController extends BaseCrudController
                 $this->clearCrudCache('users');
                 
                 // Send password reset email if requested
-                $sendPasswordReset = filter_var($request->input('send_password_reset', false), FILTER_VALIDATE_BOOLEAN);
+                // Manejo robusto del campo checkbox que puede venir como boolean, string, número o null
+                $sendPasswordResetValue = $request->input('send_password_reset');
+                $sendPasswordReset = false;
+                
+                if ($sendPasswordResetValue !== null) {
+                    // Convertir diferentes tipos de valores a boolean
+                    if (is_bool($sendPasswordResetValue)) {
+                        $sendPasswordReset = $sendPasswordResetValue;
+                    } elseif (is_string($sendPasswordResetValue)) {
+                        $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'on', 'yes']);
+                    } elseif (is_numeric($sendPasswordResetValue)) {
+                        $sendPasswordReset = (int)$sendPasswordResetValue === 1;
+                    }
+                }
+                
                 if ($sendPasswordReset) {
                     if (isset($user->generated_password) && $user->generated_password) {
                         dispatch(new SendUserCredentialsEmail($user, $user->generated_password, true));
