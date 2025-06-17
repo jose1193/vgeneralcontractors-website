@@ -140,7 +140,7 @@ class UserController extends BaseCrudController
     /**
      * Prepare data for updating a user
      */
-    protected function prepareUpdateData(Request $request, $sendPasswordReset = false)
+    protected function prepareUpdateData(Request $request)
     {
         Log::info('UserController::prepareUpdateData - Preparing data', [
             'name' => $request->name,
@@ -167,6 +167,20 @@ class UserController extends BaseCrudController
         ];
 
         // Handle password reset if requested
+        // Manejo robusto del campo checkbox que puede venir como boolean, string, número o null
+        $sendPasswordResetValue = $request->input('send_password_reset');
+        $sendPasswordReset = false;
+        
+        if ($sendPasswordResetValue !== null) {
+            // Convertir diferentes tipos de valores a boolean
+            if (is_bool($sendPasswordResetValue)) {
+                $sendPasswordReset = $sendPasswordResetValue;
+            } elseif (is_string($sendPasswordResetValue)) {
+                $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'on', 'yes']);
+            } elseif (is_numeric($sendPasswordResetValue)) {
+                $sendPasswordReset = (int)$sendPasswordResetValue === 1;
+            }
+        }
         
         if ($sendPasswordReset) {
             $newPassword = Str::random(12);
@@ -324,38 +338,9 @@ class UserController extends BaseCrudController
                 $this->markSignificantDataChange();
                 $this->clearCrudCache('users');
                 
-                // Send credentials email with improved pattern and logging
-                if (isset($user->generated_password) && $user->generated_password) {
-                    try {
-                        Log::info('Dispatching user credentials email', [
-                            'user_id' => $user->id,
-                            'user_email' => $user->email,
-                            'password_length' => strlen($user->generated_password),
-                            'is_password_reset' => false
-                        ]);
-                        
-                        // Use static dispatch pattern like AppointmentController
-                        SendUserCredentialsEmail::dispatch($user, $user->generated_password, false);
-                        
-                        Log::info('User credentials email job dispatched successfully', [
-                            'user_id' => $user->id,
-                            'user_email' => $user->email
-                        ]);
-                    } catch (\Exception $e) {
-                        Log::error('Failed to dispatch user credentials email', [
-                            'user_id' => $user->id,
-                            'user_email' => $user->email,
-                            'error' => $e->getMessage(),
-                            'trace' => $e->getTraceAsString()
-                        ]);
-                    }
-                } else {
-                    Log::warning('User created but no generated password found for email', [
-                        'user_id' => $user->id,
-                        'user_email' => $user->email,
-                        'has_generated_password' => isset($user->generated_password),
-                        'generated_password_value' => $user->generated_password ?? 'NULL'
-                    ]);
+                // Send credentials email
+                if ($user->generated_password) {
+                    dispatch(new SendUserCredentialsEmail($user, $user->generated_password, false));
                 }
                 
                 $this->afterStore($user);
@@ -476,26 +461,11 @@ class UserController extends BaseCrudController
             $data = $request->validate($this->getValidationRules($uuid));
             Log::info('UserController::update - Validation passed');
 
-            // Handle send_password_reset checkbox before transaction
-            $sendPasswordResetValue = $request->input('send_password_reset');
-            $sendPasswordReset = false;
-            
-            if ($sendPasswordResetValue !== null) {
-                // Convertir diferentes tipos de valores a boolean
-                if (is_bool($sendPasswordResetValue)) {
-                    $sendPasswordReset = $sendPasswordResetValue;
-                } elseif (is_string($sendPasswordResetValue)) {
-                    $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'on', 'yes']);
-                } elseif (is_numeric($sendPasswordResetValue)) {
-                    $sendPasswordReset = (int)$sendPasswordResetValue === 1;
-                }
-            }
-
-            $user = $this->transactionService->run(function () use ($uuid, $request, $sendPasswordReset) {
+            $user = $this->transactionService->run(function () use ($uuid, $request) {
                 $user = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
                 Log::info('UserController::update - Found user', ['current_data' => collect($user->toArray())->except(['password'])->toArray()]);
                 
-                $preparedData = $this->prepareUpdateData($request, $sendPasswordReset);
+                $preparedData = $this->prepareUpdateData($request);
                 $generatedPassword = $preparedData['generated_password'] ?? null;
                 unset($preparedData['generated_password']); // Remove from data to be saved
                 
@@ -508,13 +478,10 @@ class UserController extends BaseCrudController
                     $user->syncRoles([$request->role]);
                 }
                 
-                // Store password and reset flag for email sending
+                // Store password for email sending
                 if ($generatedPassword) {
                     $user->generated_password = $generatedPassword;
                 }
-                
-                // Store the password reset flag for afterUpdate
-                $user->send_password_reset = $sendPasswordReset;
                 
                 return $user->fresh();
             }, function ($user) use ($request) {
@@ -524,7 +491,37 @@ class UserController extends BaseCrudController
                 $this->markSignificantDataChange();
                 $this->clearCrudCache('users');
                 
-                // Password reset email will be handled in afterUpdate hook
+                // Send password reset email if requested
+                // Manejo robusto del campo checkbox que puede venir como boolean, string, número o null
+                $sendPasswordResetValue = $request->input('send_password_reset');
+                $sendPasswordReset = false;
+                
+                if ($sendPasswordResetValue !== null) {
+                    // Convertir diferentes tipos de valores a boolean
+                    if (is_bool($sendPasswordResetValue)) {
+                        $sendPasswordReset = $sendPasswordResetValue;
+                    } elseif (is_string($sendPasswordResetValue)) {
+                        $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'on', 'yes']);
+                    } elseif (is_numeric($sendPasswordResetValue)) {
+                        $sendPasswordReset = (int)$sendPasswordResetValue === 1;
+                    }
+                }
+                
+                if ($sendPasswordReset) {
+                    if (isset($user->generated_password) && $user->generated_password) {
+                        dispatch(new SendUserCredentialsEmail($user, $user->generated_password, true));
+                        Log::info('Password reset email dispatched', [
+                            'user_id' => $user->id,
+                            'email' => $user->email,
+                            'password_length' => strlen($user->generated_password)
+                        ]);
+                    } else {
+                        Log::warning('Password reset requested but no generated password found', [
+                            'user_id' => $user->id,
+                            'email' => $user->email
+                        ]);
+                    }
+                }
                 
                 $this->afterUpdate($user);
             });
@@ -861,30 +858,6 @@ class UserController extends BaseCrudController
     protected function afterStore($user)
     {
         Log::info("User created: {$user->name} {$user->last_name} ({$user->email})");
-        
-        // Send credentials email if password was generated
-        if (isset($user->generated_password) && $user->generated_password) {
-            try {
-                Log::info('Dispatching user credentials email from afterStore', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email,
-                    'password_length' => strlen($user->generated_password)
-                ]);
-                
-                SendUserCredentialsEmail::dispatch($user, $user->generated_password, false);
-                
-                Log::info('User credentials email dispatched from afterStore', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Failed to dispatch user credentials email from afterStore', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email,
-                    'error' => $e->getMessage()
-                ]);
-            }
-        }
     }
 
     /**
@@ -893,30 +866,6 @@ class UserController extends BaseCrudController
     protected function afterUpdate($user)
     {
         Log::info("User updated: {$user->name} {$user->last_name} ({$user->email})");
-        
-        // Send password reset email if password was generated and requested
-        if (isset($user->generated_password) && $user->generated_password && isset($user->send_password_reset) && $user->send_password_reset) {
-            try {
-                Log::info('Dispatching password reset email from afterUpdate', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email,
-                    'password_length' => strlen($user->generated_password)
-                ]);
-                
-                SendUserCredentialsEmail::dispatch($user, $user->generated_password, true);
-                
-                Log::info('Password reset email dispatched from afterUpdate', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Failed to dispatch password reset email from afterUpdate', [
-                    'user_id' => $user->id,
-                    'user_email' => $user->email,
-                    'error' => $e->getMessage()
-                ]);
-            }
-        }
     }
 
     /**
