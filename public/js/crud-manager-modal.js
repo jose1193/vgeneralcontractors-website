@@ -295,16 +295,12 @@ class CrudManagerModal {
      * Mostrar modal de edición
      */
     async showEditModal(id) {
-        console.log("showEditModal called with ID:", id);
         this.isEditing = true;
 
         // Cargar datos de la entidad
         try {
-            const editUrl = this.routes.edit.replace(":id", id);
-            console.log("Edit URL generated:", editUrl);
-
             const response = await $.ajax({
-                url: editUrl,
+                url: this.routes.edit.replace(":id", id),
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -336,8 +332,7 @@ class CrudManagerModal {
                     this.populateForm(this.currentEntity);
                     this.applyHeaderColor("edit");
 
-                    // Debug: verificar que los valores se estén estableciendo
-                    console.log("Current entity data:", this.currentEntity);
+                    // Initialize form elements and populate data
 
                     // Verificar y corregir valores de select después de un breve delay
                     setTimeout(() => {
@@ -411,19 +406,12 @@ class CrudManagerModal {
                 break;
 
             case "select":
-                console.log(
-                    `Generating select for ${field.name}, current value: ${value}, options:`,
-                    field.options
-                ); // Debug
                 html += `<select id="${field.name}" name="${field.name}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">`;
                 if (field.placeholder) {
                     html += `<option value="">${field.placeholder}</option>`;
                 }
                 field.options.forEach((option) => {
                     const selected = value == option.value ? "selected" : "";
-                    console.log(
-                        `Option: ${option.value} (${option.text}), selected: ${selected}, comparison: ${value} == ${option.value}`
-                    ); // Debug
                     html += `<option value="${option.value}" ${selected}>${option.text}</option>`;
                 });
                 html += `</select>`;
@@ -702,16 +690,7 @@ class CrudManagerModal {
             // Convertir el teléfono al formato de almacenamiento para comparar
             const phoneForStorage = this.formatPhoneForStorage(phone);
 
-            // Debug: verificar qué se está enviando
-            console.log("Phone validation debug:", {
-                originalPhone: phone,
-                phoneForStorage: phoneForStorage,
-                isEditing: this.isEditing,
-                currentEntityUuid:
-                    this.isEditing && this.currentEntity
-                        ? this.currentEntity.uuid
-                        : null,
-            });
+            // Prepare phone for validation
 
             const response = await $.ajax({
                 url: this.routes.checkPhone,
@@ -784,17 +763,9 @@ class CrudManagerModal {
      * Poblar formulario con datos
      */
     populateForm(entity) {
-        console.log("Populating form with entity:", entity); // Debug
-
         this.formFields.forEach((field) => {
             const element = $(`#${field.name}`);
             let value = entity[field.name];
-
-            console.log(
-                `Field: ${field.name}, Value: ${value}, Element found: ${
-                    element.length > 0
-                }`
-            ); // Debug
 
             if (field.type === "checkbox") {
                 element.prop("checked", !!value);
@@ -806,21 +777,12 @@ class CrudManagerModal {
 
                 // Para selects, asegurar que el valor se establezca correctamente
                 if (field.type === "select") {
-                    console.log(
-                        `Setting select ${field.name} to value: ${value}`
-                    ); // Debug
                     element.val(value || "");
 
                     // Verificar si el valor se estableció correctamente
                     setTimeout(() => {
                         const actualValue = element.val();
-                        console.log(
-                            `Select ${field.name} actual value after setting: ${actualValue}`
-                        ); // Debug
                         if (actualValue !== value && value) {
-                            console.warn(
-                                `Failed to set select ${field.name} to ${value}, trying again...`
-                            );
                             element.val(value);
                         }
                     }, 100);
@@ -835,43 +797,20 @@ class CrudManagerModal {
      * Verificar y corregir valores de selects
      */
     verifyAndFixSelectValues(entity) {
-        console.log("Verifying and fixing select values for entity:", entity);
-
         this.formFields.forEach((field) => {
             if (field.type === "select") {
                 const element = $(`#${field.name}`);
                 const expectedValue = entity[field.name];
                 const actualValue = element.val();
 
-                console.log(
-                    `Select ${field.name}: expected="${expectedValue}", actual="${actualValue}"`
-                );
-
                 if (expectedValue && actualValue !== expectedValue) {
-                    console.log(
-                        `Fixing select ${field.name} value from "${actualValue}" to "${expectedValue}"`
-                    );
                     element.val(expectedValue);
 
                     // Verificar una vez más
                     setTimeout(() => {
                         const finalValue = element.val();
-                        console.log(
-                            `Select ${field.name} final value: "${finalValue}"`
-                        );
                         if (finalValue !== expectedValue) {
-                            console.error(
-                                `Unable to set select ${field.name} to "${expectedValue}". Available options:`,
-                                element
-                                    .find("option")
-                                    .map(function () {
-                                        return {
-                                            value: this.value,
-                                            text: this.text,
-                                        };
-                                    })
-                                    .get()
-                            );
+                            element.val(expectedValue);
                         }
                     }, 50);
                 }
@@ -1029,9 +968,6 @@ class CrudManagerModal {
      */
     async createEntity(data) {
         try {
-            console.log("Creating entity with data:", data);
-            console.log("Sending to URL:", this.routes.store);
-
             Swal.showLoading();
 
             const response = await $.ajax({
@@ -1046,7 +982,6 @@ class CrudManagerModal {
                 data: data,
             });
 
-            console.log("Create response:", response);
             Swal.close();
             this.showAlert("success", `${this.entityName} creado exitosamente`);
             this.loadEntities();
@@ -1076,13 +1011,6 @@ class CrudManagerModal {
      */
     async updateEntity(id, data) {
         try {
-            console.log("Updating entity with ID:", id);
-            console.log("Update data:", data);
-            console.log(
-                "Sending to URL:",
-                this.routes.update.replace(":id", id)
-            );
-
             Swal.showLoading();
 
             const response = await $.ajax({
@@ -1097,7 +1025,6 @@ class CrudManagerModal {
                 data: data,
             });
 
-            console.log("Update response:", response);
             Swal.close();
             this.showAlert(
                 "success",
