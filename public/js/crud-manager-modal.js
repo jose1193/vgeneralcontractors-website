@@ -204,7 +204,7 @@ class CrudManagerModal {
             show_deleted: this.showDeleted ? "true" : "false",
         };
 
-        $.ajax({
+        return $.ajax({
             url: this.routes.index,
             type: "GET",
             dataType: "json",
@@ -228,6 +228,7 @@ class CrudManagerModal {
                     `Error loading ${this.entityNamePlural}`
                 );
                 this.hideTableLoading();
+                throw new Error(`Error loading ${this.entityNamePlural}`);
             },
         });
     }

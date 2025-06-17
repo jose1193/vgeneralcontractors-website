@@ -436,17 +436,24 @@
 
                     // Custom event handler for edit button
                     $(document).on('click', '#editCompanyDataBtn', function() {
-                        @if ($companyData)
+                        @if ($companyData && $companyData->uuid)
                             window.companyDataManager.showEditModal('{{ $companyData->uuid }}');
                         @else
-                            // If no company data exists, create a default one first
-                            window.companyDataManager.loadEntities();
-                            setTimeout(() => {
+                            // If no company data exists, load entities first to get or create the record
+                            window.companyDataManager.loadEntities().then(() => {
                                 const data = window.companyDataManager.currentData;
-                                if (data && data.data && data.data.length > 0) {
+                                if (data && data.data && data.data.length > 0 && data.data[0].uuid) {
                                     window.companyDataManager.showEditModal(data.data[0].uuid);
+                                } else {
+                                    // Show error if still no data available
+                                    window.companyDataManager.showAlert('error',
+                                        '{{ __('could_not_load_company_info') }}');
                                 }
-                            }, 1000);
+                            }).catch((error) => {
+                                console.error('Error loading company data:', error);
+                                window.companyDataManager.showAlert('error',
+                                    '{{ __('error_loading_company_info') }}');
+                            });
                         @endif
                     });
 

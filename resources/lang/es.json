@@ -128,6 +128,8 @@
     "no_company_data_found": "No se encontró información de la empresa",
     "add_company_information": "Agregar Información de la Empresa",
     "edit_company_information": "Editar Información",
+    "could_not_load_company_info": "No se pudo cargar la información de la empresa",
+    "error_loading_company_info": "Error al cargar la información de la empresa",
 
     "actions": "Acciones",
     "no_companies_available": "No hay empresas disponibles",
