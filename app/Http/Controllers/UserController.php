@@ -513,15 +513,21 @@ class UserController extends BaseCrudController
                 'validated_data' => collect($data)->except(['password'])->toArray()
             ]);
 
-            $user = $this->transactionService->run(function () use ($uuid, $request) {
+            $generatedPassword = null; // Declare outside transaction scope
+            
+            $user = $this->transactionService->run(function () use ($uuid, $request, &$generatedPassword) {
                 $user = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
                 Log::info('UserController::update - Found user', ['current_data' => collect($user->toArray())->except(['password'])->toArray()]);
                 
                 $preparedData = $this->prepareUpdateData($request);
-                $generatedPassword = $preparedData['generated_password'] ?? null;
+                $generatedPassword = $preparedData['generated_password'] ?? null; // Store in outer scope
                 unset($preparedData['generated_password']); // Remove from data to be saved
                 
                 Log::info('UserController::update - Prepared data', ['prepared_data' => collect($preparedData)->except(['password'])->toArray()]);
+                Log::info('UserController::update - Generated password captured', [
+                    'has_generated_password' => !is_null($generatedPassword),
+                    'password_length' => $generatedPassword ? strlen($generatedPassword) : 0
+                ]);
                 
                 $user->update($preparedData);
                 
@@ -530,13 +536,8 @@ class UserController extends BaseCrudController
                     $user->syncRoles([$request->role]);
                 }
                 
-                // Store password for email sending
-                if ($generatedPassword) {
-                    $user->generated_password = $generatedPassword;
-                }
-                
                 return $user->fresh();
-            }, function ($user) use ($request) {
+            }, function ($user) use ($request, &$generatedPassword) {
                 Log::info("{$this->entityName} updated successfully", ['id' => $user->id]);
                 
                 // Use new CRUD cache clearing
@@ -548,7 +549,13 @@ class UserController extends BaseCrudController
                 $sendPasswordResetValue = $request->input('send_password_reset');
                 $sendPasswordReset = false;
                 
-                if ($sendPasswordResetValue !== null) {
+                Log::info('UserController transaction callback - Processing send_password_reset', [
+                    'raw_value' => $sendPasswordResetValue,
+                    'type' => gettype($sendPasswordResetValue),
+                    'is_null' => is_null($sendPasswordResetValue)
+                ]);
+                
+                if ($sendPasswordResetValue !== null && $sendPasswordResetValue !== '' && $sendPasswordResetValue !== false) {
                     // Convertir diferentes tipos de valores a boolean
                     if (is_bool($sendPasswordResetValue)) {
                         $sendPasswordReset = $sendPasswordResetValue;
@@ -559,8 +566,19 @@ class UserController extends BaseCrudController
                     }
                 }
                 
-                // Store password reset flag for afterUpdate
+                Log::info('UserController transaction callback - Final send_password_reset value', [
+                    'send_password_reset' => $sendPasswordReset
+                ]);
+                
+                // Store password reset flag and generated password for afterUpdate
                 $user->should_send_password_reset = $sendPasswordReset;
+                $user->generated_password = $generatedPassword;
+                
+                Log::info('UserController transaction callback - Passing to afterUpdate', [
+                    'should_send_password_reset' => $sendPasswordReset,
+                    'has_generated_password' => !is_null($generatedPassword),
+                    'password_length' => $generatedPassword ? strlen($generatedPassword) : 0
+                ]);
                 
                 $this->afterUpdate($user);
             });
