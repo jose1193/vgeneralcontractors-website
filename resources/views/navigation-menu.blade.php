@@ -490,19 +490,19 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             <!-- Portfolio -->
             @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
                 <div class="relative group">
-                    <a href="{{ route('portfolios') }}"
-                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !request()->routeIs('portfolios') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <a href="{{ route('portfolios-crud.index') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('portfolios-crud.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !request()->routeIs('portfolios-crud.*') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !request()->routeIs('portfolios-crud.*') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>
                     </a>
-                    @if (!request()->routeIs('portfolios'))
+                    @if (!request()->routeIs('portfolios-crud.*'))
                         <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
-                            {{ __('portfolio') }}
+                            {{ __('Portfolios (CRUD)') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
                                 style="background-color: #2C2E36;"></div>
                         </div>
@@ -726,13 +726,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Portfolio -->
             @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
-                <a href="{{ route('portfolios') }}"
-                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('portfolios') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                <a href="{{ route('portfolios-crud.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('portfolios-crud.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
                     <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
-                    <span class="font-medium">{{ __('portfolio') }}</span>
+                    <span class="font-medium">{{ __('Portfolios (CRUD)') }}</span>
                 </a>
             @endif
         </div>

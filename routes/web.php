@@ -131,10 +131,6 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\BlogCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
-    Route::get('/portfolios', function () {
-        return view('portfolios');
-    })->name('portfolios');
-
     Route::get('/admin/posts', function () {
         return view('posts');
     })->name('admin.posts');
