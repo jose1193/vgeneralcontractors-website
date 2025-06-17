@@ -62,6 +62,21 @@ class CrudManagerModal {
             },
         };
 
+        // Configuración de traducciones
+        this.translations = options.translations || {
+            confirmDelete: "¿Estás seguro?",
+            deleteMessage: "¿Deseas eliminar este elemento?",
+            confirmRestore: "¿Restaurar registro?",
+            restoreMessage: "¿Deseas restaurar este elemento?",
+            yesDelete: "Sí, eliminar",
+            yesRestore: "Sí, restaurar",
+            cancel: "Cancelar",
+            deletedSuccessfully: "eliminado exitosamente",
+            restoredSuccessfully: "restaurado exitosamente",
+            errorDeleting: "Error al eliminar el registro",
+            errorRestoring: "Error al restaurar el registro",
+        };
+
         this.init();
     }
 
@@ -378,6 +393,9 @@ class CrudManagerModal {
 
         // Configurar validación en tiempo real
         this.setupRealTimeValidation();
+
+        // Configurar capitalización automática
+        this.setupAutoCapitalization();
     }
 
     /**
@@ -453,6 +471,49 @@ class CrudManagerModal {
                     this.validatePhoneField(e.target.value);
                 }, 500); // Debounce de 500ms
             });
+        }
+    }
+
+    /**
+     * Configurar capitalización automática para campos específicos
+     */
+    setupAutoCapitalization() {
+        // Campos que deben tener capitalización automática
+        const fieldsToCapitalize = [
+            "name",
+            "category_name",
+            "title",
+            "description",
+        ];
+
+        fieldsToCapitalize.forEach((fieldName) => {
+            const field = document.getElementById(fieldName);
+            if (field) {
+                field.addEventListener("input", (e) => {
+                    this.capitalizeInput(e);
+                });
+            }
+        });
+    }
+
+    /**
+     * Capitalizar la primera letra de cada palabra
+     */
+    capitalizeInput(event) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        const value = input.value;
+
+        // Capitalizar la primera letra de cada palabra
+        const capitalizedValue = value.replace(/\b\w/g, (match) =>
+            match.toUpperCase()
+        );
+
+        // Solo actualizar si hay cambios para evitar loops
+        if (capitalizedValue !== value) {
+            input.value = capitalizedValue;
+            // Restaurar la posición del cursor
+            input.setSelectionRange(cursorPosition, cursorPosition);
         }
     }
 
@@ -954,10 +1015,11 @@ class CrudManagerModal {
      * Eliminar entidad
      */
     async deleteEntity(id) {
-        let entityEmail = "";
+        let entityDisplayName = "";
+        let entityIdentifier = "";
 
         try {
-            // Obtener los datos de la entidad para mostrar el email
+            // Obtener los datos de la entidad para mostrar información relevante
             const response = await $.ajax({
                 url: this.routes.edit.replace(":id", id),
                 type: "GET",
@@ -970,31 +1032,43 @@ class CrudManagerModal {
             });
 
             const entity = response.data || response;
-            entityEmail = entity.email || "";
+
+            // Determinar qué campo mostrar basado en el tipo de entidad
+            if (entity.email) {
+                entityIdentifier = entity.email;
+                entityDisplayName = "correo";
+            } else if (entity.category) {
+                entityIdentifier = entity.category;
+                entityDisplayName = "categoría";
+            } else if (entity.name) {
+                entityIdentifier = entity.name;
+                entityDisplayName = "elemento";
+            } else if (entity.title) {
+                entityIdentifier = entity.title;
+                entityDisplayName = "elemento";
+            } else {
+                entityIdentifier = "este elemento";
+                entityDisplayName = "elemento";
+            }
         } catch (error) {
             console.error(
                 "Error getting entity data for delete confirmation:",
                 error
             );
-            // Fallback: buscar en la tabla
-            const currentData = $(this.tableSelector)
-                .find(`[data-id="${id}"]`)
-                .closest("tr");
-            if (currentData.length) {
-                const emailCell = currentData.find("td").eq(1);
-                entityEmail = emailCell.text().trim();
-            }
+            // Fallback: usar el nombre genérico de la entidad
+            entityIdentifier = "este elemento";
+            entityDisplayName = "elemento";
         }
 
         const result = await Swal.fire({
-            title: "¿Estás seguro?",
-            html: `¿Deseas eliminar el correo: <strong>${entityEmail}</strong>?`,
+            title: this.translations.confirmDelete,
+            text: this.translations.deleteMessage,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar",
+            confirmButtonText: this.translations.yesDelete,
+            cancelButtonText: this.translations.cancel,
         });
 
         if (result.isConfirmed) {
@@ -1012,12 +1086,12 @@ class CrudManagerModal {
 
                 this.showAlert(
                     "success",
-                    `${this.entityName} eliminado exitosamente`
+                    `${this.entityName} ${this.translations.deletedSuccessfully}`
                 );
                 this.loadEntities();
             } catch (error) {
                 console.error("Error deleting entity:", error);
-                this.showAlert("error", "Error al eliminar el registro");
+                this.showAlert("error", this.translations.errorDeleting);
             }
         }
     }
@@ -1027,14 +1101,14 @@ class CrudManagerModal {
      */
     async restoreEntity(id) {
         const result = await Swal.fire({
-            title: "¿Restaurar registro?",
-            text: `¿Deseas restaurar este ${this.entityName}?`,
+            title: this.translations.confirmRestore,
+            text: this.translations.restoreMessage,
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#28a745",
             cancelButtonColor: "#6c757d",
-            confirmButtonText: "Sí, restaurar",
-            cancelButtonText: "Cancelar",
+            confirmButtonText: this.translations.yesRestore,
+            cancelButtonText: this.translations.cancel,
         });
 
         if (result.isConfirmed) {
@@ -1052,12 +1126,12 @@ class CrudManagerModal {
 
                 this.showAlert(
                     "success",
-                    `${this.entityName} restaurado exitosamente`
+                    `${this.entityName} ${this.translations.restoredSuccessfully}`
                 );
                 this.loadEntities();
             } catch (error) {
                 console.error("Error restoring entity:", error);
-                this.showAlert("error", "Error al restaurar el registro");
+                this.showAlert("error", this.translations.errorRestoring);
             }
         }
     }

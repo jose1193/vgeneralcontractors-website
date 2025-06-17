@@ -162,6 +162,28 @@
                 .swal2-popup {
                     border-radius: 12px !important;
                     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+                    overflow: hidden !important;
+                }
+
+                /* Asegurar que el header también tenga border radius */
+                .swal2-header {
+                    border-top-left-radius: 12px !important;
+                    border-top-right-radius: 12px !important;
+                    border-bottom-left-radius: 0 !important;
+                    border-bottom-right-radius: 0 !important;
+                }
+
+                /* Asegurar que el contenido no sobresalga */
+                .swal2-content {
+                    border-radius: 0 !important;
+                }
+
+                /* Asegurar que los botones tengan border radius inferior */
+                .swal2-actions {
+                    border-bottom-left-radius: 12px !important;
+                    border-bottom-right-radius: 12px !important;
+                    border-top-left-radius: 0 !important;
+                    border-top-right-radius: 0 !important;
                 }
 
                 .swal2-title {
@@ -345,15 +367,21 @@
                             edit: '{{ __('edit_service_category') }}',
                             delete: '{{ __('delete_service_category') }}',
                             restore: '{{ __('restore_service_category') }}',
-                            confirmDelete: '{{ __('confirm_delete_service_category') }}',
-                            confirmRestore: '{{ __('confirm_restore_service_category') }}',
-                            deleteMessage: '{{ __('delete_service_category_message') }}',
-                            restoreMessage: '{{ __('restore_service_category_message') }}',
+                            confirmDelete: '{{ __('are_you_sure_delete') }}',
+                            confirmRestore: '{{ __('are_you_sure_restore') }}',
+                            deleteMessage: '{{ __('confirm_delete_service_category') }}',
+                            restoreMessage: '{{ __('confirm_restore_service_category') }}',
+                            yesDelete: '{{ __('yes') }}, {{ __('delete') }}',
+                            yesRestore: '{{ __('yes') }}, {{ __('restore') }}',
+                            cancel: '{{ __('cancel') }}',
+                            deletedSuccessfully: '{{ __('delete') }} {{ __('success') }}',
+                            restoredSuccessfully: '{{ __('restore') }} {{ __('success') }}',
+                            errorDeleting: '{{ __('error') }} {{ __('delete') }}',
+                            errorRestoring: '{{ __('error') }} {{ __('restore') }}',
                             success: '{{ __('success') }}',
                             error: '{{ __('error') }}',
                             saving: '{{ __('saving') }}',
                             loading: '{{ __('loading') }}',
-                            cancel: '{{ __('cancel') }}',
                             save: '{{ __('save') }}',
                             update: '{{ __('update') }}',
                             yes: '{{ __('yes') }}',
