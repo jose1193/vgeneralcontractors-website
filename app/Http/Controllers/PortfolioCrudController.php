@@ -10,15 +10,16 @@ use Illuminate\Support\Str;
 use App\Traits\CacheTraitCrud;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use App\Services\TransactionService;
 
 class PortfolioCrudController extends BaseCrudController
 {
     use CacheTraitCrud;
 
     // Constructor: inicializar propiedades necesarias
-    public function __construct()
+    public function __construct(TransactionService $transactionService)
     {
-        parent::__construct();
+        parent::__construct($transactionService);
         $this->modelClass = Portfolio::class;
         $this->entityName = 'PORTFOLIO';
         $this->viewPrefix = 'portfolios-crud';
