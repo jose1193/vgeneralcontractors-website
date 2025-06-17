@@ -53,8 +53,7 @@
                             <label class="flex items-center text-gray-300 cursor-pointer">
                                 <div class="relative">
                                     <input type="checkbox" id="showDeletedToggle"
-                                        {{ request('show_deleted') === 'true' ? 'checked' : '' }}
-                                        onchange="toggleShowDeleted(this)" class="sr-only">
+                                        {{ request('show_deleted') === 'true' ? 'checked' : '' }} class="sr-only">
                                     <div
                                         class="block bg-gray-600 w-14 h-8 rounded-full transition-colors duration-200 ease-in-out {{ request('show_deleted') === 'true' ? 'bg-yellow-500' : '' }}">
                                     </div>
@@ -141,7 +140,7 @@
                                         {{ __('author') }}
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         {{ __('actions') }}
                                     </th>
                                 </tr>
@@ -208,7 +207,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex justify-center space-x-2">
                                                 @if (!$post->deleted_at)
-                                                    {{-- View button (only for published posts) --}}
+                                                    {{-- Show button (only for published posts) - FIRST --}}
                                                     @if ($post->post_status === 'published')
                                                         <a href="{{ route('blog.show', $post->post_title_slug) }}"
                                                             target="_blank"
@@ -224,7 +223,7 @@
                                                         </a>
                                                     @endif
 
-                                                    {{-- Edit button --}}
+                                                    {{-- Edit button - SECOND --}}
                                                     <a href="{{ route('posts-crud.edit', $post->uuid) }}"
                                                         class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                         title="{{ __('Edit post') }}">
@@ -235,10 +234,10 @@
                                                         </svg>
                                                     </a>
 
-                                                    {{-- Delete button --}}
-                                                    <button
-                                                        onclick="deletePost('{{ $post->uuid }}', '{{ addslashes($post->post_title) }}')"
-                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                    {{-- Delete button - THIRD --}}
+                                                    <button data-uuid="{{ $post->uuid }}"
+                                                        data-title="{{ addslashes($post->post_title) }}"
+                                                        class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                         title="{{ __('Delete post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24" stroke-width="2">
@@ -248,9 +247,9 @@
                                                     </button>
                                                 @else
                                                     {{-- Restore button --}}
-                                                    <button
-                                                        onclick="restorePost('{{ $post->uuid }}', '{{ addslashes($post->post_title) }}')"
-                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                    <button data-uuid="{{ $post->uuid }}"
+                                                        data-title="{{ addslashes($post->post_title) }}"
+                                                        class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                         title="{{ __('Restore post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24" stroke-width="2">
@@ -288,6 +287,9 @@
             </div>
         </div>
     </div>
+
+    {{-- Include SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- Include PostsCrud JavaScript --}}
     <script src="{{ asset('js/postsCrud.js') }}"></script>

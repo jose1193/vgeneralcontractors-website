@@ -10,7 +10,7 @@ class PostsCrudManager {
         this.routes = options.routes || {};
 
         // Selectores del DOM
-        this.tableSelector = "#postsTable tbody";
+        this.tableSelector = "#postsTable";
         this.searchSelector = "#searchInput";
         this.perPageSelector = "#perPage";
         this.showDeletedSelector = "#showDeletedToggle";
@@ -47,6 +47,7 @@ class PostsCrudManager {
                 self.searchTerm = $(this).val();
                 self.currentPage = 1;
                 self.loadPosts();
+                self.updateURL();
             }, 300); // 300ms debounce
         });
 
@@ -81,21 +82,17 @@ class PostsCrudManager {
             }
         });
 
-        // Dynamic buttons
+        // Dynamic buttons - usando SweetAlert2
         $(document).on("click", ".delete-btn", function () {
             const uuid = $(this).data("uuid");
             const title = $(this).data("title");
-            if (confirm(`¿Está seguro de eliminar el post "${title}"?`)) {
-                self.deletePost(uuid);
-            }
+            self.deletePost(uuid, title);
         });
 
         $(document).on("click", ".restore-btn", function () {
             const uuid = $(this).data("uuid");
             const title = $(this).data("title");
-            if (confirm(`¿Está seguro de restaurar el post "${title}"?`)) {
-                self.restorePost(uuid);
-            }
+            self.restorePost(uuid, title);
         });
     }
 
@@ -174,11 +171,11 @@ class PostsCrudManager {
                     statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-500/20 text-orange-400">Scheduled</span>`;
                 }
 
-                // Actions
+                // Actions - Orden: Show → Edit → Delete/Restore
                 let actionsHtml = '<div class="flex justify-center space-x-2">';
 
                 if (!isDeleted) {
-                    // View button (only for published posts)
+                    // Show button (solo para posts publicados) - PRIMERO
                     if (post.post_status === "published") {
                         actionsHtml += `<a href="/blog/${post.post_title_slug}" target="_blank"
                             class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
@@ -190,7 +187,7 @@ class PostsCrudManager {
                         </a>`;
                     }
 
-                    // Edit button
+                    // Edit button - SEGUNDO
                     actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
                         class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                         title="Edit post">
@@ -199,8 +196,10 @@ class PostsCrudManager {
                         </svg>
                     </a>`;
 
-                    // Delete button
-                    actionsHtml += `<button data-uuid="${post.uuid}" data-title="${post.post_title}"
+                    // Delete button - TERCERO
+                    actionsHtml += `<button data-uuid="${
+                        post.uuid
+                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
                         class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                         title="Delete post">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -209,7 +208,9 @@ class PostsCrudManager {
                     </button>`;
                 } else {
                     // Restore button
-                    actionsHtml += `<button data-uuid="${post.uuid}" data-title="${post.post_title}"
+                    actionsHtml += `<button data-uuid="${
+                        post.uuid
+                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
                         class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                         title="Restore post">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -308,41 +309,97 @@ class PostsCrudManager {
         );
     }
 
-    deletePost(uuid) {
+    // Delete con SweetAlert2
+    deletePost(uuid, title) {
         const self = this;
-        $.ajax({
-            url: `/posts-crud/${uuid}`,
-            method: "DELETE",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            success: function (response) {
-                self.showAlert("Post deleted successfully", "success");
-                self.loadPosts();
-            },
-            error: function () {
-                self.showAlert("Error deleting post", "error");
-            },
+
+        Swal.fire({
+            title: "¿Estás seguro?",
+            html: `¿Deseas eliminar el post: <strong>"${title}"</strong>?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/posts-crud/${uuid}`,
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Eliminado!",
+                            html: `El post <strong>"${title}"</strong> ha sido eliminado exitosamente.`,
+                            confirmButtonColor: "#3B82F6",
+                        });
+                        self.loadPosts();
+                    },
+                    error: function (xhr) {
+                        console.error("Error deleting post:", xhr);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            text: "No se pudo eliminar el post.",
+                            confirmButtonColor: "#3B82F6",
+                        });
+                    },
+                });
+            }
         });
     }
 
-    restorePost(uuid) {
+    // Restore con SweetAlert2
+    restorePost(uuid, title) {
         const self = this;
-        $.ajax({
-            url: `/posts-crud/${uuid}/restore`,
-            method: "PATCH",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            success: function (response) {
-                self.showAlert("Post restored successfully", "success");
-                self.loadPosts();
-            },
-            error: function () {
-                self.showAlert("Error restoring post", "error");
-            },
+
+        Swal.fire({
+            title: "¿Restaurar post?",
+            html: `¿Deseas restaurar el post: <strong>"${title}"</strong>?`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Sí, restaurar",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/posts-crud/${uuid}/restore`,
+                    method: "PATCH",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Restaurado!",
+                            html: `El post <strong>"${title}"</strong> ha sido restaurado exitosamente.`,
+                            confirmButtonColor: "#3B82F6",
+                        });
+                        self.loadPosts();
+                    },
+                    error: function (xhr) {
+                        console.error("Error restoring post:", xhr);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            text: "No se pudo restaurar el post.",
+                            confirmButtonColor: "#3B82F6",
+                        });
+                    },
+                });
+            }
         });
     }
 
@@ -372,16 +429,18 @@ class PostsCrudManager {
                 : "bg-red-500/20 text-red-400 border-red-400";
 
         const alertHtml = `
-            <div class="mb-4 p-4 rounded-lg border ${alertClass}">
+            <div class="mb-4 p-4 rounded-lg border ${alertClass} transition-all duration-300 ease-in-out">
                 ${message}
             </div>
         `;
 
         $(this.alertSelector).html(alertHtml);
 
-        // Auto-hide after 5 seconds
+        // Auto-hide after 5 seconds with fade effect
         setTimeout(() => {
-            $(this.alertSelector).html("");
+            $(this.alertSelector + " > div").fadeOut(500, function () {
+                $(this).remove();
+            });
         }, 5000);
     }
 }
