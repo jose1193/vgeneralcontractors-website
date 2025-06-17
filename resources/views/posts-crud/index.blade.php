@@ -206,9 +206,28 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex justify-end space-x-2">
                                                 @if (!$post->deleted_at)
+                                                    {{-- View button (only for published posts) --}}
+                                                    @if ($post->post_status === 'published')
+                                                        <a href="{{ route('blog.show', $post->post_title_slug) }}"
+                                                            target="_blank"
+                                                            class="text-blue-400 hover:text-blue-300 transition-colors"
+                                                            title="{{ __('View post') }}">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                        </a>
+                                                    @endif
+
                                                     {{-- Edit button --}}
                                                     <a href="{{ route('posts-crud.edit', $post->uuid) }}"
-                                                        class="text-yellow-400 hover:text-yellow-300 transition-colors">
+                                                        class="text-yellow-400 hover:text-yellow-300 transition-colors"
+                                                        title="{{ __('Edit post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -220,7 +239,8 @@
                                                     {{-- Delete button --}}
                                                     <button
                                                         onclick="deletePost('{{ $post->uuid }}', '{{ addslashes($post->post_title) }}')"
-                                                        class="text-red-400 hover:text-red-300 transition-colors">
+                                                        class="text-red-400 hover:text-red-300 transition-colors"
+                                                        title="{{ __('Delete post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -332,5 +352,24 @@
                     });
             }
         }
+
+        // Auto-hide alerts after 5 seconds
+        function autoHideAlerts() {
+            const alerts = document.querySelectorAll('.mb-6[class*="bg-green-500"], .mb-6[class*="bg-red-500"]');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            autoHideAlerts();
+        });
     </script>
 </x-app-layout>

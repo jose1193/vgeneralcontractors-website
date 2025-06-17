@@ -549,9 +549,24 @@
                 'w-full text-gray-300 rounded-lg px-3 py-2 border-2 border-dashed border-gray-500 hover:border-yellow-500 transition-colors text-center bg-gray-800';
         }
 
+        // Auto-hide alerts after 5 seconds
+        function autoHideAlerts() {
+            const alerts = document.querySelectorAll('.mb-6[class*="bg-green-500"], .mb-6[class*="bg-red-500"]');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            });
+        }
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             toggleScheduleField();
+            autoHideAlerts();
         });
     </script>
 </x-app-layout>
