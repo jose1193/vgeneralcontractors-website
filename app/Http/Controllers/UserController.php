@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use App\Services\TransactionService;
 use App\Traits\CacheTraitCrud;
-use App\Traits\UserValidation;
+
 use App\Traits\UserDataFormatter;
 use App\Jobs\SendUserCredentialsEmail;
 use Throwable;
@@ -17,7 +18,6 @@ use Throwable;
 class UserController extends BaseCrudController
 {
     use CacheTraitCrud;
-    use UserValidation;
     use UserDataFormatter;
     
     protected $modelClass = User::class;
@@ -45,13 +45,50 @@ class UserController extends BaseCrudController
         $modalAction = request()->isMethod('post') ? 'store' : 'update';
         
         if ($modalAction === 'store') {
-            $rules = $this->getCreateValidationRules($id);
+            $rules = [
+                'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+                'last_name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+                'email' => ['required', 'string', 'email', 'max:255', 
+                    Rule::unique('users', 'email')->ignore($id, 'uuid')],
+                'phone' => ['nullable', 'string', 'max:20',
+                    Rule::unique('users', 'phone')->ignore($id, 'uuid')],
+                'date_of_birth' => 'nullable|date',
+                'address' => 'nullable|string|max:255',
+                'zip_code' => 'nullable|string|max:20',
+                'city' => 'nullable|string|max:100',
+                'state' => 'nullable|string|max:100',
+                'country' => 'nullable|string|max:100',
+                'gender' => 'nullable|string|in:male,female,other',
+                'terms_and_conditions' => 'nullable|boolean',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'role' => 'required|string|exists:roles,name',
+            ];
         } else {
-            $rules = $this->getUpdateValidationRules($id);
+            $rules = [
+                'name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+                'last_name' => 'required|string|max:255|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u',
+                'email' => ['required', 'string', 'email', 'max:255', 
+                    Rule::unique('users', 'email')->ignore($id, 'uuid')],
+                'username' => ['required', 'string', 'min:7', 'max:255', 'regex:/^.*[0-9].*[0-9].*$/',
+                    Rule::unique('users', 'username')->ignore($id, 'uuid')],
+                'date_of_birth' => 'nullable|date',
+                'phone' => ['nullable', 'string', 'max:20',
+                    Rule::unique('users', 'phone')->ignore($id, 'uuid')],
+                'address' => 'nullable|string|max:255',
+                'zip_code' => 'nullable|string|max:20',
+                'city' => 'nullable|string|max:100',
+                'state' => 'nullable|string|max:100',
+                'country' => 'nullable|string|max:100',
+                'gender' => 'nullable|string|in:male,female,other',
+                'terms_and_conditions' => 'nullable|boolean',
+                'latitude' => 'nullable|numeric',
+                'longitude' => 'nullable|numeric',
+                'role' => 'required|string|exists:roles,name',
+                // Campo especial para reset de password - permitir cualquier formato que pueda llegar
+                'send_password_reset' => 'nullable',
+            ];
         }
-        
-        // Add role validation
-        $rules['role'] = 'required|string|exists:roles,name';
         
         return $rules;
     }
@@ -171,7 +208,13 @@ class UserController extends BaseCrudController
         $sendPasswordResetValue = $request->input('send_password_reset');
         $sendPasswordReset = false;
         
-        if ($sendPasswordResetValue !== null) {
+        Log::info('UserController::prepareUpdateData - Processing send_password_reset', [
+            'raw_value' => $sendPasswordResetValue,
+            'type' => gettype($sendPasswordResetValue),
+            'is_null' => is_null($sendPasswordResetValue)
+        ]);
+        
+        if ($sendPasswordResetValue !== null && $sendPasswordResetValue !== '') {
             // Convertir diferentes tipos de valores a boolean
             if (is_bool($sendPasswordResetValue)) {
                 $sendPasswordReset = $sendPasswordResetValue;
@@ -182,10 +225,18 @@ class UserController extends BaseCrudController
             }
         }
         
+        Log::info('UserController::prepareUpdateData - Final send_password_reset value', [
+            'send_password_reset' => $sendPasswordReset
+        ]);
+        
         if ($sendPasswordReset) {
             $newPassword = Str::random(12);
             $data['password'] = $newPassword;
             $data['generated_password'] = $newPassword; // Store for email sending
+            
+            Log::info('UserController::prepareUpdateData - Password reset requested, generated new password', [
+                'password_length' => strlen($newPassword)
+            ]);
         }
 
         // Format data using trait
@@ -448,7 +499,9 @@ class UserController extends BaseCrudController
 
             Log::info('UserController::update - Starting update process', [
                 'uuid' => $uuid,
-                'request_data' => $request->except(['password'])
+                'all_request_data' => $request->all(),
+                'send_password_reset_raw' => $request->input('send_password_reset'),
+                'send_password_reset_type' => gettype($request->input('send_password_reset'))
             ]);
 
             if (!$uuid || $uuid === 'undefined') {
@@ -456,7 +509,9 @@ class UserController extends BaseCrudController
             }
 
             $data = $request->validate($this->getValidationRules($uuid));
-            Log::info('UserController::update - Validation passed');
+            Log::info('UserController::update - Validation passed', [
+                'validated_data' => collect($data)->except(['password'])->toArray()
+            ]);
 
             $user = $this->transactionService->run(function () use ($uuid, $request) {
                 $user = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();

@@ -972,7 +972,14 @@ class CrudManagerModal {
             let value;
 
             if (field.type === "checkbox") {
-                value = Boolean(element.is(":checked"));
+                // Para checkboxes, asegurar que siempre enviemos un boolean
+                value = element.is(":checked");
+                // Log para debugging
+                console.log(
+                    `Checkbox ${
+                        field.name
+                    }: checked=${value}, type=${typeof value}`
+                );
             } else {
                 value = element.val();
             }
@@ -995,12 +1002,27 @@ class CrudManagerModal {
             formData[field.name] = value;
         });
 
-        // Asegurar que los campos checkbox que no están presentes en el formulario tengan valor false
+        // Asegurar que todos los campos checkbox tengan un valor boolean explícito
         this.formFields.forEach((field) => {
-            if (field.type === "checkbox" && !(field.name in formData)) {
-                formData[field.name] = false;
+            if (field.type === "checkbox") {
+                // Si el campo no está en formData, significa que no está presente en este modo
+                if (!(field.name in formData)) {
+                    // Solo agregar si el campo debería estar presente según showInCreate/showInEdit
+                    const shouldShow =
+                        (isEditMode && field.showInEdit !== false) ||
+                        (!isEditMode && field.showInCreate !== false);
+                    if (shouldShow) {
+                        formData[field.name] = false;
+                    }
+                } else {
+                    // Asegurar que el valor sea boolean
+                    formData[field.name] = Boolean(formData[field.name]);
+                }
             }
         });
+
+        // Log para debugging
+        console.log("Final form data:", formData);
 
         return isValid ? formData : false;
     }
