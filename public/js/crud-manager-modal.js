@@ -647,32 +647,20 @@ class CrudManagerModal {
     formatPhoneForStorage(phone) {
         if (!phone) return "";
 
-        // Si ya está en el formato correcto (XXX) XXX-XXXX, devolverlo tal como está
-        if (/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
-            return phone;
-        }
-
-        // Extraer solo los dígitos
+        // Extraer solo los dígitos para enviar al backend
         const cleaned = phone.replace(/\D/g, "");
 
-        // Formatear a (XXX) XXX-XXXX que es como el backend lo guarda
+        // El backend espera solo dígitos y él se encarga del formato +1XXXXXXXXXX
         if (cleaned.length === 10) {
-            return `(${cleaned.substring(0, 3)}) ${cleaned.substring(
-                3,
-                6
-            )}-${cleaned.substring(6, 10)}`;
+            return cleaned; // Enviar solo los 10 dígitos
         }
 
-        // Si ya tiene 11 dígitos y empieza con 1, remover el 1 y formatear
+        // Si ya tiene 11 dígitos y empieza con 1, enviar tal como está
         if (cleaned.length === 11 && cleaned.startsWith("1")) {
-            const phoneDigits = cleaned.substring(1);
-            return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(
-                3,
-                6
-            )}-${phoneDigits.substring(6, 10)}`;
+            return cleaned;
         }
 
-        return phone;
+        return cleaned;
     }
 
     /**
@@ -844,9 +832,41 @@ class CrudManagerModal {
      * Eliminar entidad
      */
     async deleteEntity(id) {
+        let entityEmail = "";
+
+        try {
+            // Obtener los datos de la entidad para mostrar el email
+            const response = await $.ajax({
+                url: this.routes.edit.replace(":id", id),
+                type: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+            });
+
+            const entity = response.data || response;
+            entityEmail = entity.email || "";
+        } catch (error) {
+            console.error(
+                "Error getting entity data for delete confirmation:",
+                error
+            );
+            // Fallback: buscar en la tabla
+            const currentData = $(this.tableSelector)
+                .find(`[data-id="${id}"]`)
+                .closest("tr");
+            if (currentData.length) {
+                const emailCell = currentData.find("td").eq(1);
+                entityEmail = emailCell.text().trim();
+            }
+        }
+
         const result = await Swal.fire({
             title: "¿Estás seguro?",
-            text: `¿Deseas eliminar este ${this.entityName}?`,
+            html: `¿Deseas eliminar el correo: <strong>${entityEmail}</strong>?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",

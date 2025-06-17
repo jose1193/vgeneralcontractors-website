@@ -564,30 +564,21 @@ class EmailDataController extends BaseCrudController
     }
 
     /**
-     * Format phone number
+     * Format phone number for storage
      */
     private function formatPhone($phone)
     {
         // Remove all non-numeric characters
         $phone = preg_replace('/[^0-9]/', '', $phone);
         
-        // If it's a US number (10 digits), format it
+        // If it's a US number (10 digits), add +1 prefix
         if (strlen($phone) === 10) {
-            return sprintf('(%s) %s-%s', 
-                substr($phone, 0, 3),
-                substr($phone, 3, 3),
-                substr($phone, 6, 4)
-            );
+            return '+1' . $phone;
         }
         
-        // If it's 11 digits and starts with 1, format as US number
+        // If it's 11 digits and starts with 1, add + prefix
         if (strlen($phone) === 11 && substr($phone, 0, 1) === '1') {
-            $phone = substr($phone, 1);
-            return sprintf('(%s) %s-%s', 
-                substr($phone, 0, 3),
-                substr($phone, 3, 3),
-                substr($phone, 6, 4)
-            );
+            return '+' . $phone;
         }
         
         // Return as-is for international numbers
