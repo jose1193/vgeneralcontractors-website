@@ -972,7 +972,7 @@ class CrudManagerModal {
             let value;
 
             if (field.type === "checkbox") {
-                value = element.is(":checked");
+                value = Boolean(element.is(":checked"));
             } else {
                 value = element.val();
             }
