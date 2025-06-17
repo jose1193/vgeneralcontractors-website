@@ -152,6 +152,19 @@ Route::middleware([
         Route::post('/check-title', [App\Http\Controllers\PostCrudController::class, 'checkTitleExists'])->name('check-title');
     });
 
+    // Portfolios CRUD Resource Routes (NEW - No Livewire)
+    Route::prefix('portfolios-crud')->name('portfolios-crud.')->group(function () {
+        Route::get('/', [App\Http\Controllers\PortfolioCrudController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\PortfolioCrudController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\PortfolioCrudController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [App\Http\Controllers\PortfolioCrudController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\PortfolioCrudController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\PortfolioCrudController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\PortfolioCrudController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\PortfolioCrudController::class, 'restore'])->name('restore');
+        Route::post('/check-title', [App\Http\Controllers\PortfolioCrudController::class, 'checkTitleExists'])->name('check-title');
+    });
+
     // Call Records Routes
     Route::get('/call-records', [App\Http\Controllers\CallRecordsController::class, 'index'])->name('call-records');
     Route::get('/api/call-records', [App\Http\Controllers\CallRecordsController::class, 'getCalls'])->name('api.call-records');
