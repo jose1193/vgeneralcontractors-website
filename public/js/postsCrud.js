@@ -120,6 +120,12 @@ class PostsCrudManager {
             </tr>
         `);
 
+        console.log(
+            "Making request to:",
+            `${this.routes.index}?${params.toString()}`
+        );
+        console.log("Routes object:", this.routes);
+
         $.ajax({
             url: `${this.routes.index}?${params.toString()}`,
             method: "GET",
@@ -161,6 +167,8 @@ class PostsCrudManager {
             },
             error: function (xhr) {
                 console.error("Error loading posts:", xhr);
+                console.error("Status:", xhr.status);
+                console.error("Response:", xhr.responseText);
 
                 // Mostrar mensaje de error más específico
                 let errorMessage = "Error al cargar los posts";
@@ -543,8 +551,9 @@ class PostsCrudManager {
 
 // Initialize when DOM is ready
 $(document).ready(function () {
-    // Check if we're on the posts-crud index page
+    // Only initialize if not already initialized by the view
     if (
+        typeof window.postsCrudManager === "undefined" &&
         window.location.pathname.includes("posts-crud") &&
         !window.location.pathname.includes("edit") &&
         !window.location.pathname.includes("create")
