@@ -310,7 +310,8 @@
                                 validation: {
                                     required: true,
                                     maxLength: 255
-                                }
+                                },
+                                capitalize: true
                             },
                             {
                                 name: 'email',

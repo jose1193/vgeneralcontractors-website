@@ -305,7 +305,9 @@
                                     url: "{{ route('service-categories.check-category') }}",
                                     message: '{{ __('category_already_taken') }}'
                                 }
-                            }
+                            },
+                            // Habilitar capitalización automática para este campo
+                            capitalize: true
                         }],
                         tableHeaders: [{
                                 field: 'category',

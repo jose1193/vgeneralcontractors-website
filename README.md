@@ -65,6 +65,97 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## Capitalización Automática en Inputs
+
+El sistema incluye capitalización automática para campos de texto. Hay varias formas de implementarla:
+
+### 1. En Componentes Blade
+
+Usa el prop `capitalize` en el componente `x-crud.input`:
+
+```php
+<x-crud.input
+    id="name"
+    name="name"
+    label="Nombre"
+    type="text"
+    :capitalize="true"
+/>
+```
+
+### 2. En CrudManagerModal
+
+Agrega `capitalize: true` en la configuración del campo:
+
+```javascript
+formFields: [
+    {
+        name: "category",
+        type: "text",
+        label: "Nombre de Categoría",
+        placeholder: "Ingresa el nombre",
+        required: true,
+        capitalize: true, // Habilita capitalización automática
+    },
+];
+```
+
+### 3. Con Clase CSS
+
+Agrega la clase `auto-capitalize` a cualquier input:
+
+```html
+<input
+    type="text"
+    class="auto-capitalize"
+    placeholder="Se capitalizará automáticamente"
+/>
+```
+
+### Campos Excluidos
+
+Por defecto, estos tipos de campos NO se capitalizan automáticamente:
+
+-   email
+-   phone
+-   url
+-   password
+-   username
+-   slug
+
+### Funcionamiento
+
+-   **Capitaliza la primera letra de cada palabra**
+-   **Mantiene la posición del cursor**
+-   **Funciona en tiempo real mientras escribes**
+-   **Compatible con inputs dinámicos (modales, AJAX)**
+
+### Ejemplo Completo
+
+```javascript
+// En configuración de CrudManagerModal
+formFields: [
+    {
+        name: "name",
+        type: "text",
+        label: "Nombre Completo",
+        capitalize: true, // ✅ Se capitaliza
+    },
+    {
+        name: "email",
+        type: "email",
+        label: "Correo",
+        capitalize: true, // ❌ Se ignora (email no se capitaliza)
+    },
+    {
+        name: "description",
+        type: "textarea",
+        label: "Descripción",
+        capitalize: true, // ✅ Se capitaliza
+    },
+];
+```
+
 ## CrudManagerModal - Configuración de Entidades
 
 El sistema CrudManagerModal permite identificar y mostrar información específica de diferentes tipos de entidades durante las operaciones de eliminación y restauración.

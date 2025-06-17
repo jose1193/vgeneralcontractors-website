@@ -350,19 +350,26 @@ class CrudManagerModal {
             case "email":
             case "number":
             case "tel":
+                const capitalizationClass =
+                    field.type === "text" && field.capitalize
+                        ? " auto-capitalize"
+                        : "";
                 html += `<input type="${field.type}" id="${field.name}" name="${
                     field.name
-                }" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="${
+                }" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent${capitalizationClass}" placeholder="${
                     field.placeholder || ""
                 }">`;
                 break;
 
             case "textarea":
+                const textareaCapitalizationClass = field.capitalize
+                    ? " auto-capitalize"
+                    : "";
                 html += `<textarea id="${field.name}" name="${
                     field.name
                 }" ${required} ${disabled} rows="${
                     field.rows || 3
-                }" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="${
+                }" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent${textareaCapitalizationClass}" placeholder="${
                     field.placeholder || ""
                 }">${value}</textarea>`;
                 break;
@@ -511,20 +518,59 @@ class CrudManagerModal {
      * Configurar capitalización automática para campos específicos
      */
     setupAutoCapitalization() {
-        // Campos que deben tener capitalización automática
-        const fieldsToCapitalize = [
+        // Aplicar capitalización automática a todos los campos de texto relevantes
+        const textInputs = document.querySelectorAll(
+            '#swal2-content input[type="text"], #swal2-content textarea'
+        );
+
+        textInputs.forEach((input) => {
+            // Excluir campos que no deben ser capitalizados
+            const excludeFields = [
+                "email",
+                "phone",
+                "url",
+                "password",
+                "username",
+                "slug",
+            ];
+            const fieldName = input.name || input.id;
+
+            // No aplicar capitalización a campos excluidos
+            if (
+                excludeFields.some((exclude) =>
+                    fieldName.toLowerCase().includes(exclude)
+                )
+            ) {
+                return;
+            }
+
+            // No aplicar capitalización a campos que ya tienen la clase auto-capitalize
+            if (input.classList.contains("auto-capitalize")) {
+                return;
+            }
+
+            // Agregar evento de capitalización
+            input.addEventListener("input", (e) => {
+                this.capitalizeInput(e);
+            });
+        });
+
+        // También aplicar a campos específicos por nombre (compatibilidad con configuración anterior)
+        const specificFields = [
             "name",
             "category_name",
+            "category",
             "title",
             "description",
         ];
-
-        fieldsToCapitalize.forEach((fieldName) => {
+        specificFields.forEach((fieldName) => {
             const field = document.getElementById(fieldName);
-            if (field) {
+            if (field && !field.hasAttribute("data-capitalize-applied")) {
                 field.addEventListener("input", (e) => {
                     this.capitalizeInput(e);
                 });
+                // Marcar como procesado para evitar duplicados
+                field.setAttribute("data-capitalize-applied", "true");
             }
         });
     }
