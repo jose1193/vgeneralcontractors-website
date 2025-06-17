@@ -348,27 +348,9 @@
                                 placeholder: '{{ __('username_will_be_generated') }}',
                                 required: false,
                                 showInCreate: true,
-                                showInEdit: false,
+                                showInEdit: true,
                                 readonly: true,
                                 help: `{!! __('username_generated_automatically') !!}`,
-                                validation: {
-                                    minLength: 7,
-                                    unique: {
-                                        url: "{{ route('users.check-username') }}",
-                                        message: '{{ __('username_already_taken') }}'
-                                    }
-                                }
-                            },
-                            {
-                                name: 'username',
-                                type: 'text',
-                                label: '',
-                                placeholder: '{{ __('username') }}',
-                                required: false,
-                                showInCreate: false,
-                                showInEdit: true,
-                                readonly: false,
-                                help: '',
                                 validation: {
                                     minLength: 7,
                                     unique: {
