@@ -9,32 +9,27 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Services\TransactionService;
-use App\Traits\CacheTrait;
+use App\Traits\CacheTraitCrud;
 use Throwable;
 
 class EmailDataController extends BaseCrudController
 {
-    use CacheTrait;
+    use CacheTraitCrud;
     
     protected $modelClass = EmailData::class;
     protected $entityName = 'EMAIL_DATA';
     protected $routePrefix = 'email-datas';
     protected $viewPrefix = 'email-datas';
     
-    // Cache properties
-    protected $cacheEnabled = true;
+    // Override cache time to 1 minute as per user's preference
     protected $cacheTime = 60; // 1 minute
-    protected $search;
-    protected $sortField;
-    protected $sortDirection;
-    protected $perPage;
-    protected $showDeleted;
 
     public function __construct(TransactionService $transactionService)
     {
         parent::__construct($transactionService);
         
-       
+        // Initialize cache properties with defaults
+        $this->initializeCacheProperties();
     }
 
     /**
@@ -155,15 +150,14 @@ class EmailDataController extends BaseCrudController
             ]);
             
             $page = $request->input('page', 1);
-            $cacheKey = $this->generateCacheKey('email_data', $page);
             
             // Use cache for normal views
-            $emailData = Cache::remember($cacheKey, $this->cacheTime, function() use ($request, $page) {
+            $emailData = $this->rememberCrudCache('email_data', function() use ($request, $page) {
                 $query = $this->buildEmailDataQuery($request);
                 
                 // Pagination
                 return $query->paginate($this->perPage, ['*'], 'page', $page);
-            });
+            }, $page);
 
             if ($request->ajax()) {
                 return response()->json($emailData);
@@ -268,9 +262,9 @@ class EmailDataController extends BaseCrudController
             }, function ($emailData) {
                 Log::info("{$this->entityName} created successfully", ['id' => $emailData->id]);
                 
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCache('email_data');
+                // Use new CRUD cache clearing
+                $this->markSignificantDataChange();
+                $this->clearCrudCache('email_data');
                 
                 $this->afterStore($emailData);
             });
@@ -389,9 +383,9 @@ class EmailDataController extends BaseCrudController
             }, function ($emailData) {
                 Log::info("{$this->entityName} updated successfully", ['id' => $emailData->id]);
                 
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCache('email_data');
+                // Use new CRUD cache clearing
+                $this->markSignificantDataChange();
+                $this->clearCrudCache('email_data');
                 
                 $this->afterUpdate($emailData);
             });
@@ -447,9 +441,9 @@ class EmailDataController extends BaseCrudController
             }, function ($emailData) {
                 Log::info("{$this->entityName} deleted successfully", ['id' => $emailData->id]);
                 
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCache('email_data');
+                // Use new CRUD cache clearing
+                $this->markSignificantDataChange();
+                $this->clearCrudCache('email_data');
                 
                 $this->afterDestroy($emailData);
             });
@@ -497,9 +491,9 @@ class EmailDataController extends BaseCrudController
             }, function ($emailData) {
                 Log::info("{$this->entityName} restored successfully", ['id' => $emailData->id]);
                 
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCache('email_data');
+                // Use new CRUD cache clearing
+                $this->markSignificantDataChange();
+                $this->clearCrudCache('email_data');
                 
                 $this->afterRestore($emailData);
             });
@@ -675,5 +669,35 @@ class EmailDataController extends BaseCrudController
     {
         // Add any post-restoration logic here
         Log::info("EmailData restored: {$emailData->description} ({$emailData->email})");
+    }
+
+    /**
+     * TEMPORARY - Test new CRUD cache functionality
+     */
+    public function testCrudCache()
+    {
+        Log::info('EmailDataController::testCrudCache - Starting CRUD cache test');
+        
+        // Test cache key generation
+        $cacheKey = $this->generateCrudCacheKey('email_data', 1);
+        Log::info('EmailDataController::testCrudCache - Generated cache key', ['key' => $cacheKey]);
+        
+        // Test cache clearing
+        $this->markSignificantDataChange();
+        $this->clearCrudCache('email_data');
+        
+        // Test cache remember
+        $testData = $this->rememberCrudCache('email_data', function() {
+            return ['test' => 'data', 'timestamp' => now()->toDateTimeString()];
+        }, 1);
+        
+        Log::info('EmailDataController::testCrudCache - Cache remember test', ['data' => $testData]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'CRUD cache test completed - check logs for details',
+            'cache_key' => $cacheKey,
+            'test_data' => $testData
+        ]);
     }
 } 

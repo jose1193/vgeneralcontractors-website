@@ -135,6 +135,9 @@ Route::middleware([
         Route::patch('/{uuid}/restore', [App\Http\Controllers\EmailDataController::class, 'restore'])->name('restore');
         Route::post('/check-email', [App\Http\Controllers\EmailDataController::class, 'checkEmailExists'])->name('check-email');
         Route::post('/check-phone', [App\Http\Controllers\EmailDataController::class, 'checkPhoneExists'])->name('check-phone');
+        
+        // TEMPORARY - Testing new CRUD cache functionality
+        Route::get('/test-crud-cache', [App\Http\Controllers\EmailDataController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
     // Appointment Calendar Routes
