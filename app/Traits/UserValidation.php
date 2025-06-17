@@ -89,7 +89,7 @@ trait UserValidation
             'terms_and_conditions' => 'boolean',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            'send_password_reset' => 'boolean',
+            'send_password_reset' => 'nullable|boolean',
         ];
     }
 }
