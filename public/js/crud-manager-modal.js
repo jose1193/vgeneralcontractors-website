@@ -514,6 +514,17 @@ class CrudManagerModal {
             // Convertir el teléfono al formato de almacenamiento para comparar
             const phoneForStorage = this.formatPhoneForStorage(phone);
 
+            // Debug: verificar qué se está enviando
+            console.log("Phone validation debug:", {
+                originalPhone: phone,
+                phoneForStorage: phoneForStorage,
+                isEditing: this.isEditing,
+                currentEntityUuid:
+                    this.isEditing && this.currentEntity
+                        ? this.currentEntity.uuid
+                        : null,
+            });
+
             const response = await $.ajax({
                 url: this.routes.checkPhone,
                 type: "POST",
@@ -636,10 +647,15 @@ class CrudManagerModal {
     formatPhoneForStorage(phone) {
         if (!phone) return "";
 
+        // Si ya está en el formato correcto (XXX) XXX-XXXX, devolverlo tal como está
+        if (/^\(\d{3}\) \d{3}-\d{4}$/.test(phone)) {
+            return phone;
+        }
+
         // Extraer solo los dígitos
         const cleaned = phone.replace(/\D/g, "");
 
-        // Si tiene 10 dígitos, agregar +1
+        // Formatear a (XXX) XXX-XXXX que es como el backend lo guarda
         if (cleaned.length === 10) {
             return `(${cleaned.substring(0, 3)}) ${cleaned.substring(
                 3,
@@ -647,7 +663,7 @@ class CrudManagerModal {
             )}-${cleaned.substring(6, 10)}`;
         }
 
-        // Si ya tiene 11 dígitos y empieza con 1, formatear
+        // Si ya tiene 11 dígitos y empieza con 1, remover el 1 y formatear
         if (cleaned.length === 11 && cleaned.startsWith("1")) {
             const phoneDigits = cleaned.substring(1);
             return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(

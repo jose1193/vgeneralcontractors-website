@@ -153,6 +153,11 @@
                     border-radius: 12px 12px 0 0 !important;
                 }
 
+                .swal2-popup.swal-create .swal2-header,
+                .swal2-popup.swal-edit .swal2-header {
+                    border-radius: 12px 12px 0 0 !important;
+                }
+
                 .swal2-title {
                     padding: 1.5rem !important;
                     margin: 0 !important;

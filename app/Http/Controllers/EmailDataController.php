@@ -540,6 +540,14 @@ class EmailDataController extends BaseCrudController
             }
 
             $formattedPhone = $this->formatPhone($phone);
+            
+            // Debug: log what we're receiving and comparing
+            Log::info('Phone validation debug:', [
+                'received_phone' => $phone,
+                'formatted_phone' => $formattedPhone,
+                'uuid_to_exclude' => $uuid
+            ]);
+            
             $query = EmailData::where('phone', $formattedPhone);
             
             if ($uuid) {
