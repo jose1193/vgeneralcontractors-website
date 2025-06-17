@@ -9,22 +9,33 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Services\TransactionService;
+use App\Traits\CacheTrait;
 use Throwable;
 
 class EmailDataController extends BaseCrudController
 {
+    use CacheTrait;
+    
     protected $modelClass = EmailData::class;
-    protected $entityName = 'EmailData';
+    protected $entityName = 'EMAIL_DATA';
     protected $routePrefix = 'email-datas';
     protected $viewPrefix = 'email-datas';
+    
+    // Cache properties
+    protected $cacheEnabled = true;
+    protected $cacheTime = 300; // 5 minutes
+    protected $search;
+    protected $sortField;
+    protected $sortDirection;
+    protected $perPage;
+    protected $showDeleted;
 
     public function __construct(TransactionService $transactionService)
     {
         parent::__construct($transactionService);
         
-        // Set cache configuration
-        $this->cacheEnabled = true;
-        $this->cacheTime = 300; // 5 minutes
+        // Add permission middleware for authentication
+        $this->middleware('auth');
     }
 
     /**
@@ -105,6 +116,18 @@ class EmailDataController extends BaseCrudController
      */
     public function index(Request $request)
     {
+        // Check permission first - this is critical for security
+        if (!$this->checkPermission('READ_EMAIL_DATA', false)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to view email data',
+                ], 403);
+            }
+            
+            return redirect()->route('dashboard')->with('error', 'You do not have permission to view email data');
+        }
+
         try {
             // Set up cache and search parameters
             $this->search = $request->input('search', '');
@@ -144,9 +167,13 @@ class EmailDataController extends BaseCrudController
                 ]);
             }
 
+            // Get users for the create/edit modals
+            $users = User::orderBy('name')->get();
+
             return view("{$this->viewPrefix}.index", [
                 'emailData' => $emailData,
                 'entityName' => $this->entityName,
+                'users' => $users,
             ]);
         } catch (Throwable $e) {
             Log::error("Error in EmailDataController::index: {$e->getMessage()}", [
