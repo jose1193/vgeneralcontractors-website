@@ -34,8 +34,8 @@
             {{-- Form container --}}
             <div class="dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('posts-crud.store') }}" id="createPostForm"
-                        enctype="multipart/form-data">
+                    <form method="POST" action="{{ secure_url(route('posts-crud.store', [], false)) }}"
+                        id="createPostForm" enctype="multipart/form-data">
                         @csrf
 
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
