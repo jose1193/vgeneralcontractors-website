@@ -77,6 +77,39 @@ class CrudManagerModal {
             errorRestoring: "Error al restaurar el registro",
         };
 
+        // Configuración de campos para identificar entidades
+        // Ejemplos de configuración para diferentes tipos de entidades:
+        //
+        // Para usuarios:
+        // entityConfig: {
+        //     identifierField: 'email',
+        //     displayName: 'usuario',
+        //     fallbackFields: ['name', 'username'],
+        //     detailFormat: (entity) => `${entity.name} (${entity.email})`
+        // }
+        //
+        // Para productos:
+        // entityConfig: {
+        //     identifierField: 'name',
+        //     displayName: 'producto',
+        //     fallbackFields: ['title', 'sku', 'code'],
+        //     detailFormat: (entity) => entity.sku ? `${entity.name} - SKU: ${entity.sku}` : entity.name
+        // }
+        //
+        // Para empresas:
+        // entityConfig: {
+        //     identifierField: 'company_name',
+        //     displayName: 'empresa',
+        //     fallbackFields: ['name', 'business_name', 'title'],
+        //     detailFormat: (entity) => entity.company_name || entity.name || 'empresa'
+        // }
+        //
+        this.entityConfig = options.entityConfig || {
+            identifierField: "name", // Campo principal para identificar
+            displayName: "elemento", // Nombre para mostrar en español
+            fallbackFields: ["title", "description", "email"], // Campos alternativos
+        };
+
         this.init();
     }
 
@@ -1012,57 +1045,135 @@ class CrudManagerModal {
     }
 
     /**
+     * Obtener datos de entidad desde la fila de la tabla
+     */
+    getEntityDataFromRow(button) {
+        try {
+            const row = $(button).closest("tr");
+            const entityDataString = row.attr("data-entity");
+
+            if (entityDataString) {
+                const entityData = JSON.parse(
+                    entityDataString.replace(/&quot;/g, '"')
+                );
+                return entityData;
+            }
+
+            return null;
+        } catch (error) {
+            console.error("Error parsing entity data from row:", error);
+            return null;
+        }
+    }
+
+    /**
+     * Obtener identificador de entidad usando configuración
+     */
+    getEntityIdentifier(entity) {
+        // Si hay una función personalizada de formato, usarla
+        if (
+            this.entityConfig.detailFormat &&
+            typeof this.entityConfig.detailFormat === "function"
+        ) {
+            try {
+                const customIdentifier = this.entityConfig.detailFormat(entity);
+                return {
+                    identifier: customIdentifier,
+                    displayName: this.entityConfig.displayName,
+                    field: "custom",
+                };
+            } catch (error) {
+                console.error("Error using custom detail format:", error);
+                // Continuar con el método estándar si hay error
+            }
+        }
+
+        // Intentar con el campo principal configurado
+        if (entity && entity[this.entityConfig.identifierField]) {
+            const identifier = entity[this.entityConfig.identifierField];
+            return {
+                identifier: identifier,
+                displayName: this.entityConfig.displayName,
+                field: this.entityConfig.identifierField,
+            };
+        }
+
+        // Intentar con campos alternativos
+        for (const field of this.entityConfig.fallbackFields) {
+            if (entity && entity[field]) {
+                const identifier = entity[field];
+                return {
+                    identifier: identifier,
+                    displayName: this.entityConfig.displayName,
+                    field: field,
+                };
+            }
+        }
+
+        // Fallback final
+        return {
+            identifier: "este elemento",
+            displayName: "elemento",
+            field: null,
+        };
+    }
+
+    /**
      * Eliminar entidad
      */
     async deleteEntity(id) {
         let entityDisplayName = "";
         let entityIdentifier = "";
+        let entity = null;
 
-        try {
-            // Obtener los datos de la entidad para mostrar información relevante
-            const response = await $.ajax({
-                url: this.routes.edit.replace(":id", id),
-                type: "GET",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-            });
+        // Primero intentar obtener datos desde la fila de la tabla
+        const buttonElement = $(`.delete-btn[data-id="${id}"]`)[0];
+        if (buttonElement) {
+            entity = this.getEntityDataFromRow(buttonElement);
+        }
 
-            const entity = response.data || response;
+        // Si no se pudo obtener desde la tabla, hacer llamada AJAX como fallback
+        if (!entity) {
+            try {
+                const response = await $.ajax({
+                    url: this.routes.edit.replace(":id", id),
+                    type: "GET",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                });
 
-            // Determinar qué campo mostrar basado en el tipo de entidad
-            if (entity.email) {
-                entityIdentifier = entity.email;
-                entityDisplayName = "correo";
-            } else if (entity.category) {
-                entityIdentifier = entity.category;
-                entityDisplayName = "categoría";
-            } else if (entity.name) {
-                entityIdentifier = entity.name;
-                entityDisplayName = "elemento";
-            } else if (entity.title) {
-                entityIdentifier = entity.title;
-                entityDisplayName = "elemento";
-            } else {
+                entity = response.data || response;
+            } catch (error) {
+                console.error(
+                    "Error getting entity data for delete confirmation:",
+                    error
+                );
+                // Fallback: usar el nombre genérico de la entidad
                 entityIdentifier = "este elemento";
                 entityDisplayName = "elemento";
             }
-        } catch (error) {
-            console.error(
-                "Error getting entity data for delete confirmation:",
-                error
-            );
-            // Fallback: usar el nombre genérico de la entidad
-            entityIdentifier = "este elemento";
-            entityDisplayName = "elemento";
+        }
+
+        // Obtener identificador usando la configuración
+        if (entity) {
+            const entityInfo = this.getEntityIdentifier(entity);
+            entityIdentifier = entityInfo.identifier;
+            entityDisplayName = entityInfo.displayName;
+        }
+
+        // Crear mensaje personalizado con la información específica del registro
+        let customMessage = this.translations.deleteMessage;
+        if (entityIdentifier && entityIdentifier !== "este elemento") {
+            customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
             title: this.translations.confirmDelete,
-            text: this.translations.deleteMessage,
+            html: customMessage,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
@@ -1100,9 +1211,58 @@ class CrudManagerModal {
      * Restaurar entidad
      */
     async restoreEntity(id) {
+        let entityDisplayName = "";
+        let entityIdentifier = "";
+        let entity = null;
+
+        // Primero intentar obtener datos desde la fila de la tabla
+        const buttonElement = $(`.restore-btn[data-id="${id}"]`)[0];
+        if (buttonElement) {
+            entity = this.getEntityDataFromRow(buttonElement);
+        }
+
+        // Si no se pudo obtener desde la tabla, hacer llamada AJAX como fallback
+        if (!entity) {
+            try {
+                const response = await $.ajax({
+                    url: this.routes.edit.replace(":id", id),
+                    type: "GET",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                });
+
+                entity = response.data || response;
+            } catch (error) {
+                console.error(
+                    "Error getting entity data for restore confirmation:",
+                    error
+                );
+                // Fallback: usar el nombre genérico de la entidad
+                entityIdentifier = "este elemento";
+                entityDisplayName = "elemento";
+            }
+        }
+
+        // Obtener identificador usando la configuración
+        if (entity) {
+            const entityInfo = this.getEntityIdentifier(entity);
+            entityIdentifier = entityInfo.identifier;
+            entityDisplayName = entityInfo.displayName;
+        }
+
+        // Crear mensaje personalizado con la información específica del registro
+        let customMessage = this.translations.restoreMessage;
+        if (entityIdentifier && entityIdentifier !== "este elemento") {
+            customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+        }
+
         const result = await Swal.fire({
             title: this.translations.confirmRestore,
-            text: this.translations.restoreMessage,
+            html: customMessage,
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#28a745",
@@ -1152,7 +1312,13 @@ class CrudManagerModal {
                     ? "bg-red-50 dark:bg-red-900 opacity-60"
                     : "";
 
-                html += `<tr class="${rowClass}">`;
+                // Almacenar datos de la entidad como JSON en atributo data
+                const entityData = JSON.stringify(entity).replace(
+                    /"/g,
+                    "&quot;"
+                );
+
+                html += `<tr class="${rowClass}" data-entity="${entityData}">`;
 
                 this.tableHeaders.forEach((header) => {
                     let value = header.getter

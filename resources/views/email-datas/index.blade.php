@@ -518,6 +518,11 @@
                             update: '{{ __('update') }}',
                             yes: '{{ __('yes') }}',
                             no: '{{ __('no') }}'
+                        },
+                        entityConfig: {
+                            identifierField: 'email',
+                            displayName: 'correo electrónico',
+                            fallbackFields: ['description', 'phone', 'type']
                         }
                     });
 

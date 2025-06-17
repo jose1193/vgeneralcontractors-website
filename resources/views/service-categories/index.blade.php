@@ -386,6 +386,16 @@
                             update: '{{ __('update') }}',
                             yes: '{{ __('yes') }}',
                             no: '{{ __('no') }}'
+                        },
+                        entityConfig: {
+                            identifierField: 'category',
+                            displayName: 'categoría de servicio',
+                            fallbackFields: ['name', 'title', 'description'],
+                            // Configuración adicional para mostrar información más detallada
+                            detailFormat: (entity) => {
+                                // Mostrar categoría con información adicional si está disponible
+                                return entity.category || 'categoría de servicio';
+                            }
                         }
                     });
 
