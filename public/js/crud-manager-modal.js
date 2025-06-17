@@ -884,12 +884,27 @@ class CrudManagerModal {
     validateAndGetFormData() {
         const formData = {};
         let isValid = true;
+        const isEditMode = $(".swal2-popup").hasClass("swal-edit");
 
         // Limpiar errores previos
         $(".error-message").addClass("hidden").text("");
 
         this.formFields.forEach((field) => {
+            // Verificar si el campo debe estar presente en el modo actual
+            if (field.showInCreate === false && !isEditMode) {
+                return; // Saltar validación para campos no visibles en creación
+            }
+            if (field.showInEdit === false && isEditMode) {
+                return; // Saltar validación para campos no visibles en edición
+            }
+
             const element = $(`#${field.name}`);
+
+            // Si el elemento no existe en el DOM, saltarlo
+            if (!element.length) {
+                return;
+            }
+
             let value;
 
             if (field.type === "checkbox") {
