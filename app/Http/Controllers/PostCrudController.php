@@ -381,6 +381,16 @@ class PostCrudController extends BaseCrudController
                 throw new \Illuminate\Database\Eloquent\ModelNotFoundException("{$this->entityName} not found");
             }
 
+            // Ensure scheduled_at is properly formatted for datetime-local input
+            if ($post->scheduled_at && is_string($post->scheduled_at)) {
+                try {
+                    $post->scheduled_at = \Carbon\Carbon::parse($post->scheduled_at);
+                } catch (\Exception $e) {
+                    Log::warning("Could not parse scheduled_at for post {$post->uuid}: {$post->scheduled_at}");
+                    $post->scheduled_at = null;
+                }
+            }
+
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,

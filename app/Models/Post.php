@@ -25,6 +25,13 @@ class Post extends Model
         'scheduled_at'
     ];
 
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'scheduled_at' => 'datetime',
+    ];
+
     // Agrega atributo virtual para post_status
     protected $attributes = [
         'post_status' => 'published',

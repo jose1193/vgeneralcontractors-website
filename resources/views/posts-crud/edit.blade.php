@@ -34,8 +34,8 @@
             {{-- Form container --}}
             <div class="dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('posts-crud.update', $post->uuid) }}" id="editPostForm"
-                        enctype="multipart/form-data">
+                    <form method="POST" action="{{ secure_url(route('posts-crud.update', $post->uuid, [], false)) }}"
+                        id="editPostForm" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
