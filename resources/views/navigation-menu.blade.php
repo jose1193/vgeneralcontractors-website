@@ -502,7 +502,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     @if (!request()->routeIs('portfolios-crud.*'))
                         <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
-                            {{ __('Portfolios (CRUD)') }}
+                            {{ __('Portfolios') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
                                 style="background-color: #2C2E36;"></div>
                         </div>
@@ -732,7 +732,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
-                    <span class="font-medium">{{ __('Portfolios (CRUD)') }}</span>
+                    <span class="font-medium">{{ __('Portfolios') }}</span>
                 </a>
             @endif
         </div>

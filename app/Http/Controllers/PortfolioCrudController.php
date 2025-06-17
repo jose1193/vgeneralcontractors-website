@@ -96,4 +96,25 @@ class PortfolioCrudController extends BaseCrudController
     {
         // ...
     }
+
+    // Métodos requeridos por BaseCrudController
+    protected function getValidationRules($id = null)
+    {
+        // TODO: Ajustar reglas reales según el modelo Portfolio
+        return [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'service_category_id' => 'required|integer',
+        ];
+    }
+
+    protected function getValidationMessages()
+    {
+        // TODO: Ajustar mensajes reales
+        return [
+            'title.required' => 'The title is required.',
+            'description.required' => 'The description is required.',
+            'service_category_id.required' => 'The service category is required.',
+        ];
+    }
 } 
