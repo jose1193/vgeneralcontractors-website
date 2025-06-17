@@ -355,8 +355,17 @@ class CrudManagerModal {
      */
     generateFormHtml(entity = null) {
         let html = '<div class="crud-modal-form">';
+        const isEditMode = entity !== null;
 
         this.formFields.forEach((field) => {
+            // Verificar si el campo debe mostrarse en el modo actual
+            if (field.showInCreate === false && !isEditMode) {
+                return; // No mostrar el campo si es creación y showInCreate es false
+            }
+            if (field.showInEdit === false && isEditMode) {
+                return; // No mostrar el campo si es edición y showInEdit es false
+            }
+
             html += this.generateFieldHtml(field, entity);
         });
 
