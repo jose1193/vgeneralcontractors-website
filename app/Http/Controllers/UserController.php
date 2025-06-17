@@ -44,7 +44,11 @@ class UserController extends BaseCrudController
         // Determine if we're in store or update mode
         $modalAction = request()->isMethod('post') ? 'store' : 'update';
         
-        $rules = $this->getUserValidationRules($id, $modalAction);
+        if ($modalAction === 'store') {
+            $rules = $this->getCreateValidationRules($id);
+        } else {
+            $rules = $this->getUpdateValidationRules($id);
+        }
         
         // Add role validation
         $rules['role'] = 'required|string|exists:roles,name';

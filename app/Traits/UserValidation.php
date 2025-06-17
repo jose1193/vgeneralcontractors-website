@@ -52,6 +52,16 @@ trait UserValidation
                 Rule::unique('users', 'email')->ignore($uuid, 'uuid')],
             'phone' => ['nullable', 'string', 'max:20',
                 Rule::unique('users', 'phone')->ignore($uuid, 'uuid')],
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|string|max:20',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'gender' => 'nullable|string|in:male,female,other',
+            'terms_and_conditions' => 'boolean',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ];
     }
     
