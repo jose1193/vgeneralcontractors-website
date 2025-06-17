@@ -31,7 +31,71 @@ class PortfolioCrudController extends BaseCrudController
      */
     public function index(Request $request)
     {
-        // ...
+        try {
+            // Parámetros de búsqueda y paginación
+            $this->search = $request->input('search', '');
+            $this->sortField = $request->input('sort_field', 'created_at');
+            $this->sortDirection = $request->input('sort_direction', 'desc');
+            $this->perPage = $request->input('per_page', 10);
+            $this->showDeleted = $request->input('show_deleted', 'false') === 'true';
+            $page = $request->input('page', 1);
+
+            // Query base
+            $query = Portfolio::query();
+
+            // Búsqueda
+            if (!empty($this->search)) {
+                $searchTerm = '%' . $this->search . '%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('title', 'like', $searchTerm)
+                      ->orWhere('description', 'like', $searchTerm);
+                });
+            }
+
+            // Mostrar eliminados
+            if ($this->showDeleted) {
+                $query->withTrashed();
+            }
+
+            // Orden
+            $query->orderBy($this->sortField, $this->sortDirection);
+
+            // Relaciones necesarias para la tabla
+            $query->with(['projectType', 'projectType.serviceCategory', 'images']);
+
+            // Paginación
+            $portfolios = $query->paginate($this->perPage, ['*'], 'page', $page);
+
+            if ($request->ajax()) {
+                // Formato compatible con el JS
+                return response()->json([
+                    'success' => true,
+                    'data' => $portfolios->items(),
+                    'current_page' => $portfolios->currentPage(),
+                    'last_page' => $portfolios->lastPage(),
+                    'from' => $portfolios->firstItem(),
+                    'to' => $portfolios->lastItem(),
+                    'total' => $portfolios->total(),
+                ]);
+            }
+
+            // Vista normal (por si se accede directo)
+            return view('portfolios-crud.index', [
+                'entityName' => $this->entityName,
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error loading portfolios: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error loading portfolios',
+                ], 500);
+            }
+            return back()->with('error', 'Error loading portfolios');
+        }
     }
 
     /**
