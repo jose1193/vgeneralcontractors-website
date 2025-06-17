@@ -82,9 +82,10 @@ Route::middleware([
         return view('users');
     })->name('users');
 
-    Route::get('/email-datas', function () {
+    // Redirect old email-datas route to new CRUD
+    Route::get('/email-datas-old', function () {
         return view('email-datas');
-    })->name('email-datas');
+    })->name('email-datas-old');
 
     Route::get('/company-data', function () {
         return view('company-data');
@@ -124,6 +125,20 @@ Route::middleware([
         Route::patch('/{uuid}/restore', [AppointmentController::class, 'restore'])->name('restore');
         Route::post('/check-email', [AppointmentController::class, 'checkEmailExists'])->name('check-email');
         Route::post('/send-rejection', [AppointmentController::class, 'sendRejection'])->name('send-rejection');
+    });
+
+    // Email Data Resource Routes (CRUD)
+    Route::prefix('email-datas')->name('email-datas.')->group(function () {
+        Route::get('/', [App\Http\Controllers\EmailDataController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\EmailDataController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\EmailDataController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [App\Http\Controllers\EmailDataController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\EmailDataController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\EmailDataController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\EmailDataController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\EmailDataController::class, 'restore'])->name('restore');
+        Route::post('/check-email', [App\Http\Controllers\EmailDataController::class, 'checkEmailExists'])->name('check-email');
+        Route::post('/check-phone', [App\Http\Controllers\EmailDataController::class, 'checkPhoneExists'])->name('check-phone');
     });
 
     // Appointment Calendar Routes
