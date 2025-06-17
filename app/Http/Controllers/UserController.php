@@ -167,8 +167,18 @@ class UserController extends BaseCrudController
         ];
 
         // Handle password reset if requested
-        // Convert send_password_reset to boolean, defaulting to false if not present
-        $sendPasswordReset = filter_var($request->input('send_password_reset', false), FILTER_VALIDATE_BOOLEAN);
+        // Convert send_password_reset to boolean, handling various input formats
+        $sendPasswordResetValue = $request->input('send_password_reset', false);
+        $sendPasswordReset = false;
+        
+        // Handle various boolean-like values
+        if (is_bool($sendPasswordResetValue)) {
+            $sendPasswordReset = $sendPasswordResetValue;
+        } elseif (is_string($sendPasswordResetValue)) {
+            $sendPasswordReset = in_array(strtolower($sendPasswordResetValue), ['true', '1', 'yes', 'on']);
+        } elseif (is_numeric($sendPasswordResetValue)) {
+            $sendPasswordReset = (int)$sendPasswordResetValue === 1;
+        }
         
         if ($sendPasswordReset) {
             $newPassword = Str::random(12);
@@ -445,6 +455,30 @@ class UserController extends BaseCrudController
             if (!$uuid || $uuid === 'undefined') {
                 throw new \InvalidArgumentException('Invalid UUID');
             }
+
+            // Ensure send_password_reset is always a boolean
+            $originalValue = $request->input('send_password_reset');
+            $booleanValue = filter_var($originalValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            
+            // If filter_var fails, handle manually
+            if ($booleanValue === null) {
+                if (is_string($originalValue)) {
+                    $booleanValue = in_array(strtolower($originalValue), ['true', '1', 'yes', 'on']);
+                } else {
+                    $booleanValue = false;
+                }
+            }
+            
+            Log::info('UserController::update - Processing send_password_reset', [
+                'original_value' => $originalValue,
+                'original_type' => gettype($originalValue),
+                'boolean_value' => $booleanValue,
+                'boolean_type' => gettype($booleanValue)
+            ]);
+            
+            $request->merge([
+                'send_password_reset' => $booleanValue
+            ]);
 
             $data = $request->validate($this->getValidationRules($uuid));
             Log::info('UserController::update - Validation passed');

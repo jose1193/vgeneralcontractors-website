@@ -948,8 +948,7 @@ class CrudManagerModal {
     validateAndGetFormData() {
         const formData = {};
         let isValid = true;
-        // Usar this.isEditing en lugar de la clase CSS para evitar race conditions
-        const isEditMode = this.isEditing;
+        const isEditMode = $(".swal2-popup").hasClass("swal-edit");
 
         // Limpiar errores previos
         $(".error-message").addClass("hidden").text("");
@@ -996,10 +995,15 @@ class CrudManagerModal {
             formData[field.name] = value;
         });
 
-        // Asegurar que los campos checkbox que no están presentes en el formulario tengan valor false
+        // Asegurar que los campos checkbox siempre tengan un valor boolean explícito
         this.formFields.forEach((field) => {
-            if (field.type === "checkbox" && !(field.name in formData)) {
-                formData[field.name] = false;
+            if (field.type === "checkbox") {
+                if (!(field.name in formData)) {
+                    formData[field.name] = false;
+                } else {
+                    // Asegurar que el valor sea boolean
+                    formData[field.name] = Boolean(formData[field.name]);
+                }
             }
         });
 
