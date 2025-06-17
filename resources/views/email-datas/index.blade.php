@@ -50,7 +50,7 @@
                             <!-- Add email data button -->
                             <div class="w-full sm:w-auto">
                                 <button id="createEmailDataBtn"
-                                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-200 disabled:opacity-25">
+                                    class="create-btn w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-200 disabled:opacity-25">
                                     <span class="mr-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
@@ -128,6 +128,8 @@
         @push('scripts')
             <!-- SweetAlert2 -->
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- CrudManagerModal -->
+            <script src="{{ asset('js/crud-manager-modal.js') }}"></script>
             <script>
                 $(document).ready(function() {
                     // Recuperar estado del toggle de localStorage antes de inicializar el manager

@@ -55,6 +55,9 @@ class CrudManagerModal {
      * Inicializar el manager
      */
     init() {
+        // Establecer el estado inicial del toggle
+        $(this.showDeletedSelector).prop("checked", this.showDeleted);
+
         this.attachEventListeners();
         this.loadEntities();
     }
@@ -83,6 +86,7 @@ class CrudManagerModal {
         // Toggle eliminados
         $(this.showDeletedSelector).on("change", () => {
             this.showDeleted = $(this.showDeletedSelector).is(":checked");
+            localStorage.setItem("showDeleted", this.showDeleted);
             this.currentPage = 1;
             this.loadEntities();
         });
@@ -296,7 +300,7 @@ class CrudManagerModal {
                 }
                 field.options.forEach((option) => {
                     const selected = value == option.value ? "selected" : "";
-                    html += `<option value="${option.value}" ${selected}>${option.label}</option>`;
+                    html += `<option value="${option.value}" ${selected}>${option.text}</option>`;
                 });
                 html += `</select>`;
                 break;

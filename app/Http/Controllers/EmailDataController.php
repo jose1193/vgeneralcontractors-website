@@ -154,16 +154,7 @@ class EmailDataController extends BaseCrudController
             });
 
             if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $emailData->items(),
-                    'current_page' => $emailData->currentPage(),
-                    'last_page' => $emailData->lastPage(),
-                    'per_page' => $emailData->perPage(),
-                    'total' => $emailData->total(),
-                    'from' => $emailData->firstItem(),
-                    'to' => $emailData->lastItem(),
-                ]);
+                return response()->json($emailData);
             }
 
             // Get users for the create/edit modals
