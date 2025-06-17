@@ -9,7 +9,7 @@ export default class PortfolioCrudManager {
      */
     constructor(options) {
         // Base URL para las rutas del CRUD de portfolios
-        this.baseUrl = "/portfolios-crud";
+        this.baseUrl = "/portfolios";
 
         // Configuración por defecto
         this.config = {
@@ -258,7 +258,7 @@ export default class PortfolioCrudManager {
         if (mode === "edit" && uuid) {
             const self = this;
             $.ajax({
-                url: `/portfolios-crud/${uuid}`,
+                url: `/portfolios/${uuid}`,
                 type: "GET",
                 dataType: "json",
                 success(resp) {
@@ -360,8 +360,8 @@ export default class PortfolioCrudManager {
         $(".error-message").addClass("hidden").text("");
         // AJAX
         const url = this.currentEditUuid
-            ? `/portfolios-crud/${this.currentEditUuid}`
-            : `/portfolios-crud`;
+            ? `/portfolios/${this.currentEditUuid}`
+            : `/portfolios`;
         const method = this.currentEditUuid ? "POST" : "POST"; // Laravel: usar POST + _method=PUT para update
         if (this.currentEditUuid) formData.append("_method", "PUT");
         $("#save-btn")
@@ -410,7 +410,7 @@ export default class PortfolioCrudManager {
     deletePortfolio(uuid) {
         const self = this;
         $.ajax({
-            url: `/portfolios-crud/${uuid}`,
+            url: `/portfolios/${uuid}`,
             type: "DELETE",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -431,7 +431,7 @@ export default class PortfolioCrudManager {
     restorePortfolio(uuid) {
         const self = this;
         $.ajax({
-            url: `/portfolios-crud/${uuid}/restore`,
+            url: `/portfolios/${uuid}/restore`,
             type: "PATCH",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
