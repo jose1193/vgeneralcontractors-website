@@ -1225,6 +1225,8 @@
     "phone_already_taken": "Este número de teléfono ya está en uso",
     "add_user": "Agregar Usuario",
     "show_inactive_users": "Mostrar Usuarios Inactivos",
+    "search_users": "Buscar usuarios...",
+    "loading_users": "Cargando usuarios...",
     "show_inactive_items": "Mostrar Elementos Inactivos",
     "add": "Agregar",
 

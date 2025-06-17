@@ -291,7 +291,7 @@ class UserController extends BaseCrudController
                 $generatedPassword = $preparedData['generated_password'] ?? null;
                 unset($preparedData['generated_password']); // Remove from data to be saved
                 
-                Log::info('UserController::store - Creating user', ['prepared_data' => array_except($preparedData, ['password'])]);
+                Log::info('UserController::store - Creating user', ['prepared_data' => collect($preparedData)->except(['password'])->toArray()]);
                 
                 $user = $this->modelClass::create($preparedData);
                 
@@ -376,7 +376,7 @@ class UserController extends BaseCrudController
                 $userData['role'] = $userRole;
                 
                 Log::info('UserController::edit - Returning data:', [
-                    'user' => array_except($userData, ['password'])
+                    'user' => collect($userData)->except(['password'])->toArray()
                 ]);
                 
                 return response()->json([
@@ -436,13 +436,13 @@ class UserController extends BaseCrudController
 
             $user = $this->transactionService->run(function () use ($uuid, $request) {
                 $user = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
-                Log::info('UserController::update - Found user', ['current_data' => array_except($user->toArray(), ['password'])]);
+                Log::info('UserController::update - Found user', ['current_data' => collect($user->toArray())->except(['password'])->toArray()]);
                 
                 $preparedData = $this->prepareUpdateData($request);
                 $generatedPassword = $preparedData['generated_password'] ?? null;
                 unset($preparedData['generated_password']); // Remove from data to be saved
                 
-                Log::info('UserController::update - Prepared data', ['prepared_data' => array_except($preparedData, ['password'])]);
+                Log::info('UserController::update - Prepared data', ['prepared_data' => collect($preparedData)->except(['password'])->toArray()]);
                 
                 $user->update($preparedData);
                 
