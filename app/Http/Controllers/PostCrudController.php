@@ -18,13 +18,6 @@ class PostCrudController extends BaseCrudController
 {
     use CacheTraitCrud;
     
-    public $search = '';
-    public $sortField = 'created_at';
-    public $sortDirection = 'desc';
-    public $perPage = 10;
-    public $showDeleted = false;
-    protected $significantDataChange = false;
-    
     public function __construct(TransactionService $transactionService)
     {
         parent::__construct($transactionService);
@@ -36,6 +29,11 @@ class PostCrudController extends BaseCrudController
         // Initialize cache properties with defaults
         $this->initializeCacheProperties();
     }
+    
+    /**
+     * Cache time override for posts (5 minutes - posts change moderately)
+     */
+    protected $cacheTime = 300;
 
     /**
      * Get validation rules for post
@@ -187,11 +185,11 @@ class PostCrudController extends BaseCrudController
             $page = $request->input('page', 1);
             $cacheKey = $this->generateCrudCacheKey('posts', $page);
             
-            // Use cache for normal views
-            $posts = Cache::remember($cacheKey, $this->getCacheTime(), function() use ($request, $page) {
+            // Use CacheTraitCrud's rememberCrudCache for better cache management
+            $posts = $this->rememberCrudCache('posts', function() use ($request, $page) {
                 $query = $this->buildPostsQuery($request);
                 return $query->paginate($this->perPage, ['*'], 'page', $page);
-            });
+            }, $page);
 
             if ($request->ajax()) {
                 return response()->json([
@@ -288,17 +286,15 @@ class PostCrudController extends BaseCrudController
         try {
             $data = $this->validateRequest($request);
 
-            $post = $this->transactionService->run(function () use ($data) {
-                $preparedData = $this->prepareStoreData($data);
-                return $this->modelClass::create($preparedData);
-            }, function ($post) {
-                Log::info("{$this->entityName} created successfully", ['id' => $post->id]);
-                
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCrudCache('posts');
-                
-                $this->afterStore($post);
+            // Use CacheTraitCrud's executeCrudOperation for better cache management
+            $post = $this->executeCrudOperation('posts', function () use ($data) {
+                return $this->transactionService->run(function () use ($data) {
+                    $preparedData = $this->prepareStoreData($data);
+                    return $this->modelClass::create($preparedData);
+                }, function ($post) {
+                    Log::info("{$this->entityName} created successfully", ['id' => $post->id]);
+                    $this->afterStore($post);
+                });
             });
 
             if ($request->expectsJson() || $request->ajax()) {
@@ -393,19 +389,17 @@ class PostCrudController extends BaseCrudController
 
             $data = $this->validateRequest($request, $uuid);
 
-            $post = $this->transactionService->run(function () use ($uuid, $data) {
-                $post = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
-                $preparedData = $this->prepareUpdateData($data);
-                $post->update($preparedData);
-                return $post->fresh();
-            }, function ($post) {
-                Log::info("{$this->entityName} updated successfully", ['id' => $post->id]);
-                
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCrudCache('posts');
-                
-                $this->afterUpdate($post);
+            // Use CacheTraitCrud's executeCrudOperation for better cache management
+            $post = $this->executeCrudOperation('posts', function () use ($uuid, $data) {
+                return $this->transactionService->run(function () use ($uuid, $data) {
+                    $post = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
+                    $preparedData = $this->prepareUpdateData($data);
+                    $post->update($preparedData);
+                    return $post->fresh();
+                }, function ($post) {
+                    Log::info("{$this->entityName} updated successfully", ['id' => $post->id]);
+                    $this->afterUpdate($post);
+                });
             });
 
             if ($request->expectsJson() || $request->ajax()) {
@@ -452,18 +446,16 @@ class PostCrudController extends BaseCrudController
                 throw new \InvalidArgumentException('Invalid UUID');
             }
 
-            $this->transactionService->run(function () use ($uuid) {
-                $post = $this->modelClass::where('uuid', $uuid)->firstOrFail();
-                $post->delete();
-                return $post;
-            }, function ($post) {
-                Log::info("{$this->entityName} deleted successfully", ['id' => $post->id]);
-                
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCrudCache('posts');
-                
-                $this->afterDestroy($post);
+            // Use CacheTraitCrud's executeCrudOperation for better cache management
+            $this->executeCrudOperation('posts', function () use ($uuid) {
+                return $this->transactionService->run(function () use ($uuid) {
+                    $post = $this->modelClass::where('uuid', $uuid)->firstOrFail();
+                    $post->delete();
+                    return $post;
+                }, function ($post) {
+                    Log::info("{$this->entityName} deleted successfully", ['id' => $post->id]);
+                    $this->afterDestroy($post);
+                });
             });
 
             return response()->json([
@@ -493,18 +485,16 @@ class PostCrudController extends BaseCrudController
                 throw new \InvalidArgumentException('Invalid UUID');
             }
 
-            $this->transactionService->run(function () use ($uuid) {
-                $post = $this->modelClass::onlyTrashed()->where('uuid', $uuid)->firstOrFail();
-                $post->restore();
-                return $post;
-            }, function ($post) {
-                Log::info("{$this->entityName} restored successfully", ['id' => $post->id]);
-                
-                // Mark significant data change and clear cache
-                $this->significantDataChange = true;
-                $this->clearCrudCache('posts');
-                
-                $this->afterRestore($post);
+            // Use CacheTraitCrud's executeCrudOperation for better cache management
+            $this->executeCrudOperation('posts', function () use ($uuid) {
+                return $this->transactionService->run(function () use ($uuid) {
+                    $post = $this->modelClass::onlyTrashed()->where('uuid', $uuid)->firstOrFail();
+                    $post->restore();
+                    return $post;
+                }, function ($post) {
+                    Log::info("{$this->entityName} restored successfully", ['id' => $post->id]);
+                    $this->afterRestore($post);
+                });
             });
 
             return response()->json([
@@ -657,11 +647,5 @@ class PostCrudController extends BaseCrudController
         // Add custom logic here, e.g., notify user
     }
 
-    /**
-     * Get cache time (can be overridden)
-     */
-    protected function getCacheTime()
-    {
-        return $this->cacheTime ?? $this->defaultCacheTime ?? 300;
-    }
+
 } 
