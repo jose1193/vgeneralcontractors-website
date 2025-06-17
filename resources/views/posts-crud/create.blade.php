@@ -9,10 +9,10 @@
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
                 <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    {{ __('Create New Post') }}
+                    {{ __('create_new_post') }}
                 </h2>
                 <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    {{ __('Create a new blog post with rich content') }}
+                    {{ __('create_new_post_subtitle') }}
                 </p>
             </div>
         </div>
@@ -44,13 +44,12 @@
                                 {{-- Post Title --}}
                                 <div>
                                     <label for="post_title" class="block text-sm font-medium text-gray-300 mb-2">
-                                        {{ __('Post Title') }} <span class="text-red-400">*</span>
+                                        {{ __('post_title') }} <span class="text-red-400">*</span>
                                     </label>
                                     <input type="text" name="post_title" id="post_title"
                                         value="{{ old('post_title') }}" required
                                         class="w-full text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0 @error('post_title') ring-2 ring-red-500 @enderror"
-                                        style="background-color: #2C2E36;"
-                                        placeholder="{{ __('Enter post title...') }}">
+                                        style="background-color: #2C2E36;" placeholder="{{ __('enter_post_title') }}">
                                     @error('post_title')
                                         <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                                     @enderror
@@ -59,7 +58,7 @@
                                 {{-- Post Content --}}
                                 <div>
                                     <label for="post_content" class="block text-sm font-medium text-gray-300 mb-2">
-                                        {{ __('Post Content') }} <span class="text-red-400">*</span>
+                                        {{ __('post_content') }} <span class="text-red-400">*</span>
                                     </label>
                                     <textarea name="post_content" id="post_content" required
                                         class="w-full min-h-96 @error('post_content') ring-2 ring-red-500 @enderror">{{ old('post_content') }}</textarea>
@@ -73,25 +72,25 @@
                             <div class="space-y-6">
                                 {{-- Post Status --}}
                                 <div class="bg-gray-700 rounded-lg p-4">
-                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Publish') }}</h3>
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('publish') }}</h3>
 
                                     <div class="space-y-4">
                                         {{-- Post Status --}}
                                         <div>
                                             <label for="post_status"
                                                 class="block text-sm font-medium text-gray-300 mb-2">
-                                                {{ __('Status') }}
+                                                {{ __('status') }}
                                             </label>
                                             <select name="post_status" id="post_status"
                                                 class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                                 style="background-color: #2C2E36;" onchange="toggleScheduleField()">
                                                 <option value="published"
                                                     {{ old('post_status') === 'published' ? 'selected' : '' }}>
-                                                    {{ __('Published') }}
+                                                    {{ __('published') }}
                                                 </option>
                                                 <option value="scheduled"
                                                     {{ old('post_status') === 'scheduled' ? 'selected' : '' }}>
-                                                    {{ __('Scheduled') }}
+                                                    {{ __('scheduled') }}
                                                 </option>
                                             </select>
                                         </div>
@@ -100,7 +99,7 @@
                                         <div id="scheduled_at_field" style="display: none;">
                                             <label for="scheduled_at"
                                                 class="block text-sm font-medium text-gray-300 mb-2">
-                                                {{ __('Schedule Date') }}
+                                                {{ __('schedule_date') }}
                                             </label>
                                             <input type="datetime-local" name="scheduled_at" id="scheduled_at"
                                                 value="{{ old('scheduled_at') }}"
@@ -113,27 +112,27 @@
                                     <div class="mt-6 flex space-x-3">
                                         <button type="submit"
                                             class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded-lg font-medium transition-colors">
-                                            {{ __('Create Post') }}
+                                            {{ __('create_post') }}
                                         </button>
                                         <a href="{{ route('posts-crud.index') }}"
                                             class="flex-1 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium transition-colors text-center">
-                                            {{ __('Cancel') }}
+                                            {{ __('cancel') }}
                                         </a>
                                     </div>
                                 </div>
 
                                 {{-- Category --}}
                                 <div class="bg-gray-700 rounded-lg p-4">
-                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Category') }}</h3>
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('category') }}</h3>
 
                                     <div>
                                         <label for="category_id" class="block text-sm font-medium text-gray-300 mb-2">
-                                            {{ __('Select Category') }} <span class="text-red-400">*</span>
+                                            {{ __('select_category') }} <span class="text-red-400">*</span>
                                         </label>
                                         <select name="category_id" id="category_id" required
                                             class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0 @error('category_id') ring-2 ring-red-500 @enderror"
                                             style="background-color: #2C2E36;">
-                                            <option value="">{{ __('Choose a category') }}</option>
+                                            <option value="">{{ __('choose_category') }}</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}"
                                                     {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -149,25 +148,25 @@
 
                                 {{-- Featured Image with Upload & Preview --}}
                                 <div class="bg-gray-700 rounded-lg p-4">
-                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Featured Image') }}</h3>
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('featured_image') }}</h3>
 
                                     {{-- Image Upload Options --}}
                                     <div class="space-y-4">
                                         {{-- Upload Method Selector --}}
                                         <div>
                                             <label class="block text-sm font-medium text-gray-300 mb-2">
-                                                {{ __('Upload Method') }}
+                                                {{ __('upload_method') }}
                                             </label>
                                             <div class="flex space-x-2">
                                                 <button type="button" id="upload-tab"
                                                     class="flex-1 px-3 py-2 text-sm rounded-lg transition-colors bg-yellow-500 text-gray-900"
                                                     onclick="switchUploadMethod('upload')">
-                                                    {{ __('Upload File') }}
+                                                    {{ __('upload_file') }}
                                                 </button>
                                                 <button type="button" id="url-tab"
                                                     class="flex-1 px-3 py-2 text-sm rounded-lg transition-colors bg-gray-600 text-gray-300 hover:bg-gray-500"
                                                     onclick="switchUploadMethod('url')">
-                                                    {{ __('Image URL') }}
+                                                    {{ __('image_url') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -176,7 +175,7 @@
                                         <div id="upload-section">
                                             <label for="post_image_file"
                                                 class="block text-sm font-medium text-gray-300 mb-2">
-                                                {{ __('Select Image File') }}
+                                                {{ __('select_image_file') }}
                                             </label>
                                             <div class="relative">
                                                 <input type="file" name="post_image_file" id="post_image_file"
@@ -189,7 +188,7 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                                     </svg>
-                                                    {{ __('Click to upload image') }}
+                                                    {{ __('click_to_upload_image') }}
                                                 </button>
                                             </div>
                                             @error('post_image_file')

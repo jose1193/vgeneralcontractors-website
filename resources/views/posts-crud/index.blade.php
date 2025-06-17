@@ -5,10 +5,10 @@
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
                 <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    {{ __('Posts Management') }}
+                    {{ __('posts_management') }}
                 </h2>
                 <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    {{ __('Manage your blog posts with traditional CRUD operations') }}
+                    {{ __('manage_blog_posts_crud') }}
                 </p>
             </div>
         </div>
@@ -37,12 +37,12 @@
                         <div class="relative flex-1 max-w-md">
                             <form method="GET" action="{{ route('posts-crud.index') }}" class="flex">
                                 <input type="text" name="search" value="{{ request('search') }}"
-                                    placeholder="{{ __('Search posts...') }}"
+                                    placeholder="{{ __('search_posts') }}"
                                     class="flex-1 text-gray-300 placeholder-gray-500 rounded-l-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                     style="background-color: #2C2E36;">
                                 <button type="submit"
                                     class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded-r-lg font-medium transition-colors">
-                                    {{ __('Search') }}
+                                    {{ __('search') }}
                                 </button>
                                 <svg class="w-5 h-5 text-gray-500 absolute left-3 top-2.5" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@
                                 <input type="checkbox" {{ request('show_deleted') === 'true' ? 'checked' : '' }}
                                     onchange="toggleShowDeleted(this)"
                                     class="mr-2 rounded bg-gray-700 border-gray-600 text-yellow-500 focus:ring-yellow-500 focus:ring-offset-gray-800">
-                                {{ __('Show Deleted') }}
+                                {{ __('show_deleted') }}
                             </label>
 
                             {{-- Per page dropdown --}}
@@ -68,13 +68,13 @@
                                 class="text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                 style="background-color: #2C2E36;">
                                 <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10
-                                    {{ __('per page') }}</option>
+                                    {{ __('per_page') }}</option>
                                 <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25
-                                    {{ __('per page') }}</option>
+                                    {{ __('per_page') }}</option>
                                 <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50
-                                    {{ __('per page') }}</option>
+                                    {{ __('per_page') }}</option>
                                 <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100
-                                    {{ __('per page') }}</option>
+                                    {{ __('per_page') }}</option>
                             </select>
 
                             {{-- Create button --}}
@@ -84,7 +84,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4" />
                                 </svg>
-                                {{ __('Create Post') }}
+                                {{ __('create_post') }}
                             </a>
                         </div>
                     </div>
@@ -96,13 +96,13 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        {{ __('Image') }}
+                                        {{ __('image') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         <a href="{{ request()->fullUrlWithQuery(['sort_field' => 'post_title', 'sort_direction' => request('sort_field') === 'post_title' && request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}"
                                             class="hover:text-yellow-400">
-                                            {{ __('Title') }}
+                                            {{ __('title') }}
                                             @if (request('sort_field') === 'post_title')
                                                 @if (request('sort_direction') === 'asc')
                                                     ↑
@@ -114,17 +114,17 @@
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        {{ __('Category') }}
+                                        {{ __('category') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        {{ __('Status') }}
+                                        {{ __('status') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         <a href="{{ request()->fullUrlWithQuery(['sort_field' => 'created_at', 'sort_direction' => request('sort_field') === 'created_at' && request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}"
                                             class="hover:text-yellow-400">
-                                            {{ __('Created') }}
+                                            {{ __('created') }}
                                             @if (request('sort_field') === 'created_at')
                                                 @if (request('sort_direction') === 'asc')
                                                     ↑
@@ -136,11 +136,11 @@
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        {{ __('Author') }}
+                                        {{ __('author') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        {{ __('Actions') }}
+                                        {{ __('actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -183,12 +183,12 @@
                                             @if ($post->post_status === 'published')
                                                 <span
                                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">
-                                                    {{ __('Published') }}
+                                                    {{ __('published') }}
                                                 </span>
                                             @elseif($post->post_status === 'scheduled')
                                                 <span
                                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-500/20 text-orange-400">
-                                                    {{ __('Scheduled') }}
+                                                    {{ __('scheduled') }}
                                                 </span>
                                             @else
                                                 <span
@@ -247,7 +247,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="px-6 py-4 text-center text-gray-400">
-                                            {{ __('No posts found') }}
+                                            {{ __('no_posts_found') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -286,7 +286,7 @@
         }
 
         function deletePost(uuid, title) {
-            if (confirm(`Are you sure you want to delete the post "${title}"?`)) {
+            if (confirm(`{{ __('confirm_delete_post') }}`.replace('{title}', title))) {
                 fetch(`{{ route('posts-crud.index') }}/${uuid}`, {
                         method: 'DELETE',
                         headers: {
@@ -310,7 +310,7 @@
         }
 
         function restorePost(uuid, title) {
-            if (confirm(`Are you sure you want to restore the post "${title}"?`)) {
+            if (confirm(`{{ __('confirm_restore_post') }}`.replace('{title}', title))) {
                 fetch(`{{ route('posts-crud.index') }}/${uuid}/restore`, {
                         method: 'PATCH',
                         headers: {
