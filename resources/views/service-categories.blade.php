@@ -17,8 +17,25 @@
                 </p>
             </div>
 
-            <!-- Service Categories Content -->
-            <livewire:service-categories />
+            <!-- Service Categories Content - NOW USING CRUD CONTROLLER -->
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-center">
+                    <a href="{{ route('service-categories.index') }}"
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25 transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        {{ __('manage_service_categories') }}
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Redirect immediately to the new CRUD interface
+        window.location.href = "{{ route('service-categories.index') }}";
+    </script>
 </x-app-layout>

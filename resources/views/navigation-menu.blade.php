@@ -360,9 +360,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -382,8 +382,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 </a>
                             @endcan
                             @can('READ_SERVICE_CATEGORY')
-                                <a href="{{ route('service-categories') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('service-categories') ? 'bg-gray-700 text-white' : '' }}">
+                                <a href="{{ route('service-categories.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('service-categories.*') ? 'bg-gray-700 text-white' : '' }}">
                                     {{ __('service_categories') }}
                                 </a>
                             @endcan
@@ -635,8 +635,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </a>
                         @endcan
                         @can('READ_SERVICE_CATEGORY')
-                            <a href="{{ route('service-categories') }}"
-                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('service-categories') ? 'bg-gray-700 text-white' : '' }}">
+                            <a href="{{ route('service-categories.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('service-categories.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('service_categories') }}
                             </a>
                         @endcan

@@ -87,9 +87,21 @@ Route::middleware([
         return view('company-data');
     })->name('company-data');
 
-    Route::get('/service-categories', function () {
-        return view('service-categories');
-    })->name('service-categories');
+    // Service Categories Resource Routes (CRUD) - NEW
+    Route::prefix('service-categories')->name('service-categories.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ServiceCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\ServiceCategoryController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\ServiceCategoryController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\ServiceCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\ServiceCategoryController::class, 'restore'])->name('restore');
+        Route::post('/check-category', [App\Http\Controllers\ServiceCategoryController::class, 'checkCategoryExists'])->name('check-category');
+        
+        // TEMPORARY - Test CRUD cache functionality
+        Route::get('/test-crud-cache', [App\Http\Controllers\ServiceCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
+    });
     
     Route::get('/blog-categories', function () {
         return view('blog-categories');
