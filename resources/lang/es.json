@@ -1236,7 +1236,7 @@
     "select_gender": "Seleccione género",
     "select_role": "Seleccione rol",
     "username_will_be_generated": "Se generará automáticamente",
-    "username_generated_automatically": "El nombre de usuario se genera automáticamente basado en el nombre y apellido",
+    "username_generated_automatically": "El nombre de usuario se genera automáticamente basado en el nombre y apellido. <em>Ejemplo: Juan Pérez → <strong>juanperez01</strong></em>",
     "username_already_taken": "Este nombre de usuario ya está en uso",
     "create_user": "Crear Usuario",
     "confirm_delete_user": "¿Está seguro de que desea eliminar este usuario?",
