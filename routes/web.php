@@ -83,9 +83,17 @@ Route::middleware([
 
 
 
-    Route::get('/company-data', function () {
-        return view('company-data');
-    })->name('company-data');
+    // Company Data Resource Routes (CRUD) - Single record mode
+    Route::prefix('company-data')->name('company-data.')->group(function () {
+        Route::get('/', [App\Http\Controllers\CompanyDataController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\CompanyDataController::class, 'store'])->name('store');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\CompanyDataController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\CompanyDataController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\CompanyDataController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\CompanyDataController::class, 'restore'])->name('restore');
+        Route::post('/check-email', [App\Http\Controllers\CompanyDataController::class, 'checkEmailExists'])->name('check-email');
+        Route::post('/check-phone', [App\Http\Controllers\CompanyDataController::class, 'checkPhoneExists'])->name('check-phone');
+    });
 
     // Service Categories Resource Routes (CRUD) - NEW
     Route::prefix('service-categories')->name('service-categories.')->group(function () {

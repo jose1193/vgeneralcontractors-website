@@ -3,33 +3,470 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyData;
-use App\Models\EmailData;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use App\Services\TransactionService;
+use App\Traits\CacheTraitCrud;
+use Throwable;
 
-class CompanyDataController extends Controller
+class CompanyDataController extends BaseCrudController
 {
-    public function __construct()
-    {
-        // Verificar si las tablas existen antes de intentar acceder a ellas
-        if (Schema::hasTable('company_data') && Schema::hasTable('email_data')) {
-            try {
-                // Obtener los datos de la compañía
-                $companyData = CompanyData::first();
-                $emailData = EmailData::all();
+    use CacheTraitCrud;
+    
+    protected $modelClass = CompanyData::class;
+    protected $entityName = 'COMPANY_DATA';
+    protected $routePrefix = 'company-data';
+    protected $viewPrefix = 'company-data';
+    
+    // Cache time override: 10 minutes (company data doesn't change frequently)
+    protected $cacheTime = 600;
 
-                // Compartir los datos con todas las vistas
-                View::share('companyData', $companyData);
-                View::share('emailData', $emailData);
-            } catch (\Exception $e) {
-                \Log::error('Error loading company data: ' . $e->getMessage());
-                View::share('companyData', null);
-                View::share('emailData', collect([]));
-            }
-        } else {
-            // Si las tablas no existen, compartir valores nulos
-            View::share('companyData', null);
-            View::share('emailData', collect([]));
+    public function __construct(TransactionService $transactionService)
+    {
+        parent::__construct($transactionService);
+        
+        // Initialize cache properties with defaults
+        $this->initializeCacheProperties();
+    }
+
+    /**
+     * Get validation rules for company data
+     */
+    protected function getValidationRules($id = null)
+    {
+        $emailRule = 'required|email|max:255|unique:company_data,email';
+        $phoneRule = 'required|string|max:20|unique:company_data,phone';
+        
+        // If we have an ID (UUID in this case), exclude it from the unique check
+        if ($id) {
+            $emailRule .= ',' . $id . ',uuid';
+            $phoneRule .= ',' . $id . ',uuid';
         }
+        
+        return [
+            'name' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+            'email' => $emailRule,
+            'phone' => $phoneRule,
+            'address' => 'nullable|string|max:500',
+            'website' => 'nullable|url|max:255',
+            'facebook_link' => 'nullable|url|max:255',
+            'instagram_link' => 'nullable|url|max:255',
+            'linkedin_link' => 'nullable|url|max:255',
+            'twitter_link' => 'nullable|url|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+        ];
+    }
+
+    /**
+     * Get validation messages for company data
+     */
+    protected function getValidationMessages()
+    {
+        return [
+            'name.required' => 'The name is required.',
+            'name.max' => 'The name may not be greater than 255 characters.',
+            'company_name.required' => 'The company name is required.',
+            'company_name.max' => 'The company name may not be greater than 255 characters.',
+            'email.required' => 'The email is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'email.unique' => 'This email is already taken.',
+            'email.max' => 'The email may not be greater than 255 characters.',
+            'phone.required' => 'The phone number is required.',
+            'phone.unique' => 'This phone number is already taken.',
+            'phone.max' => 'The phone number may not be greater than 20 characters.',
+            'address.max' => 'The address may not be greater than 500 characters.',
+            'website.url' => 'The website must be a valid URL.',
+            'website.max' => 'The website may not be greater than 255 characters.',
+            'facebook_link.url' => 'The Facebook link must be a valid URL.',
+            'instagram_link.url' => 'The Instagram link must be a valid URL.',
+            'linkedin_link.url' => 'The LinkedIn link must be a valid URL.',
+            'twitter_link.url' => 'The Twitter link must be a valid URL.',
+            'latitude.numeric' => 'The latitude must be a number.',
+            'latitude.between' => 'The latitude must be between -90 and 90.',
+            'longitude.numeric' => 'The longitude must be a number.',
+            'longitude.between' => 'The longitude must be between -180 and 180.',
+        ];
+    }
+
+    /**
+     * Prepare data for storing company data (not used since we only edit)
+     */
+    protected function prepareStoreData(Request $request)
+    {
+        // This method is not used in single record mode but required by BaseCrudController
+        return $this->prepareUpdateData($request);
+    }
+
+    /**
+     * Prepare data for updating company data
+     */
+    protected function prepareUpdateData(Request $request)
+    {
+        $formattedPhone = $this->formatPhone($request->phone);
+        Log::info('CompanyDataController::prepareUpdateData - Phone formatting', [
+            'original_phone' => $request->phone,
+            'formatted_phone' => $formattedPhone
+        ]);
+
+        return array_filter([
+            'name' => $request->name,
+            'company_name' => $request->company_name,
+            'email' => strtolower($request->email),
+            'phone' => $formattedPhone,
+            'address' => $request->address,
+            'website' => $request->website,
+            'facebook_link' => $request->facebook_link,
+            'instagram_link' => $request->instagram_link,
+            'linkedin_link' => $request->linkedin_link,
+            'twitter_link' => $request->twitter_link,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'user_id' => auth()->id(),
+        ], fn ($value) => !is_null($value));
+    }
+
+    /**
+     * Display the company data (single record)
+     */
+    public function index(Request $request)
+    {
+        // Check permission first
+        if (!$this->checkPermission('READ_COMPANY_DATA', false)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to view company data',
+                ], 403);
+            }
+            
+            return redirect()->route('dashboard')->with('error', 'You do not have permission to view company data');
+        }
+
+        try {
+            // For AJAX requests, return the single company data record
+            if ($request->ajax()) {
+                $companyData = CompanyData::first();
+                
+                // If no company data exists, create a default one
+                if (!$companyData) {
+                    $companyData = CompanyData::create([
+                        'uuid' => (string) Str::uuid(),
+                        'name' => 'Company Name',
+                        'company_name' => 'Company Name',
+                        'email' => 'info@company.com',
+                        'phone' => '+1234567890',
+                        'user_id' => auth()->id(),
+                    ]);
+                }
+
+                // Return in the expected format for the CRUD modal
+                return response()->json([
+                    'data' => [$companyData], // Wrap in array to match pagination format
+                    'current_page' => 1,
+                    'last_page' => 1,
+                    'per_page' => 1,
+                    'total' => 1,
+                    'from' => 1,
+                    'to' => 1,
+                ]);
+            }
+
+            // For normal requests, get the single company data record
+            $companyData = CompanyData::first();
+
+            return view("{$this->viewPrefix}.index", [
+                'companyData' => $companyData,
+                'entityName' => $this->entityName,
+            ]);
+        } catch (Throwable $e) {
+            Log::error("Error in CompanyDataController::index: {$e->getMessage()}", [
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error loading company data',
+                ], 500);
+            }
+
+            return back()->with('error', 'Error loading company data');
+        }
+    }
+
+    /**
+     * Store method disabled - only editing allowed
+     */
+    public function store(Request $request)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => 'Creating new company records is not allowed. Only editing the existing record is permitted.',
+        ], 403);
+    }
+
+    /**
+     * Show the form for editing the company data
+     */
+    public function edit($uuid)
+    {
+        try {
+            if (!$uuid || $uuid === 'undefined') {
+                throw new \InvalidArgumentException('Invalid UUID');
+            }
+
+            $companyData = $this->modelClass::withTrashed()->where('uuid', $uuid)->first();
+
+            if (!$companyData) {
+                throw new \Illuminate\Database\Eloquent\ModelNotFoundException("{$this->entityName} not found");
+            }
+
+            if (request()->ajax()) {
+                Log::info('CompanyDataController::edit - Returning data:', [
+                    'companyData' => $companyData->toArray()
+                ]);
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $companyData,
+                ]);
+            }
+
+            return view("{$this->viewPrefix}.edit", [
+                'companyData' => $companyData,
+                'entityName' => $this->entityName,
+            ]);
+        } catch (Throwable $e) {
+            Log::error("Error retrieving {$this->entityName}: {$e->getMessage()}", [
+                'uuid' => $uuid,
+                'exception' => $e,
+            ]);
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Error retrieving {$this->entityName}",
+                ], $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500);
+            }
+
+            return back()->with('error', "Error retrieving {$this->entityName}");
+        }
+    }
+
+    /**
+     * Update the company data
+     */
+    public function update(Request $request, $uuid)
+    {
+        try {
+            Log::info('CompanyDataController::update - Starting update process', [
+                'uuid' => $uuid,
+                'request_data' => $request->all()
+            ]);
+
+            if (!$uuid || $uuid === 'undefined') {
+                throw new \InvalidArgumentException('Invalid UUID');
+            }
+
+            $data = $request->validate($this->getValidationRules($uuid));
+            Log::info('CompanyDataController::update - Validation passed', ['validated_data' => $data]);
+
+            $companyData = $this->transactionService->run(function () use ($uuid, $request) {
+                $companyData = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
+                Log::info('CompanyDataController::update - Found company data', ['current_data' => $companyData->toArray()]);
+                
+                $preparedData = $this->prepareUpdateData($request);
+                Log::info('CompanyDataController::update - Prepared data', ['prepared_data' => $preparedData]);
+                
+                $companyData->update($preparedData);
+                return $companyData->fresh();
+            }, function ($companyData) {
+                Log::info("{$this->entityName} updated successfully", ['id' => $companyData->id]);
+                
+                // Use new CRUD cache clearing
+                $this->markSignificantDataChange();
+                $this->clearCrudCache('company_data');
+                
+                $this->afterUpdate($companyData);
+            });
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "{$this->entityName} updated successfully",
+                    'companyData' => $companyData,
+                    'redirectUrl' => route("{$this->routePrefix}.index"),
+                ]);
+            }
+
+            return redirect()->route("{$this->routePrefix}.index")
+                ->with('message', "{$this->entityName} updated successfully");
+        } catch (Throwable $e) {
+            Log::error("Error updating {$this->entityName}: {$e->getMessage()}", [
+                'uuid' => $uuid,
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Error updating {$this->entityName}",
+                    'errors' => $e instanceof \Illuminate\Validation\ValidationException
+                        ? $e->errors()
+                        : [$e->getMessage()],
+                ], $e instanceof \Illuminate\Validation\ValidationException ? 422 : 500);
+            }
+
+            return back()->withErrors($e instanceof \Illuminate\Validation\ValidationException
+                ? $e->errors()
+                : [$e->getMessage()])->withInput();
+        }
+    }
+
+    /**
+     * Delete method disabled - deleting company data not allowed
+     */
+    public function destroy($uuid)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => 'Deleting company data is not allowed.',
+        ], 403);
+    }
+
+    /**
+     * Restore method disabled - deleting not allowed so restore not needed
+     */
+    public function restore($uuid)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => 'Restoring company data is not applicable.',
+        ], 403);
+    }
+
+    /**
+     * Check if email exists
+     */
+    public function checkEmailExists(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+            $uuid = $request->input('uuid');
+
+            if (empty($email)) {
+                return response()->json(['exists' => false]);
+            }
+
+            $query = CompanyData::where('email', strtolower($email));
+            
+            if ($uuid) {
+                $query->where('uuid', '!=', $uuid);
+            }
+
+            $exists = $query->exists();
+
+            return response()->json(['exists' => $exists]);
+        } catch (Throwable $e) {
+            Log::error('Error checking email existence: ' . $e->getMessage());
+            return response()->json(['exists' => false], 500);
+        }
+    }
+
+    /**
+     * Check if phone exists
+     */
+    public function checkPhoneExists(Request $request)
+    {
+        try {
+            $phone = $request->input('phone');
+            $uuid = $request->input('uuid');
+
+            if (empty($phone)) {
+                return response()->json(['exists' => false]);
+            }
+
+            $formattedPhone = $this->formatPhone($phone);
+            
+            Log::info('Phone validation debug:', [
+                'received_phone' => $phone,
+                'formatted_phone' => $formattedPhone,
+                'uuid_to_exclude' => $uuid
+            ]);
+            
+            $query = CompanyData::where('phone', $formattedPhone);
+            
+            if ($uuid) {
+                $query->where('uuid', '!=', $uuid);
+            }
+
+            $exists = $query->exists();
+
+            return response()->json(['exists' => $exists]);
+        } catch (Throwable $e) {
+            Log::error('Error checking phone existence: ' . $e->getMessage());
+            return response()->json(['exists' => false], 500);
+        }
+    }
+
+    /**
+     * Format phone number for storage
+     */
+    private function formatPhone($phone)
+    {
+        // Remove all non-numeric characters
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        
+        // If it's a US number (10 digits), add +1 prefix
+        if (strlen($phone) === 10) {
+            return '+1' . $phone;
+        }
+        
+        // If it's 11 digits and starts with 1, add + prefix
+        if (strlen($phone) === 11 && substr($phone, 0, 1) === '1') {
+            return '+' . $phone;
+        }
+        
+        // Return as-is for international numbers
+        return $phone;
+    }
+
+    /**
+     * Get search field for the entity
+     */
+    protected function getSearchField()
+    {
+        return 'company_name';
+    }
+
+    /**
+     * Get name field for the entity
+     */
+    protected function getNameField()
+    {
+        return 'company_name';
+    }
+
+    /**
+     * Get entity display name
+     */
+    protected function getEntityDisplayName($entity)
+    {
+        return $entity->company_name;
+    }
+
+    /**
+     * After update hook
+     */
+    protected function afterUpdate($companyData)
+    {
+        Log::info("CompanyData updated: {$companyData->company_name}");
     }
 } 

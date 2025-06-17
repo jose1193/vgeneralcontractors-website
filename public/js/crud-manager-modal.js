@@ -32,7 +32,11 @@ class CrudManagerModal {
         this.searchTerm = "";
         this.showDeleted = options.showDeleted || false;
         this.currentEntity = null;
+        this.currentData = null; // Para almacenar los datos actuales
         this.isEditing = false;
+
+        // Modo de registro único (solo editar, no crear/eliminar)
+        this.singleRecordMode = options.singleRecordMode || false;
 
         // Configuración de modales
         this.modalConfig = {
@@ -210,6 +214,7 @@ class CrudManagerModal {
             },
             data: requestData,
             success: (response) => {
+                this.currentData = response; // Almacenar datos para el modo de registro único
                 this.renderTable(response);
                 this.renderPagination(response);
             },
@@ -231,6 +236,31 @@ class CrudManagerModal {
      * Mostrar modal de creación
      */
     async showCreateModal() {
+        // En modo de registro único, redirigir a editar el registro existente
+        if (this.singleRecordMode) {
+            // Cargar entidades para obtener el registro único
+            await this.loadEntities();
+
+            // Si hay datos, abrir el modal de edición
+            if (
+                this.currentData &&
+                this.currentData.data &&
+                this.currentData.data.length > 0
+            ) {
+                const entity = this.currentData.data[0];
+                await this.showEditModal(entity[this.idField]);
+                return;
+            }
+
+            // Si no hay datos, mostrar mensaje
+            Swal.fire({
+                icon: "info",
+                title: "Sin datos",
+                text: "No se encontró información para editar. Contacte al administrador.",
+            });
+            return;
+        }
+
         this.isEditing = false;
         this.currentEntity = null;
 
@@ -350,6 +380,7 @@ class CrudManagerModal {
             case "email":
             case "number":
             case "tel":
+            case "url":
                 const capitalizationClass =
                     field.type === "text" && field.capitalize
                         ? " auto-capitalize"
