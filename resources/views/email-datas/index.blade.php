@@ -134,15 +134,30 @@
             <!-- Estilos personalizados para SweetAlert2 -->
             <style>
                 /* Estilos para modal de creación (verde) */
-                .swal2-popup.swal-create .swal2-header {
+                .swal2-popup.swal-create .swal2-header,
+                .swal2-popup.swal-create .swal2-title {
                     background: linear-gradient(135deg, #10B981, #059669) !important;
                     color: white !important;
                 }
 
                 /* Estilos para modal de edición (azul) */
-                .swal2-popup.swal-edit .swal2-header {
+                .swal2-popup.swal-edit .swal2-header,
+                .swal2-popup.swal-edit .swal2-title {
                     background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
                     color: white !important;
+                }
+
+                /* Forzar estilos del header */
+                .swal2-header {
+                    padding: 0 !important;
+                    border-radius: 12px 12px 0 0 !important;
+                }
+
+                .swal2-title {
+                    padding: 1.5rem !important;
+                    margin: 0 !important;
+                    width: 100% !important;
+                    text-align: center !important;
                 }
 
                 /* Estilos generales para el modal */

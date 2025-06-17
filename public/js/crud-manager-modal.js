@@ -252,6 +252,9 @@ class CrudManagerModal {
                     this.initializeFormElements();
                     this.populateForm(this.currentEntity);
                     this.applyHeaderColor("edit");
+
+                    // Debug: verificar que los valores se estén estableciendo
+                    console.log("Current entity data:", this.currentEntity);
                 },
             });
 
@@ -508,6 +511,9 @@ class CrudManagerModal {
         }
 
         try {
+            // Convertir el teléfono al formato de almacenamiento para comparar
+            const phoneForStorage = this.formatPhoneForStorage(phone);
+
             const response = await $.ajax({
                 url: this.routes.checkPhone,
                 type: "POST",
@@ -518,7 +524,7 @@ class CrudManagerModal {
                     Accept: "application/json",
                 },
                 data: {
-                    phone: phone,
+                    phone: phoneForStorage,
                     uuid:
                         this.isEditing && this.currentEntity
                             ? this.currentEntity.uuid
@@ -581,14 +587,76 @@ class CrudManagerModal {
     populateForm(entity) {
         this.formFields.forEach((field) => {
             const element = $(`#${field.name}`);
-            const value = entity[field.name];
+            let value = entity[field.name];
 
             if (field.type === "checkbox") {
                 element.prop("checked", !!value);
             } else {
+                // Formatear teléfono para mostrar en el formulario
+                if (field.name === "phone" && value) {
+                    value = this.formatPhoneForDisplay(value);
+                }
                 element.val(value || "");
             }
         });
+    }
+
+    /**
+     * Formatear teléfono para mostrar en formulario
+     */
+    formatPhoneForDisplay(phone) {
+        if (!phone) return "";
+
+        // Extraer solo los dígitos
+        const cleaned = phone.replace(/\D/g, "");
+
+        // Si tiene 11 dígitos y empieza con 1 (formato +1XXXXXXXXXX)
+        if (cleaned.length === 11 && cleaned.startsWith("1")) {
+            const phoneDigits = cleaned.substring(1); // Remover el 1
+            return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(
+                3,
+                6
+            )}-${phoneDigits.substring(6, 10)}`;
+        }
+        // Si tiene 10 dígitos (formato XXXXXXXXXX)
+        else if (cleaned.length === 10) {
+            return `(${cleaned.substring(0, 3)}) ${cleaned.substring(
+                3,
+                6
+            )}-${cleaned.substring(6, 10)}`;
+        }
+
+        // Para otros formatos, devolver tal como está
+        return phone;
+    }
+
+    /**
+     * Formatear teléfono para almacenamiento/comparación
+     */
+    formatPhoneForStorage(phone) {
+        if (!phone) return "";
+
+        // Extraer solo los dígitos
+        const cleaned = phone.replace(/\D/g, "");
+
+        // Si tiene 10 dígitos, agregar +1
+        if (cleaned.length === 10) {
+            return `(${cleaned.substring(0, 3)}) ${cleaned.substring(
+                3,
+                6
+            )}-${cleaned.substring(6, 10)}`;
+        }
+
+        // Si ya tiene 11 dígitos y empieza con 1, formatear
+        if (cleaned.length === 11 && cleaned.startsWith("1")) {
+            const phoneDigits = cleaned.substring(1);
+            return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(
+                3,
+                6
+            )}-${phoneDigits.substring(6, 10)}`;
+        }
+
+        return phone;
     }
 
     /**
