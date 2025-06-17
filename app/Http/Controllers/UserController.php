@@ -327,8 +327,10 @@ class UserController extends BaseCrudController
                     $user->assignRole($request->role);
                 }
                 
-                // Store password for email sending
-                $user->generated_password = $generatedPassword;
+                // Store password for email sending - assign it to the user object, not save to DB
+                if ($generatedPassword) {
+                    $user->generated_password = $generatedPassword;
+                }
                 
                 return $user;
             }, function ($user) {
@@ -337,11 +339,6 @@ class UserController extends BaseCrudController
                 // Use new CRUD cache clearing
                 $this->markSignificantDataChange();
                 $this->clearCrudCache('users');
-                
-                // Send credentials email
-                if ($user->generated_password) {
-                    dispatch(new SendUserCredentialsEmail($user, $user->generated_password, false));
-                }
                 
                 $this->afterStore($user);
             });
@@ -491,7 +488,7 @@ class UserController extends BaseCrudController
                 $this->markSignificantDataChange();
                 $this->clearCrudCache('users');
                 
-                // Send password reset email if requested
+                // Store the password reset request info for afterUpdate hook
                 // Manejo robusto del campo checkbox que puede venir como boolean, string, número o null
                 $sendPasswordResetValue = $request->input('send_password_reset');
                 $sendPasswordReset = false;
@@ -507,21 +504,8 @@ class UserController extends BaseCrudController
                     }
                 }
                 
-                if ($sendPasswordReset) {
-                    if (isset($user->generated_password) && $user->generated_password) {
-                        dispatch(new SendUserCredentialsEmail($user, $user->generated_password, true));
-                        Log::info('Password reset email dispatched', [
-                            'user_id' => $user->id,
-                            'email' => $user->email,
-                            'password_length' => strlen($user->generated_password)
-                        ]);
-                    } else {
-                        Log::warning('Password reset requested but no generated password found', [
-                            'user_id' => $user->id,
-                            'email' => $user->email
-                        ]);
-                    }
-                }
+                // Store password reset flag for afterUpdate
+                $user->should_send_password_reset = $sendPasswordReset;
                 
                 $this->afterUpdate($user);
             });
@@ -858,6 +842,16 @@ class UserController extends BaseCrudController
     protected function afterStore($user)
     {
         Log::info("User created: {$user->name} {$user->last_name} ({$user->email})");
+        
+        // Send credentials email if password was generated
+        if (isset($user->generated_password) && $user->generated_password) {
+            dispatch(new SendUserCredentialsEmail($user, $user->generated_password, false));
+            Log::info('User credentials email dispatched via creation', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'password_length' => strlen($user->generated_password)
+            ]);
+        }
     }
 
     /**
@@ -866,6 +860,23 @@ class UserController extends BaseCrudController
     protected function afterUpdate($user)
     {
         Log::info("User updated: {$user->name} {$user->last_name} ({$user->email})");
+        
+        // Send password reset email if requested
+        if (isset($user->should_send_password_reset) && $user->should_send_password_reset) {
+            if (isset($user->generated_password) && $user->generated_password) {
+                dispatch(new SendUserCredentialsEmail($user, $user->generated_password, true));
+                Log::info('Password reset email dispatched via update', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'password_length' => strlen($user->generated_password)
+                ]);
+            } else {
+                Log::warning('Password reset requested but no generated password found', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+            }
+        }
     }
 
     /**
