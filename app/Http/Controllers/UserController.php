@@ -170,8 +170,27 @@ class UserController extends BaseCrudController
             'generated_password' => $randomPassword, // Store for email sending
         ];
 
+        // Preserve generated_password before formatting (since trait doesn't include it)
+        $generatedPassword = $data['generated_password'];
+        
         // Format data using trait
-        return $this->formatUserData($data);
+        $formattedData = $this->formatUserData($data);
+        
+        // Restore generated_password after formatting
+        $formattedData['generated_password'] = $generatedPassword;
+        
+        // Hash password
+        if (isset($formattedData['password'])) {
+            $formattedData['password'] = Hash::make($formattedData['password']);
+        }
+
+        Log::info('UserController::prepareStoreData - Returning formatted data', [
+            'has_generated_password' => isset($formattedData['generated_password']),
+            'generated_password_length' => isset($formattedData['generated_password']) ? strlen($formattedData['generated_password']) : 0,
+            'has_hashed_password' => isset($formattedData['password'])
+        ]);
+
+        return $formattedData;
     }
 
     /**
