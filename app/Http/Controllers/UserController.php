@@ -473,8 +473,20 @@ class UserController extends BaseCrudController
                 $this->clearCrudCache('users');
                 
                 // Send password reset email if requested
-                if ($request->send_password_reset && $user->generated_password) {
-                    dispatch(new SendUserCredentialsEmail($user, $user->generated_password, true));
+                if ($request->send_password_reset) {
+                    if ($generatedPassword) {
+                        dispatch(new SendUserCredentialsEmail($user, $generatedPassword, true));
+                        Log::info('Password reset email dispatched', [
+                            'user_id' => $user->id,
+                            'email' => $user->email,
+                            'password_length' => strlen($generatedPassword)
+                        ]);
+                    } else {
+                        Log::warning('Password reset requested but no generated password found', [
+                            'user_id' => $user->id,
+                            'email' => $user->email
+                        ]);
+                    }
                 }
                 
                 $this->afterUpdate($user);

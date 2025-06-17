@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\UserCredentialsMail;
 use App\Mail\PasswordResetMail;
 
@@ -25,14 +26,46 @@ class SendUserCredentialsEmail implements ShouldQueue
         $this->user = $user;
         $this->password = $password;
         $this->isPasswordReset = $isPasswordReset;
+        
+        Log::info('SendUserCredentialsEmail job created', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'is_password_reset' => $isPasswordReset,
+            'password_provided' => !empty($password)
+        ]);
     }
 
     public function handle(): void
     {
-        $mailable = $this->isPasswordReset 
-            ? new PasswordResetMail($this->user, $this->password)
-            : new UserCredentialsMail($this->user, $this->password);
+        try {
+            Log::info('SendUserCredentialsEmail job starting', [
+                'user_id' => $this->user->id,
+                'user_email' => $this->user->email,
+                'is_password_reset' => $this->isPasswordReset,
+                'password_length' => $this->password ? strlen($this->password) : 0
+            ]);
 
-        Mail::to($this->user->email)->send($mailable);
+            $mailable = $this->isPasswordReset 
+                ? new PasswordResetMail($this->user, $this->password)
+                : new UserCredentialsMail($this->user, $this->password);
+
+            Mail::to($this->user->email)->send($mailable);
+            
+            Log::info('SendUserCredentialsEmail job completed successfully', [
+                'user_id' => $this->user->id,
+                'user_email' => $this->user->email,
+                'is_password_reset' => $this->isPasswordReset
+            ]);
+        } catch (\Exception $e) {
+            Log::error('SendUserCredentialsEmail job failed', [
+                'user_id' => $this->user->id,
+                'user_email' => $this->user->email,
+                'is_password_reset' => $this->isPasswordReset,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e;
+        }
     }
 }

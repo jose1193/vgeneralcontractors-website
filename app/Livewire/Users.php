@@ -403,6 +403,13 @@ class Users extends Component
     public function update()
     {
         try {
+            \Log::info('Livewire Users::update - Starting update', [
+                'uuid' => $this->uuid,
+                'send_password_reset' => $this->send_password_reset,
+                'password_provided' => !empty($this->password),
+                'user_email' => $this->email
+            ]);
+
             if (!$this->checkPermissionWithMessage('UPDATE_USER', 'No tienes permiso para actualizar usuarios')) {
                 $this->dispatch('validation-failed');
                 return;
@@ -454,10 +461,26 @@ class Users extends Component
                 $newPassword = $this->password ?: Str::random(12);
                 $formattedData['password'] = Hash::make($newPassword);
 
+                \Log::info('Livewire Users::update - Password update requested', [
+                    'send_password_reset' => $this->send_password_reset,
+                    'password_provided' => !empty($this->password),
+                    'new_password_length' => strlen($newPassword),
+                    'user_email' => $user->email
+                ]);
+
                 // Send password reset email
                 if ($this->send_password_reset) {
                     dispatch(new SendUserCredentialsEmail($user, $newPassword, true));
+                    \Log::info('Livewire Users::update - Password reset email dispatched', [
+                        'user_email' => $user->email,
+                        'password_length' => strlen($newPassword)
+                    ]);
                 }
+            } else {
+                \Log::info('Livewire Users::update - No password update requested', [
+                    'send_password_reset' => $this->send_password_reset,
+                    'password_provided' => !empty($this->password)
+                ]);
             }
 
             $user->update($formattedData);
