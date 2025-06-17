@@ -294,9 +294,28 @@ class PortfolioCrudManager {
                     self.resetForm();
                     $(self.idInputSelector).val(portfolio.uuid);
                     $("#title").val(portfolio.project_type?.title || "");
-                    $("#description").val(
-                        portfolio.project_type?.description || ""
-                    );
+
+                    const description =
+                        portfolio.project_type?.description || "";
+                    $("#description").val(description);
+
+                    // Update character counter
+                    $("#descriptionCounter").text(description.length);
+                    const counter = $("#descriptionCounter").parent();
+                    if (description.length > 900) {
+                        counter
+                            .removeClass("text-gray-500")
+                            .addClass("text-red-500");
+                    } else if (description.length > 700) {
+                        counter
+                            .removeClass("text-gray-500 text-red-500")
+                            .addClass("text-yellow-500");
+                    } else {
+                        counter
+                            .removeClass("text-red-500 text-yellow-500")
+                            .addClass("text-gray-500");
+                    }
+
                     $("#service_category_id").val(
                         portfolio.project_type?.service_category_id || ""
                     );
@@ -307,8 +326,12 @@ class PortfolioCrudManager {
                         portfolio.images.forEach((img) => {
                             const preview = $(`
                                 <div class="relative group" data-img-id="${img.id}">
-                                    <img src="/${img.path}" class="h-20 w-32 object-cover rounded shadow" />
-                                    <button type="button" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 text-xs remove-existing-image-btn" data-img-id="${img.id}">&times;</button>
+                                    <img src="/${img.path}" class="h-24 w-32 object-cover rounded-lg shadow-md" />
+                                    <button type="button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 text-xs remove-existing-image-btn transition-colors" data-img-id="${img.id}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             `);
                             $("#imagePreviews").append(preview);
@@ -476,8 +499,15 @@ class PortfolioCrudManager {
                 reader.onload = function (ev) {
                     const preview = $(`
                         <div class="relative group preview-new">
-                            <img src="${ev.target.result}" class="h-20 w-32 object-cover rounded shadow" />
-                            <button type="button" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 text-xs remove-image-btn" data-idx="${idx}">&times;</button>
+                            <img src="${ev.target.result}" class="h-24 w-32 object-cover rounded-lg shadow-md" />
+                            <button type="button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 text-xs remove-image-btn transition-colors" data-idx="${idx}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                            <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-b-lg">
+                                New
+                            </div>
                         </div>
                     `);
                     previews.append(preview);
@@ -495,6 +525,26 @@ class PortfolioCrudManager {
             self.pendingImages.push(imgId);
             $(this).parent().hide();
         });
+
+        // Drag and drop functionality
+        $(document).on("dragover", "#imagePreviews", function (e) {
+            e.preventDefault();
+            $(this).addClass("border-blue-400");
+        });
+
+        $(document).on("dragleave", "#imagePreviews", function (e) {
+            e.preventDefault();
+            $(this).removeClass("border-blue-400");
+        });
+
+        $(document).on("drop", "#imagePreviews", function (e) {
+            e.preventDefault();
+            $(this).removeClass("border-blue-400");
+
+            const files = e.originalEvent.dataTransfer.files;
+            $("#images")[0].files = files;
+            $("#images").trigger("change");
+        });
     }
 
     resetForm() {
@@ -502,6 +552,14 @@ class PortfolioCrudManager {
         $(this.idInputSelector).val("");
         $(".error-message").addClass("hidden").text("");
         $("#imagePreviews").empty();
+
+        // Reset character counter
+        $("#descriptionCounter").text("0");
+        $("#descriptionCounter")
+            .parent()
+            .removeClass("text-red-500 text-yellow-500")
+            .addClass("text-gray-500");
+
         this.pendingImages = [];
     }
 
