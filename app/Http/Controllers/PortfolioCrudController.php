@@ -69,10 +69,17 @@ class PortfolioCrudController extends BaseCrudController
             $portfolios = $query->paginate($this->perPage, ['*'], 'page', $page);
 
             if ($request->ajax()) {
-                // Formato compatible con el JS
+                // Formato compatible con el JS - estructura simplificada para debug
                 return response()->json([
                     'success' => true,
-                    'data' => $portfolios->items(),
+                    'data' => [
+                        'data' => $portfolios->items(),
+                        'current_page' => $portfolios->currentPage(),
+                        'last_page' => $portfolios->lastPage(),
+                        'from' => $portfolios->firstItem(),
+                        'to' => $portfolios->lastItem(),
+                        'total' => $portfolios->total(),
+                    ],
                     'current_page' => $portfolios->currentPage(),
                     'last_page' => $portfolios->lastPage(),
                     'from' => $portfolios->firstItem(),

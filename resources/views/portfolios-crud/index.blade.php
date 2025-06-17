@@ -185,7 +185,7 @@
         window.translations.error_loading_portfolios = "{{ __('error_loading_portfolios') }}";
     </script>
     <script type="module">
-        import PortfolioCrudManager from '/resources/js/components/portfolioCrud.js';
+        import PortfolioCrudManager from '{{ asset('js/portfolioCrud.js') }}';
 
         const routes = {
             index: '{{ route('portfolios-crud.index') }}',
