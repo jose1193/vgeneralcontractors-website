@@ -5,13 +5,48 @@ namespace App\Traits;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * CacheTraitCrud - Generic caching system for CRUD operations
+ * 
+ * CACHE TIME CONFIGURATION (Senior Best Practice):
+ * ===============================================
+ * 
+ * Priority Order:
+ * 1. Controller Override (highest) - Define $cacheTime in your controller when specific timing needed
+ *    protected $cacheTime = 60; // 1 minute for frequently changing data
+ * 
+ * 2. Trait Default (medium) - Uses $defaultCacheTime from this trait (300 seconds)
+ *    Most CRUD operations work well with 5 minutes
+ * 
+ * 3. Fallback (lowest) - Hardcoded 300 seconds if nothing else is defined
+ * 
+ * USAGE EXAMPLES:
+ * ==============
+ * 
+ * // Most controllers - just use the trait, no cache time definition needed
+ * class ProductController extends BaseCrudController {
+ *     use CacheTraitCrud; // Will use 300 seconds (5 minutes)
+ * }
+ * 
+ * // High-frequency controllers - override when needed
+ * class EmailDataController extends BaseCrudController {
+ *     use CacheTraitCrud;
+ *     protected $cacheTime = 60; // Override to 1 minute
+ * }
+ * 
+ * // Very stable data - override for longer cache
+ * class CountryController extends BaseCrudController {
+ *     use CacheTraitCrud;
+ *     protected $cacheTime = 3600; // Override to 1 hour
+ * }
+ */
 trait CacheTraitCrud
 {
     /**
      * Cache configuration
      */
     protected $cacheEnabled = true;
-    protected $cacheTime = 300; // 5 minutes default
+    protected $defaultCacheTime = 300; // 5 minutes - sensible default for most CRUD operations
     protected $significantDataChange = false;
     
     // Cache key properties - will be initialized if not set
@@ -181,15 +216,57 @@ trait CacheTraitCrud
 
         $this->initializeCacheProperties();
         $cacheKey = $this->generateCrudCacheKey($modelName, $page);
-        $cacheTime = $this->cacheTime ?? 300;
+        
+        // Priority order: controller override -> trait default -> fallback
+        $cacheTime = $this->getCacheTime();
         
         Log::debug('CacheTraitCrud::rememberCrudCache - Using cache', [
             'modelName' => $modelName,
             'cacheKey' => $cacheKey,
-            'cacheTime' => $cacheTime
+            'cacheTime' => $cacheTime,
+            'source' => $this->getCacheTimeSource()
         ]);
 
         return Cache::remember($cacheKey, $cacheTime, $callback);
+    }
+
+    /**
+     * Get cache time with priority: controller override -> trait default -> fallback
+     *
+     * @return int
+     */
+    protected function getCacheTime()
+    {
+        // 1. Controller override (highest priority)
+        if (property_exists($this, 'cacheTime') && isset($this->cacheTime)) {
+            return $this->cacheTime;
+        }
+        
+        // 2. Trait default (medium priority)
+        if (property_exists($this, 'defaultCacheTime') && isset($this->defaultCacheTime)) {
+            return $this->defaultCacheTime;
+        }
+        
+        // 3. Fallback (lowest priority)
+        return 300; // 5 minutes
+    }
+
+    /**
+     * Get the source of cache time for debugging purposes
+     *
+     * @return string
+     */
+    protected function getCacheTimeSource()
+    {
+        if (property_exists($this, 'cacheTime') && isset($this->cacheTime)) {
+            return 'controller_override';
+        }
+        
+        if (property_exists($this, 'defaultCacheTime') && isset($this->defaultCacheTime)) {
+            return 'trait_default';
+        }
+        
+        return 'fallback';
     }
 
     /**

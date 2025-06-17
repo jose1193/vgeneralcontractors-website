@@ -21,8 +21,9 @@ class EmailDataController extends BaseCrudController
     protected $routePrefix = 'email-datas';
     protected $viewPrefix = 'email-datas';
     
-    // Override cache time to 1 minute as per user's preference
-    protected $cacheTime = 60; // 1 minute
+    // Override cache time to 1 minute - EmailData changes frequently due to user interactions
+    // Trait default is 300 seconds (5 min), but this data needs faster refresh
+    protected $cacheTime = 60;
 
     public function __construct(TransactionService $transactionService)
     {
