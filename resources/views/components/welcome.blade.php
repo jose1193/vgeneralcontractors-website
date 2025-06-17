@@ -513,7 +513,22 @@
                                     </div>
                                     @if ($lead->lead_source)
                                         <div class="mt-1">
-                                            <span class="text-xs px-2 py-0.5 bg-gray-700 text-gray-300 rounded">
+                                            <span
+                                                class="text-xs px-2 py-0.5 rounded font-medium
+                                                @if ($lead->lead_source === 'Website') bg-blue-500/20 text-blue-400 border border-blue-500/30
+                                                @elseif($lead->lead_source === 'Facebook Ads') bg-indigo-500/20 text-indigo-400 border border-indigo-500/30
+                                                @elseif($lead->lead_source === 'Retell AI') bg-purple-500/20 text-purple-400 border border-purple-500/30
+                                                @elseif($lead->lead_source === 'Reference') bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
+                                                @else bg-gray-700 text-gray-300 border border-gray-600 @endif">
+                                                @if ($lead->lead_source === 'Website')
+                                                    🌐
+                                                @elseif($lead->lead_source === 'Facebook Ads')
+                                                    📱
+                                                @elseif($lead->lead_source === 'Retell AI')
+                                                    🤖
+                                                @elseif($lead->lead_source === 'Reference')
+                                                    👥
+                                                @endif
                                                 {{ $lead->lead_source }}
                                             </span>
                                         </div>
@@ -593,7 +608,22 @@
                                     </div>
                                     @if ($lead->lead_source)
                                         <div class="mt-1">
-                                            <span class="text-xs px-2 py-0.5 bg-gray-700 text-gray-300 rounded">
+                                            <span
+                                                class="text-xs px-2 py-0.5 rounded font-medium
+                                                @if ($lead->lead_source === 'Website') bg-blue-500/20 text-blue-400 border border-blue-500/30
+                                                @elseif($lead->lead_source === 'Facebook Ads') bg-indigo-500/20 text-indigo-400 border border-indigo-500/30
+                                                @elseif($lead->lead_source === 'Retell AI') bg-purple-500/20 text-purple-400 border border-purple-500/30
+                                                @elseif($lead->lead_source === 'Reference') bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
+                                                @else bg-gray-700 text-gray-300 border border-gray-600 @endif">
+                                                @if ($lead->lead_source === 'Website')
+                                                    🌐
+                                                @elseif($lead->lead_source === 'Facebook Ads')
+                                                    📱
+                                                @elseif($lead->lead_source === 'Retell AI')
+                                                    🤖
+                                                @elseif($lead->lead_source === 'Reference')
+                                                    👥
+                                                @endif
                                                 {{ $lead->lead_source }}
                                             </span>
                                         </div>
