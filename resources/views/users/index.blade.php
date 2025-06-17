@@ -346,10 +346,12 @@
                                 type: 'text',
                                 label: '{{ __('username') }}',
                                 placeholder: '{{ __('username_will_be_generated') }}',
-                                required: false, // Solo requerido en create
-                                showInCreate: true, // Solo mostrar en create
-                                showInEdit: false, // No mostrar en edición
-                                help: `{!! __('username_generated_automatically') !!}`,
+                                required: false,
+                                showInCreate: true,
+                                showInEdit: true,
+                                readonly: (mode) => mode === 'create',
+                                label: (mode) => mode === 'create' ? '{{ __('username') }}' : '',
+                                help: (mode) => mode === 'create' ? `{!! __('username_generated_automatically') !!}` : '',
                                 validation: {
                                     minLength: 7,
                                     unique: {
