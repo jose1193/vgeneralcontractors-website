@@ -302,3 +302,12 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/blog/search', [PostController::class, 'search'])->name('blog.search');
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
+
+// Service Categories API route for JavaScript
+Route::get('/service-categories', function () {
+    $categories = \App\Models\ServiceCategory::orderBy('service_category_name')->get();
+    return response()->json([
+        'success' => true,
+        'data' => $categories
+    ]);
+})->name('service-categories.api');
