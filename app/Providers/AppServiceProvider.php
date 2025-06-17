@@ -12,6 +12,7 @@ use App\Services\FacebookConversionApi;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use App\Http\Controllers\CompanyDataController;
 
 class AppServiceProvider extends ServiceProvider
 {
