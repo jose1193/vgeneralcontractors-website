@@ -360,9 +360,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas') || request()->routeIs('service-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('email-datas') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -376,8 +376,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
                                 {{ __('services') }}</div>
                             @can('READ_EMAIL_DATA')
-                                <a href="{{ route('email-datas') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('email-datas') ? 'bg-gray-700 text-white' : '' }}">
+                                <a href="{{ route('email-datas.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
                                     {{ __('emails') }}
                                 </a>
                             @endcan
@@ -629,8 +629,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </button>
                     <div x-show="servicesOpen" x-transition class="ml-9 mt-2 space-y-2">
                         @can('READ_EMAIL_DATA')
-                            <a href="{{ route('email-datas') }}"
-                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas') ? 'bg-gray-700 text-white' : '' }}">
+                            <a href="{{ route('email-datas.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('emails') }}
                             </a>
                         @endcan
