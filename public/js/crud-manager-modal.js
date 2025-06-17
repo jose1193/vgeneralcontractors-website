@@ -34,6 +34,7 @@ class CrudManagerModal {
         this.currentEntity = null;
         this.currentData = null; // Para almacenar los datos actuales
         this.isEditing = false;
+        this.alertTimeout = null; // Para manejar timeouts de alertas
 
         // Modo de registro único (solo editar, no crear/eliminar)
         this.singleRecordMode = options.singleRecordMode || false;
@@ -234,9 +235,23 @@ class CrudManagerModal {
     }
 
     /**
+     * Limpiar alertas
+     */
+    clearAlerts() {
+        if (this.alertTimeout) {
+            clearTimeout(this.alertTimeout);
+            this.alertTimeout = null;
+        }
+        $(this.alertSelector).empty().show();
+    }
+
+    /**
      * Mostrar modal de creación
      */
     async showCreateModal() {
+        // Limpiar alertas previas
+        this.clearAlerts();
+
         // En modo de registro único, redirigir a editar el registro existente
         if (this.singleRecordMode) {
             // Cargar entidades para obtener el registro único
@@ -295,6 +310,9 @@ class CrudManagerModal {
      * Mostrar modal de edición
      */
     async showEditModal(id) {
+        // Limpiar alertas previas
+        this.clearAlerts();
+
         this.isEditing = true;
 
         // Cargar datos de la entidad
@@ -1539,21 +1557,44 @@ class CrudManagerModal {
      * Mostrar alerta
      */
     showAlert(type, message) {
+        // Limpiar cualquier timeout previo
+        if (this.alertTimeout) {
+            clearTimeout(this.alertTimeout);
+        }
+
+        // Limpiar alertas previas inmediatamente
+        $(this.alertSelector).empty().show();
+
         const alertClass =
             type === "success"
                 ? "bg-green-100 border-green-400 text-green-700"
                 : "bg-red-100 border-red-400 text-red-700";
+
+        const iconSvg =
+            type === "success"
+                ? `<svg class="w-5 h-5 mr-2 inline-block" fill="currentColor" viewBox="0 0 20 20">
+                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+               </svg>`
+                : `<svg class="w-5 h-5 mr-2 inline-block" fill="currentColor" viewBox="0 0 20 20">
+                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+               </svg>`;
+
         const alertHtml = `
-            <div class="alert ${alertClass} border px-4 py-3 rounded mb-4" role="alert">
-                <span class="block sm:inline">${message}</span>
+            <div class="alert ${alertClass} border px-4 py-3 rounded mb-4 transition-all duration-300 ease-in-out" role="alert">
+                <div class="flex items-center">
+                    ${iconSvg}
+                    <span class="block sm:inline">${message}</span>
+                </div>
             </div>
         `;
 
         $(this.alertSelector).html(alertHtml);
 
-        // Auto-hide después de 5 segundos
-        setTimeout(() => {
-            $(this.alertSelector).fadeOut();
+        // Auto-hide después de 5 segundos con animación suave
+        this.alertTimeout = setTimeout(() => {
+            $(this.alertSelector).fadeOut(300, () => {
+                $(this.alertSelector).empty();
+            });
         }, 5000);
     }
 
