@@ -307,6 +307,10 @@ class EmailDataController extends BaseCrudController
             }
 
             if (request()->ajax()) {
+                Log::info('EmailDataController::edit - Returning data:', [
+                    'emailData' => $emailData->toArray()
+                ]);
+                
                 return response()->json([
                     'success' => true,
                     'data' => $emailData,
