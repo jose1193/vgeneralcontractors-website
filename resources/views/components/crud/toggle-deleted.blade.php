@@ -2,6 +2,7 @@
     'id' => 'showDeleted',
     'label' => '',
     'hasLabel' => true,
+    'managerName' => 'appointmentManager',
 ])
 
 <div class="flex items-center justify-between md:justify-start space-x-2">
@@ -35,14 +36,14 @@
 
             // Función para aplicar el estado del toggle al manager
             function applyToggleState() {
-                if (!window.appointmentManager) {
-                    console.log('appointmentManager no disponible todavía');
+                if (!window.{{ $managerName }}) {
+                    console.log('{{ $managerName }} no disponible todavía');
                     return false;
                 }
 
-                window.appointmentManager.showDeleted = toggleElement.checked;
-                console.log('Estado aplicado a appointmentManager:', {
-                    showDeleted: window.appointmentManager.showDeleted
+                window.{{ $managerName }}.showDeleted = toggleElement.checked;
+                console.log('Estado aplicado a {{ $managerName }}:', {
+                    showDeleted: window.{{ $managerName }}.showDeleted
                 });
                 return true;
             }
@@ -57,12 +58,12 @@
                     clearInterval(waitForManager);
                     if (toggleElement.checked) {
                         // Forzar recarga con los elementos inactivos si el toggle está activado
-                        window.appointmentManager.loadEntities();
+                        window.{{ $managerName }}.loadEntities();
                         console.log('Cargando entidades inactivas al iniciar');
                     }
                 } else if (attempts >= maxAttempts) {
                     clearInterval(waitForManager);
-                    console.log('No se pudo sincronizar con appointmentManager después de', attempts,
+                    console.log('No se pudo sincronizar con {{ $managerName }} después de', attempts,
                         'intentos');
                 }
             }, 200);
@@ -76,10 +77,10 @@
                 });
 
                 // If we have access to the CrudManager instance, update and refresh
-                if (window.appointmentManager) {
-                    window.appointmentManager.showDeleted = this.checked;
-                    window.appointmentManager.currentPage = 1; // Reset to first page 
-                    window.appointmentManager.loadEntities();
+                if (window.{{ $managerName }}) {
+                    window.{{ $managerName }}.showDeleted = this.checked;
+                    window.{{ $managerName }}.currentPage = 1; // Reset to first page 
+                    window.{{ $managerName }}.loadEntities();
                     console.log('Estado de toggle actualizado y datos recargados:', {
                         showDeleted: this.checked
                     });

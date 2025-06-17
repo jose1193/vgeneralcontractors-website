@@ -30,13 +30,15 @@
                         class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
                         <!-- Search input -->
                         <div class="w-full md:w-1/2 lg:w-2/5">
-                            <x-crud.input-search id="searchInput" placeholder="{{ __('search_email_data') }}" />
+                            <x-crud.input-search id="searchInput" placeholder="{{ __('search_email_data') }}"
+                                manager-name="emailDataManager" />
                         </div>
 
                         <div
                             class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                             <!-- Toggle to show inactive email data -->
-                            <x-crud.toggle-deleted id="showDeleted" label="{{ __('show_inactive_records') }}" />
+                            <x-crud.toggle-deleted id="showDeleted" label="{{ __('show_inactive_records') }}"
+                                manager-name="emailDataManager" />
 
                             <!-- Per page dropdown -->
                             <x-select-input-per-pages name="perPage" id="perPage" class="sm:w-32">

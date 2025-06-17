@@ -2,6 +2,7 @@
     'id',
     'name' => $id,
     'placeholder' => '',
+    'managerName' => 'appointmentManager',
     'class' =>
         'block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 leading-5 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-700',
 ])
@@ -49,9 +50,9 @@
                     console.log('Search input changed:', this.value);
 
                     // Ensure the searchTerm is properly set in CrudManager
-                    if (window.appointmentManager) {
-                        window.appointmentManager.searchTerm = this.value;
-                        console.log('Set appointmentManager.searchTerm to:', this.value);
+                    if (window.{{ $managerName }}) {
+                        window.{{ $managerName }}.searchTerm = this.value;
+                        console.log('Set {{ $managerName }}.searchTerm to:', this.value);
                     }
 
                     // This will trigger the CrudManager's search handler through both events
@@ -67,9 +68,9 @@
                 searchInput.focus();
 
                 // Ensure the searchTerm is cleared in CrudManager
-                if (window.appointmentManager) {
-                    window.appointmentManager.searchTerm = '';
-                    console.log('Cleared appointmentManager.searchTerm');
+                if (window.{{ $managerName }}) {
+                    window.{{ $managerName }}.searchTerm = '';
+                    console.log('Cleared {{ $managerName }}.searchTerm');
                 }
 
                 $(searchInput).trigger('keyup');
