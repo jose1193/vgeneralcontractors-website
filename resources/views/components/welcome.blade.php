@@ -95,7 +95,7 @@
             </a>
 
             <!-- View Portfolio Card -->
-            <a href="{{ route('portfolios.index') }}"
+            <a href="{{ route('portfolios-crud.index') }}"
                 class="group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 shadow-lg shadow-gray-900/50"
                 style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%); border: 1px solid rgba(147, 51, 234, 0.2);">
                 <div class="flex items-center space-x-4">
