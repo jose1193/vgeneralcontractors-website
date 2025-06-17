@@ -346,11 +346,11 @@
                                 type: 'text',
                                 label: '{{ __('username') }}',
                                 placeholder: '{{ __('username_will_be_generated') }}',
-                                required: true, // Requerido en edición
-                                showInCreate: false, // Solo mostrar en edición
+                                required: false, // Solo requerido en create
+                                showInCreate: true, // Solo mostrar en create
+                                showInEdit: false, // No mostrar en edición
                                 help: `{!! __('username_generated_automatically') !!}`,
                                 validation: {
-                                    required: true,
                                     minLength: 7,
                                     unique: {
                                         url: "{{ route('users.check-username') }}",
