@@ -56,11 +56,19 @@
                         <div
                             class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
                             {{-- Show deleted toggle --}}
-                            <label class="flex items-center text-gray-300">
-                                <input type="checkbox" {{ request('show_deleted') === 'true' ? 'checked' : '' }}
-                                    onchange="toggleShowDeleted(this)"
-                                    class="mr-2 rounded bg-gray-700 border-gray-600 text-yellow-500 focus:ring-yellow-500 focus:ring-offset-gray-800">
-                                {{ __('show_deleted') }}
+                            <label class="flex items-center text-gray-300 cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="showDeletedToggle"
+                                        {{ request('show_deleted') === 'true' ? 'checked' : '' }}
+                                        onchange="toggleShowDeleted(this)" class="sr-only">
+                                    <div
+                                        class="block bg-gray-600 w-14 h-8 rounded-full transition-colors duration-200 ease-in-out {{ request('show_deleted') === 'true' ? 'bg-yellow-500' : '' }}">
+                                    </div>
+                                    <div
+                                        class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out {{ request('show_deleted') === 'true' ? 'transform translate-x-6' : '' }}">
+                                    </div>
+                                </div>
+                                <span class="ml-3 text-sm">{{ __('show_deleted') }}</span>
                             </label>
 
                             {{-- Per page dropdown --}}
@@ -203,22 +211,20 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                                             {{ $post->user->name ?? 'N/A' }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="flex justify-end space-x-2">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                            <div class="flex justify-center space-x-2">
                                                 @if (!$post->deleted_at)
                                                     {{-- View button (only for published posts) --}}
                                                     @if ($post->post_status === 'published')
                                                         <a href="{{ route('blog.show', $post->post_title_slug) }}"
                                                             target="_blank"
-                                                            class="text-blue-400 hover:text-blue-300 transition-colors"
+                                                            class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                             title="{{ __('View post') }}">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
+                                                                viewBox="0 0 24 24" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
                                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
                                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                             </svg>
                                                         </a>
@@ -226,12 +232,11 @@
 
                                                     {{-- Edit button --}}
                                                     <a href="{{ route('posts-crud.edit', $post->uuid) }}"
-                                                        class="text-yellow-400 hover:text-yellow-300 transition-colors"
+                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                         title="{{ __('Edit post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
+                                                            viewBox="0 0 24 24" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
                                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                         </svg>
                                                     </a>
@@ -239,12 +244,11 @@
                                                     {{-- Delete button --}}
                                                     <button
                                                         onclick="deletePost('{{ $post->uuid }}', '{{ addslashes($post->post_title) }}')"
-                                                        class="text-red-400 hover:text-red-300 transition-colors"
+                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                         title="{{ __('Delete post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
+                                                            viewBox="0 0 24 24" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
                                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
                                                     </button>
@@ -252,11 +256,11 @@
                                                     {{-- Restore button --}}
                                                     <button
                                                         onclick="restorePost('{{ $post->uuid }}', '{{ addslashes($post->post_title) }}')"
-                                                        class="text-green-400 hover:text-green-300 transition-colors">
+                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                        title="{{ __('Restore post') }}">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
+                                                            viewBox="0 0 24 24" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
                                                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                         </svg>
                                                     </button>
@@ -371,5 +375,38 @@
         document.addEventListener('DOMContentLoaded', function() {
             autoHideAlerts();
         });
+
+        // Toggle functionality for show deleted
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('showDeletedToggle');
+            if (toggle) {
+                toggle.addEventListener('change', function() {
+                    const background = this.nextElementSibling;
+                    const dot = background.nextElementSibling;
+
+                    if (this.checked) {
+                        background.classList.remove('bg-gray-600');
+                        background.classList.add('bg-yellow-500');
+                        dot.classList.add('transform', 'translate-x-6');
+                    } else {
+                        background.classList.remove('bg-yellow-500');
+                        background.classList.add('bg-gray-600');
+                        dot.classList.remove('transform', 'translate-x-6');
+                    }
+                });
+            }
+        });
     </script>
+
+    <style>
+        /* Custom toggle styles */
+        .dot {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Smooth transitions for toggle */
+        .toggle-bg {
+            transition: background-color 0.2s ease-in-out;
+        }
+    </style>
 </x-app-layout>
