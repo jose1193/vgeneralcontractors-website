@@ -1340,5 +1340,9 @@
     "image_url": "URL de la Imagen",
     "select_image_file": "Seleccione Archivo de Imagen",
     "click_to_upload_image": "Haga clic para subir imagen",
-    "click_to_upload_new_image": "Haga clic para subir nueva imagen"
+    "click_to_upload_new_image": "Haga clic para subir nueva imagen",
+    "placeholder_image_url": "https://ejemplo.com/imagen.jpg",
+    "placeholder_meta_title": "Dejar vacío para usar el título de la publicación",
+    "placeholder_meta_description": "Breve descripción para motores de búsqueda",
+    "placeholder_meta_keywords": "palabra1, palabra2, palabra3"
 }

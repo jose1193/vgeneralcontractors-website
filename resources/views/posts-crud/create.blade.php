@@ -206,7 +206,7 @@
                                                 value="{{ old('post_image_url') }}"
                                                 class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                                 style="background-color: #2C2E36;"
-                                                placeholder="{{ __('https://example.com/image.jpg') }}"
+                                                placeholder="{{ __('placeholder_image_url') }}"
                                                 onchange="handleImageUrl(this)">
                                             @error('post_image_url')
                                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
@@ -245,7 +245,7 @@
                                                 value="{{ old('meta_title') }}" maxlength="100"
                                                 class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                                 style="background-color: #2C2E36;"
-                                                placeholder="{{ __('Leave empty to use post title') }}">
+                                                placeholder="{{ __('placeholder_meta_title') }}">
                                             @error('meta_title')
                                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                                             @enderror
@@ -259,7 +259,7 @@
                                             </label>
                                             <textarea name="meta_description" id="meta_description" rows="3" maxlength="255"
                                                 class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
-                                                style="background-color: #2C2E36;" placeholder="{{ __('Brief description for search engines') }}">{{ old('meta_description') }}</textarea>
+                                                style="background-color: #2C2E36;" placeholder="{{ __('placeholder_meta_description') }}">{{ old('meta_description') }}</textarea>
                                             @error('meta_description')
                                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                                             @enderror
@@ -275,7 +275,7 @@
                                                 value="{{ old('meta_keywords') }}"
                                                 class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                                                 style="background-color: #2C2E36;"
-                                                placeholder="{{ __('keyword1, keyword2, keyword3') }}">
+                                                placeholder="{{ __('placeholder_meta_keywords') }}">
                                             @error('meta_keywords')
                                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                                             @enderror
