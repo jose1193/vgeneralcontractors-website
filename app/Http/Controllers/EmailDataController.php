@@ -23,7 +23,7 @@ class EmailDataController extends BaseCrudController
     
     // Cache properties
     protected $cacheEnabled = true;
-    protected $cacheTime = 300; // 5 minutes
+    protected $cacheTime = 60; // 1 minute
     protected $search;
     protected $sortField;
     protected $sortDirection;
