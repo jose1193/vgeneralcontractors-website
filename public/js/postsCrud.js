@@ -48,7 +48,7 @@ class PostsCrudManager {
                 self.currentPage = 1;
                 self.loadPosts();
                 self.updateURL();
-            }, 300); // 300ms debounce
+            }, 500); // 500ms debounce para evitar demasiadas peticiones
         });
 
         // Per page
@@ -108,27 +108,101 @@ class PostsCrudManager {
             sort_direction: this.sortDirection,
         });
 
-        // Mostrar loading
+        // Mostrar loading con spinner
         $(this.tableSelector).html(
-            '<tr><td colspan="7" class="text-center py-4 text-gray-400">Loading...</td></tr>'
+            `<tr>
+                <td colspan="7" class="text-center py-8">
+                    <div class="flex items-center justify-center">
+                        <svg class="animate-spin h-6 w-6 mr-3 text-yellow-500" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-gray-400">Cargando posts...</span>
+                    </div>
+                </td>
+            </tr>`
         );
 
         $.ajax({
-            url: `${this.routes.index}?${params.toString()}`,
+            url: this.routes.index,
             method: "GET",
+            dataType: "json",
             headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                 "X-Requested-With": "XMLHttpRequest",
                 Accept: "application/json",
             },
-            success: function (response) {
-                self.renderTable(response.data || response);
-                self.renderPagination(response);
+            data: {
+                page: this.currentPage,
+                per_page: this.perPage,
+                search: this.searchTerm,
+                show_deleted: this.showDeleted ? "true" : "false",
+                sort_field: this.sortField,
+                sort_direction: this.sortDirection,
             },
-            error: function (xhr) {
-                console.error("Error loading posts:", xhr);
+            beforeSend: function () {
+                console.log(`Loading posts...`);
+            },
+            success: function (response) {
+                console.log("Posts loaded successfully:", response);
+
+                // Verificar si la respuesta tiene la estructura correcta
+                if (response && response.success !== false) {
+                    const posts = response.data || response;
+                    self.renderTable(posts);
+                    self.renderPagination(response);
+                } else {
+                    throw new Error(
+                        response.message || "Error en la respuesta del servidor"
+                    );
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading posts:", {
+                    xhr: xhr,
+                    status: status,
+                    error: error,
+                    responseText: xhr.responseText,
+                });
+
+                let errorMessage = "Error al cargar los posts";
+
+                // Intentar obtener un mensaje de error más específico
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.status === 0) {
+                    errorMessage =
+                        "Error de conexión. Verificar la conexión a internet.";
+                } else if (xhr.status === 404) {
+                    errorMessage = "Ruta no encontrada";
+                } else if (xhr.status === 500) {
+                    errorMessage = "Error interno del servidor";
+                } else if (xhr.status === 403) {
+                    errorMessage =
+                        "No tienes permisos para realizar esta acción";
+                }
+
                 $(self.tableSelector).html(
-                    '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading posts</td></tr>'
+                    `<tr>
+                        <td colspan="7" class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="w-12 h-12 text-red-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.732 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                                <p class="text-red-400 font-medium">${errorMessage}</p>
+                                <button onclick="window.postsCrudManager.loadPosts()" class="mt-3 px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-600 transition-colors">
+                                    Reintentar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`
                 );
+
+                // Mostrar alerta también
+                self.showAlert(errorMessage, "error");
+            },
+            complete: function () {
+                console.log("Posts request completed");
             },
         });
     }
@@ -137,8 +211,23 @@ class PostsCrudManager {
         let html = "";
 
         if (posts.length === 0) {
-            html =
-                '<tr><td colspan="7" class="text-center py-4 text-gray-400">No posts found</td></tr>';
+            html = `<tr>
+                <td colspan="7" class="text-center py-8">
+                    <div class="flex flex-col items-center justify-center">
+                        <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-gray-400 font-medium">No se encontraron posts</p>
+                        <p class="text-gray-500 text-sm mt-1">
+                            ${
+                                this.searchTerm
+                                    ? "Intenta con otro término de búsqueda"
+                                    : "Crea tu primer post para empezar"
+                            }
+                        </p>
+                    </div>
+                </td>
+            </tr>`;
         } else {
             posts.forEach((post) => {
                 const isDeleted = post.deleted_at !== null;
@@ -275,25 +364,45 @@ class PostsCrudManager {
         const { current_page, last_page, from, to, total } = data;
         const self = this;
 
+        if (!data || total === 0) {
+            $(this.paginationSelector).html("");
+            return;
+        }
+
         let html = `
-            <div class="text-sm text-gray-300">
-                Showing ${from || 0} to ${to || 0} of ${total} results
-            </div>
-            <div class="flex space-x-1">
-                <button class="px-3 py-1 rounded ${
-                    current_page === 1
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-gray-600"
-                }" ${current_page === 1 ? "disabled" : ""} data-page="${
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-300">
+                    Mostrando ${from || 0} a ${to || 0} de ${total} resultados
+                </div>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-2 text-sm bg-gray-700 text-gray-300 rounded-md border border-gray-600 ${
+                        current_page === 1
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-600 hover:text-white"
+                    }" ${current_page === 1 ? "disabled" : ""} data-page="${
             current_page - 1
-        }">Previous</button>
-                <button class="px-3 py-1 rounded ${
-                    current_page === last_page
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-gray-600"
-                }" ${current_page === last_page ? "disabled" : ""} data-page="${
-            current_page + 1
-        }">Next</button>
+        }">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Anterior
+                    </button>
+                    <span class="px-3 py-2 text-sm text-gray-300">
+                        Página ${current_page} de ${last_page}
+                    </span>
+                    <button class="px-3 py-2 text-sm bg-gray-700 text-gray-300 rounded-md border border-gray-600 ${
+                        current_page === last_page
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-600 hover:text-white"
+                    }" ${
+            current_page === last_page ? "disabled" : ""
+        } data-page="${current_page + 1}">
+                        Siguiente
+                        <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         `;
 
@@ -428,20 +537,35 @@ class PostsCrudManager {
                 ? "bg-green-500/20 text-green-400 border-green-400"
                 : "bg-red-500/20 text-red-400 border-red-400";
 
+        const iconClass =
+            type === "success" ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12";
+        const icon = `
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${iconClass}"></path>
+            </svg>
+        `;
+
         const alertHtml = `
-            <div class="mb-4 p-4 rounded-lg border ${alertClass} transition-all duration-300 ease-in-out">
-                ${message}
+            <div class="mb-4 p-4 rounded-lg border ${alertClass} transition-all duration-300 ease-in-out flex items-center">
+                ${icon}
+                <span>${message}</span>
+                <button onclick="this.parentElement.style.display='none'" class="ml-auto text-current hover:opacity-70">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
         `;
 
         $(this.alertSelector).html(alertHtml);
 
-        // Auto-hide after 5 seconds with fade effect
+        // Auto-hide after 8 seconds with fade effect (más tiempo para errores)
+        const hideTime = type === "error" ? 8000 : 5000;
         setTimeout(() => {
             $(this.alertSelector + " > div").fadeOut(500, function () {
                 $(this).remove();
             });
-        }, 5000);
+        }, hideTime);
     }
 }
 
