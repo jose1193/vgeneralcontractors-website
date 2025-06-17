@@ -545,6 +545,18 @@ class CrudManagerModal {
                 }, 500); // Debounce de 500ms
             });
         }
+
+        // Validación de username
+        const usernameField = document.getElementById("username");
+        if (usernameField) {
+            let usernameTimeout;
+            usernameField.addEventListener("input", (e) => {
+                clearTimeout(usernameTimeout);
+                usernameTimeout = setTimeout(() => {
+                    this.validateUsernameField(e.target.value);
+                }, 500); // Debounce de 500ms
+            });
+        }
     }
 
     /**
@@ -727,6 +739,58 @@ class CrudManagerModal {
             }
         } catch (error) {
             console.error("Error validating phone:", error);
+        }
+    }
+
+    /**
+     * Validar campo de username en tiempo real
+     */
+    async validateUsernameField(username) {
+        if (!username) {
+            this.clearFieldError("username");
+            return;
+        }
+
+        // Validación básica de longitud mínima
+        if (username.length < 7) {
+            this.showFieldError("username", "Mínimo 7 caracteres");
+            return;
+        }
+
+        // Validación de que tenga al menos 2 números
+        const numberMatches = username.match(/\d/g);
+        if (!numberMatches || numberMatches.length < 2) {
+            this.showFieldError("username", "Debe contener al menos 2 números");
+            return;
+        }
+
+        try {
+            const response = await $.ajax({
+                url: this.routes.checkUsername,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    username: username,
+                    uuid:
+                        this.isEditing && this.currentEntity
+                            ? this.currentEntity.uuid
+                            : null,
+                },
+            });
+
+            if (response.exists) {
+                this.showFieldError("username", "Este username ya está en uso");
+            } else {
+                this.clearFieldError("username");
+                this.showFieldSuccess("username", "Username disponible");
+            }
+        } catch (error) {
+            console.error("Error validating username:", error);
         }
     }
 
@@ -929,6 +993,13 @@ class CrudManagerModal {
             }
 
             formData[field.name] = value;
+        });
+
+        // Asegurar que los campos checkbox que no están presentes en el formulario tengan valor false
+        this.formFields.forEach((field) => {
+            if (field.type === "checkbox" && !(field.name in formData)) {
+                formData[field.name] = false;
+            }
         });
 
         return isValid ? formData : false;
