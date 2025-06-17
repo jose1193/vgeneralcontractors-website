@@ -449,8 +449,8 @@
                                 <!-- Status Icon -->
                                 <div
                                     class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
-                                    @if ($lead->status_lead === 'New') bg-green-500
-                                    @elseif($lead->status_lead === 'Called') bg-blue-500
+                                    @if ($lead->status_lead === 'New') bg-blue-500
+                                    @elseif($lead->status_lead === 'Called') bg-green-500
                                     @elseif($lead->status_lead === 'Pending') bg-yellow-500
                                     @elseif($lead->status_lead === 'Declined') bg-red-500
                                     @else bg-gray-500 @endif">
@@ -495,8 +495,8 @@
                                         </p>
                                         <span
                                             class="text-xs px-2 py-1 rounded-full
-                                            @if ($lead->status_lead === 'New') bg-green-500/20 text-green-400
-                                            @elseif($lead->status_lead === 'Called') bg-blue-500/20 text-blue-400
+                                            @if ($lead->status_lead === 'New') bg-blue-500/20 text-blue-400
+                                            @elseif($lead->status_lead === 'Called') bg-green-500/20 text-green-400
                                             @elseif($lead->status_lead === 'Pending') bg-yellow-500/20 text-yellow-400
                                             @elseif($lead->status_lead === 'Declined') bg-red-500/20 text-red-400
                                             @else bg-gray-500/20 text-gray-400 @endif">
@@ -544,8 +544,8 @@
                                 <!-- Status Icon -->
                                 <div
                                     class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
-                                    @if ($lead->status_lead === 'New') bg-green-500
-                                    @elseif($lead->status_lead === 'Called') bg-blue-500
+                                    @if ($lead->status_lead === 'New') bg-blue-500
+                                    @elseif($lead->status_lead === 'Called') bg-green-500
                                     @elseif($lead->status_lead === 'Pending') bg-yellow-500
                                     @elseif($lead->status_lead === 'Declined') bg-red-500
                                     @else bg-gray-500 @endif">
@@ -590,8 +590,8 @@
                                         </p>
                                         <span
                                             class="text-xs px-2 py-1 rounded-full
-                                            @if ($lead->status_lead === 'New') bg-green-500/20 text-green-400
-                                            @elseif($lead->status_lead === 'Called') bg-blue-500/20 text-blue-400
+                                            @if ($lead->status_lead === 'New') bg-blue-500/20 text-blue-400
+                                            @elseif($lead->status_lead === 'Called') bg-green-500/20 text-green-400
                                             @elseif($lead->status_lead === 'Pending') bg-yellow-500/20 text-yellow-400
                                             @elseif($lead->status_lead === 'Declined') bg-red-500/20 text-red-400
                                             @else bg-gray-500/20 text-gray-400 @endif">
