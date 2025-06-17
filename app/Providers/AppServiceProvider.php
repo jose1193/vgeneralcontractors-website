@@ -33,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Definir rate limiters
         $this->configureRateLimiting();
+        
+        // Inicializar el controlador de datos de la compañía
+        $companyDataController = new CompanyDataController();
 
         // Monitoreo de jobs
         Queue::before(function (JobProcessing $event) {
