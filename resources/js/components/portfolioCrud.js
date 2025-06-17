@@ -8,30 +8,34 @@ export default class PortfolioCrudManager {
      * @param {Object} options - Configuración inicial (rutas, selectores, etc)
      */
     constructor(options) {
-        // Configuración básica
-        this.entityName = options.entityName || "Portfolio";
-        this.routes = options.routes || {};
-        this.tableSelector = options.tableSelector || "#dataTable";
-        this.modalSelector = options.modalSelector || "#entityModal";
-        this.formSelector = options.formSelector || "#entityForm";
-        this.alertSelector = options.alertSelector || "#alertMessage";
-        this.addButtonSelector = options.addButtonSelector || "#addEntityBtn";
-        this.paginationSelector = options.paginationSelector || "#pagination";
-        this.searchSelector = options.searchSelector || "#searchInput";
-        this.perPageSelector = options.perPageSelector || "#perPage";
-        this.showDeletedSelector =
-            options.showDeletedSelector || "#showDeleted";
-        // ...otros selectores y configuraciones...
+        // Base URL para las rutas del CRUD de portfolios
+        this.baseUrl = "/portfolios-crud";
 
-        // Estado
-        this.currentPage = 1;
-        this.perPage = 10;
-        this.searchTerm = "";
-        this.showDeleted = false;
-        this.imagesToDelete = [];
-        this.editing = false;
-        this.editingUuid = null;
-        // ...otros estados...
+        // Configuración por defecto
+        this.config = {
+            perPage: 10,
+            currentPage: 1,
+            ...options,
+        };
+
+        // Elementos del DOM
+        this.tableBody = $("#portfolios-table-body");
+        this.pagination = $("#portfolios-pagination");
+        this.searchInput = $("#search-portfolios");
+        this.showDeletedCheckbox = $("#show-deleted-portfolios");
+        this.addButton = $("#add-portfolio-btn");
+        this.modal = $("#portfolio-modal");
+        this.modalTitle = $("#portfolio-modal-title");
+        this.modalBody = $("#portfolio-modal-body");
+
+        // Variables de control
+        this.isLoading = false;
+        this.currentEditUuid = null;
+        this.pendingImages = [];
+        this.currentImages = [];
+        this.maxImages = 10;
+        this.maxFileSize = 2 * 1024 * 1024; // 2MB
+        this.maxTotalNewSize = 10 * 1024 * 1024; // 10MB
 
         // Inicializar
         this.init();
@@ -41,42 +45,48 @@ export default class PortfolioCrudManager {
      * Inicialización principal: carga portfolios, setea handlers, etc
      */
     init() {
-        this.loadPortfolios();
         this.setupEventHandlers();
-        this.setupImageUpload();
+        this.loadPortfolios();
     }
 
     /**
      * Cargar portfolios desde el backend (AJAX)
      */
     loadPortfolios() {
-        const self = this;
-        const params = {
-            page: this.currentPage,
-            per_page: this.perPage,
-            search: this.searchTerm,
-            show_deleted: this.showDeleted ? "true" : "false",
-        };
-        $(this.tableSelector + " #loadingRow").show();
+        if (this.isLoading) return;
+
+        this.isLoading = true;
+        this.tableBody.html(
+            '<tr><td colspan="8" class="text-center py-4">Cargando portfolios...</td></tr>'
+        );
+
+        const params = new URLSearchParams({
+            page: this.config.currentPage,
+            per_page: this.config.perPage,
+            search: this.searchInput.val() || "",
+            show_deleted: this.showDeletedCheckbox.is(":checked")
+                ? "true"
+                : "false",
+        });
+
         $.ajax({
-            url: this.routes.index,
-            type: "GET",
-            data: params,
-            dataType: "json",
-            success(response) {
-                self.renderTable(response);
-                self.renderPagination(response);
+            url: `${this.baseUrl}?${params.toString()}`,
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
             },
-            error(xhr) {
-                const errorMsg =
-                    window.translations?.error_loading_portfolios ||
-                    "Error loading portfolios";
-                $(self.tableSelector + " tbody").html(
-                    `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">${errorMsg}</td></tr>`
+            success: (response) => {
+                this.renderTable(response.data);
+                this.renderPagination(response);
+            },
+            error: (xhr) => {
+                console.error("Error loading portfolios:", xhr);
+                this.tableBody.html(
+                    '<tr><td colspan="8" class="text-center py-4 text-red-600">Error cargando portfolios</td></tr>'
                 );
             },
-            complete() {
-                $(self.tableSelector + " #loadingRow").hide();
+            complete: () => {
+                this.isLoading = false;
             },
         });
     }
@@ -131,7 +141,7 @@ export default class PortfolioCrudManager {
                 </tr>`;
             });
         }
-        $(this.tableSelector + " tbody").html(html);
+        $(this.tableBody).html(html);
     }
 
     /**
@@ -163,16 +173,13 @@ export default class PortfolioCrudManager {
                 : 'data-page="' + (current_page + 1) + '"'
         }>Siguiente</button>`;
         html += `</div>`;
-        $(this.paginationSelector).html(html);
+        $(this.pagination).html(html);
         // Handlers
         const self = this;
-        $(this.paginationSelector + " button:not([disabled])").on(
-            "click",
-            function () {
-                self.currentPage = $(this).data("page");
-                self.loadPortfolios();
-            }
-        );
+        $(this.pagination + " button:not([disabled])").on("click", function () {
+            self.config.currentPage = $(this).data("page");
+            self.loadPortfolios();
+        });
     }
 
     /**
@@ -180,33 +187,27 @@ export default class PortfolioCrudManager {
      */
     setupEventHandlers() {
         const self = this;
-        $(this.searchSelector).on("keyup change", function () {
-            self.searchTerm = $(this).val();
-            self.currentPage = 1;
+        $(this.searchInput).on("keyup change", function () {
+            self.config.search = $(this).val();
+            self.config.currentPage = 1;
             self.loadPortfolios();
         });
-        $(this.perPageSelector).on("change", function () {
-            self.perPage = $(this).val();
-            self.currentPage = 1;
-            self.loadPortfolios();
-        });
-        $(this.showDeletedSelector).on("change", function () {
-            self.showDeleted = $(this).is(":checked");
-            self.currentPage = 1;
-            self.loadPortfolios();
-        });
-        $(this.addButtonSelector).on("click", function () {
+        $(this.addButton).on("click", function () {
             self.showModal("create");
         });
         // Submit form
-        $(document).on("submit", this.formSelector, function (e) {
+        $(document).on("submit", "#portfolio-form", function (e) {
             e.preventDefault();
             self.submitForm();
         });
         // Cancel/close modal
-        $(document).on("click", "#closeModal, #cancelBtn", function () {
-            self.closeModal();
-        });
+        $(document).on(
+            "click",
+            "#close-portfolio-modal, #cancel-btn",
+            function () {
+                self.closeModal();
+            }
+        );
         // Editar
         $(document).on("click", ".edit-btn", function () {
             const uuid = $(this).data("id");
@@ -231,12 +232,12 @@ export default class PortfolioCrudManager {
      */
     showModal(mode, uuid = null) {
         // Limpiar
-        $("#entityForm")[0].reset();
-        $("#imagePreviews").empty();
-        $("#entityUuid").val("");
-        this.imagesToDelete = [];
-        this.editing = mode === "edit";
-        this.editingUuid = uuid;
+        $("#portfolio-form")[0].reset();
+        $("#image-previews").empty();
+        $("#portfolio-uuid").val("");
+        this.pendingImages = [];
+        this.currentImages = [];
+        this.currentEditUuid = uuid;
         // Cargar categorías
         $.ajax({
             url: "/service-categories",
@@ -257,41 +258,41 @@ export default class PortfolioCrudManager {
         if (mode === "edit" && uuid) {
             const self = this;
             $.ajax({
-                url: this.routes.edit.replace(":id", uuid),
+                url: `/portfolios-crud/${uuid}`,
                 type: "GET",
                 dataType: "json",
                 success(resp) {
                     const p =
                         resp.portfolio || resp.entity || resp.data || resp;
-                    $("#entityUuid").val(p.uuid);
+                    $("#portfolio-uuid").val(p.uuid);
                     $("#title").val(p.project_type?.title || "");
                     $("#description").val(p.project_type?.description || "");
                     $("#service_category_id").val(
                         p.project_type?.service_category_id || ""
                     );
                     // Previews de imágenes existentes
-                    $("#imagePreviews").empty();
+                    $("#image-previews").empty();
                     (p.images || []).forEach((img) => {
                         const preview = $(
                             `<div class="relative group" data-img-id="${img.id}"><img src="/${img.path}" class="h-20 w-32 object-cover rounded shadow" /><button type="button" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 text-xs remove-existing-image-btn" data-img-id="${img.id}">&times;</button></div>`
                         );
-                        $("#imagePreviews").append(preview);
+                        $("#image-previews").append(preview);
                     });
                 },
             });
         }
         // Mostrar modal
-        $("#entityModal").removeClass("hidden").addClass("flex");
+        $("#portfolio-modal").removeClass("hidden").addClass("flex");
     }
 
     /**
      * Cerrar el modal
      */
     closeModal() {
-        $("#entityModal").addClass("hidden").removeClass("flex");
-        this.imagesToDelete = [];
-        this.editing = false;
-        this.editingUuid = null;
+        $("#portfolio-modal").addClass("hidden").removeClass("flex");
+        this.pendingImages = [];
+        this.currentImages = [];
+        this.currentEditUuid = null;
     }
 
     /**
@@ -301,7 +302,7 @@ export default class PortfolioCrudManager {
         const self = this;
         $(document).on("change", "#images", function (e) {
             const files = Array.from(e.target.files);
-            const previews = $("#imagePreviews");
+            const previews = $("#image-previews");
             // No borrar previews de imágenes existentes
             previews.find(".remove-existing-image-btn").parent().show();
             // Borrar previews de imágenes nuevas
@@ -326,7 +327,7 @@ export default class PortfolioCrudManager {
         // Marcar imagen existente para eliminar
         $(document).on("click", ".remove-existing-image-btn", (e) => {
             const imgId = $(e.currentTarget).data("img-id");
-            this.imagesToDelete.push(imgId);
+            this.pendingImages.push(imgId);
             $(e.currentTarget).parent().hide();
         });
     }
@@ -336,15 +337,15 @@ export default class PortfolioCrudManager {
      */
     submitForm() {
         const self = this;
-        const form = $(this.formSelector)[0];
+        const form = $("#portfolio-form")[0];
         const formData = new FormData();
         // Campos básicos
         formData.append("title", $("#title").val());
         formData.append("description", $("#description").val());
         formData.append("service_category_id", $("#service_category_id").val());
         // UUID si edición
-        if (this.editing && this.editingUuid) {
-            formData.append("uuid", this.editingUuid);
+        if (this.currentEditUuid) {
+            formData.append("uuid", this.currentEditUuid);
         }
         // Imágenes nuevas (solo las que siguen en previews)
         const files = $("#images")[0].files;
@@ -352,18 +353,18 @@ export default class PortfolioCrudManager {
             formData.append("images[]", files[i]);
         }
         // IDs de imágenes existentes a eliminar
-        this.imagesToDelete.forEach((id) => {
+        this.pendingImages.forEach((id) => {
             formData.append("images_to_delete[]", id);
         });
         // Limpiar errores
         $(".error-message").addClass("hidden").text("");
         // AJAX
-        const url = this.editing
-            ? this.routes.update.replace(":id", this.editingUuid)
-            : this.routes.store;
-        const method = this.editing ? "POST" : "POST"; // Laravel: usar POST + _method=PUT para update
-        if (this.editing) formData.append("_method", "PUT");
-        $("#saveBtn")
+        const url = this.currentEditUuid
+            ? `/portfolios-crud/${this.currentEditUuid}`
+            : `/portfolios-crud`;
+        const method = this.currentEditUuid ? "POST" : "POST"; // Laravel: usar POST + _method=PUT para update
+        if (this.currentEditUuid) formData.append("_method", "PUT");
+        $("#save-btn")
             .prop("disabled", true)
             .find(".button-text")
             .text("Saving...");
@@ -395,7 +396,7 @@ export default class PortfolioCrudManager {
                 }
             },
             complete() {
-                $("#saveBtn")
+                $("#save-btn")
                     .prop("disabled", false)
                     .find(".button-text")
                     .text("Save");
@@ -409,7 +410,7 @@ export default class PortfolioCrudManager {
     deletePortfolio(uuid) {
         const self = this;
         $.ajax({
-            url: this.routes.destroy.replace(":id", uuid),
+            url: `/portfolios-crud/${uuid}`,
             type: "DELETE",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -430,7 +431,7 @@ export default class PortfolioCrudManager {
     restorePortfolio(uuid) {
         const self = this;
         $.ajax({
-            url: this.routes.restore.replace(":id", uuid),
+            url: `/portfolios-crud/${uuid}/restore`,
             type: "PATCH",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),

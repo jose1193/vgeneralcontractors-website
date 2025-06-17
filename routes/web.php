@@ -149,7 +149,7 @@ Route::middleware([
     });
 
     // Portfolios CRUD Resource Routes (NEW - No Livewire)
-    Route::prefix('portfolios')->name('portfolios-crud.')->group(function () {
+    Route::prefix('portfolios-crud')->name('portfolios-crud.')->group(function () {
         Route::get('/', [App\Http\Controllers\PortfolioCrudController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\PortfolioCrudController::class, 'create'])->name('create');
         Route::post('/', [App\Http\Controllers\PortfolioCrudController::class, 'store'])->name('store');

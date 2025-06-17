@@ -1346,6 +1346,6 @@
     "placeholder_meta_title": "Leave empty to use post title",
     "placeholder_meta_description": "Brief description for search engines",
     "placeholder_meta_keywords": "keyword1, keyword2, keyword3",
-    "no_portfolios_found": "No portfolios found.",
+
     "error_loading_portfolios": "Error loading portfolios"
 }
