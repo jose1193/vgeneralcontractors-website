@@ -15,6 +15,9 @@
     "general": "General",
     "technical": "Técnico",
     "billing": "Facturación",
+    "collections": "Cobranzas",
+    "admin": "Administrador",
+    "info": "Información",
     "navigation": "Navegación",
 
     "_comment_language": "=== IDIOMA Y LOCALIZACIÓN ===",

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users;
-use App\Livewire\EmailDatas;
 use App\Livewire\CompanyData;
 use App\Livewire\BlogCategories;
 use Laravel\Socialite\Facades\Socialite;
@@ -82,10 +81,7 @@ Route::middleware([
         return view('users');
     })->name('users');
 
-    // Redirect old email-datas route to new CRUD
-    Route::get('/email-datas-old', function () {
-        return view('email-datas');
-    })->name('email-datas-old');
+
 
     Route::get('/company-data', function () {
         return view('company-data');

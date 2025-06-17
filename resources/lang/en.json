@@ -15,6 +15,9 @@
     "general": "General",
     "technical": "Technical",
     "billing": "Billing",
+    "collections": "Collections",
+    "admin": "Admin",
+    "info": "Info",
     "navigation": "Navigation",
 
     "_comment_language": "=== LANGUAGE AND LOCALIZATION ===",

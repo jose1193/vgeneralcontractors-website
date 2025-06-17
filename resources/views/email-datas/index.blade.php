@@ -344,6 +344,18 @@
                                     {
                                         value: 'Billing',
                                         text: '{{ __('billing') }}'
+                                    },
+                                    {
+                                        value: 'Collections',
+                                        text: '{{ __('collections') }}'
+                                    },
+                                    {
+                                        value: 'Admin',
+                                        text: '{{ __('admin') }}'
+                                    },
+                                    {
+                                        value: 'Info',
+                                        text: '{{ __('info') }}'
                                     }
                                 ]
                             },
@@ -409,7 +421,10 @@
                                         'Sales': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('sales') }}</span>',
                                         'General': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">{{ __('general') }}</span>',
                                         'Technical': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">{{ __('technical') }}</span>',
-                                        'Billing': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">{{ __('billing') }}</span>'
+                                        'Billing': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">{{ __('billing') }}</span>',
+                                        'Collections': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('collections') }}</span>',
+                                        'Admin': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">{{ __('admin') }}</span>',
+                                        'Info': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200">{{ __('info') }}</span>'
                                     };
                                     return entity.type ? typeMap[entity.type] || entity.type : 'N/A';
                                 }

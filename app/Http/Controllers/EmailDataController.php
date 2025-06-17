@@ -55,7 +55,7 @@ class EmailDataController extends BaseCrudController
             'description' => 'required|string|max:255',
             'email' => $emailRule,
             'phone' => $phoneRule,
-            'type' => 'required|in:Support,Sales,General,Technical,Billing',
+            'type' => 'required|in:Support,Sales,General,Technical,Billing,Collections,Admin,Info',
             'user_id' => 'nullable|exists:users,id',
         ];
     }
@@ -76,7 +76,7 @@ class EmailDataController extends BaseCrudController
             'phone.unique' => 'This phone number is already taken.',
             'phone.max' => 'The phone number may not be greater than 20 characters.',
             'type.required' => 'The type is required.',
-            'type.in' => 'The type must be one of: Support, Sales, General, Technical, Billing.',
+            'type.in' => 'The type must be one of: Support, Sales, General, Technical, Billing, Collections, Admin, Info.',
             'user_id.exists' => 'The selected user does not exist.',
         ];
     }
