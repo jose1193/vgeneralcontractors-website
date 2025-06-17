@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Users;
-use App\Livewire\CompanyData;
-use App\Livewire\BlogCategories;
+
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -77,9 +76,18 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     
-    Route::get('/users', function () {
-        return view('users');
-    })->name('users');
+    // Users Resource Routes (CRUD) - NEW
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\UserController::class, 'store'])->name('store');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\UserController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\UserController::class, 'restore'])->name('restore');
+        Route::post('/check-email', [App\Http\Controllers\UserController::class, 'checkEmailExists'])->name('check-email');
+        Route::post('/check-phone', [App\Http\Controllers\UserController::class, 'checkPhoneExists'])->name('check-phone');
+        Route::post('/check-username', [App\Http\Controllers\UserController::class, 'checkUsernameExists'])->name('check-username');
+    });
 
 
 

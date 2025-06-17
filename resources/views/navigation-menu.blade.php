@@ -345,8 +345,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 </a>
                             @endcan
                             @can('READ_USER')
-                                <a href="{{ route('users') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users') ? 'bg-gray-700 text-white' : '' }}">
+                                <a href="{{ route('users.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                     {{ __('users') }}
                                 </a>
                             @endcan
@@ -599,8 +599,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </a>
                         @endcan
                         @can('READ_USER')
-                            <a href="{{ route('users') }}"
-                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('users') ? 'bg-gray-700 text-white' : '' }}">
+                            <a href="{{ route('users.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('users') }}
                             </a>
                         @endcan
