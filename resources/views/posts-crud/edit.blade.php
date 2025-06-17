@@ -223,7 +223,8 @@
                                                     {{ __('Current Image') }}
                                                 </label>
                                                 <div class="relative">
-                                                    <img src="{{ $post->post_image }}" alt="Current featured image"
+                                                    <img src="{{ Str::startsWith($post->post_image, 'http://') ? Str::replaceFirst('http://', 'https://', $post->post_image) : $post->post_image }}"
+                                                        alt="Current featured image"
                                                         class="w-full h-48 object-cover rounded-lg border border-gray-600"
                                                         onerror="this.style.display='none'">
                                                 </div>

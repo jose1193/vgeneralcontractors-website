@@ -96,6 +96,10 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                                        {{ __('Image') }}
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         <a href="{{ request()->fullUrlWithQuery(['sort_field' => 'post_title', 'sort_direction' => request('sort_field') === 'post_title' && request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}"
                                             class="hover:text-yellow-400">
                                             {{ __('Title') }}
@@ -143,6 +147,24 @@
                             <tbody class="bg-gray-800 divide-y divide-gray-700">
                                 @forelse($posts as $post)
                                     <tr class="hover:bg-gray-750 {{ $post->deleted_at ? 'opacity-60' : '' }}">
+                                        <td class="px-4 py-3 text-sm text-gray-400">
+                                            @if ($post->post_image)
+                                                <img class="h-12 w-12 object-cover rounded-md"
+                                                    src="{{ Str::startsWith($post->post_image, 'http://') ? Str::replaceFirst('http://', 'https://', $post->post_image) : $post->post_image }}"
+                                                    alt="Post image" onerror="this.style.display='none'">
+                                            @else
+                                                <div
+                                                    class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md">
+                                                    <svg class="w-6 h-6 text-gray-500" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14">
+                                                        </path>
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-200">
                                                 {{ Str::limit($post->post_title, 50) }}
@@ -224,7 +246,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-gray-400">
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-400">
                                             {{ __('No posts found') }}
                                         </td>
                                     </tr>

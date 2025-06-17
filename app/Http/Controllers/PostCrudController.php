@@ -656,7 +656,8 @@ class PostCrudController extends BaseCrudController
             throw new \InvalidArgumentException('Post content cannot be empty');
         }
         
-        return $content;
+        // Convert newlines to <br> tags for proper rendering
+        return nl2br($content, false);
     }
 
     /**

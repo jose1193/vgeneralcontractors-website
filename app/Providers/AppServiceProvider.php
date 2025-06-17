@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Definir rate limiters
         $this->configureRateLimiting();
-
+        
         // Monitoreo de jobs
         Queue::before(function (JobProcessing $event) {
             try {
