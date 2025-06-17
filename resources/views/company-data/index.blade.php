@@ -437,6 +437,7 @@
                     // Custom event handler for edit button
                     $(document).on('click', '#editCompanyDataBtn', function() {
                         @if ($companyData && $companyData->uuid)
+                            console.log('Company data UUID from PHP:', '{{ $companyData->uuid }}');
                             window.companyDataManager.showEditModal('{{ $companyData->uuid }}');
                         @else
                             // If no company data exists, load entities first to get or create the record

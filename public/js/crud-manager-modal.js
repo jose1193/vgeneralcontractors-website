@@ -295,12 +295,16 @@ class CrudManagerModal {
      * Mostrar modal de edición
      */
     async showEditModal(id) {
+        console.log("showEditModal called with ID:", id);
         this.isEditing = true;
 
         // Cargar datos de la entidad
         try {
+            const editUrl = this.routes.edit.replace(":id", id);
+            console.log("Edit URL generated:", editUrl);
+
             const response = await $.ajax({
-                url: this.routes.edit.replace(":id", id),
+                url: editUrl,
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
