@@ -73,7 +73,7 @@
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "search": "Search",
+
     "filter": "Filter",
     "sort": "Sort",
 
@@ -620,7 +620,7 @@
     "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",
     "success": "Success!",
-    "error": "Error",
+
     "unexpected_error": "An unexpected error occurred. Please try again.",
     "reschedule_appointment": "Reschedule Appointment",
     "move_appointment_to": "Move appointment from \"{title}\" to {newTime}?",
@@ -1304,20 +1304,16 @@
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
     "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
     "Manage your account profile information and settings": "Manage your account profile information and settings",
-    "posts_management": "Posts Management",
+
     "manage_blog_posts_crud": "Manage your blog posts with traditional CRUD operations",
     "search_posts": "Search posts...",
     "search": "Search",
     "show_deleted": "Show Deleted",
-    "per_page": "per page",
-    "create_post": "Create Post",
-    "image": "Image",
+
     "title": "Title",
-    "category": "Category",
-    "status": "Status",
-    "created": "Created",
+
     "author": "Author",
-    "actions": "Actions",
+
     "published": "Published",
     "scheduled": "Scheduled",
     "no_posts_found": "No posts found",
@@ -1333,13 +1329,10 @@
     "enter_post_title": "Enter post title...",
     "post_content": "Post Content",
     "publish": "Publish",
-    "status": "Status",
-    "published": "Published",
-    "scheduled": "Scheduled",
+
     "schedule_date": "Schedule Date",
     "update_post": "Update Post",
-    "cancel": "Cancel",
-    "category": "Category",
+
     "select_category": "Select Category",
     "choose_category": "Choose a category",
     "featured_image": "Featured Image",

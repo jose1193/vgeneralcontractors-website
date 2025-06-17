@@ -1040,7 +1040,6 @@
     "delete_service_category_message": "Esta acción moverá la categoría de servicio a la papelera. Puede restaurarla más tarde si es necesario.",
     "restore_service_category_message": "Esta acción restaurará la categoría de servicio y la hará disponible nuevamente.",
 
-    "category": "Categoría",
     "category_name": "Nombre de Categoría",
     "enter_category_name": "Ingrese el nombre de la categoría",
     "category_already_taken": "Este nombre de categoría ya está en uso",
@@ -1060,7 +1059,7 @@
     "from": "Desde",
     "to": "Para",
     "duration": "Duración",
-    "status": "Estado",
+
     "sentiment": "Sentimiento",
     "date_time": "Fecha/Hora",
     "call_details": "Detalles de Llamada",
@@ -1078,7 +1077,7 @@
     "save": "Guardar",
     "update": "Actualizar",
     "saving": "Guardando...",
-    "cancel": "Cancelar",
+
     "confirm_deletion": "Confirmar Eliminación",
     "delete": "Eliminar",
     "deleting": "Eliminando...",
@@ -1295,26 +1294,20 @@
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Una vez que se elimine su cuenta, todos sus recursos y datos se eliminarán permanentemente. Antes de eliminar su cuenta, descargue cualquier dato o información que desee conservar.",
     "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "¿Está seguro de que desea eliminar su cuenta? Una vez que se elimine su cuenta, todos sus recursos y datos se eliminarán permanentemente. Ingrese su contraseña para confirmar que desea eliminar permanentemente su cuenta.",
     "Manage your account profile information and settings": "Gestione la información del perfil de su cuenta y configuraciones",
-    "posts_management": "Gestión de Publicaciones",
+
     "manage_blog_posts_crud": "Gestione sus publicaciones del blog con operaciones CRUD tradicionales",
     "search_posts": "Buscar publicaciones...",
-    "search": "Buscar",
+
     "show_deleted": "Mostrar Eliminados",
-    "per_page": "por página",
-    "create_post": "Crear Publicación",
-    "image": "Imagen",
+
     "title": "Título",
-    "category": "Categoría",
-    "status": "Estado",
-    "created": "Creado",
+
     "author": "Autor",
-    "actions": "Acciones",
-    "published": "Publicado",
-    "scheduled": "Programado",
+
     "no_posts_found": "No se encontraron publicaciones",
     "confirm_delete_post": "¿Está seguro de que desea eliminar la publicación \"{title}\"?",
     "confirm_restore_post": "¿Está seguro de que desea restaurar la publicación \"{title}\"?",
-    "error": "Error",
+
     "n_a": "N/D",
 
     "create_new_post": "Crear Nueva Publicación",

@@ -13,7 +13,7 @@
 
         <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
             @php
-                $latestPosts = App\Models\Post::latest()->take(4)->get();
+                $latestPosts = App\Models\Post::where('post_status', 'published')->latest()->take(4)->get();
             @endphp
 
             @forelse($latestPosts as $post)
