@@ -453,9 +453,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('admin.posts') || request()->routeIs('blog-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('admin.posts') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('admin.posts') || request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('admin.posts') || request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('admin.posts') || request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -471,7 +471,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             @can('READ_POST')
                                 <a href="{{ route('admin.posts') }}"
                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('admin.posts') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('posts') }}
+                                    {{ __('posts') }} (Livewire)
+                                </a>
+                            @endcan
+                            @can('READ_POST')
+                                <a href="{{ route('posts-crud.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('posts-crud.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('posts') }} (CRUD)
                                 </a>
                             @endcan
                             @can('READ_BLOG_CATEGORY')
@@ -711,7 +717,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         @can('READ_POST')
                             <a href="{{ route('admin.posts') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('admin.posts') ? 'bg-gray-700 text-white' : '' }}">
-                                {{ __('posts') }}
+                                {{ __('posts') }} (Livewire)
+                            </a>
+                        @endcan
+                        @can('READ_POST')
+                            <a href="{{ route('posts-crud.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('posts-crud.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('posts') }} (CRUD)
                             </a>
                         @endcan
                         @can('READ_BLOG_CATEGORY')

@@ -139,6 +139,19 @@ Route::middleware([
         return view('posts');
     })->name('admin.posts');
 
+    // Posts CRUD Resource Routes (NEW - Non-Livewire)
+    Route::prefix('posts-crud')->name('posts-crud.')->group(function () {
+        Route::get('/', [App\Http\Controllers\PostCrudController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\PostCrudController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\PostCrudController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [App\Http\Controllers\PostCrudController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\PostCrudController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\PostCrudController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\PostCrudController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\PostCrudController::class, 'restore'])->name('restore');
+        Route::post('/check-title', [App\Http\Controllers\PostCrudController::class, 'checkTitleExists'])->name('check-title');
+    });
+
     // Call Records Routes
     Route::get('/call-records', [App\Http\Controllers\CallRecordsController::class, 'index'])->name('call-records');
     Route::get('/api/call-records', [App\Http\Controllers\CallRecordsController::class, 'getCalls'])->name('api.call-records');

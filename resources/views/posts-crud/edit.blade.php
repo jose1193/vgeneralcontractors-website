@@ -1,0 +1,419 @@
+<x-app-layout>
+    <!-- Place the first <script>
+        tag in your HTML 's <head> --> <
+            script src =
+            "https://cdn.tiny.cloud/1/o37wydoc26hw1jj4mpqtzxsgfu1an5c3r8fz59f84yqt7z5u/tinymce/7/tinymce.min.js"
+        referrerpolicy = "origin" >
+    </script>
+
+    {{-- Dark background container with consistent styling --}}
+    <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
+        {{-- Header section with title and subtitle --}}
+        <div class="p-4 sm:p-6">
+            <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('Edit Post') }}
+                </h2>
+                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
+                    {{ __('Edit blog post:') }} "{{ Str::limit($post->post_title, 50) }}"
+                </p>
+            </div>
+        </div>
+
+        {{-- Main content area --}}
+        <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 px-4 sm:px-6 lg:px-8 pb-12">
+            {{-- Success and error messages --}}
+            @if (session()->has('message'))
+<div class="mb-6 bg-green-500/20 border border-green-500/30 text-green-400 px-4 py-3 rounded-lg">
+                    {{ session('message') }}
+                </div>
+@endif
+            @if (session()->has('error'))
+<div class="mb-6 bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
+                    {{ session('error') }}
+                </div>
+@endif
+
+            {{-- Form container --}}
+            <div class="dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
+                <div class="p-6">
+                    <form method="POST" action="{{ route('posts-crud.update', $post->uuid) }}" id="editPostForm">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {{-- Main Content Column (Left) --}}
+                            <div class="lg:col-span-2 space-y-6">
+                                {{-- Post Title --}}
+                                <div>
+                                    <label for="post_title" class="block text-sm font-medium text-gray-300 mb-2">
+                                        {{ __('Post Title') }} <span class="text-red-400">*</span>
+                                    </label>
+                                    <input type="text"
+                                        name="post_title"
+                                        id="post_title"
+                                        value="{{ old('post_title', $post->post_title) }}"
+                                        required
+                                        class="w-full text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0 @error('post_title') ring-2 ring-red-500 @enderror"
+                                        style="background-color: #2C2E36;"
+                                        placeholder="{{ __('Enter post title...') }}">
+                                    @error('post_title')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                </div>
+
+                                {{-- Post Content --}}
+                                <div>
+                                    <label for="post_content" class="block text-sm font-medium text-gray-300 mb-2">
+                                        {{ __('Post Content') }} <span class="text-red-400">*</span>
+                                    </label>
+                                    <textarea name="post_content" id="post_content" required
+                                        class="w-full min-h-96 @error('post_content') ring-2 ring-red-500 @enderror">{{ old('post_content', $post->post_content) }}</textarea>
+                                    @error('post_content')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                </div>
+                            </div>
+
+                            {{-- Sidebar (Right) --}}
+                            <div class="space-y-6">
+                                {{-- Post Status --}}
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Publish') }}</h3>
+                                    
+                                    <div class="space-y-4">
+                                        {{-- Post Status --}}
+                                        <div>
+                                            <label for="post_status" class="block text-sm font-medium text-gray-300 mb-2">
+                                                {{ __('Status') }}
+                                            </label>
+                                            <select name="post_status"
+                                                id="post_status"
+                                                class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                                style="background-color: #2C2E36;"
+                                                onchange="toggleScheduleField()">
+                                                <option value="published" {{ old('post_status', $post->post_status) === 'published' ? 'selected' : '' }}>
+                                                    {{ __('Published') }}
+                                                </option>
+                                                <option value="scheduled" {{ old('post_status', $post->post_status) === 'scheduled' ? 'selected' : '' }}>
+                                                    {{ __('Scheduled') }}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        {{-- Scheduled Date --}}
+                                        <div id="scheduled_at_field" style="display: {{ old('post_status', $post->post_status) === 'scheduled' ? 'block' : 'none' }};">
+                                            <label for="scheduled_at" class="block text-sm font-medium text-gray-300 mb-2">
+                                                {{ __('Schedule Date') }}
+                                            </label>
+                                            <input type="datetime-local"
+                                                name="scheduled_at"
+                                                id="scheduled_at"
+                                                value="{{ old('scheduled_at', $post->scheduled_at ? $post->scheduled_at->format('Y-m-d\TH:i') : '') }}"
+                                                class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                                style="background-color: #2C2E36;">
+                                        </div>
+                                    </div>
+
+                                    {{-- Submit Buttons --}}
+                                    <div class="mt-6 flex space-x-3">
+                                        <button type="submit"
+                                            class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-2 rounded-lg font-medium transition-colors">
+                                            {{ __('Update Post') }}
+                                        </button>
+                                        <a href="{{ route('posts-crud.index') }}"
+                                            class="flex-1 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium transition-colors text-center">
+                                            {{ __('Cancel') }}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {{-- Category --}}
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Category') }}</h3>
+                                    
+                                    <div>
+                                        <label for="category_id" class="block text-sm font-medium text-gray-300 mb-2">
+                                            {{ __('Select Category') }} <span class="text-red-400">*</span>
+                                        </label>
+                                        <select name="category_id"
+                                            id="category_id"
+                                            required
+                                            class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0 @error('category_id') ring-2 ring-red-500 @enderror"
+                                            style="background-color: #2C2E36;">
+                                            <option value="">{{ __('Choose a category') }}</option>
+                                            @foreach ($categories as $category)
+<option value="{{ $category->id }}" {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->blog_category_name }}
+                                                </option>
+@endforeach
+                                        </select>
+                                        @error('category_id')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                    </div>
+                                </div>
+
+                                {{-- Featured Image --}}
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Featured Image') }}</h3>
+                                    
+                                    <div>
+                                        <label for="post_image" class="block text-sm font-medium text-gray-300 mb-2">
+                                            {{ __('Image URL') }}
+                                        </label>
+                                        <input type="url"
+                                            name="post_image"
+                                            id="post_image"
+                                            value="{{ old('post_image', $post->post_image) }}"
+                                            class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                            style="background-color: #2C2E36;"
+                                            placeholder="{{ __('https://example.com/image.jpg') }}">
+                                        @error('post_image')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                        
+                                        {{-- Current Image Preview --}}
+                                        @if ($post->post_image)
+<div class="mt-3">
+                                                <p class="text-sm text-gray-400 mb-2">{{ __('Current image:') }}</p>
+                                                <img src="{{ $post->post_image }}"
+                                                    alt="Current featured image"
+                                                    class="w-full h-32 object-cover rounded-lg border border-gray-600"
+                                                    onerror="this.style.display='none'">
+                                            </div>
+@endif
+                                    </div>
+                                </div>
+
+                                {{-- SEO Section --}}
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('SEO Settings') }}</h3>
+                                    
+                                    <div class="space-y-4">
+                                        {{-- Meta Title --}}
+                                        <div>
+                                            <label for="meta_title" class="block text-sm font-medium text-gray-300 mb-2">
+                                                {{ __('Meta Title') }}
+                                            </label>
+                                            <input type="text"
+                                                name="meta_title"
+                                                id="meta_title"
+                                                value="{{ old('meta_title', $post->meta_title) }}"
+                                                maxlength="100"
+                                                class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                                style="background-color: #2C2E36;"
+                                                placeholder="{{ __('Leave empty to use post title') }}">
+                                            @error('meta_title')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                        </div>
+
+                                        {{-- Meta Description --}}
+                                        <div>
+                                            <label for="meta_description" class="block text-sm font-medium text-gray-300 mb-2">
+                                                {{ __('Meta Description') }}
+                                            </label>
+                                            <textarea name="meta_description" id="meta_description" rows="3" maxlength="255"
+                                                class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                                style="background-color: #2C2E36;" placeholder="{{ __('Brief description for search engines') }}">{{ old('meta_description', $post->meta_description) }}</textarea>
+                                            @error('meta_description')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                        </div>
+
+                                        {{-- Meta Keywords --}}
+                                        <div>
+                                            <label for="meta_keywords" class="block text-sm font-medium text-gray-300 mb-2">
+                                                {{ __('Meta Keywords') }}
+                                            </label>
+                                            <input type="text"
+                                                name="meta_keywords"
+                                                id="meta_keywords"
+                                                value="{{ old('meta_keywords', $post->meta_keywords) }}"
+                                                class="w-full text-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
+                                                style="background-color: #2C2E36;"
+                                                placeholder="{{ __('keyword1, keyword2, keyword3') }}">
+                                            @error('meta_keywords')
+    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+@enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Post Info --}}
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <h3 class="text-lg font-medium text-gray-200 mb-4">{{ __('Post Info') }}</h3>
+                                    
+                                    <div class="space-y-3 text-sm text-gray-400">
+                                        <div class="flex justify-between">
+                                            <span>{{ __('Created:') }}</span>
+                                            <span>{{ $post->created_at->format('M d, Y H:i') }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>{{ __('Updated:') }}</span>
+                                            <span>{{ $post->updated_at->format('M d, Y H:i') }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>{{ __('Author:') }}</span>
+                                            <span>{{ $post->user->name ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>{{ __('Slug:') }}</span>
+                                            <span class="break-all">{{ $post->post_title_slug }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Place the following <script>
+        and < textarea > tags your HTML 's <body> --> <
+            script >
+            tinymce.init({
+                selector: '#post_content',
+                height: 500,
+                skin: 'oxide-dark',
+                content_css: 'dark',
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount code fullscreen',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code fullscreen',
+                menubar: 'file edit view insert format tools table help',
+                branding: false,
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        editor.save();
+                    });
+                },
+                content_style: `
+                body { 
+                    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif; 
+                    font-size: 14px; 
+                    background-color: #1a1a1a; 
+                    color: #e5e7eb; 
+                }
+                p { margin: 1rem 0; }
+                h1, h2, h3, h4, h5, h6 { margin: 1.5rem 0 1rem 0; }
+            `,
+                style_formats: [{
+                        title: 'Headers',
+                        items: [{
+                                title: 'Header 1',
+                                format: 'h1'
+                            },
+                            {
+                                title: 'Header 2',
+                                format: 'h2'
+                            },
+                            {
+                                title: 'Header 3',
+                                format: 'h3'
+                            },
+                            {
+                                title: 'Header 4',
+                                format: 'h4'
+                            },
+                            {
+                                title: 'Header 5',
+                                format: 'h5'
+                            },
+                            {
+                                title: 'Header 6',
+                                format: 'h6'
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Inline',
+                        items: [{
+                                title: 'Bold',
+                                icon: 'bold',
+                                format: 'bold'
+                            },
+                            {
+                                title: 'Italic',
+                                icon: 'italic',
+                                format: 'italic'
+                            },
+                            {
+                                title: 'Underline',
+                                icon: 'underline',
+                                format: 'underline'
+                            },
+                            {
+                                title: 'Strikethrough',
+                                icon: 'strikethrough',
+                                format: 'strikethrough'
+                            },
+                            {
+                                title: 'Superscript',
+                                icon: 'superscript',
+                                format: 'superscript'
+                            },
+                            {
+                                title: 'Subscript',
+                                icon: 'subscript',
+                                format: 'subscript'
+                            },
+                            {
+                                title: 'Code',
+                                icon: 'code',
+                                format: 'code'
+                            }
+                        ]
+                    },
+                    {
+                        title: 'Blocks',
+                        items: [{
+                                title: 'Paragraph',
+                                format: 'p'
+                            },
+                            {
+                                title: 'Blockquote',
+                                format: 'blockquote'
+                            },
+                            {
+                                title: 'Div',
+                                format: 'div'
+                            },
+                            {
+                                title: 'Pre',
+                                format: 'pre'
+                            }
+                        ]
+                    }
+                ]
+            });
+
+        function toggleScheduleField() {
+            const status = document.getElementById('post_status').value;
+            const scheduledField = document.getElementById('scheduled_at_field');
+
+            if (status === 'scheduled') {
+                scheduledField.style.display = 'block';
+                document.getElementById('scheduled_at').required = true;
+            } else {
+                scheduledField.style.display = 'none';
+                document.getElementById('scheduled_at').required = false;
+                document.getElementById('scheduled_at').value = '';
+            }
+        }
+
+        // Initialize schedule field visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleScheduleField();
+        });
+
+        // Auto-generate meta title from post title if not manually set
+        document.getElementById('post_title').addEventListener('input', function() {
+            const metaTitleField = document.getElementById('meta_title');
+            if (!metaTitleField.value || metaTitleField.value === '{{ $post->post_title }}') {
+                metaTitleField.value = this.value;
+            }
+        });
+    </script>
+</x-app-layout>
