@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Http\Controllers\CompanyDataController;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
@@ -36,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
         
         // Inicializar el controlador de datos de la compañía
-        $companyDataController = new CompanyDataController();
+        // $companyDataController = new CompanyDataController();
 
         // Monitoreo de jobs
         Queue::before(function (JobProcessing $event) {
