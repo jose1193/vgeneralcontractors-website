@@ -85,6 +85,26 @@ class PortfolioCrudManager {
             self.closeModal();
         });
 
+        // Character counter for description
+        $(document).on("input", "#description", function () {
+            const length = $(this).val().length;
+            $("#descriptionCounter").text(length);
+
+            // Change color based on length
+            const counter = $("#descriptionCounter").parent();
+            if (length > 900) {
+                counter.removeClass("text-gray-500").addClass("text-red-500");
+            } else if (length > 700) {
+                counter
+                    .removeClass("text-gray-500 text-red-500")
+                    .addClass("text-yellow-500");
+            } else {
+                counter
+                    .removeClass("text-red-500 text-yellow-500")
+                    .addClass("text-gray-500");
+            }
+        });
+
         // Dynamic buttons
         $(document).on("click", ".edit-btn", function () {
             self.editEntity($(this).data("id"));
@@ -99,6 +119,23 @@ class PortfolioCrudManager {
         $(document).on("click", ".restore-btn", function () {
             if (confirm("¿Está seguro de restaurar este portfolio?")) {
                 self.restoreEntity($(this).data("id"));
+            }
+        });
+
+        // Close modal on outside click
+        $(document).on("click", this.modalSelector, function (e) {
+            if (e.target === this) {
+                self.closeModal();
+            }
+        });
+
+        // Escape key to close modal
+        $(document).on("keydown", function (e) {
+            if (
+                e.key === "Escape" &&
+                !$(self.modalSelector).hasClass("hidden")
+            ) {
+                self.closeModal();
             }
         });
     }
