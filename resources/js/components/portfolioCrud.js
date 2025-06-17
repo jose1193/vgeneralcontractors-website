@@ -68,8 +68,11 @@ export default class PortfolioCrudManager {
                 self.renderPagination(response);
             },
             error(xhr) {
+                const errorMsg =
+                    window.translations?.error_loading_portfolios ||
+                    "Error loading portfolios";
                 $(self.tableSelector + " tbody").html(
-                    `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Error loading portfolios</td></tr>`
+                    `<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">${errorMsg}</td></tr>`
                 );
             },
             complete() {
@@ -84,8 +87,10 @@ export default class PortfolioCrudManager {
     renderTable(data) {
         const portfolios = data.data || [];
         let html = "";
+        const noPortfoliosMsg =
+            window.translations?.no_portfolios_found || "No portfolios found.";
         if (portfolios.length === 0) {
-            html = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No portfolios found.</td></tr>`;
+            html = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">${noPortfoliosMsg}</td></tr>`;
         } else {
             portfolios.forEach((portfolio) => {
                 const isDeleted = portfolio.deleted_at !== null;

@@ -179,6 +179,11 @@
 </x-app-layout>
 
 @push('scripts')
+    <script>
+        window.translations = window.translations || {};
+        window.translations.no_portfolios_found = "{{ __('no_portfolios_found') }}";
+        window.translations.error_loading_portfolios = "{{ __('error_loading_portfolios') }}";
+    </script>
     <script type="module">
         import PortfolioCrudManager from '/resources/js/components/portfolioCrud.js';
 
