@@ -270,39 +270,21 @@
                         // Establecer el valor inicial basado en localStorage
                         showDeleted: showDeletedState,
                         formFields: [{
-                                name: 'category',
-                                type: 'text',
-                                label: '{{ __('category_name') }}',
-                                placeholder: '{{ __('enter_category_name') }}',
+                            name: 'category',
+                            type: 'text',
+                            label: '{{ __('category_name') }}',
+                            placeholder: '{{ __('enter_category_name') }}',
+                            required: true,
+                            validation: {
                                 required: true,
-                                validation: {
-                                    required: true,
-                                    minLength: 3,
-                                    maxLength: 100,
-                                    unique: {
-                                        url: "{{ route('service-categories.check-category') }}",
-                                        message: '{{ __('category_already_taken') }}'
-                                    }
+                                minLength: 3,
+                                maxLength: 100,
+                                unique: {
+                                    url: "{{ route('service-categories.check-category') }}",
+                                    message: '{{ __('category_already_taken') }}'
                                 }
-                            },
-                            {
-                                name: 'user_id',
-                                type: 'select',
-                                label: '{{ __('assigned_user') }}',
-                                placeholder: '{{ __('no_user_assigned') }}',
-                                required: false,
-                                options: [
-                                    @if (isset($users))
-                                        @foreach ($users as $user)
-                                            {
-                                                value: '{{ $user->id }}',
-                                                text: '{{ $user->name }} ({{ $user->email }})'
-                                            },
-                                        @endforeach
-                                    @endif
-                                ]
                             }
-                        ],
+                        }],
                         tableHeaders: [{
                                 field: 'category',
                                 name: '{{ __('category') }}',

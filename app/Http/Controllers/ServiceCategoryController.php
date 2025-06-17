@@ -46,7 +46,6 @@ class ServiceCategoryController extends BaseCrudController
         
         return [
             'category' => $categoryRule,
-            'user_id' => 'nullable|exists:users,id',
         ];
     }
 
@@ -61,7 +60,6 @@ class ServiceCategoryController extends BaseCrudController
             'category.min' => 'The category name must be at least 3 characters.',
             'category.max' => 'The category name may not be greater than 100 characters.',
             'category.unique' => 'This category name is already taken.',
-            'user_id.exists' => 'The selected user does not exist.',
         ];
     }
 
@@ -77,7 +75,7 @@ class ServiceCategoryController extends BaseCrudController
         return [
             'uuid' => (string) Str::uuid(),
             'category' => trim($request->category),
-            'user_id' => $request->user_id ?? auth()->id(),
+            'user_id' => auth()->id(), // Always set to current user
         ];
     }
 
@@ -92,7 +90,7 @@ class ServiceCategoryController extends BaseCrudController
 
         return array_filter([
             'category' => trim($request->category),
-            'user_id' => $request->user_id ?? auth()->id(),
+            'user_id' => auth()->id(), // Always set to current user
         ], fn ($value) => !is_null($value));
     }
 
@@ -142,13 +140,9 @@ class ServiceCategoryController extends BaseCrudController
                 return response()->json($serviceCategories);
             }
 
-            // Get users for the create/edit modals
-            $users = User::orderBy('name')->get();
-
             return view("{$this->viewPrefix}.index", [
                 'serviceCategories' => $serviceCategories,
                 'entityName' => $this->entityName,
-                'users' => $users,
             ]);
         } catch (Throwable $e) {
             Log::error("Error in ServiceCategoryController::index: {$e->getMessage()}", [
@@ -193,30 +187,7 @@ class ServiceCategoryController extends BaseCrudController
         return $query;
     }
 
-    /**
-     * Show the form for creating a new service category
-     */
-    public function create()
-    {
-        try {
-            if (!$this->checkPermissionWithMessage("CREATE_{$this->entityName}", "You don't have permission to create {$this->entityName}")) {
-                return redirect()->route($this->routePrefix . '.index')->with('error', "Permission denied");
-            }
-            
-            $users = User::orderBy('name')->get();
-            
-            return view("{$this->viewPrefix}.create", [
-                'entityName' => $this->entityName,
-                'users' => $users,
-            ]);
-        } catch (Throwable $e) {
-            Log::error("Error showing create form for {$this->entityName}: {$e->getMessage()}", [
-                'exception' => $e,
-            ]);
-            
-            return redirect()->route($this->routePrefix . '.index')->with('error', "Error loading create form");
-        }
-    }
+    // Create method not needed - using modal forms
 
     /**
      * Store a newly created service category
@@ -305,12 +276,9 @@ class ServiceCategoryController extends BaseCrudController
                 ]);
             }
 
-            $users = User::orderBy('name')->get();
-
             return view("{$this->viewPrefix}.edit", [
                 'serviceCategory' => $serviceCategory,
                 'entityName' => $this->entityName,
-                'users' => $users,
             ]);
         } catch (Throwable $e) {
             Log::error("Error retrieving {$this->entityName}: {$e->getMessage()}", [

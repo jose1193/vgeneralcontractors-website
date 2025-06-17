@@ -90,9 +90,7 @@ Route::middleware([
     // Service Categories Resource Routes (CRUD) - NEW
     Route::prefix('service-categories')->name('service-categories.')->group(function () {
         Route::get('/', [App\Http\Controllers\ServiceCategoryController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\ServiceCategoryController::class, 'create'])->name('create');
         Route::post('/', [App\Http\Controllers\ServiceCategoryController::class, 'store'])->name('store');
-        Route::get('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'show'])->name('show');
         Route::get('/{uuid}/edit', [App\Http\Controllers\ServiceCategoryController::class, 'edit'])->name('edit');
         Route::put('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'update'])->name('update');
         Route::delete('/{uuid}', [App\Http\Controllers\ServiceCategoryController::class, 'destroy'])->name('destroy');
