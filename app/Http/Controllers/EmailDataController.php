@@ -34,8 +34,7 @@ class EmailDataController extends BaseCrudController
     {
         parent::__construct($transactionService);
         
-        // Add permission middleware for authentication
-        $this->middleware('auth');
+       
     }
 
     /**
