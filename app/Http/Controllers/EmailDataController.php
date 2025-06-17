@@ -86,11 +86,17 @@ class EmailDataController extends BaseCrudController
      */
     protected function prepareStoreData(Request $request)
     {
+        $formattedPhone = $this->formatPhone($request->phone);
+        Log::info('EmailDataController::prepareStoreData - Phone formatting', [
+            'original_phone' => $request->phone,
+            'formatted_phone' => $formattedPhone
+        ]);
+
         return [
             'uuid' => (string) Str::uuid(),
             'description' => $request->description,
             'email' => strtolower($request->email),
-            'phone' => $this->formatPhone($request->phone),
+            'phone' => $formattedPhone,
             'type' => $request->type,
             'user_id' => $request->user_id,
         ];
@@ -101,10 +107,16 @@ class EmailDataController extends BaseCrudController
      */
     protected function prepareUpdateData(Request $request)
     {
+        $formattedPhone = $this->formatPhone($request->phone);
+        Log::info('EmailDataController::prepareUpdateData - Phone formatting', [
+            'original_phone' => $request->phone,
+            'formatted_phone' => $formattedPhone
+        ]);
+
         return array_filter([
             'description' => $request->description,
             'email' => strtolower($request->email),
-            'phone' => $this->formatPhone($request->phone),
+            'phone' => $formattedPhone,
             'type' => $request->type,
             'user_id' => $request->user_id,
         ], fn ($value) => !is_null($value));
@@ -242,10 +254,16 @@ class EmailDataController extends BaseCrudController
     public function store(Request $request)
     {
         try {
+            Log::info('EmailDataController::store - Starting store process', [
+                'request_data' => $request->all()
+            ]);
+
             $data = $this->validateRequest($request);
+            Log::info('EmailDataController::store - Validation passed', ['validated_data' => $data]);
 
             $emailData = $this->transactionService->run(function () use ($data) {
                 $preparedData = $this->prepareStoreData($data);
+                Log::info('EmailDataController::store - Prepared data', ['prepared_data' => $preparedData]);
                 return $this->modelClass::create($preparedData);
             }, function ($emailData) {
                 Log::info("{$this->entityName} created successfully", ['id' => $emailData->id]);
@@ -347,15 +365,25 @@ class EmailDataController extends BaseCrudController
     public function update(Request $request, $uuid)
     {
         try {
+            Log::info('EmailDataController::update - Starting update process', [
+                'uuid' => $uuid,
+                'request_data' => $request->all()
+            ]);
+
             if (!$uuid || $uuid === 'undefined') {
                 throw new \InvalidArgumentException('Invalid UUID');
             }
 
             $data = $this->validateRequest($request, $uuid);
+            Log::info('EmailDataController::update - Validation passed', ['validated_data' => $data]);
 
             $emailData = $this->transactionService->run(function () use ($uuid, $data) {
                 $emailData = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
+                Log::info('EmailDataController::update - Found email data', ['current_data' => $emailData->toArray()]);
+                
                 $preparedData = $this->prepareUpdateData($data);
+                Log::info('EmailDataController::update - Prepared data', ['prepared_data' => $preparedData]);
+                
                 $emailData->update($preparedData);
                 return $emailData->fresh();
             }, function ($emailData) {

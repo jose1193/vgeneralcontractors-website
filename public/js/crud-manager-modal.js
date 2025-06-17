@@ -853,6 +853,9 @@ class CrudManagerModal {
      */
     async createEntity(data) {
         try {
+            console.log("Creating entity with data:", data);
+            console.log("Sending to URL:", this.routes.store);
+
             Swal.showLoading();
 
             const response = await $.ajax({
@@ -867,17 +870,27 @@ class CrudManagerModal {
                 data: data,
             });
 
+            console.log("Create response:", response);
             Swal.close();
             this.showAlert("success", `${this.entityName} creado exitosamente`);
             this.loadEntities();
         } catch (error) {
             Swal.close();
             console.error("Error creating entity:", error);
+            console.error("Error details:", {
+                status: error.status,
+                statusText: error.statusText,
+                responseJSON: error.responseJSON,
+                responseText: error.responseText,
+            });
 
             if (error.status === 422 && error.responseJSON?.errors) {
                 this.showValidationErrors(error.responseJSON.errors);
             } else {
-                this.showAlert("error", "Error al crear el registro");
+                this.showAlert(
+                    "error",
+                    error.responseJSON?.message || "Error al crear el registro"
+                );
             }
         }
     }
@@ -887,6 +900,13 @@ class CrudManagerModal {
      */
     async updateEntity(id, data) {
         try {
+            console.log("Updating entity with ID:", id);
+            console.log("Update data:", data);
+            console.log(
+                "Sending to URL:",
+                this.routes.update.replace(":id", id)
+            );
+
             Swal.showLoading();
 
             const response = await $.ajax({
@@ -901,6 +921,7 @@ class CrudManagerModal {
                 data: data,
             });
 
+            console.log("Update response:", response);
             Swal.close();
             this.showAlert(
                 "success",
@@ -910,11 +931,21 @@ class CrudManagerModal {
         } catch (error) {
             Swal.close();
             console.error("Error updating entity:", error);
+            console.error("Update error details:", {
+                status: error.status,
+                statusText: error.statusText,
+                responseJSON: error.responseJSON,
+                responseText: error.responseText,
+            });
 
             if (error.status === 422 && error.responseJSON?.errors) {
                 this.showValidationErrors(error.responseJSON.errors);
             } else {
-                this.showAlert("error", "Error al actualizar el registro");
+                this.showAlert(
+                    "error",
+                    error.responseJSON?.message ||
+                        "Error al actualizar el registro"
+                );
             }
         }
     }
