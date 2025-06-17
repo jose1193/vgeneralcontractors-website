@@ -50,7 +50,8 @@ class PostCrudController extends BaseCrudController
         return [
             'post_title' => $titleRule,
             'post_content' => 'required|string',
-            'post_image' => 'nullable|string|max:500',
+            'post_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+            'post_image_url' => 'nullable|url|max:500',
             'meta_description' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:100',
             'meta_keywords' => 'nullable|string|max:255',
@@ -71,7 +72,11 @@ class PostCrudController extends BaseCrudController
             'post_title.min' => 'The post title must be at least 3 characters.',
             'post_title.max' => 'The post title may not be greater than 255 characters.',
             'post_content.required' => 'The post content is required.',
-            'post_image.max' => 'The post image URL may not be greater than 500 characters.',
+            'post_image_file.image' => 'The uploaded file must be an image.',
+            'post_image_file.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, webp.',
+            'post_image_file.max' => 'The image size must not exceed 5MB.',
+            'post_image_url.url' => 'The image URL must be a valid URL.',
+            'post_image_url.max' => 'The post image URL may not be greater than 500 characters.',
             'meta_description.max' => 'The meta description may not be greater than 255 characters.',
             'meta_title.max' => 'The meta title may not be greater than 100 characters.',
             'meta_keywords.max' => 'The meta keywords may not be greater than 255 characters.',
@@ -102,11 +107,19 @@ class PostCrudController extends BaseCrudController
             $post_status = 'scheduled';
         }
 
+        // Handle image upload
+        $imageUrl = null;
+        if ($request->hasFile('post_image_file')) {
+            $imageUrl = $this->handleImageUpload($request->file('post_image_file'));
+        } elseif ($request->filled('post_image_url')) {
+            $imageUrl = $request->post_image_url;
+        }
+
         return [
             'uuid' => (string) Str::uuid(),
             'post_title' => $request->post_title,
             'post_content' => $this->formatPostContentForSaving($request->post_content),
-            'post_image' => $request->post_image,
+            'post_image' => $imageUrl,
             'meta_description' => $request->meta_description,
             'meta_title' => $request->meta_title ?? $request->post_title,
             'meta_keywords' => $request->meta_keywords,
@@ -140,8 +153,32 @@ class PostCrudController extends BaseCrudController
             $data['post_content'] = $this->formatPostContentForSaving($request->post_content);
         }
         
-        if ($request->has('post_image')) {
-            $data['post_image'] = $request->post_image;
+        // Handle image upload for updates
+        if ($request->hasFile('post_image_file')) {
+            // Get the current post to delete old image if exists
+            $currentPost = Post::where('uuid', $request->route('uuid'))->first();
+            
+            // Delete old image if exists
+            if ($currentPost && $currentPost->post_image) {
+                $postImageService = app(PostImageService::class);
+                $postImageService->deletePostImage($currentPost->post_image);
+            }
+            
+            // Upload new image
+            $data['post_image'] = $this->handleImageUpload($request->file('post_image_file'));
+        } elseif ($request->filled('post_image_url')) {
+            $data['post_image'] = $request->post_image_url;
+        } elseif ($request->has('post_image_url') && $request->post_image_url === '') {
+            // If URL field is explicitly cleared
+            $currentPost = Post::where('uuid', $request->route('uuid'))->first();
+            
+            // Delete old image if exists
+            if ($currentPost && $currentPost->post_image) {
+                $postImageService = app(PostImageService::class);
+                $postImageService->deletePostImage($currentPost->post_image);
+            }
+            
+            $data['post_image'] = null;
         }
         
         if ($request->has('meta_description')) {
@@ -450,6 +487,13 @@ class PostCrudController extends BaseCrudController
             $this->executeCrudOperation('posts', function () use ($uuid) {
                 return $this->transactionService->run(function () use ($uuid) {
                     $post = $this->modelClass::where('uuid', $uuid)->firstOrFail();
+                    
+                    // Delete post image from S3 if exists
+                    if ($post->post_image) {
+                        $postImageService = app(PostImageService::class);
+                        $postImageService->deletePostImage($post->post_image);
+                    }
+                    
                     $post->delete();
                     return $post;
                 }, function ($post) {
@@ -647,5 +691,26 @@ class PostCrudController extends BaseCrudController
         // Add custom logic here, e.g., notify user
     }
 
-
+    /**
+     * Handle image file upload using PostImageService (AWS S3)
+     */
+    protected function handleImageUpload($file)
+    {
+        try {
+            $postImageService = app(PostImageService::class);
+            $imageUrl = $postImageService->storePostImage($file);
+            
+            if (!$imageUrl) {
+                throw new \Exception('Failed to upload image to S3');
+            }
+            
+            return $imageUrl;
+        } catch (\Exception $e) {
+            Log::error('Error uploading image to S3', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw new \Exception('Failed to upload image: ' . $e->getMessage());
+        }
+    }
 } 

@@ -183,8 +183,7 @@
                                                     accept="image/*" class="hidden" onchange="handleImageUpload(this)">
                                                 <button type="button"
                                                     onclick="document.getElementById('post_image_file').click()"
-                                                    class="w-full text-gray-300 rounded-lg px-3 py-2 border-2 border-dashed border-gray-500 hover:border-yellow-500 transition-colors text-center"
-                                                    style="background-color: #2C2E36;">
+                                                    class="w-full text-gray-300 rounded-lg px-3 py-2 border-2 border-dashed border-gray-500 hover:border-yellow-500 transition-colors text-center bg-gray-800">
                                                     <svg class="w-6 h-6 mx-auto mb-2 text-gray-400" fill="none"
                                                         stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -485,6 +484,17 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     showImagePreview(e.target.result);
+
+                    // Update upload button text
+                    const uploadButton = document.querySelector('#upload-section button');
+                    uploadButton.innerHTML = `
+                        <svg class="w-6 h-6 mx-auto mb-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        {{ __('Image selected') }}
+                    `;
+                    uploadButton.className =
+                        'w-full text-green-300 rounded-lg px-3 py-2 border-2 border-dashed border-green-500 hover:border-green-400 transition-colors text-center bg-green-900/20';
                 };
                 reader.readAsDataURL(file);
             }
@@ -527,6 +537,17 @@
             document.getElementById('image-preview').style.display = 'none';
             document.getElementById('post_image_file').value = '';
             document.getElementById('post_image_url').value = '';
+
+            // Reset upload button
+            const uploadButton = document.querySelector('#upload-section button');
+            uploadButton.innerHTML = `
+                <svg class="w-6 h-6 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                {{ __('Click to upload image') }}
+            `;
+            uploadButton.className =
+                'w-full text-gray-300 rounded-lg px-3 py-2 border-2 border-dashed border-gray-500 hover:border-yellow-500 transition-colors text-center bg-gray-800';
         }
 
         // Initialize on page load
