@@ -288,8 +288,16 @@ class PortfolioCrudController extends BaseCrudController
 
             $portfolio = $this->transactionService->run(function () use ($uuid, $data) {
                 $portfolio = $this->modelClass::withTrashed()->where('uuid', $uuid)->firstOrFail();
-                $preparedData = $this->prepareUpdateData($data);
-                $portfolio->update($preparedData);
+                
+                // Actualizar el ProjectType relacionado
+                if ($portfolio->projectType) {
+                    $portfolio->projectType->update([
+                        'title' => $data->title,
+                        'description' => $data->description,
+                        'service_category_id' => $data->service_category_id,
+                    ]);
+                }
+                
                 return $portfolio->fresh();
             }, function ($portfolio) {
                 Log::info("{$this->entityName} updated successfully", ['id' => $portfolio->id]);
@@ -411,13 +419,17 @@ class PortfolioCrudController extends BaseCrudController
             $title = $request->input('title');
             $excludeUuid = $request->input('exclude_uuid');
 
-            $query = Portfolio::where('title', $title);
+            $query = \App\Models\ProjectType::where('title', $title);
 
             if ($excludeUuid) {
-                $query->where('uuid', '!=', $excludeUuid);
+                // Buscar el portfolio por UUID y obtener su project_type_id
+                $portfolio = Portfolio::where('uuid', $excludeUuid)->first();
+                if ($portfolio && $portfolio->project_type_id) {
+                    $query->where('id', '!=', $portfolio->project_type_id);
+                }
             }
 
-            $exists = $query->withTrashed()->exists();
+            $exists = $query->exists();
 
             return response()->json([
                 'success' => true,
@@ -458,11 +470,16 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function prepareStoreData(Request $request)
     {
-        return [
-            'uuid' => (string) Str::uuid(),
+        // Crear ProjectType primero
+        $projectType = \App\Models\ProjectType::create([
             'title' => $request->title,
             'description' => $request->description,
             'service_category_id' => $request->service_category_id,
+        ]);
+
+        return [
+            'uuid' => (string) Str::uuid(),
+            'project_type_id' => $projectType->id,
             'user_id' => auth()->id(),
         ];
     }
@@ -472,21 +489,9 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function prepareUpdateData(Request $request)
     {
-        $data = [];
-        
-        if ($request->filled('title')) {
-            $data['title'] = $request->title;
-        }
-        
-        if ($request->filled('description')) {
-            $data['description'] = $request->description;
-        }
-        
-        if ($request->filled('service_category_id')) {
-            $data['service_category_id'] = $request->service_category_id;
-        }
-        
-        return $data;
+        // No retornamos datos del portfolio directamente, 
+        // actualizamos el ProjectType relacionado
+        return [];
     }
 
     /**
@@ -494,7 +499,10 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function afterStore($portfolio)
     {
-        // Add custom logic here, e.g., clear related caches
+        // Procesar imágenes si fueron enviadas
+        if (request()->hasFile('images')) {
+            $this->processImages($portfolio, request()->file('images'));
+        }
     }
 
     /**
@@ -502,7 +510,25 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function afterUpdate($portfolio)
     {
-        // Add custom logic here, e.g., update related records
+        // Procesar eliminación de imágenes
+        if (request()->has('images_to_delete')) {
+            $imagesToDelete = request()->input('images_to_delete', []);
+            foreach ($imagesToDelete as $imageId) {
+                $image = PortfolioImage::find($imageId);
+                if ($image && $image->portfolio_id === $portfolio->id) {
+                    // Eliminar archivo físico
+                    if (file_exists(public_path($image->path))) {
+                        unlink(public_path($image->path));
+                    }
+                    $image->delete();
+                }
+            }
+        }
+        
+        // Procesar nuevas imágenes
+        if (request()->hasFile('images')) {
+            $this->processImages($portfolio, request()->file('images'));
+        }
     }
 
     /**
@@ -524,17 +550,23 @@ class PortfolioCrudController extends BaseCrudController
     // Métodos requeridos por BaseCrudController
     protected function getValidationRules($id = null)
     {
-        $titleRule = 'required|string|min:3|max:255|unique:portfolios,title';
+        $titleRule = 'required|string|min:3|max:255|unique:project_types,title';
         
         // If we have an ID (UUID in this case), exclude it from the unique check
         if ($id) {
-            $titleRule .= ',' . $id . ',uuid';
+            // Necesitamos obtener el project_type_id del portfolio para excluir correctamente
+            $portfolio = Portfolio::where('uuid', $id)->first();
+            if ($portfolio && $portfolio->project_type_id) {
+                $titleRule .= ',' . $portfolio->project_type_id;
+            }
         }
         
         return [
             'title' => $titleRule,
             'description' => 'required|string',
             'service_category_id' => 'required|exists:service_categories,id',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -549,5 +581,34 @@ class PortfolioCrudController extends BaseCrudController
             'service_category_id.required' => 'The service category is required.',
             'service_category_id.exists' => 'The selected service category does not exist.',
         ];
+    }
+
+    /**
+     * Process uploaded images for portfolio
+     */
+    private function processImages($portfolio, $images)
+    {
+        foreach ($images as $image) {
+            if ($image->isValid()) {
+                // Generar nombre único
+                $fileName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                
+                // Crear directorio si no existe
+                $uploadPath = 'storage/portfolios/' . $portfolio->id;
+                if (!file_exists(public_path($uploadPath))) {
+                    mkdir(public_path($uploadPath), 0755, true);
+                }
+                
+                // Mover archivo
+                $image->move(public_path($uploadPath), $fileName);
+                
+                // Guardar en base de datos
+                PortfolioImage::create([
+                    'portfolio_id' => $portfolio->id,
+                    'path' => $uploadPath . '/' . $fileName,
+                    'filename' => $fileName,
+                ]);
+            }
+        }
     }
 } 

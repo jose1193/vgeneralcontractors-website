@@ -179,37 +179,34 @@
 </x-app-layout>
 
 @push('scripts')
+    <!-- Incluir CrudManager base primero -->
+    <script src="{{ asset('js/crud-manager.js') }}"></script>
+
     <script>
         window.translations = window.translations || {};
         window.translations.no_portfolios_found = "{{ __('no_portfolios_found') }}";
         window.translations.error_loading_portfolios = "{{ __('error_loading_portfolios') }}";
     </script>
-    <script type="module">
-        import PortfolioCrudManager from '{{ asset('js/portfolioCrud.js') }}';
 
-        const routes = {
-            index: '{{ route('portfolios-crud.index') }}',
-            store: '{{ route('portfolios-crud.store') }}',
-            edit: '{{ route('portfolios-crud.edit', [':id']) }}',
-            update: '{{ route('portfolios-crud.update', [':id']) }}',
-            destroy: '{{ route('portfolios-crud.destroy', [':id']) }}',
-            restore: '{{ route('portfolios-crud.restore', [':id']) }}',
-            checkTitle: '{{ route('portfolios-crud.check-title') }}',
-        };
+    <!-- Incluir PortfolioCrud directamente -->
+    <script src="{{ asset('js/portfolioCrud.js') }}"></script>
 
-        window.portfolioCrudManager = new PortfolioCrudManager({
-            entityName: 'Portfolio',
-            routes: routes,
-            tableSelector: '#dataTable',
-            modalSelector: '#entityModal',
-            formSelector: '#entityForm',
-            alertSelector: '#alertMessage',
-            addButtonSelector: '#addEntityBtn',
-            paginationSelector: '#pagination',
-            searchSelector: '#searchInput',
-            perPageSelector: '#perPage',
-            showDeletedSelector: '#showDeleted',
-            // ...otros selectores si es necesario...
+    <script>
+        $(document).ready(function() {
+            const routes = {
+                index: '{{ route('portfolios-crud.index') }}',
+                store: '{{ route('portfolios-crud.store') }}',
+                edit: '{{ route('portfolios-crud.edit', [':id']) }}',
+                update: '{{ route('portfolios-crud.update', [':id']) }}',
+                destroy: '{{ route('portfolios-crud.destroy', [':id']) }}',
+                restore: '{{ route('portfolios-crud.restore', [':id']) }}',
+                checkTitle: '{{ route('portfolios-crud.check-title') }}',
+            };
+
+            // Inicializar el manager
+            window.portfolioCrudManager = new PortfolioCrudManager({
+                routes: routes
+            });
         });
     </script>
 @endpush
