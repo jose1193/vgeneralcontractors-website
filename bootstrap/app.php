@@ -17,7 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\ShareCompanyData::class,
         ]);
     })
-
+    ->withProviders([
+        \Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
