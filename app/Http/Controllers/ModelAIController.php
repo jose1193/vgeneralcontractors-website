@@ -126,16 +126,13 @@ class ModelAIController extends BaseCrudController
             
             $page = $request->input('page', 1);
             
-            // Get paginated model AIs with caching using the trait
-            $modelAIs = $this->getCachedPaginatedData(
-                ModelAI::class,
-                'model_ais.name',
-                ['uuid', 'name', 'description', 'api_key', 'user_id', 'created_at', 'updated_at', 'deleted_at'],
-                $request,
-                [
-                    'user:id,name' // Load user relationship with only id and name
-                ]
-            );
+            // Use cache for normal views
+            $modelAIs = $this->rememberCrudCache('model_ais', function() use ($request, $page) {
+                $query = $this->buildModelAIQuery($request);
+                
+                // Pagination
+                return $query->paginate($this->perPage, ['*'], 'page', $page);
+            }, $page);
 
             if ($request->ajax()) {
                 // Transform data to include user_name for the JavaScript table
@@ -175,7 +172,7 @@ class ModelAIController extends BaseCrudController
      */
     private function buildModelAIQuery(Request $request)
     {
-        $query = $this->modelClass::query();
+        $query = $this->modelClass::query()->with('user:id,name');
 
         // Handle search
         if (!empty($this->search)) {
