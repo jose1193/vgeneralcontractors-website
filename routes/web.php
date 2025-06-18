@@ -203,6 +203,19 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\EmailDataController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
+    // Model AI Resource Routes (CRUD) - NEW
+    Route::prefix('model-ais')->name('model-ais.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ModelAIController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\ModelAIController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\ModelAIController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [App\Http\Controllers\ModelAIController::class, 'show'])->name('show');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\ModelAIController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\ModelAIController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\ModelAIController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\ModelAIController::class, 'restore'])->name('restore');
+        Route::post('/check-name', [App\Http\Controllers\ModelAIController::class, 'checkNameExists'])->name('check-name');
+    });
+
     // Appointment Calendar Routes
     Route::get('/appointment-calendar', [\App\Http\Controllers\AppointmentCalendarController::class, 'index'])->name('appointment-calendar');
     Route::get('/appointment-calendar/events', [\App\Http\Controllers\AppointmentCalendarController::class, 'events'])->name('appointment-calendar.events');

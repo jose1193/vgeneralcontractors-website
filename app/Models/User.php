@@ -100,6 +100,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the AI models created by the user.
+     */
+    public function modelAIs(): HasMany
+    {
+        return $this->hasMany(ModelAI::class);
+    }
+
+    /**
      * The "booted" method of the model.
      *
      * @return void

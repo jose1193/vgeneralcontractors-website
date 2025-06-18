@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         // Definir modelos para permisos
         $models = [
             'USER', 'EMAIL_DATA', 'SERVICE_CATEGORY', 'PORTFOLIO', 'COMPANY_DATA', 
-            'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO', 'CALL_RECORD'
+            'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO', 'CALL_RECORD', 'MODEL_AI'
         ];
 
         // Definir acciones para permisos
