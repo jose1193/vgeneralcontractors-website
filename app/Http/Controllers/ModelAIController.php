@@ -45,6 +45,8 @@ class ModelAIController extends BaseCrudController
         
         return [
             'name' => $nameRule,
+            'email' => 'required|email|max:255',
+            'type' => 'required|in:Content,Image,Mixed',
             'description' => 'nullable|string|max:1000',
             'api_key' => 'required|string|max:1000',
         ];
@@ -59,6 +61,11 @@ class ModelAIController extends BaseCrudController
             'name.required' => 'The name is required.',
             'name.unique' => 'This model name is already taken.',
             'name.max' => 'The name may not be greater than 255 characters.',
+            'email.required' => 'The email is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'email.max' => 'The email may not be greater than 255 characters.',
+            'type.required' => 'The type is required.',
+            'type.in' => 'The type must be one of: Content, Image, Mixed.',
             'description.max' => 'The description may not be greater than 1000 characters.',
             'api_key.required' => 'The API key is required.',
             'api_key.max' => 'The API key may not be greater than 1000 characters.',
@@ -73,6 +80,8 @@ class ModelAIController extends BaseCrudController
         return [
             'uuid' => (string) Str::uuid(),
             'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
             'description' => $request->description,
             'api_key' => $request->api_key,
             'user_id' => auth()->id(),
@@ -86,6 +95,8 @@ class ModelAIController extends BaseCrudController
     {
         return array_filter([
             'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
             'description' => $request->description,
             'api_key' => $request->api_key,
             // user_id no se actualiza, se mantiene el original
@@ -179,6 +190,8 @@ class ModelAIController extends BaseCrudController
             $searchTerm = '%' . $this->search . '%';
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
+                  ->orWhere('email', 'like', $searchTerm)
+                  ->orWhere('type', 'like', $searchTerm)
                   ->orWhere('description', 'like', $searchTerm);
             });
         }

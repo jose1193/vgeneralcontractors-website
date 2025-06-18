@@ -78,6 +78,16 @@
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                        data-field="email">
+                                        {{ __('model_ai_email') }}
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                        data-field="type">
+                                        {{ __('model_ai_type') }}
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                         data-field="description">
                                         {{ __('model_ai_description') }}
                                         <span class="sort-icon"></span>
@@ -105,7 +115,7 @@
                             <tbody id="modelAITable"
                                 class=" dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 <tr id="loadingRow">
-                                    <td colspan="6" class="px-6 py-4 text-center">
+                                    <td colspan="8" class="px-6 py-4 text-center">
                                         <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
                                             viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10"
@@ -297,7 +307,7 @@
                         alertSelector: '#alertContainer',
                         createButtonSelector: '#createModelAIBtn',
                         idField: 'uuid',
-                        searchFields: ['name', 'description'],
+                        searchFields: ['name', 'email', 'type', 'description'],
                         // Establecer el valor inicial basado en localStorage
                         showDeleted: showDeletedState,
                         formFields: [{
@@ -315,6 +325,41 @@
                                     }
                                 },
                                 capitalize: true
+                            },
+                            {
+                                name: 'email',
+                                type: 'email',
+                                label: "{{ __('model_ai_email') }}",
+                                placeholder: "{{ __('model_ai_enter_email') }}",
+                                required: true,
+                                validation: {
+                                    required: true,
+                                    email: true,
+                                    maxLength: 255
+                                }
+                            },
+                            {
+                                name: 'type',
+                                type: 'select',
+                                label: "{{ __('model_ai_type') }}",
+                                placeholder: "{{ __('model_ai_select_type') }}",
+                                required: true,
+                                options: [{
+                                        value: 'Content',
+                                        text: "{{ __('model_ai_type_content') }}"
+                                    },
+                                    {
+                                        value: 'Image',
+                                        text: "{{ __('model_ai_type_image') }}"
+                                    },
+                                    {
+                                        value: 'Mixed',
+                                        text: "{{ __('model_ai_type_mixed') }}"
+                                    }
+                                ],
+                                validation: {
+                                    required: true
+                                }
                             },
                             {
                                 name: 'description',
@@ -347,14 +392,32 @@
                                 sortable: true
                             },
                             {
+                                field: 'email',
+                                name: "{{ __('model_ai_email') }}",
+                                sortable: true
+                            },
+                            {
+                                field: 'type',
+                                name: "{{ __('model_ai_type') }}",
+                                sortable: true,
+                                getter: (entity) => {
+                                    const typeTranslations = {
+                                        'Content': "{{ __('model_ai_type_content') }}",
+                                        'Image': "{{ __('model_ai_type_image') }}",
+                                        'Mixed': "{{ __('model_ai_type_mixed') }}"
+                                    };
+                                    return typeTranslations[entity.type] || entity.type;
+                                }
+                            },
+                            {
                                 field: 'description',
                                 name: "{{ __('model_ai_description') }}",
                                 sortable: true,
                                 getter: (entity) => {
                                     if (!entity.description) return 'N/A';
                                     // Truncate long descriptions
-                                    return entity.description.length > 100 ?
-                                        entity.description.substring(0, 100) + '...' :
+                                    return entity.description.length > 50 ?
+                                        entity.description.substring(0, 50) + '...' :
                                         entity.description;
                                 }
                             },

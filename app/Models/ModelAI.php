@@ -17,6 +17,8 @@ class ModelAI extends Model
     protected $fillable = [
         'uuid',
         'name',
+        'email',
+        'type',
         'description',
         'api_key',
         'user_id',

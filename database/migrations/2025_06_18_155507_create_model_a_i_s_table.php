@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name');
+            $table->string('email');
+            $table->enum('type', ['Content', 'Image', 'Mixed'])->default('Content');
             $table->text('description')->nullable();
             $table->text('api_key');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
