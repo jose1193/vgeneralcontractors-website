@@ -448,7 +448,7 @@
         // Title validation function
         async function validateTitle(title) {
             try {
-                const response = await fetch("{{ route('posts-crud.check-title') }}", {
+                const response = await fetch("{{ secure_url(route('posts-crud.check-title', [], false)) }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

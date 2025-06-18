@@ -609,7 +609,7 @@ class PostCrudController extends BaseCrudController
      */
     public function checkTitleExists(Request $request)
     {
-        if (!$this->checkPermissionWithMessage("READ_POST", "You don't have permission to check post titles")) {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to check post titles")) {
             return response()->json([
                 'success' => false,
                 'message' => 'Permission denied',
