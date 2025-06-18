@@ -201,10 +201,12 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (isEditMode) {
             html += `
                 <div class="existing-images-section mb-6">
-                    <h4 class="text-md font-medium text-gray-800 mb-3">${this.getTranslation(
-                        "current_images",
-                        "Imágenes Actuales"
-                    )}</h4>
+                    <h4 id="existing-images-title" class="text-md font-medium text-gray-800 mb-3">
+                        ${this.getTranslation(
+                            "current_images",
+                            "Imágenes Actuales ({count} visibles)"
+                        ).replace("{count}", "0")}
+                    </h4>
                     <div id="existing-images-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <!-- Se llenarán dinámicamente -->
                     </div>
@@ -215,10 +217,12 @@ class PortfolioCrudManager extends CrudManagerModal {
         // Contenedor para nuevas imágenes pendientes
         html += `
             <div class="pending-images-section mb-4">
-                <h4 class="text-md font-medium text-gray-800 mb-3">${this.getTranslation(
-                    "new_images_to_upload",
-                    "Nuevas Imágenes a Subir"
-                )}</h4>
+                <h4 id="pending-images-title" class="text-md font-medium text-gray-800 mb-3">
+                    ${this.getTranslation(
+                        "new_images_pending",
+                        "Nuevas Imágenes ({count} pendientes)"
+                    ).replace("{count}", "0")}
+                </h4>
                 <div id="pending-images-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <!-- Se llenarán dinámicamente -->
                 </div>
@@ -800,6 +804,9 @@ class PortfolioCrudManager extends CrudManagerModal {
         $("#current-image-count").text(totalCount);
         $("#current-total-size").text(totalSizeMB.toFixed(2));
 
+        // Actualizar títulos con contadores dinámicos
+        this.updateImageTitles();
+
         // Actualizar colores según límites
         const countElement = $("#current-image-count");
         const sizeElement = $("#current-total-size");
@@ -814,6 +821,34 @@ class PortfolioCrudManager extends CrudManagerModal {
             sizeElement.addClass("text-red-600 font-bold");
         } else {
             sizeElement.removeClass("text-red-600 font-bold");
+        }
+    }
+
+    /**
+     * Actualizar títulos con contadores dinámicos
+     */
+    updateImageTitles() {
+        // Actualizar título de imágenes existentes
+        const existingTitle = document.getElementById("existing-images-title");
+        if (existingTitle) {
+            const visibleCount =
+                this.existingImages.length - this.imagesToDelete.length;
+            const titleText = this.getTranslation(
+                "current_images",
+                "Imágenes Actuales ({count} visibles)"
+            ).replace("{count}", visibleCount);
+            existingTitle.textContent = titleText;
+        }
+
+        // Actualizar título de imágenes pendientes
+        const pendingTitle = document.getElementById("pending-images-title");
+        if (pendingTitle) {
+            const pendingCount = this.pendingNewImages.length;
+            const titleText = this.getTranslation(
+                "new_images_pending",
+                "Nuevas Imágenes ({count} pendientes)"
+            ).replace("{count}", pendingCount);
+            pendingTitle.textContent = titleText;
         }
     }
 

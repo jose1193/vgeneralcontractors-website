@@ -1450,5 +1450,6 @@
     "portfolio_management_title": "Gestión de Portafolios",
     "portfolio_management_subtitle": "Exhiba y gestione sus proyectos completados y portafolios de servicios",
     "portfolio_title_required": "El título es requerido",
-    "portfolios": "portafolios"
+    "portfolios": "portafolios",
+    "new_images_pending": "Nuevas Imágenes ({count} pendientes)"
 }

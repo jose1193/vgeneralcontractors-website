@@ -1460,5 +1460,7 @@
     "portfolio_management_title": "Portfolio Management",
     "portfolio_management_subtitle": "Showcase and manage your completed projects and service portfolios",
     "portfolio_title_required": "Title is required",
-    "portfolios": "portfolios"
+    "portfolios": "portfolios",
+
+    "new_images_pending": "New Images ({count} pending)"
 }
