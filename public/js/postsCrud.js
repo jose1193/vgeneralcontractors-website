@@ -4,6 +4,11 @@
  */
 class PostsCrudManager {
     constructor(options) {
+        console.log(
+            "🚀 PostsCrudManager constructor called with options:",
+            options
+        );
+
         // Configuración básica
         this.entityName = "Post";
         this.entityNamePlural = "Posts";
@@ -28,24 +33,51 @@ class PostsCrudManager {
         // Debounce timer para búsqueda
         this.searchTimeout = null;
 
+        console.log("✅ PostsCrudManager initialized with state:", {
+            routes: this.routes,
+            searchSelector: this.searchSelector,
+            tableSelector: this.tableSelector,
+        });
+
         // Inicializar
         this.init();
     }
 
     init() {
+        console.log("🔧 PostsCrudManager.init() starting...");
         this.setupEventHandlers();
         this.loadPosts();
+        console.log("✅ PostsCrudManager.init() completed");
     }
 
     setupEventHandlers() {
         const self = this;
 
+        console.log("🎯 Setting up event handlers...");
+        console.log(
+            "🔍 Search input element:",
+            $(this.searchSelector).length ? "Found" : "NOT FOUND"
+        );
+        console.log(
+            "📄 Per page element:",
+            $(this.perPageSelector).length ? "Found" : "NOT FOUND"
+        );
+        console.log(
+            "🔄 Show deleted element:",
+            $(this.showDeletedSelector).length ? "Found" : "NOT FOUND"
+        );
+
         // Búsqueda en tiempo real con debounce
         $(this.searchSelector).on("input", function () {
+            console.log(
+                "🔍 Search input event triggered with value:",
+                $(this).val()
+            );
             clearTimeout(self.searchTimeout);
             self.searchTimeout = setTimeout(() => {
                 self.searchTerm = $(this).val();
                 self.currentPage = 1;
+                console.log("🔍 Starting search with term:", self.searchTerm);
                 self.loadPosts();
                 self.updateURL();
             }, 300); // 300ms debounce
@@ -642,18 +674,5 @@ class PostsCrudManager {
     }
 }
 
-// Initialize when DOM is ready
-$(document).ready(function () {
-    // Check if we're on the posts-crud index page
-    if (
-        window.location.pathname.includes("posts-crud") &&
-        !window.location.pathname.includes("edit") &&
-        !window.location.pathname.includes("create")
-    ) {
-        window.postsCrudManager = new PostsCrudManager({
-            routes: {
-                index: "/posts-crud",
-            },
-        });
-    }
-});
+// Hacer disponible globalmente la clase
+window.PostsCrudManager = PostsCrudManager;
