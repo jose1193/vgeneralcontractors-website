@@ -345,6 +345,13 @@
                     'new_images_to_upload': @json(__('new_images_pending_upload')),
                     'max_images_info': @json(__('max_images_info')),
                     'portfolio_no_records_found': @json(__('portfolio_no_records_found')),
+                    'portfolio_image_limits': @json(__('portfolio_image_limits')),
+                    'portfolio_total_size': @json(__('portfolio_total_size')),
+                    'portfolio_maximum': @json(__('portfolio_maximum')),
+                    'portfolio_images_text': @json(__('portfolio_images_text')),
+                    'portfolio_max_size_per_image': @json(__('portfolio_max_size_per_image')),
+                    'portfolio_formats': @json(__('portfolio_formats')),
+                    'portfolio_supported_formats': @json(__('portfolio_supported_formats')),
 
                     // Validaciones
                     'title_required': @json(__('portfolio_title_required')),

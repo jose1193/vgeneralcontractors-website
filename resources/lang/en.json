@@ -1465,5 +1465,10 @@
     "portfolio_total_size": "Total size",
     "portfolio_current_images": "Current Images ({count} visible)",
     "portfolio_new_images_pending": "New Images ({count} pending)",
-    "portfolio_no_records_found": "No records found"
+    "portfolio_no_records_found": "No records found",
+    "portfolio_maximum": "Maximum",
+    "portfolio_images_text": "images",
+    "portfolio_max_size_per_image": "Maximum size per image",
+    "portfolio_formats": "Formats",
+    "portfolio_supported_formats": "JPEG, PNG, JPG, GIF, WEBP"
 }

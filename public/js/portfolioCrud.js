@@ -186,12 +186,22 @@ class PortfolioCrudManager extends CrudManagerModal {
                 <input type="file" id="image_files" name="image_files" multiple accept="image/*" 
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <div class="text-sm text-gray-500 mt-1">
-                    Máximo ${
-                        this.maxFiles
-                    } imágenes. Tamaño máximo por imagen: ${
-            this.maxSizeKb / 1024
-        }MB. 
-                    Formatos: JPEG, PNG, JPG, GIF, WEBP.
+                    ${this.getTranslation("portfolio_maximum", "Máximo")} ${
+            this.maxFiles
+        } ${this.getTranslation(
+            "portfolio_images_text",
+            "imágenes"
+        )}. ${this.getTranslation(
+            "portfolio_max_size_per_image",
+            "Tamaño máximo por imagen"
+        )}: ${this.maxSizeKb / 1024}MB. 
+                    ${this.getTranslation(
+                        "portfolio_formats",
+                        "Formatos"
+                    )}: ${this.getTranslation(
+            "portfolio_supported_formats",
+            "JPEG, PNG, JPG, GIF, WEBP"
+        )}.
                 </div>
                 <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-image_files"></div>
             </div>
@@ -238,13 +248,16 @@ class PortfolioCrudManager extends CrudManagerModal {
                     </svg>
                     <div class="text-sm text-blue-700">
                         <div>${this.getTranslation(
-                            "image_limits",
+                            "portfolio_image_limits",
                             "Límites"
-                        )}: Máximo <span id="current-image-count">0</span>/${
+                        )}: ${this.getTranslation(
+            "portfolio_maximum",
+            "Máximo"
+        )} <span id="current-image-count">0</span>/${
             this.maxFiles
-        } imágenes</div>
+        } ${this.getTranslation("portfolio_images_text", "imágenes")}</div>
                         <div>${this.getTranslation(
-                            "total_size",
+                            "portfolio_total_size",
                             "Tamaño total"
                         )}: <span id="current-total-size">0</span>MB / ${
             this.maxTotalSizeKb / 1024
