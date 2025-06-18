@@ -59,16 +59,14 @@
             <meta name="twitter:image" content="{{ $post->post_image }}">
         @endif
     @else
-        <meta property="og:title" content="{{ config('app.name') }} - Blog">
-        <meta property="og:description"
-            content="Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team.">
+        <meta property="og:title" content="{{ __('blog_og_title') }}">
+        <meta property="og:description" content="{{ __('blog_og_description') }}">
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ secure_url(URL::current()) }}">
         <meta property="og:image" content="{{ secure_asset('assets/img/blog-share.jpg') }}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ config('app.name') }} - Blog">
-        <meta name="twitter:description"
-            content="Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team.">
+        <meta name="twitter:title" content="{{ __('blog_twitter_title') }}">
+        <meta name="twitter:description" content="{{ __('blog_twitter_description') }}">
         <meta name="twitter:image" content="{{ secure_asset('assets/img/blog-share.jpg') }}">
     @endif
 

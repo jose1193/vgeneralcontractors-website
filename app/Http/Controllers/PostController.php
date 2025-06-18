@@ -32,13 +32,21 @@ class PostController extends Controller
                 ->paginate(9);
         }
         
-        // Configuración SEO
-        SEOTools::setTitle('Blog | V General Contractors');
-        SEOTools::setDescription('Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.');
-        SEOTools::opengraph()->setUrl(url()->current());
+        // Configuración SEO para el blog
+        SEOTools::setTitle(__('blog_meta_title'));
+        SEOTools::setDescription(__('blog_meta_description'));
         SEOTools::setCanonical(url()->current());
         
-        $title = 'Blog';
+        // OpenGraph para el blog
+        OpenGraph::setUrl(url()->current());
+        OpenGraph::setTitle(__('blog_og_title'));
+        OpenGraph::setDescription(__('blog_og_description'));
+        OpenGraph::addProperty('type', 'website');
+        
+        // Meta keywords para el blog
+        SEOMeta::addKeyword(explode(',', __('blog_meta_keywords')));
+        
+        $title = __('blog_our_blog');
         
         return view('blog.index', compact('posts', 'title'));
     }
@@ -177,10 +185,11 @@ class PostController extends Controller
         }
         
         // Configuración SEO
-        SEOTools::setTitle('Latest Posts | V General Contractors Blog');
-        SEOTools::setDescription('Discover the latest roofing insights, tips, and industry updates from V General Contractors.');
+        SEOTools::setTitle(__('blog_meta_title'));
+        SEOTools::setDescription(__('blog_meta_description'));
+        SEOTools::setCanonical(url()->current());
         
-        $title = 'Latest Posts';
+        $title = __('blog_our_blog');
         
         return view('blog.index', compact('posts', 'title'));
     }
