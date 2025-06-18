@@ -240,22 +240,13 @@ class PostCrudController extends BaseCrudController
             
             $page = $request->input('page', 1);
             
-            // Build and execute query directly (simplified for debugging)
+            // Build and execute query
             $query = $this->buildPostsQuery($request);
             $posts = $query->paginate($this->perPage, ['*'], 'page', $page);
 
             if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'data' => $posts->items(),
-                    'current_page' => $posts->currentPage(),
-                    'last_page' => $posts->lastPage(),
-                    'from' => $posts->firstItem(),
-                    'to' => $posts->lastItem(),
-                    'total' => $posts->total(),
-                    'per_page' => $posts->perPage(),
-                    'path' => $posts->path(),
-                ]);
+                // Return consistent structure like ServiceCategoryController
+                return response()->json($posts);
             }
 
             return view("{$this->viewPrefix}.index", [

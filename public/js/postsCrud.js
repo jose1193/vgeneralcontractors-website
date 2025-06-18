@@ -134,7 +134,7 @@ class PostsCrudManager {
                 // Log de debug para verificar la estructura de respuesta
                 console.log("Posts response:", response);
 
-                // Verificar si la respuesta tiene la estructura esperada
+                // Verificar si la respuesta tiene success = false (error del servidor)
                 if (response.success === false) {
                     $(self.tableSelector).html(`
                         <tr>
@@ -154,8 +154,8 @@ class PostsCrudManager {
                     return;
                 }
 
-                // Obtener los datos correctos según la estructura de respuesta
-                const posts = response.data || response;
+                // Manejar respuesta exitosa (estructura de paginación de Laravel)
+                const posts = response.data || [];
 
                 self.renderTable(posts);
                 self.renderPagination(response);
@@ -193,6 +193,28 @@ class PostsCrudManager {
 
     renderTable(posts) {
         let html = "";
+
+        // Validar que posts sea un array válido
+        if (!Array.isArray(posts)) {
+            console.error("Posts data is not an array:", posts);
+            html = `
+                <tr>
+                    <td colspan="7" class="text-center py-8 text-red-400">
+                        <div class="flex flex-col items-center justify-center space-y-3">
+                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm">Error: Datos de posts inválidos</span>
+                            <button onclick="window.postsCrudManager.loadPosts()" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors">
+                                Reintentar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            $(this.tableSelector).html(html);
+            return;
+        }
 
         if (posts.length === 0) {
             // Mensaje más descriptivo dependiendo si hay búsqueda activa o no
@@ -233,6 +255,12 @@ class PostsCrudManager {
             `;
         } else {
             posts.forEach((post) => {
+                // Validar que el post tenga la estructura mínima esperada
+                if (!post || typeof post !== "object") {
+                    console.warn("Invalid post object:", post);
+                    return; // Saltar este post
+                }
+
                 const isDeleted = post.deleted_at !== null;
                 const rowClass = isDeleted ? "opacity-60" : "";
 
@@ -256,7 +284,9 @@ class PostsCrudManager {
                 }
 
                 // Status badge
-                let statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-500/20 text-gray-400">${post.post_status}</span>`;
+                let statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-500/20 text-gray-400">${
+                    post.post_status || "N/A"
+                }</span>`;
                 if (post.post_status === "published") {
                     statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">Published</span>`;
                 } else if (post.post_status === "scheduled") {
@@ -268,7 +298,10 @@ class PostsCrudManager {
 
                 if (!isDeleted) {
                     // Show button (solo para posts publicados) - PRIMERO
-                    if (post.post_status === "published") {
+                    if (
+                        post.post_status === "published" &&
+                        post.post_title_slug
+                    ) {
                         actionsHtml += `<a href="/blog/${post.post_title_slug}" target="_blank"
                             class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                             title="View post">
@@ -280,50 +313,64 @@ class PostsCrudManager {
                     }
 
                     // Edit button - SEGUNDO
-                    actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
-                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                        title="Edit post">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                    </a>`;
+                    if (post.uuid) {
+                        actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
+                            class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                            title="Edit post">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </a>`;
+                    }
 
                     // Delete button - TERCERO
-                    actionsHtml += `<button data-uuid="${
-                        post.uuid
-                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
-                        class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                        title="Delete post">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>`;
+                    if (post.uuid && post.post_title) {
+                        actionsHtml += `<button data-uuid="${
+                            post.uuid
+                        }" data-title="${(post.post_title || "").replace(
+                            /"/g,
+                            "&quot;"
+                        )}"
+                            class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                            title="Delete post">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>`;
+                    }
                 } else {
                     // Restore button
-                    actionsHtml += `<button data-uuid="${
-                        post.uuid
-                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
-                        class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                        title="Restore post">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                    </button>`;
+                    if (post.uuid && post.post_title) {
+                        actionsHtml += `<button data-uuid="${
+                            post.uuid
+                        }" data-title="${(post.post_title || "").replace(
+                            /"/g,
+                            "&quot;"
+                        )}"
+                            class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                            title="Restore post">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </button>`;
+                    }
                 }
 
                 actionsHtml += "</div>";
 
-                // Truncate content
+                // Truncate content with safe handling
+                const postTitle = post.post_title || "Sin título";
                 const truncatedTitle =
-                    post.post_title.length > 50
-                        ? post.post_title.substring(0, 50) + "..."
-                        : post.post_title;
-                const truncatedContent = post.post_content
-                    ? post.post_content.replace(/<[^>]*>/g, "").length > 80
-                        ? post.post_content
-                              .replace(/<[^>]*>/g, "")
-                              .substring(0, 80) + "..."
-                        : post.post_content.replace(/<[^>]*>/g, "")
+                    postTitle.length > 50
+                        ? postTitle.substring(0, 50) + "..."
+                        : postTitle;
+
+                const postContent = post.post_content || "";
+                const truncatedContent = postContent
+                    ? postContent.replace(/<[^>]*>/g, "").length > 80
+                        ? postContent.replace(/<[^>]*>/g, "").substring(0, 80) +
+                          "..."
+                        : postContent.replace(/<[^>]*>/g, "")
                     : "";
 
                 html += `
@@ -363,31 +410,41 @@ class PostsCrudManager {
     }
 
     renderPagination(data) {
-        // Simple pagination implementation
-        const { current_page, last_page, from, to, total } = data;
+        // Manejar estructura de paginación estándar de Laravel
+        const { current_page, last_page, from, to, total, per_page } = data;
+
         const self = this;
 
         let html = `
             <div class="text-sm text-gray-300">
-                Showing ${from || 0} to ${to || 0} of ${total} results
-            </div>
-            <div class="flex space-x-1">
-                <button class="px-3 py-1 rounded ${
-                    current_page === 1
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-gray-600"
-                }" ${current_page === 1 ? "disabled" : ""} data-page="${
-            current_page - 1
-        }">Previous</button>
-                <button class="px-3 py-1 rounded ${
-                    current_page === last_page
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-gray-600"
-                }" ${current_page === last_page ? "disabled" : ""} data-page="${
-            current_page + 1
-        }">Next</button>
+                Showing ${from || 0} to ${to || 0} of ${total || 0} results
             </div>
         `;
+
+        // Solo mostrar controles de paginación si hay más de una página
+        if (last_page > 1) {
+            html += `<div class="flex space-x-1">`;
+
+            // Botón Previous
+            html += `<button class="px-3 py-1 rounded ${
+                current_page === 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-600"
+            }" ${current_page === 1 ? "disabled" : ""} data-page="${
+                current_page - 1
+            }">Previous</button>`;
+
+            // Botón Next
+            html += `<button class="px-3 py-1 rounded ${
+                current_page === last_page
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-600"
+            }" ${current_page === last_page ? "disabled" : ""} data-page="${
+                current_page + 1
+            }">Next</button>`;
+
+            html += `</div>`;
+        }
 
         $(this.paginationSelector).html(html);
 
