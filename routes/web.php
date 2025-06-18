@@ -117,6 +117,11 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\ServiceCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
+    // API Routes for Service Categories (needed by Portfolio CRUD)
+    Route::prefix('api')->name('api.')->group(function () {
+        Route::get('/service-categories', [App\Http\Controllers\ServiceCategoryController::class, 'getForApi'])->name('service-categories');
+    });
+
     // Blog Categories Resource Routes (CRUD) - NEW
     Route::prefix('blog-categories')->name('blog-categories.')->group(function () {
         Route::get('/', [App\Http\Controllers\BlogCategoryController::class, 'index'])->name('index');

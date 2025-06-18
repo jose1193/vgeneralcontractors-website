@@ -585,4 +585,39 @@ class ServiceCategoryController extends BaseCrudController
             'test_data' => $testData
         ]);
     }
+
+    /**
+     * Get service categories for API use (Portfolio CRUD)
+     */
+    public function getForApi(Request $request)
+    {
+        try {
+            // Check basic read permission
+            if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view service categories")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to view service categories',
+                ], 403);
+            }
+
+            // Get all active service categories
+            $serviceCategories = ServiceCategory::select('id', 'category as service_category_name')
+                ->orderBy('category')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $serviceCategories,
+            ]);
+        } catch (Throwable $e) {
+            Log::error("Error in getForApi: {$e->getMessage()}", [
+                'exception' => $e,
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading service categories',
+            ], 500);
+        }
+    }
 } 
