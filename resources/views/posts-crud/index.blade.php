@@ -15,6 +15,9 @@
 
         {{-- Main content area --}}
         <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 px-4 sm:px-6 lg:px-8 pb-12">
+            {{-- Alert container para AJAX --}}
+            <div id="alertMessage"></div>
+
             {{-- Success and error messages --}}
             @if (session()->has('message'))
                 <div class="mb-6 bg-green-500/20 border border-green-500/30 text-green-400 px-4 py-3 rounded-lg">
@@ -327,6 +330,9 @@
             window.postsCrudManager.searchTerm = searchTerm;
             window.postsCrudManager.showDeleted = showDeleted;
             window.postsCrudManager.perPage = $('#perPage').val() || 10;
+
+            // Cargar posts automáticamente al inicializar
+            window.postsCrudManager.loadPosts();
         });
 
         // Auto-hide alerts after 5 seconds

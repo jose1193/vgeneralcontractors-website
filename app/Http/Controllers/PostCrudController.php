@@ -263,8 +263,18 @@ class PostCrudController extends BaseCrudController
             ]);
 
             if ($request->ajax()) {
-                Log::info('PostCrudController::index - Returning AJAX response');
-                // Return consistent structure like ServiceCategoryController
+                Log::info('PostCrudController::index - Returning AJAX response', [
+                    'posts_type' => get_class($posts),
+                    'posts_count' => $posts->count(),
+                    'posts_total' => $posts->total(),
+                    'posts_data_count' => count($posts->items()),
+                    'sample_response_structure' => [
+                        'current_page' => $posts->currentPage(),
+                        'data' => 'array of ' . count($posts->items()) . ' items',
+                        'total' => $posts->total()
+                    ]
+                ]);
+                // Return consistent structure like ServiceCategoryController  
                 return response()->json($posts);
             }
 

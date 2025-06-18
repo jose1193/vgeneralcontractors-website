@@ -72,43 +72,38 @@ class PostsCrudManager {
             $(this.showDeletedSelector).length ? "Found" : "NOT FOUND"
         );
 
-        // Búsqueda en tiempo real con debounce
-        $(this.searchSelector).on("input", function () {
-            console.log(
-                "🔍 Search input event triggered with value:",
-                $(this).val()
-            );
-            clearTimeout(self.searchTimeout);
-            self.searchTimeout = setTimeout(() => {
-                self.searchTerm = $(this).val();
+        // Búsqueda en tiempo real con debounce mejorado
+        $(this.searchSelector).on(
+            "input",
+            debounce(() => {
+                self.searchTerm = $(self.searchSelector).val();
                 self.currentPage = 1;
                 console.log("🔍 Starting search with term:", self.searchTerm);
                 self.loadPosts();
                 self.updateURL();
-            }, 300); // 300ms debounce
-        });
+            }, 300)
+        );
 
         // Per page
-        $(this.perPageSelector).on("change", function () {
-            self.perPage = $(this).val();
+        $(this.perPageSelector).on("change", () => {
+            self.perPage = $(self.perPageSelector).val();
             self.currentPage = 1;
             self.loadPosts();
         });
 
         // Show deleted
-        $(this.showDeletedSelector).on("change", function () {
-            self.showDeleted = $(this).is(":checked");
+        $(this.showDeletedSelector).on("change", () => {
+            self.showDeleted = $(self.showDeletedSelector).is(":checked");
             self.currentPage = 1;
             self.loadPosts();
-
-            // Actualizar URL sin recargar la página
             self.updateURL();
 
             // Update toggle appearance
-            const background = this.nextElementSibling;
+            const toggle = $(self.showDeletedSelector)[0];
+            const background = toggle.nextElementSibling;
             const dot = background.nextElementSibling;
 
-            if (this.checked) {
+            if (toggle.checked) {
                 background.classList.remove("bg-gray-600");
                 background.classList.add("bg-yellow-500");
                 dot.classList.add("transform", "translate-x-6");
@@ -133,188 +128,63 @@ class PostsCrudManager {
         });
     }
 
-    loadPosts() {
+    loadPosts(page = 1) {
+        this.currentPage = page;
         const self = this;
 
-        const params = new URLSearchParams({
+        // Mostrar loading usando la misma lógica que CrudManagerModal
+        this.showTableLoading();
+
+        const requestData = {
             page: this.currentPage,
             per_page: this.perPage,
-            search: this.searchTerm,
-            show_deleted: this.showDeleted ? "true" : "false",
             sort_field: this.sortField,
             sort_direction: this.sortDirection,
-        });
+            search: this.searchTerm,
+            show_deleted: this.showDeleted ? "true" : "false",
+        };
 
         console.log(
-            "🔍 PostsCrudManager.loadPosts() - Starting request with params:",
-            {
-                url: `${this.routes.index}?${params.toString()}`,
-                currentPage: this.currentPage,
-                perPage: this.perPage,
-                searchTerm: this.searchTerm,
-                showDeleted: this.showDeleted,
-                sortField: this.sortField,
-                sortDirection: this.sortDirection,
-            }
+            "🔍 PostsCrudManager.loadPosts() - Request data:",
+            requestData
         );
 
-        // Mostrar spinner de loading mejorado
-        $(this.tableSelector).html(`
-            <tr>
-                <td colspan="7" class="text-center py-8 text-gray-400">
-                    <div class="flex flex-col items-center justify-center space-y-3">
-                        <svg class="animate-spin h-8 w-8 text-yellow-500" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span class="text-sm">Cargando posts...</span>
-                    </div>
-                </td>
-            </tr>
-        `);
-
-        $.ajax({
-            url: `${this.routes.index}?${params.toString()}`,
-            method: "GET",
-            headers: {
-                "X-Requested-With": "XMLHttpRequest",
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
+        return $.ajax({
+            url: this.routes.index,
+            type: "GET",
             dataType: "json",
-            timeout: 30000, // 30 segundos
-            beforeSend: function (xhr) {
-                console.log("📤 AJAX beforeSend - Headers being sent:", {
-                    "X-Requested-With":
-                        xhr.getRequestHeader("X-Requested-With"),
-                    Accept: xhr.getRequestHeader("Accept"),
-                    "Content-Type": xhr.getRequestHeader("Content-Type"),
-                    "X-CSRF-TOKEN": xhr.getRequestHeader("X-CSRF-TOKEN"),
-                });
-                console.log(
-                    "📤 Full URL being requested:",
-                    xhr.url || `${self.routes.index}?${params.toString()}`
-                );
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                Accept: "application/json",
             },
-            success: function (response) {
-                console.log("✅ AJAX Success - Response received:", {
-                    responseType: typeof response,
-                    hasData: response.hasOwnProperty("data"),
-                    hasSuccess: response.hasOwnProperty("success"),
-                    dataLength: response.data ? response.data.length : "N/A",
-                    fullResponse: response,
-                });
-
-                // Verificar si la respuesta tiene success = false (error del servidor)
-                if (response.success === false) {
-                    console.log(
-                        "❌ Server returned success=false:",
-                        response.message
-                    );
-                    $(self.tableSelector).html(`
-                        <tr>
-                            <td colspan="7" class="text-center py-8 text-red-400">
-                                <div class="flex flex-col items-center justify-center space-y-3">
-                                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <span class="text-sm">${
-                                        response.message ||
-                                        "Error al cargar posts"
-                                    }</span>
-                                </div>
-                            </td>
-                        </tr>
-                    `);
-                    return;
-                }
-
-                // Manejar respuesta exitosa (estructura de paginación de Laravel)
-                const posts = response.data || [];
-                console.log("📋 Processing posts data:", {
-                    postsCount: posts.length,
-                    postsArray: posts,
-                });
-
-                self.renderTable(posts);
+            data: requestData,
+            success: (response) => {
+                console.log("✅ AJAX Success - Response received:", response);
+                self.renderTable(response);
                 self.renderPagination(response);
             },
-            error: function (xhr, status, error) {
-                console.log("❌ AJAX Error - Detailed info:", {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    responseText: xhr.responseText,
-                    responseJSON: xhr.responseJSON,
-                    error: error,
-                    readyState: xhr.readyState,
-                    ajaxStatus: status,
-                    url: `${self.routes.index}?${params.toString()}`,
-                });
-
-                // Intentar parsear la respuesta como JSON si es posible
-                let errorDetails = "";
-                try {
-                    if (xhr.responseText) {
-                        const parsed = JSON.parse(xhr.responseText);
-                        errorDetails = ` - ${
-                            parsed.message || parsed.error || "Unknown error"
-                        }`;
-                    }
-                } catch (e) {
-                    if (xhr.responseText) {
-                        errorDetails = ` - Response: ${xhr.responseText.substring(
-                            0,
-                            100
-                        )}...`;
-                    }
-                }
-
-                let errorMessage = "Error al cargar posts";
-
-                if (xhr.status === 0) {
-                    errorMessage =
-                        "Sin conexión - Verifica tu conexión a internet";
-                } else if (xhr.status === 403) {
-                    errorMessage = "No tienes permisos para ver los posts";
-                } else if (xhr.status === 404) {
-                    errorMessage = "Ruta no encontrada";
-                } else if (xhr.status === 500) {
-                    errorMessage = "Error interno del servidor";
-                } else if (status === "timeout") {
-                    errorMessage = "Tiempo de espera agotado";
-                } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
-
-                errorMessage += errorDetails;
-
-                $(self.tableSelector).html(`
-                    <tr>
-                        <td colspan="7" class="text-center py-8 text-red-400">
-                            <div class="flex flex-col items-center justify-center space-y-3">
-                                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span class="text-sm">${errorMessage}</span>
-                                <div class="text-xs text-gray-500 mt-2">Status: ${xhr.status} | Ready State: ${xhr.readyState}</div>
-                                <button onclick="window.postsCrudManager.loadPosts()" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors">
-                                    Reintentar
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `);
+            error: (xhr) => {
+                console.error("❌ Error loading posts:", xhr.responseText);
+                self.showAlert("error", "Error loading posts");
+                self.hideTableLoading();
             },
         });
     }
 
-    renderTable(posts) {
+    renderTable(data) {
+        // Extraer posts de la respuesta de paginación de Laravel
+        const posts = data.data || [];
+
         console.log("🎨 renderTable() called with:", {
+            dataType: typeof data,
             postsType: typeof posts,
             isArray: Array.isArray(posts),
-            postsLength: posts ? posts.length : "null/undefined",
-            posts: posts,
+            postsLength: posts.length,
+            paginationInfo: {
+                current_page: data.current_page,
+                total: data.total,
+                per_page: data.per_page,
+            },
         });
 
         let html = "";
@@ -535,52 +405,58 @@ class PostsCrudManager {
     }
 
     renderPagination(data) {
-        // Manejar estructura de paginación estándar de Laravel
-        const { current_page, last_page, from, to, total, per_page } = data;
+        let paginationHtml = "";
 
-        const self = this;
+        if (data.last_page > 1) {
+            paginationHtml += '<div class="flex items-center justify-between">';
+            paginationHtml += `<div class="text-sm text-gray-300">Mostrando ${
+                data.from || 0
+            } a ${data.to || 0} de ${data.total || 0} resultados</div>`;
+            paginationHtml += '<div class="flex space-x-1">';
 
-        let html = `
-            <div class="text-sm text-gray-300">
-                Showing ${from || 0} to ${to || 0} of ${total || 0} results
-            </div>
-        `;
+            // Botón anterior
+            if (data.current_page > 1) {
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700" data-page="${
+                    data.current_page - 1
+                }">Anterior</button>`;
+            }
 
-        // Solo mostrar controles de paginación si hay más de una página
-        if (last_page > 1) {
-            html += `<div class="flex space-x-1">`;
+            // Números de página
+            for (
+                let i = Math.max(1, data.current_page - 2);
+                i <= Math.min(data.last_page, data.current_page + 2);
+                i++
+            ) {
+                const activeClass =
+                    i === data.current_page
+                        ? "bg-blue-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50";
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border border-gray-300 rounded-md ${activeClass}" data-page="${i}">${i}</button>`;
+            }
 
-            // Botón Previous
-            html += `<button class="px-3 py-1 rounded ${
-                current_page === 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-gray-600"
-            }" ${current_page === 1 ? "disabled" : ""} data-page="${
-                current_page - 1
-            }">Previous</button>`;
+            // Botón siguiente
+            if (data.current_page < data.last_page) {
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700" data-page="${
+                    data.current_page + 1
+                }">Siguiente</button>`;
+            }
 
-            // Botón Next
-            html += `<button class="px-3 py-1 rounded ${
-                current_page === last_page
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-gray-600"
-            }" ${current_page === last_page ? "disabled" : ""} data-page="${
-                current_page + 1
-            }">Next</button>`;
-
-            html += `</div>`;
+            paginationHtml += "</div></div>";
+        } else if (data.total > 0) {
+            paginationHtml += `<div class="text-sm text-gray-300">Mostrando ${
+                data.from || 0
+            } a ${data.to || 0} de ${data.total || 0} resultados</div>`;
         }
 
-        $(this.paginationSelector).html(html);
+        $(this.paginationSelector).html(paginationHtml);
 
-        // Bind pagination events
-        $(this.paginationSelector + " button:not([disabled])").on(
-            "click",
-            function () {
-                self.currentPage = $(this).data("page");
-                self.loadPosts();
-            }
-        );
+        // Event listener para paginación
+        $(".pagination-btn")
+            .off("click")
+            .on("click", (e) => {
+                const page = $(e.target).data("page");
+                this.loadPosts(page);
+            });
     }
 
     // Delete con SweetAlert2
@@ -719,6 +595,56 @@ class PostsCrudManager {
     }
 
     /**
+     * Mostrar loading en tabla
+     */
+    showTableLoading() {
+        const loadingHtml = `
+            <tr id="loadingRow">
+                <td colspan="7" class="px-6 py-4 text-center">
+                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Cargando posts...
+                </td>
+            </tr>
+        `;
+        $(this.tableSelector).html(loadingHtml);
+    }
+
+    /**
+     * Ocultar loading en tabla
+     */
+    hideTableLoading() {
+        $("#loadingRow").remove();
+    }
+
+    /**
+     * Mostrar alerta con estilos específicos de posts-crud
+     */
+    showAlert(type, message) {
+        const alertClass =
+            type === "success"
+                ? "bg-green-500/20 border border-green-500/30 text-green-400"
+                : "bg-red-500/20 border border-red-500/30 text-red-400";
+
+        const alertHtml = `
+            <div class="mb-6 ${alertClass} px-4 py-3 rounded-lg transition-all duration-300 ease-in-out">
+                ${message}
+            </div>
+        `;
+
+        $(this.alertSelector).html(alertHtml);
+
+        // Auto-hide después de 5 segundos con fade effect
+        setTimeout(() => {
+            $(this.alertSelector + " > div").fadeOut(500, function () {
+                $(this).remove();
+            });
+        }, 5000);
+    }
+
+    /**
      * Inicializar paginación existente renderizada por el servidor
      */
     initializeExistingPagination() {
@@ -739,6 +665,21 @@ class PostsCrudManager {
 
         console.log("✅ Existing pagination initialized");
     }
+}
+
+/**
+ * Función debounce para optimizar búsquedas
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 // Hacer disponible globalmente la clase
