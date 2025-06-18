@@ -1456,7 +1456,10 @@ class CrudManagerModal {
         let html = "";
 
         if (entities.length === 0) {
-            html = `<tr><td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-gray-500">No se encontraron registros</td></tr>`;
+            const noRecordsText =
+                this.translations.noRecordsFound ||
+                "No se encontraron registros";
+            html = `<tr><td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
         } else {
             entities.forEach((entity) => {
                 const isDeleted = entity.deleted_at !== null;

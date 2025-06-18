@@ -1478,6 +1478,7 @@
     "model_ai_no_models_found": "No se encontraron modelos AI",
     "model_ai_error_loading": "Error al cargar modelos AI",
     "model_ai_no_models_matching": "No se encontraron modelos AI que coincidan con",
+    "model_ai_no_records_found": "No se encontraron registros",
 
     "_comment_model_ai_form": "=== FORMULARIO DE MODELO AI ===",
     "model_ai_enter_name": "Ingrese el nombre del modelo",

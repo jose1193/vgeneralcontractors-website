@@ -1062,6 +1062,7 @@
     "model_ai_no_models_found": "No AI models found",
     "model_ai_error_loading": "Error loading AI models",
     "model_ai_no_models_matching": "No AI models found matching",
+    "model_ai_no_records_found": "No records found",
 
     "_comment_model_ai_form": "=== AI MODEL FORM ===",
     "model_ai_enter_name": "Enter model name",

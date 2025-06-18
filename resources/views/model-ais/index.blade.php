@@ -447,7 +447,8 @@
                             save: "{{ __('model_ai_save') }}",
                             update: "{{ __('model_ai_update') }}",
                             yes: "{{ __('model_ai_yes') }}",
-                            no: "{{ __('model_ai_no') }}"
+                            no: "{{ __('model_ai_no') }}",
+                            noRecordsFound: "{{ __('model_ai_no_records_found') }}"
                         },
                         entityConfig: {
                             identifierField: 'name',
