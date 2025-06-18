@@ -80,6 +80,9 @@ class PostController extends Controller
             $relatedPosts = $relatedPosts->concat($additionalPosts);
         }
         
+        // Limpiar el contenido del post antes de mostrarlo
+        $post->post_content = $this->cleanPostContent($post->post_content);
+        
         // Formatear la fecha para fácil visualización
         $post->formatted_date = $post->created_at->format('F d, Y');
         
@@ -200,6 +203,35 @@ class PostController extends Controller
         $wordCount = str_word_count(strip_tags($content));
         $minutes = ceil($wordCount / $wordsPerMinute);
         return max(1, $minutes); // Al menos 1 minuto
+    }
+
+    /**
+     * Limpiar el contenido HTML del post eliminando espacios excesivos
+     */
+    private function cleanPostContent($content)
+    {
+        // Eliminar párrafos vacíos con solo espacios no separables
+        $content = preg_replace('/<p[^>]*>\s*(&nbsp;|\s)*\s*<\/p>/i', '', $content);
+        
+        // Eliminar múltiples <br> consecutivos (máximo 2)
+        $content = preg_replace('/(<br[^>]*>\s*){3,}/i', '<br><br>', $content);
+        
+        // Eliminar <br> al final de párrafos seguidos de otro <br>
+        $content = preg_replace('/<\/p>\s*<br[^>]*>\s*<br[^>]*>/i', '</p>', $content);
+        
+        // Eliminar <br> al inicio de párrafos
+        $content = preg_replace('/<p[^>]*>\s*<br[^>]*>/i', '<p>', $content);
+        
+        // Eliminar espacios no separables excesivos (más de 2 consecutivos)
+        $content = preg_replace('/(&nbsp;\s*){3,}/i', '&nbsp;&nbsp;', $content);
+        
+        // Limpiar espacios en blanco excesivos entre etiquetas
+        $content = preg_replace('/>\s+</i', '><', $content);
+        
+        // Eliminar líneas vacías múltiples
+        $content = preg_replace('/\n\s*\n\s*\n/i', "\n\n", $content);
+        
+        return trim($content);
     }
 
     public function showPost($postId)

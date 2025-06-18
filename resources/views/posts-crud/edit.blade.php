@@ -343,9 +343,59 @@
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code fullscreen',
             menubar: 'file edit view insert format tools table help',
             branding: false,
+
+            // Configuraciones para evitar espacios excesivos
+            forced_root_block: 'p',
+            forced_root_block_attrs: {},
+            force_br_newlines: false,
+            force_p_newlines: true,
+            convert_newlines_to_brs: false,
+            remove_trailing_brs: true,
+
+            // Configuración para evitar elementos vacíos
+            remove_empty_elements: true,
+            trim_span_elements: true,
+            fix_list_elements: true,
+
+            // Configuración de formato
+            formats: {
+                removeformat: [{
+                        selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+                        remove: 'all',
+                        split: true,
+                        expand: false,
+                        block_expand: true,
+                        deep: true
+                    },
+                    {
+                        selector: 'span',
+                        attributes: ['style', 'class'],
+                        remove: 'empty',
+                        split: true,
+                        expand: false,
+                        deep: true
+                    },
+                    {
+                        selector: '*',
+                        attributes: ['style', 'class'],
+                        split: false,
+                        expand: false,
+                        deep: true
+                    }
+                ]
+            },
+
             setup: function(editor) {
                 editor.on('change', function() {
                     editor.save();
+                });
+
+                // Limpiar contenido al pegar
+                editor.on('paste preprocess', function(e) {
+                    // Eliminar múltiples espacios y <br> consecutivos
+                    e.content = e.content.replace(/(<br[^>]*>\s*){2,}/gi, '<br>');
+                    e.content = e.content.replace(/(<p[^>]*>\s*&nbsp;\s*<\/p>)/gi, '');
+                    e.content = e.content.replace(/(&nbsp;\s*){2,}/gi, ' ');
                 });
             },
             content_style: `
