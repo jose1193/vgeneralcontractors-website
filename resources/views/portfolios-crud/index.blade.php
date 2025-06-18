@@ -404,18 +404,18 @@
 
                         tableHeaders: [{
                                 field: 'title',
-                                name: 'Título',
+                                name: window.translations.project_title,
                                 sortable: true,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type && portfolio.project_type.title) {
                                         return `<div class="font-medium text-gray-900 dark:text-gray-100">${portfolio.project_type.title}</div>`;
                                     }
-                                    return '<span class="text-gray-400">Sin título</span>';
+                                    return `<span class="text-gray-400">${window.translations.no_title || 'Sin título'}</span>`;
                                 }
                             },
                             {
                                 field: 'description',
-                                name: 'Descripción',
+                                name: window.translations.project_description,
                                 sortable: false,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type && portfolio.project_type.description) {
@@ -424,12 +424,12 @@
                                             description.substring(0, 100) + '...' : description;
                                         return `<div class="text-sm text-gray-600 dark:text-gray-300">${truncated}</div>`;
                                     }
-                                    return '<span class="text-gray-400">Sin descripción</span>';
+                                    return `<span class="text-gray-400">${window.translations.no_description || 'Sin descripción'}</span>`;
                                 }
                             },
                             {
                                 field: 'category',
-                                name: 'Categoría',
+                                name: window.translations.service_category,
                                 sortable: false,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type &&
@@ -439,51 +439,54 @@
                                             ${portfolio.project_type.service_category.service_category_name}
                                         </span>`;
                                     }
-                                    return '<span class="text-gray-400">Sin categoría</span>';
+                                    return `<span class="text-gray-400">${window.translations.no_category || 'Sin categoría'}</span>`;
                                 }
                             },
                             {
                                 field: 'images',
-                                name: 'Imágenes',
+                                name: window.translations.portfolio_images,
                                 sortable: false,
                                 getter: (portfolio) => {
                                     const imageCount = portfolio.images ? portfolio.images.length : 0;
                                     if (imageCount > 0) {
                                         const firstImage = portfolio.images[0];
+                                        const imageText = imageCount > 1 ? window.translations.images_count
+                                            ?.replace('{count}', imageCount).replace('{plural}', 'es') ||
+                                            `${imageCount} imágenes` : `${imageCount} imagen`;
                                         return `
                                             <div class="flex items-center space-x-2">
                                                 <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200">
                                                     <img src="${firstImage.path}" alt="Portfolio" class="w-full h-full object-cover">
                                                 </div>
                                                 <div class="text-sm">
-                                                    <div class="font-medium text-gray-900 dark:text-gray-100">${imageCount} imagen${imageCount > 1 ? 'es' : ''}</div>
+                                                    <div class="font-medium text-gray-900 dark:text-gray-100">${imageText}</div>
                                                 </div>
                                             </div>
                                         `;
                                     }
-                                    return '<span class="text-gray-400">Sin imágenes</span>';
+                                    return `<span class="text-gray-400">${window.translations.no_images || 'Sin imágenes'}</span>`;
                                 }
                             },
                             {
                                 field: 'created_at',
-                                name: 'Creado',
+                                name: window.translations.created || 'Creado',
                                 sortable: true,
                                 getter: (portfolio) => {
                                     if (portfolio.created_at) {
                                         const date = new Date(portfolio.created_at);
                                         return `<div class="text-sm text-gray-600 dark:text-gray-300">${date.toLocaleDateString()}</div>`;
                                     }
-                                    return '<span class="text-gray-400">N/A</span>';
+                                    return `<span class="text-gray-400">${window.translations.n_a || 'N/A'}</span>`;
                                 }
                             },
                             {
                                 field: 'actions',
-                                name: 'Acciones',
+                                name: window.translations.actions || 'Acciones',
                                 sortable: false,
                                 getter: (portfolio) => {
                                     let actionsHtml = `
                                         <div class="flex justify-center space-x-2">
-                                            <button data-id="${portfolio.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Editar portfolio">
+                                            <button data-id="${portfolio.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="${window.translations.edit_portfolio || 'Editar portfolio'}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
@@ -491,14 +494,14 @@
 
                                     if (portfolio.deleted_at) {
                                         actionsHtml += `
-                                            <button data-id="${portfolio.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Restaurar portfolio">
+                                            <button data-id="${portfolio.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="${window.translations.restore_portfolio || 'Restaurar portfolio'}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                 </svg>
                                             </button>`;
                                     } else {
                                         actionsHtml += `
-                                            <button data-id="${portfolio.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Eliminar portfolio">
+                                            <button data-id="${portfolio.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="${window.translations.delete_portfolio || 'Eliminar portfolio'}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
@@ -513,39 +516,39 @@
                         defaultSortField: 'created_at',
                         defaultSortDirection: 'desc',
                         translations: {
-                            create: 'Crear Portfolio',
-                            edit: 'Editar Portfolio',
-                            delete: 'Eliminar Portfolio',
-                            restore: 'Restaurar Portfolio',
-                            confirmDelete: '¿Estás seguro?',
-                            confirmRestore: '¿Restaurar portfolio?',
-                            deleteMessage: '¿Deseas eliminar este portfolio?',
-                            restoreMessage: '¿Deseas restaurar este portfolio?',
-                            yesDelete: 'Sí, eliminar',
-                            yesRestore: 'Sí, restaurar',
-                            cancel: 'Cancelar',
-                            deletedSuccessfully: 'eliminado exitosamente',
-                            restoredSuccessfully: 'restaurado exitosamente',
-                            errorDeleting: 'Error al eliminar el portfolio',
-                            errorRestoring: 'Error al restaurar el portfolio',
-                            success: 'Éxito',
-                            error: 'Error',
-                            saving: 'Guardando',
-                            loading: 'Cargando',
-                            save: 'Guardar',
-                            update: 'Actualizar',
-                            yes: 'Sí',
-                            no: 'No'
+                            create: window.translations.create_portfolio,
+                            edit: window.translations.edit_portfolio,
+                            delete: window.translations.delete_portfolio,
+                            restore: window.translations.restore_portfolio,
+                            confirmDelete: window.translations.confirm_delete,
+                            confirmRestore: window.translations.confirm_restore,
+                            deleteMessage: window.translations.delete_message,
+                            restoreMessage: window.translations.restore_message,
+                            yesDelete: window.translations.yes_delete,
+                            yesRestore: window.translations.yes_restore,
+                            cancel: window.translations.cancel,
+                            deletedSuccessfully: window.translations.deleted_successfully,
+                            restoredSuccessfully: window.translations.restored_successfully,
+                            errorDeleting: window.translations.error_deleting,
+                            errorRestoring: window.translations.error_restoring,
+                            success: window.translations.success,
+                            error: window.translations.error,
+                            saving: window.translations.saving,
+                            loading: window.translations.loading,
+                            save: window.translations.save,
+                            update: window.translations.update,
+                            yes: window.translations.yes,
+                            no: window.translations.no
                         },
                         entityConfig: {
                             identifierField: 'title',
-                            displayName: 'portfolio',
+                            displayName: window.translations.project_title?.toLowerCase() || 'portfolio',
                             fallbackFields: ['description'],
                             detailFormat: (portfolio) => {
                                 if (portfolio.project_type && portfolio.project_type.title) {
                                     return portfolio.project_type.title;
                                 }
-                                return 'este portfolio';
+                                return window.translations.no_title || 'este portfolio';
                             }
                         }
                     });
