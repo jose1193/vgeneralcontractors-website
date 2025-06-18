@@ -94,10 +94,16 @@ class PortfolioCrudManager extends CrudManagerModal {
                 : "";
         html += `
             <div class="form-group mb-4">
-                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Título del Proyecto *</label>
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">${this.getTranslation(
+                    "project_title",
+                    "Título del Proyecto"
+                )} *</label>
                 <input type="text" id="title" name="title" value="${titleValue}" required 
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent auto-capitalize" 
-                       placeholder="Ingrese el título del proyecto">
+                       placeholder="${this.getTranslation(
+                           "project_title",
+                           "Ingrese el título del proyecto"
+                       )}">
                 <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-title"></div>
             </div>
         `;
@@ -109,10 +115,16 @@ class PortfolioCrudManager extends CrudManagerModal {
                 : "";
         html += `
             <div class="form-group mb-4">
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Descripción *</label>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">${this.getTranslation(
+                    "project_description",
+                    "Descripción"
+                )} *</label>
                 <textarea id="description" name="description" required rows="3" 
                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent auto-capitalize" 
-                          placeholder="Describe el proyecto">${descriptionValue}</textarea>
+                          placeholder="${this.getTranslation(
+                              "project_description",
+                              "Describe el proyecto"
+                          )}">${descriptionValue}</textarea>
                 <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-description"></div>
             </div>
         `;
@@ -124,10 +136,16 @@ class PortfolioCrudManager extends CrudManagerModal {
                 : "";
         html += `
             <div class="form-group mb-4">
-                <label for="service_category_id" class="block text-sm font-medium text-gray-700 mb-2">Categoría de Servicio *</label>
+                <label for="service_category_id" class="block text-sm font-medium text-gray-700 mb-2">${this.getTranslation(
+                    "service_category",
+                    "Categoría de Servicio"
+                )} *</label>
                 <select id="service_category_id" name="service_category_id" required 
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="">Seleccione una categoría</option>
+                    <option value="">${this.getTranslation(
+                        "select_category",
+                        "Seleccione una categoría"
+                    )}</option>
                 </select>
                 <div class="error-message text-red-500 text-sm mt-1 hidden" id="error-service_category_id"></div>
             </div>
@@ -144,8 +162,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         const isEditMode = entity !== null;
 
         let html = '<div class="image-section">';
-        html +=
-            '<h3 class="text-lg font-medium text-gray-900 mb-4">Gestión de Imágenes</h3>';
+        html += `<h3 class="text-lg font-medium text-gray-900 mb-4">${this.getTranslation(
+            "image_management",
+            "Gestión de Imágenes"
+        )}</h3>`;
 
         // Input para nuevas imágenes
         html += `
@@ -153,8 +173,14 @@ class PortfolioCrudManager extends CrudManagerModal {
                 <label for="image_files" class="block text-sm font-medium text-gray-700 mb-2">
                     ${
                         isEditMode
-                            ? "Agregar Nuevas Imágenes"
-                            : "Imágenes del Portfolio *"
+                            ? this.getTranslation(
+                                  "add_new_images",
+                                  "Agregar Nuevas Imágenes"
+                              )
+                            : this.getTranslation(
+                                  "portfolio_images",
+                                  "Imágenes del Portfolio"
+                              ) + " *"
                     }
                 </label>
                 <input type="file" id="image_files" name="image_files" multiple accept="image/*" 
@@ -175,7 +201,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (isEditMode) {
             html += `
                 <div class="existing-images-section mb-6">
-                    <h4 class="text-md font-medium text-gray-800 mb-3">Imágenes Actuales</h4>
+                    <h4 class="text-md font-medium text-gray-800 mb-3">${this.getTranslation(
+                        "current_images",
+                        "Imágenes Actuales"
+                    )}</h4>
                     <div id="existing-images-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <!-- Se llenarán dinámicamente -->
                     </div>
@@ -186,7 +215,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         // Contenedor para nuevas imágenes pendientes
         html += `
             <div class="pending-images-section mb-4">
-                <h4 class="text-md font-medium text-gray-800 mb-3">Nuevas Imágenes a Subir</h4>
+                <h4 class="text-md font-medium text-gray-800 mb-3">${this.getTranslation(
+                    "new_images_to_upload",
+                    "Nuevas Imágenes a Subir"
+                )}</h4>
                 <div id="pending-images-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <!-- Se llenarán dinámicamente -->
                 </div>
@@ -201,12 +233,18 @@ class PortfolioCrudManager extends CrudManagerModal {
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                     </svg>
                     <div class="text-sm text-blue-700">
-                        <div>Límites: Máximo <span id="current-image-count">0</span>/${
-                            this.maxFiles
-                        } imágenes</div>
-                        <div>Tamaño total: <span id="current-total-size">0</span>MB / ${
-                            this.maxTotalSizeKb / 1024
-                        }MB</div>
+                        <div>${this.getTranslation(
+                            "image_limits",
+                            "Límites"
+                        )}: Máximo <span id="current-image-count">0</span>/${
+            this.maxFiles
+        } imágenes</div>
+                        <div>${this.getTranslation(
+                            "total_size",
+                            "Tamaño total"
+                        )}: <span id="current-total-size">0</span>MB / ${
+            this.maxTotalSizeKb / 1024
+        }MB</div>
                     </div>
                 </div>
             </div>
