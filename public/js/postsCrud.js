@@ -46,8 +46,13 @@ class PostsCrudManager {
     init() {
         console.log("🔧 PostsCrudManager.init() starting...");
         this.setupEventHandlers();
-        this.loadPosts();
-        console.log("✅ PostsCrudManager.init() completed");
+        this.initializeExistingPagination();
+
+        // NO cargar posts automáticamente en la inicialización
+        // Solo configurar los event handlers para que funcionen cuando el usuario interactúe
+        console.log(
+            "✅ PostsCrudManager.init() completed - Event handlers ready"
+        );
     }
 
     setupEventHandlers() {
@@ -671,6 +676,28 @@ class PostsCrudManager {
                 $(this).remove();
             });
         }, 5000);
+    }
+
+    /**
+     * Inicializar paginación existente renderizada por el servidor
+     */
+    initializeExistingPagination() {
+        console.log("📄 Initializing existing pagination...");
+
+        // Interceptar clics en los enlaces de paginación de Laravel para usar AJAX
+        $(document).on("click", ".pagination a", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("href");
+            if (url && window.postsCrudManager) {
+                console.log("📄 Pagination link clicked:", url);
+                const urlObj = new URL(url);
+                const page = urlObj.searchParams.get("page") || 1;
+                window.postsCrudManager.currentPage = parseInt(page);
+                window.postsCrudManager.loadPosts();
+            }
+        });
+
+        console.log("✅ Existing pagination initialized");
     }
 }
 
