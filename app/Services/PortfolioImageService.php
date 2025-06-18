@@ -11,147 +11,274 @@ use Carbon\Carbon;
 
 class PortfolioImageService
 {
-    // --- Configuración ---
-    private const DISK = 's3'; // Disco de almacenamiento (configurable via .env)
-    private const BASE_PATH = 'portfolios'; // Carpeta base en S3
-    private const MAX_DIMENSION = 1200; // Dimensión máxima (ancho o alto)
-    private const QUALITY = 80; // Calidad para WebP/JPG
-    private const FORMAT = 'webp'; // Formato de salida preferido ('webp' o 'jpg')
-
+    private const MAX_IMAGE_DIMENSION = 1200;
+    private const IMAGE_QUALITY = 80;
+    private const THUMB_DIMENSION = 300;
+    
     /**
-     * Guarda una imagen de portfolio optimizada en S3.
+     * Store and optimize portfolio image in S3
      *
-     * @param UploadedFile $file El archivo subido.
-     * @return string|null La ruta relativa en S3 de la imagen guardada, o null si falla.
+     * @param UploadedFile|string $image
+     * @return string|null URL of the stored image
      */
-    public function storeImage(UploadedFile $file): ?string
+    public function storeImage($image): ?string
     {
         try {
-            // 1. Generate path based on date and unique name
-            $now = Carbon::now();
-            $directory = self::BASE_PATH . '/' . $now->year . '/' . $now->format('m') . '/' . $now->format('d');
-            $filename = Str::uuid()->toString() . '.' . self::FORMAT;
-            $s3Path = $directory . '/' . $filename;
-
-            // 2. Process image with Intervention
-            $image = Image::make($file);
-
-            // 3. Resize if needed (maintaining aspect ratio)
-            $image->resize(self::MAX_DIMENSION, self::MAX_DIMENSION, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-
-            // 4. Encode properly for storage
-            if (self::FORMAT === 'webp' && method_exists($image, 'encode')) {
-                $encodedImage = $image->encode('webp', self::QUALITY)->stream();
-            } else {
-                // Fallback to JPEG if WebP not supported
-                $encodedImage = $image->encode('jpg', self::QUALITY)->stream();
+            if (!$image) {
+                return null;
             }
-
-            // 5. Upload to S3
-            $success = Storage::disk(self::DISK)->put($s3Path, $encodedImage);
-
-            if (!$success) {
-                throw new \Exception("Failed to upload image to S3 disk.");
-            }
-
-            // 6. Generate and return the FULL URL - This is the change
-            $fullUrl = Storage::disk(self::DISK)->url($s3Path);
             
-            Log::info('Portfolio image stored successfully on S3.', [
-                'path' => $s3Path,
-                'url' => $fullUrl
+            // Create directory structure based on date: portfolios/2023/05/25/
+            $now = Carbon::now();
+            $storagePath = 'portfolios/' . $now->year . '/' . $now->format('m') . '/' . $now->format('d');
+            
+            Log::info('Storing portfolio image', [
+                'storage_path' => $storagePath
             ]);
-
-            return $fullUrl; // Return full URL instead of path
+            
+            // Store original and optimized image
+            $imageUrl = $this->processAndStoreImage($image, $storagePath);
+            
+            return $imageUrl;
         } catch (\Exception $e) {
-            Log::error('Error storing portfolio image.', [
+            Log::error('Error storing portfolio image', [
                 'error' => $e->getMessage(),
-                'file' => $file->getClientOriginalName(),
                 'trace' => $e->getTraceAsString()
             ]);
             return null;
         }
     }
-
+    
     /**
-     * Elimina una imagen de portfolio de S3.
+     * Process and store image in S3 with optimizations
      *
-     * @param string|null $url The full S3 URL of the image to delete.
-     * @return bool True if deleted or didn't exist, False if error.
+     * @param UploadedFile|string $image
+     * @param string $storagePath
+     * @return string URL of the stored image
      */
-    public function deleteImage(?string $url): bool
+    private function processAndStoreImage($image, string $storagePath): string
     {
-        if (empty($url)) {
-            return true; // Nothing to delete
+        // Create optimized version of the image
+        $optimizedImagePath = $this->optimizeImage($image);
+        
+        // Generate thumbnail
+        $thumbnailPath = $this->createThumbnail($optimizedImagePath);
+        
+        // Generate unique filenames
+        $uniqueId = Str::uuid()->toString();
+        $mainFilename = $uniqueId . '.jpg';
+        $thumbnailFilename = $uniqueId . '-thumb.jpg';
+        
+        // Store in S3
+        $mainImageS3Path = $storagePath . '/' . $mainFilename;
+        $thumbnailS3Path = $storagePath . '/thumbnails/' . $thumbnailFilename;
+        
+        // Upload to S3
+        Storage::disk('s3')->put($mainImageS3Path, file_get_contents($optimizedImagePath));
+        Storage::disk('s3')->put($thumbnailS3Path, file_get_contents($thumbnailPath));
+        
+        // Clean up temporary files
+        if (file_exists($optimizedImagePath)) {
+            unlink($optimizedImagePath);
         }
-
+        if (file_exists($thumbnailPath)) {
+            unlink($thumbnailPath);
+        }
+        
+        // Return the main image URL
+        return Storage::disk('s3')->url($mainImageS3Path);
+    }
+    
+    /**
+     * Optimize image for web
+     *
+     * @param UploadedFile|string $image
+     * @return string Path to optimized image
+     */
+    private function optimizeImage($image): string
+    {
+        $img = Image::make($image);
+        $originalWidth = $img->width();
+        $originalHeight = $img->height();
+        
+        // Resize if larger than max dimensions while maintaining aspect ratio
+        if ($originalWidth > self::MAX_IMAGE_DIMENSION || $originalHeight > self::MAX_IMAGE_DIMENSION) {
+            $img->resize(self::MAX_IMAGE_DIMENSION, self::MAX_IMAGE_DIMENSION, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+        }
+        
+        // Create temp file path
+        $tempPath = sys_get_temp_dir() . '/' . uniqid('portfolio_') . '.jpg';
+        
+        // Save with specified quality
+        $img->save($tempPath, self::IMAGE_QUALITY);
+        
+        return $tempPath;
+    }
+    
+    /**
+     * Create thumbnail version of image
+     *
+     * @param string $imagePath
+     * @return string Path to thumbnail
+     */
+    private function createThumbnail(string $imagePath): string
+    {
+        $img = Image::make($imagePath);
+        
+        // Create a squared thumbnail by centering and cropping
+        $img->fit(self::THUMB_DIMENSION, self::THUMB_DIMENSION);
+        
+        // Create temp file path for thumbnail
+        $tempPath = sys_get_temp_dir() . '/' . uniqid('portfolio_thumb_') . '.jpg';
+        
+        // Save with specified quality
+        $img->save($tempPath, self::IMAGE_QUALITY);
+        
+        return $tempPath;
+    }
+    
+    /**
+     * Delete image from S3
+     *
+     * @param string $imageUrl URL of the image to delete
+     * @return bool
+     */
+    public function deleteImage(?string $imageUrl): bool
+    {
+        if (empty($imageUrl)) {
+            return false;
+        }
+        
         try {
-            // Extract the path from the URL
-            $path = $this->getPathFromUrl($url);
+            // Extract the path from URL
+            $path = $this->getRelativePathFromUrl($imageUrl);
             
-            if (Storage::disk(self::DISK)->exists($path)) {
-                $deleted = Storage::disk(self::DISK)->delete($path);
-                if ($deleted) {
-                    Log::info('Portfolio image deleted successfully from S3.', ['url' => $url]);
-                } else {
-                    Log::warning('Failed to delete portfolio image from S3.', ['url' => $url]);
-                }
-                return $deleted;
-            } else {
-                Log::info('Portfolio image not found on S3, skipping deletion.', ['url' => $url]);
-                return true; // Consider success if it doesn't exist
-            }
+            // Also try to find and delete the thumbnail
+            $pathInfo = pathinfo($path);
+            $thumbnailPath = $pathInfo['dirname'] . '/thumbnails/' . $pathInfo['filename'] . '-thumb.' . $pathInfo['extension'];
+            
+            // Delete main image
+            $mainDeleted = Storage::disk('s3')->exists($path) ? Storage::disk('s3')->delete($path) : false;
+            
+            // Try to delete thumbnail (but don't fail if not found)
+            $thumbDeleted = Storage::disk('s3')->exists($thumbnailPath) ? Storage::disk('s3')->delete($thumbnailPath) : true;
+            
+            Log::info('Deleted portfolio image', [
+                'main_image' => $path,
+                'thumb_image' => $thumbnailPath,
+                'main_deleted' => $mainDeleted,
+                'thumb_deleted' => $thumbDeleted
+            ]);
+            
+            return $mainDeleted;
         } catch (\Exception $e) {
-            Log::error('Error deleting portfolio image from S3.', [
-                'url' => $url,
+            Log::error('Error deleting portfolio image', [
+                'url' => $imageUrl,
                 'error' => $e->getMessage()
             ]);
             return false;
         }
     }
-
+    
     /**
-     * Extracts the relative path from a full S3 URL.
+     * Extract relative path from S3 URL
      *
-     * @param string $url The full S3 URL.
-     * @return string The relative path.
+     * @param string $url
+     * @return string
      */
-    private function getPathFromUrl(string $url): string
+    private function getRelativePathFromUrl(string $url): string
     {
+        // Remove any query parameters
+        $url = strtok($url, '?');
+        
         // Parse the URL
         $parsedUrl = parse_url($url);
         
         // Get the path component
         $path = $parsedUrl['path'] ?? '';
         
-        // Remove leading slash
+        // Remove leading slash and bucket name if present
         $path = ltrim($path, '/');
-        
-        // Remove bucket name from path if present
-        $bucketName = config('filesystems.disks.s3.bucket');
-        if (!empty($bucketName)) {
-            $path = preg_replace('/^' . preg_quote($bucketName, '/') . '\//', '', $path);
-        }
+        $bucketName = env('AWS_BUCKET');
+        $path = preg_replace("/^{$bucketName}\//", '', $path);
         
         return $path;
     }
 
     /**
-     * Obtiene la URL pública completa para una ruta de imagen.
+     * Get thumbnail URL from main image URL
      *
-     * @param string|null $path La ruta relativa en S3.
-     * @return string|null La URL completa o null.
+     * @param string $imageUrl
+     * @return string|null
      */
-    public function getImageUrl(?string $path): ?string
+    public function getThumbnailUrl(string $imageUrl): ?string
     {
-         if (empty($path)) {
+        try {
+            $path = $this->getRelativePathFromUrl($imageUrl);
+            $pathInfo = pathinfo($path);
+            $thumbnailPath = $pathInfo['dirname'] . '/thumbnails/' . $pathInfo['filename'] . '-thumb.' . $pathInfo['extension'];
+            
+            return Storage::disk('s3')->url($thumbnailPath);
+        } catch (\Exception $e) {
+            Log::error('Error generating thumbnail URL', [
+                'url' => $imageUrl,
+                'error' => $e->getMessage()
+            ]);
             return null;
-         }
-         // Asegúrate de que tu disco S3 esté configurado para URLs públicas
-         // o usa URLs temporales si es privado: Storage::disk(self::DISK)->temporaryUrl($path, now()->addMinutes(5));
-         return Storage::disk(self::DISK)->url($path);
+        }
+    }
+
+    /**
+     * Batch delete multiple images
+     *
+     * @param array $imageUrls
+     * @return array Results of deletion attempts
+     */
+    public function deleteMultipleImages(array $imageUrls): array
+    {
+        $results = [];
+        
+        foreach ($imageUrls as $url) {
+            $results[$url] = $this->deleteImage($url);
+        }
+        
+        Log::info('Batch deleted portfolio images', [
+            'total_images' => count($imageUrls),
+            'successful_deletions' => count(array_filter($results)),
+            'failed_deletions' => count($imageUrls) - count(array_filter($results))
+        ]);
+        
+        return $results;
+    }
+
+    /**
+     * Store multiple images in batch
+     *
+     * @param array $images Array of UploadedFile objects
+     * @return array Array of stored image URLs
+     */
+    public function storeMultipleImages(array $images): array
+    {
+        $storedUrls = [];
+        
+        foreach ($images as $index => $image) {
+            $url = $this->storeImage($image);
+            if ($url) {
+                $storedUrls[] = $url;
+            } else {
+                Log::warning('Failed to store image in batch', ['index' => $index]);
+            }
+        }
+        
+        Log::info('Batch stored portfolio images', [
+            'total_attempted' => count($images),
+            'successful_uploads' => count($storedUrls),
+            'failed_uploads' => count($images) - count($storedUrls)
+        ]);
+        
+        return $storedUrls;
     }
 }

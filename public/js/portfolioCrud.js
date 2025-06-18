@@ -221,13 +221,13 @@ class PortfolioCrudManager extends CrudManagerModal {
         const formHtml = this.generateFormHtml();
 
         const result = await Swal.fire({
-            title: "Crear Portfolio",
+            title: this.getTranslation("create_portfolio", "Crear Portfolio"),
             html: formHtml,
             width: "900px",
             showCloseButton: true,
             showCancelButton: true,
-            confirmButtonText: "Crear Portfolio",
-            cancelButtonText: "Cancelar",
+            confirmButtonText: this.getTranslation("create", "Crear Portfolio"),
+            cancelButtonText: this.getTranslation("cancel", "Cancelar"),
             confirmButtonColor: "#10B981",
             customClass: {
                 container: "swal-modal-container",
@@ -275,13 +275,19 @@ class PortfolioCrudManager extends CrudManagerModal {
             const formHtml = this.generateFormHtml(this.currentEntity);
 
             const result = await Swal.fire({
-                title: "Editar Portfolio",
+                title: this.getTranslation(
+                    "edit_portfolio",
+                    "Editar Portfolio"
+                ),
                 html: formHtml,
                 width: "900px",
                 showCloseButton: true,
                 showCancelButton: true,
-                confirmButtonText: "Actualizar Portfolio",
-                cancelButtonText: "Cancelar",
+                confirmButtonText: this.getTranslation(
+                    "update",
+                    "Actualizar Portfolio"
+                ),
+                cancelButtonText: this.getTranslation("cancel", "Cancelar"),
                 confirmButtonColor: "#3B82F6",
                 customClass: {
                     container: "swal-modal-container",
@@ -304,7 +310,13 @@ class PortfolioCrudManager extends CrudManagerModal {
             }
         } catch (error) {
             console.error("Error loading portfolio for edit:", error);
-            this.showAlert("error", "Error al cargar los datos del portfolio");
+            this.showAlert(
+                "error",
+                this.getTranslation(
+                    "error_loading_portfolio",
+                    "Error al cargar los datos del portfolio"
+                )
+            );
         }
     }
 
@@ -354,7 +366,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (title.length < 3) {
             this.showFieldError(
                 "title",
-                "El título debe tener al menos 3 caracteres"
+                this.getTranslation(
+                    "title_min_length",
+                    "El título debe tener al menos 3 caracteres"
+                )
             );
             return;
         }
@@ -381,11 +396,17 @@ class PortfolioCrudManager extends CrudManagerModal {
             if (response.exists) {
                 this.showFieldError(
                     "title",
-                    "Ya existe un portfolio con este título"
+                    this.getTranslation(
+                        "title_already_exists",
+                        "Ya existe un portfolio con este título"
+                    )
                 );
             } else {
                 this.clearFieldError("title");
-                this.showFieldSuccess("title", "Título disponible");
+                this.showFieldSuccess(
+                    "title",
+                    this.getTranslation("title_available", "Título disponible")
+                );
             }
         } catch (error) {
             console.error("Error validating title:", error);
@@ -417,6 +438,13 @@ class PortfolioCrudManager extends CrudManagerModal {
             }
         } catch (error) {
             console.error("Error loading service categories:", error);
+            this.showAlert(
+                "error",
+                this.getTranslation(
+                    "error_loading_service_categories",
+                    "Error al cargar categorías de servicio"
+                )
+            );
         }
     }
 
@@ -470,7 +498,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (!allowedTypes.includes(file.type)) {
             this.showAlert(
                 "error",
-                `Archivo ${file.name}: Tipo no permitido. Solo se permiten: JPEG, PNG, JPG, GIF, WEBP`
+                this.getTranslation(
+                    "invalid_file_type",
+                    `Archivo ${file.name}: Tipo no permitido. Solo se permiten: JPEG, PNG, JPG, GIF, WEBP`
+                ).replace("{name}", file.name)
             );
             return false;
         }
@@ -480,7 +511,14 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (file.size > maxSizeBytes) {
             this.showAlert(
                 "error",
-                `Archivo ${file.name}: Tamaño excede ${this.maxSizeKb / 1024}MB`
+                this.getTranslation(
+                    "file_too_large",
+                    `Archivo ${file.name}: Tamaño excede ${
+                        this.maxSizeKb / 1024
+                    }MB`
+                )
+                    .replace("{name}", file.name)
+                    .replace("{max}", this.maxSizeKb / 1024)
             );
             return false;
         }
@@ -751,7 +789,12 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (totalCount > this.maxFiles) {
             this.showFieldError(
                 "image_files",
-                `Total de imágenes (${totalCount}) excede el límite de ${this.maxFiles}`
+                this.getTranslation(
+                    "max_images_exceeded",
+                    `Total de imágenes (${totalCount}) excede el límite de ${this.maxFiles}`
+                )
+                    .replace("{total}", totalCount)
+                    .replace("{max}", this.maxFiles)
             );
             return false;
         }
@@ -760,7 +803,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (totalCount === 0) {
             this.showFieldError(
                 "image_files",
-                "Se requiere al menos una imagen para el portfolio"
+                this.getTranslation(
+                    "images_required",
+                    "Se requiere al menos una imagen para el portfolio"
+                )
             );
             return false;
         }
@@ -773,9 +819,14 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (totalSizeMB > this.maxTotalSizeKb / 1024) {
             this.showFieldError(
                 "image_files",
-                `Tamaño total de nuevas imágenes (${totalSizeMB.toFixed(
-                    2
-                )}MB) excede el límite de ${this.maxTotalSizeKb / 1024}MB`
+                this.getTranslation(
+                    "max_size_exceeded",
+                    `Tamaño total de nuevas imágenes (${totalSizeMB.toFixed(
+                        2
+                    )}MB) excede el límite de ${this.maxTotalSizeKb / 1024}MB`
+                )
+                    .replace("{size}", totalSizeMB.toFixed(2))
+                    .replace("{max}", this.maxTotalSizeKb / 1024)
             );
             return false;
         }
@@ -837,12 +888,18 @@ class PortfolioCrudManager extends CrudManagerModal {
         // Validar título
         const title = $("#title").val().trim();
         if (!title) {
-            this.showFieldError("title", "El título es requerido");
+            this.showFieldError(
+                "title",
+                this.getTranslation("title_required", "El título es requerido")
+            );
             isValid = false;
         } else if (title.length < 3) {
             this.showFieldError(
                 "title",
-                "El título debe tener al menos 3 caracteres"
+                this.getTranslation(
+                    "title_min_length",
+                    "El título debe tener al menos 3 caracteres"
+                )
             );
             isValid = false;
         } else {
@@ -852,7 +909,13 @@ class PortfolioCrudManager extends CrudManagerModal {
         // Validar descripción
         const description = $("#description").val().trim();
         if (!description) {
-            this.showFieldError("description", "La descripción es requerida");
+            this.showFieldError(
+                "description",
+                this.getTranslation(
+                    "description_required",
+                    "La descripción es requerida"
+                )
+            );
             isValid = false;
         } else {
             data.description = description;
@@ -863,7 +926,10 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (!serviceCategoryId) {
             this.showFieldError(
                 "service_category_id",
-                "La categoría de servicio es requerida"
+                this.getTranslation(
+                    "category_required",
+                    "La categoría de servicio es requerida"
+                )
             );
             isValid = false;
         } else {
@@ -895,7 +961,13 @@ class PortfolioCrudManager extends CrudManagerModal {
             });
 
             Swal.close();
-            this.showAlert("success", "Portfolio creado exitosamente");
+            this.showAlert(
+                "success",
+                this.getTranslation(
+                    "created_successfully",
+                    "Portfolio creado exitosamente"
+                )
+            );
             this.loadEntities();
             this.resetImageState();
         } catch (error) {
@@ -907,7 +979,11 @@ class PortfolioCrudManager extends CrudManagerModal {
             } else {
                 this.showAlert(
                     "error",
-                    error.responseJSON?.message || "Error al crear el portfolio"
+                    error.responseJSON?.message ||
+                        this.getTranslation(
+                            "error_creating",
+                            "Error al crear el portfolio"
+                        )
                 );
             }
         }
@@ -938,7 +1014,13 @@ class PortfolioCrudManager extends CrudManagerModal {
             });
 
             Swal.close();
-            this.showAlert("success", "Portfolio actualizado exitosamente");
+            this.showAlert(
+                "success",
+                this.getTranslation(
+                    "updated_successfully",
+                    "Portfolio actualizado exitosamente"
+                )
+            );
             this.loadEntities();
             this.resetImageState();
         } catch (error) {
@@ -986,6 +1068,106 @@ class PortfolioCrudManager extends CrudManagerModal {
                 popup.classList.add(`swal-${mode}`);
             }
         }, 10);
+    }
+
+    /**
+     * Obtener traducción con fallback
+     */
+    getTranslation(key, fallback = "") {
+        // Intentar obtener la traducción del objeto global de Laravel
+        if (
+            typeof window.translations !== "undefined" &&
+            window.translations[key]
+        ) {
+            return window.translations[key];
+        }
+
+        // Fallback a traducciones hardcodeadas en español
+        const translations = {
+            // Títulos y acciones principales
+            create_portfolio: "Crear Portafolio",
+            edit_portfolio: "Editar Portafolio",
+            delete_portfolio: "Eliminar Portafolio",
+            restore_portfolio: "Restaurar Portafolio",
+
+            // Mensajes de confirmación
+            confirm_delete: "¿Está seguro?",
+            confirm_restore: "¿Restaurar portafolio?",
+            delete_message: "¿Desea eliminar este portafolio?",
+            restore_message: "¿Desea restaurar este portafolio?",
+
+            // Botones
+            yes_delete: "Sí, eliminar",
+            yes_restore: "Sí, restaurar",
+            cancel: "Cancelar",
+            save: "Guardar",
+            update: "Actualizar",
+            create: "Crear",
+
+            // Estados y mensajes
+            success: "Éxito",
+            error: "Error",
+            saving: "Guardando",
+            loading: "Cargando",
+            deleted_successfully: "eliminado exitosamente",
+            restored_successfully: "restaurado exitosamente",
+            created_successfully: "creado exitosamente",
+            updated_successfully: "actualizado exitosamente",
+
+            // Errores
+            error_deleting: "Error al eliminar el portafolio",
+            error_restoring: "Error al restaurar el portafolio",
+            error_creating: "Error al crear el portafolio",
+            error_updating: "Error al actualizar el portafolio",
+            error_loading_service_categories:
+                "Error al cargar categorías de servicio",
+
+            // Campos del formulario
+            project_title: "Título del Proyecto",
+            project_description: "Descripción del Proyecto",
+            service_category: "Categoría de Servicio",
+            select_category: "Seleccione una categoría",
+
+            // Gestión de imágenes
+            image_management: "Gestión de Imágenes",
+            add_new_images: "Agregar Nuevas Imágenes",
+            portfolio_images: "Imágenes del Portfolio",
+            current_images: "Imágenes Actuales",
+            new_images_to_upload: "Nuevas Imágenes a Subir",
+            max_images_info:
+                "Máximo {maxFiles} imágenes. Tamaño máximo por imagen: {maxSize}MB. Formatos: JPEG, PNG, JPG, GIF, WEBP.",
+            image_limits: "Límites",
+            total_size: "Tamaño total",
+            mark_for_deletion: "Marcar para eliminar",
+            restore_image: "Restaurar imagen",
+            remove_image: "Eliminar imagen",
+
+            // Validaciones
+            title_required: "El título es requerido",
+            title_min_length: "El título debe tener al menos 3 caracteres",
+            title_already_exists: "Ya existe un portafolio con este título",
+            title_available: "Título disponible",
+            description_required: "La descripción es requerida",
+            category_required: "La categoría de servicio es requerida",
+            images_required:
+                "Se requiere al menos una imagen para el portafolio",
+            max_images_exceeded:
+                "Total de imágenes ({total}) excede el límite de {max}",
+            max_size_exceeded:
+                "Tamaño total de nuevas imágenes ({size}MB) excede el límite de {max}MB",
+            invalid_file_type:
+                "Archivo {name}: Tipo no permitido. Solo se permiten: JPEG, PNG, JPG, GIF, WEBP",
+            file_too_large: "Archivo {name}: Tamaño excede {max}MB",
+
+            // Estados de datos
+            no_title: "Sin título",
+            no_description: "Sin descripción",
+            no_category: "Sin categoría",
+            no_images: "Sin imágenes",
+            images_count: "{count} imagen{plural}",
+        };
+
+        return translations[key] || fallback || key;
     }
 }
 

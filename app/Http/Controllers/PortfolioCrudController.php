@@ -11,6 +11,7 @@ use App\Traits\CacheTraitCrud;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use App\Services\TransactionService;
+use App\Services\PortfolioImageService;
 
 class PortfolioCrudController extends BaseCrudController
 {
@@ -510,18 +511,45 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function afterUpdate($portfolio)
     {
+        $portfolioImageService = app(PortfolioImageService::class);
+        
         // Procesar eliminación de imágenes
         if (request()->has('images_to_delete')) {
             $imagesToDelete = request()->input('images_to_delete', []);
             foreach ($imagesToDelete as $imageId) {
                 $image = PortfolioImage::find($imageId);
                 if ($image && $image->portfolio_id === $portfolio->id) {
-                    // Eliminar archivo físico
-                    if (file_exists(public_path($image->path))) {
-                        unlink(public_path($image->path));
+                    try {
+                        // Eliminar archivo de AWS S3
+                        $portfolioImageService->deleteImage($image->path);
+                        
+                        // Eliminar de base de datos
+                        $image->delete();
+                        
+                        Log::info('Portfolio image deleted successfully', [
+                            'portfolio_id' => $portfolio->id,
+                            'image_id' => $imageId,
+                            'image_path' => $image->path
+                        ]);
+                    } catch (\Exception $e) {
+                        Log::error('Error deleting portfolio image', [
+                            'portfolio_id' => $portfolio->id,
+                            'image_id' => $imageId,
+                            'image_path' => $image->path,
+                            'error' => $e->getMessage()
+                        ]);
                     }
-                    $image->delete();
                 }
+            }
+        }
+        
+        // Procesar reordenamiento de imágenes existentes
+        if (request()->has('existing_images_order')) {
+            $imageOrder = request()->input('existing_images_order', []);
+            foreach ($imageOrder as $index => $imageId) {
+                PortfolioImage::where('id', $imageId)
+                    ->where('portfolio_id', $portfolio->id)
+                    ->update(['order' => $index + 1]);
             }
         }
         
@@ -536,7 +564,32 @@ class PortfolioCrudController extends BaseCrudController
      */
     protected function afterDestroy($portfolio)
     {
-        // Add custom logic here, e.g., log activity
+        // Eliminar todas las imágenes del portfolio de AWS S3
+        $portfolioImageService = app(PortfolioImageService::class);
+        
+        $images = PortfolioImage::where('portfolio_id', $portfolio->id)->get();
+        foreach ($images as $image) {
+            try {
+                // Eliminar archivo de AWS S3
+                $portfolioImageService->deleteImage($image->path);
+                
+                Log::info('Portfolio image deleted on portfolio destruction', [
+                    'portfolio_id' => $portfolio->id,
+                    'image_id' => $image->id,
+                    'image_path' => $image->path
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error deleting portfolio image on portfolio destruction', [
+                    'portfolio_id' => $portfolio->id,
+                    'image_id' => $image->id,
+                    'image_path' => $image->path,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+        
+        // Eliminar registros de imágenes de la base de datos
+        PortfolioImage::where('portfolio_id', $portfolio->id)->delete();
     }
 
     /**
@@ -588,26 +641,41 @@ class PortfolioCrudController extends BaseCrudController
      */
     private function processImages($portfolio, $images)
     {
-        foreach ($images as $image) {
+        $portfolioImageService = app(PortfolioImageService::class);
+        
+        foreach ($images as $index => $image) {
             if ($image->isValid()) {
-                // Generar nombre único
-                $fileName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                
-                // Crear directorio si no existe
-                $uploadPath = 'storage/portfolios/' . $portfolio->id;
-                if (!file_exists(public_path($uploadPath))) {
-                    mkdir(public_path($uploadPath), 0755, true);
+                try {
+                    // Usar el servicio para subir a AWS S3
+                    $imageUrl = $portfolioImageService->storeImage($image);
+                    
+                    if ($imageUrl) {
+                        // Guardar en base de datos
+                        PortfolioImage::create([
+                            'portfolio_id' => $portfolio->id,
+                            'path' => $imageUrl,
+                            'filename' => $image->getClientOriginalName(),
+                            'order' => $index + 1, // Mantener el orden
+                        ]);
+                        
+                        Log::info('Portfolio image uploaded successfully', [
+                            'portfolio_id' => $portfolio->id,
+                            'image_url' => $imageUrl,
+                            'original_name' => $image->getClientOriginalName()
+                        ]);
+                    } else {
+                        Log::error('Failed to upload portfolio image', [
+                            'portfolio_id' => $portfolio->id,
+                            'original_name' => $image->getClientOriginalName()
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Error processing portfolio image', [
+                        'portfolio_id' => $portfolio->id,
+                        'original_name' => $image->getClientOriginalName(),
+                        'error' => $e->getMessage()
+                    ]);
                 }
-                
-                // Mover archivo
-                $image->move(public_path($uploadPath), $fileName);
-                
-                // Guardar en base de datos
-                PortfolioImage::create([
-                    'portfolio_id' => $portfolio->id,
-                    'path' => $uploadPath . '/' . $fileName,
-                    'filename' => $fileName,
-                ]);
             }
         }
     }
