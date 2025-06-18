@@ -302,72 +302,72 @@
 
             <script>
                 // Hacer las traducciones disponibles para JavaScript
-                window.translations = @json([
+                window.translations = {
                     // Títulos y acciones principales
-                    'create_portfolio' => __('create_portfolio'),
-                    'edit_portfolio' => __('edit_portfolio'),
-                    'delete_portfolio' => __('delete'),
-                    'restore_portfolio' => __('restore'),
-                
+                    'create_portfolio': @json(__('create_portfolio')),
+                    'edit_portfolio': @json(__('edit_portfolio')),
+                    'delete_portfolio': @json(__('delete')),
+                    'restore_portfolio': @json(__('restore')),
+
                     // Mensajes de confirmación
-                    'confirm_delete' => __('are_you_sure'),
-                    'confirm_restore' => __('are_you_sure'),
-                    'delete_message' => __('delete_message'),
-                    'restore_message' => __('restore_message'),
-                
+                    'confirm_delete': @json(__('are_you_sure')),
+                    'confirm_restore': @json(__('are_you_sure')),
+                    'delete_message': @json(__('delete_message')),
+                    'restore_message': @json(__('restore_message')),
+
                     // Botones
-                    'yes_delete' => __('yes_delete'),
-                    'yes_restore' => __('yes_restore'),
-                    'cancel' => __('cancel'),
-                    'save' => __('save'),
-                    'update' => __('update'),
-                    'create' => __('create'),
-                
+                    'yes_delete': @json(__('yes_delete')),
+                    'yes_restore': @json(__('yes_restore')),
+                    'cancel': @json(__('cancel')),
+                    'save': @json(__('save')),
+                    'update': @json(__('update')),
+                    'create': @json(__('create')),
+
                     // Estados y mensajes
-                    'success' => __('success'),
-                    'error' => __('error'),
-                    'saving' => __('saving'),
-                    'loading' => __('loading'),
-                
+                    'success': @json(__('success')),
+                    'error': @json(__('error')),
+                    'saving': @json(__('saving')),
+                    'loading': @json(__('loading')),
+
                     // Campos del formulario
-                    'project_title' => __('project_title'),
-                    'project_description' => __('project_description'),
-                    'service_category' => __('service_category'),
-                    'select_category' => __('select_service_category'),
-                
+                    'project_title': @json(__('project_title')),
+                    'project_description': @json(__('project_description')),
+                    'service_category': @json(__('service_category')),
+                    'select_category': @json(__('select_service_category')),
+
                     // Gestión de imágenes
-                    'image_management' => __('images_management'),
-                    'add_new_images' => __('add_new_images'),
-                    'portfolio_images' => __('portfolio_images'),
-                    'current_images' => __('current_images'),
-                    'new_images_to_upload' => __('new_images_pending_upload'),
-                    'max_images_info' => __('max_images_info'),
-                
+                    'image_management': @json(__('images_management')),
+                    'add_new_images': @json(__('add_new_images')),
+                    'portfolio_images': @json(__('portfolio_images')),
+                    'current_images': @json(__('current_images')),
+                    'new_images_to_upload': @json(__('new_images_pending_upload')),
+                    'max_images_info': @json(__('max_images_info')),
+
                     // Validaciones
-                    'title_required' => __('title_required'),
-                    'title_min_length' => __('title_min_length'),
-                    'title_already_exists' => __('title_already_exists'),
-                    'title_available' => __('title_available'),
-                    'description_required' => __('description_required'),
-                    'category_required' => __('category_required'),
-                    'images_required' => __('images_required'),
-                    'max_images_exceeded' => __('max_images_exceeded'),
-                    'max_size_exceeded' => __('max_size_exceeded'),
-                    'invalid_file_type' => __('invalid_file_type'),
-                    'file_too_large' => __('file_too_large'),
-                
+                    'title_required': @json(__('title_required')),
+                    'title_min_length': @json(__('title_min_length')),
+                    'title_already_exists': @json(__('title_already_exists')),
+                    'title_available': @json(__('title_available')),
+                    'description_required': @json(__('description_required')),
+                    'category_required': @json(__('category_required')),
+                    'images_required': @json(__('images_required')),
+                    'max_images_exceeded': @json(__('max_images_exceeded')),
+                    'max_size_exceeded': @json(__('max_size_exceeded')),
+                    'invalid_file_type': @json(__('invalid_file_type')),
+                    'file_too_large': @json(__('file_too_large')),
+
                     // Mensajes de éxito/error
-                    'created_successfully' => __('created_successfully'),
-                    'updated_successfully' => __('updated_successfully'),
-                    'deleted_successfully' => __('deleted_successfully'),
-                    'restored_successfully' => __('restored_successfully'),
-                    'error_creating' => __('error_creating'),
-                    'error_updating' => __('error_updating'),
-                    'error_deleting' => __('error_deleting'),
-                    'error_restoring' => __('error_restoring'),
-                    'error_loading_service_categories' => __('error_loading_service_categories'),
-                    'error_loading_portfolio' => __('error_loading_portfolio'),
-                ]);
+                    'created_successfully': @json(__('created_successfully')),
+                    'updated_successfully': @json(__('updated_successfully')),
+                    'deleted_successfully': @json(__('deleted_successfully')),
+                    'restored_successfully': @json(__('restored_successfully')),
+                    'error_creating': @json(__('error_creating')),
+                    'error_updating': @json(__('error_updating')),
+                    'error_deleting': @json(__('error_deleting')),
+                    'error_restoring': @json(__('error_restoring')),
+                    'error_loading_service_categories': @json(__('error_loading_service_categories')),
+                    'error_loading_portfolio': @json(__('error_loading_portfolio'))
+                };
 
                 $(document).ready(function() {
                     // Recuperar estado del toggle de localStorage
