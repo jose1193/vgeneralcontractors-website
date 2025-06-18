@@ -231,52 +231,6 @@
             .prose ol {
                 @apply mb-6;
             }
-
-            /* Controlar espaciado excesivo del contenido */
-            .prose p {
-                margin-top: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            /* Limitar espacios entre párrafos */
-            .prose p+p {
-                margin-top: 1.25rem;
-            }
-
-            /* Controlar múltiples <br> consecutivos */
-            .prose br+br {
-                display: none;
-            }
-
-            /* Ocultar párrafos vacíos */
-            .prose p:empty,
-            .prose p:has(> br:only-child),
-            .prose p:has(> &nbsp; :only-child) {
-                display: none;
-            }
-
-            /* Mejorar espaciado de listas */
-            .prose li {
-                margin-top: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-
-            /* Controlar espaciado de encabezados */
-            .prose h1,
-            .prose h2,
-            .prose h3,
-            .prose h4,
-            .prose h5,
-            .prose h6 {
-                margin-top: 2rem;
-                margin-bottom: 1rem;
-            }
-
-            .prose h1:first-child,
-            .prose h2:first-child,
-            .prose h3:first-child {
-                margin-top: 0;
-            }
         </style>
     @endpush
 
