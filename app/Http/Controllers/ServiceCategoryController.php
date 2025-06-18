@@ -601,7 +601,7 @@ class ServiceCategoryController extends BaseCrudController
             }
 
             // Get all active service categories
-            $serviceCategories = ServiceCategory::select('id', 'category as service_category_name')
+            $serviceCategories = ServiceCategory::select('id', 'category', 'category as service_category_name')
                 ->orderBy('category')
                 ->get();
 

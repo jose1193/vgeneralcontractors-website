@@ -302,72 +302,72 @@
 
             <script>
                 // Hacer las traducciones disponibles para JavaScript
-                window.translations = {
+                window.translations = @json([
                     // Títulos y acciones principales
-                    'create_portfolio': 'Crear Portfolio',
-                    'edit_portfolio': 'Editar Portfolio',
-                    'delete_portfolio': 'Eliminar Portfolio',
-                    'restore_portfolio': 'Restaurar Portfolio',
-
+                    'create_portfolio' => __('add_new_portfolio'),
+                    'edit_portfolio' => __('edit_portfolio'),
+                    'delete_portfolio' => __('delete'),
+                    'restore_portfolio' => __('restore'),
+                
                     // Mensajes de confirmación
-                    'confirm_delete': '¿Está seguro?',
-                    'confirm_restore': '¿Restaurar portfolio?',
-                    'delete_message': '¿Desea eliminar este portfolio?',
-                    'restore_message': '¿Desea restaurar este portfolio?',
-
+                    'confirm_delete' => __('are_you_sure'),
+                    'confirm_restore' => __('are_you_sure'),
+                    'delete_message' => __('are_you_sure_delete'),
+                    'restore_message' => __('are_you_sure_restore'),
+                
                     // Botones
-                    'yes_delete': 'Sí, eliminar',
-                    'yes_restore': 'Sí, restaurar',
-                    'cancel': 'Cancelar',
-                    'save': 'Guardar',
-                    'update': 'Actualizar',
-                    'create': 'Crear',
-
+                    'yes_delete' => __('yes') . ', ' . __('delete'),
+                    'yes_restore' => __('yes') . ', ' . __('restore'),
+                    'cancel' => __('cancel'),
+                    'save' => __('save'),
+                    'update' => __('update'),
+                    'create' => __('create'),
+                
                     // Estados y mensajes
-                    'success': 'Éxito',
-                    'error': 'Error',
-                    'saving': 'Guardando',
-                    'loading': 'Cargando',
-
+                    'success' => __('success'),
+                    'error' => __('error'),
+                    'saving' => __('saving'),
+                    'loading' => __('loading'),
+                
                     // Campos del formulario
-                    'project_title': 'Título del Proyecto',
-                    'project_description': 'Descripción del Proyecto',
-                    'service_category': 'Categoría de Servicio',
-                    'select_category': 'Seleccione una Categoría de Servicio',
-
+                    'project_title' => __('project_title'),
+                    'project_description' => __('project_description'),
+                    'service_category' => __('service_category'),
+                    'select_category' => __('select_service_category'),
+                
                     // Gestión de imágenes
-                    'image_management': 'Imágenes',
-                    'add_new_images': 'Agregar Nuevas Imágenes',
-                    'portfolio_images': 'Imágenes del Portfolio',
-                    'current_images': 'Imágenes Actuales',
-                    'new_images_to_upload': 'Nuevas Imágenes Pendientes de Subir',
-                    'max_images_info': 'Máx. {maxFiles} total. Máx. {maxSize}MB/imagen. Máx. {maxTotal}MB nuevas totales. Arrastre para reordenar.',
-
+                    'image_management' => __('images_management'),
+                    'add_new_images' => __('add_new_images'),
+                    'portfolio_images' => __('portfolio_images'),
+                    'current_images' => __('current_images'),
+                    'new_images_to_upload' => __('new_images_pending_upload'),
+                    'max_images_info' => __('max_images_info'),
+                
                     // Validaciones
-                    'title_required': 'El título es requerido',
-                    'title_min_length': 'El título debe tener al menos 3 caracteres',
-                    'title_already_exists': 'Ya existe un portfolio con este título',
-                    'title_available': 'Título disponible',
-                    'description_required': 'La descripción es requerida',
-                    'category_required': 'La categoría de servicio es requerida',
-                    'images_required': 'Se requiere al menos una imagen para el portfolio',
-                    'max_images_exceeded': 'Total de imágenes ({total}) excede el límite de {max}',
-                    'max_size_exceeded': 'Tamaño total de nuevas imágenes ({size}MB) excede el límite de {max}MB',
-                    'invalid_file_type': 'Archivo {name}: Tipo no permitido. Solo se permiten: JPEG, PNG, JPG, GIF, WEBP',
-                    'file_too_large': 'Archivo {name}: Tamaño excede {max}MB',
-
+                    'title_required' => __('title_required'),
+                    'title_min_length' => __('title_min_length'),
+                    'title_already_exists' => __('title_already_exists'),
+                    'title_available' => __('title_available'),
+                    'description_required' => __('description_required'),
+                    'category_required' => __('category_required'),
+                    'images_required' => __('images_required'),
+                    'max_images_exceeded' => __('max_images_exceeded'),
+                    'max_size_exceeded' => __('max_size_exceeded'),
+                    'invalid_file_type' => __('invalid_file_type'),
+                    'file_too_large' => __('file_too_large'),
+                
                     // Mensajes de éxito/error
-                    'created_successfully': 'Portfolio creado exitosamente',
-                    'updated_successfully': 'Portfolio actualizado exitosamente',
-                    'deleted_successfully': 'Portfolio eliminado exitosamente',
-                    'restored_successfully': 'Portfolio restaurado exitosamente',
-                    'error_creating': 'Error al crear el portfolio',
-                    'error_updating': 'Error al actualizar el portfolio',
-                    'error_deleting': 'Error al eliminar el portfolio',
-                    'error_restoring': 'Error al restaurar el portfolio',
-                    'error_loading_service_categories': 'Error al cargar categorías de servicio',
-                    'error_loading_portfolio': 'Error al cargar los datos del portfolio'
-                };
+                    'created_successfully' => __('created_successfully'),
+                    'updated_successfully' => __('updated_successfully'),
+                    'deleted_successfully' => __('deleted_successfully'),
+                    'restored_successfully' => __('restored_successfully'),
+                    'error_creating' => __('error_creating'),
+                    'error_updating' => __('error_updating'),
+                    'error_deleting' => __('error_deleting'),
+                    'error_restoring' => __('error_restoring'),
+                    'error_loading_service_categories' => __('error_loading_service_categories'),
+                    'error_loading_portfolio' => __('error_loading_portfolio'),
+                ]);
 
                 $(document).ready(function() {
                     // Recuperar estado del toggle de localStorage

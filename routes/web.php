@@ -308,11 +308,6 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
 
-// Service Categories API route for JavaScript
-Route::get('/api/service-categories', function () {
-    $categories = \App\Models\ServiceCategory::orderBy('service_category_name')->get();
-    return response()->json([
-        'success' => true,
-        'data' => $categories
-    ]);
-})->name('service-categories.api');
+
+
+
