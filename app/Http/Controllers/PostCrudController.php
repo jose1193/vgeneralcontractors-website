@@ -211,6 +211,18 @@ class PostCrudController extends BaseCrudController
      */
     public function index(Request $request)
     {
+        // Check permission first - this is critical for security
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view {$this->entityName}")) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to view posts',
+                ], 403);
+            }
+            
+            return redirect()->route('dashboard')->with('error', 'You do not have permission to view posts');
+        }
+
         try {
             // Set up cache and search parameters
             $this->search = $request->input('search', '');
@@ -219,8 +231,14 @@ class PostCrudController extends BaseCrudController
             $this->perPage = $request->input('per_page', 10);
             $this->showDeleted = $request->input('show_deleted', 'false') === 'true';
             
+            Log::info('PostCrudController::index - Request parameters:', [
+                'all_params' => $request->all(),
+                'search_param' => $this->search,
+                'has_search' => $request->has('search'),
+                'is_empty' => empty($this->search)
+            ]);
+            
             $page = $request->input('page', 1);
-            $cacheKey = $this->generateCrudCacheKey('posts', $page);
             
             // Build and execute query directly (simplified for debugging)
             $query = $this->buildPostsQuery($request);
