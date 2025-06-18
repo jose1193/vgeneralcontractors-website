@@ -322,7 +322,7 @@
             // Initialize PostsCrudManager
             window.postsCrudManager = new PostsCrudManager({
                 routes: {
-                    index: "{{ route('posts-crud.index') }}"
+                    index: "{{ secure_url(route('posts-crud.index', [], false)) }}"
                 }
             });
 
