@@ -509,9 +509,9 @@
 
                 if (data.success) {
                     if (data.exists) {
-                        showTitleError('Este título ya existe. Por favor, elige otro.');
+                        showTitleError('{{ __('title_already_exists_post') }}');
                     } else {
-                        showTitleSuccess('Título disponible');
+                        showTitleSuccess('{{ __('title_available') }}');
                     }
                 } else {
                     clearTitleValidation();

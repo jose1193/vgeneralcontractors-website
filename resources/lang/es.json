@@ -1350,6 +1350,7 @@
     "images_required": "Se requiere al menos una imagen para el portfolio",
     "title_available": "Título disponible",
     "title_already_exists": "Ya existe un portfolio con este título",
+    "title_already_exists_post": "Este título ya existe. Por favor, elige otro.",
     "title_required": "El título es requerido",
     "title_min_length": "El título debe tener al menos 3 caracteres",
     "description_required": "La descripción es requerida",

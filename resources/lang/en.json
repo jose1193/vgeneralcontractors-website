@@ -1360,6 +1360,7 @@
     "max_size_exceeded": "Total size of new images ({size}MB) exceeds limit of {max}MB",
     "images_required": "At least one image is required for the portfolio",
     "title_available": "Title available",
+    "title_already_exists_post": "This title already exists. Please choose another.",
     "title_already_exists": "A portfolio with this title already exists",
     "title_required": "Title is required",
     "title_min_length": "Title must be at least 3 characters",
