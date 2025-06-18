@@ -5,9 +5,9 @@
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
                 <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    Gestión de Portfolios</h2>
+                    {{ __('portfolio_management_title') }}</h2>
                 <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    Administra los portfolios de proyectos con imágenes múltiples
+                    {{ __('portfolio_management_subtitle') }}
                 </p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                         class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
                         <!-- Search input -->
                         <div class="w-full md:w-1/2 lg:w-2/5">
-                            <x-crud.input-search id="searchInput" placeholder="Buscar portfolios..."
+                            <x-crud.input-search id="searchInput" placeholder="{{ __('portfolio_search_placeholder') }}"
                                 manager-name="portfolioManager" />
                         </div>
 
@@ -60,7 +60,7 @@
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                         </svg>
                                     </span>
-                                    Agregar Portfolio
+                                    {{ __('portfolio_add_new') }}
                                 </button>
                             </div>
                         </div>
@@ -74,29 +74,29 @@
                                 <tr>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                         data-field="title">
-                                        Título
+                                        {{ __('portfolio_title') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
                                         class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Descripción
+                                        {{ __('portfolio_description') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Categoría
+                                        {{ __('portfolio_service_category') }}
                                     </th>
                                     <th
                                         class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Imágenes
+                                        {{ __('portfolio_images') }}
                                     </th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
                                         data-field="created_at">
-                                        Creado
+                                        {{ __('created') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
                                         class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Acciones
+                                        {{ __('actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -112,7 +112,8 @@
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                             </path>
                                         </svg>
-                                        <span class="text-gray-400">Cargando portfolios...</span>
+                                        <span class="text-gray-400">{{ __('loading') }}
+                                            {{ __('portfolios') }}...</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -304,16 +305,16 @@
                 // Hacer las traducciones disponibles para JavaScript
                 window.translations = {
                     // Títulos y acciones principales
-                    'create_portfolio': @json(__('create_portfolio')),
-                    'edit_portfolio': @json(__('edit_portfolio')),
-                    'delete_portfolio': @json(__('delete')),
-                    'restore_portfolio': @json(__('restore')),
+                    'create_portfolio': @json(__('portfolio_create')),
+                    'edit_portfolio': @json(__('portfolio_edit')),
+                    'delete_portfolio': @json(__('portfolio_delete')),
+                    'restore_portfolio': @json(__('portfolio_restore')),
 
                     // Mensajes de confirmación
-                    'confirm_delete': @json(__('are_you_sure')),
-                    'confirm_restore': @json(__('are_you_sure')),
-                    'delete_message': @json(__('delete_message')),
-                    'restore_message': @json(__('restore_message')),
+                    'confirm_delete': @json(__('portfolio_confirm_delete')),
+                    'confirm_restore': @json(__('portfolio_confirm_restore')),
+                    'delete_message': @json(__('portfolio_delete_message')),
+                    'restore_message': @json(__('portfolio_restore_message')),
 
                     // Botones
                     'yes_delete': @json(__('yes_delete')),
@@ -330,9 +331,9 @@
                     'loading': @json(__('loading')),
 
                     // Campos del formulario
-                    'project_title': @json(__('project_title')),
-                    'project_description': @json(__('project_description')),
-                    'service_category': @json(__('service_category')),
+                    'project_title': @json(__('portfolio_title')),
+                    'project_description': @json(__('portfolio_description')),
+                    'service_category': @json(__('portfolio_service_category')),
                     'select_category': @json(__('select_service_category')),
 
                     // Gestión de imágenes
@@ -344,29 +345,29 @@
                     'max_images_info': @json(__('max_images_info')),
 
                     // Validaciones
-                    'title_required': @json(__('title_required')),
+                    'title_required': @json(__('portfolio_title_required')),
                     'title_min_length': @json(__('title_min_length')),
-                    'title_already_exists': @json(__('title_already_exists')),
+                    'title_already_exists': @json(__('portfolio_title_already_exists')),
                     'title_available': @json(__('title_available')),
                     'description_required': @json(__('description_required')),
                     'category_required': @json(__('category_required')),
-                    'images_required': @json(__('images_required')),
+                    'images_required': @json(__('portfolio_images_required')),
                     'max_images_exceeded': @json(__('max_images_exceeded')),
                     'max_size_exceeded': @json(__('max_size_exceeded')),
                     'invalid_file_type': @json(__('invalid_file_type')),
                     'file_too_large': @json(__('file_too_large')),
 
                     // Mensajes de éxito/error
-                    'created_successfully': @json(__('created_successfully')),
-                    'updated_successfully': @json(__('updated_successfully')),
-                    'deleted_successfully': @json(__('deleted_successfully')),
-                    'restored_successfully': @json(__('restored_successfully')),
-                    'error_creating': @json(__('error_creating')),
-                    'error_updating': @json(__('error_updating')),
-                    'error_deleting': @json(__('error_deleting')),
-                    'error_restoring': @json(__('error_restoring')),
+                    'created_successfully': @json(__('portfolio_created_successfully')),
+                    'updated_successfully': @json(__('portfolio_updated_successfully')),
+                    'deleted_successfully': @json(__('portfolio_deleted_successfully')),
+                    'restored_successfully': @json(__('portfolio_restored_successfully')),
+                    'error_creating': @json(__('portfolio_error_creating')),
+                    'error_updating': @json(__('portfolio_error_updating')),
+                    'error_deleting': @json(__('portfolio_error_deleting')),
+                    'error_restoring': @json(__('portfolio_error_restoring')),
                     'error_loading_service_categories': @json(__('error_loading_service_categories')),
-                    'error_loading_portfolio': @json(__('error_loading_portfolio'))
+                    'error_loading_portfolio': @json(__('portfolio_error_loading'))
                 };
 
                 $(document).ready(function() {
@@ -408,7 +409,7 @@
 
                         tableHeaders: [{
                                 field: 'title',
-                                name: @json(__('project_title')),
+                                name: @json(__('portfolio_title')),
                                 sortable: true,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type && portfolio.project_type.title) {
@@ -419,7 +420,7 @@
                             },
                             {
                                 field: 'description',
-                                name: @json(__('project_description')),
+                                name: @json(__('portfolio_description')),
                                 sortable: false,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type && portfolio.project_type.description) {
@@ -433,7 +434,7 @@
                             },
                             {
                                 field: 'category',
-                                name: @json(__('service_category')),
+                                name: @json(__('portfolio_service_category')),
                                 sortable: false,
                                 getter: (portfolio) => {
                                     if (portfolio.project_type &&
@@ -448,7 +449,7 @@
                             },
                             {
                                 field: 'images',
-                                name: @json(__('images_management')),
+                                name: @json(__('portfolio_images')),
                                 sortable: false,
                                 getter: (portfolio) => {
                                     const imageCount = portfolio.images ? portfolio.images.length : 0;
@@ -520,21 +521,21 @@
                         defaultSortField: 'created_at',
                         defaultSortDirection: 'desc',
                         translations: {
-                            create: @json(__('create_portfolio')),
-                            edit: @json(__('edit_portfolio')),
-                            delete: @json(__('delete_portfolio')),
-                            restore: @json(__('restore_portfolio')),
-                            confirmDelete: @json(__('confirm_delete')),
-                            confirmRestore: @json(__('confirm_restore')),
-                            deleteMessage: @json(__('delete_portfolio_message')),
-                            restoreMessage: @json(__('restore_portfolio_message')),
+                            create: @json(__('portfolio_create')),
+                            edit: @json(__('portfolio_edit')),
+                            delete: @json(__('portfolio_delete')),
+                            restore: @json(__('portfolio_restore')),
+                            confirmDelete: @json(__('portfolio_confirm_delete')),
+                            confirmRestore: @json(__('portfolio_confirm_restore')),
+                            deleteMessage: @json(__('portfolio_delete_message')),
+                            restoreMessage: @json(__('portfolio_restore_message')),
                             yesDelete: @json(__('yes_delete')),
                             yesRestore: @json(__('yes_restore')),
                             cancel: @json(__('cancel')),
-                            deletedSuccessfully: @json(__('deleted_successfully')),
-                            restoredSuccessfully: @json(__('restored_successfully')),
-                            errorDeleting: @json(__('error_deleting')),
-                            errorRestoring: @json(__('error_restoring')),
+                            deletedSuccessfully: @json(__('portfolio_deleted_successfully')),
+                            restoredSuccessfully: @json(__('portfolio_restored_successfully')),
+                            errorDeleting: @json(__('portfolio_error_deleting')),
+                            errorRestoring: @json(__('portfolio_error_restoring')),
                             success: @json(__('success')),
                             error: @json(__('error')),
                             saving: @json(__('saving')),
@@ -546,7 +547,7 @@
                         },
                         entityConfig: {
                             identifierField: 'title',
-                            displayName: @json(__('project_title')),
+                            displayName: @json(__('portfolio_title')),
                             fallbackFields: ['description'],
                             detailFormat: (portfolio) => {
                                 if (portfolio.project_type && portfolio.project_type.title) {
