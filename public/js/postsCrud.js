@@ -179,14 +179,23 @@ class PostsCrudManager {
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
                 Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
+            dataType: "json",
+            timeout: 30000, // 30 segundos
             beforeSend: function (xhr) {
                 console.log("📤 AJAX beforeSend - Headers being sent:", {
                     "X-Requested-With":
                         xhr.getRequestHeader("X-Requested-With"),
                     Accept: xhr.getRequestHeader("Accept"),
                     "Content-Type": xhr.getRequestHeader("Content-Type"),
+                    "X-CSRF-TOKEN": xhr.getRequestHeader("X-CSRF-TOKEN"),
                 });
+                console.log(
+                    "📤 Full URL being requested:",
+                    xhr.url || `${self.routes.index}?${params.toString()}`
+                );
             },
             success: function (response) {
                 console.log("✅ AJAX Success - Response received:", {
@@ -232,23 +241,53 @@ class PostsCrudManager {
                 self.renderPagination(response);
             },
             error: function (xhr, status, error) {
-                console.log("❌ AJAX Error:", {
+                console.log("❌ AJAX Error - Detailed info:", {
                     status: xhr.status,
                     statusText: xhr.statusText,
                     responseText: xhr.responseText,
+                    responseJSON: xhr.responseJSON,
                     error: error,
                     readyState: xhr.readyState,
+                    ajaxStatus: status,
+                    url: `${self.routes.index}?${params.toString()}`,
                 });
+
+                // Intentar parsear la respuesta como JSON si es posible
+                let errorDetails = "";
+                try {
+                    if (xhr.responseText) {
+                        const parsed = JSON.parse(xhr.responseText);
+                        errorDetails = ` - ${
+                            parsed.message || parsed.error || "Unknown error"
+                        }`;
+                    }
+                } catch (e) {
+                    if (xhr.responseText) {
+                        errorDetails = ` - Response: ${xhr.responseText.substring(
+                            0,
+                            100
+                        )}...`;
+                    }
+                }
 
                 let errorMessage = "Error al cargar posts";
 
-                if (xhr.status === 403) {
+                if (xhr.status === 0) {
+                    errorMessage =
+                        "Sin conexión - Verifica tu conexión a internet";
+                } else if (xhr.status === 403) {
                     errorMessage = "No tienes permisos para ver los posts";
+                } else if (xhr.status === 404) {
+                    errorMessage = "Ruta no encontrada";
                 } else if (xhr.status === 500) {
                     errorMessage = "Error interno del servidor";
+                } else if (status === "timeout") {
+                    errorMessage = "Tiempo de espera agotado";
                 } else if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 }
+
+                errorMessage += errorDetails;
 
                 $(self.tableSelector).html(`
                     <tr>
@@ -258,6 +297,7 @@ class PostsCrudManager {
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                                 <span class="text-sm">${errorMessage}</span>
+                                <div class="text-xs text-gray-500 mt-2">Status: ${xhr.status} | Ready State: ${xhr.readyState}</div>
                                 <button onclick="window.postsCrudManager.loadPosts()" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors">
                                     Reintentar
                                 </button>
