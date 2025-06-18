@@ -1410,5 +1410,9 @@
     "no": "No",
     "create": "Create",
     "update": "Update",
-    "are_you_sure": "Are you sure?"
+    "are_you_sure": "Are you sure?",
+    "delete_message": "Are you sure you want to delete this item?",
+    "restore_message": "Are you sure you want to restore this item?",
+    "confirm_delete": "Are you sure?",
+    "confirm_restore": "Are you sure?"
 }

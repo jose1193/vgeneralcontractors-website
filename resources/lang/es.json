@@ -1083,9 +1083,8 @@
     "confirm_restoration": "Confirmar Restauración",
     "restore": "Restaurar",
     "restoring": "Restaurando...",
-    "are_you_sure_delete": "¿Está seguro de que desea eliminar",
+
     "this_action_cannot_be_undone": "? Esta acción no se puede deshacer.",
-    "are_you_sure_restore": "¿Está seguro de que desea restaurar",
 
     "_comment_appointments_management": "=== GESTIÓN DE CITAS ===",
     "appointments_management_title": "Gestión de Citas",
@@ -1307,8 +1306,6 @@
     "confirm_delete_post": "¿Está seguro de que desea eliminar la publicación \"{title}\"?",
     "confirm_restore_post": "¿Está seguro de que desea restaurar la publicación \"{title}\"?",
 
-    "n_a": "N/D",
-
     "create_new_post": "Crear Nueva Publicación",
     "create_new_post_subtitle": "Cree una nueva publicación de blog con contenido enriquecido",
     "edit_post": "Editar Publicación",
@@ -1401,5 +1398,12 @@
     "no": "No",
     "create": "Crear",
     "update": "Actualizar",
-    "are_you_sure": "¿Está seguro?"
+    "are_you_sure": "¿Está seguro?",
+    "are_you_sure_delete": "¿Está seguro de que desea eliminar",
+    "are_you_sure_restore": "¿Está seguro de que desea restaurar",
+    "n_a": "N/D",
+    "delete_message": "¿Está seguro de que desea eliminar este elemento?",
+    "restore_message": "¿Está seguro de que desea restaurar este elemento?",
+    "confirm_delete": "¿Está seguro?",
+    "confirm_restore": "¿Está seguro?"
 }
