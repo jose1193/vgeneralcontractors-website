@@ -122,6 +122,20 @@ class DatabaseSeeder extends Seeder
         $adminRole->givePermissionTo($adminPermissions);
         $userRole->givePermissionTo($userPermissions);
 
+        // Crear permisos específicos para MODEL_AI si no existen
+        $modelAIPermissions = ['CREATE_MODEL_AI', 'READ_MODEL_AI', 'UPDATE_MODEL_AI', 'DELETE_MODEL_AI', 'RESTORE_MODEL_AI'];
+        foreach ($modelAIPermissions as $permission) {
+            if (!Permission::where('name', $permission)->exists()) {
+                Permission::create([
+                    'name' => $permission,
+                    'uuid' => Uuid::uuid4()->toString()
+                ]);
+            }
+        }
+        
+        // Asegurar que Super Admin tenga permisos de MODEL_AI
+        $superAdminRole->givePermissionTo($modelAIPermissions);
+
         // Crear la categoría "General" para blog
         BlogCategory::create([
             'uuid' => Uuid::uuid4()->toString(),

@@ -319,14 +319,11 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </div>
 
             <!-- Administration Group -->
-            @if (auth()->check() &&
-                    (auth()->user()->can('READ_COMPANY_DATA') ||
-                        auth()->user()->can('READ_USER') ||
-                        auth()->user()->can('READ_MODEL_AI')))
+            @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data.*') || request()->routeIs('users') || request()->routeIs('model-ais.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users') || request()->routeIs('model-ais.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users') || request()->routeIs('model-ais.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data.*') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -351,12 +348,6 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 <a href="{{ route('users.index') }}"
                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                     {{ __('users') }}
-                                </a>
-                            @endcan
-                            @can('READ_MODEL_AI')
-                                <a href="{{ route('model-ais.index') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('model-ais.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('model_ai_title') }}
                                 </a>
                             @endcan
                         </div>
@@ -519,6 +510,28 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 </div>
             @endif
 
+            <!-- AI Models -->
+            @if (auth()->check() && auth()->user()->can('READ_MODEL_AI'))
+                <div class="relative group">
+                    <a href="{{ route('model-ais.index') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('model-ais.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !request()->routeIs('model-ais.*') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !request()->routeIs('model-ais.*') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('model-ais.*'))
+                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
+                            style="background-color: #2C2E36;">
+                            {{ __('model_ai_title') }}
+                            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                                style="background-color: #2C2E36;"></div>
+                        </div>
+                    @endif
+                </div>
+            @endif
 
         </div>
     </div>
@@ -580,10 +593,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </a>
 
             <!-- Administration Group -->
-            @if (auth()->check() &&
-                    (auth()->user()->can('READ_COMPANY_DATA') ||
-                        auth()->user()->can('READ_USER') ||
-                        auth()->user()->can('READ_MODEL_AI')))
+            @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
                 <div x-data="{ adminOpen: false }">
                     <button @click="adminOpen = !adminOpen"
                         class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
@@ -614,12 +624,6 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             <a href="{{ route('users.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('users') }}
-                            </a>
-                        @endcan
-                        @can('READ_MODEL_AI')
-                            <a href="{{ route('model-ais.index') }}"
-                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('model-ais.*') ? 'bg-gray-700 text-white' : '' }}">
-                                {{ __('model_ai_title') }}
                             </a>
                         @endcan
                     </div>
@@ -751,6 +755,18 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                     <span class="font-medium">{{ __('Portfolios') }}</span>
+                </a>
+            @endif
+
+            <!-- AI Models -->
+            @if (auth()->check() && auth()->user()->can('READ_MODEL_AI'))
+                <a href="{{ route('model-ais.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('model-ais.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <span class="font-medium">{{ __('model_ai_title') }}</span>
                 </a>
             @endif
         </div>
