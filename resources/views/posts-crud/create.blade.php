@@ -430,6 +430,121 @@
             }
         });
 
+        // Real-time title validation
+        let titleValidationTimeout;
+        document.getElementById('post_title').addEventListener('input', function() {
+            clearTimeout(titleValidationTimeout);
+            const title = this.value.trim();
+
+            if (title.length >= 3) {
+                titleValidationTimeout = setTimeout(() => {
+                    validateTitle(title);
+                }, 500);
+            } else {
+                clearTitleValidation();
+            }
+        });
+
+        // Title validation function
+        async function validateTitle(title) {
+            try {
+                const response = await fetch("{{ route('posts-crud.check-title') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.exists) {
+                        showTitleError('Este título ya existe. Por favor, elige otro.');
+                    } else {
+                        showTitleSuccess('Título disponible');
+                    }
+                } else {
+                    clearTitleValidation();
+                }
+            } catch (error) {
+                console.error('Error validating title:', error);
+                clearTitleValidation();
+            }
+        }
+
+        // Show title validation error
+        function showTitleError(message) {
+            const titleField = document.getElementById('post_title');
+            const existingError = document.getElementById('title-validation-error');
+
+            if (existingError) {
+                existingError.remove();
+            }
+
+            titleField.classList.add('ring-2', 'ring-red-500');
+
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'title-validation-error';
+            errorDiv.className = 'mt-1 text-sm text-red-400';
+            errorDiv.textContent = message;
+
+            titleField.parentNode.appendChild(errorDiv);
+        }
+
+        // Show title validation success
+        function showTitleSuccess(message) {
+            const titleField = document.getElementById('post_title');
+            const existingError = document.getElementById('title-validation-error');
+            const existingSuccess = document.getElementById('title-validation-success');
+
+            if (existingError) {
+                existingError.remove();
+            }
+            if (existingSuccess) {
+                existingSuccess.remove();
+            }
+
+            titleField.classList.remove('ring-2', 'ring-red-500');
+            titleField.classList.add('ring-2', 'ring-green-500');
+
+            const successDiv = document.createElement('div');
+            successDiv.id = 'title-validation-success';
+            successDiv.className = 'mt-1 text-sm text-green-400';
+            successDiv.textContent = message;
+
+            titleField.parentNode.appendChild(successDiv);
+
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.remove();
+                    titleField.classList.remove('ring-2', 'ring-green-500');
+                }
+            }, 3000);
+        }
+
+        // Clear title validation
+        function clearTitleValidation() {
+            const titleField = document.getElementById('post_title');
+            const existingError = document.getElementById('title-validation-error');
+            const existingSuccess = document.getElementById('title-validation-success');
+
+            if (existingError) {
+                existingError.remove();
+            }
+            if (existingSuccess) {
+                existingSuccess.remove();
+            }
+
+            titleField.classList.remove('ring-2', 'ring-red-500', 'ring-green-500');
+        }
+
         // Upload Method Switcher
         function switchUploadMethod(method) {
             const uploadTab = document.getElementById('upload-tab');

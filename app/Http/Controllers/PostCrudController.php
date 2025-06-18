@@ -617,8 +617,18 @@ class PostCrudController extends BaseCrudController
         }
 
         try {
-            $title = $request->input('title');
-            $excludeUuid = $request->input('exclude_uuid');
+            // Handle both form data and JSON data
+            $data = $request->isJson() ? $request->json()->all() : $request->all();
+            
+            $title = $data['title'] ?? null;
+            $excludeUuid = $data['exclude_uuid'] ?? null;
+
+            if (!$title) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Title is required',
+                ], 400);
+            }
 
             $query = Post::where('post_title', $title);
 

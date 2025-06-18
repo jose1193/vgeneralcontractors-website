@@ -304,7 +304,7 @@
                 // Hacer las traducciones disponibles para JavaScript
                 window.translations = @json([
                     // Títulos y acciones principales
-                    'create_portfolio' => __('add_new_portfolio'),
+                    'create_portfolio' => __('create_portfolio'),
                     'edit_portfolio' => __('edit_portfolio'),
                     'delete_portfolio' => __('delete'),
                     'restore_portfolio' => __('restore'),
@@ -312,12 +312,12 @@
                     // Mensajes de confirmación
                     'confirm_delete' => __('are_you_sure'),
                     'confirm_restore' => __('are_you_sure'),
-                    'delete_message' => __('are_you_sure_delete'),
-                    'restore_message' => __('are_you_sure_restore'),
+                    'delete_message' => __('delete_message'),
+                    'restore_message' => __('restore_message'),
                 
                     // Botones
-                    'yes_delete' => __('yes') . ', ' . __('delete'),
-                    'yes_restore' => __('yes') . ', ' . __('restore'),
+                    'yes_delete' => __('yes_delete'),
+                    'yes_restore' => __('yes_restore'),
                     'cancel' => __('cancel'),
                     'save' => __('save'),
                     'update' => __('update'),
@@ -522,8 +522,8 @@
                             restore: @json(__('restore_portfolio')),
                             confirmDelete: @json(__('confirm_delete')),
                             confirmRestore: @json(__('confirm_restore')),
-                            deleteMessage: @json(__('delete_message')),
-                            restoreMessage: @json(__('restore_message')),
+                            deleteMessage: @json(__('delete_portfolio_message')),
+                            restoreMessage: @json(__('restore_portfolio_message')),
                             yesDelete: @json(__('yes_delete')),
                             yesRestore: @json(__('yes_restore')),
                             cancel: @json(__('cancel')),
