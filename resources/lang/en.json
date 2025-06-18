@@ -319,8 +319,7 @@
     "comment_or_message": "Comment or Message",
     "optional_label": "(Optional)",
     "property_insurance_question": "Do you have property insurance?",
-    "yes": "Yes",
-    "no": "No",
+
     "sms_consent_text": "By checking this box, I consent to receive text messages from <strong>V GENERAL CONTRACTORS</strong>. You can reply <strong>STOP</strong> at any time to opt out. Message and data rates may apply. <strong>Message frequency may vary</strong>, text <strong>HELP</strong> for assistance. For more information, please refer to our privacy policy and SMS Terms and Conditions on our website.",
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
@@ -576,11 +575,11 @@
     "portfolios_subtitle": "Showcase and manage your completed projects and service portfolios",
     "project_name": "Project Name",
     "description": "Description",
-    "service_category": "Service Category",
+
     "created_at": "Created At",
     "created": "Created",
     "add_new": "Add New",
-    "edit_portfolio": "Edit Portfolio",
+
     "add_new_portfolio": "Add New Portfolio",
     "search_portfolios": "Search portfolios...",
     "no_portfolios_found": "No portfolios found",
@@ -619,7 +618,6 @@
 
     "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",
-    "success": "Success!",
 
     "unexpected_error": "An unexpected error occurred. Please try again.",
     "reschedule_appointment": "Reschedule Appointment",
@@ -1146,13 +1144,12 @@
     "view_details": "View",
     "play_audio": "Play",
     "unknown": "Unknown",
-    "loading": "Loading...",
+
     "NRO": "No.",
 
     "_comment_modals": "=== MODALS ===",
     "save": "Save",
-    "update": "Update",
-    "saving": "Saving...",
+
     "cancel": "Cancel",
     "confirm_deletion": "Confirm Deletion",
     "delete": "Delete",
@@ -1250,7 +1247,7 @@
     "restore_blog_category_message": "This action will restore the blog category and make it available again.",
     "category_name_already_taken": "This category name is already taken",
     "enter_description_optional": "Enter description (optional)",
-    "no_description": "No description",
+
     "slug": "Slug",
     "loading_blog_categories": "Loading blog categories...",
     "search_blog_categories": "Search blog categories...",
@@ -1392,7 +1389,6 @@
     "project_title": "Project Title",
     "project_description": "Project Description",
     "service_category": "Service Category",
-    "select_service_category": "Select a category",
     "portfolio_images": "Portfolio Images",
     "add_new_images": "Add New Images",
     "new_images_to_upload": "New Images to Upload",

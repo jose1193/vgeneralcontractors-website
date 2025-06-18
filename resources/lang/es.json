@@ -280,8 +280,7 @@
     "comment_or_message": "Comentario o Mensaje",
     "optional_label": "(Opcional)",
     "property_insurance_question": "¿Tiene seguro de propiedad?",
-    "yes": "Sí",
-    "no": "No",
+
     "sms_consent_text": "Al marcar esta casilla, consiento recibir mensajes de texto de <strong>V GENERAL CONTRACTORS</strong>. Puedes responder <strong>STOP</strong> en cualquier momento para cancelar. Se aplican tarifas de mensajes y datos. <strong>La frecuencia de mensajes puede variar,</strong> envía <strong>HELP</strong> para asistencia. Para más información, consulta nuestra política de privacidad y Términos y Condiciones de SMS en nuestro sitio web.",
     "privacy_policy": "Política de Privacidad",
     "terms_of_service": "Términos de Servicio",
@@ -539,7 +538,7 @@
     "service_category": "Categoría de Servicio",
 
     "add_new": "Agregar Nuevo",
-    "edit_portfolio": "Editar Portafolio",
+
     "add_new_portfolio": "Agregar Nuevo Portafolio",
     "search_portfolios": "Buscar portafolios...",
     "no_portfolios_found": "No se encontraron portafolios.",
@@ -581,8 +580,7 @@
 
     "please_select_client": "Por favor seleccione un cliente",
     "appointment_created_successfully": "Cita creada exitosamente",
-    "success": "¡Éxito!",
-    "error": "Error",
+
     "unexpected_error": "Ocurrió un error inesperado. Por favor intente de nuevo.",
     "reschedule_appointment": "Reagendar Cita",
     "move_appointment_to": "¿Mover cita de \"{title}\" a {newTime}?",
@@ -1076,7 +1074,7 @@
 
     "_comment_modals": "=== MODALES ===",
     "save": "Guardar",
-    "update": "Actualizar",
+
     "saving": "Guardando...",
 
     "confirm_deletion": "Confirmar Eliminación",
@@ -1199,7 +1197,7 @@
     "restore_blog_category_message": "Esta acción restaurará la categoría de blog y la hará disponible nuevamente.",
     "category_name_already_taken": "Este nombre de categoría ya está en uso",
     "enter_description_optional": "Ingrese descripción (opcional)",
-    "no_description": "Sin descripción",
+
     "slug": "Slug",
     "loading_blog_categories": "Cargando categorías de blog...",
     "search_blog_categories": "Buscar categorías de blog...",
@@ -1376,14 +1374,11 @@
     "restore_portfolio_message": "¿Desea restaurar este portfolio?",
     "yes_delete": "Sí, eliminar",
     "yes_restore": "Sí, restaurar",
-    "saving": "Guardando",
-    "loading": "Cargando",
 
     "_comment_portfolio_form": "=== FORMULARIO DE PORTFOLIO ===",
     "project_title": "Título del Proyecto",
     "project_description": "Descripción del Proyecto",
-    "service_category": "Categoría de Servicio",
-    "select_service_category": "Seleccione una categoría",
+
     "portfolio_images": "Imágenes del Portfolio",
     "add_new_images": "Agregar Nuevas Imágenes",
     "new_images_to_upload": "Nuevas Imágenes a Subir",
