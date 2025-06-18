@@ -820,6 +820,7 @@ class CrudManagerModal {
         }
 
         try {
+            console.log("Making AJAX request to:", this.routes.checkName);
             const response = await $.ajax({
                 url: this.routes.checkName,
                 type: "POST",
@@ -838,10 +839,14 @@ class CrudManagerModal {
                 },
             });
 
+            console.log("Response received:", response);
+
             if (response.exists) {
+                console.log("Name exists, showing error");
                 this.showFieldError("name", "Este nombre ya está en uso");
                 this.updateSubmitButtonState();
             } else {
+                console.log("Name available, showing success");
                 this.clearFieldError("name");
                 this.showFieldSuccess("name", "Nombre disponible");
                 this.updateSubmitButtonState();
