@@ -306,6 +306,8 @@ class CrudManagerModal {
             didOpen: () => {
                 this.initializeFormElements();
                 this.applyHeaderColor("create");
+                // Verificar estado inicial del botón
+                setTimeout(() => this.updateSubmitButtonState(), 200);
             },
         });
 
@@ -363,7 +365,9 @@ class CrudManagerModal {
                     // Verificar y corregir valores de select después de un breve delay
                     setTimeout(() => {
                         this.verifyAndFixSelectValues(this.currentEntity);
-                    }, 100);
+                        // Verificar estado inicial del botón después de cargar datos
+                        this.updateSubmitButtonState();
+                    }, 200);
                 },
             });
 
@@ -583,6 +587,18 @@ class CrudManagerModal {
                 }, 500); // Debounce de 500ms
             });
         }
+
+        // Validación de name (para duplicados)
+        const nameField = document.getElementById("name");
+        if (nameField) {
+            let nameTimeout;
+            nameField.addEventListener("input", (e) => {
+                clearTimeout(nameTimeout);
+                nameTimeout = setTimeout(() => {
+                    this.validateNameField(e.target.value);
+                }, 500); // Debounce de 500ms
+            });
+        }
     }
 
     /**
@@ -682,6 +698,7 @@ class CrudManagerModal {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             this.showFieldError("email", "Formato de email inválido");
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -708,18 +725,22 @@ class CrudManagerModal {
 
                 if (response.exists) {
                     this.showFieldError("email", "Este email ya está en uso");
+                    this.updateSubmitButtonState();
                 } else {
                     this.clearFieldError("email");
                     this.showFieldSuccess("email", "Email disponible");
+                    this.updateSubmitButtonState();
                 }
             } catch (error) {
                 console.error("Error validating email:", error);
                 // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
                 this.clearFieldError("email");
+                this.updateSubmitButtonState();
             }
         } else {
             // Si no hay endpoint, solo limpiar errores (formato válido)
             this.clearFieldError("email");
+            this.updateSubmitButtonState();
         }
     }
 
@@ -773,6 +794,63 @@ class CrudManagerModal {
             }
         } catch (error) {
             console.error("Error validating phone:", error);
+        }
+    }
+
+    /**
+     * Validar campo de name en tiempo real (para duplicados)
+     */
+    async validateNameField(name) {
+        console.log("validateNameField called with:", name);
+        console.log("checkName route:", this.routes.checkName);
+
+        if (!name) {
+            this.clearFieldError("name");
+            this.updateSubmitButtonState();
+            return;
+        }
+
+        // Verificar si hay endpoint de checkName configurado
+        if (!this.routes.checkName) {
+            console.log("No checkName route configured");
+            // Si no hay endpoint, solo limpiar errores
+            this.clearFieldError("name");
+            this.updateSubmitButtonState();
+            return;
+        }
+
+        try {
+            const response = await $.ajax({
+                url: this.routes.checkName,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    name: name,
+                    uuid:
+                        this.isEditing && this.currentEntity
+                            ? this.currentEntity.uuid
+                            : null,
+                },
+            });
+
+            if (response.exists) {
+                this.showFieldError("name", "Este nombre ya está en uso");
+                this.updateSubmitButtonState();
+            } else {
+                this.clearFieldError("name");
+                this.showFieldSuccess("name", "Nombre disponible");
+                this.updateSubmitButtonState();
+            }
+        } catch (error) {
+            console.error("Error validating name:", error);
+            // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
+            this.clearFieldError("name");
+            this.updateSubmitButtonState();
         }
     }
 
@@ -864,6 +942,9 @@ class CrudManagerModal {
         if (inputElement.length) {
             inputElement.removeClass("error valid");
         }
+
+        // Actualizar estado del botón después de limpiar error
+        setTimeout(() => this.updateSubmitButtonState(), 100);
     }
 
     /**
@@ -977,6 +1058,42 @@ class CrudManagerModal {
     }
 
     /**
+     * Verificar si hay errores de validación visibles
+     */
+    hasValidationErrors() {
+        const visibleErrors = $(".error-message:not(.hidden)").filter(
+            function () {
+                return (
+                    $(this).hasClass("text-red-500") &&
+                    $(this).text().trim() !== ""
+                );
+            }
+        );
+        return visibleErrors.length > 0;
+    }
+
+    /**
+     * Actualizar estado del botón submit
+     */
+    updateSubmitButtonState() {
+        const submitButton = $(".swal2-confirm");
+        if (submitButton.length) {
+            if (this.hasValidationErrors()) {
+                submitButton.prop("disabled", true);
+                submitButton.addClass("opacity-50 cursor-not-allowed");
+                submitButton.attr(
+                    "title",
+                    "Corrija los errores de validación antes de continuar"
+                );
+            } else {
+                submitButton.prop("disabled", false);
+                submitButton.removeClass("opacity-50 cursor-not-allowed");
+                submitButton.removeAttr("title");
+            }
+        }
+    }
+
+    /**
      * Validar y obtener datos del formulario
      */
     validateAndGetFormData() {
@@ -984,8 +1101,8 @@ class CrudManagerModal {
         let isValid = true;
         const isEditMode = $(".swal2-popup").hasClass("swal-edit");
 
-        // Limpiar errores previos
-        $(".error-message").addClass("hidden").text("");
+        // NO limpiar errores previos aquí - mantener los errores de validación en tiempo real
+        // $(".error-message").addClass("hidden").text("");
 
         this.formFields.forEach((field) => {
             // Verificar si el campo debe estar presente en el modo actual
@@ -1058,6 +1175,16 @@ class CrudManagerModal {
         // Log para debugging
         console.log("Final form data:", formData);
 
+        // Verificar si hay errores de validación en tiempo real
+        if (this.hasValidationErrors()) {
+            this.updateSubmitButtonState();
+            // Mostrar alerta de error para mayor claridad
+            Swal.showValidationMessage(
+                "Por favor corrija los errores antes de continuar"
+            );
+            return false;
+        }
+
         return isValid ? formData : false;
     }
 
@@ -1112,6 +1239,9 @@ class CrudManagerModal {
         if (inputElement.length) {
             inputElement.removeClass("valid").addClass("error");
         }
+
+        // Actualizar estado del botón después de mostrar error
+        setTimeout(() => this.updateSubmitButtonState(), 100);
     }
 
     /**
