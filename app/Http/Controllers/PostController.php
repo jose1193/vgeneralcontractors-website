@@ -32,6 +32,8 @@ class PostController extends Controller
         // Configuración SEO
         SEOTools::setTitle('Blog | V General Contractors');
         SEOTools::setDescription('Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.');
+        SEOTools::opengraph()->setUrl(url()->current());
+        SEOTools::setCanonical(url()->current());
         
         $title = 'Blog';
         
@@ -70,7 +72,7 @@ class PostController extends Controller
         // Formatear la fecha para fácil visualización
         $post->formatted_date = $post->created_at->format('F d, Y');
         
-        // Configuración SEO
+        // Configuración SEO completa
         SEOTools::setTitle($post->meta_title ?? $post->post_title);
         SEOTools::setDescription($post->meta_description ?? substr(strip_tags($post->post_content), 0, 160));
         SEOTools::opengraph()->setUrl(url()->current());
