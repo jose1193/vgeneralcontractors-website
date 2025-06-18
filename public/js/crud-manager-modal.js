@@ -685,33 +685,41 @@ class CrudManagerModal {
             return;
         }
 
-        try {
-            const response = await $.ajax({
-                url: this.routes.checkEmail,
-                type: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                data: {
-                    email: email,
-                    uuid:
-                        this.isEditing && this.currentEntity
-                            ? this.currentEntity.uuid
-                            : null,
-                },
-            });
+        // Si existe el endpoint checkEmail, hacer validación de duplicados
+        if (this.routes.checkEmail) {
+            try {
+                const response = await $.ajax({
+                    url: this.routes.checkEmail,
+                    type: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                    data: {
+                        email: email,
+                        uuid:
+                            this.isEditing && this.currentEntity
+                                ? this.currentEntity.uuid
+                                : null,
+                    },
+                });
 
-            if (response.exists) {
-                this.showFieldError("email", "Este email ya está en uso");
-            } else {
+                if (response.exists) {
+                    this.showFieldError("email", "Este email ya está en uso");
+                } else {
+                    this.clearFieldError("email");
+                    this.showFieldSuccess("email", "Email disponible");
+                }
+            } catch (error) {
+                console.error("Error validating email:", error);
+                // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
                 this.clearFieldError("email");
-                this.showFieldSuccess("email", "Email disponible");
             }
-        } catch (error) {
-            console.error("Error validating email:", error);
+        } else {
+            // Si no hay endpoint, solo limpiar errores (formato válido)
+            this.clearFieldError("email");
         }
     }
 

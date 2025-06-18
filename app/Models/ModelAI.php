@@ -30,7 +30,7 @@ class ModelAI extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'api_key',
+        // Removed api_key from hidden so it can be displayed in CRUD
     ];
 
     /**

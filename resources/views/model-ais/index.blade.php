@@ -334,7 +334,6 @@
                                 required: true,
                                 validation: {
                                     required: true,
-                                    email: true,
                                     maxLength: 255
                                 }
                             },
