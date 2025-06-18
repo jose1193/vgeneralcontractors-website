@@ -29,7 +29,13 @@ class PostController extends Controller
                 ->paginate(9);
         }
         
-        return view('blog.index', compact('posts'));
+        // Configuración SEO
+        SEOTools::setTitle('Blog | V General Contractors');
+        SEOTools::setDescription('Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.');
+        
+        $title = 'Blog';
+        
+        return view('blog.index', compact('posts', 'title'));
     }
     
     /**
@@ -86,7 +92,10 @@ class PostController extends Controller
         SEOMeta::addMeta('article:published_time', $post->created_at->toIso8601String(), 'property');
         SEOMeta::addMeta('article:section', $post->category->blog_category_name ?? '', 'property');
         
-        return view('blog.show', compact('post', 'relatedPosts'));
+        // Pasar el título al layout
+        $title = $post->post_title;
+        
+        return view('blog.show', compact('post', 'relatedPosts', 'title'));
     }
     
     /**
@@ -107,7 +116,9 @@ class PostController extends Controller
         SEOTools::setTitle($category->blog_category_name . ' | V General Contractors Blog');
         SEOTools::setDescription('Articles and insights about ' . $category->blog_category_name . ' from V General Contractors.');
         
-        return view('blog.category', compact('posts', 'category'));
+        $title = $category->blog_category_name;
+        
+        return view('blog.category', compact('posts', 'category', 'title'));
     }
     
     /**
@@ -135,7 +146,9 @@ class PostController extends Controller
         SEOTools::setTitle("Search results for: {$query} | V General Contractors Blog");
         SEOTools::setDescription("Search results for {$query} in V General Contractors Blog");
         
-        return view('blog.search', compact('posts', 'query'));
+        $title = "Search: {$query}";
+        
+        return view('blog.search', compact('posts', 'query', 'title'));
     }
 
     /**
@@ -154,7 +167,13 @@ class PostController extends Controller
                 ->paginate(9);
         }
         
-        return view('blog.index', compact('posts'));
+        // Configuración SEO
+        SEOTools::setTitle('Latest Posts | V General Contractors Blog');
+        SEOTools::setDescription('Discover the latest roofing insights, tips, and industry updates from V General Contractors.');
+        
+        $title = 'Latest Posts';
+        
+        return view('blog.index', compact('posts', 'title'));
     }
 
     // Función auxiliar para cálculo de tiempo de lectura

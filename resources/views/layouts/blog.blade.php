@@ -6,7 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="transparent" />
-    <title>{{ config('app.name', 'Laravel') }}{{ isset($title) ? ' - ' . $title : ' - Blog' }}</title>
+
+    <!-- SEO Tools Integration -->
+    {!! SEOTools::generate() !!}
+
+    <!-- Fallback title if SEO Tools doesn't set one -->
+    @if (empty(SEOTools::getTitle()))
+        <title>{{ isset($title) ? $title . ' - ' . config('app.name') : config('app.name') . ' - Blog' }}</title>
+    @endif
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ secure_asset('assets/favicon_io/apple-touch-icon.png') }}">

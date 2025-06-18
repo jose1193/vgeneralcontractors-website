@@ -61,6 +61,15 @@ class Post extends Model
     }
 
     /**
+     * Get the post content with decoded HTML entities.
+     */
+    public function getPostContentAttribute($value)
+    {
+        // Decodificar entidades HTML para mostrar correctamente los caracteres especiales
+        return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
      * Get the SEO data for the post.
      */
     public function seo()

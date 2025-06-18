@@ -126,7 +126,7 @@
                     <!-- Post content -->
                     <article
                         class="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-img:rounded-lg">
-                        {!! nl2br(e($post->post_content)) !!}
+                        {!! str_replace(['<br>', '<br/>', '<br />'], '', $post->post_content) !!}
                     </article>
 
                     <!-- Tags -->
