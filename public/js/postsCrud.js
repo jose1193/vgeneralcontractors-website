@@ -108,6 +108,19 @@ class PostsCrudManager {
             sort_direction: this.sortDirection,
         });
 
+        console.log(
+            "🔍 PostsCrudManager.loadPosts() - Starting request with params:",
+            {
+                url: `${this.routes.index}?${params.toString()}`,
+                currentPage: this.currentPage,
+                perPage: this.perPage,
+                searchTerm: this.searchTerm,
+                showDeleted: this.showDeleted,
+                sortField: this.sortField,
+                sortDirection: this.sortDirection,
+            }
+        );
+
         // Mostrar spinner de loading mejorado
         $(this.tableSelector).html(`
             <tr>
@@ -130,12 +143,29 @@ class PostsCrudManager {
                 "X-Requested-With": "XMLHttpRequest",
                 Accept: "application/json",
             },
+            beforeSend: function (xhr) {
+                console.log("📤 AJAX beforeSend - Headers being sent:", {
+                    "X-Requested-With":
+                        xhr.getRequestHeader("X-Requested-With"),
+                    Accept: xhr.getRequestHeader("Accept"),
+                    "Content-Type": xhr.getRequestHeader("Content-Type"),
+                });
+            },
             success: function (response) {
-                // Log de debug para verificar la estructura de respuesta
-                console.log("Posts response:", response);
+                console.log("✅ AJAX Success - Response received:", {
+                    responseType: typeof response,
+                    hasData: response.hasOwnProperty("data"),
+                    hasSuccess: response.hasOwnProperty("success"),
+                    dataLength: response.data ? response.data.length : "N/A",
+                    fullResponse: response,
+                });
 
                 // Verificar si la respuesta tiene success = false (error del servidor)
                 if (response.success === false) {
+                    console.log(
+                        "❌ Server returned success=false:",
+                        response.message
+                    );
                     $(self.tableSelector).html(`
                         <tr>
                             <td colspan="7" class="text-center py-8 text-red-400">
@@ -156,12 +186,23 @@ class PostsCrudManager {
 
                 // Manejar respuesta exitosa (estructura de paginación de Laravel)
                 const posts = response.data || [];
+                console.log("📋 Processing posts data:", {
+                    postsCount: posts.length,
+                    postsArray: posts,
+                });
 
                 self.renderTable(posts);
                 self.renderPagination(response);
             },
-            error: function (xhr) {
-                console.error("Error loading posts:", xhr);
+            error: function (xhr, status, error) {
+                console.log("❌ AJAX Error:", {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error,
+                    readyState: xhr.readyState,
+                });
+
                 let errorMessage = "Error al cargar posts";
 
                 if (xhr.status === 403) {
@@ -192,6 +233,13 @@ class PostsCrudManager {
     }
 
     renderTable(posts) {
+        console.log("🎨 renderTable() called with:", {
+            postsType: typeof posts,
+            isArray: Array.isArray(posts),
+            postsLength: posts ? posts.length : "null/undefined",
+            posts: posts,
+        });
+
         let html = "";
 
         // Validar que posts sea un array válido

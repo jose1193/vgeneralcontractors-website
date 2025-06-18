@@ -211,6 +211,16 @@ class PostCrudController extends BaseCrudController
      */
     public function index(Request $request)
     {
+        // Debug: Log request details
+        Log::info('PostCrudController::index - Request details:', [
+            'method' => $request->method(),
+            'is_ajax' => $request->ajax(),
+            'accepts_json' => $request->acceptsJson(),
+            'wants_json' => $request->wantsJson(),
+            'headers' => $request->headers->all(),
+            'all_params' => $request->all()
+        ]);
+
         // Check permission first - this is critical for security
         if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view {$this->entityName}")) {
             if ($request->ajax()) {
@@ -244,11 +254,21 @@ class PostCrudController extends BaseCrudController
             $query = $this->buildPostsQuery($request);
             $posts = $query->paginate($this->perPage, ['*'], 'page', $page);
 
+            // Debug: Log query results
+            Log::info('PostCrudController::index - Query results:', [
+                'total_posts' => $posts->total(),
+                'current_page' => $posts->currentPage(),
+                'per_page' => $posts->perPage(),
+                'has_pages' => $posts->hasPages()
+            ]);
+
             if ($request->ajax()) {
+                Log::info('PostCrudController::index - Returning AJAX response');
                 // Return consistent structure like ServiceCategoryController
                 return response()->json($posts);
             }
 
+            Log::info('PostCrudController::index - Returning view response');
             return view("{$this->viewPrefix}.index", [
                 'posts' => $posts,
                 'entityName' => $this->entityName,
@@ -257,6 +277,7 @@ class PostCrudController extends BaseCrudController
             Log::error("Error listing {$this->entityName}s: {$e->getMessage()}", [
                 'exception' => $e,
                 'request' => $request->all(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             if ($request->ajax()) {
