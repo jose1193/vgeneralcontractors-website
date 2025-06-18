@@ -8,6 +8,9 @@ use App\Models\BlogCategory;
 use Carbon\Carbon;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\TwitterCard;
+use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 
@@ -75,14 +78,18 @@ class PostController extends Controller
         // Configuración SEO completa
         SEOTools::setTitle($post->meta_title ?? $post->post_title);
         SEOTools::setDescription($post->meta_description ?? substr(strip_tags($post->post_content), 0, 160));
-        SEOTools::opengraph()->setUrl(url()->current());
         SEOTools::setCanonical(url()->current());
-        SEOTools::opengraph()->addProperty('type', 'article');
+        
+        // OpenGraph
+        OpenGraph::setUrl(url()->current());
+        OpenGraph::addProperty('type', 'article');
+        OpenGraph::setTitle($post->meta_title ?? $post->post_title);
+        OpenGraph::setDescription($post->meta_description ?? substr(strip_tags($post->post_content), 0, 160));
         
         // Si hay imagen del post, la añadimos a los metadatos
         if($post->post_image) {
-            SEOTools::jsonLd()->addImage($post->post_image);
-            SEOTools::opengraph()->addImage($post->post_image);
+            OpenGraph::addImage($post->post_image);
+            JsonLd::addImage($post->post_image);
         }
         
         // Añadir keywords si están disponibles
