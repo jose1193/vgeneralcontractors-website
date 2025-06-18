@@ -33,20 +33,31 @@ class PortfolioCrudController extends BaseCrudController
     public function index(Request $request)
     {
         try {
+            // Verificar permisos - temporalmente comentado para debug
+            // if (!$this->checkPermission("READ_{$this->entityName}", false)) {
+            //     if ($request->ajax()) {
+            //         return response()->json([
+            //             'success' => false,
+            //             'message' => 'You do not have permission to view portfolios',
+            //         ], 403);
+            //     }
+            //     return redirect()->route('dashboard')->with('error', 'You do not have permission to view portfolios');
+            // }
+
             // Parámetros de búsqueda y paginación
-            $this->search = $request->input('search', '');
-            $this->sortField = $request->input('sort_field', 'created_at');
-            $this->sortDirection = $request->input('sort_direction', 'desc');
-            $this->perPage = $request->input('per_page', 10);
-            $this->showDeleted = $request->input('show_deleted', 'false') === 'true';
+            $search = $request->input('search', '');
+            $sortField = $request->input('sort_field', 'created_at');
+            $sortDirection = $request->input('sort_direction', 'desc');
+            $perPage = $request->input('per_page', 10);
+            $showDeleted = $request->input('show_deleted', 'false') === 'true';
             $page = $request->input('page', 1);
 
             // Query base
             $query = Portfolio::query();
 
-            // Búsqueda - arreglar campos según modelo Portfolio
-            if (!empty($this->search)) {
-                $searchTerm = '%' . $this->search . '%';
+            // Búsqueda
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
                 $query->where(function ($q) use ($searchTerm) {
                     $q->whereHas('projectType', function ($subQ) use ($searchTerm) {
                         $subQ->where('title', 'like', $searchTerm)
@@ -56,31 +67,31 @@ class PortfolioCrudController extends BaseCrudController
             }
 
             // Mostrar eliminados
-            if ($this->showDeleted) {
+            if ($showDeleted) {
                 $query->withTrashed();
             }
 
             // Orden
-            $query->orderBy($this->sortField, $this->sortDirection);
+            $query->orderBy($sortField, $sortDirection);
 
             // Relaciones necesarias para la tabla
-            $query->with(['projectType', 'projectType.serviceCategory', 'images']);
+            $query->with(['projectType.serviceCategory', 'images']);
 
             // Paginación
-            $portfolios = $query->paginate($this->perPage, ['*'], 'page', $page);
+            $portfolios = $query->paginate($perPage, ['*'], 'page', $page);
 
             if ($request->ajax()) {
-                // Formato compatible con el JS - estructura simplificada para debug
+                // Debug: Log para verificar que llega aquí
+                Log::info('Portfolio AJAX request received', [
+                    'portfolios_count' => $portfolios->count(),
+                    'total' => $portfolios->total(),
+                    'current_page' => $portfolios->currentPage(),
+                    'request_params' => $request->all(),
+                ]);
+
                 return response()->json([
                     'success' => true,
-                    'data' => [
-                        'data' => $portfolios->items(),
-                        'current_page' => $portfolios->currentPage(),
-                        'last_page' => $portfolios->lastPage(),
-                        'from' => $portfolios->firstItem(),
-                        'to' => $portfolios->lastItem(),
-                        'total' => $portfolios->total(),
-                    ],
+                    'data' => $portfolios->items(),
                     'current_page' => $portfolios->currentPage(),
                     'last_page' => $portfolios->lastPage(),
                     'from' => $portfolios->firstItem(),
@@ -101,7 +112,7 @@ class PortfolioCrudController extends BaseCrudController
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error loading portfolios',
+                    'message' => 'Error loading portfolios: ' . $e->getMessage(),
                 ], 500);
             }
             return back()->with('error', 'Error loading portfolios');

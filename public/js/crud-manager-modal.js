@@ -191,6 +191,10 @@ class CrudManagerModal {
      * Cargar entidades
      */
     loadEntities(page = 1) {
+        console.log("loadEntities called with page:", page);
+        console.log("Routes:", this.routes);
+        console.log("Index route:", this.routes.index);
+
         this.currentPage = page;
 
         // Mostrar loading
@@ -205,6 +209,8 @@ class CrudManagerModal {
             show_deleted: this.showDeleted ? "true" : "false",
         };
 
+        console.log("Making AJAX request with data:", requestData);
+
         return $.ajax({
             url: this.routes.index,
             type: "GET",
@@ -215,11 +221,13 @@ class CrudManagerModal {
             },
             data: requestData,
             success: (response) => {
+                console.log("AJAX success response:", response);
                 this.currentData = response; // Almacenar datos para el modo de registro único
                 this.renderTable(response);
                 this.renderPagination(response);
             },
             error: (xhr) => {
+                console.error("AJAX error:", xhr);
                 console.error(
                     `Error loading ${this.entityNamePlural}:`,
                     xhr.responseText

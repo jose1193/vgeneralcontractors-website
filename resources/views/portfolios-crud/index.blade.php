@@ -370,8 +370,12 @@
                 };
 
                 $(document).ready(function() {
+                    console.log('DOM ready, starting portfolio manager initialization...');
+
                     // Recuperar estado del toggle de localStorage
                     const showDeletedState = localStorage.getItem('showDeleted') === 'true';
+
+                    console.log('About to create PortfolioCrudManager...');
 
                     // Inicializar Portfolio CRUD Manager
                     window.portfolioManager = new PortfolioCrudManager({
@@ -553,8 +557,12 @@
                         }
                     });
 
+                    console.log('PortfolioCrudManager created, about to load entities...');
+
                     // Cargar portfolios iniciales
                     window.portfolioManager.loadEntities();
+
+                    console.log('loadEntities called');
                 });
             </script>
         @endpush

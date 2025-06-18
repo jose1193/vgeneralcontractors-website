@@ -4,6 +4,10 @@
  */
 class PortfolioCrudManager extends CrudManagerModal {
     constructor(options) {
+        console.log(
+            "PortfolioCrudManager constructor called with options:",
+            options
+        );
         super(options);
 
         // Configuración específica para portfolios
@@ -27,6 +31,8 @@ class PortfolioCrudManager extends CrudManagerModal {
 
         // Inicializar eventos específicos de imágenes
         this.initImageEvents();
+
+        console.log("PortfolioCrudManager initialization complete");
     }
 
     /**
