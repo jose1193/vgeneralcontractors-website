@@ -96,72 +96,6 @@ class PostsCrudManager {
         });
     }
 
-    /**
-     * Mostrar loading con spinner animado
-     */
-    showTableLoading() {
-        const loadingHtml = `
-            <tr id="loadingRow">
-                <td colspan="7" class="px-6 py-4 text-center">
-                    <div class="flex items-center justify-center">
-                        <svg class="animate-spin h-5 w-5 mr-3 text-yellow-500 inline-block" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span class="text-gray-300">Cargando posts...</span>
-                    </div>
-                </td>
-            </tr>
-        `;
-        $(this.tableSelector).html(loadingHtml);
-    }
-
-    /**
-     * Ocultar loading
-     */
-    hideTableLoading() {
-        $("#loadingRow").remove();
-    }
-
-    /**
-     * Mostrar mensaje de error
-     */
-    showTableError(message = "Error al cargar los posts") {
-        const errorHtml = `
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center">
-                    <div class="flex items-center justify-center text-red-400">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span>${message}</span>
-                    </div>
-                </td>
-            </tr>
-        `;
-        $(this.tableSelector).html(errorHtml);
-    }
-
-    /**
-     * Mostrar mensaje cuando no hay datos
-     */
-    showEmptyState(message = "No se encontraron posts") {
-        const emptyHtml = `
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center">
-                    <div class="flex flex-col items-center justify-center text-gray-400 py-8">
-                        <svg class="w-12 h-12 mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p class="text-lg font-medium">${message}</p>
-                        <p class="text-sm mt-2">Intenta cambiar los filtros de búsqueda o crear un nuevo post</p>
-                    </div>
-                </td>
-            </tr>
-        `;
-        $(this.tableSelector).html(emptyHtml);
-    }
-
     loadPosts() {
         const self = this;
 
@@ -174,8 +108,10 @@ class PostsCrudManager {
             sort_direction: this.sortDirection,
         });
 
-        // Mostrar loading con spinner
-        this.showTableLoading();
+        // Mostrar loading
+        $(this.tableSelector).html(
+            '<tr><td colspan="7" class="text-center py-4 text-gray-400">Loading...</td></tr>'
+        );
 
         $.ajax({
             url: `${this.routes.index}?${params.toString()}`,
@@ -185,182 +121,151 @@ class PostsCrudManager {
                 Accept: "application/json",
             },
             success: function (response) {
-                try {
-                    const posts = response.data || response;
-                    self.renderTable(posts);
-                    self.renderPagination(response);
-                } catch (error) {
-                    console.error("Error processing response:", error);
-                    self.showTableError(
-                        "Error al procesar la respuesta del servidor"
-                    );
-                }
+                self.renderTable(response.data || response);
+                self.renderPagination(response);
             },
             error: function (xhr) {
                 console.error("Error loading posts:", xhr);
-
-                let errorMessage = "Error al cargar los posts";
-
-                // Personalizar mensaje según el tipo de error
-                if (xhr.status === 0) {
-                    errorMessage = "Sin conexión al servidor";
-                } else if (xhr.status === 404) {
-                    errorMessage = "Página no encontrada";
-                } else if (xhr.status === 500) {
-                    errorMessage = "Error interno del servidor";
-                } else if (xhr.status >= 400 && xhr.status < 500) {
-                    errorMessage = "Error en la solicitud";
-                }
-
-                self.showTableError(errorMessage);
+                $(self.tableSelector).html(
+                    '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading posts</td></tr>'
+                );
             },
-            timeout: 10000, // 10 segundos timeout
         });
     }
 
     renderTable(posts) {
         let html = "";
 
-        if (!posts || posts.length === 0) {
-            // Determinar el mensaje según si hay búsqueda activa o no
-            let emptyMessage = "No se encontraron posts";
+        if (posts.length === 0) {
+            html =
+                '<tr><td colspan="7" class="text-center py-4 text-gray-400">No posts found</td></tr>';
+        } else {
+            posts.forEach((post) => {
+                const isDeleted = post.deleted_at !== null;
+                const rowClass = isDeleted ? "opacity-60" : "";
 
-            if (this.searchTerm.trim()) {
-                emptyMessage = `No se encontraron posts que coincidan con "${this.searchTerm}"`;
-            } else if (this.showDeleted) {
-                emptyMessage = "No hay posts eliminados";
-            } else {
-                emptyMessage =
-                    "No hay posts disponibles. ¡Crea tu primer post!";
-            }
+                // Imagen
+                let imgHtml = `<div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
+                    </svg>
+                </div>`;
 
-            this.showEmptyState(emptyMessage);
-            return;
-        }
-
-        posts.forEach((post) => {
-            const isDeleted = post.deleted_at !== null;
-            const rowClass = isDeleted ? "opacity-60" : "";
-
-            // Imagen
-            let imgHtml = `<div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md">
-                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
-                </svg>
-            </div>`;
-
-            if (post.post_image) {
-                const imageUrl = post.post_image.startsWith("http://")
-                    ? post.post_image.replace("http://", "https://")
-                    : post.post_image;
-                imgHtml = `<img class="h-12 w-12 object-cover rounded-md" src="${imageUrl}" alt="Post image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md" style="display:none;">
-                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
-                        </svg>
-                    </div>`;
-            }
-
-            // Status badge
-            let statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-500/20 text-gray-400">${post.post_status}</span>`;
-            if (post.post_status === "published") {
-                statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">Published</span>`;
-            } else if (post.post_status === "scheduled") {
-                statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-500/20 text-orange-400">Scheduled</span>`;
-            }
-
-            // Actions - Orden: Show → Edit → Delete/Restore
-            let actionsHtml = '<div class="flex justify-center space-x-2">';
-
-            if (!isDeleted) {
-                // Show button (solo para posts publicados) - PRIMERO
-                if (post.post_status === "published") {
-                    actionsHtml += `<a href="/blog/${post.post_title_slug}" target="_blank"
-                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                        title="View post">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                    </a>`;
+                if (post.post_image) {
+                    const imageUrl = post.post_image.startsWith("http://")
+                        ? post.post_image.replace("http://", "https://")
+                        : post.post_image;
+                    imgHtml = `<img class="h-12 w-12 object-cover rounded-md" src="${imageUrl}" alt="Post image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="h-12 w-12 flex items-center justify-center bg-gray-700 rounded-md" style="display:none;">
+                            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path>
+                            </svg>
+                        </div>`;
                 }
 
-                // Edit button - SEGUNDO
-                actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
-                    class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                    title="Edit post">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                </a>`;
+                // Status badge
+                let statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-500/20 text-gray-400">${post.post_status}</span>`;
+                if (post.post_status === "published") {
+                    statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-400">Published</span>`;
+                } else if (post.post_status === "scheduled") {
+                    statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-500/20 text-orange-400">Scheduled</span>`;
+                }
 
-                // Delete button - TERCERO
-                actionsHtml += `<button data-uuid="${
-                    post.uuid
-                }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
-                    class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                    title="Delete post">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>`;
-            } else {
-                // Restore button
-                actionsHtml += `<button data-uuid="${
-                    post.uuid
-                }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
-                    class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                    title="Restore post">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                </button>`;
-            }
+                // Actions - Orden: Show → Edit → Delete/Restore
+                let actionsHtml = '<div class="flex justify-center space-x-2">';
 
-            actionsHtml += "</div>";
+                if (!isDeleted) {
+                    // Show button (solo para posts publicados) - PRIMERO
+                    if (post.post_status === "published") {
+                        actionsHtml += `<a href="/blog/${post.post_title_slug}" target="_blank"
+                            class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                            title="View post">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>`;
+                    }
 
-            // Truncate content
-            const truncatedTitle =
-                post.post_title.length > 50
-                    ? post.post_title.substring(0, 50) + "..."
-                    : post.post_title;
-            const truncatedContent = post.post_content
-                ? post.post_content.replace(/<[^>]*>/g, "").length > 80
-                    ? post.post_content
-                          .replace(/<[^>]*>/g, "")
-                          .substring(0, 80) + "..."
-                    : post.post_content.replace(/<[^>]*>/g, "")
-                : "";
+                    // Edit button - SEGUNDO
+                    actionsHtml += `<a href="/posts-crud/${post.uuid}/edit"
+                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Edit post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </a>`;
 
-            html += `
-                <tr class="hover:bg-gray-750 ${rowClass}">
-                    <td class="px-4 py-3 text-sm text-gray-400">${imgHtml}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-200">${truncatedTitle}</div>
-                        <div class="text-sm text-gray-400">${truncatedContent}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-400">
-                            ${post.category?.blog_category_name || "N/A"}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                        ${
-                            post.created_at
-                                ? new Date(post.created_at).toLocaleDateString()
-                                : "N/A"
-                        }
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                        ${post.user?.name || "N/A"}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        ${actionsHtml}
-                    </td>
-                </tr>
-            `;
-        });
+                    // Delete button - TERCERO
+                    actionsHtml += `<button data-uuid="${
+                        post.uuid
+                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
+                        class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Delete post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>`;
+                } else {
+                    // Restore button
+                    actionsHtml += `<button data-uuid="${
+                        post.uuid
+                    }" data-title="${post.post_title.replace(/"/g, "&quot;")}"
+                        class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                        title="Restore post">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>`;
+                }
+
+                actionsHtml += "</div>";
+
+                // Truncate content
+                const truncatedTitle =
+                    post.post_title.length > 50
+                        ? post.post_title.substring(0, 50) + "..."
+                        : post.post_title;
+                const truncatedContent = post.post_content
+                    ? post.post_content.replace(/<[^>]*>/g, "").length > 80
+                        ? post.post_content
+                              .replace(/<[^>]*>/g, "")
+                              .substring(0, 80) + "..."
+                        : post.post_content.replace(/<[^>]*>/g, "")
+                    : "";
+
+                html += `
+                    <tr class="hover:bg-gray-750 ${rowClass}">
+                        <td class="px-4 py-3 text-sm text-gray-400">${imgHtml}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-200">${truncatedTitle}</div>
+                            <div class="text-sm text-gray-400">${truncatedContent}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-400">
+                                ${post.category?.blog_category_name || "N/A"}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                            ${
+                                post.created_at
+                                    ? new Date(
+                                          post.created_at
+                                      ).toLocaleDateString()
+                                    : "N/A"
+                            }
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                            ${post.user?.name || "N/A"}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            ${actionsHtml}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
         $(this.tableSelector).html(html);
     }
@@ -372,23 +277,23 @@ class PostsCrudManager {
 
         let html = `
             <div class="text-sm text-gray-300">
-                Mostrando ${from || 0} a ${to || 0} de ${total} resultados
+                Showing ${from || 0} to ${to || 0} of ${total} results
             </div>
             <div class="flex space-x-1">
-                <button class="px-3 py-1 rounded text-gray-300 hover:text-white ${
+                <button class="px-3 py-1 rounded ${
                     current_page === 1
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:bg-gray-600"
                 }" ${current_page === 1 ? "disabled" : ""} data-page="${
             current_page - 1
-        }">Anterior</button>
-                <button class="px-3 py-1 rounded text-gray-300 hover:text-white ${
+        }">Previous</button>
+                <button class="px-3 py-1 rounded ${
                     current_page === last_page
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:bg-gray-600"
                 }" ${current_page === last_page ? "disabled" : ""} data-page="${
             current_page + 1
-        }">Siguiente</button>
+        }">Next</button>
             </div>
         `;
 
