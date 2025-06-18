@@ -845,7 +845,7 @@ class PortfolioCrudManager extends CrudManagerModal {
         if (pendingTitle) {
             const pendingCount = this.pendingNewImages.length;
             const titleText = this.getTranslation(
-                "new_images_pending",
+                "portfolio_new_images_pending",
                 "Nuevas Imágenes ({count} pendientes)"
             ).replace("{count}", pendingCount);
             pendingTitle.textContent = titleText;
@@ -1147,6 +1147,49 @@ class PortfolioCrudManager extends CrudManagerModal {
                 popup.classList.add(`swal-${mode}`);
             }
         }, 10);
+    }
+
+    /**
+     * Renderizar tabla con traducción personalizada
+     */
+    renderTable(data) {
+        const entities = data.data;
+        let html = "";
+
+        if (entities.length === 0) {
+            html = `<tr><td colspan="${
+                this.tableHeaders.length
+            }" class="px-6 py-4 text-center text-sm text-gray-500">${this.getTranslation(
+                "portfolio_no_records_found",
+                "No se encontraron registros"
+            )}</td></tr>`;
+        } else {
+            entities.forEach((entity) => {
+                const isDeleted = entity.deleted_at !== null;
+                const rowClass = isDeleted
+                    ? "bg-red-50 dark:bg-red-900 opacity-60"
+                    : "";
+
+                // Almacenar datos de la entidad como JSON en atributo data
+                const entityData = JSON.stringify(entity).replace(
+                    /"/g,
+                    "&quot;"
+                );
+
+                html += `<tr class="${rowClass}" data-entity="${entityData}">`;
+
+                this.tableHeaders.forEach((header) => {
+                    let value = header.getter
+                        ? header.getter(entity)
+                        : entity[header.field];
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">${value}</td>`;
+                });
+
+                html += `</tr>`;
+            });
+        }
+
+        $(this.tableSelector).html(html);
     }
 
     /**

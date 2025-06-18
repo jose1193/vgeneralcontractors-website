@@ -1451,5 +1451,9 @@
     "portfolio_management_subtitle": "Exhiba y gestione sus proyectos completados y portafolios de servicios",
     "portfolio_title_required": "El título es requerido",
     "portfolios": "portafolios",
-    "new_images_pending": "Nuevas Imágenes ({count} pendientes)"
+    "portfolio_image_limits": "Límites",
+    "portfolio_total_size": "Tamaño total",
+    "portfolio_current_images": "Imágenes Actuales ({count} visibles)",
+    "portfolio_new_images_pending": "Nuevas Imágenes ({count} pendientes)",
+    "portfolio_no_records_found": "No se encontraron registros"
 }

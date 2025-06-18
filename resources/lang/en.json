@@ -1461,6 +1461,9 @@
     "portfolio_management_subtitle": "Showcase and manage your completed projects and service portfolios",
     "portfolio_title_required": "Title is required",
     "portfolios": "portfolios",
-
-    "new_images_pending": "New Images ({count} pending)"
+    "portfolio_image_limits": "Limits",
+    "portfolio_total_size": "Total size",
+    "portfolio_current_images": "Current Images ({count} visible)",
+    "portfolio_new_images_pending": "New Images ({count} pending)",
+    "portfolio_no_records_found": "No records found"
 }

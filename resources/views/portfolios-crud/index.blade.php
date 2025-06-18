@@ -340,9 +340,11 @@
                     'image_management': @json(__('images_management')),
                     'add_new_images': @json(__('add_new_images')),
                     'portfolio_images': @json(__('portfolio_images')),
-                    'current_images': @json(__('current_images')),
+                    'portfolio_current_images': @json(__('portfolio_current_images')),
+                    'portfolio_new_images_pending': @json(__('portfolio_new_images_pending')),
                     'new_images_to_upload': @json(__('new_images_pending_upload')),
                     'max_images_info': @json(__('max_images_info')),
+                    'portfolio_no_records_found': @json(__('portfolio_no_records_found')),
 
                     // Validaciones
                     'title_required': @json(__('portfolio_title_required')),
