@@ -126,7 +126,7 @@
                     <!-- Post content -->
                     <article
                         class="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-img:rounded-lg">
-                        {!! $post->post_content !!}
+                        {!! str_replace(['<br>', '<br/>', '<br />'], '', $post->post_content) !!}
                     </article>
 
                     <!-- Tags -->
@@ -230,34 +230,6 @@
             .prose ul,
             .prose ol {
                 @apply mb-6;
-            }
-
-            /* Control paragraph spacing */
-            .prose p {
-                @apply mb-4;
-                line-height: 1.7;
-            }
-
-            /* Remove excessive spacing from multiple br tags */
-            .prose br+br {
-                display: none;
-            }
-
-            /* Control spacing for consecutive paragraphs */
-            .prose p+p {
-                @apply mt-4;
-            }
-
-            /* Reduce spacing for empty paragraphs */
-            .prose p:empty {
-                display: none;
-            }
-
-            /* Control spacing for headings after paragraphs */
-            .prose p+h2,
-            .prose p+h3,
-            .prose p+h4 {
-                @apply mt-8;
             }
         </style>
     @endpush

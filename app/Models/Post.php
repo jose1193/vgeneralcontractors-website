@@ -61,20 +61,12 @@ class Post extends Model
     }
 
     /**
-     * Get the post content with decoded HTML entities and cleaned spacing.
+     * Get the post content with decoded HTML entities.
      */
     public function getPostContentAttribute($value)
     {
         // Decodificar entidades HTML para mostrar correctamente los caracteres especiales
-        $content = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-        
-        // Limpiar espacios excesivos y br tags múltiples
-        $content = preg_replace('/(<br\s*\/?>){3,}/', '<br><br>', $content); // Máximo 2 br consecutivos
-        $content = preg_replace('/(<p[^>]*>\s*&nbsp;\s*<\/p>)/', '', $content); // Remover párrafos con solo &nbsp;
-        $content = preg_replace('/(<p[^>]*>\s*<\/p>)/', '', $content); // Remover párrafos vacíos
-        $content = preg_replace('/\s{3,}/', ' ', $content); // Reducir espacios múltiples a uno solo
-        
-        return $content;
+        return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
     }
 
     /**
