@@ -17,9 +17,7 @@
     'alertId' => 'alertContainer',
 ])
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/crud-modal.css') }}">
-@endpush
+{{-- Estilos del modal CRUD ahora están incluidos en app.css --}}
 
 <x-app-layout>
     {{-- Dark background container with consistent styling --}}
