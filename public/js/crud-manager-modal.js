@@ -1747,127 +1747,16 @@ class CrudManagerModal {
      * Aplicar color al header del modal
      */
     applyHeaderColor(mode) {
-        console.log("Applying header color for mode:", mode);
-
-        // Aplicar clase CSS al popup con múltiples intentos para asegurar que funcione
-        const applyStyles = () => {
+        // Aplicar clase CSS al popup
+        setTimeout(() => {
             const popup = document.querySelector(".swal2-popup");
-            const header = document.querySelector(".swal2-header");
-            const title = document.querySelector(".swal2-title");
-
-            console.log("Elements found:", {
-                popup: !!popup,
-                header: !!header,
-                title: !!title,
-            });
-
-            if (popup && header && title) {
+            if (popup) {
                 // Remover clases previas
                 popup.classList.remove("swal-create", "swal-edit");
                 // Agregar clase según el modo
                 popup.classList.add(`swal-${mode}`);
-
-                // Aplicar estilos directamente de manera más agresiva
-                const colors = {
-                    create: {
-                        background: "linear-gradient(135deg, #10B981, #059669)",
-                        color: "#FFFFFF",
-                    },
-                    edit: {
-                        background: "linear-gradient(135deg, #3B82F6, #2563EB)",
-                        color: "#FFFFFF",
-                    },
-                };
-
-                if (colors[mode]) {
-                    console.log(
-                        "Applying colors for mode:",
-                        mode,
-                        colors[mode]
-                    );
-
-                    // Aplicar al header de manera más agresiva
-                    header.style.cssText = `
-                        background: ${colors[mode].background} !important;
-                        color: ${colors[mode].color} !important;
-                        border-radius: 12px 12px 0 0 !important;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                        border: none !important;
-                    `;
-
-                    // Aplicar al title de manera más agresiva
-                    title.style.cssText = `
-                        background: ${colors[mode].background} !important;
-                        color: ${colors[mode].color} !important;
-                        padding: 1.5rem !important;
-                        margin: 0 !important;
-                        width: 100% !important;
-                        text-align: center !important;
-                        font-size: 1.5rem !important;
-                        font-weight: 600 !important;
-                        border-radius: 12px 12px 0 0 !important;
-                        border: none !important;
-                    `;
-
-                    // También aplicar al popup general
-                    popup.style.setProperty(
-                        "border-radius",
-                        "12px",
-                        "important"
-                    );
-                    popup.style.setProperty("overflow", "hidden", "important");
-
-                    console.log("Styles applied successfully");
-                }
-
-                return true;
             }
-            return false;
-        };
-
-        // Crear un MutationObserver para aplicar estilos cuando SweetAlert2 termine de renderizar
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (
-                    mutation.type === "childList" &&
-                    mutation.addedNodes.length > 0
-                ) {
-                    const swalModal = document.querySelector(".swal2-popup");
-                    if (swalModal) {
-                        setTimeout(applyStyles, 10);
-                        observer.disconnect();
-                    }
-                }
-            });
-        });
-
-        // Observar cambios en el DOM
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
-
-        // Intentar aplicar inmediatamente
-        if (!applyStyles()) {
-            // Si no funciona, intentar después de 10ms
-            setTimeout(() => {
-                if (!applyStyles()) {
-                    // Intentar después de 50ms
-                    setTimeout(() => {
-                        if (!applyStyles()) {
-                            // Último intento después de 200ms
-                            setTimeout(applyStyles, 200);
-                        }
-                    }, 50);
-                }
-            }, 10);
-        }
-
-        // Desconectar el observer después de 1 segundo como máximo
-        setTimeout(() => {
-            observer.disconnect();
-        }, 1000);
+        }, 10);
     }
 
     /**
