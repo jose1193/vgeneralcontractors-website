@@ -41,10 +41,11 @@
         @if ($showPerPage)
             <!-- Per Page Selector -->
             <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto">
-                <label for="{{ $perPageId }}" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">Per
+                <label for="{{ $perPageId }}"
+                    class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Per
                     page:</label>
                 <select id="{{ $perPageId }}"
-                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm py-2 px-2 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-auto text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
                     @foreach ($perPageOptions as $option)
                         <option value="{{ $option }}" {{ $option == $defaultPerPage ? 'selected' : '' }}>
                             {{ $option }}</option>
