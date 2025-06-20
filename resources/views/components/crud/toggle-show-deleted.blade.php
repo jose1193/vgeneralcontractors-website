@@ -6,7 +6,7 @@
 ])
 
 <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto {{ $class }}">
-    <label for="{{ $id }}" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+    <label for="{{ $id }}" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
         {{ $label }}
     </label>
     <label for="{{ $id }}" class="flex items-center cursor-pointer">
