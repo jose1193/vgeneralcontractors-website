@@ -127,6 +127,10 @@
             </div>
         </div>
 
+        @push('styles')
+            <link rel="stylesheet" href="{{ asset('css/crud-modal.css') }}">
+        @endpush
+
         @push('scripts')
             <!-- SweetAlert2 -->
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
