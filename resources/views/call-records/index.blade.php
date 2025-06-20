@@ -482,58 +482,79 @@
                 
                 // Function to show call details
                 function showCallDetails(callId) {
-                    $.ajax({
-                        url: `/api/call-records/${callId}/details`,
-                        type: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            'Accept': 'application/json'
-                        },
-                        success: function(response) {
-                            const call = response.call;
-                            const analysis = call.call_analysis || {};
-                            
-                            let detailsHtml = `
-                                <div class="space-y-4">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <strong>{{ __('call_record_from') }}:</strong> ${formatPhoneNumber(call.from_number)}
-                                        </div>
-                                        <div>
-                                            <strong>{{ __('call_record_to') }}:</strong> ${formatPhoneNumber(call.to_number)}
-                                        </div>
-                                        <div>
-                                            <strong>{{ __('call_record_start_time') }}:</strong> ${formatTimestamp(call.start_timestamp)}
-                                        </div>
-                                        <div>
-                                            <strong>{{ __('call_record_duration') }}:</strong> ${formatDuration(call.duration_ms)}
-                                        </div>
+                    fetch(`/api/call-records/${callId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            const call = data.call;
+                            let html = `
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">From</h3>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            ${formatPhoneNumber(call.from_number)}
+                                        </p>
                                     </div>
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-300">To</h3>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            ${formatPhoneNumber(call.to_number)}
+                                        </p>
+                                    </div>
+                                </div>
                             `;
-                            
-                            if (analysis.call_summary) {
-                                detailsHtml += `
+
+                            if (call.call_analysis && call.call_analysis.call_summary) {
+                                html += `
                                     <div>
-                                        <strong>{{ __('call_details') }}:</strong>
-                                        <p class="mt-2 p-3 bg-gray-50 rounded-lg">${analysis.call_summary}</p>
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Summary</h3>
+                                        <p class="mt-2 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+                                            ${call.call_analysis.call_summary}
+                                        </p>
                                     </div>
                                 `;
                             }
-                            
+
                             if (call.transcript) {
-                                detailsHtml += `
+                                html += `
                                     <div>
-                                        <strong>Transcripción:</strong>
-                                        <div class="mt-2 p-3 bg-gray-50 rounded-lg max-h-60 overflow-y-auto">${call.transcript}</div>
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Transcript</h3>
+                                        <div class="mt-2 space-y-4">
+                                            ${call.transcript.split('\n').map(line => `
+                                                <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">${line}</p>
+                                            `).join('')}
+                                        </div>
                                     </div>
                                 `;
                             }
-                            
-                            detailsHtml += `</div>`;
+
+                            if (call.metadata && Object.keys(call.metadata).length > 0) {
+                                html += `
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Additional Information</h3>
+                                        <dl class="mt-2 space-y-2">
+                                            ${Object.entries(call.metadata).map(([key, value]) => `
+                                                <div>
+                                                    <dt class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                                        ${key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-800 dark:text-gray-100">
+                                                        ${typeof value === 'object' ? JSON.stringify(value) : value}
+                                                    </dd>
+                                                </div>
+                                            `).join('')}
+                                        </dl>
+                                    </div>
+                                `;
+                            }
                             
                             Swal.fire({
                                 title: '{{ __('call_details') }}',
-                                html: detailsHtml,
+                                html: html,
                                 width: '800px',
                                 showCloseButton: true,
                                 showConfirmButton: false,
@@ -541,16 +562,15 @@
                                     popup: 'text-left'
                                 }
                             });
-                        },
-                        error: function(xhr) {
-                            console.error('Error fetching call details:', xhr);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching call details:', error);
                             Swal.fire({
                                 title: 'Error',
-                                text: 'No se pudieron cargar los detalles de la llamada.',
+                                text: 'Error loading call details: ' + error.message,
                                 icon: 'error'
                             });
-                        }
-                    });
+                        });
                 }
 
                 // Function to play audio
