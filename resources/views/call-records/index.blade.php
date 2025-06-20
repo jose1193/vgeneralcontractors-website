@@ -114,6 +114,10 @@
         </div>
     </div>
     
+    <x-slot name="title">
+        {{ __('call_records_title') }}
+    </x-slot>
+    
     @push('scripts')
         <!-- Flatpickr for date picker -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
