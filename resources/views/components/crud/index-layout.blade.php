@@ -17,6 +17,10 @@
     'alertId' => 'alertContainer',
 ])
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/crud-modal.css') }}">
+@endpush
+
 <x-app-layout>
     {{-- Dark background container with consistent styling --}}
     <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
