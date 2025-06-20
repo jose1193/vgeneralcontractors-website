@@ -1747,7 +1747,7 @@ class CrudManagerModal {
      * Aplicar color al header del modal
      */
     applyHeaderColor(mode) {
-        // Aplicar clase CSS al popup
+        // Aplicar clase CSS al popup con mejor timing
         setTimeout(() => {
             const popup = document.querySelector(".swal2-popup");
             if (popup) {
@@ -1755,8 +1755,29 @@ class CrudManagerModal {
                 popup.classList.remove("swal-create", "swal-edit");
                 // Agregar clase según el modo
                 popup.classList.add(`swal-${mode}`);
+
+                // Forzar la aplicación de estilos
+                const header = popup.querySelector(".swal2-header");
+                const title = popup.querySelector(".swal2-title");
+
+                if (header && title) {
+                    // Aplicar estilos directamente también por si acaso
+                    if (mode === "create") {
+                        header.style.background =
+                            "linear-gradient(135deg, #10b981, #059669)";
+                        title.style.background =
+                            "linear-gradient(135deg, #10b981, #059669)";
+                        title.style.color = "white";
+                    } else if (mode === "edit") {
+                        header.style.background =
+                            "linear-gradient(135deg, #3b82f6, #2563eb)";
+                        title.style.background =
+                            "linear-gradient(135deg, #3b82f6, #2563eb)";
+                        title.style.color = "white";
+                    }
+                }
             }
-        }, 10);
+        }, 50); // Incrementar el timeout para asegurar que SweetAlert2 esté completamente renderizado
     }
 
     /**
