@@ -1747,16 +1747,85 @@ class CrudManagerModal {
      * Aplicar color al header del modal
      */
     applyHeaderColor(mode) {
-        // Aplicar clase CSS al popup
-        setTimeout(() => {
+        // Aplicar clase CSS al popup con múltiples intentos para asegurar que funcione
+        const applyStyles = () => {
             const popup = document.querySelector(".swal2-popup");
-            if (popup) {
+            const header = document.querySelector(".swal2-header");
+            const title = document.querySelector(".swal2-title");
+
+            if (popup && header && title) {
                 // Remover clases previas
                 popup.classList.remove("swal-create", "swal-edit");
                 // Agregar clase según el modo
                 popup.classList.add(`swal-${mode}`);
+
+                // Aplicar estilos directamente como fallback
+                const colors = {
+                    create: {
+                        background: "linear-gradient(135deg, #10B981, #059669)",
+                        color: "#FFFFFF",
+                    },
+                    edit: {
+                        background: "linear-gradient(135deg, #3B82F6, #2563EB)",
+                        color: "#FFFFFF",
+                    },
+                };
+
+                if (colors[mode]) {
+                    header.style.setProperty(
+                        "background",
+                        colors[mode].background,
+                        "important"
+                    );
+                    header.style.setProperty(
+                        "color",
+                        colors[mode].color,
+                        "important"
+                    );
+                    header.style.setProperty(
+                        "border-radius",
+                        "12px 12px 0 0",
+                        "important"
+                    );
+                    header.style.setProperty("padding", "0", "important");
+
+                    title.style.setProperty(
+                        "background",
+                        colors[mode].background,
+                        "important"
+                    );
+                    title.style.setProperty(
+                        "color",
+                        colors[mode].color,
+                        "important"
+                    );
+                    title.style.setProperty("padding", "1.5rem", "important");
+                    title.style.setProperty("margin", "0", "important");
+                    title.style.setProperty("width", "100%", "important");
+                    title.style.setProperty(
+                        "text-align",
+                        "center",
+                        "important"
+                    );
+                    title.style.setProperty("font-size", "1.5rem", "important");
+                    title.style.setProperty("font-weight", "600", "important");
+                }
+
+                return true;
             }
-        }, 10);
+            return false;
+        };
+
+        // Intentar aplicar inmediatamente
+        if (!applyStyles()) {
+            // Si no funciona, intentar después de 50ms
+            setTimeout(() => {
+                if (!applyStyles()) {
+                    // Último intento después de 150ms
+                    setTimeout(applyStyles, 150);
+                }
+            }, 50);
+        }
     }
 
     /**
