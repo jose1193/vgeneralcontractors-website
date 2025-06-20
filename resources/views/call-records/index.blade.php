@@ -1,16 +1,32 @@
 <x-app-layout>
-    <x-slot name="header">
+    {{-- Commenting out Jetstream header to avoid duplicate titles --}}
+    {{-- <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('call_records_title') }}
+            {{ __('Call Records') }}
         </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {{ __('call_records_subtitle') }}
-        </p>
-    </x-slot>
+    </x-slot> --}}
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+    <div style="background-color: #141414;" class="text-white min-h-screen">
+        <!-- Page Header -->
+        <div class="p-6">
+            <div class="mb-8 text-center sm:text-center md:text-left lg:text-left">
+                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('call_records_title') }}</h2>
+                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
+                    {{ __('call_records_subtitle') }}
+                </p>
+            </div>
+
+            <!-- Call Records Content -->
+            <div class="max-w-7xl mx-auto py-10">
+                @if (session('error'))
+                    <div class="mb-4 rounded-lg bg-red-100 p-4 text-sm text-red-700 dark:bg-red-800 dark:text-red-200"
+                        role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-lg">
                 <div class="p-6">
                     <!-- Alert Container -->
                     <div id="alertContainer"></div>
@@ -608,4 +624,6 @@
             });
         </script>
     @endpush
-</x-crud.index-layout>
+    </div>
+    </div>
+</x-app-layout>
