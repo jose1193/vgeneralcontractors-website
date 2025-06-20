@@ -36,7 +36,7 @@
                         restore: "{{ secure_url(route('model-ais.restore', ':id', false)) }}",
                         checkName: "{{ secure_url(route('model-ais.check-name', [], false)) }}"
                     },
-                    tableSelector: '#modelAITable',
+                    tableSelector: '#modelAITable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',
