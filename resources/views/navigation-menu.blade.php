@@ -58,7 +58,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     <div class="flex items-center flex-shrink-0">
                         <a href="{{ route('dashboard') }}" class="flex items-center">
                             <img src="{{ asset('assets/logo/logo4-white.webp') }}" alt="V General Contractors Logo"
-                                class="h-6 sm:h-8 mr-2 sm:mr-3">
+                                class="h-8 sm:h-10 mr-2 sm:mr-3">
                         </a>
                     </div>
 

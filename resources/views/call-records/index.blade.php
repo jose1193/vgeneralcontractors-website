@@ -51,7 +51,7 @@
                                 <input type="text" id="endDate" placeholder="End Date" 
                                        class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-gray-900 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400">
                                 <button id="clearDates" class="px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
-                                    Clear
+                                    {{ __('clear') }}
                                 </button>
                             </div>
                         </div>
@@ -77,31 +77,31 @@
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="start_timestamp">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="start_timestamp">
                                         {{ __('call_record_start_time') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="from_number">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="from_number">
                                         {{ __('call_record_from') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="to_number">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="to_number">
                                         {{ __('call_record_to') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="duration_ms">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="duration_ms">
                                         {{ __('call_record_duration') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="call_status">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="call_status">
                                         {{ __('call_record_status') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="user_sentiment">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" data-sort="user_sentiment">
                                         {{ __('call_record_sentiment') }}
                                         <span class="sort-icon ml-1">↕</span>
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         {{ __('call_record_actions') }}
                                     </th>
                                 </tr>
@@ -344,17 +344,17 @@
                          
                          tableHtml += `
                              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${formatTimestamp(call.start_timestamp)}</td>
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${formatPhoneNumber(call.from_number)}</td>
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${formatPhoneNumber(call.to_number)}</td>
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${formatDuration(call.duration_ms)}</td>
-                                 <td class="px-6 py-4 whitespace-nowrap">
+                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-center">${formatTimestamp(call.start_timestamp)}</td>
+                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-center">${formatPhoneNumber(call.from_number)}</td>
+                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-center">${formatPhoneNumber(call.to_number)}</td>
+                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-center">${formatDuration(call.duration_ms)}</td>
+                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusBadgeClass}">${status}</span>
                                  </td>
-                                 <td class="px-6 py-4 whitespace-nowrap">
+                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${sentimentBadgeClass}">${sentiment}</span>
                                  </td>
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">${actionsHtml}</td>
+                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">${actionsHtml}</td>
                              </tr>
                          `;
                      });
