@@ -113,41 +113,8 @@
             <!-- Portfolio CRUD específico -->
             <script src="{{ asset('js/portfolioCrud.js') }}"></script>
 
-            <!-- Estilos para el modal de portfolios -->
+            <!-- Estilos específicos para portfolios -->
             <style>
-                /* Estilos base para modales */
-                .swal2-popup.swal-create .swal2-header,
-                .swal2-popup.swal-create .swal2-title {
-                    background: linear-gradient(135deg, #10B981, #059669) !important;
-                    color: white !important;
-                }
-
-                .swal2-popup.swal-edit .swal2-header,
-                .swal2-popup.swal-edit .swal2-title {
-                    background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
-                    color: white !important;
-                }
-
-                .swal2-popup {
-                    border-radius: 12px !important;
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-                    overflow: hidden !important;
-                }
-
-                .swal2-header {
-                    padding: 0 !important;
-                    border-radius: 12px 12px 0 0 !important;
-                }
-
-                .swal2-title {
-                    padding: 1.5rem !important;
-                    margin: 0 !important;
-                    width: 100% !important;
-                    text-align: center !important;
-                    font-size: 1.5rem !important;
-                    font-weight: 600 !important;
-                }
-
                 /* Estilos específicos para portfolios */
                 .portfolio-crud-form {
                     max-height: 70vh;
@@ -212,22 +179,6 @@
                 .remove-pending-image:hover {
                     transform: scale(1.1);
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                }
-
-                /* Estilos para campos con error */
-                .form-group input.error,
-                .form-group select.error,
-                .form-group textarea.error {
-                    border-color: #ef4444 !important;
-                    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
-                }
-
-                /* Estilos para campos válidos */
-                .form-group input.valid,
-                .form-group select.valid,
-                .form-group textarea.valid {
-                    border-color: #10b981 !important;
-                    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
                 }
 
                 /* Responsive para grid de imágenes */
