@@ -26,45 +26,22 @@
             <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg">
                 <div class="p-6">
                     <!-- Filter and action bar -->
-                    <div
-                        class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
-                        <!-- Search input -->
-                        <div class="w-full md:w-1/2 lg:w-2/5">
-                            <x-crud.input-search id="searchInput" placeholder="{{ __('portfolio_search_placeholder') }}"
-                                manager-name="portfolioManager" />
-                        </div>
-
-                        <div
-                            class="flex flex-col sm:flex-row items-center w-full md:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
-                            <!-- Toggle to show inactive portfolios -->
-                            <x-crud.toggle-deleted id="showDeleted" label="{{ __('show_inactive_items') }}"
-                                manager-name="portfolioManager" />
-
-                            <!-- Per page dropdown -->
-                            <x-select-input-per-pages name="perPage" id="perPage" class="sm:w-32">
-                                <option value="5">5 {{ __('per_page') }}</option>
-                                <option value="10" selected>10 {{ __('per_page') }}</option>
-                                <option value="15">15 {{ __('per_page') }}</option>
-                                <option value="25">25 {{ __('per_page') }}</option>
-                                <option value="50">50 {{ __('per_page') }}</option>
-                            </x-select-input-per-pages>
-
-                            <!-- Add portfolio button -->
-                            <div class="w-full sm:w-auto">
-                                <button id="createPortfolioBtn"
-                                    class="create-btn w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-200 disabled:opacity-25">
-                                    <span class="mr-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                        </svg>
-                                    </span>
-                                    {{ __('portfolio_add_new') }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <x-crud.filter-bar 
+                        entity-name="{{ __('portfolio_entity_name') }}"
+                        :show-search-bar="true"
+                        :show-inactive-toggle="true"
+                        :show-per-page="true"
+                        :per-page-options="[5, 10, 15, 25, 50]"
+                        :default-per-page="10"
+                        add-button-id="createPortfolioBtn"
+                        search-id="searchInput"
+                        search-placeholder="{{ __('portfolio_search_placeholder') }}"
+                        show-deleted-id="showDeleted"
+                        show-deleted-label="{{ __('show_inactive_items') }}"
+                        per-page-id="perPage"
+                        create-button-id="createPortfolioBtn"
+                        add-new-label="{{ __('portfolio_add_new') }}"
+                        manager-name="portfolioManager" />
 
                     <!-- Portfolios table -->
                     <div

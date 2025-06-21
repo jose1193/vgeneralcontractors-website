@@ -47,7 +47,7 @@
                     class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-auto text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
                     @foreach ($perPageOptions as $option)
                         <option value="{{ $option }}" {{ $option == $defaultPerPage ? 'selected' : '' }}>
-                            {{ $option }}</option>
+                            {{ $option }} {{ __('per_page') }}</option>
                     @endforeach
                 </select>
             </div>
