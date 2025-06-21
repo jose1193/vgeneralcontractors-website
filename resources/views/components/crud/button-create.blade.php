@@ -52,5 +52,5 @@
                 d="{{ $iconPaths[$icon] ?? $iconPaths['plus'] }}" />
         </svg>
     </span>
-    {{ $label }}{{ $entityName ? ' ' . ucfirst($entityName) : '' }}
+    {{ $label }}
 </button>

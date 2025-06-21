@@ -176,3 +176,23 @@ input:checked ~ .block {
     border-color: #10b981 !important;
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
+
+/* Estilos para campos requeridos - asterisco rojo */
+.form-group label.required::after {
+    content: " *";
+    color: #ef4444 !important;
+    font-weight: bold !important;
+    margin-left: 2px;
+}
+
+.form-group label.required {
+    position: relative;
+}
+
+/* Alternativa para asterisco antes del label */
+.form-group label.required-before::before {
+    content: "* ";
+    color: #ef4444 !important;
+    font-weight: bold !important;
+    margin-right: 2px;
+}

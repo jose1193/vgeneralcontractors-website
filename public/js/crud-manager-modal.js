@@ -412,7 +412,8 @@ class CrudManagerModal {
         const disabled = field.disabled ? "disabled" : "";
 
         let html = `<div class="form-group mb-4">`;
-        html += `<label for="${field.name}" class="block text-sm font-medium text-gray-700 mb-2">${field.label}</label>`;
+        const labelClass = field.required ? "block text-sm font-medium text-gray-700 mb-2 required" : "block text-sm font-medium text-gray-700 mb-2";
+        html += `<label for="${field.name}" class="${labelClass}">${field.label}</label>`;
 
         switch (field.type) {
             case "text":
