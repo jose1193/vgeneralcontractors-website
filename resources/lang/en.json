@@ -134,8 +134,7 @@
     "location": "Location",
     "latitude": "Latitude",
     "longitude": "Longitude",
-    "phone_already_in_use": "This phone number is already in use",
-    "email_already_in_use": "This email is already in use",
+    
     "edit_company_data": "Edit Company Information",
     "company_information_entity": "company information",
     "could_not_load_company_info": "Could not load company information",

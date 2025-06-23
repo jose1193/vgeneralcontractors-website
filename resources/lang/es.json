@@ -1566,8 +1566,7 @@
     "validation_errors": "Errores de validación",
     "invalid_format": "Formato inválido",
     "invalid_email": "Email inválido",
-    "email_already_in_use": "Este email ya está en uso",
-    "phone_already_in_use": "Este teléfono ya está en uso",
+    
     "name_already_in_use": "Este nombre ya está en uso",
     "username_already_in_use": "Este username ya está en uso",
     "must_contain_numbers": "Debe contener al menos 2 números",
