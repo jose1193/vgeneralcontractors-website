@@ -131,6 +131,7 @@
     "edit_company_information": "Editar Información",
     "could_not_load_company_info": "No se pudo cargar la información de la empresa",
     "error_loading_company_info": "Error al cargar la información de la empresa",
+    "error_loading_data_for_edit": "Error al cargar los datos para editar",
 
     "actions": "Acciones",
     "no_companies_available": "No hay empresas disponibles",

@@ -376,7 +376,7 @@ class CrudManagerModal {
             }
         } catch (error) {
             console.error("Error loading entity for edit:", error);
-            this.showAlert("error", "Error al cargar los datos para editar");
+            this.showAlert("error", this.translations.errorLoadingDataForEdit || "Error al cargar los datos para editar");
         }
     }
 

@@ -425,7 +425,8 @@
                             success: '{{ __('success') }}',
                             error: '{{ __('error') }}',
                             saving: '{{ __('saving') }}',
-                            loading: '{{ __('loading') }}'
+                            loading: '{{ __('loading') }}',
+                            errorLoadingDataForEdit: '{{ __('error_loading_data_for_edit') }}'
                         },
                         entityConfig: {
                             identifierField: 'company_name',

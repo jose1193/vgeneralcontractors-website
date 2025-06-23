@@ -139,6 +139,7 @@
     "company_information_entity": "company information",
     "could_not_load_company_info": "Could not load company information",
     "error_loading_company_info": "Error loading company information",
+    "error_loading_data_for_edit": "Error loading data for editing",
 
     "status": "Status",
     "actions": "Actions",
