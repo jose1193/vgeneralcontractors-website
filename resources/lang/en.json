@@ -134,7 +134,7 @@
     "location": "Location",
     "latitude": "Latitude",
     "longitude": "Longitude",
-    
+
     "edit_company_data": "Edit Company Information",
     "company_information_entity": "company information",
     "could_not_load_company_info": "Could not load company information",
@@ -1571,7 +1571,8 @@
 
     "_comment_validation_messages": "=== VALIDATION MESSAGES ===",
     "please_correct_errors": "Please correct the errors before continuing",
-    "minimum_characters": "Minimum 7 characters",
+    "minimum_characters": "Minimum {count} characters",
+    "maximum_characters": "Maximum {count} characters",
     "last_name_required": "Last Name is required",
     "validation_errors": "Validation errors",
     "invalid_format": "Invalid format",

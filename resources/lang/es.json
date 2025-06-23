@@ -1562,12 +1562,13 @@
 
     "_comment_validation_messages": "=== MENSAJES DE VALIDACIÓN ===",
     "please_correct_errors": "Por favor corrija los errores antes de continuar",
-    "minimum_characters": "Mínimo 7 caracteres",
+    "minimum_characters": "Mínimo {count} caracteres",
+    "maximum_characters": "Máximo {count} caracteres",
     "last_name_required": "El apellido es requerido",
     "validation_errors": "Errores de validación",
     "invalid_format": "Formato inválido",
     "invalid_email": "Email inválido",
-    
+
     "name_already_in_use": "Este nombre ya está en uso",
     "username_already_in_use": "Este username ya está en uso",
     "must_contain_numbers": "Debe contener al menos 2 números",

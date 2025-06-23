@@ -1285,14 +1285,20 @@ class CrudManagerModal {
         if (validation.minLength && value.length < validation.minLength) {
             return {
                 valid: false,
-                message: `Mínimo ${validation.minLength} caracteres`,
+                message: (
+                    this.translations.minimumCharacters ||
+                    "Minimum {count} characters"
+                ).replace("{count}", validation.minLength),
             };
         }
 
         if (validation.maxLength && value.length > validation.maxLength) {
             return {
                 valid: false,
-                message: `Máximo ${validation.maxLength} caracteres`,
+                message: (
+                    this.translations.maximumCharacters ||
+                    "Maximum {count} characters"
+                ).replace("{count}", validation.maxLength),
             };
         }
 
