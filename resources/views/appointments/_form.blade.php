@@ -16,16 +16,16 @@
     {{-- First Name --}}
     <div>
         <x-label for="first_name" value="{{ __('First Name') }}" />
-        <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
-            required autofocus pattern="[A-Za-z\s\'-]+" title="{{ __('first_name_validation') }}" />
+        <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')" 
+            required autofocus pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
         <x-input-error for="first_name" class="mt-2" />
     </div>
 
     {{-- Last Name --}}
     <div>
         <x-label for="last_name" value="{{ __('Last Name') }}" />
-        <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
-            required pattern="[A-Za-z\s\'-]+" title="{{ __('last_name_validation') }}" />
+        <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')" 
+            required pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
         <x-input-error for="last_name" class="mt-2" />
     </div>
 
