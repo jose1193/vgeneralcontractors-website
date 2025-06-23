@@ -1593,5 +1593,12 @@
     "correct_validation_errors": "Correct validation errors before continuing",
     "is_required": "is required",
     "name_available": "Name available",
-    "unexpected_error": "An unexpected error occurred. Please try again."
+    "unexpected_error": "An unexpected error occurred. Please try again.",
+    "insurance_property_required": "Insurance property type is required",
+    "captcha_required": "CAPTCHA verification is required",
+    "email_already_registered": "This email is already registered. Please contact our support team to schedule your appointment.",
+    "missing_required_fields": "Missing required fields",
+    "no_appointment_found": "No active appointment found for this client",
+    "time_slot_not_available": "The requested time slot is not available",
+    "invalid_api_key": "Invalid API key"
 }

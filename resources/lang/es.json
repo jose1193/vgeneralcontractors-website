@@ -1605,5 +1605,12 @@
     "swal_ok": "OK",
     "swal_success": "¡Éxito!",
     "swal_verification_error": "Error de Verificación",
-    "swal_message_sent_successfully": "¡Su mensaje ha sido enviado exitosamente!"
+    "swal_message_sent_successfully": "¡Su mensaje ha sido enviado exitosamente!",
+    "insurance_property_required": "El tipo de seguro de propiedad es requerido",
+    "captcha_required": "La verificación CAPTCHA es requerida",
+    "email_already_registered": "Este correo ya está registrado. Por favor contacte a nuestro equipo de soporte para programar su cita.",
+    "missing_required_fields": "Faltan campos requeridos",
+    "no_appointment_found": "No se encontró una cita activa para este cliente",
+    "time_slot_not_available": "El horario solicitado no está disponible",
+    "invalid_api_key": "Clave API inválida"
 }

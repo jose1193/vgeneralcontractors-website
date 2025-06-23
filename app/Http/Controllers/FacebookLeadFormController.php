@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Throwable;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\AppointmentResource;
@@ -112,7 +113,7 @@ class FacebookLeadFormController extends Controller
 
         try {
             // Check if email already exists in appointments
-            $existingAppointment = \App\Models\Appointment::where('email', $validatedData['email'])->first();
+            $existingAppointment = Appointment::where('email', $validatedData['email'])->first();
             
             if ($existingAppointment) {
                 return response()->json([
@@ -254,11 +255,11 @@ class FacebookLeadFormController extends Controller
         } else {
             // Verificar específicamente si es el campo email y ya existe en la base de datos
             if ($fieldName === 'email' && !empty($fieldValue)) {
-                $existingEmail = \App\Models\Appointment::where('email', $fieldValue)->exists();
+                $existingEmail = Appointment::where('email', $fieldValue)->exists();
                 if ($existingEmail) {
                     return response()->json([
                         'valid' => false, 
-                        'errors' => ['This email is already registered. Please contact our support team to schedule your appointment.'],
+                        'errors' => [__('email_already_registered')],
                         'duplicate_email' => true
                     ], 422);
                 }
@@ -314,7 +315,7 @@ class FacebookLeadFormController extends Controller
         if ($validatedData['api_key'] !== $apiKey) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid API key'
+                'message' => __('invalid_api_key')
             ], 401);
         }
         
@@ -322,13 +323,13 @@ class FacebookLeadFormController extends Controller
 
         try {
             // Check if email already exists in appointments
-            $existingAppointment = \App\Models\Appointment::where('email', $validatedData['email'])->first();
+            $existingAppointment = Appointment::where('email', $validatedData['email'])->first();
             
             if ($existingAppointment) {
                 return response()->json([
                     'success' => false,
                     'duplicate_email' => true,
-                    'message' => 'This email is already registered in our system. Please contact our support team or call us to schedule your appointment.',
+                    'message' => __('email_already_registered'),
                     'data' => $existingAppointment ? new AppointmentResource($existingAppointment) : null
                 ], 422);
             }
@@ -597,7 +598,7 @@ class FacebookLeadFormController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Missing required fields',
+                'message' => __('missing_required_fields'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -612,7 +613,7 @@ class FacebookLeadFormController extends Controller
         if (!$appointment) {
             return response()->json([
                 'success' => false,
-                'message' => 'No active appointment found for this client'
+                'message' => __('no_appointment_found')
             ], 404);
         }
         
@@ -628,7 +629,7 @@ class FacebookLeadFormController extends Controller
         if (!$isAvailable) {
             return response()->json([
                 'success' => false,
-                'message' => 'The requested time slot is not available'
+                'message' => __('time_slot_not_available')
             ], 409);
         }
         
@@ -665,7 +666,7 @@ class FacebookLeadFormController extends Controller
     private function isTimeSlotAvailable($date, $time)
     {
         // Verificar si la fecha es domingo
-        if (Carbon::parse($date)->dayOfWeek === Carbon::SUNDAY) {
+        if (Carbon::parse($date)->dayOfWeek === CarbonInterface::SUNDAY) {
             return false; // Domingos no disponibles
         }
         
@@ -755,7 +756,7 @@ class FacebookLeadFormController extends Controller
     {
         if (empty($date)) return null;
         
-        if ($date instanceof \Carbon\Carbon) {
+        if ($date instanceof Carbon) {
             return $date->format('m-d-Y');
         }
         
@@ -808,7 +809,7 @@ class FacebookLeadFormController extends Controller
             $dayOfWeek = $currentDate->dayOfWeek;
             
             // Omitir domingos
-            if ($dayOfWeek !== Carbon::SUNDAY) {
+            if ($dayOfWeek !== CarbonInterface::SUNDAY) {
                 $daySlots = [];
                 
                 // Para cada hora de trabajo
