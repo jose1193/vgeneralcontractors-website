@@ -331,15 +331,32 @@ class CrudManagerModal {
      * Mostrar modal de edición
      */
     async showEditModal(id) {
+        // Debug: Log del ID recibido
+        console.log("showEditModal called with id:", id);
+        console.log("ID type:", typeof id);
+        console.log("ID is undefined:", id === undefined);
+        console.log("ID is null:", id === null);
+        console.log("Routes.edit:", this.routes.edit);
+
         // Limpiar alertas previas
         this.clearAlerts();
 
         this.isEditing = true;
 
+        // Validar que tenemos un ID válido
+        if (!id || id === "undefined" || id === "null") {
+            console.error("Invalid ID provided to showEditModal:", id);
+            this.showAlert("error", "Invalid ID provided for editing");
+            return;
+        }
+
         // Cargar datos de la entidad
         try {
+            const editUrl = this.routes.edit.replace(":id", id);
+            console.log("Edit URL:", editUrl);
+
             const response = await $.ajax({
-                url: this.routes.edit.replace(":id", id),
+                url: editUrl,
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -349,6 +366,7 @@ class CrudManagerModal {
                 },
             });
 
+            console.log("Edit AJAX response:", response);
             this.currentEntity = response.data || response;
 
             const formHtml = this.generateFormHtml(this.currentEntity);
@@ -387,6 +405,12 @@ class CrudManagerModal {
             }
         } catch (error) {
             console.error("Error loading entity for edit:", error);
+            console.error("Error details:", {
+                status: error.status,
+                statusText: error.statusText,
+                responseText: error.responseText,
+                url: this.routes.edit.replace(":id", id),
+            });
             this.showAlert(
                 "error",
                 this.translations.errorLoadingDataForEdit ||

@@ -268,17 +268,33 @@ class CompanyDataController extends BaseCrudController
                 'uuid' => $uuid,
                 'uuid_type' => gettype($uuid),
                 'uuid_length' => strlen($uuid ?? ''),
-                'is_ajax' => request()->ajax()
+                'is_ajax' => request()->ajax(),
+                'raw_uuid' => var_export($uuid, true)
             ]);
 
-            if (!$uuid || $uuid === 'undefined' || $uuid === 'null') {
-                Log::error('CompanyDataController::edit - Invalid UUID provided', ['uuid' => $uuid]);
-                throw new \InvalidArgumentException('Invalid UUID provided');
+            // More detailed UUID validation
+            if (!$uuid) {
+                Log::error('CompanyDataController::edit - UUID is null or empty', ['uuid' => $uuid]);
+                throw new \InvalidArgumentException('UUID is required');
+            }
+            
+            if ($uuid === 'undefined') {
+                Log::error('CompanyDataController::edit - UUID is string "undefined"', ['uuid' => $uuid]);
+                throw new \InvalidArgumentException('UUID cannot be "undefined"');
+            }
+            
+            if ($uuid === 'null') {
+                Log::error('CompanyDataController::edit - UUID is string "null"', ['uuid' => $uuid]);
+                throw new \InvalidArgumentException('UUID cannot be "null"');
             }
 
             // Validate UUID format
             if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid)) {
-                Log::error('CompanyDataController::edit - UUID format invalid', ['uuid' => $uuid]);
+                Log::error('CompanyDataController::edit - UUID format invalid', [
+                    'uuid' => $uuid,
+                    'uuid_length' => strlen($uuid),
+                    'uuid_pattern_match' => preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid)
+                ]);
                 throw new \InvalidArgumentException('UUID format is invalid');
             }
 
@@ -316,7 +332,9 @@ class CompanyDataController extends BaseCrudController
             Log::error("Error retrieving {$this->entityName}: {$e->getMessage()}", [
                 'uuid' => $uuid,
                 'exception' => $e,
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'request_url' => request()->url(),
+                'request_method' => request()->method()
             ]);
 
             if (request()->ajax()) {
@@ -325,7 +343,10 @@ class CompanyDataController extends BaseCrudController
                     'message' => "Error retrieving {$this->entityName}: {$e->getMessage()}",
                     'debug' => [
                         'uuid' => $uuid,
-                        'error_type' => get_class($e)
+                        'error_type' => get_class($e),
+                        'error_message' => $e->getMessage(),
+                        'error_line' => $e->getLine(),
+                        'error_file' => $e->getFile()
                     ]
                 ], $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500);
             }
