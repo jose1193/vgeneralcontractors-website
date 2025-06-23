@@ -201,11 +201,11 @@ input:checked ~ .block {
    CHECKBOX AND RADIO BUTTON STYLES
    =============================================== */
 
-/* Estilos mejorados para checkboxes */
-input[type="checkbox"].checkbox-field,
-input[type="checkbox"].form-checkbox,
-.checkbox-field,
-.form-checkbox {
+/* Estilos mejorados para checkboxes - Solo aplicar cuando NO tienen estilos personalizados */
+input[type="checkbox"].checkbox-field:not(.custom-styled),
+input[type="checkbox"].form-checkbox:not(.custom-styled),
+.checkbox-field:not(.custom-styled),
+.form-checkbox:not(.custom-styled) {
     appearance: none !important;
     -webkit-appearance: none !important;
     width: 1.25rem !important;
@@ -221,10 +221,10 @@ input[type="checkbox"].form-checkbox,
 }
 
 /* Hover state para checkboxes */
-input[type="checkbox"].checkbox-field:hover,
-input[type="checkbox"].form-checkbox:hover,
-.checkbox-field:hover,
-.form-checkbox:hover {
+input[type="checkbox"].checkbox-field:not(.custom-styled):hover,
+input[type="checkbox"].form-checkbox:not(.custom-styled):hover,
+.checkbox-field:not(.custom-styled):hover,
+.form-checkbox:not(.custom-styled):hover {
     border-color: #f59e0b !important; /* yellow-500 */
     background-color: #fef3c7 !important; /* yellow-50 */
     transform: scale(1.05) !important;
@@ -232,10 +232,10 @@ input[type="checkbox"].form-checkbox:hover,
 }
 
 /* Focus state para checkboxes */
-input[type="checkbox"].checkbox-field:focus,
-input[type="checkbox"].form-checkbox:focus,
-.checkbox-field:focus,
-.form-checkbox:focus {
+input[type="checkbox"].checkbox-field:not(.custom-styled):focus,
+input[type="checkbox"].form-checkbox:not(.custom-styled):focus,
+.checkbox-field:not(.custom-styled):focus,
+.form-checkbox:not(.custom-styled):focus {
     outline: none !important;
     border-color: #f59e0b !important; /* yellow-500 */
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3) !important;
@@ -243,19 +243,19 @@ input[type="checkbox"].form-checkbox:focus,
 }
 
 /* Checked state para checkboxes */
-input[type="checkbox"].checkbox-field:checked,
-input[type="checkbox"].form-checkbox:checked,
-.checkbox-field:checked,
-.form-checkbox:checked {
+input[type="checkbox"].checkbox-field:not(.custom-styled):checked,
+input[type="checkbox"].form-checkbox:not(.custom-styled):checked,
+.checkbox-field:not(.custom-styled):checked,
+.form-checkbox:not(.custom-styled):checked {
     background-color: #f59e0b !important; /* yellow-500 */
     border-color: #d97706 !important; /* yellow-600 */
 }
 
 /* Checkmark para checkboxes */
-input[type="checkbox"].checkbox-field:checked::after,
-input[type="checkbox"].form-checkbox:checked::after,
-.checkbox-field:checked::after,
-.form-checkbox:checked::after {
+input[type="checkbox"].checkbox-field:not(.custom-styled):checked::after,
+input[type="checkbox"].form-checkbox:not(.custom-styled):checked::after,
+.checkbox-field:not(.custom-styled):checked::after,
+.form-checkbox:not(.custom-styled):checked::after {
     content: "✓" !important;
     position: absolute !important;
     top: 50% !important;
@@ -284,8 +284,8 @@ input[type="checkbox"].form-checkbox:checked::after,
     }
 }
 
-/* Estilos para radio buttons */
-input[type="radio"].radio-field {
+/* Estilos para radio buttons - Solo aplicar cuando NO tienen estilos personalizados */
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only) {
     appearance: none !important;
     -webkit-appearance: none !important;
     width: 1.25rem !important;
@@ -301,7 +301,7 @@ input[type="radio"].radio-field {
 }
 
 /* Hover state para radio buttons */
-input[type="radio"].radio-field:hover {
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):hover {
     border-color: #f59e0b !important; /* yellow-500 */
     background-color: #fef3c7 !important; /* yellow-50 */
     transform: scale(1.05) !important;
@@ -309,7 +309,7 @@ input[type="radio"].radio-field:hover {
 }
 
 /* Focus state para radio buttons */
-input[type="radio"].radio-field:focus {
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):focus {
     outline: none !important;
     border-color: #f59e0b !important; /* yellow-500 */
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3) !important;
@@ -317,13 +317,13 @@ input[type="radio"].radio-field:focus {
 }
 
 /* Checked state para radio buttons */
-input[type="radio"].radio-field:checked {
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):checked {
     background-color: #f59e0b !important; /* yellow-500 */
     border-color: #d97706 !important; /* yellow-600 */
 }
 
 /* Dot para radio buttons */
-input[type="radio"].radio-field:checked::after {
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):checked::after {
     content: "" !important;
     position: absolute !important;
     top: 50% !important;
@@ -353,22 +353,22 @@ input[type="radio"].radio-field:checked::after {
 }
 
 /* Disabled states */
-input[type="checkbox"].checkbox-field:disabled,
-input[type="checkbox"].form-checkbox:disabled,
-input[type="radio"].radio-field:disabled,
-.checkbox-field:disabled,
-.form-checkbox:disabled {
+input[type="checkbox"].checkbox-field:not(.custom-styled):disabled,
+input[type="checkbox"].form-checkbox:not(.custom-styled):disabled,
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):disabled,
+.checkbox-field:not(.custom-styled):disabled,
+.form-checkbox:not(.custom-styled):disabled {
     opacity: 0.5 !important;
     cursor: not-allowed !important;
     border-color: #9ca3af !important; /* gray-400 */
     background-color: #f3f4f6 !important; /* gray-100 */
 }
 
-input[type="checkbox"].checkbox-field:disabled:hover,
-input[type="checkbox"].form-checkbox:disabled:hover,
-input[type="radio"].radio-field:disabled:hover,
-.checkbox-field:disabled:hover,
-.form-checkbox:disabled:hover {
+input[type="checkbox"].checkbox-field:not(.custom-styled):disabled:hover,
+input[type="checkbox"].form-checkbox:not(.custom-styled):disabled:hover,
+input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):disabled:hover,
+.checkbox-field:not(.custom-styled):disabled:hover,
+.form-checkbox:not(.custom-styled):disabled:hover {
     transform: none !important;
     background-color: #f3f4f6 !important; /* gray-100 */
 }
