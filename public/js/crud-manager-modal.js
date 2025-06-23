@@ -228,16 +228,27 @@ class CrudManagerModal {
             },
             error: (xhr) => {
                 console.error("AJAX error:", xhr);
+                console.error("Error status:", xhr.status);
+                console.error("Error statusText:", xhr.statusText);
+                console.error("Error responseText:", xhr.responseText);
+                try {
+                    const responseJSON = JSON.parse(xhr.responseText);
+                    console.error("Error responseJSON:", responseJSON);
+                } catch (e) {
+                    console.error("Could not parse error response as JSON");
+                }
                 console.error(
                     `Error loading ${this.entityNamePlural}:`,
                     xhr.responseText
                 );
                 this.showAlert(
                     "error",
-                    `Error loading ${this.entityNamePlural}`
+                    `Error loading ${this.entityNamePlural}: ${xhr.status} ${xhr.statusText}`
                 );
                 this.hideTableLoading();
-                throw new Error(`Error loading ${this.entityNamePlural}`);
+                throw new Error(
+                    `Error loading ${this.entityNamePlural}: ${xhr.status} ${xhr.statusText}`
+                );
             },
         });
     }
@@ -376,7 +387,11 @@ class CrudManagerModal {
             }
         } catch (error) {
             console.error("Error loading entity for edit:", error);
-            this.showAlert("error", this.translations.errorLoadingDataForEdit || "Error al cargar los datos para editar");
+            this.showAlert(
+                "error",
+                this.translations.errorLoadingDataForEdit ||
+                    "Error al cargar los datos para editar"
+            );
         }
     }
 
@@ -412,7 +427,9 @@ class CrudManagerModal {
         const disabled = field.disabled ? "disabled" : "";
 
         let html = `<div class="form-group mb-4">`;
-        const labelClass = field.required ? "block text-sm font-medium text-gray-700 mb-2 required" : "block text-sm font-medium text-gray-700 mb-2";
+        const labelClass = field.required
+            ? "block text-sm font-medium text-gray-700 mb-2 required"
+            : "block text-sm font-medium text-gray-700 mb-2";
         html += `<label for="${field.name}" class="${labelClass}">${field.label}</label>`;
 
         switch (field.type) {
@@ -698,7 +715,10 @@ class CrudManagerModal {
         // Validación básica de formato de email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            this.showFieldError("email", this.translations.invalidEmail || "Invalid email format");
+            this.showFieldError(
+                "email",
+                this.translations.invalidEmail || "Invalid email format"
+            );
             this.updateSubmitButtonState();
             return;
         }
@@ -725,11 +745,18 @@ class CrudManagerModal {
                 });
 
                 if (response.exists) {
-                    this.showFieldError("email", this.translations.emailAlreadyInUse || "This email is already in use");
+                    this.showFieldError(
+                        "email",
+                        this.translations.emailAlreadyInUse ||
+                            "This email is already in use"
+                    );
                     this.updateSubmitButtonState();
                 } else {
                     this.clearFieldError("email");
-                    this.showFieldSuccess("email", this.translations.emailAvailable || "Email available");
+                    this.showFieldSuccess(
+                        "email",
+                        this.translations.emailAvailable || "Email available"
+                    );
                     this.updateSubmitButtonState();
                 }
             } catch (error) {
@@ -788,10 +815,17 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("phone", this.translations.phoneAlreadyInUse || "This phone is already in use");
+                this.showFieldError(
+                    "phone",
+                    this.translations.phoneAlreadyInUse ||
+                        "This phone is already in use"
+                );
             } else {
                 this.clearFieldError("phone");
-                this.showFieldSuccess("phone", this.translations.phoneAvailable || "Phone available");
+                this.showFieldSuccess(
+                    "phone",
+                    this.translations.phoneAvailable || "Phone available"
+                );
             }
         } catch (error) {
             console.error("Error validating phone:", error);
@@ -836,11 +870,18 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("name", this.translations.nameAlreadyInUse || "This name is already in use");
+                this.showFieldError(
+                    "name",
+                    this.translations.nameAlreadyInUse ||
+                        "This name is already in use"
+                );
                 this.updateSubmitButtonState();
             } else {
                 this.clearFieldError("name");
-                this.showFieldSuccess("name", this.translations.nameAvailable || "Name available");
+                this.showFieldSuccess(
+                    "name",
+                    this.translations.nameAvailable || "Name available"
+                );
                 this.updateSubmitButtonState();
             }
         } catch (error) {
@@ -862,14 +903,21 @@ class CrudManagerModal {
 
         // Validación básica de longitud mínima
         if (username.length < 7) {
-            this.showFieldError("username", this.translations.minimumCharacters || "Minimum 7 characters");
+            this.showFieldError(
+                "username",
+                this.translations.minimumCharacters || "Minimum 7 characters"
+            );
             return;
         }
 
         // Validación de que tenga al menos 2 números
         const numberMatches = username.match(/\d/g);
         if (!numberMatches || numberMatches.length < 2) {
-            this.showFieldError("username", this.translations.mustContainNumbers || "Must contain at least 2 numbers");
+            this.showFieldError(
+                "username",
+                this.translations.mustContainNumbers ||
+                    "Must contain at least 2 numbers"
+            );
             return;
         }
 
@@ -893,10 +941,17 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("username", this.translations.usernameAlreadyInUse || "This username is already in use");
+                this.showFieldError(
+                    "username",
+                    this.translations.usernameAlreadyInUse ||
+                        "This username is already in use"
+                );
             } else {
                 this.clearFieldError("username");
-                this.showFieldSuccess("username", this.translations.usernameAvailable || "Username available");
+                this.showFieldSuccess(
+                    "username",
+                    this.translations.usernameAvailable || "Username available"
+                );
             }
         } catch (error) {
             console.error("Error validating username:", error);
@@ -1134,9 +1189,13 @@ class CrudManagerModal {
 
             // Validación requerida
             if (field.required && (!value || value.toString().trim() === "")) {
-                const requiredMessage = field.name === 'last_name' ? 
-                    (this.translations.lastNameRequired || 'Last name is required') : 
-                    `${field.label} ${this.translations.isRequired || 'is required'}`;
+                const requiredMessage =
+                    field.name === "last_name"
+                        ? this.translations.lastNameRequired ||
+                          "Last name is required"
+                        : `${field.label} ${
+                              this.translations.isRequired || "is required"
+                          }`;
                 this.showFieldError(field.name, requiredMessage);
                 isValid = false;
             }
@@ -1180,7 +1239,8 @@ class CrudManagerModal {
             this.updateSubmitButtonState();
             // Mostrar alerta de error para mayor claridad
             Swal.showValidationMessage(
-                this.translations.pleaseCorrectErrors || "Please correct the errors before continuing"
+                this.translations.pleaseCorrectErrors ||
+                    "Please correct the errors before continuing"
             );
             return false;
         }
@@ -1211,12 +1271,18 @@ class CrudManagerModal {
         if (validation.pattern && !validation.pattern.test(value)) {
             return {
                 valid: false,
-                message: validation.message || (this.translations.invalidFormat || "Invalid format"),
+                message:
+                    validation.message ||
+                    this.translations.invalidFormat ||
+                    "Invalid format",
             };
         }
 
         if (validation.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-            return { valid: false, message: this.translations.invalidEmail || "Invalid email" };
+            return {
+                valid: false,
+                message: this.translations.invalidEmail || "Invalid email",
+            };
         }
 
         return { valid: true };
@@ -1590,6 +1656,12 @@ class CrudManagerModal {
      * Renderizar tabla
      */
     renderTable(data) {
+        // En modo de registro único, no renderizamos tabla
+        if (this.singleRecordMode) {
+            console.log("Single record mode - skipping table rendering");
+            return;
+        }
+
         const entities = data.data;
         let html = "";
 
@@ -1631,6 +1703,12 @@ class CrudManagerModal {
      * Renderizar paginación
      */
     renderPagination(data) {
+        // En modo de registro único, no renderizamos paginación
+        if (this.singleRecordMode) {
+            console.log("Single record mode - skipping pagination rendering");
+            return;
+        }
+
         let paginationHtml = "";
 
         if (data.last_page > 1) {

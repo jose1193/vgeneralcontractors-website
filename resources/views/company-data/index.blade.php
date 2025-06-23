@@ -279,10 +279,14 @@
                         routes: {
                             index: "{{ secure_url(route('company-data.index', [], false)) }}",
                             store: "{{ secure_url(route('company-data.store', [], false)) }}",
-                            edit: "{{ secure_url(route('company-data.edit', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
-                            update: "{{ secure_url(route('company-data.update', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
-                            destroy: "{{ secure_url(route('company-data.destroy', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
-                            restore: "{{ secure_url(route('company-data.restore', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
+                            edit: "{{ secure_url(route('company-data.edit', 'UUID_PLACEHOLDER', false)) }}"
+                                .replace('UUID_PLACEHOLDER', ':id'),
+                            update: "{{ secure_url(route('company-data.update', 'UUID_PLACEHOLDER', false)) }}"
+                                .replace('UUID_PLACEHOLDER', ':id'),
+                            destroy: "{{ secure_url(route('company-data.destroy', 'UUID_PLACEHOLDER', false)) }}"
+                                .replace('UUID_PLACEHOLDER', ':id'),
+                            restore: "{{ secure_url(route('company-data.restore', 'UUID_PLACEHOLDER', false)) }}"
+                                .replace('UUID_PLACEHOLDER', ':id'),
                             checkEmail: "{{ secure_url(route('company-data.check-email', [], false)) }}",
                             checkPhone: "{{ secure_url(route('company-data.check-phone', [], false)) }}"
                         },
@@ -442,6 +446,10 @@
                             window.companyDataManager.showEditModal('{{ $companyData->uuid }}');
                         @else
                             console.log('No company data found, loading entities...');
+                            // Debug: Log the routes being used
+                            console.log('Routes configuration:', window.companyDataManager.routes);
+                            console.log('Index route URL:', window.companyDataManager.routes.index);
+
                             // If no company data exists, load entities first to get or create the record
                             window.companyDataManager.loadEntities().then((response) => {
                                 console.log('Loaded entities response:', response);
@@ -458,14 +466,20 @@
                                 }
                             }).catch((error) => {
                                 console.error('Error loading company data:', error);
+                                console.error('Error details:', {
+                                    status: error.status,
+                                    statusText: error.statusText,
+                                    responseText: error.responseText,
+                                    responseJSON: error.responseJSON
+                                });
                                 window.companyDataManager.showAlert('error',
                                     '{{ __('error_loading_company_info') }}');
                             });
                         @endif
                     });
 
-                    // Initialize loading of entities for AJAX functionality
-                    window.companyDataManager.loadEntities();
+                    // Don't initialize loadEntities automatically - only load when needed
+                    console.log('CompanyDataManager initialized, ready for use');
                 });
             </script>
         @endpush
