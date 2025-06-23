@@ -52,6 +52,12 @@ class ContactSupportController extends Controller
             'message' => 'required|min:10',
             'sms_consent' => 'sometimes|boolean',
             'g-recaptcha-response' => 'required'
+        ], [
+            'first_name.required' => __('first_name_required'),
+            'last_name.required' => __('last_name_required'),
+            'email.required' => __('email_required'),
+            'phone.required' => __('phone_required'),
+            'message.required' => __('message_required'),
         ]);
 
         if ($validator->fails()) {
@@ -178,7 +184,15 @@ class ContactSupportController extends Controller
         }
 
         // Create a validator instance for only the specified field
-        $validator = Validator::make([$fieldName => $fieldValue], [$fieldName => $rules[$fieldName]]);
+        $customMessages = [
+            'first_name.required' => __('first_name_required'),
+            'last_name.required' => __('last_name_required'),
+            'email.required' => __('email_required'),
+            'phone.required' => __('phone_required'),
+            'message.required' => __('message_required'),
+        ];
+        
+        $validator = Validator::make([$fieldName => $fieldValue], [$fieldName => $rules[$fieldName]], $customMessages);
 
         if ($validator->fails()) {
             return response()->json(['valid' => false, 'errors' => $validator->errors()->get($fieldName)], 422);
