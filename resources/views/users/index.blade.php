@@ -39,7 +39,7 @@
                         checkPhone: "{{ secure_url(route('users.check-phone', [], false)) }}",
                         checkUsername: "{{ secure_url(route('users.check-username', [], false)) }}"
                     },
-                    tableSelector: '#userTable-body',
+                    tableSelector: '#userTable',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',
