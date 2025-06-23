@@ -371,7 +371,7 @@
                         },
                         entityConfig: {
                             identifierField: 'email',
-                            displayName: 'usuario',
+                            displayName: '{{ __('user') }}',
                             fallbackFields: ['name', 'last_name', 'username'],
                             detailFormat: (entity) => {
                                 return `${entity.name || ''} ${entity.last_name || ''} (${entity.email || ''})`

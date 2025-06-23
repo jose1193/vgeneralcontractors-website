@@ -99,6 +99,7 @@
     "company_data_subtitle": "Manage your company profile and business information settings",
     "users_title": "User Management",
     "users_subtitle": "Manage user accounts, roles, and access permissions",
+    "user": "user",
     "name": "Name",
     "username": "Username",
     "active": "Active",
