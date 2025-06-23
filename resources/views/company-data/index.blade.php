@@ -279,10 +279,10 @@
                         routes: {
                             index: "{{ secure_url(route('company-data.index', [], false)) }}",
                             store: "{{ secure_url(route('company-data.store', [], false)) }}",
-                            edit: "{{ secure_url(route('company-data.edit', ':id', false)) }}",
-                            update: "{{ secure_url(route('company-data.update', ':id', false)) }}",
-                            destroy: "{{ secure_url(route('company-data.destroy', ':id', false)) }}",
-                            restore: "{{ secure_url(route('company-data.restore', ':id', false)) }}",
+                            edit: "{{ secure_url(route('company-data.edit', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
+                            update: "{{ secure_url(route('company-data.update', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
+                            destroy: "{{ secure_url(route('company-data.destroy', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
+                            restore: "{{ secure_url(route('company-data.restore', 'UUID_PLACEHOLDER', false)) }}".replace('UUID_PLACEHOLDER', ':id'),
                             checkEmail: "{{ secure_url(route('company-data.check-email', [], false)) }}",
                             checkPhone: "{{ secure_url(route('company-data.check-phone', [], false)) }}"
                         },
