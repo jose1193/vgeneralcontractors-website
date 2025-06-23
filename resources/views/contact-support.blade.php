@@ -505,6 +505,14 @@
             function submitFormData() {
                 const formData = new FormData(form);
 
+                // Ensure sms_consent is always sent as a boolean value
+                const smsConsentCheckbox = document.getElementById('sms_consent');
+                if (smsConsentCheckbox) {
+                    // Remove the original value and set a proper boolean
+                    formData.delete('sms_consent');
+                    formData.append('sms_consent', smsConsentCheckbox.checked ? '1' : '0');
+                }
+
                 fetch(form.action, {
                         method: 'POST',
                         headers: {

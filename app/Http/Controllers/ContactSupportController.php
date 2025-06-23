@@ -50,7 +50,7 @@ class ContactSupportController extends Controller
             'email' => 'required|email',
             'phone' => 'required',
             'message' => 'required|min:10',
-            'sms_consent' => 'boolean',
+            'sms_consent' => 'sometimes|boolean',
             'g-recaptcha-response' => 'required'
         ]);
 
@@ -65,6 +65,9 @@ class ContactSupportController extends Controller
         
         // Format the phone number
         $validatedData['phone'] = $this->formatPhoneNumber($validatedData['phone']);
+        
+        // Ensure sms_consent is always a boolean (default to false if not present)
+        $validatedData['sms_consent'] = isset($validatedData['sms_consent']) ? (bool) $validatedData['sms_consent'] : false;
         
         // Verify reCAPTCHA token manually
         $recaptchaToken = $request->input('g-recaptcha-response');
@@ -167,7 +170,7 @@ class ContactSupportController extends Controller
             'email' => 'required|email',
             'phone' => 'required',
             'message' => 'required|min:10',
-            'sms_consent' => 'boolean',
+            'sms_consent' => 'sometimes|boolean',
         ];
 
         if (!isset($rules[$fieldName])) {
