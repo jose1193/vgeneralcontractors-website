@@ -139,7 +139,9 @@
 
     {{-- Address 2 --}}
     <div class="md:col-span-2">
-        <x-label for="address_2" value="{{ __('Address 2 (Optional)') }}" />
+        <label for="address_2" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('address_2') }}
+        </label>
         <x-input id="address_2" class="block mt-1 w-full" type="text" name="address_2"
             placeholder="Apt #, Suite #, etc." :value="old('address_2', $appointment->address_2 ?? '')" />
         <x-input-error for="address_2" class="mt-2" />
@@ -147,7 +149,9 @@
 
     {{-- City --}}
     <div>
-        <x-label for="city" value="{{ __('City') }}" />
+        <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('city') }} <span class="text-red-500">*</span>
+        </label>
         <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
             required />
         <x-input-error for="city" class="mt-2" />
@@ -155,7 +159,9 @@
 
     {{-- State --}}
     <div>
-        <x-label for="state" value="{{ __('State') }}" />
+        <label for="state" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('state') }} <span class="text-red-500">*</span>
+        </label>
         <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
             required />
         <x-input-error for="state" class="mt-2" />
@@ -163,7 +169,9 @@
 
     {{-- Zipcode --}}
     <div>
-        <x-label for="zipcode" value="{{ __('Zip Code') }}" />
+        <label for="zipcode" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('zip_code') }} <span class="text-red-500">*</span>
+        </label>
         <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
             required />
         <x-input-error for="zipcode" class="mt-2" />
@@ -171,7 +179,9 @@
 
     {{-- Country --}}
     <div>
-        <x-label for="country" value="{{ __('Country') }}" />
+        <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('country') }} <span class="text-red-500">*</span>
+        </label>
         <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
             required />
         <x-input-error for="country" class="mt-2" />
@@ -179,7 +189,9 @@
 
     {{-- Inspection Date --}}
     <div>
-        <x-label for="inspection_date" value="{{ __('Inspection Date') }}" />
+        <label for="inspection_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('inspection_date') }}
+        </label>
         <x-input id="inspection_date" class="block mt-1 w-full" type="date" name="inspection_date"
             min="{{ date('Y-m-d') }}" :value="old(
                 'inspection_date',
@@ -190,7 +202,9 @@
 
     {{-- Inspection Time --}}
     <div>
-        <x-label for="inspection_time_hour" value="{{ __('Inspection Time') }}" id="inspection_time_label" />
+        <label for="inspection_time_hour" class="block font-medium text-sm text-gray-700 dark:text-gray-300" id="inspection_time_label">
+            {{ __('inspection_time') }}
+        </label>
         <div class="flex mt-1 space-x-2">
             <select id="inspection_time_hour" name="inspection_time_hour"
                 class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
@@ -226,7 +240,7 @@
     {{-- Inspection Status --}}
     <div>
         <label for="inspection_status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-            {{ __('Inspection Status') }} <span class="text-red-500">*</span>
+            {{ __('inspection_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="inspection_status" name="inspection_status"
             class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
@@ -251,7 +265,7 @@
     {{-- Status Lead --}}
     <div>
         <label for="status_lead" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-            {{ __('Lead Status') }} <span class="text-red-500">*</span>
+            {{ __('lead_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="status_lead" name="status_lead"
             class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
@@ -276,7 +290,7 @@
     {{-- Lead Source --}}
     <div>
         <label for="lead_source" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-            {{ __('Lead Source') }} <span class="text-red-500">*</span>
+            {{ __('lead_source') }} <span class="text-red-500">*</span>
         </label>
         <select id="lead_source" name="lead_source"
             class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
@@ -300,7 +314,9 @@
 
     {{-- Owner --}}
     <div>
-        <x-label for="owner" value="{{ __('Owner') }}" />
+        <label for="owner" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('owner') }}
+        </label>
         <x-input id="owner" class="block mt-1 w-full capitalize-first" type="text" name="owner"
             :value="old('owner', $appointment->owner ?? '')" />
         <x-input-error for="owner" class="mt-2" />
@@ -308,7 +324,9 @@
 
     {{-- Notes --}}
     <div class="md:col-span-2 mb-6">
-        <x-label for="notes" value="{{ __('Notes') }}" />
+        <label for="notes" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+            {{ __('notes') }}
+        </label>
         <textarea id="notes" name="notes" rows="4"
             class="capitalize-first border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">{{ old('notes', $appointment->notes ?? '') }}</textarea>
         <x-input-error for="notes" class="mt-2" />
@@ -317,7 +335,9 @@
 
 {{-- Damage Detail --}}
 <div class="md:col-span-2 mb-6">
-    <x-label for="damage_detail" value="{{ __('Damage Detail') }}" />
+    <label for="damage_detail" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+        {{ __('damage_detail') }}
+    </label>
     <textarea id="damage_detail" name="damage_detail" rows="4"
         class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">{{ old('damage_detail', $appointment->damage_detail ?? '') }}</textarea>
     <x-input-error for="damage_detail" class="mt-2" />
@@ -325,7 +345,9 @@
 
 {{-- Additional Note --}}
 <div class="md:col-span-2 mb-6">
-    <x-label for="additional_note" value="{{ __('Additional Notes (Post-Inspection)') }}" />
+    <label for="additional_note" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+        {{ __('additional_note') }}
+    </label>
     <textarea id="additional_note" name="additional_note" rows="4"
         class="capitalize-first border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">{{ old('additional_note', $appointment->additional_note ?? '') }}</textarea>
     <x-input-error for="additional_note" class="mt-2" />
@@ -396,7 +418,7 @@
         <label for="insurance_property" class="flex items-center">
             <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
                 required />
-            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Property Insurance') }}</span>
+            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('property_insurance') }}</span>
             <span class="text-red-500 ml-1">*</span>
         </label>
     </div>
@@ -406,13 +428,13 @@
         <div class="block">
             <label for="sms_consent" class="flex items-center">
                 <x-checkbox id="sms_consent" name="sms_consent" :checked="old('sms_consent', $appointment->sms_consent ?? false)" />
-                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('SMS Consent') }}</span>
+                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('sms_consent') }}</span>
             </label>
         </div>
         <div class="block">
             <label for="intent_to_claim" class="flex items-center">
                 <x-checkbox id="intent_to_claim" name="intent_to_claim" :checked="old('intent_to_claim', $appointment->intent_to_claim ?? false)" />
-                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Intent to Claim?') }}</span>
+                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('intent_to_claim') }}</span>
             </label>
         </div>
     </div>
