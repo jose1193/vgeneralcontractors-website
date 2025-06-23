@@ -17,16 +17,18 @@
     <div>
         <x-label for="first_name" value="{{ __('First Name') }}" />
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
-            required autofocus pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
+            required autofocus maxlength="50" pattern="[A-Za-z\s]+" title="{{ __('first_name_validation') }}" />
         <x-input-error for="first_name" class="mt-2" />
+        <p class="text-xs text-gray-500 mt-1">{{ __('max_50_characters') }}</p>
     </div>
 
     {{-- Last Name --}}
     <div>
         <x-label for="last_name" value="{{ __('Last Name') }}" />
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
-            required pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
+            required maxlength="50" pattern="[A-Za-z\s]+" title="{{ __('last_name_validation') }}" />
         <x-input-error for="last_name" class="mt-2" />
+        <p class="text-xs text-gray-500 mt-1">{{ __('max_50_characters') }}</p>
     </div>
 
     {{-- Phone --}}
@@ -61,6 +63,28 @@
 
         {{-- Share location buttons --}}
         <div class="mt-2 flex flex-wrap gap-2">
+            <button id="show-address-modal"
+                class="inline-flex items-center px-3 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
+                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ __('view_complete_address') }}
+            </button>
+            <button id="share-location-options"
+                class="inline-flex items-center px-3 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600">
+                <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                </svg>
+                {{ __('choose_how_share_location') }}
+            </button>
+        </div>
+
+        {{-- Share options dropdown (hidden by default) --}}
+        <div id="share-options" class="hidden mt-2">
             <a href="#" id="share-whatsapp"
                 class="inline-flex items-center px-3 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600">
                 <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
@@ -85,7 +109,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Open in Maps
+                {{ __('open_in_maps') }}
             </a>
             <button id="copy-address"
                 class="inline-flex items-center px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">
@@ -93,7 +117,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                Copy Link
+                {{ __('copy_address') }}
             </button>
         </div>
     </div>
@@ -297,6 +321,64 @@
     <textarea id="additional_note" name="additional_note" rows="4"
         class="capitalize-first border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">{{ old('additional_note', $appointment->additional_note ?? '') }}</textarea>
     <x-input-error for="additional_note" class="mt-2" />
+</div>
+
+{{-- Address Modal --}}
+<div id="address-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('complete_address_details') }}</h3>
+                <button id="close-address-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ __('formatted_address') }}</h4>
+                    <p id="modal-formatted-address" class="text-gray-900 dark:text-gray-100 font-medium">-</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('city') }}</label>
+                        <p id="modal-city" class="text-gray-900 dark:text-gray-100">-</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('state') }}</label>
+                        <p id="modal-state" class="text-gray-900 dark:text-gray-100">-</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('zip_code') }}</label>
+                        <p id="modal-zipcode" class="text-gray-900 dark:text-gray-100 font-bold text-lg">-</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('country') }}</label>
+                        <p id="modal-country" class="text-gray-900 dark:text-gray-100">-</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('latitude') }}</label>
+                        <p id="modal-latitude" class="text-gray-600 dark:text-gray-400 text-sm font-mono">-</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('longitude') }}</label>
+                        <p id="modal-longitude" class="text-gray-600 dark:text-gray-400 text-sm font-mono">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button id="copy-complete-address" class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
+                    {{ __('copy_complete_address') }}
+                </button>
+                <button id="close-modal-btn" class="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400">
+                    {{ __('close') }}
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Checkboxes section transformed to radio buttons for insurance_property --}}
@@ -1028,6 +1110,163 @@
                 console.error('Error initializing autocomplete:', error);
             }
         }
+
+        // Modal and sharing functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const showAddressModal = document.getElementById('show-address-modal');
+            const addressModal = document.getElementById('address-modal');
+            const closeAddressModal = document.getElementById('close-address-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const shareLocationOptions = document.getElementById('share-location-options');
+            const shareOptions = document.getElementById('share-options');
+            const copyCompleteAddress = document.getElementById('copy-complete-address');
+            const copyAddress = document.getElementById('copy-address');
+
+            // Show address modal
+            if (showAddressModal) {
+                showAddressModal.addEventListener('click', function() {
+                    updateModalContent();
+                    addressModal.classList.remove('hidden');
+                });
+            }
+
+            // Close modal events
+            [closeAddressModal, closeModalBtn].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        addressModal.classList.add('hidden');
+                    });
+                }
+            });
+
+            // Close modal when clicking outside
+            if (addressModal) {
+                addressModal.addEventListener('click', function(e) {
+                    if (e.target === addressModal) {
+                        addressModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Toggle share options
+            if (shareLocationOptions) {
+                shareLocationOptions.addEventListener('click', function() {
+                    shareOptions.classList.toggle('hidden');
+                    const isHidden = shareOptions.classList.contains('hidden');
+                    this.textContent = isHidden ? '{{ __('choose_how_share_location') }}' : '{{ __('hide_share_options') }}';
+                });
+            }
+
+            // Copy complete address functionality
+            if (copyCompleteAddress) {
+                copyCompleteAddress.addEventListener('click', function() {
+                    const completeAddress = getCompleteAddressString();
+                    copyToClipboard(completeAddress, '{{ __('complete_address_copied') }}');
+                });
+            }
+
+            // Copy address functionality
+            if (copyAddress) {
+                copyAddress.addEventListener('click', function() {
+                    const address = document.getElementById('address_map_input').value;
+                    copyToClipboard(address, '{{ __('address_copied') }}');
+                });
+            }
+
+            // Share functionality
+            const shareWhatsApp = document.getElementById('share-whatsapp');
+            const shareEmail = document.getElementById('share-email');
+            const shareMaps = document.getElementById('share-maps');
+
+            if (shareWhatsApp) {
+                shareWhatsApp.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const address = document.getElementById('address_map_input').value;
+                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('{{ __('check_this_location') }}: ' + address)}`;
+                    window.open(whatsappUrl, '_blank');
+                });
+            }
+
+            if (shareEmail) {
+                shareEmail.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const address = document.getElementById('address_map_input').value;
+                    const subject = encodeURIComponent('{{ __('location_shared') }}');
+                    const body = encodeURIComponent('{{ __('check_this_location') }}: ' + address);
+                    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+                });
+            }
+
+            if (shareMaps) {
+                shareMaps.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lat = document.getElementById('latitude').value;
+                    const lng = document.getElementById('longitude').value;
+                    if (lat && lng) {
+                        const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                        window.open(mapsUrl, '_blank');
+                    } else {
+                        alert('{{ __('no_coordinates_available') }}');
+                    }
+                });
+            }
+
+            // Update modal content
+            function updateModalContent() {
+                const formattedAddress = document.getElementById('address_map_input').value || '-';
+                const city = document.getElementById('city').value || '-';
+                const state = document.getElementById('state').value || '-';
+                const zipcode = document.getElementById('zipcode').value || '-';
+                const country = document.getElementById('country').value || '-';
+                const latitude = document.getElementById('latitude').value || '-';
+                const longitude = document.getElementById('longitude').value || '-';
+
+                document.getElementById('modal-formatted-address').textContent = formattedAddress;
+                document.getElementById('modal-city').textContent = city;
+                document.getElementById('modal-state').textContent = state;
+                document.getElementById('modal-zipcode').textContent = zipcode;
+                document.getElementById('modal-country').textContent = country;
+                document.getElementById('modal-latitude').textContent = latitude;
+                document.getElementById('modal-longitude').textContent = longitude;
+            }
+
+            // Get complete address string
+            function getCompleteAddressString() {
+                const address = document.getElementById('address').value || '';
+                const address2 = document.getElementById('address_2').value || '';
+                const city = document.getElementById('city').value || '';
+                const state = document.getElementById('state').value || '';
+                const zipcode = document.getElementById('zipcode').value || '';
+                const country = document.getElementById('country').value || '';
+
+                let completeAddress = address;
+                if (address2) completeAddress += ', ' + address2;
+                if (city) completeAddress += ', ' + city;
+                if (state) completeAddress += ', ' + state;
+                if (zipcode) completeAddress += ' ' + zipcode;
+                if (country) completeAddress += ', ' + country;
+
+                return completeAddress;
+            }
+
+            // Copy to clipboard utility
+            function copyToClipboard(text, successMessage) {
+                navigator.clipboard.writeText(text).then(function() {
+                    // Show success message
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50';
+                    toast.textContent = successMessage;
+                    document.body.appendChild(toast);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 3000);
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    alert('{{ __('copy_failed') }}');
+                });
+            }
+        });
     </script>
 @endpush
 

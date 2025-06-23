@@ -133,8 +133,7 @@
     "website_placeholder": "https://example.com",
     "social_media": "Social Media",
     "location": "Location",
-    "latitude": "Latitude",
-    "longitude": "Longitude",
+    
 
     "edit_company_data": "Edit Company Information",
     "company_information_entity": "company information",
@@ -615,7 +614,7 @@
     "confirm_appointment": "Confirm Appointment",
     "decline_appointment": "Decline Appointment",
     "processing": "Processing...",
-    "close": "Close",
+ 
     "create_new_appointment": "Create New Appointment",
 
     "please_select_client": "Please select a client",
@@ -1300,10 +1299,10 @@
     "please_provide_other_reason": "Please provide details for the other reason",
     "rejection_notifications_sent": "Rejection notifications sent successfully",
     "rejection_error": "An error occurred while sending rejection notifications",
-    "no_location_available": "No hay ubicación",
-    "no_coordinates_available": "No hay coordenadas disponibles para esta cita. Edite la cita para agregar una dirección con coordenadas.",
-    "share_location": "Compartir ubicación",
-    "open_in_maps": "Abrir en Maps",
+    "no_location_available": "There is no location",
+   
+   
+    
 
     "whatsapp": "WhatsApp",
     "email_share": "Email",
@@ -1602,5 +1601,27 @@
     "missing_required_fields": "Missing required fields",
     "no_appointment_found": "No active appointment found for this client",
     "time_slot_not_available": "The requested time slot is not available",
-    "invalid_api_key": "Invalid API key"
+    "invalid_api_key": "Invalid API key",
+    "view_complete_address": "View Complete Address",
+    "choose_how_share_location": "Choose how you want to share this location",
+    "hide_share_options": "Hide share options",
+    "open_in_maps": "Open in Maps",
+    "copy_address": "Copy Address",
+    "share_via_whatsapp": "Share via WhatsApp",
+    "share_via_email": "Share via Email",
+    "complete_address_details": "Complete Address Details",
+    "formatted_address": "Formatted Address",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "copy_complete_address": "Copy Complete Address",
+    "close": "Close",
+    "complete_address_copied": "Complete address copied to clipboard!",
+    "address_copied": "Address copied to clipboard!",
+    "check_this_location": "Check this location",
+    "location_shared": "Location Shared",
+    "no_coordinates_available": "No coordinates available for this location",
+    "copy_failed": "Failed to copy to clipboard",
+    "first_name_validation": "Only letters and spaces allowed, maximum 50 characters",
+    "last_name_validation": "Only letters and spaces allowed, maximum 50 characters",
+    "max_50_characters": "Maximum 50 characters"
 }

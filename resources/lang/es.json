@@ -120,8 +120,7 @@
     "website_placeholder": "https://ejemplo.com",
     "social_media": "Redes Sociales",
     "location": "Ubicación",
-    "latitude": "Latitud",
-    "longitude": "Longitud",
+    
     "phone_already_in_use": "Este teléfono ya está en uso",
     "email_already_in_use": "Este email ya está en uso",
     "edit_company_data": "Editar Información de la Empresa",
@@ -575,7 +574,7 @@
     "confirm_appointment": "Confirmar Cita",
     "decline_appointment": "Rechazar Cita",
     "processing": "Procesando...",
-    "close": "Cerrar",
+
     "create_new_appointment": "Crear Nueva Cita",
     "whatsapp": "WhatsApp",
     "email_share": "Email",
@@ -1133,9 +1132,9 @@
     "rejection_notifications_sent": "Notificaciones de rechazo enviadas exitosamente",
     "rejection_error": "Ocurrió un error al enviar las notificaciones de rechazo",
     "no_location_available": "No hay ubicación",
-    "no_coordinates_available": "No hay coordenadas disponibles para esta cita. Edite la cita para agregar una dirección con coordenadas.",
+   
     "share_location": "Compartir ubicación",
-    "open_in_maps": "Abrir en Maps",
+   
 
     "edit_appointment": "Editar Cita",
     "update_appointment_btn": "ACTUALIZAR CITA",
@@ -1614,5 +1613,27 @@
     "missing_required_fields": "Faltan campos requeridos",
     "no_appointment_found": "No se encontró una cita activa para este cliente",
     "time_slot_not_available": "El horario solicitado no está disponible",
-    "invalid_api_key": "Clave API inválida"
+    "invalid_api_key": "Clave API inválida",
+    "view_complete_address": "Ver Dirección Completa",
+    "choose_how_share_location": "Elige cómo quieres compartir esta ubicación",
+    "hide_share_options": "Ocultar opciones de compartir",
+    "open_in_maps": "Abrir en Mapas",
+    "copy_address": "Copiar Dirección",
+    "share_via_whatsapp": "Compartir por WhatsApp",
+    "share_via_email": "Compartir por Email",
+    "complete_address_details": "Detalles de Dirección Completa",
+    "formatted_address": "Dirección Formateada",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "copy_complete_address": "Copiar Dirección Completa",
+    "close": "Cerrar",
+    "complete_address_copied": "¡Dirección completa copiada al portapapeles!",
+    "address_copied": "¡Dirección copiada al portapapeles!",
+    "check_this_location": "Revisa esta ubicación",
+    "location_shared": "Ubicación Compartida",
+    "no_coordinates_available": "No hay coordenadas disponibles para esta ubicación",
+    "copy_failed": "Error al copiar al portapapeles",
+    "first_name_validation": "Solo se permiten letras y espacios, máximo 50 caracteres",
+    "last_name_validation": "Solo se permiten letras y espacios, máximo 50 caracteres",
+    "max_50_characters": "Máximo 50 caracteres"
 }
