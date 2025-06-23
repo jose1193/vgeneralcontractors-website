@@ -15,7 +15,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     {{-- First Name --}}
     <div>
-        <x-label for="first_name" value="{{ __('First Name') }}" />
+        <x-label for="first_name" value="{{ __('First Name') }} <span class='text-red-500'>*</span>" />
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')" 
             required autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
         <x-input-error for="first_name" class="mt-2" />
@@ -23,7 +23,7 @@
 
     {{-- Last Name --}}
     <div>
-        <x-label for="last_name" value="{{ __('Last Name') }}" />
+        <x-label for="last_name" value="{{ __('Last Name') }} <span class='text-red-500'>*</span>" />
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')" 
             required maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
         <x-input-error for="last_name" class="mt-2" />
@@ -31,7 +31,7 @@
 
     {{-- Phone --}}
     <div>
-        <x-label for="phone" value="{{ __('Phone') }}" />
+        <x-label for="phone" value="{{ __('Phone') }} <span class='text-red-500'>*</span>" />
         <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
             :value="old('phone', $appointment->phone ?? '')" required />
         <x-input-error for="phone" class="mt-2" />
@@ -39,14 +39,14 @@
 
     {{-- Email --}}
     <div>
-        <x-label for="email" value="{{ __('Email') }}" />
+        <x-label for="email" value="{{ __('Email') }} <span class='text-red-500'>*</span>" />
         <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
         <x-input-error for="email" class="mt-2" />
     </div>
 
     {{-- Address Map Input (for Google Maps Autocomplete) --}}
     <div class="md:col-span-2">
-        <x-label for="address_map_input" value="{{ __('Address') }}" />
+        <x-label for="address_map_input" value="{{ __('Address') }} <span class='text-red-500'>*</span>" />
         <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
             placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
         <x-input-error for="address_map_input" class="mt-2" />
