@@ -243,12 +243,18 @@ class FacebookLeadFormController extends Controller
 
         $formRequest = new FacebookLeadFormRequest();
         $rules = $formRequest->rules();
+        $messages = $formRequest->messages();
 
         if (!isset($rules[$fieldName])) {
             return response()->json(['error' => 'Invalid field name.'], 400);
         }
 
-        $validator = Validator::make([$fieldName => $fieldValue], [$fieldName => $rules[$fieldName]]);
+        // Filter messages to only include those for the current field
+        $fieldMessages = array_filter($messages, function($key) use ($fieldName) {
+            return strpos($key, $fieldName . '.') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        $validator = Validator::make([$fieldName => $fieldValue], [$fieldName => $rules[$fieldName]], $fieldMessages);
 
         if ($validator->fails()) {
             return response()->json(['valid' => false, 'errors' => $validator->errors()->get($fieldName)], 422);

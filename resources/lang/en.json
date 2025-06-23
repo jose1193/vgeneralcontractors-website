@@ -1593,6 +1593,8 @@
     "correct_validation_errors": "Correct validation errors before continuing",
     "is_required": "is required",
     "name_available": "Name available",
+    "name_should_only_contain_letters": "Name should only contain letters and spaces",
+    "valid_phone_number_format": "Please enter a valid phone number format: (XXX) XXX-XXXX",
     "unexpected_error": "An unexpected error occurred. Please try again.",
     "insurance_property_required": "Insurance property type is required",
     "captcha_required": "CAPTCHA verification is required",

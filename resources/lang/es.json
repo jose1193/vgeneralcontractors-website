@@ -1585,6 +1585,8 @@
     "correct_validation_errors": "Corrija los errores de validación antes de continuar",
     "is_required": "es requerido",
     "name_available": "Nombre disponible",
+    "name_should_only_contain_letters": "El nombre solo debe contener letras y espacios",
+    "valid_phone_number_format": "Por favor ingrese un formato de teléfono válido: (XXX) XXX-XXXX",
 
     "_comment_sweetalert_messages": "=== MENSAJES DE SWEETALERT ===",
     "swal_could_not_verify": "No se pudo verificar su solicitud. Por favor intente de nuevo.",
