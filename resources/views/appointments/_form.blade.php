@@ -386,8 +386,8 @@
         <label for="insurance_property" class="flex items-center">
             <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
                 required />
-            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Property Insurance') }}
-                <span class="text-red-500">*</span></span>
+            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Property Insurance') }}</span>
+            <span class="text-red-500 ml-1">*</span>
         </label>
     </div>
 
