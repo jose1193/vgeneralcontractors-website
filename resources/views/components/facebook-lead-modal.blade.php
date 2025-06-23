@@ -83,7 +83,7 @@
                                         <span class="text-red-500">*</span></label>
                                     <input type="text" id="first_name" name="first_name"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                                        autocomplete="given-name" maxlength="50" required>
+                                        autocomplete="given-name" required>
                                     <span class="error-message text-xs text-red-500 mt-1 block h-4"
                                         data-field="first_name"></span>
                                 </div>
@@ -95,7 +95,7 @@
                                         <span class="text-red-500">*</span></label>
                                     <input type="text" id="last_name" name="last_name"
                                         class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                                        autocomplete="family-name" maxlength="50" required>
+                                        autocomplete="family-name" required>
                                     <span class="error-message text-xs text-red-500 mt-1 block h-4"
                                         data-field="last_name"></span>
                                 </div>
@@ -672,27 +672,9 @@
                 function formatName(inputElement) {
                     let value = inputElement.value;
                     if (typeof value === 'string' && value.length > 0) {
-                        // Limitar a 50 caracteres máximo
-                        if (value.length > 50) {
-                            value = value.substring(0, 50);
-                        }
-
-                        // Permitir solo letras, espacios y algunos caracteres especiales (á, é, í, ó, ú, ñ, etc.)
-                        value = value.replace(/[^a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]/g, '');
-
-                        // Eliminar espacios múltiples consecutivos
-                        value = value.replace(/\s+/g, ' ');
-
-                        // Capitalizar cada palabra
                         let parts = value.trim().split(' ');
-                        let formattedParts = parts.map(part => {
-                            if (part.length > 0) {
-                                return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-                            }
-                            return part;
-                        });
-
-                        inputElement.value = formattedParts.join(' ');
+                        let firstWord = parts[0];
+                        inputElement.value = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
                     }
                 }
 

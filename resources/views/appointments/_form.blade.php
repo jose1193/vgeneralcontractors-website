@@ -17,7 +17,7 @@
     <div>
         <x-label for="first_name" value="{{ __('First Name') }}" />
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
-            required autofocus maxlength="50" />
+            required autofocus pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="first_name" class="mt-2" />
     </div>
 
@@ -25,7 +25,7 @@
     <div>
         <x-label for="last_name" value="{{ __('Last Name') }}" />
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
-            required maxlength="50" />
+            required pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="last_name" class="mt-2" />
     </div>
 
@@ -100,7 +100,8 @@
 
     {{-- Hidden Address Fields --}}
     <input type="hidden" id="address" name="address" value="{{ old('address', $appointment->address ?? '') }}">
-    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude', $appointment->latitude ?? '') }}">
+    <input type="hidden" id="latitude" name="latitude"
+        value="{{ old('latitude', $appointment->latitude ?? '') }}">
     <input type="hidden" id="longitude" name="longitude"
         value="{{ old('longitude', $appointment->longitude ?? '') }}">
 
@@ -568,30 +569,8 @@
 
             // Function to format name fields
             function formatNameField(input) {
-                let value = input.value;
-                if (typeof value === 'string' && value.length > 0) {
-                    // Limitar a 50 caracteres máximo
-                    if (value.length > 50) {
-                        value = value.substring(0, 50);
-                    }
-
-                    // Permitir solo letras, espacios y algunos caracteres especiales (á, é, í, ó, ú, ñ, etc.)
-                    value = value.replace(/[^a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]/g, '');
-
-                    // Eliminar espacios múltiples consecutivos
-                    value = value.replace(/\s+/g, ' ');
-
-                    // Capitalizar cada palabra
-                    let parts = value.trim().split(' ');
-                    let formattedParts = parts.map(part => {
-                        if (part.length > 0) {
-                            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-                        }
-                        return part;
-                    });
-
-                    input.value = formattedParts.join(' ');
-                }
+                // Remove any non-letter characters
+                input.value = input.value.replace(/[^A-Za-z]/g, '');
             }
 
             if (firstNameInput) {
