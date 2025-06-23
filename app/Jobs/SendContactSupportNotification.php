@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\ContactSupportNotification as ContactSupportNotificationMail; // Alias for clarity
 use App\Models\CompanyData;
 use App\Models\ContactSupport;
+use App\Models\EmailData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -60,55 +61,105 @@ class SendContactSupportNotification implements ShouldQueue
     public function handle(): void // Added return type hint (optional, requires PHP 7.1+)
     {
         try {
-            // Find the company data to get the recipient email
-            // Assuming there's usually one primary company data record.
-            // Cache this lookup if it's frequently accessed and doesn't change often.
-            $companyData = CompanyData::query()
-                // Add any conditions if needed, e.g., ->where('is_primary', true)
-                ->first();
-
-            if (!$companyData || !$companyData->email) {
-                Log::warning('SendContactSupportNotification Job: Company email not found or not set in CompanyData. Cannot send notification.', [
+            $recipientEmails = [];
+            
+            // 1. Get company data email (original recipient)
+            $companyData = CompanyData::query()->first();
+            if ($companyData && $companyData->email && filter_var($companyData->email, FILTER_VALIDATE_EMAIL)) {
+                $recipientEmails[] = [
+                    'email' => $companyData->email,
+                    'type' => 'Company'
+                ];
+                Log::info('Added Company email to contact support notification recipients.', [
                     'contact_support_id' => $this->contactSupport->id,
-                    'job_id' => $this->job?->getJobId() // Log job ID if available
+                    'company_email' => $companyData->email
                 ]);
-                // You might want to fail the job explicitly if this is critical
-                // $this->fail('Company email not configured.');
-                return; // Stop processing if no email address
-            }
-
-            $recipientEmail = $companyData->email;
-
-            // Check if recipient email is valid format (basic check)
-            if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
-                 Log::error('SendContactSupportNotification Job: Invalid recipient email format in CompanyData.', [
+            } else {
+                Log::warning('Company email not found or invalid in CompanyData.', [
                     'contact_support_id' => $this->contactSupport->id,
-                    'job_id' => $this->job?->getJobId(),
-                    'invalid_email' => $recipientEmail
-                 ]);
-                 $this->fail('Invalid recipient email format configured.'); // Fail the job
-                 return;
+                    'job_id' => $this->job?->getJobId()
+                ]);
             }
 
-            // Create the Mailable instance using the alias
-            $email = new ContactSupportNotificationMail($this->contactSupport);
+            // 2. Get Admin email from EmailData (following ProcessNewLead pattern)
+            $adminEmailData = EmailData::where('type', 'Admin')->first();
+            if ($adminEmailData && $adminEmailData->email && filter_var($adminEmailData->email, FILTER_VALIDATE_EMAIL)) {
+                $recipientEmails[] = [
+                    'email' => $adminEmailData->email,
+                    'type' => 'Admin'
+                ];
+                Log::info('Added Admin email to contact support notification recipients.', [
+                    'contact_support_id' => $this->contactSupport->id,
+                    'admin_email' => $adminEmailData->email
+                ]);
+            } else {
+                Log::warning('Admin email not found or invalid in EmailData.', [
+                    'contact_support_id' => $this->contactSupport->id,
+                    'job_id' => $this->job?->getJobId()
+                ]);
+            }
 
-            // Send the email
-            Mail::to($recipientEmail)->send($email);
+            // 3. Check if we have at least one valid recipient
+            if (empty($recipientEmails)) {
+                Log::error('No valid recipient emails found for contact support notification.', [
+                    'contact_support_id' => $this->contactSupport->id,
+                    'job_id' => $this->job?->getJobId()
+                ]);
+                $this->fail('No valid recipient emails configured.');
+                return;
+            }
 
-            Log::info('Contact support notification email sent successfully.', [
+            // 4. Send emails to all recipients
+            $successCount = 0;
+            $failureCount = 0;
+            
+            foreach ($recipientEmails as $recipient) {
+                try {
+                    // Create the Mailable instance for each recipient
+                    $email = new ContactSupportNotificationMail($this->contactSupport);
+                    
+                    // Send the email
+                    Mail::to($recipient['email'])->send($email);
+                    
+                    $successCount++;
+                    Log::info('Contact support notification email sent successfully.', [
+                        'contact_support_id' => $this->contactSupport->id,
+                        'recipient_email' => $recipient['email'],
+                        'recipient_type' => $recipient['type'],
+                        'job_id' => $this->job?->getJobId()
+                    ]);
+                    
+                } catch (Throwable $emailError) {
+                    $failureCount++;
+                    Log::error('Failed to send contact support notification to specific recipient.', [
+                        'contact_support_id' => $this->contactSupport->id,
+                        'recipient_email' => $recipient['email'],
+                        'recipient_type' => $recipient['type'],
+                        'job_id' => $this->job?->getJobId(),
+                        'error_message' => $emailError->getMessage()
+                    ]);
+                }
+            }
+
+            // 5. Log final results
+            Log::info('Contact support notification job completed.', [
                 'contact_support_id' => $this->contactSupport->id,
-                'recipient' => $recipientEmail,
+                'total_recipients' => count($recipientEmails),
+                'successful_sends' => $successCount,
+                'failed_sends' => $failureCount,
                 'job_id' => $this->job?->getJobId()
             ]);
 
+            // If all emails failed, consider it a job failure
+            if ($successCount === 0) {
+                $this->fail('All email notifications failed to send.');
+            }
+
         } catch (Throwable $e) {
-            Log::error('Failed to send contact support notification email.', [
+            Log::error('Failed to process contact support notification job.', [
                 'contact_support_id' => $this->contactSupport->id,
                 'job_id' => $this->job?->getJobId(),
                 'error_message' => $e->getMessage(),
-                // Only include trace in detailed logs or non-production environments if needed
-                // 'trace' => $e->getTraceAsString()
             ]);
 
             // Check if the job has attempts remaining before releasing back to the queue
@@ -118,7 +169,6 @@ class SendContactSupportNotification implements ShouldQueue
             } else {
                 // Max attempts reached, fail the job permanently
                 $this->fail($e);
-                // Optional: Send a notification to an admin about the permanent failure
             }
         }
     }
