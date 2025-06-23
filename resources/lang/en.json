@@ -621,7 +621,7 @@
     "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",
 
-    "unexpected_error": "An unexpected error occurred. Please try again.",
+   
     "reschedule_appointment": "Reschedule Appointment",
     "move_appointment_to": "Move appointment from \"{title}\" to {newTime}?",
     "yes_move": "Yes, move!",
@@ -1588,5 +1588,6 @@
     "username_available": "Username available",
     "correct_validation_errors": "Correct validation errors before continuing",
     "is_required": "is required",
-    "name_available": "Name available"
+    "name_available": "Name available",
+    "unexpected_error": "An unexpected error occurred. Please try again."
 }

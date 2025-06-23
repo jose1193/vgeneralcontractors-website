@@ -989,23 +989,9 @@
     "privacy_applicable_legislation": "10. Legislación Aplicable",
     "privacy_governed_by_laws": "Esta política se rige por las leyes de <strong>Houston, Texas EE.UU.</strong>, con referencia especial a las regulaciones sobre protección de <strong>datos</strong> personales y construcción.",
 
-    "swal_verification_error": "Error de Verificación",
-    "swal_could_not_verify": "No se pudo verificar su solicitud. Por favor, inténtelo de nuevo.",
-    "swal_address_incomplete": "Dirección Incompleta",
-    "swal_select_complete_address": "Por favor, seleccione una dirección completa de las sugerencias del menú desplegable.",
-    "swal_error": "Error",
-    "swal_recaptcha_failed": "La validación reCAPTCHA falló. Por favor, inténtelo de nuevo.",
-    "swal_email_already_registered": "Correo Electrónico Ya Registrado",
-    "swal_email_in_system": "Este correo electrónico ya está en nuestro sistema.<br><br>Por favor, contacte a nuestro equipo de soporte o llámenos al <strong>(346) 692-0757</strong> para programar su cita.",
-    "swal_correct_errors": "Por favor, corrija los errores marcados a continuación",
-    "swal_thank_you": "¡Gracias!",
-    "swal_request_submitted": "¡Su solicitud ha sido enviada exitosamente!",
-    "swal_oops": "¡Ups!",
-    "swal_server_error": "Ocurrió un error en el servidor. Por favor, inténtelo de nuevo.",
-    "swal_submission_error": "Error de Envío",
-    "swal_security_check_failed": "La verificación de seguridad falló. Por favor, actualice la página e inténtelo de nuevo.",
-    "swal_network_error": "No se pudo enviar el formulario debido a un problema de red o del servidor. Por favor, inténtelo más tarde.",
-    "swal_ok": "OK",
+   
+   
+   
 
     "gender": "Género",
     "male": "Masculino",
@@ -1578,5 +1564,26 @@
     "username_available": "Username disponible",
     "correct_validation_errors": "Corrija los errores de validación antes de continuar",
     "is_required": "es requerido",
-    "name_available": "Nombre disponible"
+    "name_available": "Nombre disponible",
+
+    "_comment_sweetalert_messages": "=== MENSAJES DE SWEETALERT ===",
+    "swal_could_not_verify": "No se pudo verificar su solicitud. Por favor intente de nuevo.",
+    "swal_address_incomplete": "Dirección Incompleta",
+    "swal_select_complete_address": "Por favor seleccione una dirección completa de las sugerencias del menú desplegable.",
+    "swal_error": "Error",
+    "swal_recaptcha_failed": "La validación de reCAPTCHA falló. Por favor intente de nuevo.",
+    "swal_email_already_registered": "Email Ya Registrado",
+    "swal_email_in_system": "Este email ya está en nuestro sistema.<br><br>Por favor contacte a nuestro equipo de soporte o llámenos al <strong>(346) 692-0757</strong> para programar su cita.",
+    "swal_correct_errors": "Por favor corrija los errores marcados abajo",
+    "swal_thank_you": "¡Gracias!",
+    "swal_request_submitted": "¡Su solicitud ha sido enviada exitosamente!",
+    "swal_oops": "¡Ups!",
+    "swal_server_error": "Ocurrió un error en el servidor. Por favor intente de nuevo.",
+    "swal_submission_error": "Error de Envío",
+    "swal_security_check_failed": "La verificación de seguridad falló. Por favor actualice la página e intente de nuevo.",
+    "swal_network_error": "No se pudo enviar el formulario debido a un problema de red o servidor. Por favor intente más tarde.",
+    "swal_ok": "OK",
+    "swal_success": "¡Éxito!",
+    "swal_verification_error": "Error de Verificación",
+    "swal_message_sent_successfully": "¡Su mensaje ha sido enviado exitosamente!"
 }

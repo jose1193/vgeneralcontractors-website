@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@php use App\Helpers\PhoneHelper; @endphp
+
 @section('title', __('contact_support_page_title'))
 
 @section('meta')
@@ -59,7 +61,6 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        @php use App\Helpers\PhoneHelper; @endphp
         <!-- Contact Support Form -->
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div id="success-message" class="hidden p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
@@ -124,7 +125,7 @@
                             class="form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500 input-field">
                         <span class="ml-2 text-sm text-gray-600">
                             {!! __('sms_consent_text_page', [
-                                'phone' => PhoneHelper::format($companyData->phone),
+                                'phone' => App\Helpers\PhoneHelper::format($companyData->phone),
                                 'privacy_url' => route('privacy-policy'),
                                 'terms_url' => route('terms-and-conditions'),
                             ]) !!}
@@ -296,7 +297,7 @@
                 successMessageDiv.textContent = '';
                 clearTimeout(errorTimeoutId);
 
-                generalErrorDiv.textContent = message || 'An unexpected error occurred.';
+                generalErrorDiv.textContent = message || '{{ __('unexpected_error') }}';
                 generalErrorDiv.classList.remove('hidden');
                 generalErrorDiv.scrollIntoView({
                     behavior: 'smooth',
@@ -497,7 +498,7 @@
                     })
                     .catch(function(error) {
                         console.error('reCAPTCHA execution failed:', error);
-                        showGeneralError('Could not verify request. Please try again.');
+                        showGeneralError('{{ __('swal_could_not_verify') }}');
                         setLoadingState(false);
                     });
             });
@@ -526,7 +527,7 @@
                         if (!response.ok && !(contentType && contentType.indexOf("application/json") !== -1 &&
                                 response.status === 422)) {
                             if (response.status === 403) {
-                                throw new Error(`Security check failed.`);
+                                throw new Error(`{{ __('swal_security_check_failed') }}`);
                             }
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -541,63 +542,63 @@
                     }) => {
                         if (status === 422 && body.errors) {
                             if (body.errors['g-recaptcha-response']) {
-                                showGeneralError('reCAPTCHA validation failed. Please try again.');
-                            } else {
-                                displayErrors(body.errors);
-                                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 5000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                    }
-                                });
-
-                                Toast.fire({
-                                    icon: 'warning',
-                                    title: 'Please correct the errors marked below'
-                                });
-                            }
-                        } else if (body.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: body.message || 'Your message has been sent successfully!',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#f59e0b',
-                                timer: 3000,
+                            showGeneralError('{{ __('swal_recaptcha_failed') }}');
+                        } else {
+                            displayErrors(body.errors);
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
                                 timerProgressBar: true,
-                                didOpen: () => {
-                                    form.reset();
-                                    window.scrollTo({
-                                        top: 0,
-                                        behavior: 'smooth'
-                                    });
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
                                 }
                             });
-                        } else {
-                            Swal.fire({
-                                title: 'Oops!',
-                                text: body.message ||
-                                    'An error occurred on the server. Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#f59e0b',
+
+                            Toast.fire({
+                                icon: 'warning',
+                                title: '{{ __('swal_correct_errors') }}'
                             });
+                            }
+                        } else if (body.success) {
+                        Swal.fire({
+                            title: '{{ __('swal_success') }}',
+                            text: body.message || '{{ __('swal_message_sent_successfully') }}',
+                            icon: 'success',
+                            confirmButtonText: '{{ __('swal_ok') }}',
+                            confirmButtonColor: '#f59e0b',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                form.reset();
+                                window.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                        } else {
+                        Swal.fire({
+                            title: '{{ __('swal_oops') }}',
+                            text: body.message ||
+                                '{{ __('swal_server_error') }}',
+                            icon: 'error',
+                            confirmButtonText: '{{ __('swal_ok') }}',
+                            confirmButtonColor: '#f59e0b',
+                        });
                         }
                     })
                     .catch(error => {
                         console.error('Submission failed:', error);
                         Swal.fire({
-                            title: 'Submission Error',
-                            text: error.message.includes('Security check failed') ?
-                                'Security check failed. Please refresh and try again.' :
-                                'Could not submit the form due to a network or server issue. Please try again later.',
+                            title: '{{ __('swal_submission_error') }}',
+                            text: error.message.includes('{{ __('swal_security_check_failed') }}') ?
+                                '{{ __('swal_security_check_failed') }}' :
+                                '{{ __('swal_network_error') }}',
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: '{{ __('swal_ok') }}',
                             confirmButtonColor: '#f59e0b',
                         });
                     })
