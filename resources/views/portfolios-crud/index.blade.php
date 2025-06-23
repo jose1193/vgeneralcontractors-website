@@ -26,21 +26,12 @@
             <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg">
                 <div class="p-6">
                     <!-- Filter and action bar -->
-                    <x-crud.filter-bar 
-                        entity-name="{{ __('portfolio_entity_name') }}"
-                        :show-search-bar="true"
-                        :show-inactive-toggle="true"
-                        :show-per-page="true"
-                        :per-page-options="[5, 10, 15, 25, 50]"
-                        :default-per-page="10"
-                        add-button-id="createPortfolioBtn"
-                        search-id="searchInput"
-                        search-placeholder="{{ __('portfolio_search_placeholder') }}"
-                        show-deleted-id="showDeleted"
-                        show-deleted-label="{{ __('show_inactive_items') }}"
-                        per-page-id="perPage"
-                        create-button-id="createPortfolioBtn"
-                        add-new-label="{{ __('portfolio_add_new') }}"
+                    <x-crud.filter-bar entity-name="{{ __('portfolio_entity_name') }}" :show-search-bar="true"
+                        :show-inactive-toggle="true" :show-per-page="true" :per-page-options="[5, 10, 15, 25, 50]" :default-per-page="10"
+                        add-button-id="createPortfolioBtn" search-id="searchInput"
+                        search-placeholder="{{ __('portfolio_search_placeholder') }}" show-deleted-id="showDeleted"
+                        show-deleted-label="{{ __('show_inactive_items') }}" per-page-id="perPage"
+                        create-button-id="createPortfolioBtn" add-new-label="{{ __('portfolio_add_new') }}"
                         manager-name="portfolioManager" />
 
                     <!-- Portfolios table -->

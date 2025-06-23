@@ -33,7 +33,7 @@
                         restore: "{{ secure_url(route('service-categories.restore', ':id', false)) }}",
                         checkCategory: "{{ secure_url(route('service-categories.check-category', [], false)) }}"
                     },
-                    tableSelector: '#serviceCategoryTable',
+                    tableSelector: '#serviceCategoryTable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',

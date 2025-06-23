@@ -37,7 +37,7 @@
                         checkEmail: "{{ secure_url(route('email-datas.check-email', [], false)) }}",
                         checkPhone: "{{ secure_url(route('email-datas.check-phone', [], false)) }}"
                     },
-                    tableSelector: '#emailDataTable',
+                    tableSelector: '#emailDataTable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',

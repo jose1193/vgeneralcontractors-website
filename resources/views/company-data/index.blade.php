@@ -290,7 +290,7 @@
                             checkEmail: "{{ secure_url(route('company-data.check-email', [], false)) }}",
                             checkPhone: "{{ secure_url(route('company-data.check-phone', [], false)) }}"
                         },
-                        tableSelector: '#companyDataTable',
+                        tableSelector: '#companyDataTable-body',
                         searchSelector: '#searchInput',
                         perPageSelector: '#perPage',
                         showDeletedSelector: '#showDeleted',

@@ -32,7 +32,7 @@
                         restore: "{{ secure_url(route('blog-categories.restore', ':id', false)) }}",
                         checkCategoryName: "{{ secure_url(route('blog-categories.check-category-name', [], false)) }}"
                     },
-                    tableSelector: '#blogCategoryTable',
+                    tableSelector: '#blogCategoryTable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',
