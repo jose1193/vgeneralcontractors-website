@@ -23,9 +23,27 @@
     formatName(field) {
         let value = this.formData[field];
         if (typeof value === 'string' && value.length > 0) {
+            // Limitar a 50 caracteres máximo
+            if (value.length > 50) {
+                value = value.substring(0, 50);
+            }
+
+            // Permitir solo letras, espacios y algunos caracteres especiales (á, é, í, ó, ú, ñ, etc.)
+            value = value.replace(/[^a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]/g, '');
+
+            // Eliminar espacios múltiples consecutivos
+            value = value.replace(/\s+/g, ' ');
+
+            // Capitalizar cada palabra
             let parts = value.trim().split(' ');
-            let firstWord = parts[0];
-            this.formData[field] = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+            let formattedParts = parts.map(part => {
+                if (part.length > 0) {
+                    return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                }
+                return part;
+            });
+
+            this.formData[field] = formattedParts.join(' ');
         }
         this.validateField(field);
     },
@@ -34,8 +52,8 @@
             case 'first_name':
                 if (!this.formData.first_name) {
                     this.errors.first_name = 'First Name is required';
-                } else if (!/^[A-Za-z'-]+$/.test(this.formData.first_name)) {
-                    this.errors.first_name = 'First Name must contain only letters, hyphens, or apostrophes (no spaces)';
+                } else if (!/^[A-Za-záéíóúñüÁÉÍÓÚÑÜ'\s-]+$/.test(this.formData.first_name) || this.formData.first_name.length > 50) {
+                    this.errors.first_name = 'First Name must contain only letters, spaces, hyphens, or apostrophes (max 50 characters)';
                 } else {
                     delete this.errors.first_name;
                 }
@@ -43,8 +61,8 @@
             case 'last_name':
                 if (!this.formData.last_name) {
                     this.errors.last_name = 'Last Name is required';
-                } else if (!/^[A-Za-z'-]+$/.test(this.formData.last_name)) {
-                    this.errors.last_name = 'Last Name must contain only letters, hyphens, or apostrophes (no spaces)';
+                } else if (!/^[A-Za-záéíóúñüÁÉÍÓÚÑÜ'\s-]+$/.test(this.formData.last_name) || this.formData.last_name.length > 50) {
+                    this.errors.last_name = 'Last Name must contain only letters, spaces, hyphens, or apostrophes (max 50 characters)';
                 } else {
                     delete this.errors.last_name;
                 }
