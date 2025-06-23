@@ -367,7 +367,25 @@
                             save: '{{ __('save') }}',
                             update: '{{ __('update') }}',
                             yes: '{{ __('yes') }}',
-                            no: '{{ __('no') }}'
+                            no: '{{ __('no') }}',
+                            // Validation messages
+                            pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
+                            minimumCharacters: '{{ __('minimum_characters') }}',
+                            lastNameRequired: '{{ __('last_name_required') }}',
+                            validationErrors: '{{ __('validation_errors') }}',
+                            invalidFormat: '{{ __('invalid_format') }}',
+                            invalidEmail: '{{ __('invalid_email') }}',
+                            emailAlreadyInUse: '{{ __('email_already_in_use') }}',
+                            phoneAlreadyInUse: '{{ __('phone_already_in_use') }}',
+                            nameAlreadyInUse: '{{ __('name_already_in_use') }}',
+                            usernameAlreadyInUse: '{{ __('username_already_in_use') }}',
+                            mustContainNumbers: '{{ __('must_contain_numbers') }}',
+                            phoneAvailable: '{{ __('phone_available') }}',
+                            emailAvailable: '{{ __('email_available') }}',
+                            usernameAvailable: '{{ __('username_available') }}',
+                            correctValidationErrors: '{{ __('correct_validation_errors') }}',
+                            isRequired: '{{ __('is_required') }}',
+                            nameAvailable: '{{ __('name_available') }}'
                         },
                         entityConfig: {
                             identifierField: 'email',

@@ -698,7 +698,7 @@ class CrudManagerModal {
         // Validación básica de formato de email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            this.showFieldError("email", "Formato de email inválido");
+            this.showFieldError("email", this.translations.invalidEmail || "Invalid email format");
             this.updateSubmitButtonState();
             return;
         }
@@ -725,11 +725,11 @@ class CrudManagerModal {
                 });
 
                 if (response.exists) {
-                    this.showFieldError("email", "Este email ya está en uso");
+                    this.showFieldError("email", this.translations.emailAlreadyInUse || "This email is already in use");
                     this.updateSubmitButtonState();
                 } else {
                     this.clearFieldError("email");
-                    this.showFieldSuccess("email", "Email disponible");
+                    this.showFieldSuccess("email", this.translations.emailAvailable || "Email available");
                     this.updateSubmitButtonState();
                 }
             } catch (error) {
@@ -788,10 +788,10 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("phone", "Este teléfono ya está en uso");
+                this.showFieldError("phone", this.translations.phoneAlreadyInUse || "This phone is already in use");
             } else {
                 this.clearFieldError("phone");
-                this.showFieldSuccess("phone", "Teléfono disponible");
+                this.showFieldSuccess("phone", this.translations.phoneAvailable || "Phone available");
             }
         } catch (error) {
             console.error("Error validating phone:", error);
@@ -836,11 +836,11 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("name", "Este nombre ya está en uso");
+                this.showFieldError("name", this.translations.nameAlreadyInUse || "This name is already in use");
                 this.updateSubmitButtonState();
             } else {
                 this.clearFieldError("name");
-                this.showFieldSuccess("name", "Nombre disponible");
+                this.showFieldSuccess("name", this.translations.nameAvailable || "Name available");
                 this.updateSubmitButtonState();
             }
         } catch (error) {
@@ -862,14 +862,14 @@ class CrudManagerModal {
 
         // Validación básica de longitud mínima
         if (username.length < 7) {
-            this.showFieldError("username", "Mínimo 7 caracteres");
+            this.showFieldError("username", this.translations.minimumCharacters || "Minimum 7 characters");
             return;
         }
 
         // Validación de que tenga al menos 2 números
         const numberMatches = username.match(/\d/g);
         if (!numberMatches || numberMatches.length < 2) {
-            this.showFieldError("username", "Debe contener al menos 2 números");
+            this.showFieldError("username", this.translations.mustContainNumbers || "Must contain at least 2 numbers");
             return;
         }
 
@@ -893,10 +893,10 @@ class CrudManagerModal {
             });
 
             if (response.exists) {
-                this.showFieldError("username", "Este username ya está en uso");
+                this.showFieldError("username", this.translations.usernameAlreadyInUse || "This username is already in use");
             } else {
                 this.clearFieldError("username");
-                this.showFieldSuccess("username", "Username disponible");
+                this.showFieldSuccess("username", this.translations.usernameAvailable || "Username available");
             }
         } catch (error) {
             console.error("Error validating username:", error);
@@ -1134,7 +1134,10 @@ class CrudManagerModal {
 
             // Validación requerida
             if (field.required && (!value || value.toString().trim() === "")) {
-                this.showFieldError(field.name, `${field.label} es requerido`);
+                const requiredMessage = field.name === 'last_name' ? 
+                    (this.translations.lastNameRequired || 'Last name is required') : 
+                    `${field.label} ${this.translations.isRequired || 'is required'}`;
+                this.showFieldError(field.name, requiredMessage);
                 isValid = false;
             }
 
@@ -1177,7 +1180,7 @@ class CrudManagerModal {
             this.updateSubmitButtonState();
             // Mostrar alerta de error para mayor claridad
             Swal.showValidationMessage(
-                "Por favor corrija los errores antes de continuar"
+                this.translations.pleaseCorrectErrors || "Please correct the errors before continuing"
             );
             return false;
         }
@@ -1208,12 +1211,12 @@ class CrudManagerModal {
         if (validation.pattern && !validation.pattern.test(value)) {
             return {
                 valid: false,
-                message: validation.message || "Formato inválido",
+                message: validation.message || (this.translations.invalidFormat || "Invalid format"),
             };
         }
 
         if (validation.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-            return { valid: false, message: "Email inválido" };
+            return { valid: false, message: this.translations.invalidEmail || "Invalid email" };
         }
 
         return { valid: true };

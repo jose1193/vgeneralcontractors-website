@@ -1567,5 +1567,24 @@
     "portfolio_images_text": "images",
     "portfolio_max_size_per_image": "Maximum size per image",
     "portfolio_formats": "Formats",
-    "portfolio_supported_formats": "JPEG, PNG, JPG, GIF, WEBP"
+    "portfolio_supported_formats": "JPEG, PNG, JPG, GIF, WEBP",
+
+    "_comment_validation_messages": "=== VALIDATION MESSAGES ===",
+    "please_correct_errors": "Please correct the errors before continuing",
+    "minimum_characters": "Minimum 7 characters",
+    "last_name_required": "Last Name is required",
+    "validation_errors": "Validation errors",
+    "invalid_format": "Invalid format",
+    "invalid_email": "Invalid email",
+    "email_already_in_use": "This email is already in use",
+    "phone_already_in_use": "This phone is already in use",
+    "name_already_in_use": "This name is already in use",
+    "username_already_in_use": "This username is already in use",
+    "must_contain_numbers": "Must contain at least 2 numbers",
+    "phone_available": "Phone available",
+    "email_available": "Email available",
+    "username_available": "Username available",
+    "correct_validation_errors": "Correct validation errors before continuing",
+    "is_required": "is required",
+    "name_available": "Name available"
 }

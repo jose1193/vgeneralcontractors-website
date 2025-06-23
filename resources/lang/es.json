@@ -1557,5 +1557,24 @@
     "_comment_model_ai_tooltips": "=== TOOLTIPS MODELO AI ===",
     "model_ai_edit_tooltip": "Editar Modelo AI",
     "model_ai_delete_tooltip": "Eliminar Modelo AI",
-    "model_ai_restore_tooltip": "Restaurar Modelo AI"
+    "model_ai_restore_tooltip": "Restaurar Modelo AI",
+
+    "_comment_validation_messages": "=== MENSAJES DE VALIDACIÓN ===",
+    "please_correct_errors": "Por favor corrija los errores antes de continuar",
+    "minimum_characters": "Mínimo 7 caracteres",
+    "last_name_required": "El apellido es requerido",
+    "validation_errors": "Errores de validación",
+    "invalid_format": "Formato inválido",
+    "invalid_email": "Email inválido",
+    "email_already_in_use": "Este email ya está en uso",
+    "phone_already_in_use": "Este teléfono ya está en uso",
+    "name_already_in_use": "Este nombre ya está en uso",
+    "username_already_in_use": "Este username ya está en uso",
+    "must_contain_numbers": "Debe contener al menos 2 números",
+    "phone_available": "Teléfono disponible",
+    "email_available": "Email disponible",
+    "username_available": "Username disponible",
+    "correct_validation_errors": "Corrija los errores de validación antes de continuar",
+    "is_required": "es requerido",
+    "name_available": "Nombre disponible"
 }
