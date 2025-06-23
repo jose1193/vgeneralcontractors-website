@@ -438,14 +438,20 @@
                     // Custom event handler for edit button
                     $(document).on('click', '#editCompanyDataBtn', function() {
                         @if ($companyData && $companyData->uuid)
+                            console.log('Company data UUID:', '{{ $companyData->uuid }}');
                             window.companyDataManager.showEditModal('{{ $companyData->uuid }}');
                         @else
+                            console.log('No company data found, loading entities...');
                             // If no company data exists, load entities first to get or create the record
-                            window.companyDataManager.loadEntities().then(() => {
+                            window.companyDataManager.loadEntities().then((response) => {
+                                console.log('Loaded entities response:', response);
                                 const data = window.companyDataManager.currentData;
+                                console.log('Current data:', data);
                                 if (data && data.data && data.data.length > 0 && data.data[0].uuid) {
+                                    console.log('Found UUID:', data.data[0].uuid);
                                     window.companyDataManager.showEditModal(data.data[0].uuid);
                                 } else {
+                                    console.error('No valid UUID found in data:', data);
                                     // Show error if still no data available
                                     window.companyDataManager.showAlert('error',
                                         '{{ __('could_not_load_company_info') }}');

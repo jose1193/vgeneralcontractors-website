@@ -217,18 +217,37 @@ class CompanyDataController extends BaseCrudController
     public function edit($uuid)
     {
         try {
-            if (!$uuid || $uuid === 'undefined') {
-                throw new \InvalidArgumentException('Invalid UUID');
+            Log::info('CompanyDataController::edit - Starting edit process', [
+                'uuid' => $uuid,
+                'uuid_type' => gettype($uuid),
+                'uuid_length' => strlen($uuid ?? ''),
+                'is_ajax' => request()->ajax()
+            ]);
+
+            if (!$uuid || $uuid === 'undefined' || $uuid === 'null') {
+                Log::error('CompanyDataController::edit - Invalid UUID provided', ['uuid' => $uuid]);
+                throw new \InvalidArgumentException('Invalid UUID provided');
+            }
+
+            // Validate UUID format
+            if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid)) {
+                Log::error('CompanyDataController::edit - UUID format invalid', ['uuid' => $uuid]);
+                throw new \InvalidArgumentException('UUID format is invalid');
             }
 
             $companyData = $this->modelClass::withTrashed()->where('uuid', $uuid)->first();
+            Log::info('CompanyDataController::edit - Database query result', [
+                'found' => $companyData ? 'yes' : 'no',
+                'data' => $companyData ? $companyData->toArray() : null
+            ]);
 
             if (!$companyData) {
-                throw new \Illuminate\Database\Eloquent\ModelNotFoundException("{$this->entityName} not found");
+                Log::error('CompanyDataController::edit - Company data not found', ['uuid' => $uuid]);
+                throw new \Illuminate\Database\Eloquent\ModelNotFoundException("{$this->entityName} not found with UUID: {$uuid}");
             }
 
             if (request()->ajax()) {
-                Log::info('CompanyDataController::edit - Returning data:', [
+                Log::info('CompanyDataController::edit - Returning data for AJAX:', [
                     'companyData' => $companyData->toArray()
                 ]);
                 
@@ -246,16 +265,21 @@ class CompanyDataController extends BaseCrudController
             Log::error("Error retrieving {$this->entityName}: {$e->getMessage()}", [
                 'uuid' => $uuid,
                 'exception' => $e,
+                'trace' => $e->getTraceAsString()
             ]);
 
             if (request()->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Error retrieving {$this->entityName}",
+                    'message' => "Error retrieving {$this->entityName}: {$e->getMessage()}",
+                    'debug' => [
+                        'uuid' => $uuid,
+                        'error_type' => get_class($e)
+                    ]
                 ], $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500);
             }
 
-            return back()->with('error', "Error retrieving {$this->entityName}");
+            return back()->with('error', "Error retrieving {$this->entityName}: {$e->getMessage()}");
         }
     }
 
@@ -469,4 +493,4 @@ class CompanyDataController extends BaseCrudController
     {
         Log::info("CompanyData updated: {$companyData->company_name}");
     }
-} 
+}
