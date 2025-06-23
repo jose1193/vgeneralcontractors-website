@@ -335,16 +335,34 @@
                         value = value.substring(0, 50);
                     }
                     
+                    // Store cursor position
+                    const cursorPosition = inputElement.selectionStart;
+                    
                     // Allow multiple names separated by spaces
-                    let parts = value.trim().split(' ');
-                    let formattedParts = parts.map(part => {
+                    // Only clean up multiple spaces, but preserve trailing space if user is typing
+                    const endsWithSpace = value.endsWith(' ');
+                    value = value.replace(/\s{2,}/g, ' '); // Replace multiple spaces with single space
+                    
+                    let parts = value.split(' ');
+                    let formattedParts = parts.map((part, index) => {
                         if (part.length > 0) {
                             return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
                         }
+                        // Keep empty parts if they're not at the end (to preserve spaces between words)
                         return part;
                     });
                     
-                    inputElement.value = formattedParts.join(' ');
+                    let formattedValue = formattedParts.join(' ');
+                    
+                    // Preserve trailing space if user was typing a space
+                    if (endsWithSpace && !formattedValue.endsWith(' ') && formattedValue.length < 50) {
+                        formattedValue += ' ';
+                    }
+                    
+                    inputElement.value = formattedValue;
+                    
+                    // Restore cursor position
+                    inputElement.setSelectionRange(cursorPosition, cursorPosition);
                 }
             }
 
