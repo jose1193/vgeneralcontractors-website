@@ -79,7 +79,7 @@
                     <div>
                         <label for="first_name"
                             class="block text-sm font-medium text-gray-700">{{ __('first_name') }}</label>
-                        <input type="text" id="first_name" name="first_name"
+                        <input type="text" id="first_name" name="first_name" maxlength="50"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="first_name"></p>
                     </div>
@@ -88,7 +88,7 @@
                     <div>
                         <label for="last_name"
                             class="block text-sm font-medium text-gray-700">{{ __('last_name') }}</label>
-                        <input type="text" id="last_name" name="last_name"
+                        <input type="text" id="last_name" name="last_name" maxlength="50"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 input-field">
                         <p class="mt-1 text-sm text-red-600 error-message" data-field="last_name"></p>
                     </div>
@@ -330,9 +330,21 @@
             function formatName(inputElement) {
                 let value = inputElement.value;
                 if (typeof value === 'string' && value.length > 0) {
+                    // Limit to 50 characters
+                    if (value.length > 50) {
+                        value = value.substring(0, 50);
+                    }
+                    
+                    // Allow multiple names separated by spaces
                     let parts = value.trim().split(' ');
-                    let firstWord = parts[0];
-                    inputElement.value = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+                    let formattedParts = parts.map(part => {
+                        if (part.length > 0) {
+                            return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                        }
+                        return part;
+                    });
+                    
+                    inputElement.value = formattedParts.join(' ');
                 }
             }
 
