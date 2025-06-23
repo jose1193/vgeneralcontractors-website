@@ -1012,6 +1012,7 @@
     "female": "Femenino",
 
     "role": "Rol",
+    "no_role": "Sin Rol",
     "country": "País",
     "date_of_birth": "Fecha de Nacimiento",
 

@@ -7,6 +7,7 @@
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
         ['field' => 'username', 'label' => __('username'), 'sortable' => true],
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
+        ['field' => 'role', 'label' => __('role'), 'sortable' => true],
         ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
         ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
@@ -285,6 +286,18 @@
 
                                 // Para otros formatos, devolver tal como está
                                 return entity.phone;
+                            }
+                        },
+                        {
+                            field: 'role',
+                            name: '{{ __('role') }}',
+                            sortable: true,
+                            getter: (entity) => {
+                                // Mostrar el primer rol del usuario o 'Sin Rol' si no tiene
+                                if (entity.roles && entity.roles.length > 0) {
+                                    return entity.roles[0].name;
+                                }
+                                return '{{ __('no_role') }}';
                             }
                         },
                         {

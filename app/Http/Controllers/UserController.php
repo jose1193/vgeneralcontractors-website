@@ -354,6 +354,9 @@ class UserController extends BaseCrudController
     {
         $query = $this->modelClass::query();
 
+        // Load roles relationship for table display
+        $query->with('roles');
+
         // Handle search
         if (!empty($this->search)) {
             $searchTerm = '%' . $this->search . '%';
@@ -362,7 +365,10 @@ class UserController extends BaseCrudController
                   ->orWhere('last_name', 'like', $searchTerm)
                   ->orWhere('email', 'like', $searchTerm)
                   ->orWhere('username', 'like', $searchTerm)
-                  ->orWhere('address', 'like', $searchTerm);
+                  ->orWhere('address', 'like', $searchTerm)
+                  ->orWhereHas('roles', function ($roleQuery) use ($searchTerm) {
+                      $roleQuery->where('name', 'like', $searchTerm);
+                  });
             });
         }
 
@@ -372,7 +378,15 @@ class UserController extends BaseCrudController
         }
 
         // Sorting
-        $query->orderBy($this->sortField, $this->sortDirection);
+        if ($this->sortField === 'role') {
+            // Special handling for role sorting
+            $query->leftJoin('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+                  ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                  ->orderBy('roles.name', $this->sortDirection)
+                  ->select('users.*'); // Ensure we only select users columns
+        } else {
+            $query->orderBy($this->sortField, $this->sortDirection);
+        }
         
         return $query;
     }
