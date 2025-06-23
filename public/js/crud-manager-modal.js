@@ -191,6 +191,13 @@ class CrudManagerModal {
                 this.sortField = field;
                 this.sortDirection = "asc";
             }
+
+            // Update sort classes
+            $(".sort-header").removeClass("sort-asc sort-desc");
+            $(e.currentTarget).addClass(
+                this.sortDirection === "asc" ? "sort-asc" : "sort-desc"
+            );
+
             this.loadEntities();
         });
     }

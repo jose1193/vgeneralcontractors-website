@@ -39,7 +39,7 @@
                         checkPhone: "{{ secure_url(route('users.check-phone', [], false)) }}",
                         checkUsername: "{{ secure_url(route('users.check-username', [], false)) }}"
                     },
-                    tableSelector: '#userTable',
+                    tableSelector: '#userTable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
                     showDeletedSelector: '#showDeleted',
@@ -269,7 +269,7 @@
                             name: '{{ __('phone') }}',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.phone) return 'N/A';
+                                if (!entity.phone) return '-';
 
                                 // Extraer solo los dígitos
                                 const cleaned = entity.phone.replace(/\D/g, '');
