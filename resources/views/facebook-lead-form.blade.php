@@ -54,7 +54,7 @@
                                 class="text-red-500">*</span></label>
                         <input type="text" id="first_name" name="first_name"
                             class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                            autocomplete="given-name" required>
+                            autocomplete="given-name" maxlength="50" required>
                         <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
                     </div>
 
@@ -64,7 +64,7 @@
                                 class="text-red-500">*</span></label>
                         <input type="text" id="last_name" name="last_name"
                             class="input-field block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                            autocomplete="family-name" required>
+                            autocomplete="family-name" maxlength="50" required>
                         <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>
                     </div>
                 </div>
@@ -613,11 +613,43 @@
             }
 
             function formatName(inputElement) {
+                // Store cursor position
+                const cursorPosition = inputElement.selectionStart;
                 let value = inputElement.value;
+                
                 if (typeof value === 'string' && value.length > 0) {
-                    let parts = value.trim().split(' ');
-                    let firstWord = parts[0];
-                    inputElement.value = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+                    // Limit to 50 characters
+                    if (value.length > 50) {
+                        value = value.substring(0, 50);
+                    }
+                    
+                    // Check if value ends with space to preserve it
+                    const endsWithSpace = value.endsWith(' ');
+                    
+                    // Replace multiple spaces with single space
+                    value = value.replace(/\s+/g, ' ');
+                    
+                    // Split by spaces and filter out empty parts
+                    let parts = value.trim().split(' ').filter(part => part.length > 0);
+                    
+                    // Capitalize each word
+                    parts = parts.map(part => {
+                        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                    });
+                    
+                    // Join parts with single space
+                    let formattedValue = parts.join(' ');
+                    
+                    // Preserve trailing space if original had it and we're under 50 chars
+                    if (endsWithSpace && formattedValue.length < 50) {
+                        formattedValue += ' ';
+                    }
+                    
+                    inputElement.value = formattedValue;
+                    
+                    // Restore cursor position
+                    const newCursorPosition = Math.min(cursorPosition, formattedValue.length);
+                    inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
                 }
             }
 
