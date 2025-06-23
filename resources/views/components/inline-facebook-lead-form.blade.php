@@ -202,20 +202,62 @@
         }
 
         .insurance-label {
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insurance-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .insurance-label:hover {
-            background-color: #facc15 !important;
+            background: linear-gradient(135deg, #facc15, #f59e0b) !important;
             color: white !important;
             border-color: #eab308 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.25), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .insurance-label:hover::before {
+            left: 100%;
         }
 
         .insurance-label.selected {
-            background-color: #f59e0b !important;
+            background: linear-gradient(135deg, #f59e0b, #d97706) !important;
             color: white !important;
             border-color: #d97706 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .insurance-label:active {
+            transform: translateY(0) !important;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Animación de pulso para el estado seleccionado */
+        .insurance-label.selected {
+            animation: pulse-selected 2s infinite;
+        }
+
+        @keyframes pulse-selected {
+            0%, 100% {
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.5), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            }
         }
     </style>
 @endonce
