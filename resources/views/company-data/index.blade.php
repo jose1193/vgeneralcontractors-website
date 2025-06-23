@@ -34,7 +34,7 @@
                         <!-- Edit company data button -->
                         <div>
                             <button id="editCompanyDataBtn"
-                                class="edit-btn inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
+                                class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-200 disabled:opacity-25">
                                 <span class="mr-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -200,7 +200,7 @@
                             <div class="text-center py-8">
                                 <p class="text-gray-500 dark:text-gray-400">{{ __('no_company_data_found') }}</p>
                                 <button id="editCompanyDataBtn"
-                                    class="mt-4 edit-btn inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                    class="mt-4 inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
                                     {{ __('add_company_information') }}
                                 </button>
                             </div>

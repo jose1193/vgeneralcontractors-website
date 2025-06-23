@@ -162,7 +162,15 @@ class CrudManagerModal {
         $(document).on("click", ".create-btn", () => this.showCreateModal());
         $(document).on("click", ".edit-btn", (e) => {
             const id = $(e.currentTarget).data("id");
-            this.showEditModal(id);
+            // Solo ejecutar si hay un ID válido
+            if (id && id !== "undefined" && id !== "null") {
+                this.showEditModal(id);
+            } else {
+                console.warn(
+                    "Edit button clicked but no valid data-id found:",
+                    id
+                );
+            }
         });
         $(document).on("click", ".delete-btn", (e) => {
             const id = $(e.currentTarget).data("id");
@@ -333,10 +341,6 @@ class CrudManagerModal {
     async showEditModal(id) {
         // Debug: Log del ID recibido
         console.log("showEditModal called with id:", id);
-        console.log("ID type:", typeof id);
-        console.log("ID is undefined:", id === undefined);
-        console.log("ID is null:", id === null);
-        console.log("Routes.edit:", this.routes.edit);
 
         // Limpiar alertas previas
         this.clearAlerts();
@@ -366,7 +370,7 @@ class CrudManagerModal {
                 },
             });
 
-            console.log("Edit AJAX response:", response);
+            console.log("Edit AJAX response received successfully");
             this.currentEntity = response.data || response;
 
             const formHtml = this.generateFormHtml(this.currentEntity);
