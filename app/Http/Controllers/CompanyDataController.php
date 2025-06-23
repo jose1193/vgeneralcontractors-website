@@ -68,11 +68,11 @@ class CompanyDataController extends BaseCrudController
     protected function getValidationMessages()
     {
         return [
-            'name.required' => 'The name is required.',
+            'name.required' => __('name_required'),
             'name.max' => 'The name may not be greater than 255 characters.',
-            'company_name.required' => 'The company name is required.',
+            'company_name.required' => __('The company name is required.'),
             'company_name.max' => 'The company name may not be greater than 255 characters.',
-            'email.required' => 'The email is required.',
+            'email.required' => __('email_required'),
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'This email is already taken.',
             'email.max' => 'The email may not be greater than 255 characters.',

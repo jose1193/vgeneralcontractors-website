@@ -86,11 +86,11 @@ class AppointmentController extends BaseCrudController
     protected function getValidationMessages()
     {
         return [
-            'first_name.required' => 'The first name is required.',
+            'first_name.required' => __('first_name_required'),
             'first_name.max' => 'The first name may not be greater than 255 characters.',
-            'last_name.required' => 'The last name is required.',
+            'last_name.required' => __('last_name_required'),
             'last_name.max' => 'The last name may not be greater than 255 characters.',
-            'email.required' => 'The email is required.',
+            'email.required' => __('email_required'),
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'This email is already taken.',
             'email.max' => 'The email may not be greater than 255 characters.',
@@ -380,13 +380,13 @@ class AppointmentController extends BaseCrudController
                 return response()->json([
                     'success' => false,
                     'message' => "Error creating {$this->entityName}",
-                    'errors' => $e instanceof \Illuminate\Validation\ValidationException
-                        ? $e->errors()
-                        : [$e->getMessage()],
-                ], $e instanceof \Illuminate\Validation\ValidationException ? 422 : 500);
+                    'errors' => $e instanceof ValidationException
+                    ? $e->errors()
+                    : [$e->getMessage()],
+            ], $e instanceof ValidationException ? 422 : 500);
             }
 
-            return back()->withErrors($e instanceof \Illuminate\Validation\ValidationException
+            return back()->withErrors($e instanceof ValidationException
                 ? $e->errors()
                 : [$e->getMessage()])->withInput();
         }
@@ -486,13 +486,13 @@ class AppointmentController extends BaseCrudController
                 return response()->json([
                     'success' => false,
                     'message' => "Error updating {$this->entityName}",
-                    'errors' => $e instanceof \Illuminate\Validation\ValidationException
-                        ? $e->errors()
-                        : [$e->getMessage()],
-                ], $e instanceof \Illuminate\Validation\ValidationException ? 422 : ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500));
+                    'errors' => $e instanceof ValidationException
+                    ? $e->errors()
+                    : [$e->getMessage()],
+            ], $e instanceof ValidationException ? 422 : ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500));
             }
 
-            return back()->withErrors($e instanceof \Illuminate\Validation\ValidationException
+            return back()->withErrors($e instanceof ValidationException
                 ? $e->errors()
                 : [$e->getMessage()])->withInput();
         }
@@ -692,7 +692,7 @@ class AppointmentController extends BaseCrudController
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            throw new \Illuminate\Validation\ValidationException($validator);
+            throw new ValidationException($validator);
         }
 
         return $request;

@@ -123,11 +123,11 @@ abstract class BaseFormRequest extends FormRequest
     protected function getCommonMessages(): array
     {
         return [
-            'not_regex' => 'Please provide valid, real information.',
-            'regex' => 'The format is invalid.',
-            'required' => 'This field is required.',
-            'email' => 'Please provide a valid email address.',
-            'uuid' => 'Invalid identifier format.',
+            'not_regex' => __('Please provide valid, real information.'),
+            'regex' => __('The format is invalid.'),
+            'required' => __('This field is required.'),
+            'email' => __('Please provide a valid email address.'),
+            'uuid' => __('Invalid identifier format.'),
         ];
     }
-} 
+}

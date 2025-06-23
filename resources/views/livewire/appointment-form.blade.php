@@ -33,7 +33,7 @@
         switch (field) {
             case 'first_name':
                 if (!this.formData.first_name) {
-                    this.errors.first_name = 'First Name is required';
+                    this.errors.first_name = '{{ __('first_name_required') }}';
                 } else if (!/^[A-Za-z'-]+$/.test(this.formData.first_name)) {
                     this.errors.first_name = 'First Name must contain only letters, hyphens, or apostrophes (no spaces)';
                 } else {
@@ -42,7 +42,7 @@
                 break;
             case 'last_name':
                 if (!this.formData.last_name) {
-                    this.errors.last_name = 'Last Name is required';
+                    this.errors.last_name = '{{ __('last_name_required') }}';
                 } else if (!/^[A-Za-z'-]+$/.test(this.formData.last_name)) {
                     this.errors.last_name = 'Last Name must contain only letters, hyphens, or apostrophes (no spaces)';
                 } else {
@@ -51,7 +51,7 @@
                 break;
             case 'phone':
                 if (!this.formData.phone) {
-                    this.errors.phone = 'Phone is required';
+                    this.errors.phone = '{{ __('phone_required') }}';
                 } else if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(this.formData.phone)) {
                     this.errors.phone = 'Phone must be in format (XXX) XXX-XXXX';
                 } else {
@@ -60,7 +60,7 @@
                 break;
             case 'email':
                 if (!this.formData.email) {
-                    this.errors.email = 'Email is required';
+                    this.errors.email = '{{ __('email_required') }}';
                 } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email)) {
                     this.errors.email = 'Please enter a valid email';
                 } else {
@@ -69,28 +69,28 @@
                 break;
             case 'address':
                 if (!this.formData.address) {
-                    this.errors.address = 'Address is required';
+                    this.errors.address = '{{ __('address_required') }}';
                 } else {
                     delete this.errors.address;
                 }
                 break;
             case 'city':
                 if (!this.formData.city) {
-                    this.errors.city = 'City is required';
+                    this.errors.city = '{{ __('city_required') }}';
                 } else {
                     delete this.errors.city;
                 }
                 break;
             case 'state':
                 if (!this.formData.state) {
-                    this.errors.state = 'State is required';
+                    this.errors.state = '{{ __('state_required') }}';
                 } else {
                     delete this.errors.state;
                 }
                 break;
             case 'zipcode':
                 if (!this.formData.zipcode) {
-                    this.errors.zipcode = 'Zip code is required';
+                    this.errors.zipcode = '{{ __('zipcode_required') }}';
                 } else if (!/^\d{5}(-\d{4})?$/.test(this.formData.zipcode)) {
                     this.errors.zipcode = 'Please enter a valid US zip code (5 or 9 digits)';
                 } else {
@@ -99,7 +99,7 @@
                 break;
             case 'country':
                 if (!this.formData.country) {
-                    this.errors.country = 'Country is required';
+                    this.errors.country = '{{ __('country_required') }}';
                 } else {
                     delete this.errors.country;
                 }

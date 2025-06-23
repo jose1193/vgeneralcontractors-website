@@ -24,7 +24,7 @@
                     switch (field) {
                         case 'name':
                             if (!this.formData.name) {
-                                this.errors.name = 'Name is required';
+                                this.errors.name = '{{ __('name_required') }}';
                             } else if (!/^[A-Za-z\s]+$/.test(this.formData.name)) {
                                 this.errors.name = 'Name must contain only letters';
                             } else {
@@ -33,7 +33,7 @@
                             break;
                         case 'phone':
                             if (!this.formData.phone) {
-                                this.errors.phone = 'Phone is required';
+                                this.errors.phone = '{{ __('phone_required') }}';
                             } else if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(this.formData.phone)) {
                                 this.errors.phone = 'Phone must be in format (XXX) XXX-XXXX';
                             } else {
@@ -42,7 +42,7 @@
                             break;
                         case 'email':
                             if (!this.formData.email) {
-                                this.errors.email = 'Email is required';
+                                this.errors.email = '{{ __('email_required') }}';
                             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email)) {
                                 this.errors.email = 'Please enter a valid email';
                             } else {
@@ -51,14 +51,14 @@
                             break;
                         case 'city':
                             if (!this.formData.city) {
-                                this.errors.city = 'City is required';
+                                this.errors.city = '{{ __('city_required') }}';
                             } else {
                                 delete this.errors.city;
                             }
                             break;
                         case 'zipcode':
                             if (!this.formData.zipcode) {
-                                this.errors.zipcode = 'Zip code is required';
+                                this.errors.zipcode = '{{ __('zipcode_required') }}';
                             } else {
                                 delete this.errors.zipcode;
                             }

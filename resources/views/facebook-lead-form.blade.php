@@ -757,8 +757,8 @@
                                     // Opcionalmente mostrar un tooltip o mensaje flotante
                                     if (typeof Swal !== 'undefined') {
                                         Swal.fire({
-                                            title: 'Email Already Registered',
-                                            html: 'This email is already in our system.<br><br>' +
+                                            title: '{{ __('swal_email_already_registered') }}',
+                        html: '{{ __('swal_email_in_system') }}' +
                                                 'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
                                             icon: 'info',
                                             confirmButtonText: 'OK',
@@ -924,8 +924,8 @@
                             // Check for duplicate email error
                             else if (body.duplicate_email) {
                                 Swal.fire({
-                                    title: 'Email Already Registered',
-                                    html: 'This email is already in our system.<br><br>' +
+                                    title: '{{ __('swal_email_already_registered') }}',
+                        html: '{{ __('swal_email_in_system') }}' +
                                         'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
                                     icon: 'info',
                                     confirmButtonText: 'OK',

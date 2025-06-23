@@ -462,7 +462,7 @@
                                     // Si es un error de email duplicado, mostrar un mensaje descriptivo
                                     if (fieldName === 'email' && data.duplicate_email) {
                                         errorSpan.innerHTML =
-                                            'This email is already registered. <strong>Please contact support to schedule your appointment.</strong>';
+                                            '{{ __('swal_email_in_system') }}';
                                     }
                                 } else {
                                     errorSpan.textContent = '';
