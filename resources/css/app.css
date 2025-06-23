@@ -196,3 +196,139 @@ input:checked ~ .block {
     font-weight: bold !important;
     margin-right: 2px;
 }
+
+/* ===============================================
+   CHECKBOX AND RADIO BUTTON STYLES
+   =============================================== */
+
+/* Estilos mejorados para checkboxes */
+input[type="checkbox"].checkbox-field,
+input[type="checkbox"].form-checkbox,
+.checkbox-field,
+.form-checkbox {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    border: 2px solid #d97706 !important; /* yellow-600 border */
+    border-radius: 0.375rem !important; /* rounded-md */
+    background-color: #ffffff !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease-in-out !important;
+    flex-shrink: 0 !important;
+}
+
+/* Hover state para checkboxes */
+input[type="checkbox"].checkbox-field:hover,
+input[type="checkbox"].form-checkbox:hover,
+.checkbox-field:hover,
+.form-checkbox:hover {
+    border-color: #f59e0b !important; /* yellow-500 */
+    background-color: #fef3c7 !important; /* yellow-50 */
+    transform: scale(1.05) !important;
+}
+
+/* Focus state para checkboxes */
+input[type="checkbox"].checkbox-field:focus,
+input[type="checkbox"].form-checkbox:focus,
+.checkbox-field:focus,
+.form-checkbox:focus {
+    outline: none !important;
+    border-color: #f59e0b !important; /* yellow-500 */
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Checked state para checkboxes */
+input[type="checkbox"].checkbox-field:checked,
+input[type="checkbox"].form-checkbox:checked,
+.checkbox-field:checked,
+.form-checkbox:checked {
+    background-color: #f59e0b !important; /* yellow-500 */
+    border-color: #d97706 !important; /* yellow-600 */
+}
+
+/* Checkmark para checkboxes */
+input[type="checkbox"].checkbox-field:checked::after,
+input[type="checkbox"].form-checkbox:checked::after,
+.checkbox-field:checked::after,
+.form-checkbox:checked::after {
+    content: "✓" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: #ffffff !important;
+    font-size: 0.875rem !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+}
+
+/* Estilos para radio buttons */
+input[type="radio"].radio-field {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    border: 2px solid #d97706 !important; /* yellow-600 border */
+    border-radius: 50% !important;
+    background-color: #ffffff !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease-in-out !important;
+    flex-shrink: 0 !important;
+}
+
+/* Hover state para radio buttons */
+input[type="radio"].radio-field:hover {
+    border-color: #f59e0b !important; /* yellow-500 */
+    background-color: #fef3c7 !important; /* yellow-50 */
+    transform: scale(1.05) !important;
+}
+
+/* Focus state para radio buttons */
+input[type="radio"].radio-field:focus {
+    outline: none !important;
+    border-color: #f59e0b !important; /* yellow-500 */
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Checked state para radio buttons */
+input[type="radio"].radio-field:checked {
+    background-color: #f59e0b !important; /* yellow-500 */
+    border-color: #d97706 !important; /* yellow-600 */
+}
+
+/* Dot para radio buttons */
+input[type="radio"].radio-field:checked::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 0.5rem !important;
+    height: 0.5rem !important;
+    background-color: #ffffff !important;
+    border-radius: 50% !important;
+}
+
+/* Disabled states */
+input[type="checkbox"].checkbox-field:disabled,
+input[type="checkbox"].form-checkbox:disabled,
+input[type="radio"].radio-field:disabled,
+.checkbox-field:disabled,
+.form-checkbox:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    border-color: #9ca3af !important; /* gray-400 */
+    background-color: #f3f4f6 !important; /* gray-100 */
+}
+
+input[type="checkbox"].checkbox-field:disabled:hover,
+input[type="checkbox"].form-checkbox:disabled:hover,
+input[type="radio"].radio-field:disabled:hover,
+.checkbox-field:disabled:hover,
+.form-checkbox:disabled:hover {
+    transform: none !important;
+    background-color: #f3f4f6 !important; /* gray-100 */
+}

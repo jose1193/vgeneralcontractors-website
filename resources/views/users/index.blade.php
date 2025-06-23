@@ -293,11 +293,37 @@
                             name: '{{ __('role') }}',
                             sortable: true,
                             getter: (entity) => {
-                                // Mostrar el primer rol del usuario o 'Sin Rol' si no tiene
+                                // Mostrar el primer rol del usuario con badge de color o 'Sin Rol' si no tiene
                                 if (entity.roles && entity.roles.length > 0) {
-                                    return entity.roles[0].name;
+                                    const roleName = entity.roles[0].name;
+                                    let badgeClass = '';
+
+                                    // Asignar colores específicos para cada rol
+                                    switch (roleName) {
+                                        case 'Super Admin':
+                                            badgeClass =
+                                                'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-purple-200';
+                                            break;
+                                        case 'Admin':
+                                            badgeClass =
+                                                'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-blue-200';
+                                            break;
+                                        case 'User':
+                                            badgeClass =
+                                                'bg-gradient-to-r from-green-500 to-green-600 text-white border-green-200';
+                                            break;
+                                        default:
+                                            badgeClass =
+                                                'bg-gradient-to-r from-gray-500 to-gray-600 text-white border-gray-200';
+                                    }
+
+                                    return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${badgeClass} shadow-sm border">
+                                        ${roleName}
+                                    </span>`;
                                 }
-                                return '{{ __('no_role') }}';
+                                return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                                    {{ __('no_role') }}
+                                </span>`;
                             }
                         },
                         {

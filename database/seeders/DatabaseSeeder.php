@@ -136,11 +136,20 @@ class DatabaseSeeder extends Seeder
         // Asegurar que Super Admin tenga permisos de MODEL_AI
         $superAdminRole->givePermissionTo($modelAIPermissions);
 
-        // Crear la categoría "General" para blog
+        // Crear categorías para blog
         BlogCategory::create([
             'uuid' => Uuid::uuid4()->toString(),
             'blog_category_name' => 'Roofing',
             'blog_category_description' => 'Valor por defecto',
+            'blog_category_image' => 'Valor por defecto',
+            'user_id' => 1,
+           
+        ]);
+
+        BlogCategory::create([
+            'uuid' => Uuid::uuid4()->toString(),
+            'blog_category_name' => 'Water Mitigation',
+            'blog_category_description' => 'Categoría para contenido relacionado con mitigación de agua',
             'blog_category_image' => 'Valor por defecto',
             'user_id' => 1,
            
@@ -210,7 +219,8 @@ class DatabaseSeeder extends Seeder
             'Tarp',
             'ReTarp',
             'Rebuild',
-            'Roof Paint'
+            'Roof Paint',
+            'Inspección Tarp'
         ];
 
         foreach ($serviceCategories as $category) {
