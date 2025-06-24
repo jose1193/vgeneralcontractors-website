@@ -1429,20 +1429,43 @@
                 checkFormValidity();
             }
 
+            // Helper function to capitalize first letter
+            function capitalizeFirst(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            // Helper function to format field names for display
+            function formatFieldName(fieldName) {
+                return capitalizeFirst(fieldName.replace('_', ' '));
+            }
+
             // Function to validate individual field
             function validateField(fieldName, value) {
                 switch (fieldName) {
                     case 'first_name':
-                    case 'last_name':
                         if (!value || value.trim() === '') {
-                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            showFieldError(fieldName, '{{ __('first_name_required') }}');
                             return false;
                         } else if (value.length > 50) {
-                            showFieldError(fieldName,
-                                `${fieldName.replace('_', ' ')} must not exceed 50 characters`);
+                            showFieldError(fieldName, '{{ __('first_name_max') }}');
                             return false;
                         } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
-                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} contains invalid characters`);
+                            showFieldError(fieldName, '{{ __('first_name_regex') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'last_name':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, '{{ __('last_name_required') }}');
+                            return false;
+                        } else if (value.length > 50) {
+                            showFieldError(fieldName, '{{ __('last_name_max') }}');
+                            return false;
+                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                            showFieldError(fieldName, '{{ __('last_name_regex') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1451,10 +1474,10 @@
 
                     case 'email':
                         if (!value || value.trim() === '') {
-                            showFieldError(fieldName, 'Email is required');
+                            showFieldError(fieldName, '{{ __('email_required') }}');
                             return false;
                         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                            showFieldError(fieldName, 'Please enter a valid email address');
+                            showFieldError(fieldName, '{{ __('email_invalid') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1463,10 +1486,10 @@
 
                     case 'phone':
                         if (!value || value.trim() === '') {
-                            showFieldError(fieldName, 'Phone number is required');
+                            showFieldError(fieldName, '{{ __('phone_required') }}');
                             return false;
                         } else if (value.replace(/\D/g, '').length !== 10) {
-                            showFieldError(fieldName, 'Please enter a valid 10-digit phone number');
+                            showFieldError(fieldName, '{{ __('phone_max') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1474,12 +1497,44 @@
                         }
 
                     case 'address':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, '{{ __('address_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'city':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, '{{ __('city_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'state':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, '{{ __('state_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'zipcode':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, '{{ __('zipcode_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'country':
                         if (!value || value.trim() === '') {
-                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            showFieldError(fieldName, '{{ __('country_required') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1489,7 +1544,7 @@
                     case 'insurance_property':
                         const checkedRadio = document.querySelector('input[name="insurance_property"]:checked');
                         if (!checkedRadio) {
-                            showFieldError(fieldName, 'Please select an insurance option');
+                            showFieldError(fieldName, '{{ __('insurance_property_required') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1497,10 +1552,26 @@
                         }
 
                     case 'lead_source':
+                        if (!value || value === '') {
+                            showFieldError(fieldName, '{{ __('lead_source_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'inspection_status':
+                        if (!value || value === '') {
+                            showFieldError(fieldName, '{{ __('inspection_status_required') }}');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
                     case 'status_lead':
                         if (!value || value === '') {
-                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            showFieldError(fieldName, '{{ __('status_lead_required') }}');
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1522,35 +1593,54 @@
                 ];
 
                 let isValid = true;
+                let allFieldsFilled = true;
 
                 requiredFields.forEach(fieldName => {
                     let value = '';
+                    let hasValue = false;
 
                     if (fieldName === 'insurance_property') {
                         const checkedRadio = document.querySelector(
                             'input[name="insurance_property"]:checked');
                         value = checkedRadio ? checkedRadio.value : '';
+                        hasValue = !!checkedRadio;
                     } else {
                         const field = document.querySelector(`[name="${fieldName}"]`);
-                        value = field ? field.value : '';
+                        value = field ? field.value.trim() : '';
+                        hasValue = value !== '';
                     }
 
-                    if (!validateField(fieldName, value)) {
-                        isValid = false;
+                    // Check if field has value
+                    if (!hasValue) {
+                        allFieldsFilled = false;
+                    }
+
+                    // Only validate fields that have been touched or have values
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    const hasBeenTouched = field && (field.dataset.touched === 'true');
+
+                    if (hasValue || hasBeenTouched) {
+                        if (!validateField(fieldName, value)) {
+                            isValid = false;
+                        }
                     }
                 });
 
-                // Enable/disable submit button
+                // Enable submit button only if ALL required fields are filled AND valid
+                const shouldEnable = allFieldsFilled && isValid;
+
                 if (submitButton) {
-                    submitButton.disabled = !isValid;
-                    if (isValid) {
+                    submitButton.disabled = !shouldEnable;
+                    if (shouldEnable) {
                         submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        submitButton.classList.add('hover:bg-gray-700');
                     } else {
                         submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        submitButton.classList.remove('hover:bg-gray-700');
                     }
                 }
 
-                return isValid;
+                return shouldEnable;
             }
 
             // Add event listeners for real-time validation
@@ -1563,27 +1653,55 @@
             fieldsToValidate.forEach(fieldName => {
                 const field = document.querySelector(`[name="${fieldName}"]`);
                 if (field) {
+                    // Mark field as touched when user interacts with it
+                    field.addEventListener('focus', function() {
+                        this.dataset.touched = 'true';
+                    });
+
                     // Validate on blur (when user leaves field)
                     field.addEventListener('blur', function() {
+                        this.dataset.touched = 'true';
                         validateField(fieldName, this.value);
+                        checkFormValidity();
                     });
 
                     // Validate on input for immediate feedback
                     field.addEventListener('input', function() {
+                        this.dataset.touched = 'true';
                         // Clear errors immediately when user starts typing
                         if (this.value.trim() !== '') {
                             clearFieldError(fieldName);
                         }
+                        checkFormValidity();
                     });
+
+                    // For select fields, also listen to change events
+                    if (field.tagName === 'SELECT') {
+                        field.addEventListener('change', function() {
+                            this.dataset.touched = 'true';
+                            validateField(fieldName, this.value);
+                            checkFormValidity();
+                        });
+                    }
                 }
             });
 
             // Special handling for insurance radio buttons
             insuranceRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
+                    // Mark all radio buttons in the group as touched
+                    insuranceRadios.forEach(r => r.dataset.touched = 'true');
                     validateField('insurance_property', this.value);
+                    checkFormValidity();
                 });
             });
+
+            // Initialize submit button as disabled
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                submitButton.classList.remove('hover:bg-gray-700');
+            }
 
             // Initial form validation check
             setTimeout(() => {

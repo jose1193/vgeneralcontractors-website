@@ -154,6 +154,27 @@ return [
     'to_schedule_appointment' => 'para programar su cita',
     'error' => 'Error',
     'ok' => 'OK',
+
+    // Form Validation Messages
+    'first_name_required' => 'El nombre es requerido',
+    'first_name_max' => 'El nombre no debe exceder 50 caracteres',
+    'first_name_regex' => 'El nombre contiene caracteres inválidos',
+    'last_name_required' => 'El apellido es requerido',
+    'last_name_max' => 'El apellido no debe exceder 50 caracteres',
+    'last_name_regex' => 'El apellido contiene caracteres inválidos',
+    'email_required' => 'El correo electrónico es requerido',
+    'email_invalid' => 'Por favor ingrese un correo electrónico válido',
+    'phone_required' => 'El número de teléfono es requerido',
+    'phone_max' => 'Por favor ingrese un número de teléfono válido de 10 dígitos',
+    'address_required' => 'La dirección es requerida',
+    'city_required' => 'La ciudad es requerida',
+    'state_required' => 'El estado es requerido',
+    'zipcode_required' => 'El código postal es requerido',
+    'country_required' => 'El país es requerido',
+    'insurance_property_required' => 'Por favor seleccione una opción de seguro',
+    'lead_source_required' => 'La fuente del lead es requerida',
+    'inspection_status_required' => 'El estado de inspección es requerido',
+    'status_lead_required' => 'El estado del lead es requerido',
     
     // Welcome Page
     'welcome_title' => '¡Bienvenido a V General Contractors!',

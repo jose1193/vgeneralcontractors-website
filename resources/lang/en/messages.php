@@ -154,6 +154,27 @@ return [
     'to_schedule_appointment' => 'to schedule your appointment',
     'error' => 'Error',
     'ok' => 'OK',
+
+    // Form Validation Messages
+    'first_name_required' => 'First name is required',
+    'first_name_max' => 'First name must not exceed 50 characters',
+    'first_name_regex' => 'First name contains invalid characters',
+    'last_name_required' => 'Last name is required',
+    'last_name_max' => 'Last name must not exceed 50 characters',
+    'last_name_regex' => 'Last name contains invalid characters',
+    'email_required' => 'Email is required',
+    'email_invalid' => 'Please enter a valid email address',
+    'phone_required' => 'Phone number is required',
+    'phone_max' => 'Please enter a valid 10-digit phone number',
+    'address_required' => 'Address is required',
+    'city_required' => 'City is required',
+    'state_required' => 'State is required',
+    'zipcode_required' => 'Zip code is required',
+    'country_required' => 'Country is required',
+    'insurance_property_required' => 'Please select an insurance option',
+    'lead_source_required' => 'Lead source is required',
+    'inspection_status_required' => 'Inspection status is required',
+    'status_lead_required' => 'Lead status is required',
     
     // Welcome Page
     'welcome_title' => 'Welcome to V General Contractors!',
