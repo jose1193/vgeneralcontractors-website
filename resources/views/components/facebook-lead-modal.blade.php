@@ -284,14 +284,34 @@
                 let map;
                 let marker;
 
-                // Radio button styling
+                // Radio button styling and initialization
                 const insuranceOptions = document.querySelectorAll('input[name="insurance_property"]');
+                
+                // Initialize radio button styles on load
                 insuranceOptions.forEach(option => {
+                    if (option.checked) {
+                        const label = document.querySelector(`label[for="${option.id}"]`);
+                        if (label) {
+                            label.classList.add('selected');
+                        }
+                    }
+                    
+                    // Custom validation message
+                     option.setCustomValidity('');
+                     option.addEventListener('invalid', function() {
+                         this.setCustomValidity('{{ __('insurance_property_required') }}');
+                     });
+                    
                     option.addEventListener('change', function() {
+                        // Clear custom validation
+                        this.setCustomValidity('');
+                        
+                        // Remove selected class from all labels
                         document.querySelectorAll('.insurance-label').forEach(label => {
                             label.classList.remove('selected');
                         });
 
+                        // Add selected class to the clicked option's label
                         if (this.checked) {
                             const label = document.querySelector(`label[for="${this.id}"]`);
                             if (label) {
@@ -299,6 +319,7 @@
                             }
                         }
 
+                        // Validate the field
                         validateField(this);
                     });
                 });
