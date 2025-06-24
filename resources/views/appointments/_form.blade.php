@@ -19,7 +19,7 @@
             {{ __('first_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
-            required autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
+            autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
         <x-input-error for="first_name" class="mt-2" />
     </div>
 
@@ -29,7 +29,7 @@
             {{ __('last_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
-            required maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
+            maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
         <x-input-error for="last_name" class="mt-2" />
     </div>
 
@@ -39,7 +39,7 @@
             {{ __('phone') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
-            :value="old('phone', $appointment->phone ?? '')" required />
+            :value="old('phone', $appointment->phone ?? '')" />
         <x-input-error for="phone" class="mt-2" />
     </div>
 
@@ -48,7 +48,7 @@
         <label for="email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('email') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
+        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" />
         <x-input-error for="email" class="mt-2" />
     </div>
 
@@ -152,8 +152,7 @@
         <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('city') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
-            required />
+        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')" />
         <x-input-error for="city" class="mt-2" />
     </div>
 
@@ -162,8 +161,7 @@
         <label for="state" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('state') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
-            required />
+        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')" />
         <x-input-error for="state" class="mt-2" />
     </div>
 
@@ -172,8 +170,7 @@
         <label for="zipcode" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('zip_code') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
-            required />
+        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')" />
         <x-input-error for="zipcode" class="mt-2" />
     </div>
 
@@ -182,8 +179,7 @@
         <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('country') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
-            required />
+        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')" />
         <x-input-error for="country" class="mt-2" />
     </div>
 
@@ -244,8 +240,7 @@
             {{ __('inspection_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="inspection_status" name="inspection_status"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Status</option>
             <option value="Confirmed"
                 {{ old('inspection_status', $appointment->inspection_status ?? '') == 'Confirmed' ? 'selected' : '' }}>
@@ -269,8 +264,7 @@
             {{ __('lead_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="status_lead" name="status_lead"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Lead Status</option>
             <option value="New"
                 {{ old('status_lead', $appointment->status_lead ?? 'New') == 'New' ? 'selected' : '' }}>
@@ -294,8 +288,7 @@
             {{ __('lead_source') }} <span class="text-red-500">*</span>
         </label>
         <select id="lead_source" name="lead_source"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Lead Source</option>
             <option value="Website"
                 {{ old('lead_source', $appointment->lead_source ?? '') == 'Website' ? 'selected' : '' }}>
@@ -435,8 +428,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_yes" name="insurance_property" type="radio" value="1"
                         class="radio-field focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}
-                        required>
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}>
                     <label for="insurance_yes"
                         class="insurance-label ml-2 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm bg-white hover:bg-indigo-50">
                         {{ __('yes') }}
@@ -445,8 +437,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_no" name="insurance_property" type="radio" value="0"
                         class="radio-field focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}
-                        required>
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}>
                     <label for="insurance_no"
                         class="insurance-label ml-2 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm bg-white hover:bg-indigo-50">
                         {{ __('no') }}
@@ -455,6 +446,7 @@
             </div>
         </fieldset>
         <x-input-error for="insurance_property" class="mt-2" />
+        <span class="text-xs text-red-500 mt-1 block hidden" data-field="insurance_property"></span>
     </div>
 
     {{-- Other checkboxes --}}
@@ -1377,8 +1369,226 @@
                             label.classList.add('selected');
                         }
                     }
+
+                    // Clear any validation errors
+                    clearFieldError('insurance_property');
                 });
             });
+
+            // ===== REAL-TIME VALIDATION SYSTEM =====
+
+            // Get all form inputs for validation
+            const formInputs = document.querySelectorAll('input[required], select[required], textarea[required]');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            // Function to clear field errors
+            function clearFieldError(fieldName) {
+                const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                }
+
+                // Remove red border from field
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.classList.remove('border-red-500', 'border-red-300');
+                    field.classList.add('border-gray-300');
+                }
+
+                checkFormValidity();
+            }
+
+            // Function to show field error
+            function showFieldError(fieldName, message) {
+                let errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
+
+                if (!errorElement) {
+                    // Create error element if it doesn't exist
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field) {
+                        errorElement = document.createElement('span');
+                        errorElement.className = 'text-xs text-red-500 mt-1 block';
+                        errorElement.setAttribute('data-field', fieldName);
+                        field.parentNode.appendChild(errorElement);
+                    }
+                }
+
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.classList.remove('hidden');
+                }
+
+                // Add red border to field
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.classList.add('border-red-500');
+                    field.classList.remove('border-gray-300', 'border-green-500');
+                }
+
+                checkFormValidity();
+            }
+
+            // Function to validate individual field
+            function validateField(fieldName, value) {
+                switch (fieldName) {
+                    case 'first_name':
+                    case 'last_name':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            return false;
+                        } else if (value.length > 50) {
+                            showFieldError(fieldName,
+                                `${fieldName.replace('_', ' ')} must not exceed 50 characters`);
+                            return false;
+                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} contains invalid characters`);
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'email':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, 'Email is required');
+                            return false;
+                        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                            showFieldError(fieldName, 'Please enter a valid email address');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'phone':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, 'Phone number is required');
+                            return false;
+                        } else if (value.replace(/\D/g, '').length !== 10) {
+                            showFieldError(fieldName, 'Please enter a valid 10-digit phone number');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'address':
+                    case 'city':
+                    case 'state':
+                    case 'zipcode':
+                    case 'country':
+                        if (!value || value.trim() === '') {
+                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'insurance_property':
+                        const checkedRadio = document.querySelector('input[name="insurance_property"]:checked');
+                        if (!checkedRadio) {
+                            showFieldError(fieldName, 'Please select an insurance option');
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    case 'lead_source':
+                    case 'inspection_status':
+                    case 'status_lead':
+                        if (!value || value === '') {
+                            showFieldError(fieldName, `${fieldName.replace('_', ' ')} is required`);
+                            return false;
+                        } else {
+                            clearFieldError(fieldName);
+                            return true;
+                        }
+
+                    default:
+                        clearFieldError(fieldName);
+                        return true;
+                }
+            }
+
+            // Function to check overall form validity
+            function checkFormValidity() {
+                const requiredFields = [
+                    'first_name', 'last_name', 'email', 'phone', 'address',
+                    'city', 'state', 'zipcode', 'country', 'insurance_property',
+                    'lead_source', 'inspection_status', 'status_lead'
+                ];
+
+                let isValid = true;
+
+                requiredFields.forEach(fieldName => {
+                    let value = '';
+
+                    if (fieldName === 'insurance_property') {
+                        const checkedRadio = document.querySelector(
+                            'input[name="insurance_property"]:checked');
+                        value = checkedRadio ? checkedRadio.value : '';
+                    } else {
+                        const field = document.querySelector(`[name="${fieldName}"]`);
+                        value = field ? field.value : '';
+                    }
+
+                    if (!validateField(fieldName, value)) {
+                        isValid = false;
+                    }
+                });
+
+                // Enable/disable submit button
+                if (submitButton) {
+                    submitButton.disabled = !isValid;
+                    if (isValid) {
+                        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+
+                return isValid;
+            }
+
+            // Add event listeners for real-time validation
+            const fieldsToValidate = [
+                'first_name', 'last_name', 'email', 'phone', 'address',
+                'city', 'state', 'zipcode', 'country', 'lead_source',
+                'inspection_status', 'status_lead'
+            ];
+
+            fieldsToValidate.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    // Validate on blur (when user leaves field)
+                    field.addEventListener('blur', function() {
+                        validateField(fieldName, this.value);
+                    });
+
+                    // Validate on input for immediate feedback
+                    field.addEventListener('input', function() {
+                        // Clear errors immediately when user starts typing
+                        if (this.value.trim() !== '') {
+                            clearFieldError(fieldName);
+                        }
+                    });
+                }
+            });
+
+            // Special handling for insurance radio buttons
+            insuranceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    validateField('insurance_property', this.value);
+                });
+            });
+
+            // Initial form validation check
+            setTimeout(() => {
+                checkFormValidity();
+            }, 100);
         });
     </script>
 @endpush
