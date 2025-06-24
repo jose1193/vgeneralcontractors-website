@@ -122,39 +122,9 @@
                         },
                         body: new FormData(form)
                     })
-                    .then(response => {
-                        const contentType = response.headers.get("content-type");
-                        if (!response.ok && !(contentType && contentType.indexOf("application/json") !== -1 && response.status === 422)) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json().then(data => ({
-                            status: response.status,
-                            body: data
-                        }));
-                    })
-                    .then(({ status, body }) => {
-                        if (status === 422 && body.errors) {
-                            // Display validation errors
-                            displayErrors(body.errors);
-                            
-                            // Show notification with SweetAlert
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            });
-
-                            Toast.fire({
-                                icon: 'warning',
-                                title: '{{ __('swal_correct_errors') }}'
-                            });
-                        } else if (body.success) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
                             // Reset form before showing success message
                             form.reset();
 
@@ -162,21 +132,29 @@
                             setLoadingState(false);
 
                             Swal.fire({
-                                title: '{{ __('swal_success') }}',
-                                text: body.message,
+                                title: '{{ __('success_title') }}',
+                                text: data.message,
                                 icon: 'success',
-                                confirmButtonText: '{{ __('swal_ok') }}',
-                                confirmButtonColor: '#f59e0b'
+                                confirmButtonText: '{{ __('swal_ok') }}'
                             }).then(() => {
-                                window.location.href = '{{ route('appointments.index') }}';
+                                // Use redirectUrl from response if available
+                                window.location.href = data.redirectUrl ||
+                                    "{{ route('appointments.index') }}";
                             });
                         } else {
+                            let errorMessage = data.message;
+                            if (data.errors) {
+                                errorMessage += '\n';
+                                Object.values(data.errors).forEach(error => {
+                                    errorMessage += '\n• ' + error;
+                                });
+                            }
+
                             Swal.fire({
-                                title: '{{ __('swal_error') }}',
-                                text: body.message || '{{ __('swal_unknown_error') }}',
+                                title: '{{ __('error_occurred') }}',
+                                text: errorMessage,
                                 icon: 'error',
-                                confirmButtonText: '{{ __('swal_ok') }}',
-                                confirmButtonColor: '#f59e0b'
+                                confirmButtonText: '{{ __('swal_ok') }}'
                             });
 
                             // Hide spinner and enable button on error
@@ -194,59 +172,7 @@
 
                         // Hide spinner and enable button on error
                         setLoadingState(false);
-                    })
-                    .finally(() => {
-                        // Hide loading spinner
-                        setLoadingState(false);
                     });
-            });
-
-            // Function to display validation errors
-            function displayErrors(errors) {
-                clearAllErrors();
-                let firstErrorField = null;
-                for (const field in errors) {
-                    const errorSpan = document.querySelector(`.error-message[data-field="${field}"]`);
-                    const inputElement = document.querySelector(`[name="${field}"]`);
-
-                    if (errorSpan && errors[field]?.[0]) {
-                        errorSpan.textContent = errors[field][0];
-                        errorSpan.classList.remove('hidden');
-                    }
-                    if (inputElement) {
-                        inputElement.classList.add('border-red-500');
-                        if (!firstErrorField) firstErrorField = inputElement;
-                    }
-                }
-                if (firstErrorField) {
-                    firstErrorField.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            }
-
-            // Function to clear all errors
-            function clearAllErrors() {
-                document.querySelectorAll('.error-message').forEach(span => {
-                    span.textContent = '';
-                    span.classList.add('hidden');
-                });
-                document.querySelectorAll('.input-field, input, select, textarea').forEach(input => {
-                    input.classList.remove('border-red-500');
-                });
-            }
-
-            // Add event listeners to clear errors on input
-            document.querySelectorAll('input, select, textarea').forEach(input => {
-                input.addEventListener('input', function() {
-                    const errorSpan = document.querySelector(`.error-message[data-field="${this.name}"]`);
-                    if (errorSpan) {
-                        errorSpan.textContent = '';
-                        errorSpan.classList.add('hidden');
-                    }
-                    this.classList.remove('border-red-500');
-                });
             });
         });
     </script>
