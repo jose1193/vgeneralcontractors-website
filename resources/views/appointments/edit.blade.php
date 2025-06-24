@@ -49,6 +49,15 @@
             const submitSpinner = document.getElementById('submit-spinner');
             const submitButtonText = document.getElementById('submit-button-text');
 
+            // Wait for the form validation system to be ready
+            const waitForValidation = setInterval(() => {
+                if (window.appointmentFormValidation) {
+                    clearInterval(waitForValidation);
+                    // Initial check to ensure button state is correct
+                    window.appointmentFormValidation.checkFormValidity();
+                }
+            }, 100);
+
             // Extra code to ensure insurance radio buttons styling works
             const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
             const insuranceLabels = document.querySelectorAll('.insurance-label');
@@ -99,13 +108,17 @@
 
             // Function to set loading state
             function setLoadingState(isLoading) {
-                submitButton.disabled = isLoading;
                 if (isLoading) {
+                    submitButton.disabled = true;
                     submitSpinner.classList.remove('hidden');
                     submitButtonText.textContent = '{{ __('sending') }}...';
                 } else {
                     submitSpinner.classList.add('hidden');
                     submitButtonText.textContent = '{{ __('update_appointment_btn') }}';
+                    // Re-check form validity after loading to restore proper button state
+                    if (window.appointmentFormValidation) {
+                        window.appointmentFormValidation.checkFormValidity();
+                    }
                 }
             }
 

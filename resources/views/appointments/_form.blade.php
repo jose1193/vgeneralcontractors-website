@@ -1379,7 +1379,8 @@
 
             // Get all form inputs for validation
             const formInputs = document.querySelectorAll('input[required], select[required], textarea[required]');
-            const submitButton = document.querySelector('button[type="submit"]');
+            const submitButton = document.querySelector('button[type="submit"]') || document.getElementById(
+                'submit-button');
 
             // Function to clear field errors
             function clearFieldError(fieldName) {
@@ -1702,6 +1703,13 @@
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
                 submitButton.classList.remove('hover:bg-gray-700');
             }
+
+            // Make checkFormValidity available globally for other scripts
+            window.appointmentFormValidation = {
+                checkFormValidity: checkFormValidity,
+                validateField: validateField,
+                submitButton: submitButton
+            };
 
             // Initial form validation check
             setTimeout(() => {
