@@ -1683,5 +1683,7 @@
     "appointment_calendar_rescheduled_successfully": "Appointment rescheduled successfully. A notification email has been sent to the client.",
     "appointment_calendar_error_creating": "Error creating appointment: ",
     "appointment_calendar_error_fetching_clients": "Error fetching clients: ",
-    "appointment_calendar_validation_error": "Validation error"
+    "appointment_calendar_validation_error": "Validation error",
+    "select_client": "Select Client",
+    "create_confirmed_appointment": "Create Confirmed Appointment"
 }

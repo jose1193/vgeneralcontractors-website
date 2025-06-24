@@ -1688,5 +1688,7 @@
     "appointment_calendar_rescheduled_successfully": "Cita reprogramada con éxito. Se ha enviado un correo electrónico de notificación al cliente.",
     "appointment_calendar_error_creating": "Error al crear la cita: ",
     "appointment_calendar_error_fetching_clients": "Error al obtener los clientes: ",
-    "appointment_calendar_validation_error": "Error de validación"
+    "appointment_calendar_validation_error": "Error de validación",
+    "select_client": "Seleccionar Cliente",
+    "create_confirmed_appointment": "Crear Cita Confirmada"
 }
