@@ -803,6 +803,7 @@
     "contact_support_page": "Contactar Soporte",
     "here_to_help_roofing_needs": "Estamos Aquí para Ayudar con Todas tus Necesidades de Techado",
     "phone_placeholder": "(XXX) XXX-XXXX",
+    "notes_placeholder": "Notas adicionales sobre el prospecto...",
     "sending_page": "Enviando...",
     "sms_consent_text_page": "Al marcar esta casilla, consiento recibir mensajes de texto de <strong>V GENERAL CONTRACTORS</strong>. Puedes responder <strong>STOP</strong> en cualquier momento para cancelar. Se aplican tarifas de mensajes y datos. <strong>La frecuencia de mensajes puede variar,</strong> envía <strong>HELP :phone</strong> para asistencia. Para más información, consulta nuestra <a href=':privacy_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Política de Privacidad</a> y <a href=':terms_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Términos de Servicio</a>.",
 

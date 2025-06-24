@@ -1305,18 +1305,18 @@
                                     <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-3">
                                         {{ __('property_insurance') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <fieldset>
+                                    <fieldset class="mt-2">
                                         <legend class="sr-only">Property Insurance</legend>
-                                        <div class="space-y-2">
-                                            <div class="flex items-center">
-                                                <input id="lead_insurance_yes" name="insurance_property" type="radio" value="1" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700" required>
-                                                <label for="lead_insurance_yes" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="radio-option flex items-center">
+                                                <input id="lead_insurance_yes" name="insurance_property" type="radio" value="1" class="radio-field sr-only" required>
+                                                <label for="lead_insurance_yes" class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                     {{ __('yes') }}
                                                 </label>
                                             </div>
-                                            <div class="flex items-center">
-                                                <input id="lead_insurance_no" name="insurance_property" type="radio" value="0" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700" required>
-                                                <label for="lead_insurance_no" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            <div class="radio-option flex items-center">
+                                                <input id="lead_insurance_no" name="insurance_property" type="radio" value="0" class="radio-field sr-only" required>
+                                                <label for="lead_insurance_no" class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                     {{ __('no') }}
                                                 </label>
                                             </div>
@@ -1330,7 +1330,7 @@
                                     <label for="lead_notes" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('notes') }}
                                     </label>
-                                    <textarea id="lead_notes" name="notes" rows="3" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" placeholder="Additional notes about the lead..."></textarea>
+                                    <textarea id="lead_notes" name="notes" rows="3" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" placeholder="{{ __('notes_placeholder') }}"></textarea>
                                 </div>
 
                                 {{-- Hidden Address Fields --}}
@@ -1737,9 +1737,32 @@
                     validateLeadField('lead_address_map_input', this.value);
                 });
 
-                // Add validation for insurance property radio buttons
+                // Initialize insurance property radio button styles on load
                 document.querySelectorAll('input[name="insurance_property"]').forEach(radio => {
+                    const label = document.querySelector(`label[for="${radio.id}"]`);
+                    if (radio.checked) {
+                        label.classList.add('selected');
+                    }
+                    
+                    // Set custom validation message
+                    radio.setCustomValidity('{{ __('insurance_property_required') }}');
+                    
                     radio.addEventListener('change', function() {
+                        // Clear custom validation when a radio is selected
+                        document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
+                            r.setCustomValidity('');
+                        });
+                        
+                        // Update selected class
+                        document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
+                            const lbl = document.querySelector(`label[for="${r.id}"]`);
+                            lbl.classList.remove('selected');
+                        });
+                        
+                        if (this.checked) {
+                            label.classList.add('selected');
+                        }
+                        
                         validateInsuranceProperty();
                     });
                 });
