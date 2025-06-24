@@ -381,6 +381,9 @@
             @endpush
 
             @push('scripts')
+                {{-- Google Maps API --}}
+                <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places" async defer></script>
+                
                 {{-- FullCalendar JS --}}
                 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
                 <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/es.global.js'></script>
@@ -1270,7 +1273,7 @@
                                     <label for="lead_email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('email') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" required />
+                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" placeholder="{{ __('enter_email') }}" required />
                                     <div id="emailError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     <div id="emailSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
                                 </div>
@@ -1424,6 +1427,13 @@
                     const mapElement = document.getElementById('lead-location-map');
                     if (!mapElement) return;
 
+                    // Check if Google Maps is loaded
+                    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                        console.log('Google Maps not loaded yet, retrying in 500ms...');
+                        setTimeout(initializeLeadMap, 500);
+                        return;
+                    }
+
                     // Default location (you can change this)
                     const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // New York
 
@@ -1505,6 +1515,13 @@
 
                 // Reverse geocoding for lead
                 function reverseGeocodeForLead(lat, lng) {
+                    // Check if Google Maps is loaded
+                    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                        console.log('Google Maps not loaded yet for reverse geocoding, retrying in 500ms...');
+                        setTimeout(() => reverseGeocodeForLead(lat, lng), 500);
+                        return;
+                    }
+
                     const geocoder = new google.maps.Geocoder();
                     const latlng = { lat: lat, lng: lng };
 
