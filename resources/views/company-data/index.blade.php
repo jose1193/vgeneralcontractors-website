@@ -430,7 +430,17 @@
                             error: '{{ __('error') }}',
                             saving: '{{ __('saving') }}',
                             loading: '{{ __('loading') }}',
-                            errorLoadingDataForEdit: '{{ __('error_loading_data_for_edit') }}'
+                            errorLoadingDataForEdit: '{{ __('error_loading_data_for_edit') }}',
+                            // Traducciones de validación faltantes
+                            isRequired: '{{ __('is_required') }}',
+                            nameRequired: '{{ __('name_required') }}',
+                            emailRequired: '{{ __('email_required') }}',
+                            phoneRequired: '{{ __('phone_required') }}',
+                            pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
+                            invalidFormat: '{{ __('invalid_format') }}',
+                            invalidEmail: '{{ __('invalid_email') }}',
+                            minimumCharacters: '{{ __('minimum_characters') }}',
+                            maximumCharacters: '{{ __('maximum_characters') }}'
                         },
                         entityConfig: {
                             identifierField: 'company_name',

@@ -1576,6 +1576,8 @@
     "please_correct_errors": "Please correct the errors before continuing",
     "minimum_characters": "Minimum {count} characters",
     "maximum_characters": "Maximum {count} characters",
+    "name_required": "Name is required",
+    "company_name_required": "Company name is required",
     "first_name_required": "First Name is required",
     "last_name_required": "Last Name is required",
     "email_required": "Email is required",
