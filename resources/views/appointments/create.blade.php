@@ -12,7 +12,7 @@
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
                 <form id="appointmentCreateForm" action="{{ secure_url(route('appointments.store', [], false)) }}"
-                    method="POST" class=" dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    method="POST" class=" dark:bg-gray-800 shadow-md rounded-lg p-6" novalidate>
                     @csrf
                     @include('appointments._form')
                     <div class="mt-10 mb-3 flex justify-center">
