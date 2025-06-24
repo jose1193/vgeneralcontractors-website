@@ -136,13 +136,13 @@
                 <legend class="sr-only">Property Insurance</legend>
                 <div class="flex items-center justify-center space-x-4">
                     <div class="radio-option flex items-center">
-                        <input id="inline_insurance_yes" name="insurance_property" type="radio" value="yes"
+                        <input id="inline_insurance_yes" name="insurance_property" type="radio" value="1"
                             class="radio-field sr-only" required>
                         <label for="inline_insurance_yes"
                             class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">{{ __('yes') }}</label>
                     </div>
                     <div class="radio-option flex items-center">
-                        <input id="inline_insurance_no" name="insurance_property" type="radio" value="no"
+                        <input id="inline_insurance_no" name="insurance_property" type="radio" value="0"
                             class="radio-field sr-only" required>
                         <label for="inline_insurance_no"
                             class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">{{ __('no') }}</label>

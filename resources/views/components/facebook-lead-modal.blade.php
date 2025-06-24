@@ -192,7 +192,7 @@
                                     <div class="flex items-center justify-center space-x-4">
                                         <div class="radio-option flex items-center">
                                             <input id="insurance_yes" name="insurance_property" type="radio"
-                                                value="yes" class="radio-field sr-only" required>
+                                                value="1" class="radio-field sr-only" required>
                                             <label for="insurance_yes"
                                                 class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                 {{ __('yes') }}
@@ -200,7 +200,7 @@
                                         </div>
                                         <div class="radio-option flex items-center">
                                             <input id="insurance_no" name="insurance_property" type="radio"
-                                                value="no" class="radio-field sr-only" required>
+                                                value="0" class="radio-field sr-only" required>
                                             <label for="insurance_no"
                                                 class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                 {{ __('no') }}

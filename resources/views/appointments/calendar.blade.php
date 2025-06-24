@@ -1273,7 +1273,7 @@
                                     <label for="lead_email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('email') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" placeholder="{{ __('enter_email') }}" required />
+                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" placeholder="{{ __('email') }}" required />
                                     <div id="emailError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     <div id="emailSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
                                 </div>
