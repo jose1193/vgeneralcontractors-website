@@ -1466,6 +1466,7 @@
     "description_required": "Description is required",
     "category_required": "Category is required",
     "service_category_required": "Service category is required",
+    "blog_category_name_required": "Blog category name is required",
 
     "_comment_portfolio_messages": "=== PORTFOLIO MESSAGES ===",
     "created_successfully": "Portfolio created successfully",

@@ -1362,6 +1362,7 @@
     "description_required": "La descripción es requerida",
     "category_required": "La categoría es requerida",
     "service_category_required": "La categoría de servicio es requerida",
+    "blog_category_name_required": "El nombre de la categoría del blog es requerido",
     "_comment_portfolio_messages": "=== MENSAJES DE PORTFOLIO ===",
     "created_successfully": "Portfolio creado exitosamente",
     "updated_successfully": "Portfolio actualizado exitosamente",

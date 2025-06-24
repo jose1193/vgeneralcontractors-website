@@ -161,7 +161,15 @@
                         save: '{{ __('save') }}',
                         update: '{{ __('update') }}',
                         yes: '{{ __('yes') }}',
-                        no: '{{ __('no') }}'
+                        no: '{{ __('no') }}',
+                        // Traducciones de validación faltantes
+                        isRequired: '{{ __('is_required') }}',
+                        blogCategoryNameRequired: '{{ __('blog_category_name_required') }}',
+                        descriptionRequired: '{{ __('description_required') }}',
+                        pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
+                        invalidFormat: '{{ __('invalid_format') }}',
+                        minimumCharacters: '{{ __('minimum_characters') }}',
+                        maximumCharacters: '{{ __('maximum_characters') }}'
                     },
                     entityConfig: {
                         identifierField: 'blog_category_name',
