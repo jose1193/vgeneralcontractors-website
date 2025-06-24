@@ -25,7 +25,7 @@
                             <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
-                            {{ __('Create New Lead') }}
+                            {{ __('create_new_lead') }}
                         </button>
                     </div>
                 </div>
@@ -1283,7 +1283,7 @@
                                     <label for="lead_address_map_input" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('address') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_address_map_input" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_map_input" placeholder="Enter complete address for autocomplete" autocomplete="off" required />
+                                    <input id="lead_address_map_input" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_map_input" placeholder="{{ __('enter_complete_address') }}" autocomplete="off" required />
                                 </div>
 
                                 {{-- Map Display --}}
