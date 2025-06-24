@@ -19,8 +19,9 @@
             {{ __('first_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')" 
-            required autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
+            required autofocus maxlength="50" />
         <x-input-error for="first_name" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="first_name"></span>
     </div>
 
     {{-- Last Name --}}
@@ -29,8 +30,9 @@
             {{ __('last_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')" 
-            required maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
+            required maxlength="50" />
         <x-input-error for="last_name" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="last_name"></span>
     </div>
 
     {{-- Phone --}}
@@ -41,6 +43,7 @@
         <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
             :value="old('phone', $appointment->phone ?? '')" required />
         <x-input-error for="phone" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="phone"></span>
     </div>
 
     {{-- Email --}}
@@ -50,6 +53,7 @@
         </label>
         <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
         <x-input-error for="email" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="email"></span>
     </div>
 
     {{-- Address Map Input (for Google Maps Autocomplete) --}}
@@ -60,6 +64,7 @@
         <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
             placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
         <x-input-error for="address_map_input" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="address_map_input"></span>
     </div>
 
     {{-- Map Display --}}
@@ -155,6 +160,7 @@
         <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
             required />
         <x-input-error for="city" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="city"></span>
     </div>
 
     {{-- State --}}
@@ -165,6 +171,7 @@
         <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
             required />
         <x-input-error for="state" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="state"></span>
     </div>
 
     {{-- Zipcode --}}
@@ -175,6 +182,7 @@
         <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
             required />
         <x-input-error for="zipcode" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="zipcode"></span>
     </div>
 
     {{-- Country --}}
@@ -185,6 +193,7 @@
         <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
             required />
         <x-input-error for="country" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="country"></span>
     </div>
 
     {{-- Inspection Date --}}
@@ -260,6 +269,7 @@
                 Declined</option>
         </select>
         <x-input-error for="inspection_status" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="inspection_status"></span>
     </div>
 
     {{-- Status Lead --}}
@@ -285,6 +295,7 @@
                 Declined</option>
         </select>
         <x-input-error for="status_lead" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="status_lead"></span>
     </div>
 
     {{-- Lead Source --}}
@@ -310,6 +321,7 @@
                 Retell AI</option>
         </select>
         <x-input-error for="lead_source" class="mt-2" />
+        <span class="error-message text-red-500 text-sm hidden" data-field="lead_source"></span>
     </div>
 
     {{-- Owner --}}
