@@ -71,7 +71,7 @@
 
         {{-- Share location buttons --}}
         <div class="mt-2 flex flex-wrap gap-2">
-            <button id="show-address-modal"
+            <button type="button" id="show-address-modal"
                 class="inline-flex items-center px-3 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
                 <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -81,7 +81,7 @@
                 </svg>
                 {{ __('view_complete_address') }}
             </button>
-            <button id="share-location-options"
+            <button type="button" id="share-location-options"
                 class="inline-flex items-center px-3 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600">
                 <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,7 +119,7 @@
                 </svg>
                 {{ __('open_in_maps') }}
             </a>
-            <button id="copy-address"
+            <button type="button" id="copy-address"
                 class="inline-flex items-center px-3 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600">
                 <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -354,7 +354,8 @@
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('complete_address_details') }}
                 </h3>
-                <button id="close-address-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <button type="button" id="close-address-modal"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12"></path>
@@ -402,11 +403,11 @@
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-3">
-                <button id="copy-complete-address"
+                <button type="button" id="copy-complete-address"
                     class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
                     {{ __('copy_complete_address') }}
                 </button>
-                <button id="close-modal-btn"
+                <button type="button" id="close-modal-btn"
                     class="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400">
                     {{ __('close') }}
                 </button>
