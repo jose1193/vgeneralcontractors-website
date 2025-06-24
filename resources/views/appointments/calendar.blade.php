@@ -259,7 +259,7 @@
                                                             <label class="inline-flex items-center cursor-pointer">
                                                                 <input type="checkbox" id="createNewClientToggle" 
                                                                     class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                                                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                                                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
                                                                     {{ __('create_new_client') }}
                                                                 </span>
                                                             </label>
@@ -286,6 +286,7 @@
                                                                         {{ __('first_name') }}
                                                                     </label>
                                                                     <input type="text" id="newClientFirstName" name="first_name"
+                                           placeholder="{{ __('enter_first_name') }}"
                                                                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                                 </div>
                                                                 <div>
@@ -294,6 +295,7 @@
                                                                         {{ __('last_name') }}
                                                                     </label>
                                                                     <input type="text" id="newClientLastName" name="last_name"
+                                           placeholder="{{ __('enter_last_name') }}"
                                                                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                                 </div>
                                                             </div>
@@ -315,15 +317,30 @@
                                                                     placeholder="{{ __('email_placeholder') }}"
                                                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                             </div>
+                                                            {{-- Google Maps Address Input --}}
                                                             <div>
-                                                                <label for="newClientAddress"
+                                                                <label for="newClientAddressMapInput"
                                                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                                     {{ __('address') }}
                                                                 </label>
-                                                                <textarea id="newClientAddress" name="address" rows="2"
+                                                                <input type="text" id="newClientAddressMapInput" name="address_map_input"
                                                                     placeholder="{{ __('address_placeholder') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                             </div>
+
+                                                            {{-- Map Container --}}
+                                                            <div id="newClientLocationMap" class="mt-3 h-48 w-full rounded-md border border-gray-300 hidden"></div>
+
+                                                            {{-- Hidden Address Fields --}}
+                                                            <input type="hidden" id="newClientAddress" name="address">
+                                                            <input type="hidden" id="newClientAddressSimple" name="address_simple">
+                                                            <input type="hidden" id="newClientAddress2" name="address_2">
+                                                            <input type="hidden" id="newClientCity" name="city">
+                                                            <input type="hidden" id="newClientState" name="state">
+                                                            <input type="hidden" id="newClientZipcode" name="zipcode">
+                                                            <input type="hidden" id="newClientCountry" name="country">
+                                                            <input type="hidden" id="newClientLatitude" name="latitude">
+                                                            <input type="hidden" id="newClientLongitude" name="longitude">
                                                         </div>
                                                     </form>
                                                 </div>
@@ -690,6 +707,11 @@
                             
                             // Update button visibility based on current state
                             updateButtonVisibility();
+                            
+                            // Initialize Google Maps autocomplete
+                            if (typeof google !== 'undefined' && google.maps) {
+                                initializeNewAppointmentAutocomplete();
+                            }
                         }
 
                         // Function to load clients for the dropdown
@@ -2152,11 +2174,121 @@
                             emailError.classList.add('hidden');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error checking email:', error);
-                    });
+                .catch(error => {
+                    console.error('Error checking email:', error);
+                });
+            }
+
+            // Initialize Google Maps Autocomplete for new appointment modal
+            function initializeNewAppointmentAutocomplete() {
+                const addressInput = document.getElementById('address_map_input');
+                const mapContainer = document.getElementById('map-container');
+                
+                if (!addressInput || typeof google === 'undefined') {
+                    console.log('Google Maps not loaded or address input not found');
+                    return;
                 }
-            });
-        </script>
-    @endpush
+
+                // Initialize map
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 25.7617, lng: -80.1918 }, // Miami default
+                    zoom: 13,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    fullscreenControl: false
+                });
+
+                const marker = new google.maps.Marker({
+                    map: map,
+                    draggable: true
+                });
+
+                // Initialize autocomplete
+                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                    types: ['address'],
+                    componentRestrictions: { country: 'us' }
+                });
+
+                autocomplete.bindTo('bounds', map);
+
+                // Handle place selection
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    
+                    if (!place.geometry) {
+                        console.log('No geometry for place:', place.name);
+                        return;
+                    }
+
+                    // Extract address components
+                    let streetNumber = '';
+                    let route = '';
+                    let city = '';
+                    let state = '';
+                    let zipcode = '';
+                    let country = '';
+
+                    place.address_components.forEach(component => {
+                        const types = component.types;
+                        if (types.includes('street_number')) {
+                            streetNumber = component.long_name;
+                        } else if (types.includes('route')) {
+                            route = component.long_name;
+                        } else if (types.includes('locality')) {
+                            city = component.long_name;
+                        } else if (types.includes('administrative_area_level_1')) {
+                            state = component.short_name;
+                        } else if (types.includes('postal_code')) {
+                            zipcode = component.long_name;
+                        } else if (types.includes('country')) {
+                            country = component.long_name;
+                        }
+                    });
+
+                    // Populate hidden fields
+                    const fullAddress = `${streetNumber} ${route}`.trim();
+                    document.getElementById('address').value = fullAddress;
+                    
+                    // Use formatted_address for address_simple (complete address with city, state, zipcode)
+                    if (place.formatted_address) {
+                        document.getElementById('address_simple').value = place.formatted_address;
+                    } else {
+                        // Fallback: construct complete address manually
+                        const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(', ');
+                        document.getElementById('address_simple').value = completeAddress;
+                    }
+                    
+                    document.getElementById('city').value = city;
+                    document.getElementById('state').value = state;
+                    document.getElementById('zipcode').value = zipcode;
+                    document.getElementById('country').value = country;
+                    document.getElementById('latitude').value = place.geometry.location.lat();
+                    document.getElementById('longitude').value = place.geometry.location.lng();
+
+                    // Update map
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                    
+                    // Show map container
+                    mapContainer.style.display = 'block';
+
+                    // Trigger change events for validation
+                    addressInput.dispatchEvent(new Event('change'));
+                });
+
+                // Handle marker drag
+                marker.addListener('dragend', function() {
+                    const position = marker.getPosition();
+                    document.getElementById('latitude').value = position.lat();
+                    document.getElementById('longitude').value = position.lng();
+                });
+            }
+
+            // Initialize autocomplete when Google Maps is loaded
+            window.initializeNewAppointmentAutocomplete = initializeNewAppointmentAutocomplete;
+        });
+    </script>
+@endpush
 </x-app-layout>

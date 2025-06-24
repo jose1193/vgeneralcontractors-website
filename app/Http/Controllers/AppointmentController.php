@@ -57,6 +57,7 @@ class AppointmentController extends BaseCrudController
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:255',
             'address_map_input' => 'nullable|string|max:255',
+            'address_simple' => 'nullable|string|max:255',
             'address_2' => 'nullable|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',

@@ -357,6 +357,12 @@ class AppointmentCalendarController extends Controller
                     'phone' => 'required|string|max:20',
                     'email' => 'nullable|email|max:255',
                     'address' => 'nullable|string|max:255',
+                    'city' => 'nullable|string|max:100',
+                    'state' => 'nullable|string|max:100',
+                    'zipcode' => 'nullable|string|max:20',
+                    'country' => 'nullable|string|max:100',
+                    'latitude' => 'nullable|numeric|between:-90,90',
+                    'longitude' => 'nullable|numeric|between:-180,180',
                     'inspection_date' => 'required|date',
                     'inspection_time' => 'required|string',
                     'inspection_status' => 'required|string',
@@ -431,6 +437,12 @@ class AppointmentCalendarController extends Controller
                 $appointment->phone = $validatedData['phone'];
                 $appointment->email = $validatedData['email'] ?? null;
                 $appointment->address = $validatedData['address'] ?? null;
+                $appointment->city = $validatedData['city'] ?? null;
+                $appointment->state = $validatedData['state'] ?? null;
+                $appointment->zipcode = $validatedData['zipcode'] ?? null;
+                $appointment->country = $validatedData['country'] ?? null;
+                $appointment->latitude = $validatedData['latitude'] ?? null;
+                $appointment->longitude = $validatedData['longitude'] ?? null;
                 $appointment->inspection_date = $validatedData['inspection_date'];
                 $appointment->inspection_time = $validatedData['inspection_time'];
                 $appointment->inspection_status = $validatedData['inspection_status'];
@@ -560,6 +572,10 @@ class AppointmentCalendarController extends Controller
                 'phone' => 'required|string|max:20',
                 'address' => 'required|string|max:255',
                 'address_2' => 'nullable|string|max:255',
+                'city' => 'nullable|string|max:100',
+                'state' => 'nullable|string|max:100',
+                'zipcode' => 'nullable|string|max:20',
+                'country' => 'nullable|string|max:100',
                 'insurance_property' => 'required|boolean',
                 'notes' => 'nullable|string',
                 'latitude' => 'nullable|numeric|between:-90,90',
@@ -610,6 +626,10 @@ class AppointmentCalendarController extends Controller
             $appointment->phone = $validatedData['phone'];
             $appointment->address = $validatedData['address'];
             $appointment->address_2 = $validatedData['address_2'] ?? null;
+            $appointment->city = $validatedData['city'] ?? null;
+            $appointment->state = $validatedData['state'] ?? null;
+            $appointment->zipcode = $validatedData['zipcode'] ?? null;
+            $appointment->country = $validatedData['country'] ?? null;
             $appointment->insurance_property = $validatedData['insurance_property'];
             $appointment->notes = $validatedData['notes'] ?? null;
             $appointment->latitude = $validatedData['latitude'] ?? null;
