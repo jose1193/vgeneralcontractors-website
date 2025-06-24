@@ -609,6 +609,13 @@
     "appointment_status": "Appointment Status",
 
     "notes": "Notes",
+    "lead_source": "Lead Source",
+    "owner": "Owner",
+    "damage_detail": "Damage Detail",
+    "additional_note": "Additional Note",
+    "property_insurance": "Property Insurance",
+    "sms_consent": "SMS Consent",
+    "intent_to_claim": "Intent to Claim?",
     "damage": "Damage",
     "has_insurance": "Has Insurance?",
     "confirm_appointment": "Confirm Appointment",
