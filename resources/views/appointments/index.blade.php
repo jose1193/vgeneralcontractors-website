@@ -1049,7 +1049,8 @@
                             showCloseButton: true,
                             customClass: {
                                 container: 'swal-fullscreen',
-                                popup: 'swal-fullscreen-popup'
+                                popup: 'swal-fullscreen-popup',
+                                closeButton: 'custom-close-button'
                             },
                             width: '95%',
                             heightAuto: false
@@ -1098,6 +1099,37 @@
                 overflow-y: auto !important;
                 padding: 0 !important;
                 margin: 0 !important;
+            }
+
+            /* Custom close button styles */
+            .custom-close-button {
+                background-color: #dc2626 !important;
+                color: white !important;
+                border-radius: 50% !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 20px !important;
+                font-weight: bold !important;
+                border: none !important;
+                position: absolute !important;
+                top: 15px !important;
+                right: 15px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3) !important;
+            }
+
+            .custom-close-button:hover {
+                background-color: #b91c1c !important;
+                transform: scale(1.1) !important;
+                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+            }
+
+            .custom-close-button:focus {
+                outline: none !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;
             }
 
             @media (max-width: 640px) {
