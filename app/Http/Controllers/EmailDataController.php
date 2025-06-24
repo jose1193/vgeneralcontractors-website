@@ -62,18 +62,18 @@ class EmailDataController extends BaseCrudController
     protected function getValidationMessages()
     {
         return [
-            'description.required' => 'The description is required.',
-            'description.max' => 'The description may not be greater than 255 characters.',
-            'email.required' => 'The email is required.',
-            'email.email' => 'The email must be a valid email address.',
-            'email.unique' => 'This email is already taken.',
-            'email.max' => 'The email may not be greater than 255 characters.',
-            'phone.required' => 'The phone number is required.',
-            'phone.unique' => 'This phone number is already taken.',
-            'phone.max' => 'The phone number may not be greater than 20 characters.',
-            'type.required' => 'The type is required.',
-            'type.in' => 'The type must be one of: Support, Sales, General, Technical, Billing, Collections, Admin, Info.',
-            'user_id.exists' => 'The selected user does not exist.',
+            'description.required' => __('validation.custom.description.required'),
+            'description.max' => __('validation.custom.description.max'),
+            'email.required' => __('validation.custom.email.required'),
+            'email.email' => __('validation.custom.email.email'),
+            'email.unique' => __('validation.custom.email.unique'),
+            'email.max' => __('validation.custom.email.max'),
+            'phone.required' => __('validation.custom.phone.required'),
+            'phone.unique' => __('validation.custom.phone.unique'),
+            'phone.max' => __('validation.custom.phone.max'),
+            'type.required' => __('validation.custom.type.required'),
+            'type.in' => __('validation.custom.type.in'),
+            'user_id.exists' => __('validation.exists'),
         ];
     }
 
@@ -701,4 +701,4 @@ class EmailDataController extends BaseCrudController
             'test_data' => $testData
         ]);
     }
-} 
+}
