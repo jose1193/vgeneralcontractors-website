@@ -140,7 +140,14 @@
                         save: '{{ __('save') }}',
                         update: '{{ __('update') }}',
                         yes: '{{ __('yes') }}',
-                        no: '{{ __('no') }}'
+                        no: '{{ __('no') }}',
+                        // Traducciones de validación faltantes
+                        isRequired: '{{ __('is_required') }}',
+                        categoryRequired: '{{ __('service_category_required') }}',
+                        pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
+                        invalidFormat: '{{ __('invalid_format') }}',
+                        minimumCharacters: '{{ __('minimum_characters') }}',
+                        maximumCharacters: '{{ __('maximum_characters') }}'
                     },
                     entityConfig: {
                         identifierField: 'category',

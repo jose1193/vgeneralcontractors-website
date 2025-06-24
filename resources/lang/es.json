@@ -1360,8 +1360,8 @@
     "title_required": "El título es requerido",
     "title_min_length": "El título debe tener al menos 3 caracteres",
     "description_required": "La descripción es requerida",
-    "category_required": "La categoría de servicio es requerida",
-
+    "category_required": "La categoría es requerida",
+    "service_category_required": "Service category is required",
     "_comment_portfolio_messages": "=== MENSAJES DE PORTFOLIO ===",
     "created_successfully": "Portfolio creado exitosamente",
     "updated_successfully": "Portfolio actualizado exitosamente",
