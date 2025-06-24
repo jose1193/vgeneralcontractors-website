@@ -120,7 +120,7 @@
     "website_placeholder": "https://ejemplo.com",
     "social_media": "Redes Sociales",
     "location": "Ubicación",
-    
+
     "phone_already_in_use": "Este teléfono ya está en uso",
     "email_already_in_use": "Este email ya está en uso",
     "edit_company_data": "Editar Información de la Empresa",
@@ -995,10 +995,6 @@
     "privacy_applicable_legislation": "10. Legislación Aplicable",
     "privacy_governed_by_laws": "Esta política se rige por las leyes de <strong>Houston, Texas EE.UU.</strong>, con referencia especial a las regulaciones sobre protección de <strong>datos</strong> personales y construcción.",
 
-   
-   
-   
-
     "gender": "Género",
     "male": "Masculino",
     "female": "Femenino",
@@ -1139,9 +1135,8 @@
     "rejection_notifications_sent": "Notificaciones de rechazo enviadas exitosamente",
     "rejection_error": "Ocurrió un error al enviar las notificaciones de rechazo",
     "no_location_available": "No hay ubicación",
-   
+
     "share_location": "Compartir ubicación",
-   
 
     "edit_appointment": "Editar Cita",
     "update_appointment_btn": "ACTUALIZAR CITA",
@@ -1562,6 +1557,7 @@
     "last_name_required": "El apellido es requerido",
     "email_required": "El email es requerido",
     "phone_required": "El teléfono es requerido",
+
     "message_required": "El mensaje es requerido",
     "address_required": "La dirección es requerida",
     "city_required": "La ciudad es requerida",

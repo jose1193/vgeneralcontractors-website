@@ -265,7 +265,17 @@
                         save: '{{ __('save') }}',
                         update: '{{ __('update') }}',
                         yes: '{{ __('yes') }}',
-                        no: '{{ __('no') }}'
+                        no: '{{ __('no') }}',
+                        // Traducciones de validación faltantes
+                        isRequired: '{{ __('is_required') }}',
+                        descriptionRequired: '{{ __('description_required') }}',
+                        emailRequired: '{{ __('email_required') }}',
+                        phoneRequired: '{{ __('phone_required') }}',
+                        pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
+                        invalidFormat: '{{ __('invalid_format') }}',
+                        invalidEmail: '{{ __('invalid_email') }}',
+                        minimumCharacters: '{{ __('minimum_characters') }}',
+                        maximumCharacters: '{{ __('maximum_characters') }}'
                     },
                     entityConfig: {
                         identifierField: 'email',

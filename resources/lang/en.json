@@ -133,7 +133,6 @@
     "website_placeholder": "https://example.com",
     "social_media": "Social Media",
     "location": "Location",
-    
 
     "edit_company_data": "Edit Company Information",
     "company_information_entity": "company information",
@@ -621,13 +620,12 @@
     "confirm_appointment": "Confirm Appointment",
     "decline_appointment": "Decline Appointment",
     "processing": "Processing...",
- 
+
     "create_new_appointment": "Create New Appointment",
 
     "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",
 
-   
     "reschedule_appointment": "Reschedule Appointment",
     "move_appointment_to": "Move appointment from \"{title}\" to {newTime}?",
     "yes_move": "Yes, move!",
@@ -1307,9 +1305,6 @@
     "rejection_notifications_sent": "Rejection notifications sent successfully",
     "rejection_error": "An error occurred while sending rejection notifications",
     "no_location_available": "There is no location",
-   
-   
-    
 
     "whatsapp": "WhatsApp",
     "email_share": "Email",
@@ -1584,6 +1579,7 @@
     "last_name_required": "Last Name is required",
     "email_required": "Email is required",
     "phone_required": "Phone is required",
+
     "address_required": "Address is required",
     "city_required": "City is required",
     "state_required": "State is required",
