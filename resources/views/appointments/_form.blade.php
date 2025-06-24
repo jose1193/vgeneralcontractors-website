@@ -471,6 +471,18 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
         defer></script>
     <script>
+        // Immediate initialization - disable submit button as soon as possible
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to find and disable submit button immediately
+            const immediateSubmitButton = document.querySelector('button[type="submit"]') || document
+                .getElementById('submit-button');
+            if (immediateSubmitButton) {
+                immediateSubmitButton.disabled = true;
+                immediateSubmitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                immediateSubmitButton.classList.remove('hover:bg-gray-700');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Global variables for map functionality
             let appointmentMap;
@@ -1697,7 +1709,7 @@
                 });
             });
 
-            // Initialize submit button as disabled
+            // Initialize submit button as disabled immediately
             if (submitButton) {
                 submitButton.disabled = true;
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
@@ -1711,10 +1723,11 @@
                 submitButton: submitButton
             };
 
-            // Initial form validation check
+            // Initial form validation check - immediate and with timeout as backup
+            checkFormValidity();
             setTimeout(() => {
                 checkFormValidity();
-            }, 100);
+            }, 50);
         });
     </script>
 @endpush
