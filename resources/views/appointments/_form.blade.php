@@ -18,8 +18,10 @@
         <label for="first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('first_name') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')" 
-            required autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
+        <x-input id="first_name" class="input-field block mt-1 w-full capitalize" type="text" name="first_name"
+            :value="old('first_name', $appointment->first_name ?? '')" autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+"
+            title="{{ __('first_name_validation') }}" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
         <x-input-error for="first_name" class="mt-2" />
     </div>
 
@@ -28,8 +30,9 @@
         <label for="last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('last_name') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')" 
-            required maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
+        <x-input id="last_name" class="input-field block mt-1 w-full capitalize" type="text" name="last_name"
+            :value="old('last_name', $appointment->last_name ?? '')" maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>
         <x-input-error for="last_name" class="mt-2" />
     </div>
 
@@ -38,8 +41,9 @@
         <label for="phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('phone') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
-            :value="old('phone', $appointment->phone ?? '')" required />
+        <x-input id="phone" class="input-field block mt-1 w-full" type="tel" name="phone"
+            placeholder="(XXX) XXX-XXXX" :value="old('phone', $appointment->phone ?? '')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="phone"></span>
         <x-input-error for="phone" class="mt-2" />
     </div>
 
@@ -48,7 +52,8 @@
         <label for="email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('email') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
+        <x-input id="email" class="input-field block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="email"></span>
         <x-input-error for="email" class="mt-2" />
     </div>
 
@@ -57,8 +62,9 @@
         <label for="address_map_input" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('address') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
-            placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
+        <x-input id="address_map_input" class="input-field block mt-1 w-full" type="text" name="address_map_input"
+            placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_map_input"></span>
         <x-input-error for="address_map_input" class="mt-2" />
     </div>
 
@@ -152,8 +158,9 @@
         <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('city') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
-            required />
+        <x-input id="city" class="input-field block mt-1 w-full" type="text" name="city"
+            :value="old('city', $appointment->city ?? '')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="city"></span>
         <x-input-error for="city" class="mt-2" />
     </div>
 
@@ -162,8 +169,9 @@
         <label for="state" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('state') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
-            required />
+        <x-input id="state" class="input-field block mt-1 w-full" type="text" name="state"
+            :value="old('state', $appointment->state ?? '')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="state"></span>
         <x-input-error for="state" class="mt-2" />
     </div>
 
@@ -172,8 +180,9 @@
         <label for="zipcode" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('zip_code') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
-            required />
+        <x-input id="zipcode" class="input-field block mt-1 w-full" type="text" name="zipcode"
+            :value="old('zipcode', $appointment->zipcode ?? '')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="zipcode"></span>
         <x-input-error for="zipcode" class="mt-2" />
     </div>
 
@@ -182,8 +191,9 @@
         <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('country') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
-            required />
+        <x-input id="country" class="input-field block mt-1 w-full" type="text" name="country"
+            :value="old('country', $appointment->country ?? 'USA')" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="country"></span>
         <x-input-error for="country" class="mt-2" />
     </div>
 
@@ -202,7 +212,8 @@
 
     {{-- Inspection Time --}}
     <div>
-        <label for="inspection_time_hour" class="block font-medium text-sm text-gray-700 dark:text-gray-300" id="inspection_time_label">
+        <label for="inspection_time_hour" class="block font-medium text-sm text-gray-700 dark:text-gray-300"
+            id="inspection_time_label">
             {{ __('inspection_time') }}
         </label>
         <div class="flex mt-1 space-x-2">
@@ -243,8 +254,7 @@
             {{ __('inspection_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="inspection_status" name="inspection_status"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="input-field border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Status</option>
             <option value="Confirmed"
                 {{ old('inspection_status', $appointment->inspection_status ?? '') == 'Confirmed' ? 'selected' : '' }}>
@@ -259,6 +269,7 @@
                 {{ old('inspection_status', $appointment->inspection_status ?? '') == 'Declined' ? 'selected' : '' }}>
                 Declined</option>
         </select>
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="inspection_status"></span>
         <x-input-error for="inspection_status" class="mt-2" />
     </div>
 
@@ -268,8 +279,7 @@
             {{ __('lead_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="status_lead" name="status_lead"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="input-field border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Lead Status</option>
             <option value="New"
                 {{ old('status_lead', $appointment->status_lead ?? 'New') == 'New' ? 'selected' : '' }}>
@@ -284,6 +294,7 @@
                 {{ old('status_lead', $appointment->status_lead ?? '') == 'Declined' ? 'selected' : '' }}>
                 Declined</option>
         </select>
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="status_lead"></span>
         <x-input-error for="status_lead" class="mt-2" />
     </div>
 
@@ -293,8 +304,7 @@
             {{ __('lead_source') }} <span class="text-red-500">*</span>
         </label>
         <select id="lead_source" name="lead_source"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
-            required>
+            class="input-field border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
             <option value="">Select Lead Source</option>
             <option value="Website"
                 {{ old('lead_source', $appointment->lead_source ?? '') == 'Website' ? 'selected' : '' }}>
@@ -309,6 +319,7 @@
                 {{ old('lead_source', $appointment->lead_source ?? '') == 'Retell AI' ? 'selected' : '' }}>
                 Retell AI</option>
         </select>
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="lead_source"></span>
         <x-input-error for="lead_source" class="mt-2" />
     </div>
 
@@ -358,10 +369,12 @@
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
         <div class="mt-3">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('complete_address_details') }}</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('complete_address_details') }}
+                </h3>
                 <button id="close-address-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
@@ -372,38 +385,46 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('city') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('city') }}</label>
                         <p id="modal-city" class="text-gray-900 dark:text-gray-100">-</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('state') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('state') }}</label>
                         <p id="modal-state" class="text-gray-900 dark:text-gray-100">-</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('zip_code') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('zip_code') }}</label>
                         <p id="modal-zipcode" class="text-gray-900 dark:text-gray-100 font-bold text-lg">-</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('country') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('country') }}</label>
                         <p id="modal-country" class="text-gray-900 dark:text-gray-100">-</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('latitude') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('latitude') }}</label>
                         <p id="modal-latitude" class="text-gray-600 dark:text-gray-400 text-sm font-mono">-</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('longitude') }}</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('longitude') }}</label>
                         <p id="modal-longitude" class="text-gray-600 dark:text-gray-400 text-sm font-mono">-</p>
                     </div>
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-3">
-                <button id="copy-complete-address" class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
+                <button id="copy-complete-address"
+                    class="px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-600">
                     {{ __('copy_complete_address') }}
                 </button>
-                <button id="close-modal-btn" class="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400">
+                <button id="close-modal-btn"
+                    class="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400">
                     {{ __('close') }}
                 </button>
             </div>
@@ -417,10 +438,12 @@
     <div class="block">
         <label for="insurance_property" class="flex items-center">
             <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
-                required />
-            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('property_insurance') }}</span>
+                class="checkbox-field" />
+            <span
+                class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('property_insurance') }}</span>
             <span class="text-red-500 ml-1">*</span>
         </label>
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
     </div>
 
     {{-- Other checkboxes --}}
@@ -600,10 +623,9 @@
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
                 form.addEventListener('submit', function(e) {
-                    if (inspectionDateField && inspectionTimeHourField &&
-                        inspectionTimeMinuteField) {
-                        if (inspectionDateField.value && (!inspectionTimeHourField.value || !
-                                inspectionTimeMinuteField.value)) {
+                    if (inspectionDateField && inspectionTimeField &&
+                        inspectionDateField.value && inspectionTimeField.value) {
+                        if (!inspectionTimeHourField.value || !inspectionTimeMinuteField.value) {
                             e.preventDefault();
                             timeRequiredMessage.classList.remove('hidden');
 
@@ -982,312 +1004,17 @@
                     inspectionTimeMinuteField.setAttribute('disabled', 'disabled');
                 }
             }
-        });
-
-        // Initialize map
-        function initAppointmentMap() {
-            try {
-                // Check if Google Maps API is loaded
-                if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                    console.error('Google Maps API not loaded');
-                    return;
-                }
-
-                // Get the map container
-                const mapContainer = document.getElementById('location-map');
-                if (!mapContainer) {
-                    console.error('Map container not found');
-                    return;
-                }
-
-                // Default location (United States center)
-                const defaultLocation = {
-                    lat: 37.0902,
-                    lng: -95.7129
-                };
-
-                // Check if we have existing coordinates
-                const latInput = document.getElementById('latitude');
-                const lngInput = document.getElementById('longitude');
-                const hasCoordinates = latInput && latInput.value && lngInput && lngInput.value;
-
-                let mapCenter = defaultLocation;
-                let zoomLevel = 4;
-
-                if (hasCoordinates) {
-                    mapCenter = {
-                        lat: parseFloat(latInput.value),
-                        lng: parseFloat(lngInput.value)
-                    };
-                    zoomLevel = 16;
-                }
-
-                // Create map
-                appointmentMap = new google.maps.Map(mapContainer, {
-                    center: mapCenter,
-                    zoom: zoomLevel,
-                    mapTypeControl: false,
-                    streetViewControl: false,
-                    fullscreenControl: false,
-                    zoomControl: true
-                });
-
-                // Create marker
-                appointmentMarker = new google.maps.Marker({
-                    map: appointmentMap,
-                    position: hasCoordinates ? mapCenter : null,
-                    visible: hasCoordinates
-                });
-
-                // Initialize address autocomplete
-                initAppointmentAutocomplete();
-            } catch (error) {
-                console.error('Error initializing map:', error);
-            }
-        }
-
-        // Initialize Google Maps Address Autocomplete
-        function initAppointmentAutocomplete() {
-            try {
-                const addressMapInput = document.getElementById('address_map_input');
-                if (!addressMapInput) {
-                    console.error('Address input not found');
-                    return;
-                }
-
-                autocomplete = new google.maps.places.Autocomplete(addressMapInput, {
-                    types: ['address'],
-                    componentRestrictions: {
-                        country: 'us'
-                    }, // Restrict to US addresses
-                    fields: ['address_components', 'geometry', 'formatted_address']
-                });
-
-                // When a place is selected
-                autocomplete.addListener('place_changed', function() {
-                    const place = autocomplete.getPlace();
-
-                    if (!place.geometry) {
-                        console.log("No details available for this place");
-                        return;
-                    }
-
-                    // Get coordinates
-                    const lat = place.geometry.location.lat();
-                    const lng = place.geometry.location.lng();
-
-                    // Set coordinates in hidden fields
-                    document.getElementById('latitude').value = lat;
-                    document.getElementById('longitude').value = lng;
-
-                    // Update map with selected location
-                    if (appointmentMap && appointmentMarker) {
-                        appointmentMap.setCenter({
-                            lat,
-                            lng
-                        });
-                        appointmentMap.setZoom(16);
-                        appointmentMarker.setPosition({
-                            lat,
-                            lng
-                        });
-                        appointmentMarker.setVisible(true);
-                    }
-
-                    // Fill address components
-                    let addressLine1 = '';
-                    let city = '';
-                    let state = '';
-                    let zipcode = '';
-
-                    for (const component of place.address_components) {
-                        const componentType = component.types[0];
-
-                        switch (componentType) {
-                            case 'street_number':
-                                addressLine1 = component.long_name;
-                                break;
-                            case 'route':
-                                addressLine1 = addressLine1 ?
-                                    addressLine1 + ' ' + component.long_name :
-                                    component.long_name;
-                                break;
-                            case 'locality':
-                                city = component.long_name;
-                                break;
-                            case 'administrative_area_level_1':
-                                state = component.short_name;
-                                break;
-                            case 'postal_code':
-                                zipcode = component.long_name;
-                                break;
-                        }
-                    }
-
-                    // Use formatted_address if available
-                    if (place.formatted_address) {
-                        addressMapInput.value = place.formatted_address;
-                    }
-
-                    // Fill in form fields
-                    if (addressLine1) document.getElementById('address').value = addressLine1;
-                    if (city) document.getElementById('city').value = city;
-                    if (state) document.getElementById('state').value = state;
-                    if (zipcode) document.getElementById('zipcode').value = zipcode;
-                    document.getElementById('country').value = 'USA';
-                });
-            } catch (error) {
-                console.error('Error initializing autocomplete:', error);
-            }
-        }
-
-        // Modal and sharing functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const showAddressModal = document.getElementById('show-address-modal');
-            const addressModal = document.getElementById('address-modal');
-            const closeAddressModal = document.getElementById('close-address-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const shareLocationOptions = document.getElementById('share-location-options');
-            const shareOptions = document.getElementById('share-options');
-            const copyCompleteAddress = document.getElementById('copy-complete-address');
-            const copyAddress = document.getElementById('copy-address');
-
-            // Show address modal
-            if (showAddressModal) {
-                showAddressModal.addEventListener('click', function() {
-                    updateModalContent();
-                    addressModal.classList.remove('hidden');
-                });
-            }
-
-            // Close modal events
-            [closeAddressModal, closeModalBtn].forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', function() {
-                        addressModal.classList.add('hidden');
-                    });
-                }
-            });
-
-            // Close modal when clicking outside
-            if (addressModal) {
-                addressModal.addEventListener('click', function(e) {
-                    if (e.target === addressModal) {
-                        addressModal.classList.add('hidden');
-                    }
-                });
-            }
-
-            // Toggle share options
-            if (shareLocationOptions) {
-                shareLocationOptions.addEventListener('click', function() {
-                    shareOptions.classList.toggle('hidden');
-                    const isHidden = shareOptions.classList.contains('hidden');
-                    this.textContent = isHidden ? '{{ __('choose_how_share_location') }}' : '{{ __('hide_share_options') }}';
-                });
-            }
-
-            // Copy complete address functionality
-            if (copyCompleteAddress) {
-                copyCompleteAddress.addEventListener('click', function() {
-                    const completeAddress = getCompleteAddressString();
-                    copyToClipboard(completeAddress, '{{ __('complete_address_copied') }}');
-                });
-            }
-
-            // Copy address functionality
-            if (copyAddress) {
-                copyAddress.addEventListener('click', function() {
-                    const address = document.getElementById('address_map_input').value;
-                    copyToClipboard(address, '{{ __('address_copied') }}');
-                });
-            }
-
-            // Share functionality
-            const shareWhatsApp = document.getElementById('share-whatsapp');
-            const shareEmail = document.getElementById('share-email');
-            const shareMaps = document.getElementById('share-maps');
-
-            if (shareWhatsApp) {
-                shareWhatsApp.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const address = document.getElementById('address_map_input').value;
-                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('{{ __('check_this_location') }}: ' + address)}`;
-                    window.open(whatsappUrl, '_blank');
-                });
-            }
-
-            if (shareEmail) {
-                shareEmail.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const address = document.getElementById('address_map_input').value;
-                    const subject = encodeURIComponent('{{ __('location_shared') }}');
-                    const body = encodeURIComponent('{{ __('check_this_location') }}: ' + address);
-                    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-                });
-            }
-
-            if (shareMaps) {
-                shareMaps.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const lat = document.getElementById('latitude').value;
-                    const lng = document.getElementById('longitude').value;
-                    if (lat && lng) {
-                        const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-                        window.open(mapsUrl, '_blank');
-                    } else {
-                        alert('{{ __('no_coordinates_available') }}');
-                    }
-                });
-            }
-
-            // Update modal content
-            function updateModalContent() {
-                const formattedAddress = document.getElementById('address_map_input').value || '-';
-                const city = document.getElementById('city').value || '-';
-                const state = document.getElementById('state').value || '-';
-                const zipcode = document.getElementById('zipcode').value || '-';
-                const country = document.getElementById('country').value || '-';
-                const latitude = document.getElementById('latitude').value || '-';
-                const longitude = document.getElementById('longitude').value || '-';
-
-                document.getElementById('modal-formatted-address').textContent = formattedAddress;
-                document.getElementById('modal-city').textContent = city;
-                document.getElementById('modal-state').textContent = state;
-                document.getElementById('modal-zipcode').textContent = zipcode;
-                document.getElementById('modal-country').textContent = country;
-                document.getElementById('modal-latitude').textContent = latitude;
-                document.getElementById('modal-longitude').textContent = longitude;
-            }
-
-            // Get complete address string
-            function getCompleteAddressString() {
-                const address = document.getElementById('address').value || '';
-                const address2 = document.getElementById('address_2').value || '';
-                const city = document.getElementById('city').value || '';
-                const state = document.getElementById('state').value || '';
-                const zipcode = document.getElementById('zipcode').value || '';
-                const country = document.getElementById('country').value || '';
-
-                let completeAddress = address;
-                if (address2) completeAddress += ', ' + address2;
-                if (city) completeAddress += ', ' + city;
-                if (state) completeAddress += ', ' + state;
-                if (zipcode) completeAddress += ' ' + zipcode;
-                if (country) completeAddress += ', ' + country;
-
-                return completeAddress;
-            }
 
             // Copy to clipboard utility
             function copyToClipboard(text, successMessage) {
                 navigator.clipboard.writeText(text).then(function() {
                     // Show success message
                     const toast = document.createElement('div');
-                    toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50';
+                    toast.className =
+                        'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50';
                     toast.textContent = successMessage;
                     document.body.appendChild(toast);
-                    
+
                     setTimeout(() => {
                         document.body.removeChild(toast);
                     }, 3000);
@@ -1296,7 +1023,238 @@
                     alert('{{ __('copy_failed') }}');
                 });
             }
+
+            // ============= VALIDATION SYSTEM =============
+            // Setup appointment form validation system similar to Facebook Lead Modal
+            setupAppointmentValidation();
         });
+
+        // Setup real-time validation system
+        function setupAppointmentValidation() {
+            const form = document.querySelector('form');
+            if (!form || form.dataset.validationInitialized === 'true') return;
+
+            console.log('Setting up appointment form validation...');
+
+            const submitButton = document.getElementById('submit-button');
+            const allInputs = form.querySelectorAll('.input-field, .checkbox-field');
+            const requiredFields = ['first_name', 'last_name', 'phone', 'email', 'address_map_input', 'city', 'state',
+                'zipcode', 'country', 'inspection_status', 'status_lead', 'lead_source', 'insurance_property'
+            ];
+            const appointmentUuid = '{{ $appointment->uuid ?? '' }}'; // For edit mode
+            let validationTimeouts = {};
+
+            // Helper Functions
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            function clearFieldError(fieldElement) {
+                const fieldName = fieldElement.name;
+                const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                if (errorSpan) errorSpan.textContent = '';
+                fieldElement.classList.remove('border-red-500');
+                checkFormValidity();
+            }
+
+            function clearAllErrors() {
+                document.querySelectorAll('.error-message').forEach(span => span.textContent = '');
+                allInputs.forEach(input => input.classList.remove('border-red-500'));
+                checkFormValidity();
+            }
+
+            function checkFormValidity() {
+                let allRequiredFilled = true;
+                let hasVisibleErrors = false;
+
+                // Check required fields
+                requiredFields.forEach(fieldName => {
+                    const field = form.querySelector(`[name="${fieldName}"]`);
+                    if (field) {
+                        let value = '';
+                        if (field.type === 'checkbox') {
+                            value = field.checked ? '1' : '';
+                        } else {
+                            value = field.value ? field.value.trim() : '';
+                        }
+
+                        if (!value) {
+                            allRequiredFilled = false;
+                        }
+                    }
+                });
+
+                // Check for visible errors
+                hasVisibleErrors = Array.from(form.querySelectorAll('.error-message'))
+                    .some(span => span.textContent.trim() !== '');
+
+                // Enable button only if all required fields are filled AND there are no errors
+                if (submitButton) {
+                    submitButton.disabled = !allRequiredFilled || hasVisibleErrors;
+                }
+            }
+
+            function validateField(fieldElement) {
+                const fieldName = fieldElement.name;
+                let fieldValue = '';
+
+                if (fieldElement.type === 'checkbox') {
+                    fieldValue = fieldElement.checked ? '1' : '0';
+                } else {
+                    fieldValue = fieldElement.value;
+                }
+
+                // Clear previous timeout for this field
+                if (validationTimeouts[fieldName]) {
+                    clearTimeout(validationTimeouts[fieldName]);
+                }
+
+                const validateUrl = '{{ route('appointments.validate-field') }}';
+                const csrfToken = document.querySelector('input[name="_token"]')?.value;
+
+                const requestData = {
+                    fieldName: fieldName,
+                    fieldValue: fieldValue
+                };
+
+                // Add exclude_uuid for edit mode
+                if (appointmentUuid) {
+                    requestData.exclude_uuid = appointmentUuid;
+                }
+
+                fetch(validateUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => {
+                        if (!response.ok && response.status !== 422) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                        if (errorSpan) {
+                            if (!data.valid && data.errors?.[0]) {
+                                errorSpan.textContent = data.errors[0];
+                                fieldElement.classList.add('border-red-500');
+                            } else {
+                                errorSpan.textContent = '';
+                                fieldElement.classList.remove('border-red-500');
+                            }
+                        }
+                        checkFormValidity();
+                    })
+                    .catch(error => {
+                        console.error('Validation request failed:', error);
+                        checkFormValidity();
+                    });
+            }
+
+            // Debounced validation
+            const debouncedValidateField = debounce(validateField, 500);
+
+            // Name formatting functions
+            function formatName(inputElement) {
+                const cursorPosition = inputElement.selectionStart;
+                let value = inputElement.value;
+
+                if (typeof value === 'string' && value.length > 0) {
+                    if (value.length > 50) {
+                        value = value.substring(0, 50);
+                    }
+
+                    const endsWithSpace = value.endsWith(' ');
+                    value = value.replace(/\s+/g, ' ');
+
+                    let parts = value.trim().split(' ').filter(part => part.length > 0);
+                    parts = parts.map(part => {
+                        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+                    });
+
+                    let formattedValue = parts.join(' ');
+                    if (endsWithSpace && formattedValue.length < 50) {
+                        formattedValue += ' ';
+                    }
+
+                    inputElement.value = formattedValue;
+
+                    const newCursorPosition = Math.min(cursorPosition, formattedValue.length);
+                    inputElement.setSelectionRange(newCursorPosition, newCursorPosition);
+                }
+            }
+
+            function formatPhoneInput(inputElement, event) {
+                const isBackspace = event?.inputType === 'deleteContentBackward';
+                let value = inputElement.value.replace(/\D/g, '');
+
+                value = value.substring(0, 10);
+
+                let formattedValue = '';
+                if (value.length === 0) {
+                    formattedValue = '';
+                } else if (value.length <= 3) {
+                    formattedValue = `(${value}`;
+                } else if (value.length <= 6) {
+                    formattedValue = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+                } else {
+                    formattedValue = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 10)}`;
+                }
+                inputElement.value = formattedValue;
+            }
+
+            // Setup event listeners for inputs
+            allInputs.forEach(input => {
+                if (input.name === 'first_name' || input.name === 'last_name') {
+                    input.addEventListener('input', (event) => {
+                        formatName(event.target);
+                        debouncedValidateField(event.target);
+                    });
+                    input.addEventListener('blur', (event) => {
+                        formatName(event.target);
+                        validateField(event.target);
+                    });
+                } else if (input.name === 'phone') {
+                    input.addEventListener('input', (event) => {
+                        formatPhoneInput(input, event);
+                        debouncedValidateField(input);
+                    });
+                    input.addEventListener('blur', (event) => {
+                        validateField(input);
+                    });
+                } else if (input.type === 'checkbox') {
+                    input.addEventListener('change', (event) => {
+                        validateField(event.target);
+                    });
+                } else {
+                    input.addEventListener('input', (event) => {
+                        debouncedValidateField(event.target);
+                    });
+                    input.addEventListener('blur', (event) => {
+                        validateField(event.target);
+                    });
+                }
+            });
+
+            // Initial form validity check
+            checkFormValidity();
+
+            // Mark as initialized
+            form.dataset.validationInitialized = 'true';
+        }
     </script>
 @endpush
 
@@ -1310,6 +1268,49 @@
         /* Capitalize only first letter */
         .capitalize-first::first-letter {
             text-transform: uppercase;
+        }
+
+        /* Validation Error Styling - Similar to Facebook Lead Modal */
+        .border-red-500 {
+            border-color: #f56565 !important;
+        }
+
+        .error-message {
+            min-height: 1rem;
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+
+        /* Input field focus states */
+        .input-field:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 1px #6366f1;
+        }
+
+        .input-field.border-red-500:focus {
+            border-color: #f56565 !important;
+            box-shadow: 0 0 0 1px #f56565 !important;
+        }
+
+        /* Checkbox field styling */
+        .checkbox-field {
+            accent-color: #6366f1;
+        }
+
+        .checkbox-field.border-red-500 {
+            outline: 2px solid #f56565;
+            outline-offset: 2px;
+        }
+
+        /* Submit button disabled state */
+        #submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Success states */
+        .border-green-500 {
+            border-color: #10b981 !important;
         }
     </style>
 @endpush
