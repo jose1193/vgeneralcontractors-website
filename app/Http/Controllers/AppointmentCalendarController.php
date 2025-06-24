@@ -309,156 +309,6 @@ class AppointmentCalendarController extends Controller
     }
 
     /**
-     * Create a new appointment from the calendar view
-     */
-    public function create(Request $request)
-    {
-        try {
-            // Validate the request
-            $request->validate([
-                'client_uuid' => 'required|exists:appointments,uuid',
-                'inspection_date' => 'required|date|after_or_equal:today',
-                'inspection_time' => 'required|date_format:H:i',
-                'inspection_status' => 'required|in:Confirmed,Pending',
-                'status_lead' => 'nullable|in:New,Called,Pending,Declined,Completed'
-            ]);
-
-            // Find the client (existing appointment)
-            $client = Appointment::where('uuid', $request->client_uuid)->first();
-            if (!$client) {
-                return response()->json([
-                'success' => false,
-                'message' => __('appointment_calendar_client_not_found')
-            ], 404);
-            }
-
-            // Check for schedule conflicts
-            $conflictCheck = Appointment::where('inspection_date', $request->inspection_date)
-                ->where('inspection_time', $request->inspection_time)
-                ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
-                ->where('uuid', '!=', $client->uuid)
-                ->exists();
-
-            if ($conflictCheck) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('appointment_calendar_time_slot_booked'),
-                    'errors' => [
-                        'schedule_conflict' => __('appointment_calendar_select_different_time')
-                    ]
-                ], 422);
-            }
-
-            // Update the appointment with new inspection details
-            $oldStatus = $client->inspection_status;
-            $client->inspection_date = $request->inspection_date;
-            
-            // Both date and time must always be provided together
-            if (empty($request->inspection_date) && !empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('appointment_calendar_validation_error'),
-                    'errors' => [
-                        'inspection_date' => [__('appointment_calendar_date_required_with_time')]
-                    ]
-                ], 422);
-            }
-            
-            if (!empty($request->inspection_date) && empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('appointment_calendar_validation_error'),
-                    'errors' => [
-                        'inspection_time' => [__('appointment_calendar_time_required_with_date')]
-                    ]
-                ], 422);
-            }
-            
-            $client->inspection_time = $request->inspection_time;
-            
-            // Ensure consistent status handling
-            // If both date and time are provided, always set status to Confirmed
-            if (!empty($client->inspection_date) && !empty($client->inspection_time)) {
-                $client->inspection_status = 'Confirmed';
-                
-                // Use provided status_lead or default to 'Called'
-                if ($request->has('status_lead') && !empty($request->status_lead)) {
-                    $client->status_lead = $request->status_lead;
-                } else {
-                    $client->status_lead = 'Called';
-                }
-            } else {
-                $client->inspection_status = $request->inspection_status;
-                
-                // Use provided status_lead or set based on inspection_status
-                if ($request->has('status_lead') && !empty($request->status_lead)) {
-                    $client->status_lead = $request->status_lead;
-                } else {
-                    // Set status_lead based on inspection_status
-                    if ($client->inspection_status === 'Confirmed') {
-                        $client->status_lead = 'Called';
-                    } else if ($client->inspection_status === 'Declined') {
-                        $client->status_lead = 'Declined';
-                    } else if ($client->inspection_status === 'Pending') {
-                        if ($client->status_lead !== 'Pending') {
-                            $client->status_lead = 'New';
-                        }
-                    }
-                }
-            }
-            
-            $client->save();
-            
-            // Clear cache after updating
-            $this->significantDataChange = true;
-            $this->clearCache('appointments');
-            
-            // Clear calendar event cache
-            $cacheKeys = Cache::get('calendar_event_keys', []);
-            foreach ($cacheKeys as $key) {
-                Cache::forget($key);
-            }
-            Cache::forget('calendar_event_keys');
-
-            // Determine email type and message based on status
-            $message = __('appointment_calendar_scheduled_successfully');
-            $emailType = '';
-            
-            if ($client->inspection_status === 'Confirmed') {
-                if ($oldStatus !== 'Confirmed') {
-                    $emailType = 'confirmed';
-                    $message = __('appointment_calendar_confirmed_successfully');
-                } else {
-                    $emailType = 'rescheduled';
-                    $message = __('appointment_calendar_rescheduled_successfully');
-                }
-            }
-            
-            // Send notification email if needed
-            if (!empty($emailType)) {
-                ProcessAppointmentEmail::dispatch($client, $emailType);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => $message,
-                'appointment' => $client
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => __('appointment_calendar_validation_error'),
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => __('appointment_calendar_error_creating') . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
      * Fetch available clients for appointment scheduling
      */
     public function getClients()
@@ -492,6 +342,210 @@ class AppointmentCalendarController extends Controller
         }
     }
     
+    /**
+     * Create a new appointment from the calendar view
+     */
+    public function create(Request $request)
+    {
+        try {
+            // Check if creating a new client or using existing one
+            if ($request->has('create_new_client') && $request->create_new_client) {
+                // Validate new client data
+                $validator = Validator::make($request->all(), [
+                    'first_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s\'-]+$/'],
+                    'last_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s\'-]+$/'],
+                    'phone' => 'required|string|max:20',
+                    'email' => 'nullable|email|max:255',
+                    'address' => 'nullable|string|max:255',
+                    'inspection_date' => 'required|date',
+                    'inspection_time' => 'required|string',
+                    'inspection_status' => 'required|string',
+                    'status_lead' => 'nullable|string',
+                ], [
+                    'first_name.required' => __('first_name_required'),
+                    'first_name.regex' => __('first_name_regex'),
+                    'last_name.required' => __('last_name_required'),
+                    'last_name.regex' => __('last_name_regex'),
+                    'phone.required' => __('phone_required'),
+                    'email.email' => __('email_invalid'),
+                    'inspection_date.required' => __('appointment_calendar_date_required'),
+                    'inspection_time.required' => __('appointment_calendar_time_required'),
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_validation_error'),
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+
+                $validatedData = $validator->validated();
+
+                // Format phone number
+                $validatedData['phone'] = $this->formatPhone($validatedData['phone']);
+
+                // Check for duplicate phone after formatting
+                $existingPhone = Appointment::where('phone', $validatedData['phone'])->first();
+                if ($existingPhone) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_validation_error'),
+                        'errors' => ['phone' => [__('phone_unique')]]
+                    ], 422);
+                }
+
+                // Check for duplicate email if provided
+                if (!empty($validatedData['email'])) {
+                    $existingEmail = Appointment::where('email', $validatedData['email'])->first();
+                    if ($existingEmail) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => __('appointment_calendar_validation_error'),
+                            'errors' => ['email' => [__('email_unique')]]
+                        ], 422);
+                    }
+                }
+
+                // Check for schedule conflicts
+                $conflictCheck = Appointment::where('inspection_date', $validatedData['inspection_date'])
+                    ->where('inspection_time', $validatedData['inspection_time'])
+                    ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
+                    ->first();
+
+                if ($conflictCheck) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_time_slot_booked'),
+                        'errors' => [
+                            'schedule_conflict' => __('appointment_calendar_select_different_time')
+                        ]
+                    ], 422);
+                }
+
+                // Create new appointment with client data
+                $appointment = new Appointment();
+                $appointment->uuid = Str::uuid();
+                $appointment->first_name = $validatedData['first_name'];
+                $appointment->last_name = $validatedData['last_name'];
+                $appointment->phone = $validatedData['phone'];
+                $appointment->email = $validatedData['email'] ?? null;
+                $appointment->address = $validatedData['address'] ?? null;
+                $appointment->inspection_date = $validatedData['inspection_date'];
+                $appointment->inspection_time = $validatedData['inspection_time'];
+                $appointment->inspection_status = $validatedData['inspection_status'];
+                $appointment->status_lead = $validatedData['status_lead'] ?? 'New';
+                $appointment->lead_source = 'Calendar';
+                $appointment->registration_date = now();
+                $appointment->save();
+
+                $message = __('appointment_calendar_appointment_created_successfully');
+                
+            } else {
+                // Handle existing client appointment creation
+                $validator = Validator::make($request->all(), [
+                    'client_uuid' => 'required|string|exists:appointments,uuid',
+                    'inspection_date' => 'required|date',
+                    'inspection_time' => 'required|string',
+                    'inspection_status' => 'required|string',
+                    'status_lead' => 'nullable|string',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_validation_error'),
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+
+                $validatedData = $validator->validated();
+
+                // Find the existing client
+                $client = Appointment::where('uuid', $validatedData['client_uuid'])->first();
+                
+                if (!$client) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_client_not_found')
+                    ], 404);
+                }
+
+                // Check for schedule conflicts
+                $conflictCheck = Appointment::where('inspection_date', $validatedData['inspection_date'])
+                    ->where('inspection_time', $validatedData['inspection_time'])
+                    ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
+                    ->first();
+
+                if ($conflictCheck) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('appointment_calendar_time_slot_booked'),
+                        'errors' => [
+                            'schedule_conflict' => __('appointment_calendar_select_different_time')
+                        ]
+                    ], 422);
+                }
+
+                // Update the existing client with appointment details
+                $client->inspection_date = $validatedData['inspection_date'];
+                $client->inspection_time = $validatedData['inspection_time'];
+                $client->inspection_status = $validatedData['inspection_status'];
+                $client->status_lead = $validatedData['status_lead'] ?? 'New';
+                $client->save();
+
+                $appointment = $client;
+                $message = __('appointment_calendar_scheduled_successfully');
+            }
+
+            // Clear cache after creating/updating
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
+            
+            // Clear calendar event cache
+            $cacheKeys = Cache::get('calendar_event_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            Cache::forget('calendar_event_keys');
+
+            // Determine email type based on status
+            $emailType = '';
+            if ($appointment->inspection_status === 'Confirmed') {
+                $emailType = 'confirmed';
+                $message = __('appointment_calendar_confirmed_successfully');
+            }
+            
+            // Send notification email if needed
+            if (!empty($emailType)) {
+                ProcessAppointmentEmail::dispatch($appointment, $emailType);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'appointment' => $appointment
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('appointment_calendar_validation_error'),
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Error creating appointment from calendar: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('appointment_calendar_error_creating') . $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Store a new lead from the calendar modal
      */

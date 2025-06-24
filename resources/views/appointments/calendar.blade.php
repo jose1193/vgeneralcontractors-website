@@ -254,16 +254,74 @@
                                                                 name="inspection_time">
                                                         </div>
 
-                                                        {{-- Client Selector --}}
+                                                        {{-- Toggle for New Client --}}
                                                         <div class="mt-3">
+                                                            <div class="flex items-center">
+                                                                <input type="checkbox" id="createNewClientToggle" 
+                                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                                <label for="createNewClientToggle" 
+                                                                    class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                                                    {{ __('create_new_client') }}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Existing Client Selector --}}
+                                                        <div id="existingClientSection" class="mt-3">
                                                             <label for="clientSelector"
                                                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                                 {{ __('select_client') }}
                                                             </label>
-                                                            <select id="clientSelector" name="client_id" required
+                                                            <select id="clientSelector" name="client_id"
                                                                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                                 <option value="">{{ __('please_select_client') }}</option>
                                                             </select>
+                                                        </div>
+
+                                                        {{-- New Client Fields --}}
+                                                        <div id="newClientSection" class="mt-3 space-y-3 hidden">
+                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                <div>
+                                                                    <label for="newClientFirstName"
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        {{ __('first_name') }}
+                                                                    </label>
+                                                                    <input type="text" id="newClientFirstName" name="first_name"
+                                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                                </div>
+                                                                <div>
+                                                                    <label for="newClientLastName"
+                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        {{ __('last_name') }}
+                                                                    </label>
+                                                                    <input type="text" id="newClientLastName" name="last_name"
+                                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <label for="newClientPhone"
+                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('phone') }}
+                                                                </label>
+                                                                <input type="tel" id="newClientPhone" name="phone"
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                            </div>
+                                                            <div>
+                                                                <label for="newClientEmail"
+                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('email') }}
+                                                                </label>
+                                                                <input type="email" id="newClientEmail" name="email"
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                            </div>
+                                                            <div>
+                                                                <label for="newClientAddress"
+                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('address') }}
+                                                                </label>
+                                                                <textarea id="newClientAddress" name="address" rows="2"
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                                            </div>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -486,10 +544,29 @@
                         // Handle create confirmed and called appointment button
                         const createConfirmedCalledBtn = document.getElementById('createConfirmedCalledBtn');
                         createConfirmedCalledBtn.addEventListener('click', function() {
-                            // Validate client is selected
-                            if (!clientSelector.value) {
-                                Swal.fire(translations.error, translations.please_select_client, 'error');
-                                return;
+                            // Validate based on mode (existing client vs new client)
+                            if (createNewClientToggle.checked) {
+                                // Validate new client fields
+                                const firstName = document.getElementById('newClientFirstName').value.trim();
+                                const lastName = document.getElementById('newClientLastName').value.trim();
+                                const phone = document.getElementById('newClientPhone').value.trim();
+                                const email = document.getElementById('newClientEmail').value.trim();
+                                
+                                if (!firstName || !lastName || !phone) {
+                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone)', 'error');
+                                    return;
+                                }
+                                
+                                if (email && !email.includes('@')) {
+                                    Swal.fire(translations.error, 'Please enter a valid email address', 'error');
+                                    return;
+                                }
+                            } else {
+                                // Validate existing client is selected
+                                if (!clientSelector.value) {
+                                    Swal.fire(translations.error, translations.please_select_client, 'error');
+                                    return;
+                                }
                             }
 
                             // Show processing state
@@ -499,13 +576,22 @@
                             processingText.classList.remove('hidden');
                             createConfirmedCalledBtn.disabled = true;
 
-                            // Get selected client data
-                            const selectedClient = clientSelector.options[clientSelector.selectedIndex];
-                            const clientUuid = clientSelector.value;
-
                             // Prepare the data for the AJAX request
                             const formData = new FormData();
-                            formData.append('client_uuid', clientUuid);
+                            
+                            if (createNewClientToggle.checked) {
+                                // New client data
+                                formData.append('first_name', document.getElementById('newClientFirstName').value.trim());
+                                formData.append('last_name', document.getElementById('newClientLastName').value.trim());
+                                formData.append('phone', document.getElementById('newClientPhone').value.trim());
+                                formData.append('email', document.getElementById('newClientEmail').value.trim());
+                                formData.append('address', document.getElementById('newClientAddress').value.trim());
+                                formData.append('create_new_client', '1');
+                            } else {
+                                // Existing client
+                                formData.append('client_uuid', clientSelector.value);
+                            }
+                            
                             formData.append('inspection_date', appointmentDate.value);
                             formData.append('inspection_time', appointmentTime.value);
                             formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
@@ -648,12 +734,41 @@
                                 });
                         }
 
+                        // Handle toggle for new client creation
+                        const createNewClientToggle = document.getElementById('createNewClientToggle');
+                        const existingClientSection = document.getElementById('existingClientSection');
+                        const newClientSection = document.getElementById('newClientSection');
+
+                        createNewClientToggle.addEventListener('change', function() {
+                            if (this.checked) {
+                                // Show new client fields, hide existing client selector
+                                existingClientSection.classList.add('hidden');
+                                newClientSection.classList.remove('hidden');
+                                // Clear existing client selection
+                                $('#clientSelector').val('').trigger('change');
+                            } else {
+                                // Show existing client selector, hide new client fields
+                                existingClientSection.classList.remove('hidden');
+                                newClientSection.classList.add('hidden');
+                                // Clear new client fields
+                                document.getElementById('newClientFirstName').value = '';
+                                document.getElementById('newClientLastName').value = '';
+                                document.getElementById('newClientPhone').value = '';
+                                document.getElementById('newClientEmail').value = '';
+                                document.getElementById('newClientAddress').value = '';
+                            }
+                        });
+
                         // Handle close new appointment modal
                         closeNewAppointmentModalBtn.addEventListener('click', () => {
                             newAppointmentModal.classList.add('hidden');
                             newAppointmentModal.style.display = 'none';
                             // Clear selection on calendar
                             calendar.unselect();
+                            // Reset toggle and sections
+                            createNewClientToggle.checked = false;
+                            existingClientSection.classList.remove('hidden');
+                            newClientSection.classList.add('hidden');
                         });
 
                         // Handle click outside new appointment modal
@@ -663,15 +778,38 @@
                                 newAppointmentModal.style.display = 'none';
                                 // Clear selection on calendar
                                 calendar.unselect();
+                                // Reset toggle and sections
+                                createNewClientToggle.checked = false;
+                                existingClientSection.classList.remove('hidden');
+                                newClientSection.classList.add('hidden');
                             }
                         });
 
                         // Handle create appointment button
                         createAppointmentBtn.addEventListener('click', function() {
-                            // Validate client is selected
-                            if (!clientSelector.value) {
-                                Swal.fire(translations.error, translations.please_select_client, 'error');
-                                return;
+                            // Validate based on mode (existing client vs new client)
+                            if (createNewClientToggle.checked) {
+                                // Validate new client fields
+                                const firstName = document.getElementById('newClientFirstName').value.trim();
+                                const lastName = document.getElementById('newClientLastName').value.trim();
+                                const phone = document.getElementById('newClientPhone').value.trim();
+                                const email = document.getElementById('newClientEmail').value.trim();
+                                
+                                if (!firstName || !lastName || !phone) {
+                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone)', 'error');
+                                    return;
+                                }
+                                
+                                if (email && !email.includes('@')) {
+                                    Swal.fire(translations.error, 'Please enter a valid email address', 'error');
+                                    return;
+                                }
+                            } else {
+                                // Validate existing client is selected
+                                if (!clientSelector.value) {
+                                    Swal.fire(translations.error, translations.please_select_client, 'error');
+                                    return;
+                                }
                             }
 
                             // Show processing state
@@ -681,13 +819,22 @@
                             processingText.classList.remove('hidden');
                             createAppointmentBtn.disabled = true;
 
-                            // Get selected client data
-                            const selectedClient = clientSelector.options[clientSelector.selectedIndex];
-                            const clientUuid = clientSelector.value;
-
                             // Prepare the data for the AJAX request
                             const formData = new FormData();
-                            formData.append('client_uuid', clientUuid);
+                            
+                            if (createNewClientToggle.checked) {
+                                // New client data
+                                formData.append('first_name', document.getElementById('newClientFirstName').value.trim());
+                                formData.append('last_name', document.getElementById('newClientLastName').value.trim());
+                                formData.append('phone', document.getElementById('newClientPhone').value.trim());
+                                formData.append('email', document.getElementById('newClientEmail').value.trim());
+                                formData.append('address', document.getElementById('newClientAddress').value.trim());
+                                formData.append('create_new_client', '1');
+                            } else {
+                                // Existing client
+                                formData.append('client_uuid', clientSelector.value);
+                            }
+                            
                             formData.append('inspection_date', appointmentDate.value);
                             formData.append('inspection_time', appointmentTime.value);
                             formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
