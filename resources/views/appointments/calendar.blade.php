@@ -256,14 +256,13 @@
 
                                                         {{-- Toggle for New Client --}}
                                                         <div class="mt-3">
-                                                            <div class="flex items-center">
+                                                            <label class="inline-flex items-center cursor-pointer">
                                                                 <input type="checkbox" id="createNewClientToggle" 
-                                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                                                <label for="createNewClientToggle" 
-                                                                    class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                                                    class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                                                                     {{ __('create_new_client') }}
-                                                                </label>
-                                                            </div>
+                                                                </span>
+                                                            </label>
                                                         </div>
 
                                                         {{-- Existing Client Selector --}}
@@ -304,6 +303,7 @@
                                                                     {{ __('phone') }}
                                                                 </label>
                                                                 <input type="tel" id="newClientPhone" name="phone"
+                                                                    placeholder="{{ __('phone_placeholder') }}"
                                                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                             </div>
                                                             <div>
@@ -312,6 +312,7 @@
                                                                     {{ __('email') }}
                                                                 </label>
                                                                 <input type="email" id="newClientEmail" name="email"
+                                                                    placeholder="{{ __('email_placeholder') }}"
                                                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                             </div>
                                                             <div>
@@ -320,6 +321,7 @@
                                                                     {{ __('address') }}
                                                                 </label>
                                                                 <textarea id="newClientAddress" name="address" rows="2"
+                                                                    placeholder="{{ __('address_placeholder') }}"
                                                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                                                             </div>
                                                         </div>
@@ -350,7 +352,7 @@
                                         
                                         {{-- Botón para crear cita como Confirmed y Called --}}
                                         <button type="button" id="createConfirmedCalledBtn"
-                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                            class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
                                             <span class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
                                             <span class="processing-btn-text hidden">
                                                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
@@ -542,7 +544,6 @@
                             });
 
                         // Handle create confirmed and called appointment button
-                        const createConfirmedCalledBtn = document.getElementById('createConfirmedCalledBtn');
                         createConfirmedCalledBtn.addEventListener('click', function() {
                             // Validate based on mode (existing client vs new client)
                             if (createNewClientToggle.checked) {
@@ -686,6 +687,9 @@
                             // Show modal
                             newAppointmentModal.classList.remove('hidden');
                             newAppointmentModal.style.display = 'block';
+                            
+                            // Update button visibility based on current state
+                            updateButtonVisibility();
                         }
 
                         // Function to load clients for the dropdown
@@ -738,6 +742,23 @@
                         const createNewClientToggle = document.getElementById('createNewClientToggle');
                         const existingClientSection = document.getElementById('existingClientSection');
                         const newClientSection = document.getElementById('newClientSection');
+                        const createConfirmedCalledBtn = document.getElementById('createConfirmedCalledBtn');
+
+                        // Function to update button visibility
+                        function updateButtonVisibility() {
+                            if (createNewClientToggle.checked) {
+                                // New client mode: hide confirmed+called button, show only create appointment
+                                createConfirmedCalledBtn.classList.add('hidden');
+                            } else {
+                                // Existing client mode: show confirmed+called button if client is selected
+                                const hasSelectedClient = clientSelector.value !== '';
+                                if (hasSelectedClient) {
+                                    createConfirmedCalledBtn.classList.remove('hidden');
+                                } else {
+                                    createConfirmedCalledBtn.classList.add('hidden');
+                                }
+                            }
+                        }
 
                         createNewClientToggle.addEventListener('change', function() {
                             if (this.checked) {
@@ -757,6 +778,12 @@
                                 document.getElementById('newClientEmail').value = '';
                                 document.getElementById('newClientAddress').value = '';
                             }
+                            updateButtonVisibility();
+                        });
+
+                        // Handle client selector change
+                        $('#clientSelector').on('change', function() {
+                            updateButtonVisibility();
                         });
 
                         // Handle close new appointment modal

@@ -1697,5 +1697,9 @@
     "appointment_calendar_validation_error": "Error de validación",
     "select_client": "Seleccionar Cliente",
     "create_confirmed_appointment": "Crear Cita Confirmada",
-    "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada"
+    "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
+    "create_new_client": "Crear Nuevo Cliente",
+   
+    "email_placeholder": "correo@ejemplo.com",
+    "address_placeholder": "Ingrese dirección completa"
 }
