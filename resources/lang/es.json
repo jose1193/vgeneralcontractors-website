@@ -1006,6 +1006,7 @@
 
     "email_datas_title": "Gestión de Correos",
     "email_datas_subtitle": "Gestione direcciones de correo electrónico e información de contacto para su negocio",
+    "email_data_entity_plural": "Datos de Correo",
 
     "email_address": "Dirección de Correo",
     "phone_number": "Número de Teléfono",
