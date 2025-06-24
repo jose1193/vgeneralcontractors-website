@@ -219,7 +219,7 @@
                                     aria-hidden="true">&#8203;</span>
                                 <div
                                     class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                                    <div class="bg-green-600 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                                         {{-- Close button --}}
                                         <button type="button" id="closeNewAppointmentModalBtn"
                                             class="absolute top-2 right-2 rounded-full bg-red-600 p-2 inline-flex items-center justify-center text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
@@ -233,11 +233,15 @@
                                         <div class="sm:flex sm:items-start">
                                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                                 <h3
-                                                    class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+                                                    class="text-lg leading-6 font-medium text-white text-center">
                                                     {{ __('create_new_appointment') }}
                                                 </h3>
-                                                <div class="mt-4 space-y-4">
-                                                    <form id="newAppointmentForm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                        <div class="mt-4 space-y-4">
+                                            <form id="newAppointmentForm">
                                                         @csrf
                                                         {{-- Selected Date/Time (readonly) --}}
                                                         <div>
@@ -283,7 +287,7 @@
                                                                 <div>
                                                                     <label for="newClientFirstName"
                                                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        {{ __('first_name') }}
+                                                                        {{ __('first_name') }} <span class="text-red-500">*</span>
                                                                     </label>
                                                                     <input type="text" id="newClientFirstName" name="first_name"
                                            placeholder="{{ __('enter_first_name') }}"
@@ -292,7 +296,7 @@
                                                                 <div>
                                                                     <label for="newClientLastName"
                                                                         class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        {{ __('last_name') }}
+                                                                        {{ __('last_name') }} <span class="text-red-500">*</span>
                                                                     </label>
                                                                     <input type="text" id="newClientLastName" name="last_name"
                                            placeholder="{{ __('enter_last_name') }}"
@@ -302,7 +306,7 @@
                                                             <div>
                                                                 <label for="newClientPhone"
                                                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('phone') }}
+                                                                    {{ __('phone') }} <span class="text-red-500">*</span>
                                                                 </label>
                                                                 <input type="tel" id="newClientPhone" name="phone"
                                                                     placeholder="{{ __('phone_placeholder') }}"
@@ -311,7 +315,7 @@
                                                             <div>
                                                                 <label for="newClientEmail"
                                                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('email') }}
+                                                                    {{ __('email') }} <span class="text-red-500">*</span>
                                                                 </label>
                                                                 <input type="email" id="newClientEmail" name="email"
                                                                     placeholder="{{ __('email_placeholder') }}"
@@ -321,7 +325,7 @@
                                                             <div>
                                                                 <label for="newClientAddressMapInput"
                                                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('address') }}
+                                                                    {{ __('address') }} <span class="text-red-500">*</span>
                                                                 </label>
                                                                 <input type="text" id="newClientAddressMapInput" name="address_map_input"
                                                                     placeholder="{{ __('address_placeholder') }}"
@@ -329,12 +333,52 @@
                                                             </div>
 
                                                             {{-- Map Container --}}
-                                                            <div id="newClientLocationMap" class="mt-3 h-48 w-full rounded-md border border-gray-300 hidden"></div>
+                                                            <div id="newClientLocationMap" class="mt-3 h-48 w-full rounded-md border border-gray-300"></div>
+
+                                                            {{-- Address 2 Field --}}
+                                                            <div>
+                                                                <label for="newClientAddress2"
+                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('address_2') }}
+                                                                </label>
+                                                                <input type="text" id="newClientAddress2" name="address_2"
+                                                                    placeholder="{{ __('address_2_placeholder') }}"
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                            </div>
+
+                                                            {{-- Property Insurance --}}
+                                                            <div>
+                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('property_insurance') }} <span class="text-red-500">*</span>
+                                                                </label>
+                                                                <div class="mt-2 space-x-6">
+                                                                    <label class="inline-flex items-center">
+                                                                        <input type="radio" id="newClientInsuranceYes" name="insurance_property" value="1"
+                                                                            class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('yes') }}</span>
+                                                                    </label>
+                                                                    <label class="inline-flex items-center">
+                                                                        <input type="radio" id="newClientInsuranceNo" name="insurance_property" value="0"
+                                                                            class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('no') }}</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- Notes --}}
+                                                            <div>
+                                                                <label for="newClientNotes"
+                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {{ __('notes') }}
+                                                                </label>
+                                                                <textarea id="newClientNotes" name="notes" rows="3"
+                                                                    placeholder="{{ __('notes_placeholder') }}"
+                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                                            </div>
 
                                                             {{-- Hidden Address Fields --}}
                                                             <input type="hidden" id="newClientAddress" name="address">
                                                             <input type="hidden" id="newClientAddressSimple" name="address_simple">
-                                                            <input type="hidden" id="newClientAddress2" name="address_2">
                                                             <input type="hidden" id="newClientCity" name="city">
                                                             <input type="hidden" id="newClientState" name="state">
                                                             <input type="hidden" id="newClientZipcode" name="zipcode">
@@ -351,7 +395,7 @@
                                         class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center space-x-3">
                                         {{-- Botón para crear cita solo como Confirmed --}}
                                         <button type="button" id="createAppointmentBtn"
-                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
                                             <span class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
                                             <span class="processing-btn-text hidden">
                                                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
@@ -569,9 +613,16 @@
                                 const lastName = document.getElementById('newClientLastName').value.trim();
                                 const phone = document.getElementById('newClientPhone').value.trim();
                                 const email = document.getElementById('newClientEmail').value.trim();
+                                const address = document.getElementById('newClientAddressMapInput').value.trim();
+                                const insuranceProperty = document.querySelector('input[name="insurance_property"]:checked');
                                 
-                                if (!firstName || !lastName || !phone) {
-                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone)', 'error');
+                                if (!firstName || !lastName || !phone || !email || !address) {
+                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone, Email, Address)', 'error');
+                                    return;
+                                }
+                                
+                                if (!insuranceProperty) {
+                                    Swal.fire(translations.error, 'Please select Property Insurance option', 'error');
                                     return;
                                 }
                                 
@@ -821,6 +872,10 @@
                                 document.getElementById('newClientCountry').value = '';
                                 document.getElementById('newClientLatitude').value = '';
                                 document.getElementById('newClientLongitude').value = '';
+                                document.getElementById('newClientNotes').value = '';
+                                // Clear insurance property radio buttons
+                                const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+                                insuranceRadios.forEach(radio => radio.checked = false);
                             }
                             updateButtonVisibility();
                         });
@@ -900,6 +955,16 @@
                                 formData.append('phone', document.getElementById('newClientPhone').value.trim());
                                 formData.append('email', document.getElementById('newClientEmail').value.trim());
                                 formData.append('address', document.getElementById('newClientAddress').value.trim());
+                                formData.append('address_simple', document.getElementById('newClientAddressSimple').value.trim());
+                                formData.append('address_2', document.getElementById('newClientAddress2').value.trim());
+                                formData.append('city', document.getElementById('newClientCity').value.trim());
+                                formData.append('state', document.getElementById('newClientState').value.trim());
+                                formData.append('zipcode', document.getElementById('newClientZipcode').value.trim());
+                                formData.append('country', document.getElementById('newClientCountry').value.trim());
+                                formData.append('latitude', document.getElementById('newClientLatitude').value.trim());
+                                formData.append('longitude', document.getElementById('newClientLongitude').value.trim());
+                                formData.append('insurance_property', document.querySelector('input[name="insurance_property"]:checked').value);
+                                formData.append('notes', document.getElementById('newClientNotes').value.trim());
                                 formData.append('create_new_client', '1');
                             } else {
                                 // Existing client
