@@ -228,7 +228,8 @@ input[type="checkbox"].form-checkbox:not(.custom-styled):hover,
     border-color: #f59e0b !important; /* yellow-500 */
     background-color: #fef3c7 !important; /* yellow-50 */
     transform: scale(1.05) !important;
-    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.15), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.15),
+        0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Focus state para checkboxes */
@@ -265,7 +266,8 @@ input[type="checkbox"].form-checkbox:not(.custom-styled):checked::after,
     font-size: 0.875rem !important;
     font-weight: bold !important;
     line-height: 1 !important;
-    animation: checkmark-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards !important;
+    animation: checkmark-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+        forwards !important;
 }
 
 /* Animación para el checkmark */
@@ -305,7 +307,8 @@ input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):hover {
     border-color: #f59e0b !important; /* yellow-500 */
     background-color: #fef3c7 !important; /* yellow-50 */
     transform: scale(1.05) !important;
-    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.15), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.15),
+        0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Focus state para radio buttons */
@@ -323,7 +326,9 @@ input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):checked {
 }
 
 /* Dot para radio buttons */
-input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):checked::after {
+input[type="radio"].radio-field:not(.custom-styled):not(
+        .sr-only
+    ):checked::after {
     content: "" !important;
     position: absolute !important;
     top: 50% !important;
@@ -333,7 +338,8 @@ input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):checked::after
     height: 0.5rem !important;
     background-color: #ffffff !important;
     border-radius: 50% !important;
-    animation: radio-dot-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards !important;
+    animation: radio-dot-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+        forwards !important;
 }
 
 /* Animación para el dot del radio button */
@@ -366,9 +372,61 @@ input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):disabled,
 
 input[type="checkbox"].checkbox-field:not(.custom-styled):disabled:hover,
 input[type="checkbox"].form-checkbox:not(.custom-styled):disabled:hover,
-input[type="radio"].radio-field:not(.custom-styled):not(.sr-only):disabled:hover,
+input[type="radio"].radio-field:not(.custom-styled):not(
+        .sr-only
+    ):disabled:hover,
 .checkbox-field:not(.custom-styled):disabled:hover,
 .form-checkbox:not(.custom-styled):disabled:hover {
     transform: none !important;
     background-color: #f3f4f6 !important; /* gray-100 */
+}
+
+/* ===============================================
+   INSURANCE RADIO BUTTONS STYLING
+   =============================================== */
+
+/* Radio buttons styling for insurance options - consistent with facebook-lead-form */
+.insurance-label {
+    transition: all 0.2s ease !important;
+    background-color: white !important;
+    border: 2px solid #e5e7eb !important; /* gray-300 */
+    font-weight: 500 !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.insurance-label:hover {
+    background-color: #facc15 !important; /* yellow-400 */
+    color: white !important;
+    border-color: #eab308 !important; /* yellow-500 */
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.25),
+        0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.insurance-label.selected {
+    background-color: #f59e0b !important; /* yellow-500 */
+    color: white !important;
+    border-color: #d97706 !important; /* yellow-600 */
+    font-weight: bold !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.3),
+        0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.insurance-label:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Hide radio buttons visually but keep them accessible for insurance options */
+.radio-field.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }

@@ -425,22 +425,22 @@
         </label>
         <fieldset class="mt-2">
             <legend class="sr-only">Property Insurance</legend>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center justify-center space-x-4">
                 <div class="radio-option flex items-center">
                     <input id="insurance_yes" name="insurance_property" type="radio" value="1"
-                        class="radio-field focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        class="radio-field sr-only"
                         {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}>
                     <label for="insurance_yes"
-                        class="insurance-label ml-2 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm bg-white hover:bg-indigo-50">
+                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('yes') }}
                     </label>
                 </div>
                 <div class="radio-option flex items-center">
                     <input id="insurance_no" name="insurance_property" type="radio" value="0"
-                        class="radio-field focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        class="radio-field sr-only"
                         {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}>
                     <label for="insurance_no"
-                        class="insurance-label ml-2 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm bg-white hover:bg-indigo-50">
+                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('no') }}
                     </label>
                 </div>
@@ -1742,59 +1742,6 @@
         /* Capitalize only first letter */
         .capitalize-first::first-letter {
             text-transform: uppercase;
-        }
-
-        /* Radio buttons styling for insurance */
-        .insurance-label {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background-color: white;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .insurance-label::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .insurance-label:hover {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe) !important;
-            color: #3730a3 !important;
-            border-color: #6366f1 !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px 0 rgba(99, 102, 241, 0.25), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .insurance-label:hover::before {
-            left: 100%;
-        }
-
-        .insurance-label.selected {
-            background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
-            color: white !important;
-            border-color: #4338ca !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px 0 rgba(79, 70, 229, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .insurance-label:active {
-            transform: translateY(0) !important;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* Hide radio buttons visually but keep them accessible */
-        .radio-field {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
         }
     </style>
 @endpush
