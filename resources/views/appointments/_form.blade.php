@@ -19,7 +19,7 @@
             {{ __('first_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')" 
-            autofocus maxlength="50" />
+            required autofocus maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('first_name_validation') }}" />
         <x-input-error for="first_name" class="mt-2" />
     </div>
 
@@ -29,7 +29,7 @@
             {{ __('last_name') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')" 
-            maxlength="50" />
+            required maxlength="50" pattern="[A-Za-z\s\\'-]+" title="{{ __('last_name_validation') }}" />
         <x-input-error for="last_name" class="mt-2" />
     </div>
 
@@ -39,7 +39,7 @@
             {{ __('phone') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
-            :value="old('phone', $appointment->phone ?? '')" />
+            :value="old('phone', $appointment->phone ?? '')" required />
         <x-input-error for="phone" class="mt-2" />
     </div>
 
@@ -48,7 +48,7 @@
         <label for="email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('email') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" />
+        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
         <x-input-error for="email" class="mt-2" />
     </div>
 
@@ -58,7 +58,7 @@
             {{ __('address') }} <span class="text-red-500">*</span>
         </label>
         <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
-            placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" />
+            placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
         <x-input-error for="address_map_input" class="mt-2" />
     </div>
 
@@ -152,7 +152,8 @@
         <label for="city" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('city') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')" />
+        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
+            required />
         <x-input-error for="city" class="mt-2" />
     </div>
 
@@ -161,7 +162,8 @@
         <label for="state" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('state') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')" />
+        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
+            required />
         <x-input-error for="state" class="mt-2" />
     </div>
 
@@ -170,7 +172,8 @@
         <label for="zipcode" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('zip_code') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')" />
+        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
+            required />
         <x-input-error for="zipcode" class="mt-2" />
     </div>
 
@@ -179,7 +182,8 @@
         <label for="country" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
             {{ __('country') }} <span class="text-red-500">*</span>
         </label>
-        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')" />
+        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
+            required />
         <x-input-error for="country" class="mt-2" />
     </div>
 
@@ -239,7 +243,8 @@
             {{ __('inspection_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="inspection_status" name="inspection_status"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
+            required>
             <option value="">Select Status</option>
             <option value="Confirmed"
                 {{ old('inspection_status', $appointment->inspection_status ?? '') == 'Confirmed' ? 'selected' : '' }}>
@@ -263,7 +268,8 @@
             {{ __('lead_status') }} <span class="text-red-500">*</span>
         </label>
         <select id="status_lead" name="status_lead"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
+            required>
             <option value="">Select Lead Status</option>
             <option value="New"
                 {{ old('status_lead', $appointment->status_lead ?? 'New') == 'New' ? 'selected' : '' }}>
@@ -287,7 +293,8 @@
             {{ __('lead_source') }} <span class="text-red-500">*</span>
         </label>
         <select id="lead_source" name="lead_source"
-            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full"
+            required>
             <option value="">Select Lead Source</option>
             <option value="Website"
                 {{ old('lead_source', $appointment->lead_source ?? '') == 'Website' ? 'selected' : '' }}>
@@ -409,7 +416,8 @@
     {{-- Insurance Property as Checkbox --}}
     <div class="block">
         <label for="insurance_property" class="flex items-center">
-            <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1" />
+            <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
+                required />
             <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('property_insurance') }}</span>
             <span class="text-red-500 ml-1">*</span>
         </label>
@@ -478,9 +486,11 @@
             // - Resets time values when date is cleared
             function updateTimeFieldRequirement() {
                 if (inspectionDateField.value) {
-                    // If date is set, enable time fields
+                    // If date is set, enable and make time required
                     inspectionTimeHourField.removeAttribute('disabled');
                     inspectionTimeMinuteField.removeAttribute('disabled');
+                    inspectionTimeHourField.setAttribute('required', 'required');
+                    inspectionTimeMinuteField.setAttribute('required', 'required');
 
                     // Add visual indicator to the label (red asterisk)
                     if (!inspectionTimeLabel.innerHTML.includes('*')) {
@@ -512,6 +522,8 @@
                     // If date is not set, disable and reset time fields
                     inspectionTimeHourField.setAttribute('disabled', 'disabled');
                     inspectionTimeMinuteField.setAttribute('disabled', 'disabled');
+                    inspectionTimeHourField.removeAttribute('required');
+                    inspectionTimeMinuteField.removeAttribute('required');
 
                     // Reset time values
                     inspectionTimeHourField.value = '';
