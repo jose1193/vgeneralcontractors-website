@@ -55,13 +55,14 @@ class AppointmentController extends BaseCrudController
             'last_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s\'-]+$/'],
             'email' => $emailRule,
             'phone' => 'required|string|max:20',
-            'address' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'address_map_input' => 'nullable|string|max:255',
             'address_2' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'zipcode' => 'nullable|string|max:20',
-            'country' => 'nullable|string|max:100',
-            'insurance_property' => 'present',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'zipcode' => 'required|string|max:20',
+            'country' => 'required|string|max:100',
+            'insurance_property' => 'required|in:0,1',
             'message' => 'nullable|string',
             'sms_consent' => 'nullable|boolean',
             'registration_date' => 'nullable|date',
@@ -110,7 +111,7 @@ class AppointmentController extends BaseCrudController
             'country.required' => __('country_required'),
             'country.max' => __('country_max'),
             'insurance_property.required' => __('insurance_property_required'),
-            'insurance_property.boolean' => __('insurance_property_boolean'),
+            'insurance_property.in' => __('insurance_property_invalid_value'),
             'lead_source.required' => __('lead_source_required'),
             'lead_source.in' => __('lead_source_in'),
             'sms_consent.boolean' => __('sms_consent_boolean'),
@@ -644,9 +645,16 @@ class AppointmentController extends BaseCrudController
         $rules = $this->getValidationRules($id);
         $messages = $this->getValidationMessages();
 
-        // Convertir insurance_property a booleano
+        // Convertir insurance_property a booleano desde radio button values
+        $insuranceValue = $request->input('insurance_property');
+        $insuranceBoolean = false;
+        
+        if ($insuranceValue === '1' || $insuranceValue === 1 || $insuranceValue === true || $insuranceValue === 'true') {
+            $insuranceBoolean = true;
+        }
+        
         $request->merge([
-            'insurance_property' => filter_var($request->input('insurance_property', false), FILTER_VALIDATE_BOOLEAN)
+            'insurance_property' => $insuranceBoolean
         ]);
 
         // Handle inspection date and time relationship
