@@ -425,7 +425,7 @@
         </label>
         <fieldset class="mt-2">
             <legend class="sr-only">Property Insurance</legend>
-            <div class="flex items-center justify-center space-x-4">
+            <div class="flex items-center space-x-4">
                 <div class="radio-option flex items-center">
                     <input id="insurance_yes" name="insurance_property" type="radio" value="1"
                         class="radio-field sr-only"
