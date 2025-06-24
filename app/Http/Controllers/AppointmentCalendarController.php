@@ -86,18 +86,18 @@ class AppointmentCalendarController extends Controller
                 }
     
                 // Convert inspection_date and inspection_time to Carbon objects
-                $inspectionDate = Carbon::parse($appointment->inspection_date);
-                $inspectionTime = $appointment->inspection_time ? Carbon::parse($appointment->inspection_time) : null;
+                $inspectionDate = Carbon::parse((string) $appointment->inspection_date);
+                $inspectionTime = $appointment->inspection_time ? Carbon::parse((string) $appointment->inspection_time) : null;
                 
                 // If we have a time, combine it with the date
                 if ($inspectionTime) {
-                    $startTime = Carbon::parse($appointment->inspection_date)
+                    $startTime = Carbon::parse((string) $appointment->inspection_date)
                         ->setHour($inspectionTime->hour)
                         ->setMinute($inspectionTime->minute)
                         ->setSecond(0);
                     
                     // Add 2 hours for the end by default
-                    $endTime = $startTime->copy()->addHours(2);
+                    $endTime = $startTime->copy()->addHours(3);
                 } else {
                     // If there's no time, use all day
                     $startTime = $inspectionDate;
@@ -146,7 +146,7 @@ class AppointmentCalendarController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Invalid date format.', 'errors' => $validator->errors()], 422);
+            return response()->json(['message' => __('appointment_calendar_invalid_date_format'), 'errors' => $validator->errors()], 422);
         }
 
         $validatedData = $validator->validated();
@@ -172,7 +172,7 @@ class AppointmentCalendarController extends Controller
                         ->first();
 
                     if ($existingAppointment) {
-                        throw new \RuntimeException('Schedule conflict: Another appointment is already scheduled for this time.', 409);
+                        throw new \RuntimeException(__('appointment_calendar_schedule_conflict'), 409);
                     }
 
                     // Mark the inspection as confirmed
@@ -205,7 +205,7 @@ class AppointmentCalendarController extends Controller
             );
 
             // If the transaction is successful
-            return response()->json(['message' => 'Appointment updated successfully. A notification email has been sent to the client.']);
+            return response()->json(['message' => __('appointment_calendar_updated_successfully')]);
 
         } catch (\RuntimeException $re) {
             // Capture specific errors thrown from the transaction
@@ -220,7 +220,7 @@ class AppointmentCalendarController extends Controller
                 'id' => $id,
                 'exception' => $e
             ]);
-            return response()->json(['message' => 'Error updating the appointment in the calendar.'], 500);
+            return response()->json(['message' => __('appointment_calendar_error_updating')], 500);
         }
     }
 
@@ -233,7 +233,7 @@ class AppointmentCalendarController extends Controller
             $status = $request->input('status');
             // Only allow valid values based on the database schema
             if (!in_array($status, ['Confirmed', 'Completed', 'Pending', 'Declined'])) {
-                return response()->json(['success' => false, 'message' => 'Invalid status'], 400);
+                return response()->json(['success' => false, 'message' => __('appointment_calendar_invalid_status')], 400);
             }
 
             $appointment = Appointment::findOrFail($id);
@@ -276,18 +276,18 @@ class AppointmentCalendarController extends Controller
             Cache::forget('calendar_event_keys');
 
             // Determine message and email type based on status
-            $message = 'Appointment status updated successfully.';
+            $message = __('appointment_calendar_status_updated');
             $emailType = '';
             
             if ($appointment->inspection_status === 'Confirmed') {
                 $emailType = 'confirmed';
-                $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
+                $message = __('appointment_calendar_confirmed_successfully');
             } else if ($appointment->inspection_status === 'Declined') {
                 $emailType = 'declined';
-                $message = 'Appointment declined successfully. A notification email has been sent to the client.';
+                $message = __('appointment_calendar_declined_successfully');
             } else if ($appointment->inspection_status === 'Completed') {
                 $emailType = 'completed';
-                $message = 'Appointment marked as completed successfully.';
+                $message = __('appointment_calendar_completed_successfully');
             }
             
             // Send notification email if needed
@@ -323,9 +323,9 @@ class AppointmentCalendarController extends Controller
             $client = Appointment::where('uuid', $request->client_uuid)->first();
             if (!$client) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Client not found'
-                ], 404);
+                'success' => false,
+                'message' => __('appointment_calendar_client_not_found')
+            ], 404);
             }
 
             // Check for schedule conflicts
@@ -338,9 +338,9 @@ class AppointmentCalendarController extends Controller
             if ($conflictCheck) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'This time slot is already booked with another client.',
+                    'message' => __('appointment_calendar_time_slot_booked'),
                     'errors' => [
-                        'schedule_conflict' => 'Please select a different date or time for your inspection.'
+                        'schedule_conflict' => __('appointment_calendar_select_different_time')
                     ]
                 ], 422);
             }
@@ -353,9 +353,9 @@ class AppointmentCalendarController extends Controller
             if (empty($request->inspection_date) && !empty($request->inspection_time)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validation error',
+                    'message' => __('appointment_calendar_validation_error'),
                     'errors' => [
-                        'inspection_date' => ['The inspection date is required when inspection time is present.']
+                        'inspection_date' => [__('appointment_calendar_date_required_with_time')]
                     ]
                 ], 422);
             }
@@ -363,9 +363,9 @@ class AppointmentCalendarController extends Controller
             if (!empty($request->inspection_date) && empty($request->inspection_time)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validation error',
+                    'message' => __('appointment_calendar_validation_error'),
                     'errors' => [
-                        'inspection_time' => ['The inspection time is required when inspection date is present.']
+                        'inspection_time' => [__('appointment_calendar_time_required_with_date')]
                     ]
                 ], 422);
             }
@@ -406,16 +406,16 @@ class AppointmentCalendarController extends Controller
             Cache::forget('calendar_event_keys');
 
             // Determine email type and message based on status
-            $message = 'Appointment scheduled successfully.';
+            $message = __('appointment_calendar_scheduled_successfully');
             $emailType = '';
             
             if ($client->inspection_status === 'Confirmed') {
                 if ($oldStatus !== 'Confirmed') {
                     $emailType = 'confirmed';
-                    $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
+                    $message = __('appointment_calendar_confirmed_successfully');
                 } else {
                     $emailType = 'rescheduled';
-                    $message = 'Appointment rescheduled successfully. A notification email has been sent to the client.';
+                    $message = __('appointment_calendar_rescheduled_successfully');
                 }
             }
             
@@ -432,13 +432,13 @@ class AppointmentCalendarController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => __('appointment_calendar_validation_error'),
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error creating appointment: ' . $e->getMessage()
+                'message' => __('appointment_calendar_error_creating') . $e->getMessage()
             ], 500);
         }
     }
@@ -472,7 +472,7 @@ class AppointmentCalendarController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error fetching clients: ' . $e->getMessage()
+                'message' => __('appointment_calendar_error_fetching_clients') . $e->getMessage()
             ], 500);
         }
     }
@@ -488,4 +488,4 @@ class AppointmentCalendarController extends Controller
             Cache::put('calendar_event_keys', $cacheKeys, 60 * 24); // Store for 24 hours
         }
     }
-} 
+}

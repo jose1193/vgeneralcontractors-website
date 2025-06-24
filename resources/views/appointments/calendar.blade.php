@@ -661,11 +661,11 @@
 
                                 // Time grid options
                                 slotDuration: '00:30:00', // Set slot duration to 30 mins for grid lines
-                                slotMinTime: '08:00:00', // Optional: Start time for the grid
-                                slotMaxTime: '20:00:00', // Optional: End time for the grid
+                                slotMinTime: '09:00:00', // Optional: Start time for the grid
+                                slotMaxTime: '18:00:00', // Optional: End time for the grid
                                 businessHours: { // Optional: Highlight business hours
                                     daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
-                                    startTime: '08:00',
+                                    startTime: '09:00',
                                     endTime: '18:00',
                                 },
 
@@ -706,7 +706,7 @@
                                         hour12: false
                                     }) : '';
 
-                                    timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '') + ' (2h)';
+                                    timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '') + ' (3h)';
 
                                     // 3. Estado (última línea, más pequeña)
                                     let statusText = document.createElement('div');

@@ -71,6 +71,7 @@ npm install -g @modelcontextprotocol/server-github
 npm install -g @modelcontextprotocol/server-puppeteer
 
 # Servidores avanzados
+npm i @upstash/context7-mcp@1.0.11
 npm install -g @modelcontextprotocol/server-context7
 npm install -g @modelcontextprotocol/server-sequential-thinking
 npm install -g @modelcontextprotocol/server-memory

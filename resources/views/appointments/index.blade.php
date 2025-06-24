@@ -1007,7 +1007,7 @@
                                     </svg>
                                 </div>
                                 <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">${address}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Choose how you want to share this location</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('choose_how_share_location') }}</p>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
