@@ -1051,7 +1051,6 @@
 
     "email_datas_title": "Email Management",
     "email_datas_subtitle": "Manage email addresses and contact information for your business",
-    "email_data_entity_plural": "Email Data",
 
     "_comment_model_ai_management": "=== AI MODELS MANAGEMENT ===",
     "model_ai_title": "AI Models Management",
