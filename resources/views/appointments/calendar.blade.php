@@ -448,8 +448,8 @@
                                 year: 'numeric'
                             });
 
-                            // Ensure the end time is 2 hours after start
-                            const actualEnd = new Date(start.getTime() + (2 * 60 * 60 * 1000));
+                            // Ensure the end time is 3 hours after start
+                            const actualEnd = new Date(start.getTime() + (3 * 60 * 60 * 1000));
 
                             const formattedTime = start.toLocaleTimeString('en-US', {
                                 hour: '2-digit',
@@ -459,7 +459,7 @@
                                 hour: '2-digit',
                                 minute: '2-digit',
                                 hour12: false
-                            }) + ' (2 hours)';
+                            }) + ' (3 hours)';
 
                             // Display formatted date & time with proper capitalization
                             selectedDateTime.value = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1) + ' • ' +
@@ -834,14 +834,14 @@
                                             hour12: true
                                         }).format(start);
 
-                                        // Add end time (2 hours after start)
+                                        // Add end time (3 hours after start)
                                         if (end) {
                                             formattedDateTime += ' - ' + new Intl.DateTimeFormat('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                                 hour12: true
                                             }).format(end);
-                                            formattedDateTime += ' (2 hours)';
+                                            formattedDateTime += ' (3 hours)';
                                         }
 
                                         document.getElementById('modalEventDateTime').textContent =
