@@ -494,6 +494,7 @@ class AppointmentCalendarController extends Controller
                 'phone' => 'required|string|max:20',
                 'address' => 'required|string|max:255',
                 'address_2' => 'nullable|string|max:255',
+                'insurance_property' => 'required|boolean',
                 'notes' => 'nullable|string',
                 'latitude' => 'nullable|numeric|between:-90,90',
                 'longitude' => 'nullable|numeric|between:-180,180',
@@ -507,6 +508,8 @@ class AppointmentCalendarController extends Controller
                 'email.unique' => __('email_unique'),
                 'phone.required' => __('phone_required'),
                 'address.required' => __('address_required'),
+                'insurance_property.required' => __('insurance_property_required'),
+                'insurance_property.boolean' => __('insurance_property_boolean'),
             ]);
 
             if ($validator->fails()) {
@@ -541,6 +544,7 @@ class AppointmentCalendarController extends Controller
             $appointment->phone = $validatedData['phone'];
             $appointment->address = $validatedData['address'];
             $appointment->address_2 = $validatedData['address_2'] ?? null;
+            $appointment->insurance_property = $validatedData['insurance_property'];
             $appointment->notes = $validatedData['notes'] ?? null;
             $appointment->latitude = $validatedData['latitude'] ?? null;
             $appointment->longitude = $validatedData['longitude'] ?? null;

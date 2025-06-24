@@ -1244,7 +1244,7 @@
                                     <label for="lead_first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('first_name') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_first_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="first_name" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                    <input id="lead_first_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="first_name" placeholder="{{ __('enter_first_name') }}" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
                                 </div>
 
                                 {{-- Last Name --}}
@@ -1252,7 +1252,7 @@
                                     <label for="lead_last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('last_name') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_last_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="last_name" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                    <input id="lead_last_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="last_name" placeholder="{{ __('enter_last_name') }}" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
                                 </div>
 
                                 {{-- Phone --}}
@@ -1260,7 +1260,7 @@
                                     <label for="lead_phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('phone') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_phone" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="tel" name="phone" placeholder="(XXX) XXX-XXXX" maxlength="14" required />
+                                    <input id="lead_phone" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="tel" name="phone" placeholder="{{ __('phone_placeholder') }}" maxlength="14" required />
                                     <div id="phoneError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     <div id="phoneSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
                                 </div>
@@ -1295,6 +1295,31 @@
                                         {{ __('address_2') }}
                                     </label>
                                     <input id="lead_address_2" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_2" placeholder="Apt #, Suite #, etc." />
+                                </div>
+
+                                {{-- Property Insurance --}}
+                                <div class="md:col-span-2">
+                                    <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-3">
+                                        {{ __('property_insurance') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <fieldset>
+                                        <legend class="sr-only">Property Insurance</legend>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center">
+                                                <input id="lead_insurance_yes" name="insurance_property" type="radio" value="1" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700" required>
+                                                <label for="lead_insurance_yes" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                    {{ __('yes') }}
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="lead_insurance_no" name="insurance_property" type="radio" value="0" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700" required>
+                                                <label for="lead_insurance_no" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                    {{ __('no') }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div id="insuranceError" class="text-red-500 text-sm mt-1 hidden"></div>
                                 </div>
 
                                 {{-- Notes --}}
@@ -1496,6 +1521,30 @@
                 createLeadForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
+                    // Validate all fields before submission
+                    let isFormValid = true;
+                    
+                    // Validate individual fields
+                    const firstNameValid = validateLeadField('lead_first_name', document.getElementById('lead_first_name').value);
+                    const lastNameValid = validateLeadField('lead_last_name', document.getElementById('lead_last_name').value);
+                    const phoneValid = validateLeadField('lead_phone', document.getElementById('lead_phone').value);
+                    const emailValid = validateLeadField('lead_email', document.getElementById('lead_email').value);
+                    const addressValid = validateLeadField('lead_address_map_input', document.getElementById('lead_address_map_input').value);
+                    const insuranceValid = validateInsuranceProperty();
+                    
+                    isFormValid = firstNameValid && lastNameValid && phoneValid && emailValid && addressValid && insuranceValid;
+                    
+                    if (!isFormValid) {
+                        // Show general error message
+                        Swal.fire({
+                            title: 'Validation Error!',
+                            text: 'Please correct the errors in the form before submitting.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+                    
                     // Show loading state
                     submitLeadText.classList.add('hidden');
                     submitLeadSpinner.classList.remove('hidden');
@@ -1562,6 +1611,119 @@
                         submitLeadText.classList.remove('hidden');
                         submitLeadSpinner.classList.add('hidden');
                         submitLeadBtn.disabled = false;
+                    });
+                });
+
+                // Real-time validation functions
+                function validateLeadField(fieldName, value) {
+                    const errorElement = document.getElementById(fieldName + 'Error');
+                    let isValid = true;
+                    let errorMessage = '';
+
+                    switch (fieldName) {
+                        case 'lead_first_name':
+                            if (!value.trim()) {
+                                errorMessage = '{{ __('first_name_required') }}';
+                                isValid = false;
+                            } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                                errorMessage = '{{ __('first_name_regex') }}';
+                                isValid = false;
+                            }
+                            break;
+                        case 'lead_last_name':
+                            if (!value.trim()) {
+                                errorMessage = '{{ __('last_name_required') }}';
+                                isValid = false;
+                            } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                                errorMessage = '{{ __('last_name_regex') }}';
+                                isValid = false;
+                            }
+                            break;
+                        case 'lead_phone':
+                            if (!value.trim()) {
+                                errorMessage = '{{ __('phone_required') }}';
+                                isValid = false;
+                            } else if (value.replace(/\D/g, '').length < 10) {
+                                errorMessage = 'Phone number must be at least 10 digits';
+                                isValid = false;
+                            }
+                            break;
+                        case 'lead_email':
+                            if (!value.trim()) {
+                                errorMessage = '{{ __('email_required') }}';
+                                isValid = false;
+                            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                                errorMessage = '{{ __('email_invalid') }}';
+                                isValid = false;
+                            }
+                            break;
+                        case 'lead_address_map_input':
+                            if (!value.trim()) {
+                                errorMessage = '{{ __('address_required') }}';
+                                isValid = false;
+                            }
+                            break;
+                    }
+
+                    if (errorElement) {
+                        if (isValid) {
+                            errorElement.classList.add('hidden');
+                            errorElement.textContent = '';
+                        } else {
+                            errorElement.classList.remove('hidden');
+                            errorElement.textContent = errorMessage;
+                        }
+                    }
+
+                    return isValid;
+                }
+
+                function validateInsuranceProperty() {
+                    const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+                    const errorElement = document.getElementById('insuranceError');
+                    const isChecked = Array.from(insuranceRadios).some(radio => radio.checked);
+
+                    if (!isChecked) {
+                        errorElement.classList.remove('hidden');
+                        errorElement.textContent = '{{ __('insurance_property_required') }}';
+                        return false;
+                    } else {
+                        errorElement.classList.add('hidden');
+                        errorElement.textContent = '';
+                        return true;
+                    }
+                }
+
+                // Add real-time validation event listeners
+                document.getElementById('lead_first_name').addEventListener('blur', function() {
+                    validateLeadField('lead_first_name', this.value);
+                });
+
+                document.getElementById('lead_last_name').addEventListener('blur', function() {
+                    validateLeadField('lead_last_name', this.value);
+                });
+
+                document.getElementById('lead_phone').addEventListener('input', function() {
+                    // Format phone number
+                    this.value = formatPhoneNumber(this.value);
+                });
+
+                document.getElementById('lead_phone').addEventListener('blur', function() {
+                    validateLeadField('lead_phone', this.value);
+                });
+
+                document.getElementById('lead_email').addEventListener('blur', function() {
+                    validateLeadField('lead_email', this.value);
+                });
+
+                document.getElementById('lead_address_map_input').addEventListener('blur', function() {
+                    validateLeadField('lead_address_map_input', this.value);
+                });
+
+                // Add validation for insurance property radio buttons
+                document.querySelectorAll('input[name="insurance_property"]').forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        validateInsuranceProperty();
                     });
                 });
 
