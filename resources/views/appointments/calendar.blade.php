@@ -11,11 +11,24 @@
         {{-- Header section with title and subtitle --}}
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
-                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    {{ __('appointment_calendar_title') }}</h2>
-                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    {{ __('appointment_calendar_subtitle') }}
-                </p>
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                    <div>
+                        <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                            {{ __('appointment_calendar_title') }}</h2>
+                        <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
+                            {{ __('appointment_calendar_subtitle') }}
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <button id="openCreateLeadModal" type="button"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
+                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            {{ __('Create New Lead') }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1196,4 +1209,458 @@
             @endpush
         </div>
     </div>
+
+    {{-- Modal para crear nuevo lead --}}
+    <div id="createLeadModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    {{-- Modal Header --}}
+                    <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ __('Create New Lead') }}</h3>
+                        <button type="button" id="closeCreateLeadModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Modal Body --}}
+                    <div class="p-6">
+                        <form id="createLeadForm" method="POST" action="{{ route('appointment-calendar.store') }}">
+                            @csrf
+                            
+                            {{-- Display validation errors --}}
+                            <div id="leadFormErrors" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-300 hidden" role="alert">
+                                <strong class="font-bold">Validation Error!</strong>
+                                <ul id="leadErrorsList" class="mt-2 list-disc list-inside"></ul>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {{-- First Name --}}
+                                <div>
+                                    <label for="lead_first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('first_name') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="lead_first_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="first_name" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                </div>
+
+                                {{-- Last Name --}}
+                                <div>
+                                    <label for="lead_last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('last_name') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="lead_last_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="last_name" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                </div>
+
+                                {{-- Phone --}}
+                                <div>
+                                    <label for="lead_phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('phone') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="lead_phone" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="tel" name="phone" placeholder="(XXX) XXX-XXXX" maxlength="14" required />
+                                    <div id="phoneError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    <div id="phoneSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
+                                </div>
+
+                                {{-- Email --}}
+                                <div>
+                                    <label for="lead_email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('email') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" required />
+                                    <div id="emailError" class="text-red-500 text-sm mt-1 hidden"></div>
+                                    <div id="emailSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
+                                </div>
+
+                                {{-- Address Map Input (for Google Maps Autocomplete) --}}
+                                <div class="md:col-span-2">
+                                    <label for="lead_address_map_input" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('address') }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input id="lead_address_map_input" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_map_input" placeholder="Enter complete address for autocomplete" autocomplete="off" required />
+                                </div>
+
+                                {{-- Map Display --}}
+                                <div class="md:col-span-2 mt-2 mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location Map</label>
+                                    <div id="lead-location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600"></div>
+                                </div>
+
+                                {{-- Hidden Address Fields --}}
+                                <input type="hidden" id="lead_address" name="address">
+                                <input type="hidden" id="lead_latitude" name="latitude">
+                                <input type="hidden" id="lead_longitude" name="longitude">
+                                <input type="hidden" id="lead_city" name="city">
+                                <input type="hidden" id="lead_state" name="state">
+                                <input type="hidden" id="lead_zipcode" name="zipcode">
+                                <input type="hidden" id="lead_country" name="country" value="USA">
+                            </div>
+
+                            {{-- Modal Footer --}}
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button type="button" id="cancelCreateLead" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded-md transition-colors duration-200">
+                                    {{ __('Cancel') }}
+                                </button>
+                                <button type="submit" id="submitCreateLead" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
+                                    <span id="submitLeadText">{{ __('Create Lead') }}</span>
+                                    <span id="submitLeadSpinner" class="hidden">
+                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        {{ __('Creating...') }}
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- JavaScript para el modal de crear lead --}}
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Modal elements
+                const createLeadModal = document.getElementById('createLeadModal');
+                const openCreateLeadModalBtn = document.getElementById('openCreateLeadModal');
+                const closeCreateLeadModalBtn = document.getElementById('closeCreateLeadModal');
+                const cancelCreateLeadBtn = document.getElementById('cancelCreateLead');
+                const createLeadForm = document.getElementById('createLeadForm');
+                const submitLeadBtn = document.getElementById('submitCreateLead');
+                const submitLeadText = document.getElementById('submitLeadText');
+                const submitLeadSpinner = document.getElementById('submitLeadSpinner');
+                const leadFormErrors = document.getElementById('leadFormErrors');
+                const leadErrorsList = document.getElementById('leadErrorsList');
+
+                // Google Maps variables for lead modal
+                let leadMap;
+                let leadMarker;
+                let leadAutocomplete;
+
+                // Open modal
+                openCreateLeadModalBtn.addEventListener('click', function() {
+                    createLeadModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Initialize Google Maps for lead modal
+                    setTimeout(() => {
+                        initializeLeadMap();
+                    }, 100);
+                });
+
+                // Close modal functions
+                function closeLeadModal() {
+                    createLeadModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                    createLeadForm.reset();
+                    leadFormErrors.classList.add('hidden');
+                    leadErrorsList.innerHTML = '';
+                    
+                    // Reset submit button
+                    submitLeadText.classList.remove('hidden');
+                    submitLeadSpinner.classList.add('hidden');
+                    submitLeadBtn.disabled = false;
+                }
+
+                closeCreateLeadModalBtn.addEventListener('click', closeLeadModal);
+                cancelCreateLeadBtn.addEventListener('click', closeLeadModal);
+
+                // Close modal when clicking outside
+                createLeadModal.addEventListener('click', function(e) {
+                    if (e.target === createLeadModal) {
+                        closeLeadModal();
+                    }
+                });
+
+                // Initialize Google Maps for lead modal
+                function initializeLeadMap() {
+                    const mapElement = document.getElementById('lead-location-map');
+                    if (!mapElement) return;
+
+                    // Default location (you can change this)
+                    const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // New York
+
+                    leadMap = new google.maps.Map(mapElement, {
+                        zoom: 13,
+                        center: defaultLocation,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    });
+
+                    leadMarker = new google.maps.Marker({
+                        position: defaultLocation,
+                        map: leadMap,
+                        draggable: true
+                    });
+
+                    // Initialize autocomplete
+                    const addressInput = document.getElementById('lead_address_map_input');
+                    leadAutocomplete = new google.maps.places.Autocomplete(addressInput);
+                    leadAutocomplete.bindTo('bounds', leadMap);
+
+                    // Handle place selection
+                    leadAutocomplete.addListener('place_changed', function() {
+                        const place = leadAutocomplete.getPlace();
+                        if (!place.geometry) return;
+
+                        // Update map
+                        if (place.geometry.viewport) {
+                            leadMap.fitBounds(place.geometry.viewport);
+                        } else {
+                            leadMap.setCenter(place.geometry.location);
+                            leadMap.setZoom(17);
+                        }
+
+                        // Update marker
+                        leadMarker.setPosition(place.geometry.location);
+
+                        // Extract address components
+                        updateLeadAddressFields(place);
+                    });
+
+                    // Handle marker drag
+                    leadMarker.addListener('dragend', function() {
+                        const position = leadMarker.getPosition();
+                        reverseGeocodeForLead(position.lat(), position.lng());
+                    });
+                }
+
+                // Update address fields from place object
+                function updateLeadAddressFields(place) {
+                    const components = place.address_components;
+                    let address = place.formatted_address;
+                    let city = '';
+                    let state = '';
+                    let zipcode = '';
+                    let country = '';
+
+                    components.forEach(component => {
+                        const types = component.types;
+                        if (types.includes('locality')) {
+                            city = component.long_name;
+                        } else if (types.includes('administrative_area_level_1')) {
+                            state = component.short_name;
+                        } else if (types.includes('postal_code')) {
+                            zipcode = component.long_name;
+                        } else if (types.includes('country')) {
+                            country = component.short_name;
+                        }
+                    });
+
+                    // Update hidden fields
+                    document.getElementById('lead_address').value = address;
+                    document.getElementById('lead_latitude').value = place.geometry.location.lat();
+                    document.getElementById('lead_longitude').value = place.geometry.location.lng();
+                    document.getElementById('lead_city').value = city;
+                    document.getElementById('lead_state').value = state;
+                    document.getElementById('lead_zipcode').value = zipcode;
+                    document.getElementById('lead_country').value = country || 'USA';
+                }
+
+                // Reverse geocoding for lead
+                function reverseGeocodeForLead(lat, lng) {
+                    const geocoder = new google.maps.Geocoder();
+                    const latlng = { lat: lat, lng: lng };
+
+                    geocoder.geocode({ location: latlng }, function(results, status) {
+                        if (status === 'OK' && results[0]) {
+                            const place = results[0];
+                            document.getElementById('lead_address_map_input').value = place.formatted_address;
+                            updateLeadAddressFields(place);
+                        }
+                    });
+                }
+
+                // Handle form submission
+                createLeadForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Show loading state
+                    submitLeadText.classList.add('hidden');
+                    submitLeadSpinner.classList.remove('hidden');
+                    submitLeadBtn.disabled = true;
+                    
+                    // Hide previous errors
+                    leadFormErrors.classList.add('hidden');
+                    leadErrorsList.innerHTML = '';
+
+                    // Prepare form data
+                    const formData = new FormData(createLeadForm);
+
+                    // Submit via AJAX
+                    fetch(createLeadForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            Swal.fire({
+                                title: 'Success!',
+                                text: data.message || 'Lead created successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                closeLeadModal();
+                                // Refresh calendar if needed
+                                if (typeof calendar !== 'undefined') {
+                                    calendar.refetchEvents();
+                                }
+                            });
+                        } else {
+                            // Show validation errors
+                            if (data.errors) {
+                                leadErrorsList.innerHTML = '';
+                                Object.values(data.errors).forEach(errorArray => {
+                                    errorArray.forEach(error => {
+                                        const li = document.createElement('li');
+                                        li.textContent = error;
+                                        leadErrorsList.appendChild(li);
+                                    });
+                                });
+                                leadFormErrors.classList.remove('hidden');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred while creating the lead.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .finally(() => {
+                        // Reset loading state
+                        submitLeadText.classList.remove('hidden');
+                        submitLeadSpinner.classList.add('hidden');
+                        submitLeadBtn.disabled = false;
+                    });
+                });
+
+                // Phone formatting function
+                function formatPhoneNumber(value) {
+                    // Remove all non-numeric characters
+                    const phoneNumber = value.replace(/\D/g, '');
+                    
+                    // Format as (XXX) XXX-XXXX
+                    if (phoneNumber.length >= 6) {
+                        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+                    } else if (phoneNumber.length >= 3) {
+                        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+                    } else {
+                        return phoneNumber;
+                    }
+                }
+
+                // Phone input formatting
+                const phoneInput = document.getElementById('lead_phone');
+                const emailInput = document.getElementById('lead_email');
+                const phoneError = document.getElementById('phoneError');
+                const phoneSuccess = document.getElementById('phoneSuccess');
+                const emailError = document.getElementById('emailError');
+                const emailSuccess = document.getElementById('emailSuccess');
+
+                let phoneTimeout;
+                let emailTimeout;
+
+                // Format phone number on input
+                phoneInput.addEventListener('input', function(e) {
+                    const formatted = formatPhoneNumber(e.target.value);
+                    e.target.value = formatted;
+                    
+                    // Clear previous timeout
+                    clearTimeout(phoneTimeout);
+                    
+                    // Hide previous messages
+                    phoneError.classList.add('hidden');
+                    phoneSuccess.classList.add('hidden');
+                    
+                    // Only validate if we have a complete phone number
+                    const phoneNumber = e.target.value.replace(/\D/g, '');
+                    if (phoneNumber.length === 10) {
+                        phoneTimeout = setTimeout(() => {
+                            checkPhoneExists(e.target.value);
+                        }, 500);
+                    }
+                });
+
+                // Email validation on blur
+                emailInput.addEventListener('blur', function(e) {
+                    const email = e.target.value.trim();
+                    if (email && email.includes('@')) {
+                        clearTimeout(emailTimeout);
+                        emailTimeout = setTimeout(() => {
+                            checkEmailExists(email);
+                        }, 300);
+                    }
+                });
+
+                // Check if phone exists
+                function checkPhoneExists(phone) {
+                    fetch('{{ route("appointment-calendar.check-phone") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ phone: phone })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            phoneError.textContent = 'Este número de teléfono ya está registrado.';
+                            phoneError.classList.remove('hidden');
+                            phoneSuccess.classList.add('hidden');
+                        } else {
+                            phoneSuccess.textContent = 'Número de teléfono disponible.';
+                            phoneSuccess.classList.remove('hidden');
+                            phoneError.classList.add('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking phone:', error);
+                    });
+                }
+
+                // Check if email exists
+                function checkEmailExists(email) {
+                    fetch('{{ route("appointment-calendar.check-email") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ email: email })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            emailError.textContent = 'Este email ya está registrado.';
+                            emailError.classList.remove('hidden');
+                            emailSuccess.classList.add('hidden');
+                        } else {
+                            emailSuccess.textContent = 'Email disponible.';
+                            emailSuccess.classList.remove('hidden');
+                            emailError.classList.add('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking email:', error);
+                    });
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

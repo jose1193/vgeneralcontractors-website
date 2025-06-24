@@ -13,10 +13,13 @@ use Throwable;
 use App\Jobs\ProcessAppointmentEmail;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\CacheTrait;
+use App\Traits\PhoneDataFormatter;
+use Illuminate\Support\Str;
+use App\Jobs\ProcessNewLead;
 
 class AppointmentCalendarController extends Controller
 {
-    use CacheTrait;
+    use CacheTrait, PhoneDataFormatter;
     
     protected TransactionService $transactionService;
     public $search = '';
@@ -477,6 +480,152 @@ class AppointmentCalendarController extends Controller
         }
     }
     
+    /**
+     * Store a new lead from the calendar modal
+     */
+    public function store(Request $request)
+    {
+        try {
+            // Validate the request
+            $validator = Validator::make($request->all(), [
+                'first_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s\'-]+$/'],
+                'last_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s\'-]+$/'],
+                'email' => 'required|email|max:255|unique:appointments,email',
+                'phone' => 'required|string|max:20',
+                'address' => 'required|string|max:255',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180',
+            ], [
+                'first_name.required' => __('first_name_required'),
+                'first_name.regex' => __('first_name_regex'),
+                'last_name.required' => __('last_name_required'),
+                'last_name.regex' => __('last_name_regex'),
+                'email.required' => __('email_required'),
+                'email.email' => __('email_invalid'),
+                'email.unique' => __('email_unique'),
+                'phone.required' => __('phone_required'),
+                'address.required' => __('address_required'),
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('appointment_calendar_validation_error'),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $validatedData = $validator->validated();
+
+            // Format phone number
+            $validatedData['phone'] = $this->formatPhone($validatedData['phone']);
+
+            // Check for duplicate phone after formatting
+            $existingPhone = Appointment::where('phone', $validatedData['phone'])->first();
+            if ($existingPhone) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('appointment_calendar_validation_error'),
+                    'errors' => ['phone' => [__('phone_unique')]]
+                ], 422);
+            }
+
+            // Create the appointment
+            $appointment = new Appointment();
+            $appointment->uuid = Str::uuid();
+            $appointment->first_name = $validatedData['first_name'];
+            $appointment->last_name = $validatedData['last_name'];
+            $appointment->email = $validatedData['email'];
+            $appointment->phone = $validatedData['phone'];
+            $appointment->address = $validatedData['address'];
+            $appointment->latitude = $validatedData['latitude'] ?? null;
+            $appointment->longitude = $validatedData['longitude'] ?? null;
+            $appointment->lead_source = 'Website';
+            $appointment->status_lead = 'New';
+            $appointment->inspection_status = 'Pending';
+            $appointment->registration_date = now();
+            $appointment->save();
+
+            // Clear cache
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
+            
+            // Clear calendar event cache
+            $cacheKeys = Cache::get('calendar_event_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            Cache::forget('calendar_event_keys');
+
+            // Dispatch new lead processing job
+            ProcessNewLead::dispatch($appointment);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('appointment_calendar_lead_created_successfully'),
+                'appointment' => $appointment
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error creating lead from calendar: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('appointment_calendar_error_creating') . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Check if email exists in appointments
+     */
+    public function checkEmailExists(Request $request)
+    {
+        $email = $request->input('email');
+        $excludeUuid = $request->input('exclude_uuid');
+        
+        $query = Appointment::where('email', $email);
+        
+        if ($excludeUuid) {
+            $query->where('uuid', '!=', $excludeUuid);
+        }
+        
+        $exists = $query->exists();
+        
+        return response()->json([
+            'exists' => $exists,
+            'message' => $exists ? __('email_unique') : null
+        ]);
+    }
+
+    /**
+     * Check if phone exists in appointments
+     */
+    public function checkPhoneExists(Request $request)
+    {
+        $phone = $request->input('phone');
+        $excludeUuid = $request->input('exclude_uuid');
+        
+        // Format the phone number for consistent checking
+        $formattedPhone = $this->formatPhone($phone);
+        
+        $query = Appointment::where('phone', $formattedPhone);
+        
+        if ($excludeUuid) {
+            $query->where('uuid', '!=', $excludeUuid);
+        }
+        
+        $exists = $query->exists();
+        
+        return response()->json([
+            'exists' => $exists,
+            'message' => $exists ? __('phone_unique') : null,
+            'formatted_phone' => $this->formatPhoneForDisplay($formattedPhone)
+        ]);
+    }
+
     /**
      * Track calendar event cache keys for efficient invalidation
      */

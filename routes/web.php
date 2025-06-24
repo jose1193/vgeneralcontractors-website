@@ -223,6 +223,9 @@ Route::middleware([
     Route::patch('/appointment-calendar/events/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'update'])->name('appointment-calendar.update');
     Route::patch('/appointment-calendar/status/{id}', [\App\Http\Controllers\AppointmentCalendarController::class, 'updateStatus'])->name('appointment-calendar.status');
     Route::post('/appointment-calendar/create', [\App\Http\Controllers\AppointmentCalendarController::class, 'create'])->name('appointment-calendar.create');
+    Route::post('/appointment-calendar/store', [\App\Http\Controllers\AppointmentCalendarController::class, 'store'])->name('appointment-calendar.store');
+    Route::post('/appointment-calendar/check-email', [\App\Http\Controllers\AppointmentCalendarController::class, 'checkEmailExists'])->name('appointment-calendar.check-email');
+    Route::post('/appointment-calendar/check-phone', [\App\Http\Controllers\AppointmentCalendarController::class, 'checkPhoneExists'])->name('appointment-calendar.check-phone');
     
     // Translation Demo Route
     Route::get('/translation-demo', function () {
