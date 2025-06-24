@@ -622,6 +622,10 @@
     "processing": "Processing...",
 
     "create_new_appointment": "Create New Appointment",
+    "create_new_lead": "Create New Lead",
+  
+    "create_lead": "Create Lead",
+    "creating": "Creating...",
 
     "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",

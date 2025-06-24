@@ -274,7 +274,7 @@
     "get_your_free_inspection": "Obtenga su Inspección Gratuita",
     "fill_form_below": "Complete el formulario a continuación y nuestro equipo se comunicará con usted en breve para programar su inspección gratuita.",
     "enter_complete_address": "Ingrese su dirección completa",
-    "address_2": "Dirección 2",
+  
     "optional_apt_suite": "(Opcional, ej., Apto, Suite, Unidad)",
     "apt_suite_placeholder": "# Apto, # Suite, etc.",
     "location_map": "Mapa de Ubicación",
@@ -583,6 +583,11 @@
     "processing": "Procesando...",
 
     "create_new_appointment": "Crear Nueva Cita",
+    "create_new_lead": "Crear Nuevo Lead",
+    "address_2": "Dirección 2",
+   
+    "create_lead": "Crear Lead",
+    "creating": "Creando...",
     "whatsapp": "WhatsApp",
     "email_share": "Email",
 

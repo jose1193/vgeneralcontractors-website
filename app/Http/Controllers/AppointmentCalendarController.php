@@ -493,6 +493,8 @@ class AppointmentCalendarController extends Controller
                 'email' => 'required|email|max:255|unique:appointments,email',
                 'phone' => 'required|string|max:20',
                 'address' => 'required|string|max:255',
+                'address_2' => 'nullable|string|max:255',
+                'notes' => 'nullable|string',
                 'latitude' => 'nullable|numeric|between:-90,90',
                 'longitude' => 'nullable|numeric|between:-180,180',
             ], [
@@ -538,6 +540,8 @@ class AppointmentCalendarController extends Controller
             $appointment->email = $validatedData['email'];
             $appointment->phone = $validatedData['phone'];
             $appointment->address = $validatedData['address'];
+            $appointment->address_2 = $validatedData['address_2'] ?? null;
+            $appointment->notes = $validatedData['notes'] ?? null;
             $appointment->latitude = $validatedData['latitude'] ?? null;
             $appointment->longitude = $validatedData['longitude'] ?? null;
             $appointment->lead_source = 'Website';

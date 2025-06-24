@@ -1216,19 +1216,19 @@
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
-                    {{-- Modal Header --}}
-                    <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ __('Create New Lead') }}</h3>
-                        <button type="button" id="closeCreateLeadModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <div class="bg-white dark:bg-gray-800 relative">
+                    {{-- Modal Header with Green Background --}}
+                    <div class="bg-green-600 dark:bg-green-700 px-6 py-4 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-white text-center flex-1">{{ __('create_new_lead') }}</h3>
+                        <button type="button" id="closeCreateLeadModal" class="ml-4 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 transition-colors duration-200">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
 
                     {{-- Modal Body --}}
-                    <div class="p-6">
+                    <div class="px-6 pt-6">
                         <form id="createLeadForm" method="POST" action="{{ route('appointment-calendar.store') }}">
                             @csrf
                             
@@ -1289,6 +1289,22 @@
                                     <div id="lead-location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600"></div>
                                 </div>
 
+                                {{-- Address 2 --}}
+                                <div class="md:col-span-2">
+                                    <label for="lead_address_2" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('address_2') }}
+                                    </label>
+                                    <input id="lead_address_2" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_2" placeholder="Apt #, Suite #, etc." />
+                                </div>
+
+                                {{-- Notes --}}
+                                <div class="md:col-span-2">
+                                    <label for="lead_notes" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                        {{ __('notes') }}
+                                    </label>
+                                    <textarea id="lead_notes" name="notes" rows="3" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" placeholder="Additional notes about the lead..."></textarea>
+                                </div>
+
                                 {{-- Hidden Address Fields --}}
                                 <input type="hidden" id="lead_address" name="address">
                                 <input type="hidden" id="lead_latitude" name="latitude">
@@ -1300,18 +1316,18 @@
                             </div>
 
                             {{-- Modal Footer --}}
-                            <div class="mt-6 flex justify-end space-x-3">
+                            <div class="mt-6 px-6 pb-6 flex justify-end space-x-3">
                                 <button type="button" id="cancelCreateLead" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded-md transition-colors duration-200">
-                                    {{ __('Cancel') }}
+                                    {{ __('cancel') }}
                                 </button>
                                 <button type="submit" id="submitCreateLead" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
-                                    <span id="submitLeadText">{{ __('Create Lead') }}</span>
+                                    <span id="submitLeadText">{{ __('create_lead') }}</span>
                                     <span id="submitLeadSpinner" class="hidden">
                                         <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        {{ __('Creating...') }}
+                                        {{ __('creating') }}
                                     </span>
                                 </button>
                             </div>
