@@ -604,6 +604,14 @@
                                 formData.append('phone', document.getElementById('newClientPhone').value.trim());
                                 formData.append('email', document.getElementById('newClientEmail').value.trim());
                                 formData.append('address', document.getElementById('newClientAddress').value.trim());
+                                formData.append('address_simple', document.getElementById('newClientAddressSimple').value.trim());
+                                formData.append('address_2', document.getElementById('newClientAddress2').value.trim());
+                                formData.append('city', document.getElementById('newClientCity').value.trim());
+                                formData.append('state', document.getElementById('newClientState').value.trim());
+                                formData.append('zipcode', document.getElementById('newClientZipcode').value.trim());
+                                formData.append('country', document.getElementById('newClientCountry').value.trim());
+                                formData.append('latitude', document.getElementById('newClientLatitude').value.trim());
+                                formData.append('longitude', document.getElementById('newClientLongitude').value.trim());
                                 formData.append('create_new_client', '1');
                             } else {
                                 // Existing client
@@ -789,6 +797,11 @@
                                 newClientSection.classList.remove('hidden');
                                 // Clear existing client selection
                                 $('#clientSelector').val('').trigger('change');
+                                
+                                // Initialize Google Maps autocomplete for new client address
+                                if (typeof google !== 'undefined' && google.maps) {
+                                    initializeNewClientAutocomplete();
+                                }
                             } else {
                                 // Show existing client selector, hide new client fields
                                 existingClientSection.classList.remove('hidden');
@@ -798,7 +811,16 @@
                                 document.getElementById('newClientLastName').value = '';
                                 document.getElementById('newClientPhone').value = '';
                                 document.getElementById('newClientEmail').value = '';
+                                document.getElementById('newClientAddressMapInput').value = '';
                                 document.getElementById('newClientAddress').value = '';
+                                document.getElementById('newClientAddressSimple').value = '';
+                                document.getElementById('newClientAddress2').value = '';
+                                document.getElementById('newClientCity').value = '';
+                                document.getElementById('newClientState').value = '';
+                                document.getElementById('newClientZipcode').value = '';
+                                document.getElementById('newClientCountry').value = '';
+                                document.getElementById('newClientLatitude').value = '';
+                                document.getElementById('newClientLongitude').value = '';
                             }
                             updateButtonVisibility();
                         });
@@ -2288,6 +2310,122 @@
 
             // Initialize autocomplete when Google Maps is loaded
             window.initializeNewAppointmentAutocomplete = initializeNewAppointmentAutocomplete;
+            
+            // Function to initialize Google Maps autocomplete for new client address
+            function initializeNewClientAutocomplete() {
+                const addressInput = document.getElementById('newClientAddressMapInput');
+                const mapContainer = document.getElementById('newClientLocationMap');
+                
+                if (!addressInput || !mapContainer) {
+                    console.log('New client address input or map container not found');
+                    return;
+                }
+
+                // Initialize map
+                const map = new google.maps.Map(mapContainer, {
+                    zoom: 13,
+                    center: { lat: 25.7617, lng: -80.1918 } // Miami default
+                });
+
+                const marker = new google.maps.Marker({
+                    map: map,
+                    draggable: true
+                });
+
+                // Initialize autocomplete
+                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                    types: ['address'],
+                    componentRestrictions: { country: 'us' }
+                });
+
+                autocomplete.bindTo('bounds', map);
+
+                // Handle place selection
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    
+                    if (!place.geometry) {
+                        console.log('No geometry for place:', place.name);
+                        return;
+                    }
+
+                    // Extract address components
+                    let streetNumber = '';
+                    let route = '';
+                    let city = '';
+                    let state = '';
+                    let zipcode = '';
+                    let country = '';
+
+                    place.address_components.forEach(component => {
+                        const types = component.types;
+                        if (types.includes('street_number')) {
+                            streetNumber = component.long_name;
+                        } else if (types.includes('route')) {
+                            route = component.long_name;
+                        } else if (types.includes('locality')) {
+                            city = component.long_name;
+                        } else if (types.includes('administrative_area_level_1')) {
+                            state = component.short_name;
+                        } else if (types.includes('postal_code')) {
+                            zipcode = component.long_name;
+                        } else if (types.includes('country')) {
+                            country = component.long_name;
+                        }
+                    });
+
+                    // Populate hidden fields
+                    const fullAddress = `${streetNumber} ${route}`.trim();
+                    document.getElementById('newClientAddress').value = fullAddress;
+                    
+                    // Use formatted_address for address_simple (complete address with city, state, zipcode)
+                    if (place.formatted_address) {
+                        document.getElementById('newClientAddressSimple').value = place.formatted_address;
+                    } else {
+                        // Fallback: construct complete address manually
+                        const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(', ');
+                        document.getElementById('newClientAddressSimple').value = completeAddress;
+                    }
+                    
+                    document.getElementById('newClientCity').value = city;
+                    document.getElementById('newClientState').value = state;
+                    document.getElementById('newClientZipcode').value = zipcode;
+                    document.getElementById('newClientCountry').value = country;
+                    document.getElementById('newClientLatitude').value = place.geometry.location.lat();
+                    document.getElementById('newClientLongitude').value = place.geometry.location.lng();
+
+                    // Update map
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                    
+                    // Show map container
+                    mapContainer.style.display = 'block';
+
+                    // Trigger change events for validation
+                    addressInput.dispatchEvent(new Event('change'));
+                });
+
+                // Handle marker drag
+                marker.addListener('dragend', function() {
+                    const position = marker.getPosition();
+                    document.getElementById('newClientLatitude').value = position.lat();
+                    document.getElementById('newClientLongitude').value = position.lng();
+                });
+            }
+            
+            // Initialize autocomplete for new client when Google Maps is loaded
+            window.initializeNewClientAutocomplete = initializeNewClientAutocomplete;
+            
+            // Add phone formatting for new client phone field
+            const newClientPhoneInput = document.getElementById('newClientPhone');
+            if (newClientPhoneInput) {
+                newClientPhoneInput.addEventListener('input', function(e) {
+                    const formatted = formatPhoneNumber(e.target.value);
+                    e.target.value = formatted;
+                });
+            }
         });
     </script>
 @endpush
