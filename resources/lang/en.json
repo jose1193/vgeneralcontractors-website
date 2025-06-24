@@ -1690,5 +1690,6 @@
     "appointment_calendar_error_fetching_clients": "Error fetching clients: ",
     "appointment_calendar_validation_error": "Validation error",
     "select_client": "Select Client",
-    "create_confirmed_appointment": "Create Confirmed Appointment"
+    "create_confirmed_appointment": "Create Confirmed Appointment",
+    "create_confirmed_called_appointment": "Create Confirmed & Called Appointment"
 }

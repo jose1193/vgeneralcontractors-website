@@ -319,7 +319,8 @@ class AppointmentCalendarController extends Controller
                 'client_uuid' => 'required|exists:appointments,uuid',
                 'inspection_date' => 'required|date|after_or_equal:today',
                 'inspection_time' => 'required|date_format:H:i',
-                'inspection_status' => 'required|in:Confirmed,Pending'
+                'inspection_status' => 'required|in:Confirmed,Pending',
+                'status_lead' => 'nullable|in:New,Called,Pending,Declined,Completed'
             ]);
 
             // Find the client (existing appointment)
@@ -379,18 +380,29 @@ class AppointmentCalendarController extends Controller
             // If both date and time are provided, always set status to Confirmed
             if (!empty($client->inspection_date) && !empty($client->inspection_time)) {
                 $client->inspection_status = 'Confirmed';
-                $client->status_lead = 'Called';
+                
+                // Use provided status_lead or default to 'Called'
+                if ($request->has('status_lead') && !empty($request->status_lead)) {
+                    $client->status_lead = $request->status_lead;
+                } else {
+                    $client->status_lead = 'Called';
+                }
             } else {
                 $client->inspection_status = $request->inspection_status;
                 
-                // Set status_lead based on inspection_status
-                if ($client->inspection_status === 'Confirmed') {
-                    $client->status_lead = 'Called';
-                } else if ($client->inspection_status === 'Declined') {
-                    $client->status_lead = 'Declined';
-                } else if ($client->inspection_status === 'Pending') {
-                    if ($client->status_lead !== 'Pending') {
-                        $client->status_lead = 'New';
+                // Use provided status_lead or set based on inspection_status
+                if ($request->has('status_lead') && !empty($request->status_lead)) {
+                    $client->status_lead = $request->status_lead;
+                } else {
+                    // Set status_lead based on inspection_status
+                    if ($client->inspection_status === 'Confirmed') {
+                        $client->status_lead = 'Called';
+                    } else if ($client->inspection_status === 'Declined') {
+                        $client->status_lead = 'Declined';
+                    } else if ($client->inspection_status === 'Pending') {
+                        if ($client->status_lead !== 'Pending') {
+                            $client->status_lead = 'New';
+                        }
                     }
                 }
             }

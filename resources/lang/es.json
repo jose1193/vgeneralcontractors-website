@@ -1696,5 +1696,6 @@
     "appointment_calendar_error_fetching_clients": "Error al obtener los clientes: ",
     "appointment_calendar_validation_error": "Error de validación",
     "select_client": "Seleccionar Cliente",
-    "create_confirmed_appointment": "Crear Cita Confirmada"
+    "create_confirmed_appointment": "Crear Cita Confirmada",
+    "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada"
 }

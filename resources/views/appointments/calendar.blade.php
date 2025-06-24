@@ -271,7 +271,8 @@
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center">
+                                        class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center space-x-3">
+                                        {{-- Botón para crear cita solo como Confirmed --}}
                                         <button type="button" id="createAppointmentBtn"
                                             class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
                                             <span class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
@@ -282,7 +283,25 @@
                                                     <circle class="opacity-25" cx="12" cy="12" r="10"
                                                         stroke="currentColor" stroke-width="4"></circle>
                                                     <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                    </path>
+                                                </svg>
+                                                {{ __('processing') }}
+                                            </span>
+                                        </button>
+                                        
+                                        {{-- Botón para crear cita como Confirmed y Called --}}
+                                        <button type="button" id="createConfirmedCalledBtn"
+                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                            <span class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
+                                            <span class="processing-btn-text hidden">
+                                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                        stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                                     </path>
                                                 </svg>
                                                 {{ __('processing') }}
@@ -463,6 +482,91 @@
                                 day: 'numeric',
                                 year: 'numeric'
                             });
+
+                        // Handle create confirmed and called appointment button
+                        const createConfirmedCalledBtn = document.getElementById('createConfirmedCalledBtn');
+                        createConfirmedCalledBtn.addEventListener('click', function() {
+                            // Validate client is selected
+                            if (!clientSelector.value) {
+                                Swal.fire(translations.error, translations.please_select_client, 'error');
+                                return;
+                            }
+
+                            // Show processing state
+                            const btnText = createConfirmedCalledBtn.querySelector('.normal-btn-text');
+                            const processingText = createConfirmedCalledBtn.querySelector('.processing-btn-text');
+                            btnText.classList.add('hidden');
+                            processingText.classList.remove('hidden');
+                            createConfirmedCalledBtn.disabled = true;
+
+                            // Get selected client data
+                            const selectedClient = clientSelector.options[clientSelector.selectedIndex];
+                            const clientUuid = clientSelector.value;
+
+                            // Prepare the data for the AJAX request
+                            const formData = new FormData();
+                            formData.append('client_uuid', clientUuid);
+                            formData.append('inspection_date', appointmentDate.value);
+                            formData.append('inspection_time', appointmentTime.value);
+                            formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
+                            formData.append('status_lead', 'Called'); // Set lead status to Called
+                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'));
+
+                            // Send AJAX request to create appointment
+                            fetch('{{ secure_url(route('appointment-calendar.create', [], false)) }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                             .getAttribute('content'),
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Reset button state
+                                    btnText.classList.remove('hidden');
+                                    processingText.classList.add('hidden');
+                                    createConfirmedCalledBtn.disabled = false;
+
+                                    if (data.success) {
+                                        // Show success message
+                                        Swal.fire(translations.success, data.message || 'Appointment created successfully as Confirmed and Called!',
+                                            'success');
+
+                                        // Close modal and refresh calendar
+                                        newAppointmentModal.classList.add('hidden');
+                                        newAppointmentModal.style.display = 'none';
+                                        calendar.refetchEvents();
+
+                                        // Clear form
+                                        clientSelector.value = '';
+                                    } else {
+                                        // Show error message
+                                        let errorMessage = data.message || 'Error creating appointment';
+
+                                        if (data.errors) {
+                                            // Format validation errors
+                                            errorMessage += '\n\n';
+                                            Object.values(data.errors).forEach(error => {
+                                                errorMessage += '• ' + error + '\n';
+                                            });
+                                        }
+
+                                        Swal.fire(translations.error, errorMessage, 'error');
+                                    }
+                                })
+                                .catch(error => {
+                                    // Reset button state
+                                    btnText.classList.remove('hidden');
+                                    processingText.classList.add('hidden');
+                                    createConfirmedCalledBtn.disabled = false;
+
+                                    console.error('Error creating appointment:', error);
+                                    Swal.fire(translations.error, translations.unexpected_error, 'error');
+                                });
+                        });
 
                             // Ensure the end time is 3 hours after start
                             const actualEnd = new Date(start.getTime() + (3 * 60 * 60 * 1000));
