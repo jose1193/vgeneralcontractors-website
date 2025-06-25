@@ -192,14 +192,14 @@ class CalendarModals {
             return;
         }
 
-        // Initialize toggle state
-        let isCreateNewMode = false;
+        // Initialize toggle state as instance property
+        this.isCreateNewMode = false;
 
         // Handle toggle click
         toggle.addEventListener("click", () => {
-            isCreateNewMode = !isCreateNewMode;
+            this.isCreateNewMode = !this.isCreateNewMode;
             
-            if (isCreateNewMode) {
+            if (this.isCreateNewMode) {
                 // Create new client mode
                 existingClientSection.classList.add("hidden");
                 newClientSection.classList.remove("hidden");
@@ -246,7 +246,7 @@ class CalendarModals {
         if (hideNewClientBtn) {
             hideNewClientBtn.addEventListener("click", () => {
                 // Switch back to existing client mode
-                isCreateNewMode = false;
+                this.isCreateNewMode = false;
                 existingClientSection.classList.remove("hidden");
                 newClientSection.classList.add("hidden");
                 toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
@@ -268,7 +268,7 @@ class CalendarModals {
         }
 
         // Initialize with default state (select existing client)
-        isCreateNewMode = false;
+        this.isCreateNewMode = false;
         existingClientSection.classList.remove("hidden");
         newClientSection.classList.add("hidden");
         if (createBtnText) {
@@ -697,10 +697,18 @@ class CalendarModals {
         // Clear the form when closing
         this.clearLeadForm();
 
-        // Reset button text to default
+        // Reset button text to correct default state (existing client mode)
         const createBtnText = document.getElementById('createBtnText');
         if (createBtnText) {
-            createBtnText.textContent = this.translations.create_lead || 'Create Lead';
+            createBtnText.textContent = this.translations.create_confirmed_appointment || 'Create Confirmed Appointment';
+        }
+
+        // Ensure we're in existing client mode after reset
+        const existingClientSection = document.getElementById("existingClientSection");
+        const newClientSection = document.getElementById("newClientSection");
+        if (existingClientSection && newClientSection) {
+            existingClientSection.classList.remove("hidden");
+            newClientSection.classList.add("hidden");
         }
 
         // Limpiar selección en calendario
@@ -720,7 +728,7 @@ class CalendarModals {
     handleCreateAppointment() {
         const toggle = document.getElementById("createNewClientToggle");
         const newClientSection = document.getElementById("newClientSection");
-        const isNewClient = newClientSection ? !newClientSection.classList.contains("hidden") : false;
+        const isNewClient = this.isCreateNewMode;
 
         // Validar formulario según el modo
         if (!this.validateForm(isNewClient)) {
@@ -901,8 +909,12 @@ class CalendarModals {
         const toggle = document.getElementById("createNewClientToggle");
         const existingClientSection = document.getElementById("existingClientSection");
         const newClientSection = document.getElementById("newClientSection");
+        const createBtnText = document.getElementById("createBtnText");
         
         if (toggle && existingClientSection && newClientSection) {
+            // Reset toggle state
+            this.isCreateNewMode = false;
+            
             // Reset to existing client mode
             existingClientSection.classList.remove("hidden");
             newClientSection.classList.add("hidden");
@@ -914,6 +926,11 @@ class CalendarModals {
                 </svg>
                 ${this.translations.create_new_client || "Crear Nuevo Cliente"}
             `;
+            
+            // Reset button text to match existing client mode
+            if (createBtnText) {
+                createBtnText.textContent = this.translations.create_confirmed_appointment || "Create Confirmed Appointment";
+            }
         }
 
         // Clear client selector
