@@ -1713,6 +1713,7 @@
     "create_new_client": "Crear Nuevo Cliente",
     "hide": "Ocultar Formulario",
     "please_select_client": "Por favor seleccione un cliente",
+    "select_lead_source": "Seleccionar Fuente de Lead",
     "create_confirmed_appointment": "Crear Cita Confirmada",
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
     "email_placeholder": "correo@ejemplo.com",

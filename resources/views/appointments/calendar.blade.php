@@ -86,6 +86,10 @@
 
                                     // Calendar specific
                                     'please_select_client': @json(__('Please select a client')),
+                                    'select_lead_source': @json(__('select_lead_source')),
+                                    'create_lead': @json(__('create_lead')),
+                                    'create_new_client': @json(__('create_new_client')),
+                                    'create_confirmed_appointment': @json(__('create_confirmed_appointment')),
                                     'appointment_created_successfully': @json(__('Appointment created successfully')),
                                     'appointment_updated_successfully': @json(__('Appointment updated successfully')),
                                     'appointment_deleted_successfully': @json(__('Appointment deleted successfully')),

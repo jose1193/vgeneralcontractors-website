@@ -694,6 +694,15 @@ class CalendarModals {
             modal.style.display = "none";
         }
 
+        // Clear the form when closing
+        this.clearLeadForm();
+
+        // Reset button text to default
+        const createBtnText = document.getElementById('createBtnText');
+        if (createBtnText) {
+            createBtnText.textContent = this.translations.create_lead || 'Create Lead';
+        }
+
         // Limpiar selección en calendario
         if (this.calendar) {
             this.calendar.unselect();
@@ -912,6 +921,16 @@ class CalendarModals {
         if (clientSelector) {
             clientSelector.value = "";
         }
+
+        // Reset all select elements to their first option
+        const selectElements = form.querySelectorAll('select');
+        selectElements.forEach(select => {
+            if (select.options.length > 0) {
+                select.selectedIndex = 0;
+                // Dispatch change event to ensure dependent elements are updated
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
 
         // Limpiar mensajes de error
         const errorMessages = form.querySelectorAll(".error-message");

@@ -199,7 +199,7 @@
                         </label>
                         <select id="lead_source" name="lead_source" required
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
-                            <option value="">Select Lead Source</option>
+                            <option value="">{{ __('select_lead_source') }}</option>
                             <option value="Website">Website</option>
                             <option value="Facebook Ads">Facebook Ads</option>
                             <option value="Reference">Reference</option>
