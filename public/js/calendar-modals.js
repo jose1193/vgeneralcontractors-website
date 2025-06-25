@@ -725,6 +725,13 @@ class CalendarModals {
      * Manejar creación de cita
      */
     handleCreateAppointment() {
+        const button = document.getElementById("createAppointmentBtn");
+        
+        // Prevenir envío si el botón está deshabilitado
+        if (button.disabled) {
+            return;
+        }
+        
         const toggle = document.getElementById("createNewClientToggle");
         const newClientSection = document.getElementById("newClientSection");
         const isNewClient = this.isCreateNewMode;
@@ -735,7 +742,6 @@ class CalendarModals {
         }
 
         // Mostrar estado de carga
-        const button = document.getElementById("createAppointmentBtn");
         const normalText = button.querySelector(".normal-btn-text");
         const loadingText = button.querySelector(".loading-btn-text");
 
