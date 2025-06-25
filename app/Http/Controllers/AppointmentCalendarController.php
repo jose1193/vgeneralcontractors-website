@@ -56,18 +56,18 @@ class AppointmentCalendarController extends Controller
         // Register this cache key for future invalidation
         $this->trackCalendarCacheKey($cacheKey);
         
-        // Cache the events for 60 minutes (adjust as needed)
-        $events = Cache::remember($cacheKey, 60, function() use ($start, $end) {
-            $appointments = Appointment::query()
-                ->where(function($query) use ($start, $end) {
-                    // Filter appointments with inspection date within the range
-                    $query->whereBetween('inspection_date', [$start->toDateString(), $end->toDateString()]);
-                })
-                // Optionally filter by status if needed
-                // ->whereNotIn('inspection_status', ['Declined'])
-                ->get();
-    
-            return $appointments->map(function (Appointment $appointment) {
+                // TEMPORARY: Force cache refresh by skipping cache
+        // Cache disabled for debugging - get fresh data
+        $appointments = Appointment::query()
+            ->where(function($query) use ($start, $end) {
+                // Filter appointments with inspection date within the range
+                $query->whereBetween('inspection_date', [$start->toDateString(), $end->toDateString()]);
+            })
+            // Optionally filter by status if needed
+            // ->whereNotIn('inspection_status', ['Declined'])
+            ->get();
+
+        $events = $appointments->map(function (Appointment $appointment) {
                 // Color based on appointment status
                 $color = '#3b82f6'; // Blue by default (pending)
                 switch ($appointment->inspection_status) {
@@ -105,7 +105,7 @@ class AppointmentCalendarController extends Controller
                 }
     
                 // Format the appointment for FullCalendar
-                return [
+                $eventData = [
                     'id' => $appointment->id,
                     'title' => $appointment->first_name . ' ' . $appointment->last_name,
                     'start' => $startTime->toIso8601String(),
@@ -128,8 +128,17 @@ class AppointmentCalendarController extends Controller
                         'longitude' => $appointment->longitude,
                     ]
                 ];
+                
+                // Debug: Log the calculated times
+                \Log::info('Calendar Event Debug', [
+                    'appointment_id' => $appointment->id,
+                    'start_time' => $startTime->toIso8601String(),
+                    'end_time' => $endTime->toIso8601String(),
+                    'duration_hours' => $startTime->diffInHours($endTime)
+                ]);
+                
+                return $eventData;
             });
-        });
 
         return response()->json($events);
     }
