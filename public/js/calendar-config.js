@@ -98,7 +98,7 @@ class CalendarConfig {
             selectMinDistance: 0,
 
             // Time grid options
-            slotDuration: "03:00:00", // 3 hours to match inspection duration
+            slotDuration: "00:30:00",
             slotMinTime: "08:00:00",
             slotMaxTime: "20:00:00",
             defaultTimedEventDuration: "03:00:00", // 3 hours default duration for inspections

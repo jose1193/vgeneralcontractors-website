@@ -304,7 +304,7 @@ class AppointmentCalendarController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
+    
     /**
      * Create a new appointment from the calendar view
      */
@@ -322,28 +322,28 @@ class AppointmentCalendarController extends Controller
             // Find the client (existing appointment)
             $client = Appointment::where('uuid', $request->client_uuid)->first();
             if (!$client) {
-                return response()->json([
-                    'success' => false,
+                    return response()->json([
+                        'success' => false,
                     'message' => 'Client not found'
                 ], 404);
-            }
+                }
 
-            // Check for schedule conflicts
+                // Check for schedule conflicts
             $conflictCheck = Appointment::where('inspection_date', $request->inspection_date)
                 ->where('inspection_time', $request->inspection_time)
-                ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
+                    ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
                 ->where('uuid', '!=', $client->uuid)
                 ->exists();
 
-            if ($conflictCheck) {
-                return response()->json([
-                    'success' => false,
+                if ($conflictCheck) {
+                    return response()->json([
+                        'success' => false,
                     'message' => 'This time slot is already booked with another client.',
-                    'errors' => [
+                        'errors' => [
                         'schedule_conflict' => 'Please select a different date or time for your inspection.'
-                    ]
-                ], 422);
-            }
+                        ]
+                    ], 422);
+                }
 
             // Update the appointment with new inspection details
             $oldStatus = $client->inspection_status;
@@ -351,25 +351,25 @@ class AppointmentCalendarController extends Controller
             
             // Both date and time must always be provided together
             if (empty($request->inspection_date) && !empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
+                    return response()->json([
+                        'success' => false,
                     'message' => 'Validation error',
                     'errors' => [
                         'inspection_date' => ['The inspection date is required when inspection time is present.']
                     ]
-                ], 422);
-            }
-            
+                    ], 422);
+                }
+
             if (!empty($request->inspection_date) && empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
+                    return response()->json([
+                        'success' => false,
                     'message' => 'Validation error',
-                    'errors' => [
+                        'errors' => [
                         'inspection_time' => ['The inspection time is required when inspection date is present.']
-                    ]
-                ], 422);
-            }
-            
+                        ]
+                    ], 422);
+                }
+
             $client->inspection_time = $request->inspection_time;
             
             // Ensure consistent status handling
@@ -411,7 +411,7 @@ class AppointmentCalendarController extends Controller
             
             if ($client->inspection_status === 'Confirmed') {
                 if ($oldStatus !== 'Confirmed') {
-                    $emailType = 'confirmed';
+                $emailType = 'confirmed';
                     $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
                 } else {
                     $emailType = 'rescheduled';
@@ -509,8 +509,8 @@ class AppointmentCalendarController extends Controller
                     $appointment->inspection_status = 'Pending';
                 }
                 
-                $appointment->save();
-                
+            $appointment->save();
+
                 return $appointment;
             });
 
@@ -576,14 +576,14 @@ class AppointmentCalendarController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Check if email already exists for duplicate validation.
      */
     public function checkEmailExists(Request $request)
     {
         try {
-            $email = $request->input('email');
+        $email = $request->input('email');
             
             if (!$email) {
                 return response()->json([
@@ -603,9 +603,9 @@ class AppointmentCalendarController extends Controller
 
             // Check if email exists in appointments table
             $exists = Appointment::where('email', $email)->exists();
-            
-            return response()->json([
-                'exists' => $exists,
+        
+        return response()->json([
+            'exists' => $exists,
                 'valid' => true,
                 'message' => $exists ? __('email_already_exists') : null
             ]);
@@ -625,7 +625,7 @@ class AppointmentCalendarController extends Controller
     public function checkPhoneExists(Request $request)
     {
         try {
-            $phone = $request->input('phone');
+        $phone = $request->input('phone');
             
             if (!$phone) {
                 return response()->json([
@@ -648,9 +648,9 @@ class AppointmentCalendarController extends Controller
 
             // Check if phone exists in appointments table (compare clean numbers)
             $exists = Appointment::whereRaw('REGEXP_REPLACE(phone, "[^0-9]", "") = ?', [$cleanPhone])->exists();
-            
-            return response()->json([
-                'exists' => $exists,
+        
+        return response()->json([
+            'exists' => $exists,
                 'valid' => true,
                 'message' => $exists ? __('phone_already_exists') : null
             ]);
@@ -675,4 +675,4 @@ class AppointmentCalendarController extends Controller
             Cache::put('calendar_event_keys', $cacheKeys, 60 * 24); // Store for 24 hours
         }
     }
-} 
+}
