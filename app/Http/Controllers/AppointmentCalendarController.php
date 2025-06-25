@@ -11,6 +11,7 @@ use App\Services\TransactionService;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Jobs\ProcessAppointmentEmail;
+use App\Jobs\ProcessNewLead;
 use Illuminate\Support\Facades\Cache;
 use App\Traits\CacheTrait;
 
@@ -526,8 +527,14 @@ class AppointmentCalendarController extends Controller
             }
             Cache::forget('calendar_event_keys');
 
-            // Send notification email for new lead
-            ProcessNewLead::dispatch($appointment);
+            // Send appropriate notification based on appointment type
+            if ($appointment->inspection_date && $appointment->inspection_time) {
+                // If appointment has date and time, send confirmation email
+                ProcessAppointmentEmail::dispatch($appointment, 'confirmed');
+            } else {
+                // If no date/time, treat as new lead
+                ProcessNewLead::dispatch($appointment);
+            }
 
             return response()->json([
                 'success' => true,
