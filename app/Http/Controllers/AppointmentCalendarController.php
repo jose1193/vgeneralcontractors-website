@@ -87,12 +87,16 @@ class AppointmentCalendarController extends Controller
                 }
     
                 // Convert inspection_date and inspection_time to Carbon objects
-                $inspectionDate = Carbon::parse($appointment->inspection_date);
+                $inspectionDate = $appointment->inspection_date instanceof \Carbon\Carbon 
+                    ? $appointment->inspection_date 
+                    : Carbon::parse($appointment->inspection_date);
                 $inspectionTime = $appointment->inspection_time ? Carbon::parse($appointment->inspection_time) : null;
                 
                 // If we have a time, combine it with the date
                 if ($inspectionTime) {
-                    $startTime = Carbon::parse($appointment->inspection_date)
+                    $startTime = ($appointment->inspection_date instanceof \Carbon\Carbon 
+                        ? $appointment->inspection_date 
+                        : Carbon::parse($appointment->inspection_date))
                         ->setHour($inspectionTime->hour)
                         ->setMinute($inspectionTime->minute)
                         ->setSecond(0);
@@ -443,6 +447,14 @@ class AppointmentCalendarController extends Controller
                 'message' => 'Error creating appointment: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Create appointment for existing client (alias for create method)
+     */
+    public function createAppointment(Request $request)
+    {
+        return $this->create($request);
     }
 
     /**
