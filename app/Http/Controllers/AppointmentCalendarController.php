@@ -475,7 +475,7 @@ class AppointmentCalendarController extends Controller
             ]);
 
             // Use transaction service for data consistency
-            $appointment = $this->transactionService->executeInTransaction(function () use ($request) {
+            $appointment = $this->transactionService->run(function () use ($request) {
                 // Create new appointment/lead
                 $appointment = new Appointment();
                 $appointment->uuid = \Str::uuid();
