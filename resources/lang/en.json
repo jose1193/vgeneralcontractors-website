@@ -1705,7 +1705,7 @@
     "select_client": "Select Client",
     "select_client_3_hours": "Select Client (3 hours)",
     "create_new_client": "Create New Client",
-    "hide": "Hide",
+    "hide": "Hide Form",
     "please_select_client": "Please select a client",
     "create_confirmed_appointment": "Create Confirmed Appointment",
     "create_confirmed_called_appointment": "Create Confirmed & Called Appointment",

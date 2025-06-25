@@ -261,8 +261,7 @@
                     <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
                         <div>
                             <label for="inspection_date" class="block text-sm font-medium text-gray-700">
-                                {{ __('inspection_date') }} <span
-                                    class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                                {{ __('inspection_date') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="date" id="inspection_date" name="inspection_date"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
@@ -272,8 +271,7 @@
 
                         <div>
                             <label for="inspection_time" class="block text-sm font-medium text-gray-700">
-                                {{ __('inspection_time') }} <span
-                                    class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                                {{ __('inspection_time') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="time" id="inspection_time" name="inspection_time"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
