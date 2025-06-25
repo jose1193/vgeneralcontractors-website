@@ -304,7 +304,7 @@ class CalendarEvents {
         // Create temporary event
         const tempEvent = {
             id: "temp-selection",
-            title: "New Appointment (3 hours)",
+            title: "🆕 New Appointment",
             start: start.toISOString(),
             end: end.toISOString(),
             backgroundColor: "#3b82f6",
@@ -312,6 +312,11 @@ class CalendarEvents {
             className: "temp-selection-event",
             display: "block",
             editable: false,
+            extendedProps: {
+                status: "New",
+                clientName: "New Appointment",
+                isTemporary: true,
+            },
         };
 
         // Add to calendar

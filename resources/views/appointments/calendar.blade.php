@@ -248,16 +248,140 @@
                                     z-index: 1000;
                                 }
 
+                                /* Custom event styling */
+                                .fc-event-content-custom {
+                                    position: relative;
+                                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+                                    backdrop-filter: blur(10px);
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                                    transition: all 0.3s ease;
+                                }
+
+                                .fc-event-content-custom:hover {
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+                                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+                                }
+
+                                .fc-event-content-custom:before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    height: 3px;
+                                    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+                                    border-radius: 8px 8px 0 0;
+                                }
+
+                                /* Event content typography improvements */
+                                .client-title {
+                                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                                    line-height: 1.2;
+                                }
+
+                                .event-time {
+                                    font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                                    font-variant-numeric: tabular-nums;
+                                }
+
+                                .status-badge {
+                                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                                    text-rendering: optimizeLegibility;
+                                    -webkit-font-smoothing: antialiased;
+                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                    transition: all 0.2s ease;
+                                }
+
+                                .status-badge:hover {
+                                    transform: scale(1.05);
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                                }
+
+                                /* Specific event type styling */
+                                .fc-event.fc-event-confirmed .fc-event-content-custom {
+                                    border-left: 4px solid #10b981;
+                                }
+
+                                .fc-event.fc-event-completed .fc-event-content-custom {
+                                    border-left: 4px solid #22c55e;
+                                }
+
+                                .fc-event.fc-event-pending .fc-event-content-custom {
+                                    border-left: 4px solid #f59e0b;
+                                }
+
+                                .fc-event.fc-event-declined .fc-event-content-custom {
+                                    border-left: 4px solid #ef4444;
+                                }
+
                                 /* Temporary selection event styling */
                                 .temp-selection-event {
-                                    opacity: 0.8 !important;
+                                    opacity: 0.85 !important;
                                     border: 2px dashed #1d4ed8 !important;
                                     background: linear-gradient(45deg, #3b82f6, #60a5fa) !important;
+                                    animation: pulse-selection 2s infinite;
                                 }
 
                                 .temp-selection-event .fc-event-title {
                                     font-weight: bold !important;
                                     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+                                }
+
+                                @keyframes pulse-selection {
+
+                                    0%,
+                                    100% {
+                                        opacity: 0.85;
+                                    }
+
+                                    50% {
+                                        opacity: 0.95;
+                                    }
+                                }
+
+                                /* Mobile responsiveness */
+                                @media (max-width: 768px) {
+                                    .fc-event-content-custom {
+                                        padding: 4px 6px !important;
+                                    }
+
+                                    .client-title {
+                                        font-size: 11px !important;
+                                    }
+
+                                    .event-time {
+                                        font-size: 9px !important;
+                                    }
+
+                                    .status-badge {
+                                        font-size: 8px !important;
+                                        padding: 1px 4px !important;
+                                    }
+                                }
+
+                                /* Calendar grid improvements */
+                                .fc-timegrid-slot {
+                                    border-color: #e5e7eb;
+                                }
+
+                                .fc-timegrid-slot:hover {
+                                    background-color: rgba(59, 130, 246, 0.05);
+                                }
+
+                                .fc-day-today {
+                                    background-color: rgba(59, 130, 246, 0.08) !important;
+                                }
+
+                                .fc-timegrid-now-indicator-line {
+                                    border-color: #ef4444;
+                                    border-width: 2px;
+                                }
+
+                                .fc-timegrid-now-indicator-arrow {
+                                    border-top-color: #ef4444;
+                                    border-bottom-color: #ef4444;
                                 }
 
                                 /* Print styles */

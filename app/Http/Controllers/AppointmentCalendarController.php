@@ -111,6 +111,7 @@ class AppointmentCalendarController extends Controller
                     'start' => $startTime->toIso8601String(),
                     'end' => $endTime->toIso8601String(),
                     'color' => $color,
+                    'className' => 'fc-event-' . strtolower($appointment->inspection_status),
                     'allDay' => $inspectionTime ? false : true,
                     // Additional properties to display in the popup
                     'extendedProps' => [

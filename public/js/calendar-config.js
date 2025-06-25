@@ -146,46 +146,146 @@ class CalendarConfig {
                 content.style.cursor = "pointer";
                 content.style.width = "100%";
                 content.style.height = "100%";
+                content.style.padding = "6px 8px";
+                content.style.overflow = "hidden";
 
-                // 1. Nombre del cliente (primera línea)
+                // 1. Nombre del cliente (primera línea) con icono
                 let clientTitle = document.createElement("div");
                 clientTitle.classList.add("client-title");
-                clientTitle.innerHTML = arg.event.title;
+                clientTitle.style.display = "flex";
+                clientTitle.style.alignItems = "center";
+                clientTitle.style.fontWeight = "600";
+                clientTitle.style.fontSize = "13px";
+                clientTitle.style.color = "#ffffff";
+                clientTitle.style.marginBottom = "3px";
+                clientTitle.style.textShadow = "0 1px 2px rgba(0,0,0,0.3)";
 
-                // 2. Horario (segunda línea)
+                // Cliente icon
+                let clientIcon = document.createElement("span");
+                clientIcon.innerHTML = "👤";
+                clientIcon.style.marginRight = "4px";
+                clientIcon.style.fontSize = "11px";
+
+                let clientName = document.createElement("span");
+                clientName.textContent = arg.event.title;
+                clientName.style.whiteSpace = "nowrap";
+                clientName.style.overflow = "hidden";
+                clientName.style.textOverflow = "ellipsis";
+
+                clientTitle.appendChild(clientIcon);
+                clientTitle.appendChild(clientName);
+
+                // 2. Horario (segunda línea) con icono de reloj
                 let timeText = document.createElement("div");
                 timeText.classList.add("event-time");
+                timeText.style.display = "flex";
+                timeText.style.alignItems = "center";
+                timeText.style.fontSize = "11px";
+                timeText.style.color = "rgba(255,255,255,0.95)";
+                timeText.style.marginBottom = "4px";
+                timeText.style.fontWeight = "500";
 
                 const start = arg.event.start;
-                const end = arg.event.end;
-                const startTime = start.toLocaleTimeString("es-ES", {
+                const startTime = start.toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
-                    hour12: false,
+                    hour12: true,
                 });
 
                 // Force display of 3-hour duration
                 const calculatedEnd = new Date(
                     start.getTime() + 3 * 60 * 60 * 1000
                 );
-                const endTime = calculatedEnd.toLocaleTimeString("es-ES", {
+                const endTime = calculatedEnd.toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
-                    hour12: false,
+                    hour12: true,
                 });
 
-                timeText.innerHTML = startTime + " - " + endTime + " (3h)";
+                // Clock icon
+                let timeIcon = document.createElement("span");
+                timeIcon.innerHTML = "🕐";
+                timeIcon.style.marginRight = "4px";
+                timeIcon.style.fontSize = "10px";
 
-                // 3. Estado (última línea)
-                let statusText = document.createElement("div");
-                statusText.classList.add("appointment-status");
-                statusText.innerHTML =
-                    arg.event.extendedProps.status || "Pending";
+                let timeSpan = document.createElement("span");
+                timeSpan.textContent = `${startTime} - ${endTime}`;
+                timeSpan.style.whiteSpace = "nowrap";
+
+                let durationBadge = document.createElement("span");
+                durationBadge.textContent = "3h";
+                durationBadge.style.backgroundColor = "rgba(255,255,255,0.2)";
+                durationBadge.style.padding = "1px 4px";
+                durationBadge.style.borderRadius = "8px";
+                durationBadge.style.fontSize = "9px";
+                durationBadge.style.fontWeight = "600";
+                durationBadge.style.marginLeft = "4px";
+
+                timeText.appendChild(timeIcon);
+                timeText.appendChild(timeSpan);
+                timeText.appendChild(durationBadge);
+
+                // 3. Estado (última línea) con badge estilizado
+                let statusContainer = document.createElement("div");
+                statusContainer.classList.add("appointment-status-container");
+                statusContainer.style.display = "flex";
+                statusContainer.style.alignItems = "center";
+                statusContainer.style.justifyContent = "space-between";
+
+                let statusBadge = document.createElement("span");
+                statusBadge.classList.add("status-badge");
+                const status = arg.event.extendedProps.status || "Pending";
+                statusBadge.textContent = status;
+
+                // Status styling
+                statusBadge.style.fontSize = "10px";
+                statusBadge.style.fontWeight = "600";
+                statusBadge.style.padding = "2px 6px";
+                statusBadge.style.borderRadius = "10px";
+                statusBadge.style.textTransform = "uppercase";
+                statusBadge.style.letterSpacing = "0.5px";
+                statusBadge.style.border = "1px solid rgba(255,255,255,0.3)";
+
+                // Status-specific colors
+                switch (status.toLowerCase()) {
+                    case "confirmed":
+                        statusBadge.style.backgroundColor =
+                            "rgba(16, 185, 129, 0.9)";
+                        statusBadge.style.color = "#ffffff";
+                        statusBadge.innerHTML = "✓ CONFIRMED";
+                        break;
+                    case "completed":
+                        statusBadge.style.backgroundColor =
+                            "rgba(34, 197, 94, 0.9)";
+                        statusBadge.style.color = "#ffffff";
+                        statusBadge.innerHTML = "✅ COMPLETED";
+                        break;
+                    case "pending":
+                        statusBadge.style.backgroundColor =
+                            "rgba(245, 158, 11, 0.9)";
+                        statusBadge.style.color = "#ffffff";
+                        statusBadge.innerHTML = "⏳ PENDING";
+                        break;
+                    case "declined":
+                        statusBadge.style.backgroundColor =
+                            "rgba(239, 68, 68, 0.9)";
+                        statusBadge.style.color = "#ffffff";
+                        statusBadge.innerHTML = "❌ DECLINED";
+                        break;
+                    default:
+                        statusBadge.style.backgroundColor =
+                            "rgba(107, 114, 128, 0.9)";
+                        statusBadge.style.color = "#ffffff";
+                        statusBadge.innerHTML = "📋 " + status.toUpperCase();
+                        break;
+                }
+
+                statusContainer.appendChild(statusBadge);
 
                 // Agregar todo al contenedor
                 content.appendChild(clientTitle);
                 content.appendChild(timeText);
-                content.appendChild(statusText);
+                content.appendChild(statusContainer);
 
                 return { domNodes: [content] };
             },
