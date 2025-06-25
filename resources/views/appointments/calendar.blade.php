@@ -23,7 +23,8 @@
                         <button id="openCreateLeadModal" type="button"
                             class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
                             <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             {{ __('create_new_lead') }}
                         </button>
@@ -232,8 +233,7 @@
                                         </button>
                                         <div class="sm:flex sm:items-start">
                                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                                <h3
-                                                    class="text-lg leading-6 font-medium text-white text-center">
+                                                <h3 class="text-lg leading-6 font-medium text-white text-center">
                                                     {{ __('create_new_appointment') }}
                                                 </h3>
                                             </div>
@@ -243,182 +243,200 @@
                                         <form id="newAppointmentForm">
                                             @csrf
                                             <div class="mt-4 space-y-4">
-                                                        {{-- Selected Date/Time (readonly) --}}
+                                                {{-- Selected Date/Time (readonly) --}}
+                                                <div>
+                                                    <label for="selectedDateTime"
+                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        {{ __('date_time') }}
+                                                    </label>
+                                                    <input type="text" id="selectedDateTime"
+                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        readonly>
+                                                    <input type="hidden" id="appointmentDate"
+                                                        name="inspection_date">
+                                                    <input type="hidden" id="appointmentTime"
+                                                        name="inspection_time">
+                                                </div>
+
+                                                {{-- Toggle for New Client --}}
+                                                <div class="mt-3">
+                                                    <label class="inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" id="createNewClientToggle"
+                                                            class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                                        <span
+                                                            class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
+                                                            {{ __('create_new_client') }}
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                {{-- Existing Client Selector --}}
+                                                <div id="existingClientSection" class="mt-3">
+                                                    <label for="clientSelector"
+                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        {{ __('select_client') }}
+                                                    </label>
+                                                    <select id="clientSelector" name="client_id"
+                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                        <option value="">{{ __('please_select_client') }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                                {{-- New Client Fields --}}
+                                                <div id="newClientSection" class="mt-3 space-y-3 hidden">
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                         <div>
-                                                            <label for="selectedDateTime"
+                                                            <label for="newClientFirstName"
                                                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                {{ __('date_time') }}
+                                                                {{ __('first_name') }} <span
+                                                                    class="text-red-500">*</span>
                                                             </label>
-                                                            <input type="text" id="selectedDateTime"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                                readonly>
-                                                            <input type="hidden" id="appointmentDate"
-                                                                name="inspection_date">
-                                                            <input type="hidden" id="appointmentTime"
-                                                                name="inspection_time">
-                                                        </div>
-
-                                                        {{-- Toggle for New Client --}}
-                                                        <div class="mt-3">
-                                                            <label class="inline-flex items-center cursor-pointer">
-                                                                <input type="checkbox" id="createNewClientToggle" 
-                                                                    class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                                                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
-                                                                    {{ __('create_new_client') }}
-                                                                </span>
-                                                            </label>
-                                                        </div>
-
-                                                        {{-- Existing Client Selector --}}
-                                                        <div id="existingClientSection" class="mt-3">
-                                                            <label for="clientSelector"
-                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                {{ __('select_client') }}
-                                                            </label>
-                                                            <select id="clientSelector" name="client_id"
+                                                            <input type="text" id="newClientFirstName"
+                                                                name="first_name"
+                                                                placeholder="{{ __('enter_first_name') }}"
                                                                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                <option value="">{{ __('please_select_client') }}</option>
-                                                            </select>
                                                         </div>
-
-                                                        {{-- New Client Fields --}}
-                                                        <div id="newClientSection" class="mt-3 space-y-3 hidden">
-                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                                <div>
-                                                                    <label for="newClientFirstName"
-                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        {{ __('first_name') }} <span class="text-red-500">*</span>
-                                                                    </label>
-                                                                    <input type="text" id="newClientFirstName" name="first_name"
-                                           placeholder="{{ __('enter_first_name') }}"
-                                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                </div>
-                                                                <div>
-                                                                    <label for="newClientLastName"
-                                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        {{ __('last_name') }} <span class="text-red-500">*</span>
-                                                                    </label>
-                                                                    <input type="text" id="newClientLastName" name="last_name"
-                                           placeholder="{{ __('enter_last_name') }}"
-                                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <label for="newClientPhone"
-                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('phone') }} <span class="text-red-500">*</span>
-                                                                </label>
-                                                                <input type="tel" id="newClientPhone" name="phone"
-                                                                    placeholder="{{ __('phone_placeholder') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                            </div>
-                                                            <div>
-                                                                <label for="newClientEmail"
-                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('email') }} <span class="text-red-500">*</span>
-                                                                </label>
-                                                                <input type="email" id="newClientEmail" name="email"
-                                                                    placeholder="{{ __('email_placeholder') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                            </div>
-                                                            {{-- Google Maps Address Input --}}
-                                                            <div>
-                                                                <label for="newClientAddressMapInput"
-                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('address') }} <span class="text-red-500">*</span>
-                                                                </label>
-                                                                <input type="text" id="newClientAddressMapInput" name="address_map_input"
-                                                                    placeholder="{{ __('address_placeholder') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                            </div>
-
-                                                            {{-- Map Container --}}
-                                                            <div id="newClientLocationMap" class="mt-3 h-48 w-full rounded-md border border-gray-300"></div>
-
-                                                            {{-- Address 2 Field --}}
-                                                            <div>
-                                                                <label for="newClientAddress2"
-                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('address_2') }}
-                                                                </label>
-                                                                <input type="text" id="newClientAddress2" name="address_2"
-                                                                    placeholder="{{ __('apartment_suite_optional') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                            </div>
-
-                                                            {{-- Property Insurance --}}
-                                                            <div>
-                                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('property_insurance') }} <span class="text-red-500">*</span>
-                                                                </label>
-                                                                <div class="mt-2 space-x-6">
-                                                                    <label class="inline-flex items-center">
-                                                                        <input type="radio" id="newClientInsuranceYes" name="insurance_property" value="1"
-                                                                            class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('yes') }}</span>
-                                                                    </label>
-                                                                    <label class="inline-flex items-center">
-                                                                        <input type="radio" id="newClientInsuranceNo" name="insurance_property" value="0"
-                                                                            class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('no') }}</span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-
-                                                            {{-- Notes --}}
-                                                            <div>
-                                                                <label for="newClientNotes"
-                                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                    {{ __('notes') }}
-                                                                </label>
-                                                                <textarea id="newClientNotes" name="notes" rows="3"
-                                                                    placeholder="{{ __('notes_placeholder') }}"
-                                                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                            </div>
-
-                                                            {{-- Hidden Address Fields --}}
-                                                            <input type="hidden" id="newClientAddress" name="address">
-                                                            <input type="hidden" id="newClientAddressSimple" name="address_simple">
-                                                            <input type="hidden" id="newClientCity" name="city">
-                                                            <input type="hidden" id="newClientState" name="state">
-                                                            <input type="hidden" id="newClientZipcode" name="zipcode">
-                                                            <input type="hidden" id="newClientCountry" name="country">
-                                                            <input type="hidden" id="newClientLatitude" name="latitude">
-                                                            <input type="hidden" id="newClientLongitude" name="longitude">
+                                                        <div>
+                                                            <label for="newClientLastName"
+                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                {{ __('last_name') }} <span
+                                                                    class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="newClientLastName"
+                                                                name="last_name"
+                                                                placeholder="{{ __('enter_last_name') }}"
+                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                         </div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="newClientPhone"
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('phone') }} <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="tel" id="newClientPhone" name="phone"
+                                                            placeholder="{{ __('phone_placeholder') }}"
+                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+                                                    <div>
+                                                        <label for="newClientEmail"
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('email') }} <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="email" id="newClientEmail" name="email"
+                                                            placeholder="{{ __('email_placeholder') }}"
+                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+                                                    {{-- Google Maps Address Input --}}
+                                                    <div>
+                                                        <label for="newClientAddressMapInput"
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('address') }} <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="newClientAddressMapInput"
+                                                            name="address_map_input"
+                                                            placeholder="{{ __('address_placeholder') }}"
+                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+
+                                                    {{-- Map Container --}}
+                                                    <div id="newClientLocationMap"
+                                                        class="mt-3 h-48 w-full rounded-md border border-gray-300">
+                                                    </div>
+
+                                                    {{-- Address 2 Field --}}
+                                                    <div>
+                                                        <label for="newClientAddress2"
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('address_2') }}
+                                                        </label>
+                                                        <input type="text" id="newClientAddress2" name="address_2"
+                                                            placeholder="{{ __('apartment_suite_optional') }}"
+                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+
+                                                    {{-- Property Insurance --}}
+                                                    <div>
+                                                        <label
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('property_insurance') }} <span
+                                                                class="text-red-500">*</span>
+                                                        </label>
+                                                        <div class="mt-2 space-x-6">
+                                                            <label class="inline-flex items-center">
+                                                                <input type="radio" id="newClientInsuranceYes"
+                                                                    name="insurance_property" value="1"
+                                                                    class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                                <span
+                                                                    class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('yes') }}</span>
+                                                            </label>
+                                                            <label class="inline-flex items-center">
+                                                                <input type="radio" id="newClientInsuranceNo"
+                                                                    name="insurance_property" value="0"
+                                                                    class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                                <span
+                                                                    class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('no') }}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Notes --}}
+                                                    <div>
+                                                        <label for="newClientNotes"
+                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {{ __('notes') }}
+                                                        </label>
+                                                        <textarea id="newClientNotes" name="notes" rows="3" placeholder="{{ __('notes_placeholder') }}"
+                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                                    </div>
+
+                                                    {{-- Hidden Address Fields --}}
+                                                    <input type="hidden" id="newClientAddress" name="address">
+                                                    <input type="hidden" id="newClientAddressSimple"
+                                                        name="address_simple">
+                                                    <input type="hidden" id="newClientCity" name="city">
+                                                    <input type="hidden" id="newClientState" name="state">
+                                                    <input type="hidden" id="newClientZipcode" name="zipcode">
+                                                    <input type="hidden" id="newClientCountry" name="country">
+                                                    <input type="hidden" id="newClientLatitude" name="latitude">
+                                                    <input type="hidden" id="newClientLongitude" name="longitude">
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center">
+                                    <div
+                                        class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center">
                                         <div class="flex space-x-3 justify-center">
                                             {{-- Botón para crear cita solo como Confirmed --}}
                                             <button type="button" id="createAppointmentBtn"
                                                 class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                                            <span class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
-                                            <span class="processing-btn-text hidden">
-                                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                        stroke="currentColor" stroke-width="4"></circle>
-                                                    <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                    </path>
-                                                </svg>
-                                                {{ __('processing') }}
-                                            </span>
-                                            </button>
-                                            
-                                            {{-- Botón para crear cita como Confirmed y Called --}}
-                                            <button type="button" id="createConfirmedCalledBtn"
-                                                class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                                                <span class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
+                                                <span
+                                                    class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
                                                 <span class="processing-btn-text hidden">
                                                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                        <circle class="opacity-25" cx="12" cy="12"
+                                                            r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                        </path>
+                                                    </svg>
+                                                    {{ __('processing') }}
+                                                </span>
+                                            </button>
+
+                                            {{-- Botón para crear cita como Confirmed y Called --}}
+                                            <button type="button" id="createConfirmedCalledBtn"
+                                                class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                                <span
+                                                    class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
+                                                <span class="processing-btn-text hidden">
+                                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12"
+                                                            r="10" stroke="currentColor" stroke-width="4"></circle>
                                                         <path class="opacity-75" fill="currentColor"
                                                             d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                                         </path>
@@ -521,8 +539,9 @@
 
             @push('scripts')
                 {{-- Google Maps API --}}
-                <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places" async defer></script>
-                
+                <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
+                    async defer></script>
+
                 {{-- FullCalendar JS --}}
                 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
                 <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/es.global.js'></script>
@@ -597,151 +616,169 @@
                             selectedEnd = end;
 
                             // Format date and time for display - dynamic locale
-                            const formattedDate = start.toLocaleDateString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric'
-                            });
-
-                        // Handle create confirmed and called appointment button
-                        createConfirmedCalledBtn.addEventListener('click', function() {
-                            // Validate based on mode (existing client vs new client)
-                            if (createNewClientToggle.checked) {
-                                // Validate new client fields
-                                const firstName = document.getElementById('newClientFirstName').value.trim();
-                                const lastName = document.getElementById('newClientLastName').value.trim();
-                                const phone = document.getElementById('newClientPhone').value.trim();
-                                const email = document.getElementById('newClientEmail').value.trim();
-                                const address = document.getElementById('newClientAddressMapInput').value.trim();
-                                const insuranceProperty = document.querySelector('input[name="insurance_property"]:checked');
-                                
-                                if (!firstName || !lastName || !phone || !email || !address) {
-                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone, Email, Address)', 'error');
-                                    return;
-                                }
-                                
-                                if (!insuranceProperty) {
-                                    Swal.fire(translations.error, 'Please select Property Insurance option', 'error');
-                                    return;
-                                }
-                                
-                                if (email && !email.includes('@')) {
-                                    Swal.fire(translations.error, 'Please enter a valid email address', 'error');
-                                    return;
-                                }
-                            } else {
-                                // Validate existing client is selected
-                                if (!clientSelector.value) {
-                                    Swal.fire(translations.error, translations.please_select_client, 'error');
-                                    return;
-                                }
-                            }
-
-                            // Show processing state
-                            const btnText = createConfirmedCalledBtn.querySelector('.normal-btn-text');
-                            const processingText = createConfirmedCalledBtn.querySelector('.processing-btn-text');
-                            btnText.classList.add('hidden');
-                            processingText.classList.remove('hidden');
-                            createConfirmedCalledBtn.disabled = true;
-
-                            // Prepare the data for the AJAX request
-                            const formData = new FormData();
-                            
-                            if (createNewClientToggle.checked) {
-                                // New client data
-                                formData.append('first_name', document.getElementById('newClientFirstName').value.trim());
-                                formData.append('last_name', document.getElementById('newClientLastName').value.trim());
-                                formData.append('phone', document.getElementById('newClientPhone').value.trim());
-                                formData.append('email', document.getElementById('newClientEmail').value.trim());
-                                formData.append('address', document.getElementById('newClientAddress').value.trim());
-                                formData.append('address_simple', document.getElementById('newClientAddressSimple').value.trim());
-                                formData.append('address_2', document.getElementById('newClientAddress2').value.trim());
-                                formData.append('city', document.getElementById('newClientCity').value.trim());
-                                formData.append('state', document.getElementById('newClientState').value.trim());
-                                formData.append('zipcode', document.getElementById('newClientZipcode').value.trim());
-                                formData.append('country', document.getElementById('newClientCountry').value.trim());
-                                formData.append('latitude', document.getElementById('newClientLatitude').value.trim());
-                                formData.append('longitude', document.getElementById('newClientLongitude').value.trim());
-                                formData.append('create_new_client', '1');
-                            } else {
-                                // Existing client
-                                formData.append('client_uuid', clientSelector.value);
-                            }
-                            
-                            formData.append('inspection_date', appointmentDate.value);
-                            formData.append('inspection_time', appointmentTime.value);
-                            formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
-                            formData.append('status_lead', 'Called'); // Set lead status to Called
-                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                'content'));
-
-                            // Send AJAX request to create appointment
-                            fetch('{{ route('appointment-calendar.create', [], true) }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                             .getAttribute('content'),
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    },
-                                    body: formData
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    // Reset button state
-                                    btnText.classList.remove('hidden');
-                                    processingText.classList.add('hidden');
-                                    createConfirmedCalledBtn.disabled = false;
-
-                                    if (data.success) {
-                                        // Show success message
-                                        Swal.fire(translations.success, data.message || 'Appointment created successfully as Confirmed and Called!',
-                                            'success');
-
-                                        // Close modal and refresh calendar
-                                        newAppointmentModal.classList.add('hidden');
-                                        newAppointmentModal.style.display = 'none';
-                                        calendar.refetchEvents();
-
-                                        // Clear form
-                                        clientSelector.value = '';
-                                    } else {
-                                        // Show error message
-                                        let errorMessage = data.message || 'Error creating appointment';
-
-                                        if (data.errors) {
-                                            // Format validation errors
-                                            errorMessage += '\n\n';
-                                            Object.values(data.errors).forEach(error => {
-                                                errorMessage += '• ' + error + '\n';
-                                            });
-                                        }
-
-                                        Swal.fire(translations.error, errorMessage, 'error');
-                                    }
-                                })
-                                .catch(error => {
-                                    // Reset button state
-                                    btnText.classList.remove('hidden');
-                                    processingText.classList.add('hidden');
-                                    createConfirmedCalledBtn.disabled = false;
-
-                                    console.error('Error creating appointment:', error);
-                                    Swal.fire(translations.error, translations.unexpected_error, 'error');
+                            const formattedDate = start.toLocaleDateString(
+                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
+                                    month: 'long',
+                                    day: 'numeric',
+                                    year: 'numeric'
                                 });
-                        });
+
+                            // Handle create confirmed and called appointment button
+                            createConfirmedCalledBtn.addEventListener('click', function() {
+                                // Validate based on mode (existing client vs new client)
+                                if (createNewClientToggle.checked) {
+                                    // Validate new client fields
+                                    const firstName = document.getElementById('newClientFirstName').value.trim();
+                                    const lastName = document.getElementById('newClientLastName').value.trim();
+                                    const phone = document.getElementById('newClientPhone').value.trim();
+                                    const email = document.getElementById('newClientEmail').value.trim();
+                                    const address = document.getElementById('newClientAddressMapInput').value.trim();
+                                    const insuranceProperty = document.querySelector(
+                                        'input[name="insurance_property"]:checked');
+
+                                    if (!firstName || !lastName || !phone || !email || !address) {
+                                        Swal.fire(translations.error,
+                                            'Please fill in all required fields (First Name, Last Name, Phone, Email, Address)',
+                                            'error');
+                                        return;
+                                    }
+
+                                    if (!insuranceProperty) {
+                                        Swal.fire(translations.error, 'Please select Property Insurance option',
+                                            'error');
+                                        return;
+                                    }
+
+                                    if (email && !email.includes('@')) {
+                                        Swal.fire(translations.error, 'Please enter a valid email address', 'error');
+                                        return;
+                                    }
+                                } else {
+                                    // Validate existing client is selected
+                                    if (!clientSelector.value) {
+                                        Swal.fire(translations.error, translations.please_select_client, 'error');
+                                        return;
+                                    }
+                                }
+
+                                // Show processing state
+                                const btnText = createConfirmedCalledBtn.querySelector('.normal-btn-text');
+                                const processingText = createConfirmedCalledBtn.querySelector('.processing-btn-text');
+                                btnText.classList.add('hidden');
+                                processingText.classList.remove('hidden');
+                                createConfirmedCalledBtn.disabled = true;
+
+                                // Prepare the data for the AJAX request
+                                const formData = new FormData();
+
+                                if (createNewClientToggle.checked) {
+                                    // New client data
+                                    formData.append('first_name', document.getElementById('newClientFirstName').value
+                                        .trim());
+                                    formData.append('last_name', document.getElementById('newClientLastName').value
+                                        .trim());
+                                    formData.append('phone', document.getElementById('newClientPhone').value.trim());
+                                    formData.append('email', document.getElementById('newClientEmail').value.trim());
+                                    formData.append('address', document.getElementById('newClientAddress').value
+                                        .trim());
+                                    formData.append('address_simple', document.getElementById('newClientAddressSimple')
+                                        .value.trim());
+                                    formData.append('address_2', document.getElementById('newClientAddress2').value
+                                        .trim());
+                                    formData.append('city', document.getElementById('newClientCity').value.trim());
+                                    formData.append('state', document.getElementById('newClientState').value.trim());
+                                    formData.append('zipcode', document.getElementById('newClientZipcode').value
+                                        .trim());
+                                    formData.append('country', document.getElementById('newClientCountry').value
+                                        .trim());
+                                    formData.append('latitude', document.getElementById('newClientLatitude').value
+                                        .trim());
+                                    formData.append('longitude', document.getElementById('newClientLongitude').value
+                                        .trim());
+                                    formData.append('create_new_client', '1');
+                                } else {
+                                    // Existing client
+                                    formData.append('client_uuid', clientSelector.value);
+                                }
+
+                                formData.append('inspection_date', appointmentDate.value);
+                                formData.append('inspection_time', appointmentTime.value);
+                                formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
+                                formData.append('status_lead', 'Called'); // Set lead status to Called
+                                formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute(
+                                        'content'));
+
+                                // Send AJAX request to create appointment
+                                fetch('{{ url()->secure(route('appointment-calendar.create', [], false)) }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                                .getAttribute('content'),
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Reset button state
+                                        btnText.classList.remove('hidden');
+                                        processingText.classList.add('hidden');
+                                        createConfirmedCalledBtn.disabled = false;
+
+                                        if (data.success) {
+                                            // Show success message
+                                            Swal.fire(translations.success, data.message ||
+                                                'Appointment created successfully as Confirmed and Called!',
+                                                'success');
+
+                                            // Close modal and refresh calendar
+                                            newAppointmentModal.classList.add('hidden');
+                                            newAppointmentModal.style.display = 'none';
+                                            calendar.refetchEvents();
+
+                                            // Clear form
+                                            clientSelector.value = '';
+                                        } else {
+                                            // Show error message
+                                            let errorMessage = data.message || 'Error creating appointment';
+
+                                            if (data.errors) {
+                                                // Format validation errors
+                                                errorMessage += '\n\n';
+                                                Object.values(data.errors).forEach(error => {
+                                                    errorMessage += '• ' + error + '\n';
+                                                });
+                                            }
+
+                                            Swal.fire(translations.error, errorMessage, 'error');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Reset button state
+                                        btnText.classList.remove('hidden');
+                                        processingText.classList.add('hidden');
+                                        createConfirmedCalledBtn.disabled = false;
+
+                                        console.error('Error creating appointment:', error);
+                                        Swal.fire(translations.error, translations.unexpected_error, 'error');
+                                    });
+                            });
 
                             // Ensure the end time is 3 hours after start
                             const actualEnd = new Date(start.getTime() + (3 * 60 * 60 * 1000));
 
-                            const formattedTime = start.toLocaleTimeString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                            }) + ' - ' + actualEnd.toLocaleTimeString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                            }) + ' (3 hours)';
+                            const formattedTime = start.toLocaleTimeString(
+                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }) + ' - ' + actualEnd.toLocaleTimeString(
+                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }) + ' (3 hours)';
 
                             // Display formatted date & time with proper capitalization
                             selectedDateTime.value = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1) + ' • ' +
@@ -762,10 +799,10 @@
                             // Show modal
                             newAppointmentModal.classList.remove('hidden');
                             newAppointmentModal.style.display = 'block';
-                            
+
                             // Update button visibility based on current state
                             updateButtonVisibility();
-                            
+
                             // Initialize Google Maps autocomplete
                             if (typeof google !== 'undefined' && google.maps) {
                                 initializeNewAppointmentAutocomplete();
@@ -779,7 +816,7 @@
                             console.log('Loading clients from API...');
 
                             // Fetch de clientes desde el endpoint
-                            fetch('{{ route('appointment-calendar.clients', [], true) }}')
+                            fetch('{{ url()->secure(route('appointment-calendar.clients', [], false)) }}')
                                 .then(response => {
                                     console.log('API response status:', response.status);
                                     return response.json();
@@ -788,7 +825,8 @@
                                     console.log('Client data received:', data);
                                     if (data.success && data.data && data.data.length > 0) {
                                         // Limpiar opción de carga
-                                        clientSelector.innerHTML = `<option value="">${translations.please_select_client}</option>`;
+                                        clientSelector.innerHTML =
+                                            `<option value="">${translations.please_select_client}</option>`;
                                         console.log('Found', data.data.length, 'clients');
 
                                         // Agregar clientes al dropdown
@@ -847,7 +885,7 @@
                                 newClientSection.classList.remove('hidden');
                                 // Clear existing client selection
                                 $('#clientSelector').val('').trigger('change');
-                                
+
                                 // Initialize Google Maps autocomplete for new client address
                                 if (typeof google !== 'undefined' && google.maps) {
                                     initializeNewClientAutocomplete();
@@ -919,12 +957,14 @@
                                 const lastName = document.getElementById('newClientLastName').value.trim();
                                 const phone = document.getElementById('newClientPhone').value.trim();
                                 const email = document.getElementById('newClientEmail').value.trim();
-                                
+
                                 if (!firstName || !lastName || !phone) {
-                                    Swal.fire(translations.error, 'Please fill in all required fields (First Name, Last Name, Phone)', 'error');
+                                    Swal.fire(translations.error,
+                                        'Please fill in all required fields (First Name, Last Name, Phone)', 'error'
+                                    );
                                     return;
                                 }
-                                
+
                                 if (email && !email.includes('@')) {
                                     Swal.fire(translations.error, 'Please enter a valid email address', 'error');
                                     return;
@@ -946,30 +986,34 @@
 
                             // Prepare the data for the AJAX request
                             const formData = new FormData();
-                            
+
                             if (createNewClientToggle.checked) {
                                 // New client data
-                                formData.append('first_name', document.getElementById('newClientFirstName').value.trim());
+                                formData.append('first_name', document.getElementById('newClientFirstName').value
+                                    .trim());
                                 formData.append('last_name', document.getElementById('newClientLastName').value.trim());
                                 formData.append('phone', document.getElementById('newClientPhone').value.trim());
                                 formData.append('email', document.getElementById('newClientEmail').value.trim());
                                 formData.append('address', document.getElementById('newClientAddress').value.trim());
-                                formData.append('address_simple', document.getElementById('newClientAddressSimple').value.trim());
+                                formData.append('address_simple', document.getElementById('newClientAddressSimple')
+                                    .value.trim());
                                 formData.append('address_2', document.getElementById('newClientAddress2').value.trim());
                                 formData.append('city', document.getElementById('newClientCity').value.trim());
                                 formData.append('state', document.getElementById('newClientState').value.trim());
                                 formData.append('zipcode', document.getElementById('newClientZipcode').value.trim());
                                 formData.append('country', document.getElementById('newClientCountry').value.trim());
                                 formData.append('latitude', document.getElementById('newClientLatitude').value.trim());
-                                formData.append('longitude', document.getElementById('newClientLongitude').value.trim());
-                                formData.append('insurance_property', document.querySelector('input[name="insurance_property"]:checked').value);
+                                formData.append('longitude', document.getElementById('newClientLongitude').value
+                                    .trim());
+                                formData.append('insurance_property', document.querySelector(
+                                    'input[name="insurance_property"]:checked').value);
                                 formData.append('notes', document.getElementById('newClientNotes').value.trim());
                                 formData.append('create_new_client', '1');
                             } else {
                                 // Existing client
                                 formData.append('client_uuid', clientSelector.value);
                             }
-                            
+
                             formData.append('inspection_date', appointmentDate.value);
                             formData.append('inspection_time', appointmentTime.value);
                             formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
@@ -977,7 +1021,7 @@
                                 'content'));
 
                             // Send AJAX request to create appointment
-                            fetch('{{ route('appointment-calendar.create', [], true) }}', {
+                            fetch('{{ url()->secure(route('appointment-calendar.create', [], false)) }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
@@ -1127,7 +1171,7 @@
 
                                 // Event Data Source
                                 events: {
-                                    url: '{{ route('appointment-calendar.events', [], true) }}',
+                                    url: '{{ url()->secure(route('appointment-calendar.events', [], false)) }}',
                                     failure: function(err) {
                                         console.error("Failed to load events:", err);
                                     },
@@ -1168,7 +1212,7 @@
                                         if (result.isConfirmed) {
                                             // Send AJAX request to update backend
                                             $.ajax({
-                                                url: `{{ route('appointment-calendar.update', '', true) }}/${event.id}`,
+                                                url: `{{ url()->secure(route('appointment-calendar.update', '', false)) }}/${event.id}`,
                                                 type: 'PATCH',
                                                 data: {
                                                     start: newStart,
@@ -1600,17 +1644,22 @@
     </div>
 
     {{-- Modal para crear nuevo lead --}}
-    <div id="createLeadModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div id="createLeadModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <div
+                class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                 <div class="bg-white dark:bg-gray-800 relative">
                     {{-- Modal Header with Green Background --}}
                     <div class="bg-green-600 dark:bg-green-700 px-6 py-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold text-white text-center flex-1">{{ __('create_new_lead') }}</h3>
-                        <button type="button" id="closeCreateLeadModal" class="ml-4 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 transition-colors duration-200">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                        <h3 class="text-xl font-semibold text-white text-center flex-1">{{ __('create_new_lead') }}
+                        </h3>
+                        <button type="button" id="closeCreateLeadModal"
+                            class="ml-4 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 transition-colors duration-200">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                stroke-width="3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -1618,11 +1667,14 @@
 
                     {{-- Modal Body --}}
                     <div class="px-6 pt-6">
-                        <form id="createLeadForm" method="POST" action="{{ route('appointment-calendar.store', [], true) }}">
+                        <form id="createLeadForm" method="POST"
+                            action="{{ route('appointment-calendar.store', [], true) }}">
                             @csrf
-                            
+
                             {{-- Display validation errors --}}
-                            <div id="leadFormErrors" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-300 hidden" role="alert">
+                            <div id="leadFormErrors"
+                                class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-300 hidden"
+                                role="alert">
                                 <strong class="font-bold">Validation Error!</strong>
                                 <ul id="leadErrorsList" class="mt-2 list-disc list-inside"></ul>
                             </div>
@@ -1630,60 +1682,87 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {{-- First Name --}}
                                 <div>
-                                    <label for="lead_first_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_first_name"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('first_name') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_first_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="first_name" placeholder="{{ __('enter_first_name') }}" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                    <input id="lead_first_name"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
+                                        type="text" name="first_name" placeholder="{{ __('enter_first_name') }}"
+                                        maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
                                 </div>
 
                                 {{-- Last Name --}}
                                 <div>
-                                    <label for="lead_last_name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_last_name"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('last_name') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_last_name" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize" type="text" name="last_name" placeholder="{{ __('enter_last_name') }}" maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
+                                    <input id="lead_last_name"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
+                                        type="text" name="last_name" placeholder="{{ __('enter_last_name') }}"
+                                        maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
                                 </div>
 
                                 {{-- Phone --}}
                                 <div>
-                                    <label for="lead_phone" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_phone"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('phone') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_phone" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="tel" name="phone" placeholder="{{ __('phone_placeholder') }}" maxlength="14" required />
+                                    <input id="lead_phone"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        type="tel" name="phone" placeholder="{{ __('phone_placeholder') }}"
+                                        maxlength="14" required />
                                     <div id="phoneError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     <div id="phoneSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
                                 </div>
 
                                 {{-- Email --}}
                                 <div>
-                                    <label for="lead_email" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_email"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('email') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_email" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="email" name="email" placeholder="{{ __('email') }}" required />
+                                    <input id="lead_email"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        type="email" name="email" placeholder="{{ __('email') }}" required />
                                     <div id="emailError" class="text-red-500 text-sm mt-1 hidden"></div>
                                     <div id="emailSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
                                 </div>
 
                                 {{-- Address Map Input (for Google Maps Autocomplete) --}}
                                 <div class="md:col-span-2">
-                                    <label for="lead_address_map_input" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_address_map_input"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('address') }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input id="lead_address_map_input" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_map_input" placeholder="{{ __('enter_complete_address') }}" autocomplete="off" required />
+                                    <input id="lead_address_map_input"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        type="text" name="address_map_input"
+                                        placeholder="{{ __('enter_complete_address') }}" autocomplete="off"
+                                        required />
                                 </div>
 
                                 {{-- Map Display --}}
                                 <div class="md:col-span-2 mt-2 mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location Map</label>
-                                    <div id="lead-location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600"></div>
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location
+                                        Map</label>
+                                    <div id="lead-location-map"
+                                        class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                                    </div>
                                 </div>
 
                                 {{-- Address 2 --}}
                                 <div class="md:col-span-2">
-                                    <label for="lead_address_2" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_address_2"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('address_2') }}
                                     </label>
-                                    <input id="lead_address_2" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" type="text" name="address_2" placeholder="Apt #, Suite #, etc." />
+                                    <input id="lead_address_2"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        type="text" name="address_2" placeholder="Apt #, Suite #, etc." />
                                 </div>
 
                                 {{-- Property Insurance --}}
@@ -1695,14 +1774,20 @@
                                         <legend class="sr-only">Property Insurance</legend>
                                         <div class="flex items-center space-x-4">
                                             <div class="radio-option flex items-center">
-                                                <input id="lead_insurance_yes" name="insurance_property" type="radio" value="1" class="radio-field sr-only" required>
-                                                <label for="lead_insurance_yes" class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                                <input id="lead_insurance_yes" name="insurance_property"
+                                                    type="radio" value="1" class="radio-field sr-only"
+                                                    required>
+                                                <label for="lead_insurance_yes"
+                                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                     {{ __('yes') }}
                                                 </label>
                                             </div>
                                             <div class="radio-option flex items-center">
-                                                <input id="lead_insurance_no" name="insurance_property" type="radio" value="0" class="radio-field sr-only" required>
-                                                <label for="lead_insurance_no" class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                                <input id="lead_insurance_no" name="insurance_property"
+                                                    type="radio" value="0" class="radio-field sr-only"
+                                                    required>
+                                                <label for="lead_insurance_no"
+                                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                                                     {{ __('no') }}
                                                 </label>
                                             </div>
@@ -1713,10 +1798,13 @@
 
                                 {{-- Notes --}}
                                 <div class="md:col-span-2">
-                                    <label for="lead_notes" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                                    <label for="lead_notes"
+                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
                                         {{ __('notes') }}
                                     </label>
-                                    <textarea id="lead_notes" name="notes" rows="3" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" placeholder="{{ __('notes_placeholder') }}"></textarea>
+                                    <textarea id="lead_notes" name="notes" rows="3"
+                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                        placeholder="{{ __('notes_placeholder') }}"></textarea>
                                 </div>
 
                                 {{-- Hidden Address Fields --}}
@@ -1731,15 +1819,21 @@
 
                             {{-- Modal Footer --}}
                             <div class="mt-6 px-6 pb-6 flex justify-end space-x-3">
-                                <button type="button" id="cancelCreateLead" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded-md transition-colors duration-200">
+                                <button type="button" id="cancelCreateLead"
+                                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded-md transition-colors duration-200">
                                     {{ __('cancel') }}
                                 </button>
-                                <button type="submit" id="submitCreateLead" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
+                                <button type="submit" id="submitCreateLead"
+                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
                                     <span id="submitLeadText">{{ __('create_lead') }}</span>
                                     <span id="submitLeadSpinner" class="hidden">
-                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
                                         </svg>
                                         {{ __('creating') }}
                                     </span>
@@ -1777,7 +1871,7 @@
                 openCreateLeadModalBtn.addEventListener('click', function() {
                     createLeadModal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
-                    
+
                     // Initialize Google Maps for lead modal
                     setTimeout(() => {
                         initializeLeadMap();
@@ -1791,7 +1885,7 @@
                     createLeadForm.reset();
                     leadFormErrors.classList.add('hidden');
                     leadErrorsList.innerHTML = '';
-                    
+
                     // Reset submit button
                     submitLeadText.classList.remove('hidden');
                     submitLeadSpinner.classList.add('hidden');
@@ -1821,7 +1915,10 @@
                     }
 
                     // Default location (you can change this)
-                    const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // New York
+                    const defaultLocation = {
+                        lat: 40.7128,
+                        lng: -74.0060
+                    }; // New York
 
                     leadMap = new google.maps.Map(mapElement, {
                         zoom: 13,
@@ -1909,9 +2006,14 @@
                     }
 
                     const geocoder = new google.maps.Geocoder();
-                    const latlng = { lat: lat, lng: lng };
+                    const latlng = {
+                        lat: lat,
+                        lng: lng
+                    };
 
-                    geocoder.geocode({ location: latlng }, function(results, status) {
+                    geocoder.geocode({
+                        location: latlng
+                    }, function(results, status) {
                         if (status === 'OK' && results[0]) {
                             const place = results[0];
                             document.getElementById('lead_address_map_input').value = place.formatted_address;
@@ -1923,20 +2025,26 @@
                 // Handle form submission
                 createLeadForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
+
                     // Validate all fields before submission
                     let isFormValid = true;
-                    
+
                     // Validate individual fields
-                    const firstNameValid = validateLeadField('lead_first_name', document.getElementById('lead_first_name').value);
-                    const lastNameValid = validateLeadField('lead_last_name', document.getElementById('lead_last_name').value);
-                    const phoneValid = validateLeadField('lead_phone', document.getElementById('lead_phone').value);
-                    const emailValid = validateLeadField('lead_email', document.getElementById('lead_email').value);
-                    const addressValid = validateLeadField('lead_address_map_input', document.getElementById('lead_address_map_input').value);
+                    const firstNameValid = validateLeadField('lead_first_name', document.getElementById(
+                        'lead_first_name').value);
+                    const lastNameValid = validateLeadField('lead_last_name', document.getElementById(
+                        'lead_last_name').value);
+                    const phoneValid = validateLeadField('lead_phone', document.getElementById('lead_phone')
+                        .value);
+                    const emailValid = validateLeadField('lead_email', document.getElementById('lead_email')
+                        .value);
+                    const addressValid = validateLeadField('lead_address_map_input', document.getElementById(
+                        'lead_address_map_input').value);
                     const insuranceValid = validateInsuranceProperty();
-                    
-                    isFormValid = firstNameValid && lastNameValid && phoneValid && emailValid && addressValid && insuranceValid;
-                    
+
+                    isFormValid = firstNameValid && lastNameValid && phoneValid && emailValid && addressValid &&
+                        insuranceValid;
+
                     if (!isFormValid) {
                         // Show general error message
                         Swal.fire({
@@ -1947,12 +2055,12 @@
                         });
                         return;
                     }
-                    
+
                     // Show loading state
                     submitLeadText.classList.add('hidden');
                     submitLeadSpinner.classList.remove('hidden');
                     submitLeadBtn.disabled = true;
-                    
+
                     // Hide previous errors
                     leadFormErrors.classList.add('hidden');
                     leadErrorsList.innerHTML = '';
@@ -1962,59 +2070,60 @@
 
                     // Submit via AJAX
                     fetch(createLeadForm.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Show success message
-                            Swal.fire({
-                                title: 'Success!',
-                                text: data.message || 'Lead created successfully!',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                closeLeadModal();
-                                // Refresh calendar if needed
-                                if (typeof calendar !== 'undefined') {
-                                    calendar.refetchEvents();
-                                }
-                            });
-                        } else {
-                            // Show validation errors
-                            if (data.errors) {
-                                leadErrorsList.innerHTML = '';
-                                Object.values(data.errors).forEach(errorArray => {
-                                    errorArray.forEach(error => {
-                                        const li = document.createElement('li');
-                                        li.textContent = error;
-                                        leadErrorsList.appendChild(li);
-                                    });
-                                });
-                                leadFormErrors.classList.remove('hidden');
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
                             }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred while creating the lead.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: data.message || 'Lead created successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    closeLeadModal();
+                                    // Refresh calendar if needed
+                                    if (typeof calendar !== 'undefined') {
+                                        calendar.refetchEvents();
+                                    }
+                                });
+                            } else {
+                                // Show validation errors
+                                if (data.errors) {
+                                    leadErrorsList.innerHTML = '';
+                                    Object.values(data.errors).forEach(errorArray => {
+                                        errorArray.forEach(error => {
+                                            const li = document.createElement('li');
+                                            li.textContent = error;
+                                            leadErrorsList.appendChild(li);
+                                        });
+                                    });
+                                    leadFormErrors.classList.remove('hidden');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while creating the lead.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        })
+                        .finally(() => {
+                            // Reset loading state
+                            submitLeadText.classList.remove('hidden');
+                            submitLeadSpinner.classList.add('hidden');
+                            submitLeadBtn.disabled = false;
                         });
-                    })
-                    .finally(() => {
-                        // Reset loading state
-                        submitLeadText.classList.remove('hidden');
-                        submitLeadSpinner.classList.add('hidden');
-                        submitLeadBtn.disabled = false;
-                    });
                 });
 
                 // Real-time validation functions
@@ -2129,26 +2238,26 @@
                     if (radio.checked) {
                         label.classList.add('selected');
                     }
-                    
+
                     // Set custom validation message
                     radio.setCustomValidity('{{ __('insurance_property_required') }}');
-                    
+
                     radio.addEventListener('change', function() {
                         // Clear custom validation when a radio is selected
                         document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
                             r.setCustomValidity('');
                         });
-                        
+
                         // Update selected class
                         document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
                             const lbl = document.querySelector(`label[for="${r.id}"]`);
                             lbl.classList.remove('selected');
                         });
-                        
+
                         if (this.checked) {
                             label.classList.add('selected');
                         }
-                        
+
                         validateInsuranceProperty();
                     });
                 });
@@ -2157,7 +2266,7 @@
                 function formatPhoneNumber(value) {
                     // Remove all non-numeric characters
                     const phoneNumber = value.replace(/\D/g, '');
-                    
+
                     // Format as (XXX) XXX-XXXX
                     if (phoneNumber.length >= 6) {
                         return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
@@ -2183,14 +2292,14 @@
                 phoneInput.addEventListener('input', function(e) {
                     const formatted = formatPhoneNumber(e.target.value);
                     e.target.value = formatted;
-                    
+
                     // Clear previous timeout
                     clearTimeout(phoneTimeout);
-                    
+
                     // Hide previous messages
                     phoneError.classList.add('hidden');
                     phoneSuccess.classList.add('hidden');
-                    
+
                     // Only validate if we have a complete phone number
                     const phoneNumber = e.target.value.replace(/\D/g, '');
                     if (phoneNumber.length === 10) {
@@ -2213,284 +2322,302 @@
 
                 // Check if phone exists
                 function checkPhoneExists(phone) {
-                    fetch('{{ route("appointment-calendar.check-phone", [], true) }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ phone: phone })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.exists) {
-                            phoneError.textContent = 'Este número de teléfono ya está registrado.';
-                            phoneError.classList.remove('hidden');
-                            phoneSuccess.classList.add('hidden');
-                        } else {
-                            phoneSuccess.textContent = 'Número de teléfono disponible.';
-                            phoneSuccess.classList.remove('hidden');
-                            phoneError.classList.add('hidden');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error checking phone:', error);
-                    });
+                    fetch('{{ url()->secure(route('appointment-calendar.check-phone', [], false)) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                phone: phone
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                phoneError.textContent = 'Este número de teléfono ya está registrado.';
+                                phoneError.classList.remove('hidden');
+                                phoneSuccess.classList.add('hidden');
+                            } else {
+                                phoneSuccess.textContent = 'Número de teléfono disponible.';
+                                phoneSuccess.classList.remove('hidden');
+                                phoneError.classList.add('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking phone:', error);
+                        });
                 }
 
                 // Check if email exists
                 function checkEmailExists(email) {
-                    fetch('{{ route("appointment-calendar.check-email", [], true) }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ email: email })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.exists) {
-                            emailError.textContent = 'Este email ya está registrado.';
-                            emailError.classList.remove('hidden');
-                            emailSuccess.classList.add('hidden');
+                    fetch('{{ url()->secure(route('appointment-calendar.check-email', [], false)) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                email: email
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                emailError.textContent = 'Este email ya está registrado.';
+                                emailError.classList.remove('hidden');
+                                emailSuccess.classList.add('hidden');
+                            } else {
+                                emailSuccess.textContent = 'Email disponible.';
+                                emailSuccess.classList.remove('hidden');
+                                emailError.classList.add('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking email:', error);
+                        });
+                }
+
+                // Initialize Google Maps Autocomplete for new appointment modal
+                function initializeNewAppointmentAutocomplete() {
+                    const addressInput = document.getElementById('address_map_input');
+                    const mapContainer = document.getElementById('map-container');
+
+                    if (!addressInput || typeof google === 'undefined') {
+                        console.log('Google Maps not loaded or address input not found');
+                        return;
+                    }
+
+                    // Initialize map
+                    const map = new google.maps.Map(document.getElementById('map'), {
+                        center: {
+                            lat: 25.7617,
+                            lng: -80.1918
+                        }, // Miami default
+                        zoom: 13,
+                        mapTypeControl: false,
+                        streetViewControl: false,
+                        fullscreenControl: false
+                    });
+
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        draggable: true
+                    });
+
+                    // Initialize autocomplete
+                    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                        types: ['address'],
+                        componentRestrictions: {
+                            country: 'us'
+                        }
+                    });
+
+                    autocomplete.bindTo('bounds', map);
+
+                    // Handle place selection
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+
+                        if (!place.geometry) {
+                            console.log('No geometry for place:', place.name);
+                            return;
+                        }
+
+                        // Extract address components
+                        let streetNumber = '';
+                        let route = '';
+                        let city = '';
+                        let state = '';
+                        let zipcode = '';
+                        let country = '';
+
+                        place.address_components.forEach(component => {
+                            const types = component.types;
+                            if (types.includes('street_number')) {
+                                streetNumber = component.long_name;
+                            } else if (types.includes('route')) {
+                                route = component.long_name;
+                            } else if (types.includes('locality')) {
+                                city = component.long_name;
+                            } else if (types.includes('administrative_area_level_1')) {
+                                state = component.short_name;
+                            } else if (types.includes('postal_code')) {
+                                zipcode = component.long_name;
+                            } else if (types.includes('country')) {
+                                country = component.long_name;
+                            }
+                        });
+
+                        // Populate hidden fields
+                        const fullAddress = `${streetNumber} ${route}`.trim();
+                        document.getElementById('address').value = fullAddress;
+
+                        // Use formatted_address for address_simple (complete address with city, state, zipcode)
+                        if (place.formatted_address) {
+                            document.getElementById('address_simple').value = place.formatted_address;
                         } else {
-                            emailSuccess.textContent = 'Email disponible.';
-                            emailSuccess.classList.remove('hidden');
-                            emailError.classList.add('hidden');
+                            // Fallback: construct complete address manually
+                            const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(
+                                ', ');
+                            document.getElementById('address_simple').value = completeAddress;
                         }
-                    })
-                .catch(error => {
-                    console.error('Error checking email:', error);
-                });
-            }
 
-            // Initialize Google Maps Autocomplete for new appointment modal
-            function initializeNewAppointmentAutocomplete() {
-                const addressInput = document.getElementById('address_map_input');
-                const mapContainer = document.getElementById('map-container');
-                
-                if (!addressInput || typeof google === 'undefined') {
-                    console.log('Google Maps not loaded or address input not found');
-                    return;
+                        document.getElementById('city').value = city;
+                        document.getElementById('state').value = state;
+                        document.getElementById('zipcode').value = zipcode;
+                        document.getElementById('country').value = country;
+                        document.getElementById('latitude').value = place.geometry.location.lat();
+                        document.getElementById('longitude').value = place.geometry.location.lng();
+
+                        // Update map
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17);
+                        marker.setPosition(place.geometry.location);
+                        marker.setVisible(true);
+
+                        // Show map container
+                        mapContainer.style.display = 'block';
+
+                        // Trigger change events for validation
+                        addressInput.dispatchEvent(new Event('change'));
+                    });
+
+                    // Handle marker drag
+                    marker.addListener('dragend', function() {
+                        const position = marker.getPosition();
+                        document.getElementById('latitude').value = position.lat();
+                        document.getElementById('longitude').value = position.lng();
+                    });
                 }
 
-                // Initialize map
-                const map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: 25.7617, lng: -80.1918 }, // Miami default
-                    zoom: 13,
-                    mapTypeControl: false,
-                    streetViewControl: false,
-                    fullscreenControl: false
-                });
+                // Initialize autocomplete when Google Maps is loaded
+                window.initializeNewAppointmentAutocomplete = initializeNewAppointmentAutocomplete;
 
-                const marker = new google.maps.Marker({
-                    map: map,
-                    draggable: true
-                });
+                // Function to initialize Google Maps autocomplete for new client address
+                function initializeNewClientAutocomplete() {
+                    const addressInput = document.getElementById('newClientAddressMapInput');
+                    const mapContainer = document.getElementById('newClientLocationMap');
 
-                // Initialize autocomplete
-                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                    types: ['address'],
-                    componentRestrictions: { country: 'us' }
-                });
-
-                autocomplete.bindTo('bounds', map);
-
-                // Handle place selection
-                autocomplete.addListener('place_changed', function() {
-                    const place = autocomplete.getPlace();
-                    
-                    if (!place.geometry) {
-                        console.log('No geometry for place:', place.name);
+                    if (!addressInput || !mapContainer) {
+                        console.log('New client address input or map container not found');
                         return;
                     }
 
-                    // Extract address components
-                    let streetNumber = '';
-                    let route = '';
-                    let city = '';
-                    let state = '';
-                    let zipcode = '';
-                    let country = '';
+                    // Initialize map
+                    const map = new google.maps.Map(mapContainer, {
+                        zoom: 13,
+                        center: {
+                            lat: 25.7617,
+                            lng: -80.1918
+                        } // Miami default
+                    });
 
-                    place.address_components.forEach(component => {
-                        const types = component.types;
-                        if (types.includes('street_number')) {
-                            streetNumber = component.long_name;
-                        } else if (types.includes('route')) {
-                            route = component.long_name;
-                        } else if (types.includes('locality')) {
-                            city = component.long_name;
-                        } else if (types.includes('administrative_area_level_1')) {
-                            state = component.short_name;
-                        } else if (types.includes('postal_code')) {
-                            zipcode = component.long_name;
-                        } else if (types.includes('country')) {
-                            country = component.long_name;
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        draggable: true
+                    });
+
+                    // Initialize autocomplete
+                    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                        types: ['address'],
+                        componentRestrictions: {
+                            country: 'us'
                         }
                     });
 
-                    // Populate hidden fields
-                    const fullAddress = `${streetNumber} ${route}`.trim();
-                    document.getElementById('address').value = fullAddress;
-                    
-                    // Use formatted_address for address_simple (complete address with city, state, zipcode)
-                    if (place.formatted_address) {
-                        document.getElementById('address_simple').value = place.formatted_address;
-                    } else {
-                        // Fallback: construct complete address manually
-                        const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(', ');
-                        document.getElementById('address_simple').value = completeAddress;
-                    }
-                    
-                    document.getElementById('city').value = city;
-                    document.getElementById('state').value = state;
-                    document.getElementById('zipcode').value = zipcode;
-                    document.getElementById('country').value = country;
-                    document.getElementById('latitude').value = place.geometry.location.lat();
-                    document.getElementById('longitude').value = place.geometry.location.lng();
+                    autocomplete.bindTo('bounds', map);
 
-                    // Update map
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);
-                    marker.setPosition(place.geometry.location);
-                    marker.setVisible(true);
-                    
-                    // Show map container
-                    mapContainer.style.display = 'block';
+                    // Handle place selection
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
 
-                    // Trigger change events for validation
-                    addressInput.dispatchEvent(new Event('change'));
-                });
+                        if (!place.geometry) {
+                            console.log('No geometry for place:', place.name);
+                            return;
+                        }
 
-                // Handle marker drag
-                marker.addListener('dragend', function() {
-                    const position = marker.getPosition();
-                    document.getElementById('latitude').value = position.lat();
-                    document.getElementById('longitude').value = position.lng();
-                });
-            }
+                        // Extract address components
+                        let streetNumber = '';
+                        let route = '';
+                        let city = '';
+                        let state = '';
+                        let zipcode = '';
+                        let country = '';
 
-            // Initialize autocomplete when Google Maps is loaded
-            window.initializeNewAppointmentAutocomplete = initializeNewAppointmentAutocomplete;
-            
-            // Function to initialize Google Maps autocomplete for new client address
-            function initializeNewClientAutocomplete() {
-                const addressInput = document.getElementById('newClientAddressMapInput');
-                const mapContainer = document.getElementById('newClientLocationMap');
-                
-                if (!addressInput || !mapContainer) {
-                    console.log('New client address input or map container not found');
-                    return;
+                        place.address_components.forEach(component => {
+                            const types = component.types;
+                            if (types.includes('street_number')) {
+                                streetNumber = component.long_name;
+                            } else if (types.includes('route')) {
+                                route = component.long_name;
+                            } else if (types.includes('locality')) {
+                                city = component.long_name;
+                            } else if (types.includes('administrative_area_level_1')) {
+                                state = component.short_name;
+                            } else if (types.includes('postal_code')) {
+                                zipcode = component.long_name;
+                            } else if (types.includes('country')) {
+                                country = component.long_name;
+                            }
+                        });
+
+                        // Populate hidden fields
+                        const fullAddress = `${streetNumber} ${route}`.trim();
+                        document.getElementById('newClientAddress').value = fullAddress;
+
+                        // Use formatted_address for address_simple (complete address with city, state, zipcode)
+                        if (place.formatted_address) {
+                            document.getElementById('newClientAddressSimple').value = place.formatted_address;
+                        } else {
+                            // Fallback: construct complete address manually
+                            const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(
+                                ', ');
+                            document.getElementById('newClientAddressSimple').value = completeAddress;
+                        }
+
+                        document.getElementById('newClientCity').value = city;
+                        document.getElementById('newClientState').value = state;
+                        document.getElementById('newClientZipcode').value = zipcode;
+                        document.getElementById('newClientCountry').value = country;
+                        document.getElementById('newClientLatitude').value = place.geometry.location.lat();
+                        document.getElementById('newClientLongitude').value = place.geometry.location.lng();
+
+                        // Update map
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17);
+                        marker.setPosition(place.geometry.location);
+                        marker.setVisible(true);
+
+                        // Show map container
+                        mapContainer.style.display = 'block';
+
+                        // Trigger change events for validation
+                        addressInput.dispatchEvent(new Event('change'));
+                    });
+
+                    // Handle marker drag
+                    marker.addListener('dragend', function() {
+                        const position = marker.getPosition();
+                        document.getElementById('newClientLatitude').value = position.lat();
+                        document.getElementById('newClientLongitude').value = position.lng();
+                    });
                 }
 
-                // Initialize map
-                const map = new google.maps.Map(mapContainer, {
-                    zoom: 13,
-                    center: { lat: 25.7617, lng: -80.1918 } // Miami default
-                });
+                // Initialize autocomplete for new client when Google Maps is loaded
+                window.initializeNewClientAutocomplete = initializeNewClientAutocomplete;
 
-                const marker = new google.maps.Marker({
-                    map: map,
-                    draggable: true
-                });
-
-                // Initialize autocomplete
-                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                    types: ['address'],
-                    componentRestrictions: { country: 'us' }
-                });
-
-                autocomplete.bindTo('bounds', map);
-
-                // Handle place selection
-                autocomplete.addListener('place_changed', function() {
-                    const place = autocomplete.getPlace();
-                    
-                    if (!place.geometry) {
-                        console.log('No geometry for place:', place.name);
-                        return;
-                    }
-
-                    // Extract address components
-                    let streetNumber = '';
-                    let route = '';
-                    let city = '';
-                    let state = '';
-                    let zipcode = '';
-                    let country = '';
-
-                    place.address_components.forEach(component => {
-                        const types = component.types;
-                        if (types.includes('street_number')) {
-                            streetNumber = component.long_name;
-                        } else if (types.includes('route')) {
-                            route = component.long_name;
-                        } else if (types.includes('locality')) {
-                            city = component.long_name;
-                        } else if (types.includes('administrative_area_level_1')) {
-                            state = component.short_name;
-                        } else if (types.includes('postal_code')) {
-                            zipcode = component.long_name;
-                        } else if (types.includes('country')) {
-                            country = component.long_name;
-                        }
+                // Add phone formatting for new client phone field
+                const newClientPhoneInput = document.getElementById('newClientPhone');
+                if (newClientPhoneInput) {
+                    newClientPhoneInput.addEventListener('input', function(e) {
+                        const formatted = formatPhoneNumber(e.target.value);
+                        e.target.value = formatted;
                     });
-
-                    // Populate hidden fields
-                    const fullAddress = `${streetNumber} ${route}`.trim();
-                    document.getElementById('newClientAddress').value = fullAddress;
-                    
-                    // Use formatted_address for address_simple (complete address with city, state, zipcode)
-                    if (place.formatted_address) {
-                        document.getElementById('newClientAddressSimple').value = place.formatted_address;
-                    } else {
-                        // Fallback: construct complete address manually
-                        const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(', ');
-                        document.getElementById('newClientAddressSimple').value = completeAddress;
-                    }
-                    
-                    document.getElementById('newClientCity').value = city;
-                    document.getElementById('newClientState').value = state;
-                    document.getElementById('newClientZipcode').value = zipcode;
-                    document.getElementById('newClientCountry').value = country;
-                    document.getElementById('newClientLatitude').value = place.geometry.location.lat();
-                    document.getElementById('newClientLongitude').value = place.geometry.location.lng();
-
-                    // Update map
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);
-                    marker.setPosition(place.geometry.location);
-                    marker.setVisible(true);
-                    
-                    // Show map container
-                    mapContainer.style.display = 'block';
-
-                    // Trigger change events for validation
-                    addressInput.dispatchEvent(new Event('change'));
-                });
-
-                // Handle marker drag
-                marker.addListener('dragend', function() {
-                    const position = marker.getPosition();
-                    document.getElementById('newClientLatitude').value = position.lat();
-                    document.getElementById('newClientLongitude').value = position.lng();
-                });
-            }
-            
-            // Initialize autocomplete for new client when Google Maps is loaded
-            window.initializeNewClientAutocomplete = initializeNewClientAutocomplete;
-            
-            // Add phone formatting for new client phone field
-            const newClientPhoneInput = document.getElementById('newClientPhone');
-            if (newClientPhoneInput) {
-                newClientPhoneInput.addEventListener('input', function(e) {
-                    const formatted = formatPhoneNumber(e.target.value);
-                    e.target.value = formatted;
-                });
-            }
-        });
-    </script>
-@endpush
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

@@ -319,13 +319,12 @@ class AppointmentCalendarController extends Controller
             
             // Cache the clients list for 10 minutes
             $clients = Cache::remember($cacheKey, 10, function() {
-                return Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone')
+                return Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone', 'inspection_status', 'status_lead')
                     ->whereNotNull('first_name')
                     ->whereNotNull('email')
-                    ->where(function($query) {
-                        $query->whereNull('inspection_date')
-                              ->orWhereNull('inspection_time');
-                    })
+                    // Show all leads, including those with inspection dates
+                    // Allow rescheduling of any appointment that is not 'Completed' or 'Declined'
+                    ->whereNotIn('inspection_status', ['Completed', 'Declined'])
                     ->orderBy('created_at', 'desc')
                     ->get();
             });
