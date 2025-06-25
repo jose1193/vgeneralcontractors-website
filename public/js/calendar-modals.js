@@ -725,6 +725,13 @@ class CalendarModals {
      * Manejar creación de cita
      */
     handleCreateAppointment() {
+        const button = document.getElementById("createAppointmentBtn");
+        
+        // Verificar si el botón está disabled
+        if (button.disabled) {
+            return;
+        }
+        
         const toggle = document.getElementById("createNewClientToggle");
         const newClientSection = document.getElementById("newClientSection");
         const isNewClient = this.isCreateNewMode;
@@ -735,7 +742,6 @@ class CalendarModals {
         }
 
         // Mostrar estado de carga
-        const button = document.getElementById("createAppointmentBtn");
         const normalText = button.querySelector(".normal-btn-text");
         const loadingText = button.querySelector(".loading-btn-text");
 
@@ -1121,7 +1127,6 @@ class CalendarModals {
         const checkFormValidity = () => {
             let allRequiredFilled = true;
             requiredInputs.forEach((input) => {
-                let value = input.value.trim();
                 if (input.type === "radio") {
                     const groupName = input.name;
                     if (
@@ -1131,8 +1136,15 @@ class CalendarModals {
                     ) {
                         allRequiredFilled = false;
                     }
-                } else if (!value) {
-                    allRequiredFilled = false;
+                } else if (input.type === "checkbox") {
+                    if (!input.checked) {
+                        allRequiredFilled = false;
+                    }
+                } else {
+                    let value = input.value.trim();
+                    if (!value) {
+                        allRequiredFilled = false;
+                    }
                 }
             });
 
