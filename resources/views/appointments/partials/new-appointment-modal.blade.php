@@ -35,7 +35,7 @@
                 <!-- Toggle for New Client -->
                 <div class="mb-6">
                     <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="createNewClientToggle" checked
+                        <input type="checkbox" id="createNewClientToggle"
                             class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
                             {{ __('create_new_client') }}
@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- Existing Client Selector -->
-                <div id="existingClientSection" class="mb-6 hidden">
+                <div id="existingClientSection" class="mb-6">
                     <label for="clientSelector" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         {{ __('select_client_3_hours') }} <span class="text-red-500">*</span>
                     </label>
@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- New Client Fields -->
-                <div id="newClientSection">
+                <div id="newClientSection" class="hidden">
 
                     <!-- Basic Information -->
                     <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">

@@ -220,10 +220,17 @@ class CalendarModals {
             }
         });
 
-        // Initialize with default state (create new client)
-        toggle.checked = true;
-        existingClientSection.classList.add("hidden");
-        newClientSection.classList.remove("hidden");
+        // Initialize with default state (select existing client)
+        toggle.checked = false;
+        existingClientSection.classList.remove("hidden");
+        newClientSection.classList.add("hidden");
+        if (createBtnText) {
+            createBtnText.textContent =
+                this.translations.create_confirmed_appointment ||
+                "Create Confirmed Appointment";
+        }
+        // Load clients on initialization
+        this.loadClients();
     }
 
     /**
@@ -824,10 +831,10 @@ class CalendarModals {
         );
         checkboxInputs.forEach((input) => (input.checked = false));
 
-        // Reset toggle to default state (create new client)
+        // Reset toggle to default state (select existing client)
         const toggle = document.getElementById("createNewClientToggle");
         if (toggle) {
-            toggle.checked = true;
+            toggle.checked = false;
             // Trigger change event to update UI
             toggle.dispatchEvent(new Event("change"));
         }
