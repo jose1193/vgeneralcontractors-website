@@ -502,13 +502,16 @@ class AppointmentCalendarController extends Controller
                 
                 // Set default values as requested
                 $appointment->lead_source = 'Reference';
-                $appointment->status_lead = 'Pending';
                 
                 // Set inspection details if provided
                 if ($request->inspection_date && $request->inspection_time) {
                     $appointment->inspection_date = $request->inspection_date;
                     $appointment->inspection_time = $request->inspection_time;
-                    $appointment->inspection_status = 'Pending';
+                    $appointment->inspection_status = 'Confirmed';
+                    $appointment->status_lead = 'Called';
+                } else {
+                    // New lead without inspection scheduled
+                    $appointment->status_lead = 'New';
                 }
                 
             $appointment->save();
