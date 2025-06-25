@@ -104,7 +104,7 @@ class CalendarConfig {
 
             // Time grid options
             slotDuration: "00:30:00",
-            slotMinTime: "08:00:00",
+            slotMinTime: "09:00:00",
             slotMaxTime: "20:00:00",
             defaultTimedEventDuration: "03:00:00", // 3 hours default duration
             selectConstraint: "businessHours",
@@ -112,7 +112,7 @@ class CalendarConfig {
             selectMinDistance: 0, // Allow selections to start at any time
             businessHours: {
                 daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
-                startTime: "08:00",
+                startTime: "09:00",
                 endTime: "18:00",
             },
 
