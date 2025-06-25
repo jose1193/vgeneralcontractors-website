@@ -241,6 +241,32 @@ class CalendarModals {
             }
         });
 
+        // Add event listener for hide button
+        const hideNewClientBtn = document.getElementById("hideNewClientBtn");
+        if (hideNewClientBtn) {
+            hideNewClientBtn.addEventListener("click", () => {
+                // Switch back to existing client mode
+                isCreateNewMode = false;
+                existingClientSection.classList.remove("hidden");
+                newClientSection.classList.add("hidden");
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+                `;
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_confirmed_appointment ||
+                        "Create Confirmed Appointment";
+                }
+                // Load clients if not already loaded
+                this.loadClients();
+            });
+        }
+
         // Initialize with default state (select existing client)
         isCreateNewMode = false;
         existingClientSection.classList.remove("hidden");

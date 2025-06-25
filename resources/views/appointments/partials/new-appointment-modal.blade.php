@@ -55,6 +55,16 @@
 
                 <!-- New Client Fields -->
                 <div id="newClientSection" class="hidden">
+                    <!-- Hide Button -->
+                    <div class="mb-4 flex justify-end">
+                        <button type="button" id="hideNewClientBtn"
+                            class="bg-red-100 hover:bg-red-200 text-red-700 py-2 px-4 rounded-md border border-red-300 transition-colors duration-200 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            {{ __('hide') }}
+                        </button>
+                    </div>
 
                     <!-- Basic Information -->
                     <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
