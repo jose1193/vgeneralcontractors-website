@@ -11,25 +11,11 @@
         {{-- Header section with title and subtitle --}}
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                    <div>
-                        <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                            {{ __('appointment_calendar_title') }}</h2>
-                        <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                            {{ __('appointment_calendar_subtitle') }}
-                        </p>
-                    </div>
-                    <div class="mt-4 md:mt-0">
-                        <button id="openCreateLeadModal" type="button"
-                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
-                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            {{ __('create_new_lead') }}
-                        </button>
-                    </div>
-                </div>
+                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                    {{ __('appointment_calendar_title') }}</h2>
+                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
+                    {{ __('appointment_calendar_subtitle') }}
+                </p>
             </div>
         </div>
 
@@ -220,7 +206,7 @@
                                     aria-hidden="true">&#8203;</span>
                                 <div
                                     class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                                    <div class="bg-green-600 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                                         {{-- Close button --}}
                                         <button type="button" id="closeNewAppointmentModalBtn"
                                             class="absolute top-2 right-2 rounded-full bg-red-600 p-2 inline-flex items-center justify-center text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
@@ -233,218 +219,62 @@
                                         </button>
                                         <div class="sm:flex sm:items-start">
                                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                                <h3 class="text-lg leading-6 font-medium text-white text-center">
+                                                <h3
+                                                    class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
                                                     {{ __('create_new_appointment') }}
                                                 </h3>
+                                                <div class="mt-4 space-y-4">
+                                                    <form id="newAppointmentForm">
+                                                        @csrf
+                                                        {{-- Selected Date/Time (readonly) --}}
+                                                        <div>
+                                                            <label for="selectedDateTime"
+                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                {{ __('date_time') }}
+                                                            </label>
+                                                            <input type="text" id="selectedDateTime"
+                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                                readonly>
+                                                            <input type="hidden" id="appointmentDate"
+                                                                name="inspection_date">
+                                                            <input type="hidden" id="appointmentTime"
+                                                                name="inspection_time">
+                                                        </div>
+
+                                                        {{-- Client Selector --}}
+                                                        <div class="mt-3">
+                                                            <label for="clientSelector"
+                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                Select Client
+                                                            </label>
+                                                            <select id="clientSelector" name="client_id" required
+                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                                <option value="">Select a client</option>
+                                                            </select>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                        <form id="newAppointmentForm">
-                                            @csrf
-                                            <div class="mt-4 space-y-4">
-                                                {{-- Selected Date/Time (readonly) --}}
-                                                <div>
-                                                    <label for="selectedDateTime"
-                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                        {{ __('date_time') }}
-                                                    </label>
-                                                    <input type="text" id="selectedDateTime"
-                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        readonly>
-                                                    <input type="hidden" id="appointmentDate"
-                                                        name="inspection_date">
-                                                    <input type="hidden" id="appointmentTime"
-                                                        name="inspection_time">
-                                                </div>
-
-                                                {{-- Toggle for New Client --}}
-                                                <div class="mt-3">
-                                                    <label class="inline-flex items-center cursor-pointer">
-                                                        <input type="checkbox" id="createNewClientToggle"
-                                                            class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                                                        <span
-                                                            class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
-                                                            {{ __('create_new_client') }}
-                                                        </span>
-                                                    </label>
-                                                </div>
-
-                                                {{-- Existing Client Selector --}}
-                                                <div id="existingClientSection" class="mt-3">
-                                                    <label for="clientSelector"
-                                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                        {{ __('select_client') }}
-                                                    </label>
-                                                    <select id="clientSelector" name="client_id"
-                                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                        <option value="">{{ __('please_select_client') }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-
-                                                {{-- New Client Fields --}}
-                                                <div id="newClientSection" class="mt-3 space-y-3 hidden">
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                        <div>
-                                                            <label for="newClientFirstName"
-                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                {{ __('first_name') }} <span
-                                                                    class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="newClientFirstName"
-                                                                name="first_name"
-                                                                placeholder="{{ __('enter_first_name') }}"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                        </div>
-                                                        <div>
-                                                            <label for="newClientLastName"
-                                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                {{ __('last_name') }} <span
-                                                                    class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="newClientLastName"
-                                                                name="last_name"
-                                                                placeholder="{{ __('enter_last_name') }}"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <label for="newClientPhone"
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('phone') }} <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="tel" id="newClientPhone" name="phone"
-                                                            placeholder="{{ __('phone_placeholder') }}"
-                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-                                                    <div>
-                                                        <label for="newClientEmail"
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('email') }} <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="email" id="newClientEmail" name="email"
-                                                            placeholder="{{ __('email_placeholder') }}"
-                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-                                                    {{-- Google Maps Address Input --}}
-                                                    <div>
-                                                        <label for="newClientAddressMapInput"
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('address') }} <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="text" id="newClientAddressMapInput"
-                                                            name="address_map_input"
-                                                            placeholder="{{ __('address_placeholder') }}"
-                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-
-                                                    {{-- Map Container --}}
-                                                    <div id="newClientLocationMap"
-                                                        class="mt-3 h-48 w-full rounded-md border border-gray-300">
-                                                    </div>
-
-                                                    {{-- Address 2 Field --}}
-                                                    <div>
-                                                        <label for="newClientAddress2"
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('address_2') }}
-                                                        </label>
-                                                        <input type="text" id="newClientAddress2" name="address_2"
-                                                            placeholder="{{ __('apartment_suite_optional') }}"
-                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-
-                                                    {{-- Property Insurance --}}
-                                                    <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('property_insurance') }} <span
-                                                                class="text-red-500">*</span>
-                                                        </label>
-                                                        <div class="mt-2 space-x-6">
-                                                            <label class="inline-flex items-center">
-                                                                <input type="radio" id="newClientInsuranceYes"
-                                                                    name="insurance_property" value="1"
-                                                                    class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                                <span
-                                                                    class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('yes') }}</span>
-                                                            </label>
-                                                            <label class="inline-flex items-center">
-                                                                <input type="radio" id="newClientInsuranceNo"
-                                                                    name="insurance_property" value="0"
-                                                                    class="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                                <span
-                                                                    class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('no') }}</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-
-                                                    {{-- Notes --}}
-                                                    <div>
-                                                        <label for="newClientNotes"
-                                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            {{ __('notes') }}
-                                                        </label>
-                                                        <textarea id="newClientNotes" name="notes" rows="3" placeholder="{{ __('notes_placeholder') }}"
-                                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                    </div>
-
-                                                    {{-- Hidden Address Fields --}}
-                                                    <input type="hidden" id="newClientAddress" name="address">
-                                                    <input type="hidden" id="newClientAddressSimple"
-                                                        name="address_simple">
-                                                    <input type="hidden" id="newClientCity" name="city">
-                                                    <input type="hidden" id="newClientState" name="state">
-                                                    <input type="hidden" id="newClientZipcode" name="zipcode">
-                                                    <input type="hidden" id="newClientCountry" name="country">
-                                                    <input type="hidden" id="newClientLatitude" name="latitude">
-                                                    <input type="hidden" id="newClientLongitude" name="longitude">
-                                                </div>
-                                            </div>
-                                        </form>
                                     </div>
                                     <div
                                         class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center">
-                                        <div class="flex space-x-3 justify-center">
-                                            {{-- Botón para crear cita solo como Confirmed --}}
-                                            <button type="button" id="createAppointmentBtn"
-                                                class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                                                <span
-                                                    class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
-                                                <span class="processing-btn-text hidden">
-                                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12"
-                                                            r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor"
-                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                        </path>
-                                                    </svg>
-                                                    {{ __('processing') }}
-                                                </span>
-                                            </button>
-
-                                            {{-- Botón para crear cita como Confirmed y Called --}}
-                                            <button type="button" id="createConfirmedCalledBtn"
-                                                class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                                                <span
-                                                    class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
-                                                <span class="processing-btn-text hidden">
-                                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12"
-                                                            r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor"
-                                                            d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                        </path>
-                                                    </svg>
-                                                    {{ __('processing') }}
-                                                </span>
-                                            </button>
-                                        </div>
+                                        <button type="button" id="createAppointmentBtn"
+                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                                            <span class="normal-btn-text">Create Confirmed Appointment</span>
+                                            <span class="processing-btn-text hidden">
+                                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                        stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                    </path>
+                                                </svg>
+                                                {{ __('processing') }}
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -538,10 +368,6 @@
             @endpush
 
             @push('scripts')
-                {{-- Google Maps API --}}
-                <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
-                    async defer></script>
-
                 {{-- FullCalendar JS --}}
                 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
                 <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/es.global.js'></script>
@@ -615,170 +441,25 @@
                             selectedStart = start;
                             selectedEnd = end;
 
-                            // Format date and time for display - dynamic locale
-                            const formattedDate = start.toLocaleDateString(
-                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
-                                    month: 'long',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                });
-
-                            // Handle create confirmed and called appointment button
-                            createConfirmedCalledBtn.addEventListener('click', function() {
-                                // Validate based on mode (existing client vs new client)
-                                if (createNewClientToggle.checked) {
-                                    // Validate new client fields
-                                    const firstName = document.getElementById('newClientFirstName').value.trim();
-                                    const lastName = document.getElementById('newClientLastName').value.trim();
-                                    const phone = document.getElementById('newClientPhone').value.trim();
-                                    const email = document.getElementById('newClientEmail').value.trim();
-                                    const address = document.getElementById('newClientAddressMapInput').value.trim();
-                                    const insuranceProperty = document.querySelector(
-                                        'input[name="insurance_property"]:checked');
-
-                                    if (!firstName || !lastName || !phone || !email || !address) {
-                                        Swal.fire(translations.error,
-                                            'Please fill in all required fields (First Name, Last Name, Phone, Email, Address)',
-                                            'error');
-                                        return;
-                                    }
-
-                                    if (!insuranceProperty) {
-                                        Swal.fire(translations.error, 'Please select Property Insurance option',
-                                            'error');
-                                        return;
-                                    }
-
-                                    if (email && !email.includes('@')) {
-                                        Swal.fire(translations.error, 'Please enter a valid email address', 'error');
-                                        return;
-                                    }
-                                } else {
-                                    // Validate existing client is selected
-                                    if (!clientSelector.value) {
-                                        Swal.fire(translations.error, translations.please_select_client, 'error');
-                                        return;
-                                    }
-                                }
-
-                                // Show processing state
-                                const btnText = createConfirmedCalledBtn.querySelector('.normal-btn-text');
-                                const processingText = createConfirmedCalledBtn.querySelector('.processing-btn-text');
-                                btnText.classList.add('hidden');
-                                processingText.classList.remove('hidden');
-                                createConfirmedCalledBtn.disabled = true;
-
-                                // Prepare the data for the AJAX request
-                                const formData = new FormData();
-
-                                if (createNewClientToggle.checked) {
-                                    // New client data
-                                    formData.append('first_name', document.getElementById('newClientFirstName').value
-                                        .trim());
-                                    formData.append('last_name', document.getElementById('newClientLastName').value
-                                        .trim());
-                                    formData.append('phone', document.getElementById('newClientPhone').value.trim());
-                                    formData.append('email', document.getElementById('newClientEmail').value.trim());
-                                    formData.append('address', document.getElementById('newClientAddress').value
-                                        .trim());
-                                    formData.append('address_simple', document.getElementById('newClientAddressSimple')
-                                        .value.trim());
-                                    formData.append('address_2', document.getElementById('newClientAddress2').value
-                                        .trim());
-                                    formData.append('city', document.getElementById('newClientCity').value.trim());
-                                    formData.append('state', document.getElementById('newClientState').value.trim());
-                                    formData.append('zipcode', document.getElementById('newClientZipcode').value
-                                        .trim());
-                                    formData.append('country', document.getElementById('newClientCountry').value
-                                        .trim());
-                                    formData.append('latitude', document.getElementById('newClientLatitude').value
-                                        .trim());
-                                    formData.append('longitude', document.getElementById('newClientLongitude').value
-                                        .trim());
-                                    formData.append('create_new_client', '1');
-                                } else {
-                                    // Existing client
-                                    formData.append('client_uuid', clientSelector.value);
-                                }
-
-                                formData.append('inspection_date', appointmentDate.value);
-                                formData.append('inspection_time', appointmentTime.value);
-                                formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
-                                formData.append('status_lead', 'Called'); // Set lead status to Called
-                                formData.append('_token', document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute(
-                                        'content'));
-
-                                // Send AJAX request to create appointment
-                                fetch('{{ url()->secure(route('appointment-calendar.create', [], false)) }}', {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                                .getAttribute('content'),
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: formData
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Reset button state
-                                        btnText.classList.remove('hidden');
-                                        processingText.classList.add('hidden');
-                                        createConfirmedCalledBtn.disabled = false;
-
-                                        if (data.success) {
-                                            // Show success message
-                                            Swal.fire(translations.success, data.message ||
-                                                'Appointment created successfully as Confirmed and Called!',
-                                                'success');
-
-                                            // Close modal and refresh calendar
-                                            newAppointmentModal.classList.add('hidden');
-                                            newAppointmentModal.style.display = 'none';
-                                            calendar.refetchEvents();
-
-                                            // Clear form
-                                            clientSelector.value = '';
-                                        } else {
-                                            // Show error message
-                                            let errorMessage = data.message || 'Error creating appointment';
-
-                                            if (data.errors) {
-                                                // Format validation errors
-                                                errorMessage += '\n\n';
-                                                Object.values(data.errors).forEach(error => {
-                                                    errorMessage += '• ' + error + '\n';
-                                                });
-                                            }
-
-                                            Swal.fire(translations.error, errorMessage, 'error');
-                                        }
-                                    })
-                                    .catch(error => {
-                                        // Reset button state
-                                        btnText.classList.remove('hidden');
-                                        processingText.classList.add('hidden');
-                                        createConfirmedCalledBtn.disabled = false;
-
-                                        console.error('Error creating appointment:', error);
-                                        Swal.fire(translations.error, translations.unexpected_error, 'error');
-                                    });
+                            // Format date and time for display - in English with Month first
+                            const formattedDate = start.toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
                             });
 
-                            // Ensure the end time is 3 hours after start
-                            const actualEnd = new Date(start.getTime() + (3 * 60 * 60 * 1000));
+                            // Ensure the end time is 2 hours after start
+                            const actualEnd = new Date(start.getTime() + (2 * 60 * 60 * 1000));
 
-                            const formattedTime = start.toLocaleTimeString(
-                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: false
-                                }) + ' - ' + actualEnd.toLocaleTimeString(
-                                '{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: false
-                                }) + ' (3 hours)';
+                            const formattedTime = start.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            }) + ' - ' + actualEnd.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            }) + ' (2 hours)';
 
                             // Display formatted date & time with proper capitalization
                             selectedDateTime.value = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1) + ' • ' +
@@ -799,14 +480,6 @@
                             // Show modal
                             newAppointmentModal.classList.remove('hidden');
                             newAppointmentModal.style.display = 'block';
-
-                            // Update button visibility based on current state
-                            updateButtonVisibility();
-
-                            // Initialize Google Maps autocomplete
-                            if (typeof google !== 'undefined' && google.maps) {
-                                initializeNewAppointmentAutocomplete();
-                            }
                         }
 
                         // Function to load clients for the dropdown
@@ -816,7 +489,7 @@
                             console.log('Loading clients from API...');
 
                             // Fetch de clientes desde el endpoint
-                            fetch('{{ url()->secure(route('appointment-calendar.clients', [], false)) }}')
+                            fetch('{{ secure_url(route('appointment-calendar.clients', [], false)) }}')
                                 .then(response => {
                                     console.log('API response status:', response.status);
                                     return response.json();
@@ -825,8 +498,7 @@
                                     console.log('Client data received:', data);
                                     if (data.success && data.data && data.data.length > 0) {
                                         // Limpiar opción de carga
-                                        clientSelector.innerHTML =
-                                            `<option value="">${translations.please_select_client}</option>`;
+                                        clientSelector.innerHTML = '<option value="">Select a client</option>';
                                         console.log('Found', data.data.length, 'clients');
 
                                         // Agregar clientes al dropdown
@@ -842,7 +514,7 @@
 
                                         // Inicializar Select2 después de cargar las opciones
                                         $('#clientSelector').select2({
-                                            placeholder: translations.please_select_client,
+                                            placeholder: "Select a client",
                                             allowClear: true
                                         });
                                     } else {
@@ -856,82 +528,12 @@
                                 });
                         }
 
-                        // Handle toggle for new client creation
-                        const createNewClientToggle = document.getElementById('createNewClientToggle');
-                        const existingClientSection = document.getElementById('existingClientSection');
-                        const newClientSection = document.getElementById('newClientSection');
-                        const createConfirmedCalledBtn = document.getElementById('createConfirmedCalledBtn');
-
-                        // Function to update button visibility
-                        function updateButtonVisibility() {
-                            if (createNewClientToggle.checked) {
-                                // New client mode: hide confirmed+called button, show only create appointment
-                                createConfirmedCalledBtn.classList.add('hidden');
-                            } else {
-                                // Existing client mode: show confirmed+called button if client is selected
-                                const hasSelectedClient = clientSelector.value !== '';
-                                if (hasSelectedClient) {
-                                    createConfirmedCalledBtn.classList.remove('hidden');
-                                } else {
-                                    createConfirmedCalledBtn.classList.add('hidden');
-                                }
-                            }
-                        }
-
-                        createNewClientToggle.addEventListener('change', function() {
-                            if (this.checked) {
-                                // Show new client fields, hide existing client selector
-                                existingClientSection.classList.add('hidden');
-                                newClientSection.classList.remove('hidden');
-                                // Clear existing client selection
-                                $('#clientSelector').val('').trigger('change');
-
-                                // Initialize Google Maps autocomplete for new client address
-                                if (typeof google !== 'undefined' && google.maps) {
-                                    initializeNewClientAutocomplete();
-                                }
-                            } else {
-                                // Show existing client selector, hide new client fields
-                                existingClientSection.classList.remove('hidden');
-                                newClientSection.classList.add('hidden');
-                                // Clear new client fields
-                                document.getElementById('newClientFirstName').value = '';
-                                document.getElementById('newClientLastName').value = '';
-                                document.getElementById('newClientPhone').value = '';
-                                document.getElementById('newClientEmail').value = '';
-                                document.getElementById('newClientAddressMapInput').value = '';
-                                document.getElementById('newClientAddress').value = '';
-                                document.getElementById('newClientAddressSimple').value = '';
-                                document.getElementById('newClientAddress2').value = '';
-                                document.getElementById('newClientCity').value = '';
-                                document.getElementById('newClientState').value = '';
-                                document.getElementById('newClientZipcode').value = '';
-                                document.getElementById('newClientCountry').value = '';
-                                document.getElementById('newClientLatitude').value = '';
-                                document.getElementById('newClientLongitude').value = '';
-                                document.getElementById('newClientNotes').value = '';
-                                // Clear insurance property radio buttons
-                                const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
-                                insuranceRadios.forEach(radio => radio.checked = false);
-                            }
-                            updateButtonVisibility();
-                        });
-
-                        // Handle client selector change
-                        $('#clientSelector').on('change', function() {
-                            updateButtonVisibility();
-                        });
-
                         // Handle close new appointment modal
                         closeNewAppointmentModalBtn.addEventListener('click', () => {
                             newAppointmentModal.classList.add('hidden');
                             newAppointmentModal.style.display = 'none';
                             // Clear selection on calendar
                             calendar.unselect();
-                            // Reset toggle and sections
-                            createNewClientToggle.checked = false;
-                            existingClientSection.classList.remove('hidden');
-                            newClientSection.classList.add('hidden');
                         });
 
                         // Handle click outside new appointment modal
@@ -941,40 +543,15 @@
                                 newAppointmentModal.style.display = 'none';
                                 // Clear selection on calendar
                                 calendar.unselect();
-                                // Reset toggle and sections
-                                createNewClientToggle.checked = false;
-                                existingClientSection.classList.remove('hidden');
-                                newClientSection.classList.add('hidden');
                             }
                         });
 
                         // Handle create appointment button
                         createAppointmentBtn.addEventListener('click', function() {
-                            // Validate based on mode (existing client vs new client)
-                            if (createNewClientToggle.checked) {
-                                // Validate new client fields
-                                const firstName = document.getElementById('newClientFirstName').value.trim();
-                                const lastName = document.getElementById('newClientLastName').value.trim();
-                                const phone = document.getElementById('newClientPhone').value.trim();
-                                const email = document.getElementById('newClientEmail').value.trim();
-
-                                if (!firstName || !lastName || !phone) {
-                                    Swal.fire(translations.error,
-                                        'Please fill in all required fields (First Name, Last Name, Phone)', 'error'
-                                    );
-                                    return;
-                                }
-
-                                if (email && !email.includes('@')) {
-                                    Swal.fire(translations.error, 'Please enter a valid email address', 'error');
-                                    return;
-                                }
-                            } else {
-                                // Validate existing client is selected
-                                if (!clientSelector.value) {
-                                    Swal.fire(translations.error, translations.please_select_client, 'error');
-                                    return;
-                                }
+                            // Validate client is selected
+                            if (!clientSelector.value) {
+                                Swal.fire(translations.error, translations.please_select_client, 'error');
+                                return;
                             }
 
                             // Show processing state
@@ -984,36 +561,13 @@
                             processingText.classList.remove('hidden');
                             createAppointmentBtn.disabled = true;
 
+                            // Get selected client data
+                            const selectedClient = clientSelector.options[clientSelector.selectedIndex];
+                            const clientUuid = clientSelector.value;
+
                             // Prepare the data for the AJAX request
                             const formData = new FormData();
-
-                            if (createNewClientToggle.checked) {
-                                // New client data
-                                formData.append('first_name', document.getElementById('newClientFirstName').value
-                                    .trim());
-                                formData.append('last_name', document.getElementById('newClientLastName').value.trim());
-                                formData.append('phone', document.getElementById('newClientPhone').value.trim());
-                                formData.append('email', document.getElementById('newClientEmail').value.trim());
-                                formData.append('address', document.getElementById('newClientAddress').value.trim());
-                                formData.append('address_simple', document.getElementById('newClientAddressSimple')
-                                    .value.trim());
-                                formData.append('address_2', document.getElementById('newClientAddress2').value.trim());
-                                formData.append('city', document.getElementById('newClientCity').value.trim());
-                                formData.append('state', document.getElementById('newClientState').value.trim());
-                                formData.append('zipcode', document.getElementById('newClientZipcode').value.trim());
-                                formData.append('country', document.getElementById('newClientCountry').value.trim());
-                                formData.append('latitude', document.getElementById('newClientLatitude').value.trim());
-                                formData.append('longitude', document.getElementById('newClientLongitude').value
-                                    .trim());
-                                formData.append('insurance_property', document.querySelector(
-                                    'input[name="insurance_property"]:checked').value);
-                                formData.append('notes', document.getElementById('newClientNotes').value.trim());
-                                formData.append('create_new_client', '1');
-                            } else {
-                                // Existing client
-                                formData.append('client_uuid', clientSelector.value);
-                            }
-
+                            formData.append('client_uuid', clientUuid);
                             formData.append('inspection_date', appointmentDate.value);
                             formData.append('inspection_time', appointmentTime.value);
                             formData.append('inspection_status', 'Confirmed'); // Set status to Confirmed
@@ -1021,7 +575,7 @@
                                 'content'));
 
                             // Send AJAX request to create appointment
-                            fetch('{{ url()->secure(route('appointment-calendar.create', [], false)) }}', {
+                            fetch('{{ secure_url(route('appointment-calendar.create', [], false)) }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
@@ -1088,7 +642,7 @@
 
                         try {
                             console.log("Creating calendar with options");
-                            window.calendar = calendar = new FullCalendar.Calendar(calendarEl, {
+                            var calendar = new FullCalendar.Calendar(calendarEl, {
                                 // Core options
                                 headerToolbar: {
                                     left: 'prev,next today',
@@ -1096,7 +650,7 @@
                                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' // Views
                                 },
                                 initialView: 'timeGridWeek', // Default view
-                                locale: '{{ app()->getLocale() }}', // Dynamic locale based on current language
+                                locale: 'en', // English locale
                                 timeZone: 'local', // Use local timezone
                                 navLinks: true, // allows users to click day/week names to navigate
                                 editable: true, // enable drag and drop
@@ -1107,11 +661,11 @@
 
                                 // Time grid options
                                 slotDuration: '00:30:00', // Set slot duration to 30 mins for grid lines
-                                slotMinTime: '09:00:00', // Optional: Start time for the grid
-                                slotMaxTime: '18:00:00', // Optional: End time for the grid
+                                slotMinTime: '08:00:00', // Optional: Start time for the grid
+                                slotMaxTime: '20:00:00', // Optional: End time for the grid
                                 businessHours: { // Optional: Highlight business hours
                                     daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
-                                    startTime: '09:00',
+                                    startTime: '08:00',
                                     endTime: '18:00',
                                 },
 
@@ -1152,7 +706,7 @@
                                         hour12: false
                                     }) : '';
 
-                                    timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '') + ' (3h)';
+                                    timeText.innerHTML = startTime + (endTime ? ' - ' + endTime : '') + ' (2h)';
 
                                     // 3. Estado (última línea, más pequeña)
                                     let statusText = document.createElement('div');
@@ -1171,18 +725,12 @@
 
                                 // Event Data Source
                                 events: {
-                                    url: '{{ url()->secure(route('appointment-calendar.events', [], false)) }}',
+                                    url: '{{ secure_url(route('appointment-calendar.events', [], false)) }}',
                                     failure: function(err) {
                                         console.error("Failed to load events:", err);
                                     },
                                     success: function(events) {
                                         console.log("Events loaded successfully:", events);
-                                    },
-                                    // Add headers to distinguish calendar requests
-                                    extraParams: function() {
-                                        return {
-                                            'calendar_request': 'true'
-                                        };
                                     }
                                 },
                                 eventTimeFormat: { // Format time display on events
@@ -1218,7 +766,7 @@
                                         if (result.isConfirmed) {
                                             // Send AJAX request to update backend
                                             $.ajax({
-                                                url: `{{ url()->secure(route('appointment-calendar.update', '', false)) }}/${event.id}`,
+                                                url: `{{ secure_url(route('appointment-calendar.update', '', false)) }}/${event.id}`,
                                                 type: 'PATCH',
                                                 data: {
                                                     start: newStart,
@@ -1286,14 +834,14 @@
                                             hour12: true
                                         }).format(start);
 
-                                        // Add end time (3 hours after start)
+                                        // Add end time (2 hours after start)
                                         if (end) {
                                             formattedDateTime += ' - ' + new Intl.DateTimeFormat('en-US', {
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                                 hour12: true
                                             }).format(end);
-                                            formattedDateTime += ' (3 hours)';
+                                            formattedDateTime += ' (2 hours)';
                                         }
 
                                         document.getElementById('modalEventDateTime').textContent =
@@ -1465,7 +1013,7 @@
 
                                         // Send AJAX request to update appointment status
                                         $.ajax({
-                                            url: `{{ route('appointment-calendar.status', '', true) }}/${currentAppointmentId}`,
+                                            url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
                                             type: 'PATCH',
                                             data: {
                                                 status: 'Confirmed'
@@ -1534,7 +1082,7 @@
 
                                         // Send AJAX request to update appointment status
                                         $.ajax({
-                                            url: `{{ route('appointment-calendar.status', '', true) }}/${currentAppointmentId}`,
+                                            url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
                                             type: 'PATCH',
                                             data: {
                                                 status: 'Declined'
@@ -1648,1007 +1196,4 @@
             @endpush
         </div>
     </div>
-
-    {{-- Modal para crear nuevo lead --}}
-    <div id="createLeadModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title"
-        role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div
-                class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="bg-white dark:bg-gray-800 relative">
-                    {{-- Modal Header with Green Background --}}
-                    <div class="bg-green-600 dark:bg-green-700 px-6 py-4 flex justify-between items-center">
-                        <h3 class="text-xl font-semibold text-white text-center flex-1">{{ __('create_new_lead') }}
-                        </h3>
-                        <button type="button" id="closeCreateLeadModal"
-                            class="ml-4 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 transition-colors duration-200">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                stroke-width="3">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    {{-- Modal Body --}}
-                    <div class="px-6 pt-6">
-                        <form id="createLeadForm" method="POST"
-                            action="{{ route('appointment-calendar.store', [], true) }}">
-                            @csrf
-
-                            {{-- Display validation errors --}}
-                            <div id="leadFormErrors"
-                                class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900 dark:border-red-700 dark:text-red-300 hidden"
-                                role="alert">
-                                <strong class="font-bold">Validation Error!</strong>
-                                <ul id="leadErrorsList" class="mt-2 list-disc list-inside"></ul>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {{-- First Name --}}
-                                <div>
-                                    <label for="lead_first_name"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('first_name') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input id="lead_first_name"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
-                                        type="text" name="first_name" placeholder="{{ __('enter_first_name') }}"
-                                        maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
-                                </div>
-
-                                {{-- Last Name --}}
-                                <div>
-                                    <label for="lead_last_name"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('last_name') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input id="lead_last_name"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm capitalize"
-                                        type="text" name="last_name" placeholder="{{ __('enter_last_name') }}"
-                                        maxlength="50" pattern="[A-Za-z\s\\'-]+" required />
-                                </div>
-
-                                {{-- Phone --}}
-                                <div>
-                                    <label for="lead_phone"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('phone') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input id="lead_phone"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        type="tel" name="phone" placeholder="{{ __('phone_placeholder') }}"
-                                        maxlength="14" required />
-                                    <div id="phoneError" class="text-red-500 text-sm mt-1 hidden"></div>
-                                    <div id="phoneSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
-                                </div>
-
-                                {{-- Email --}}
-                                <div>
-                                    <label for="lead_email"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('email') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input id="lead_email"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        type="email" name="email" placeholder="{{ __('email') }}" required />
-                                    <div id="emailError" class="text-red-500 text-sm mt-1 hidden"></div>
-                                    <div id="emailSuccess" class="text-green-500 text-sm mt-1 hidden"></div>
-                                </div>
-
-                                {{-- Address Map Input (for Google Maps Autocomplete) --}}
-                                <div class="md:col-span-2">
-                                    <label for="lead_address_map_input"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('address') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <input id="lead_address_map_input"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        type="text" name="address_map_input"
-                                        placeholder="{{ __('enter_complete_address') }}" autocomplete="off"
-                                        required />
-                                </div>
-
-                                {{-- Map Display --}}
-                                <div class="md:col-span-2 mt-2 mb-4">
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location
-                                        Map</label>
-                                    <div id="lead-location-map"
-                                        class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600">
-                                    </div>
-                                </div>
-
-                                {{-- Address 2 --}}
-                                <div class="md:col-span-2">
-                                    <label for="lead_address_2"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('address_2') }}
-                                    </label>
-                                    <input id="lead_address_2"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        type="text" name="address_2" placeholder="Apt #, Suite #, etc." />
-                                </div>
-
-                                {{-- Property Insurance --}}
-                                <div class="md:col-span-2">
-                                    <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-3">
-                                        {{ __('property_insurance') }} <span class="text-red-500">*</span>
-                                    </label>
-                                    <fieldset class="mt-2">
-                                        <legend class="sr-only">Property Insurance</legend>
-                                        <div class="flex items-center space-x-4">
-                                            <div class="radio-option flex items-center">
-                                                <input id="lead_insurance_yes" name="insurance_property"
-                                                    type="radio" value="1" class="radio-field sr-only"
-                                                    required>
-                                                <label for="lead_insurance_yes"
-                                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                                    {{ __('yes') }}
-                                                </label>
-                                            </div>
-                                            <div class="radio-option flex items-center">
-                                                <input id="lead_insurance_no" name="insurance_property"
-                                                    type="radio" value="0" class="radio-field sr-only"
-                                                    required>
-                                                <label for="lead_insurance_no"
-                                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                                    {{ __('no') }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    <div id="insuranceError" class="text-red-500 text-sm mt-1 hidden"></div>
-                                </div>
-
-                                {{-- Notes --}}
-                                <div class="md:col-span-2">
-                                    <label for="lead_notes"
-                                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-                                        {{ __('notes') }}
-                                    </label>
-                                    <textarea id="lead_notes" name="notes" rows="3"
-                                        class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                        placeholder="{{ __('notes_placeholder') }}"></textarea>
-                                </div>
-
-                                {{-- Hidden Address Fields --}}
-                                <input type="hidden" id="lead_address" name="address">
-                                <input type="hidden" id="lead_latitude" name="latitude">
-                                <input type="hidden" id="lead_longitude" name="longitude">
-                                <input type="hidden" id="lead_city" name="city">
-                                <input type="hidden" id="lead_state" name="state">
-                                <input type="hidden" id="lead_zipcode" name="zipcode">
-                                <input type="hidden" id="lead_country" name="country" value="USA">
-                            </div>
-
-                            {{-- Modal Footer --}}
-                            <div class="mt-6 px-6 pb-6 flex justify-end space-x-3">
-                                <button type="button" id="cancelCreateLead"
-                                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium rounded-md transition-colors duration-200">
-                                    {{ __('cancel') }}
-                                </button>
-                                <button type="submit" id="submitCreateLead"
-                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
-                                    <span id="submitLeadText">{{ __('create_lead') }}</span>
-                                    <span id="submitLeadSpinner" class="hidden">
-                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
-                                        </svg>
-                                        {{ __('creating') }}
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- JavaScript para el modal de crear lead --}}
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Modal elements
-                const createLeadModal = document.getElementById('createLeadModal');
-                const openCreateLeadModalBtn = document.getElementById('openCreateLeadModal');
-                const closeCreateLeadModalBtn = document.getElementById('closeCreateLeadModal');
-                const cancelCreateLeadBtn = document.getElementById('cancelCreateLead');
-                const createLeadForm = document.getElementById('createLeadForm');
-                const submitLeadBtn = document.getElementById('submitCreateLead');
-                const submitLeadText = document.getElementById('submitLeadText');
-                const submitLeadSpinner = document.getElementById('submitLeadSpinner');
-                const leadFormErrors = document.getElementById('leadFormErrors');
-                const leadErrorsList = document.getElementById('leadErrorsList');
-
-                // Google Maps variables for lead modal
-                let leadMap;
-                let leadMarker;
-                let leadAutocomplete;
-
-                // Open modal
-                openCreateLeadModalBtn.addEventListener('click', function() {
-                    createLeadModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-
-                    // Initialize Google Maps for lead modal
-                    setTimeout(() => {
-                        initializeLeadMap();
-                    }, 100);
-                });
-
-                // Close modal functions
-                function closeLeadModal() {
-                    createLeadModal.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                    createLeadForm.reset();
-                    leadFormErrors.classList.add('hidden');
-                    leadErrorsList.innerHTML = '';
-
-                    // Reset submit button
-                    submitLeadText.classList.remove('hidden');
-                    submitLeadSpinner.classList.add('hidden');
-                    submitLeadBtn.disabled = false;
-                }
-
-                closeCreateLeadModalBtn.addEventListener('click', closeLeadModal);
-                cancelCreateLeadBtn.addEventListener('click', closeLeadModal);
-
-                // Close modal when clicking outside
-                createLeadModal.addEventListener('click', function(e) {
-                    if (e.target === createLeadModal) {
-                        closeLeadModal();
-                    }
-                });
-
-                // Initialize Google Maps for lead modal
-                function initializeLeadMap() {
-                    const mapElement = document.getElementById('lead-location-map');
-                    if (!mapElement) return;
-
-                    // Check if Google Maps is loaded
-                    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                        console.log('Google Maps not loaded yet, retrying in 500ms...');
-                        setTimeout(initializeLeadMap, 500);
-                        return;
-                    }
-
-                    // Default location (you can change this)
-                    const defaultLocation = {
-                        lat: 40.7128,
-                        lng: -74.0060
-                    }; // New York
-
-                    leadMap = new google.maps.Map(mapElement, {
-                        zoom: 13,
-                        center: defaultLocation,
-                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                    });
-
-                    leadMarker = new google.maps.Marker({
-                        position: defaultLocation,
-                        map: leadMap,
-                        draggable: true
-                    });
-
-                    // Initialize autocomplete
-                    const addressInput = document.getElementById('lead_address_map_input');
-                    leadAutocomplete = new google.maps.places.Autocomplete(addressInput);
-                    leadAutocomplete.bindTo('bounds', leadMap);
-
-                    // Handle place selection
-                    leadAutocomplete.addListener('place_changed', function() {
-                        const place = leadAutocomplete.getPlace();
-                        if (!place.geometry) return;
-
-                        // Update map
-                        if (place.geometry.viewport) {
-                            leadMap.fitBounds(place.geometry.viewport);
-                        } else {
-                            leadMap.setCenter(place.geometry.location);
-                            leadMap.setZoom(17);
-                        }
-
-                        // Update marker
-                        leadMarker.setPosition(place.geometry.location);
-
-                        // Extract address components
-                        updateLeadAddressFields(place);
-                    });
-
-                    // Handle marker drag
-                    leadMarker.addListener('dragend', function() {
-                        const position = leadMarker.getPosition();
-                        reverseGeocodeForLead(position.lat(), position.lng());
-                    });
-                }
-
-                // Update address fields from place object
-                function updateLeadAddressFields(place) {
-                    const components = place.address_components;
-                    let address = place.formatted_address;
-                    let city = '';
-                    let state = '';
-                    let zipcode = '';
-                    let country = '';
-
-                    components.forEach(component => {
-                        const types = component.types;
-                        if (types.includes('locality')) {
-                            city = component.long_name;
-                        } else if (types.includes('administrative_area_level_1')) {
-                            state = component.short_name;
-                        } else if (types.includes('postal_code')) {
-                            zipcode = component.long_name;
-                        } else if (types.includes('country')) {
-                            country = component.short_name;
-                        }
-                    });
-
-                    // Update hidden fields
-                    document.getElementById('lead_address').value = address;
-                    document.getElementById('lead_latitude').value = place.geometry.location.lat();
-                    document.getElementById('lead_longitude').value = place.geometry.location.lng();
-                    document.getElementById('lead_city').value = city;
-                    document.getElementById('lead_state').value = state;
-                    document.getElementById('lead_zipcode').value = zipcode;
-                    document.getElementById('lead_country').value = country || 'USA';
-                }
-
-                // Reverse geocoding for lead
-                function reverseGeocodeForLead(lat, lng) {
-                    // Check if Google Maps is loaded
-                    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                        console.log('Google Maps not loaded yet for reverse geocoding, retrying in 500ms...');
-                        setTimeout(() => reverseGeocodeForLead(lat, lng), 500);
-                        return;
-                    }
-
-                    const geocoder = new google.maps.Geocoder();
-                    const latlng = {
-                        lat: lat,
-                        lng: lng
-                    };
-
-                    geocoder.geocode({
-                        location: latlng
-                    }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            const place = results[0];
-                            document.getElementById('lead_address_map_input').value = place.formatted_address;
-                            updateLeadAddressFields(place);
-                        }
-                    });
-                }
-
-                // Handle form submission
-                createLeadForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    // Validate all fields before submission
-                    let isFormValid = true;
-
-                    // Validate individual fields
-                    const firstNameValid = validateLeadField('lead_first_name', document.getElementById(
-                        'lead_first_name').value);
-                    const lastNameValid = validateLeadField('lead_last_name', document.getElementById(
-                        'lead_last_name').value);
-                    const phoneValid = validateLeadField('lead_phone', document.getElementById('lead_phone')
-                        .value);
-                    const emailValid = validateLeadField('lead_email', document.getElementById('lead_email')
-                        .value);
-                    const addressValid = validateLeadField('lead_address_map_input', document.getElementById(
-                        'lead_address_map_input').value);
-                    const insuranceValid = validateInsuranceProperty();
-
-                    isFormValid = firstNameValid && lastNameValid && phoneValid && emailValid && addressValid &&
-                        insuranceValid;
-
-                    if (!isFormValid) {
-                        // Show general error message
-                        Swal.fire({
-                            title: 'Validation Error!',
-                            text: 'Please correct the errors in the form before submitting.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                        return;
-                    }
-
-                    // Show loading state
-                    submitLeadText.classList.add('hidden');
-                    submitLeadSpinner.classList.remove('hidden');
-                    submitLeadBtn.disabled = true;
-
-                    // Hide previous errors
-                    leadFormErrors.classList.add('hidden');
-                    leadErrorsList.innerHTML = '';
-
-                    // Prepare form data
-                    const formData = new FormData(createLeadForm);
-
-                    // Submit via AJAX
-                    fetch(createLeadForm.action, {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Show success message
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: data.message || 'Lead created successfully!',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    closeLeadModal();
-                                    // Refresh calendar if needed
-                                    if (typeof calendar !== 'undefined') {
-                                        calendar.refetchEvents();
-                                    }
-                                });
-                            } else {
-                                // Show validation errors
-                                if (data.errors) {
-                                    leadErrorsList.innerHTML = '';
-                                    Object.values(data.errors).forEach(errorArray => {
-                                        errorArray.forEach(error => {
-                                            const li = document.createElement('li');
-                                            li.textContent = error;
-                                            leadErrorsList.appendChild(li);
-                                        });
-                                    });
-                                    leadFormErrors.classList.remove('hidden');
-                                }
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'An error occurred while creating the lead.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        })
-                        .finally(() => {
-                            // Reset loading state
-                            submitLeadText.classList.remove('hidden');
-                            submitLeadSpinner.classList.add('hidden');
-                            submitLeadBtn.disabled = false;
-                        });
-                });
-
-                // Real-time validation functions
-                function validateLeadField(fieldName, value) {
-                    const errorElement = document.getElementById(fieldName + 'Error');
-                    let isValid = true;
-                    let errorMessage = '';
-
-                    switch (fieldName) {
-                        case 'lead_first_name':
-                            if (!value.trim()) {
-                                errorMessage = '{{ __('first_name_required') }}';
-                                isValid = false;
-                            } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
-                                errorMessage = '{{ __('first_name_regex') }}';
-                                isValid = false;
-                            }
-                            break;
-                        case 'lead_last_name':
-                            if (!value.trim()) {
-                                errorMessage = '{{ __('last_name_required') }}';
-                                isValid = false;
-                            } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
-                                errorMessage = '{{ __('last_name_regex') }}';
-                                isValid = false;
-                            }
-                            break;
-                        case 'lead_phone':
-                            if (!value.trim()) {
-                                errorMessage = '{{ __('phone_required') }}';
-                                isValid = false;
-                            } else if (value.replace(/\D/g, '').length < 10) {
-                                errorMessage = 'Phone number must be at least 10 digits';
-                                isValid = false;
-                            }
-                            break;
-                        case 'lead_email':
-                            if (!value.trim()) {
-                                errorMessage = '{{ __('email_required') }}';
-                                isValid = false;
-                            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                                errorMessage = '{{ __('email_invalid') }}';
-                                isValid = false;
-                            }
-                            break;
-                        case 'lead_address_map_input':
-                            if (!value.trim()) {
-                                errorMessage = '{{ __('address_required') }}';
-                                isValid = false;
-                            }
-                            break;
-                    }
-
-                    if (errorElement) {
-                        if (isValid) {
-                            errorElement.classList.add('hidden');
-                            errorElement.textContent = '';
-                        } else {
-                            errorElement.classList.remove('hidden');
-                            errorElement.textContent = errorMessage;
-                        }
-                    }
-
-                    return isValid;
-                }
-
-                function validateInsuranceProperty() {
-                    const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
-                    const errorElement = document.getElementById('insuranceError');
-                    const isChecked = Array.from(insuranceRadios).some(radio => radio.checked);
-
-                    if (!isChecked) {
-                        errorElement.classList.remove('hidden');
-                        errorElement.textContent = '{{ __('insurance_property_required') }}';
-                        return false;
-                    } else {
-                        errorElement.classList.add('hidden');
-                        errorElement.textContent = '';
-                        return true;
-                    }
-                }
-
-                // Add real-time validation event listeners
-                document.getElementById('lead_first_name').addEventListener('blur', function() {
-                    validateLeadField('lead_first_name', this.value);
-                });
-
-                document.getElementById('lead_last_name').addEventListener('blur', function() {
-                    validateLeadField('lead_last_name', this.value);
-                });
-
-                document.getElementById('lead_phone').addEventListener('input', function() {
-                    // Format phone number
-                    this.value = formatPhoneNumber(this.value);
-                });
-
-                document.getElementById('lead_phone').addEventListener('blur', function() {
-                    validateLeadField('lead_phone', this.value);
-                });
-
-                document.getElementById('lead_email').addEventListener('blur', function() {
-                    validateLeadField('lead_email', this.value);
-                });
-
-                document.getElementById('lead_address_map_input').addEventListener('blur', function() {
-                    validateLeadField('lead_address_map_input', this.value);
-                });
-
-                // Initialize insurance property radio button styles on load
-                document.querySelectorAll('input[name="insurance_property"]').forEach(radio => {
-                    const label = document.querySelector(`label[for="${radio.id}"]`);
-                    if (radio.checked) {
-                        label.classList.add('selected');
-                    }
-
-                    // Set custom validation message
-                    radio.setCustomValidity('{{ __('insurance_property_required') }}');
-
-                    radio.addEventListener('change', function() {
-                        // Clear custom validation when a radio is selected
-                        document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
-                            r.setCustomValidity('');
-                        });
-
-                        // Update selected class
-                        document.querySelectorAll('input[name="insurance_property"]').forEach(r => {
-                            const lbl = document.querySelector(`label[for="${r.id}"]`);
-                            lbl.classList.remove('selected');
-                        });
-
-                        if (this.checked) {
-                            label.classList.add('selected');
-                        }
-
-                        validateInsuranceProperty();
-                    });
-                });
-
-                // Phone formatting function
-                function formatPhoneNumber(value) {
-                    // Remove all non-numeric characters
-                    const phoneNumber = value.replace(/\D/g, '');
-
-                    // Format as (XXX) XXX-XXXX
-                    if (phoneNumber.length >= 6) {
-                        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-                    } else if (phoneNumber.length >= 3) {
-                        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-                    } else {
-                        return phoneNumber;
-                    }
-                }
-
-                // Phone input formatting
-                const phoneInput = document.getElementById('lead_phone');
-                const emailInput = document.getElementById('lead_email');
-                const phoneError = document.getElementById('phoneError');
-                const phoneSuccess = document.getElementById('phoneSuccess');
-                const emailError = document.getElementById('emailError');
-                const emailSuccess = document.getElementById('emailSuccess');
-
-                let phoneTimeout;
-                let emailTimeout;
-
-                // Format phone number on input
-                phoneInput.addEventListener('input', function(e) {
-                    const formatted = formatPhoneNumber(e.target.value);
-                    e.target.value = formatted;
-
-                    // Clear previous timeout
-                    clearTimeout(phoneTimeout);
-
-                    // Hide previous messages
-                    phoneError.classList.add('hidden');
-                    phoneSuccess.classList.add('hidden');
-
-                    // Only validate if we have a complete phone number
-                    const phoneNumber = e.target.value.replace(/\D/g, '');
-                    if (phoneNumber.length === 10) {
-                        phoneTimeout = setTimeout(() => {
-                            checkPhoneExists(e.target.value);
-                        }, 500);
-                    }
-                });
-
-                // Email validation on blur
-                emailInput.addEventListener('blur', function(e) {
-                    const email = e.target.value.trim();
-                    if (email && email.includes('@')) {
-                        clearTimeout(emailTimeout);
-                        emailTimeout = setTimeout(() => {
-                            checkEmailExists(email);
-                        }, 300);
-                    }
-                });
-
-                // Check if phone exists
-                function checkPhoneExists(phone) {
-                    fetch('{{ url()->secure(route('appointment-calendar.check-phone', [], false)) }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                    'content')
-                            },
-                            body: JSON.stringify({
-                                phone: phone
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.exists) {
-                                phoneError.textContent = 'Este número de teléfono ya está registrado.';
-                                phoneError.classList.remove('hidden');
-                                phoneSuccess.classList.add('hidden');
-                            } else {
-                                phoneSuccess.textContent = 'Número de teléfono disponible.';
-                                phoneSuccess.classList.remove('hidden');
-                                phoneError.classList.add('hidden');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error checking phone:', error);
-                        });
-                }
-
-                // Check if email exists
-                function checkEmailExists(email) {
-                    fetch('{{ url()->secure(route('appointment-calendar.check-email', [], false)) }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                    'content')
-                            },
-                            body: JSON.stringify({
-                                email: email
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.exists) {
-                                emailError.textContent = 'Este email ya está registrado.';
-                                emailError.classList.remove('hidden');
-                                emailSuccess.classList.add('hidden');
-                            } else {
-                                emailSuccess.textContent = 'Email disponible.';
-                                emailSuccess.classList.remove('hidden');
-                                emailError.classList.add('hidden');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error checking email:', error);
-                        });
-                }
-
-                // Initialize Google Maps Autocomplete for new appointment modal
-                function initializeNewAppointmentAutocomplete() {
-                    const addressInput = document.getElementById('address_map_input');
-                    const mapContainer = document.getElementById('map-container');
-
-                    if (!addressInput || typeof google === 'undefined') {
-                        console.log('Google Maps not loaded or address input not found');
-                        return;
-                    }
-
-                    // Initialize map
-                    const map = new google.maps.Map(document.getElementById('map'), {
-                        center: {
-                            lat: 25.7617,
-                            lng: -80.1918
-                        }, // Miami default
-                        zoom: 13,
-                        mapTypeControl: false,
-                        streetViewControl: false,
-                        fullscreenControl: false
-                    });
-
-                    const marker = new google.maps.Marker({
-                        map: map,
-                        draggable: true
-                    });
-
-                    // Initialize autocomplete
-                    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                        types: ['address'],
-                        componentRestrictions: {
-                            country: 'us'
-                        }
-                    });
-
-                    autocomplete.bindTo('bounds', map);
-
-                    // Handle place selection
-                    autocomplete.addListener('place_changed', function() {
-                        const place = autocomplete.getPlace();
-
-                        if (!place.geometry) {
-                            console.log('No geometry for place:', place.name);
-                            return;
-                        }
-
-                        // Extract address components
-                        let streetNumber = '';
-                        let route = '';
-                        let city = '';
-                        let state = '';
-                        let zipcode = '';
-                        let country = '';
-
-                        place.address_components.forEach(component => {
-                            const types = component.types;
-                            if (types.includes('street_number')) {
-                                streetNumber = component.long_name;
-                            } else if (types.includes('route')) {
-                                route = component.long_name;
-                            } else if (types.includes('locality')) {
-                                city = component.long_name;
-                            } else if (types.includes('administrative_area_level_1')) {
-                                state = component.short_name;
-                            } else if (types.includes('postal_code')) {
-                                zipcode = component.long_name;
-                            } else if (types.includes('country')) {
-                                country = component.long_name;
-                            }
-                        });
-
-                        // Populate hidden fields
-                        const fullAddress = `${streetNumber} ${route}`.trim();
-                        document.getElementById('address').value = fullAddress;
-
-                        // Use formatted_address for address_simple (complete address with city, state, zipcode)
-                        if (place.formatted_address) {
-                            document.getElementById('address_simple').value = place.formatted_address;
-                        } else {
-                            // Fallback: construct complete address manually
-                            const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(
-                                ', ');
-                            document.getElementById('address_simple').value = completeAddress;
-                        }
-
-                        document.getElementById('city').value = city;
-                        document.getElementById('state').value = state;
-                        document.getElementById('zipcode').value = zipcode;
-                        document.getElementById('country').value = country;
-                        document.getElementById('latitude').value = place.geometry.location.lat();
-                        document.getElementById('longitude').value = place.geometry.location.lng();
-
-                        // Update map
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(17);
-                        marker.setPosition(place.geometry.location);
-                        marker.setVisible(true);
-
-                        // Show map container
-                        mapContainer.style.display = 'block';
-
-                        // Trigger change events for validation
-                        addressInput.dispatchEvent(new Event('change'));
-                    });
-
-                    // Handle marker drag
-                    marker.addListener('dragend', function() {
-                        const position = marker.getPosition();
-                        document.getElementById('latitude').value = position.lat();
-                        document.getElementById('longitude').value = position.lng();
-                    });
-                }
-
-                // Initialize autocomplete when Google Maps is loaded
-                window.initializeNewAppointmentAutocomplete = initializeNewAppointmentAutocomplete;
-
-                // Function to initialize Google Maps autocomplete for new client address
-                function initializeNewClientAutocomplete() {
-                    const addressInput = document.getElementById('newClientAddressMapInput');
-                    const mapContainer = document.getElementById('newClientLocationMap');
-
-                    if (!addressInput || !mapContainer) {
-                        console.log('New client address input or map container not found');
-                        return;
-                    }
-
-                    // Initialize map
-                    const map = new google.maps.Map(mapContainer, {
-                        zoom: 13,
-                        center: {
-                            lat: 25.7617,
-                            lng: -80.1918
-                        } // Miami default
-                    });
-
-                    const marker = new google.maps.Marker({
-                        map: map,
-                        draggable: true
-                    });
-
-                    // Initialize autocomplete
-                    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                        types: ['address'],
-                        componentRestrictions: {
-                            country: 'us'
-                        }
-                    });
-
-                    autocomplete.bindTo('bounds', map);
-
-                    // Handle place selection
-                    autocomplete.addListener('place_changed', function() {
-                        const place = autocomplete.getPlace();
-
-                        if (!place.geometry) {
-                            console.log('No geometry for place:', place.name);
-                            return;
-                        }
-
-                        // Extract address components
-                        let streetNumber = '';
-                        let route = '';
-                        let city = '';
-                        let state = '';
-                        let zipcode = '';
-                        let country = '';
-
-                        place.address_components.forEach(component => {
-                            const types = component.types;
-                            if (types.includes('street_number')) {
-                                streetNumber = component.long_name;
-                            } else if (types.includes('route')) {
-                                route = component.long_name;
-                            } else if (types.includes('locality')) {
-                                city = component.long_name;
-                            } else if (types.includes('administrative_area_level_1')) {
-                                state = component.short_name;
-                            } else if (types.includes('postal_code')) {
-                                zipcode = component.long_name;
-                            } else if (types.includes('country')) {
-                                country = component.long_name;
-                            }
-                        });
-
-                        // Populate hidden fields
-                        const fullAddress = `${streetNumber} ${route}`.trim();
-                        document.getElementById('newClientAddress').value = fullAddress;
-
-                        // Use formatted_address for address_simple (complete address with city, state, zipcode)
-                        if (place.formatted_address) {
-                            document.getElementById('newClientAddressSimple').value = place.formatted_address;
-                        } else {
-                            // Fallback: construct complete address manually
-                            const completeAddress = [fullAddress, city, state, zipcode].filter(Boolean).join(
-                                ', ');
-                            document.getElementById('newClientAddressSimple').value = completeAddress;
-                        }
-
-                        document.getElementById('newClientCity').value = city;
-                        document.getElementById('newClientState').value = state;
-                        document.getElementById('newClientZipcode').value = zipcode;
-                        document.getElementById('newClientCountry').value = country;
-                        document.getElementById('newClientLatitude').value = place.geometry.location.lat();
-                        document.getElementById('newClientLongitude').value = place.geometry.location.lng();
-
-                        // Update map
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(17);
-                        marker.setPosition(place.geometry.location);
-                        marker.setVisible(true);
-
-                        // Show map container
-                        mapContainer.style.display = 'block';
-
-                        // Trigger change events for validation
-                        addressInput.dispatchEvent(new Event('change'));
-                    });
-
-                    // Handle marker drag
-                    marker.addListener('dragend', function() {
-                        const position = marker.getPosition();
-                        document.getElementById('newClientLatitude').value = position.lat();
-                        document.getElementById('newClientLongitude').value = position.lng();
-                    });
-                }
-
-                // Initialize autocomplete for new client when Google Maps is loaded
-                window.initializeNewClientAutocomplete = initializeNewClientAutocomplete;
-
-                // Language switcher fix - prevent calendar from interfering with language change
-                document.addEventListener('click', function(e) {
-                    // Check if the clicked element is a language switcher link
-                    const target = e.target.closest('a[href*="/lang/"]');
-                    if (target) {
-                        // Prevent any default FullCalendar behavior
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-
-                        // Force a full page reload to the language switch URL
-                        window.location.href = target.href;
-                        return false;
-                    }
-                }, true); // Use capturing phase to intercept before other handlers
-
-                // Additional protection: if page is being navigated away from calendar due to language change
-                window.addEventListener('beforeunload', function() {
-                    // Clear any pending FullCalendar requests
-                    if (window.calendar) {
-                        window.calendar.getEvents().forEach(function(event) {
-                            // Clean up any pending events
-                        });
-                    }
-                });
-
-                // Add phone formatting for new client phone field
-                const newClientPhoneInput = document.getElementById('newClientPhone');
-                if (newClientPhoneInput) {
-                    newClientPhoneInput.addEventListener('input', function(e) {
-                        const formatted = formatPhoneNumber(e.target.value);
-                        e.target.value = formatted;
-                    });
-                }
-            });
-        </script>
-    @endpush
 </x-app-layout>
