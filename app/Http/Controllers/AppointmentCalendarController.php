@@ -444,6 +444,110 @@ class AppointmentCalendarController extends Controller
     }
 
     /**
+     * Store a new lead/appointment from the calendar modal
+     */
+    public function store(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'first_name' => 'required|string|max:255|regex:/^[a-zA-Z\s\'-]+$/',
+                'last_name' => 'required|string|max:255|regex:/^[a-zA-Z\s\'-]+$/',
+                'email' => 'required|email|max:255|unique:appointments,email',
+                'phone' => 'required|string|max:20',
+                'address' => 'required|string|max:255',
+                'address_2' => 'nullable|string|max:255',
+                'city' => 'required|string|max:100',
+                'state' => 'required|string|max:100',
+                'zipcode' => 'required|string|max:20',
+                'country' => 'required|string|max:100',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180',
+                'insurance_property' => 'required|boolean',
+                'message' => 'nullable|string',
+                'notes' => 'nullable|string',
+                'damage_detail' => 'nullable|string',
+                'intent_to_claim' => 'nullable|boolean',
+                'sms_consent' => 'nullable|boolean',
+                'inspection_date' => 'nullable|date|after_or_equal:today',
+                'inspection_time' => 'nullable|date_format:H:i',
+            ]);
+
+            // Use transaction service for data consistency
+            $appointment = $this->transactionService->executeInTransaction(function () use ($request) {
+                // Create new appointment/lead
+                $appointment = new Appointment();
+                $appointment->uuid = \Str::uuid();
+                $appointment->first_name = $request->first_name;
+                $appointment->last_name = $request->last_name;
+                $appointment->email = $request->email;
+                $appointment->phone = $request->phone;
+                $appointment->address = $request->address;
+                $appointment->address_2 = $request->address_2;
+                $appointment->city = $request->city;
+                $appointment->state = $request->state;
+                $appointment->zipcode = $request->zipcode;
+                $appointment->country = $request->country ?? 'USA';
+                $appointment->latitude = $request->latitude;
+                $appointment->longitude = $request->longitude;
+                $appointment->insurance_property = $request->insurance_property ?? false;
+                $appointment->message = $request->message;
+                $appointment->notes = $request->notes;
+                $appointment->damage_detail = $request->damage_detail;
+                $appointment->intent_to_claim = $request->intent_to_claim ?? false;
+                $appointment->sms_consent = $request->sms_consent ?? false;
+                $appointment->registration_date = now();
+                
+                // Set default values as requested
+                $appointment->lead_source = 'Reference';
+                $appointment->status_lead = 'Pending';
+                
+                // Set inspection details if provided
+                if ($request->inspection_date && $request->inspection_time) {
+                    $appointment->inspection_date = $request->inspection_date;
+                    $appointment->inspection_time = $request->inspection_time;
+                    $appointment->inspection_status = 'Pending';
+                }
+                
+                $appointment->save();
+                
+                return $appointment;
+            });
+
+            // Clear cache after creating new appointment
+            $this->significantDataChange = true;
+            $this->clearCache('appointments');
+            
+            // Clear calendar event cache
+            $cacheKeys = Cache::get('calendar_event_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            Cache::forget('calendar_event_keys');
+
+            // Send notification email for new lead
+            ProcessNewLead::dispatch($appointment);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lead created successfully.',
+                'appointment' => $appointment
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating lead: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Fetch available clients for appointment scheduling
      */
     public function getClients()
@@ -454,13 +558,9 @@ class AppointmentCalendarController extends Controller
             
             // Cache the clients list for 10 minutes
             $clients = Cache::remember($cacheKey, 10, function() {
-                return Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone')
+                return Appointment::select('uuid', 'first_name', 'last_name', 'email', 'phone', 'status_lead', 'inspection_status')
                     ->whereNotNull('first_name')
                     ->whereNotNull('email')
-                    ->where(function($query) {
-                        $query->whereNull('inspection_date')
-                              ->orWhereNull('inspection_time');
-                    })
                     ->orderBy('created_at', 'desc')
                     ->get();
             });

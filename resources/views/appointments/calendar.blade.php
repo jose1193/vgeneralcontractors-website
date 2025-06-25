@@ -65,6 +65,10 @@
                             <script src="https://unpkg.com/@popperjs/core@2"></script>
                             <script src="https://unpkg.com/tippy.js@6"></script>
 
+                            <!-- Google Maps API -->
+                            <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"
+                                async defer></script>
+
                             <!-- Calendar JavaScript Modules -->
                             <script src="{{ asset('js/calendar-utils.js') }}"></script>
                             <script src="{{ asset('js/calendar-config.js') }}"></script>

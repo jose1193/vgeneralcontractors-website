@@ -18,17 +18,18 @@ class CalendarModals {
      */
     setupModalEventListeners() {
         // Event detail modal
-        const closeEventModalBtn = document.getElementById('closeEventModalBtn');
-        const eventDetailModal = document.getElementById('eventDetailModal');
-        
+        const closeEventModalBtn =
+            document.getElementById("closeEventModalBtn");
+        const eventDetailModal = document.getElementById("eventDetailModal");
+
         if (closeEventModalBtn) {
-            closeEventModalBtn.addEventListener('click', () => {
+            closeEventModalBtn.addEventListener("click", () => {
                 this.closeEventDetailModal();
             });
         }
 
         if (eventDetailModal) {
-            eventDetailModal.addEventListener('click', (event) => {
+            eventDetailModal.addEventListener("click", (event) => {
                 if (event.target === eventDetailModal) {
                     this.closeEventDetailModal();
                 }
@@ -36,17 +37,21 @@ class CalendarModals {
         }
 
         // New appointment modal
-        const closeNewAppointmentModalBtn = document.getElementById('closeNewAppointmentModalBtn');
-        const newAppointmentModal = document.getElementById('newAppointmentModal');
-        
+        const closeNewAppointmentModalBtn = document.getElementById(
+            "closeNewAppointmentModalBtn"
+        );
+        const newAppointmentModal = document.getElementById(
+            "newAppointmentModal"
+        );
+
         if (closeNewAppointmentModalBtn) {
-            closeNewAppointmentModalBtn.addEventListener('click', () => {
+            closeNewAppointmentModalBtn.addEventListener("click", () => {
                 this.closeNewAppointmentModal();
             });
         }
 
         if (newAppointmentModal) {
-            newAppointmentModal.addEventListener('click', (event) => {
+            newAppointmentModal.addEventListener("click", (event) => {
                 if (event.target === newAppointmentModal) {
                     this.closeNewAppointmentModal();
                 }
@@ -54,27 +59,35 @@ class CalendarModals {
         }
 
         // Create appointment button
-        const createAppointmentBtn = document.getElementById('createAppointmentBtn');
+        const createAppointmentBtn = document.getElementById(
+            "createAppointmentBtn"
+        );
         if (createAppointmentBtn) {
-            createAppointmentBtn.addEventListener('click', () => {
+            createAppointmentBtn.addEventListener("click", () => {
                 this.handleCreateAppointment();
             });
         }
 
         // Action buttons
-        const confirmAppointmentBtn = document.getElementById('confirmAppointmentBtn');
-        const declineAppointmentBtn = document.getElementById('declineAppointmentBtn');
-        
+        const confirmAppointmentBtn = document.getElementById(
+            "confirmAppointmentBtn"
+        );
+        const declineAppointmentBtn = document.getElementById(
+            "declineAppointmentBtn"
+        );
+
         if (confirmAppointmentBtn && window.CalendarEvents) {
-            confirmAppointmentBtn.addEventListener('click', () => {
-                const appointmentId = window.CalendarEvents.getCurrentAppointmentId();
+            confirmAppointmentBtn.addEventListener("click", () => {
+                const appointmentId =
+                    window.CalendarEvents.getCurrentAppointmentId();
                 window.CalendarEvents.confirmAppointment(appointmentId);
             });
         }
 
         if (declineAppointmentBtn && window.CalendarEvents) {
-            declineAppointmentBtn.addEventListener('click', () => {
-                const appointmentId = window.CalendarEvents.getCurrentAppointmentId();
+            declineAppointmentBtn.addEventListener("click", () => {
+                const appointmentId =
+                    window.CalendarEvents.getCurrentAppointmentId();
                 window.CalendarEvents.declineAppointment(appointmentId);
             });
         }
@@ -84,15 +97,15 @@ class CalendarModals {
      * Abrir modal de detalles de evento
      */
     openEventDetailModal(event, props) {
-        const modal = document.getElementById('eventDetailModal');
+        const modal = document.getElementById("eventDetailModal");
         if (!modal) return;
 
         // Poblar datos del modal
         this.populateEventDetailModal(event, props);
-        
+
         // Mostrar modal
-        modal.classList.remove('hidden');
-        modal.style.display = 'block';
+        modal.classList.remove("hidden");
+        modal.style.display = "block";
     }
 
     /**
@@ -100,79 +113,81 @@ class CalendarModals {
      */
     populateEventDetailModal(event, props) {
         // Título
-        const titleElement = document.getElementById('modalEventTitle');
+        const titleElement = document.getElementById("modalEventTitle");
         if (titleElement) {
             titleElement.textContent = props.clientName || event.title;
         }
 
         // Email
-        const emailElement = document.getElementById('modalEventEmail');
+        const emailElement = document.getElementById("modalEventEmail");
         if (emailElement) {
-            emailElement.textContent = props.clientEmail || 'N/A';
+            emailElement.textContent = props.clientEmail || "N/A";
         }
 
         // Teléfono
-        const phoneElement = document.getElementById('modalEventPhone');
+        const phoneElement = document.getElementById("modalEventPhone");
         if (phoneElement) {
-            phoneElement.textContent = props.clientPhone || 'N/A';
+            phoneElement.textContent = props.clientPhone || "N/A";
         }
 
         // Fecha y hora
-        const dateTimeElement = document.getElementById('modalEventDateTime');
+        const dateTimeElement = document.getElementById("modalEventDateTime");
         if (dateTimeElement) {
             const start = event.start;
             const end = event.end;
-            let formattedDateTime = new Intl.DateTimeFormat('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                hour12: true
+            let formattedDateTime = new Intl.DateTimeFormat("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
             }).format(start);
 
             if (end) {
-                formattedDateTime += ' - ' + new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                }).format(end);
-                formattedDateTime += ' (2 hours)';
+                formattedDateTime +=
+                    " - " +
+                    new Intl.DateTimeFormat("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                    }).format(end);
+                formattedDateTime += " (2 hours)";
             }
 
             dateTimeElement.textContent = formattedDateTime;
         }
 
         // Estado de la cita
-        this.setStatusBadge('modalEventStatus', props.status);
-        
+        this.setStatusBadge("modalEventStatus", props.status);
+
         // Estado del lead
-        this.setStatusBadge('modalEventLeadStatus', props.leadStatus);
+        this.setStatusBadge("modalEventLeadStatus", props.leadStatus);
 
         // Dirección
-        const addressElement = document.getElementById('modalEventAddress');
+        const addressElement = document.getElementById("modalEventAddress");
         if (addressElement) {
-            addressElement.textContent = props.address || 'N/A';
+            addressElement.textContent = props.address || "N/A";
         }
 
         // Configurar compartir ubicación
         this.setupMapSharing(props);
 
         // Notas
-        const notesElement = document.getElementById('modalEventNotes');
+        const notesElement = document.getElementById("modalEventNotes");
         if (notesElement) {
-            notesElement.textContent = props.notes || 'N/A';
+            notesElement.textContent = props.notes || "N/A";
         }
 
         // Daños
-        const damageElement = document.getElementById('modalEventDamage');
+        const damageElement = document.getElementById("modalEventDamage");
         if (damageElement) {
-            damageElement.textContent = props.damage || 'N/A';
+            damageElement.textContent = props.damage || "N/A";
         }
 
         // Seguro
-        this.setInsuranceBadge('modalEventInsurance', props.hasInsurance);
+        this.setInsuranceBadge("modalEventInsurance", props.hasInsurance);
 
         // Configurar botones de acción
         this.setupActionButtons(props.status);
@@ -185,30 +200,31 @@ class CalendarModals {
         const element = document.getElementById(elementId);
         if (!element) return;
 
-        element.textContent = status || 'N/A';
-        element.className = 'px-2 py-1 text-xs font-semibold rounded-full text-white';
+        element.textContent = status || "N/A";
+        element.className =
+            "px-2 py-1 text-xs font-semibold rounded-full text-white";
 
         switch (status) {
-            case 'Confirmed':
-                element.classList.add('bg-purple-600');
+            case "Confirmed":
+                element.classList.add("bg-purple-600");
                 break;
-            case 'Completed':
-                element.classList.add('bg-green-600');
+            case "Completed":
+                element.classList.add("bg-green-600");
                 break;
-            case 'Pending':
-                element.classList.add('bg-orange-600');
+            case "Pending":
+                element.classList.add("bg-orange-600");
                 break;
-            case 'Declined':
-                element.classList.add('bg-red-600');
+            case "Declined":
+                element.classList.add("bg-red-600");
                 break;
-            case 'New':
-                element.classList.add('bg-blue-600');
+            case "New":
+                element.classList.add("bg-blue-600");
                 break;
-            case 'Called':
-                element.classList.add('bg-green-600');
+            case "Called":
+                element.classList.add("bg-green-600");
                 break;
             default:
-                element.classList.add('bg-gray-600');
+                element.classList.add("bg-gray-600");
                 break;
         }
     }
@@ -220,17 +236,18 @@ class CalendarModals {
         const element = document.getElementById(elementId);
         if (!element) return;
 
-        element.className = 'px-2 py-1 text-xs font-semibold rounded-full text-white';
+        element.className =
+            "px-2 py-1 text-xs font-semibold rounded-full text-white";
 
-        if (hasInsurance === 'Yes') {
-            element.textContent = 'Yes';
-            element.classList.add('bg-green-600');
-        } else if (hasInsurance === 'No') {
-            element.textContent = 'No';
-            element.classList.add('bg-red-600');
+        if (hasInsurance === "Yes") {
+            element.textContent = "Yes";
+            element.classList.add("bg-green-600");
+        } else if (hasInsurance === "No") {
+            element.textContent = "No";
+            element.classList.add("bg-red-600");
         } else {
-            element.textContent = 'N/A';
-            element.classList.add('bg-gray-600');
+            element.textContent = "N/A";
+            element.classList.add("bg-gray-600");
         }
     }
 
@@ -238,23 +255,31 @@ class CalendarModals {
      * Configurar botones de acción según estado
      */
     setupActionButtons(status) {
-        const statusActionButtons = document.getElementById('statusActionButtons');
-        const confirmBtn = document.getElementById('confirmAppointmentBtn');
+        const statusActionButtons = document.getElementById(
+            "statusActionButtons"
+        );
+        const confirmBtn = document.getElementById("confirmAppointmentBtn");
 
         if (!statusActionButtons) return;
 
-        if (status === 'Completed' || status === 'Declined') {
-            statusActionButtons.classList.add('hidden');
+        if (status === "Completed" || status === "Declined") {
+            statusActionButtons.classList.add("hidden");
         } else {
-            statusActionButtons.classList.remove('hidden');
+            statusActionButtons.classList.remove("hidden");
 
             // Deshabilitar botón confirmar si ya está confirmado
             if (confirmBtn) {
-                if (status === 'Confirmed') {
-                    confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                if (status === "Confirmed") {
+                    confirmBtn.classList.add(
+                        "opacity-50",
+                        "cursor-not-allowed"
+                    );
                     confirmBtn.disabled = true;
                 } else {
-                    confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    confirmBtn.classList.remove(
+                        "opacity-50",
+                        "cursor-not-allowed"
+                    );
                     confirmBtn.disabled = false;
                 }
             }
@@ -265,21 +290,24 @@ class CalendarModals {
      * Configurar funcionalidad de compartir ubicación
      */
     setupMapSharing(props) {
-        const address = props.address || '';
-        const lat = props.latitude || '';
-        const lng = props.longitude || '';
+        const address = props.address || "";
+        const lat = props.latitude || "";
+        const lng = props.longitude || "";
 
         // Almacenar coordenadas en campos ocultos
-        const latField = document.getElementById('event-latitude');
-        const lngField = document.getElementById('event-longitude');
-        
+        const latField = document.getElementById("event-latitude");
+        const lngField = document.getElementById("event-longitude");
+
         if (latField) latField.value = lat;
         if (lngField) lngField.value = lng;
 
         // Crear URL de Google Maps
-        const mapsUrl = (lat && lng) ?
-            `https://www.google.com/maps?q=${lat},${lng}` :
-            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+        const mapsUrl =
+            lat && lng
+                ? `https://www.google.com/maps?q=${lat},${lng}`
+                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      address
+                  )}`;
 
         // Configurar enlaces de compartir
         this.setupSharingLinks(address, mapsUrl);
@@ -290,35 +318,40 @@ class CalendarModals {
      */
     setupSharingLinks(address, mapsUrl) {
         // WhatsApp
-        const whatsappLink = document.getElementById('share-whatsapp');
+        const whatsappLink = document.getElementById("share-whatsapp");
         if (whatsappLink) {
-            whatsappLink.href = `https://wa.me/?text=Location for inspection: ${encodeURIComponent(address)} - ${encodeURIComponent(mapsUrl)}`;
-            whatsappLink.target = '_blank';
+            whatsappLink.href = `https://wa.me/?text=Location for inspection: ${encodeURIComponent(
+                address
+            )} - ${encodeURIComponent(mapsUrl)}`;
+            whatsappLink.target = "_blank";
         }
 
         // Email
-        const emailLink = document.getElementById('share-email');
+        const emailLink = document.getElementById("share-email");
         if (emailLink) {
-            const subject = encodeURIComponent('Location for inspection');
-            const body = encodeURIComponent(`The location for the inspection is: ${address}\n\nView in Google Maps: ${mapsUrl}`);
+            const subject = encodeURIComponent("Location for inspection");
+            const body = encodeURIComponent(
+                `The location for the inspection is: ${address}\n\nView in Google Maps: ${mapsUrl}`
+            );
             emailLink.href = `mailto:?subject=${subject}&body=${body}`;
         }
 
         // Google Maps
-        const mapsLink = document.getElementById('share-maps');
+        const mapsLink = document.getElementById("share-maps");
         if (mapsLink) {
             mapsLink.href = mapsUrl;
-            mapsLink.target = '_blank';
+            mapsLink.target = "_blank";
         }
 
         // Botón copiar
-        const copyButton = document.getElementById('copy-address');
+        const copyButton = document.getElementById("copy-address");
         if (copyButton) {
             copyButton.onclick = (e) => {
                 e.preventDefault();
                 navigator.clipboard.writeText(mapsUrl).then(() => {
                     const originalHTML = copyButton.innerHTML;
-                    copyButton.innerHTML = '<svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+                    copyButton.innerHTML =
+                        '<svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
                     setTimeout(() => {
                         copyButton.innerHTML = originalHTML;
                     }, 2000);
@@ -328,12 +361,12 @@ class CalendarModals {
 
         // Habilitar/deshabilitar botones según disponibilidad de dirección
         const buttons = [whatsappLink, emailLink, mapsLink, copyButton];
-        buttons.forEach(button => {
+        buttons.forEach((button) => {
             if (button) {
                 if (!address) {
-                    button.classList.add('opacity-50', 'cursor-not-allowed');
+                    button.classList.add("opacity-50", "cursor-not-allowed");
                 } else {
-                    button.classList.remove('opacity-50', 'cursor-not-allowed');
+                    button.classList.remove("opacity-50", "cursor-not-allowed");
                 }
             }
         });
@@ -343,74 +376,85 @@ class CalendarModals {
      * Cerrar modal de detalles de evento
      */
     closeEventDetailModal() {
-        const modal = document.getElementById('eventDetailModal');
+        const modal = document.getElementById("eventDetailModal");
         if (modal) {
-            modal.classList.add('hidden');
-            modal.style.display = 'none';
+            modal.classList.add("hidden");
+            modal.style.display = "none";
         }
     }
 
     /**
-     * Abrir modal de nueva cita
+     * Abrir modal de nueva cita (ahora para crear leads)
      */
     openNewAppointmentModal(start, end) {
         this.selectedStart = start;
         this.selectedEnd = end;
 
-        const modal = document.getElementById('newAppointmentModal');
+        const modal = document.getElementById("newAppointmentModal");
         if (!modal) return;
 
-        // Formatear fecha y hora
-        this.formatSelectedDateTime(start, end);
+        // Limpiar formulario
+        this.clearLeadForm();
 
-        // Cargar clientes si es necesario
-        const clientSelector = document.getElementById('clientSelector');
-        if (clientSelector && clientSelector.options.length <= 1) {
-            if (window.CalendarAPI) {
-                window.CalendarAPI.loadClients();
-            }
+        // Configurar fecha y hora de inspección si se seleccionó desde calendario
+        if (start) {
+            this.setInspectionDateTime(start);
         }
 
+        // Inicializar Google Maps si está disponible
+        this.initializeGoogleMaps();
+
+        // Configurar validación en tiempo real
+        this.setupFormValidation();
+
         // Mostrar modal
-        modal.classList.remove('hidden');
-        modal.style.display = 'block';
+        modal.classList.remove("hidden");
+        modal.style.display = "block";
     }
 
     /**
      * Formatear fecha y hora seleccionada
      */
     formatSelectedDateTime(start, end) {
-        const selectedDateTime = document.getElementById('selectedDateTime');
-        const appointmentDate = document.getElementById('appointmentDate');
-        const appointmentTime = document.getElementById('appointmentTime');
+        const selectedDateTime = document.getElementById("selectedDateTime");
+        const appointmentDate = document.getElementById("appointmentDate");
+        const appointmentTime = document.getElementById("appointmentTime");
 
         if (!selectedDateTime || !appointmentDate || !appointmentTime) return;
 
         // Formatear fecha para mostrar
-        const formattedDate = start.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
+        const formattedDate = start.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
         });
 
         // Asegurar que la cita dure 2 horas
-        const actualEnd = new Date(start.getTime() + (2 * 60 * 60 * 1000));
+        const actualEnd = new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
-        const formattedTime = start.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }) + ' - ' + actualEnd.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }) + ' (2 hours)';
+        const formattedTime =
+            start.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }) +
+            " - " +
+            actualEnd.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }) +
+            " (2 hours)";
 
         // Mostrar fecha y hora formateada
-        selectedDateTime.value = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1) + ' • ' + formattedTime;
+        selectedDateTime.value =
+            formattedDate.charAt(0).toUpperCase() +
+            formattedDate.slice(1) +
+            " • " +
+            formattedTime;
 
         // Configurar campos ocultos para envío
-        const dateStr = start.toISOString().split('T')[0]; // YYYY-MM-DD
+        const dateStr = start.toISOString().split("T")[0]; // YYYY-MM-DD
         const timeStr = start.toTimeString().substring(0, 5); // HH:MM
 
         appointmentDate.value = dateStr;
@@ -421,10 +465,10 @@ class CalendarModals {
      * Cerrar modal de nueva cita
      */
     closeNewAppointmentModal() {
-        const modal = document.getElementById('newAppointmentModal');
+        const modal = document.getElementById("newAppointmentModal");
         if (modal) {
-            modal.classList.add('hidden');
-            modal.style.display = 'none';
+            modal.classList.add("hidden");
+            modal.style.display = "none";
         }
 
         // Limpiar selección en calendario
@@ -437,18 +481,412 @@ class CalendarModals {
      * Manejar creación de cita
      */
     handleCreateAppointment() {
-        const clientSelector = document.getElementById('clientSelector');
-        
-        // Validar que se haya seleccionado un cliente
-        if (!clientSelector || !clientSelector.value) {
-            Swal.fire(this.translations.error, this.translations.please_select_client, 'error');
+        // Validar formulario
+        if (!this.validateLeadForm()) {
             return;
         }
 
-        // Crear cita usando CalendarAPI
-        if (window.CalendarAPI) {
-            window.CalendarAPI.createAppointment();
+        // Mostrar estado de carga
+        const button = document.getElementById("createAppointmentBtn");
+        const normalText = button.querySelector(".normal-btn-text");
+        const loadingText = button.querySelector(".loading-btn-text");
+
+        normalText.classList.add("hidden");
+        loadingText.classList.remove("hidden");
+        button.disabled = true;
+
+        // Enviar formulario
+        const form = document.getElementById("newAppointmentForm");
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: data.message,
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    }).then(() => {
+                        this.closeNewAppointmentModal();
+                        // Refrescar calendario
+                        if (this.calendar) {
+                            this.calendar.refetchEvents();
+                        }
+                    });
+                } else {
+                    this.handleFormErrors(data.errors || {});
+                    Swal.fire(
+                        "Error",
+                        data.message || "An error occurred",
+                        "error"
+                    );
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                Swal.fire("Error", "An unexpected error occurred", "error");
+            })
+            .finally(() => {
+                // Restaurar estado del botón
+                normalText.classList.remove("hidden");
+                loadingText.classList.add("hidden");
+                button.disabled = false;
+            });
+    }
+
+    /**
+     * Limpiar formulario de lead
+     */
+    clearLeadForm() {
+        const form = document.getElementById("newAppointmentForm");
+        if (!form) return;
+
+        // Limpiar todos los campos de texto
+        const textInputs = form.querySelectorAll(
+            'input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], textarea'
+        );
+        textInputs.forEach((input) => (input.value = ""));
+
+        // Limpiar radio buttons
+        const radioInputs = form.querySelectorAll('input[type="radio"]');
+        radioInputs.forEach((input) => (input.checked = false));
+
+        // Limpiar checkboxes
+        const checkboxInputs = form.querySelectorAll('input[type="checkbox"]');
+        checkboxInputs.forEach((input) => (input.checked = false));
+
+        // Limpiar mensajes de error
+        const errorMessages = form.querySelectorAll(".error-message");
+        errorMessages.forEach((error) => (error.textContent = ""));
+
+        // Limpiar mapa si existe
+        if (this.leadMap) {
+            this.leadMap.setCenter({ lat: 39.8283, lng: -98.5795 }); // Centro de EE.UU.
+            this.leadMap.setZoom(4);
+            if (this.leadMapMarker) {
+                this.leadMapMarker.setMap(null);
+            }
         }
+    }
+
+    /**
+     * Configurar fecha y hora de inspección
+     */
+    setInspectionDateTime(start) {
+        const dateInput = document.getElementById("inspection_date");
+        const timeInput = document.getElementById("inspection_time");
+
+        if (dateInput && timeInput) {
+            const dateStr = start.toISOString().split("T")[0]; // YYYY-MM-DD
+            const timeStr = start.toTimeString().substring(0, 5); // HH:MM
+
+            dateInput.value = dateStr;
+            timeInput.value = timeStr;
+        }
+    }
+
+    /**
+     * Inicializar Google Maps
+     */
+    initializeGoogleMaps() {
+        if (typeof google === "undefined" || !google.maps) {
+            console.warn("Google Maps API not loaded");
+            return;
+        }
+
+        const mapContainer = document.getElementById("location-map");
+        const addressInput = document.getElementById("address_map_input");
+
+        if (!mapContainer || !addressInput) return;
+
+        // Inicializar mapa
+        this.leadMap = new google.maps.Map(mapContainer, {
+            center: { lat: 39.8283, lng: -98.5795 }, // Centro de EE.UU.
+            zoom: 4,
+        });
+
+        // Configurar autocompletado
+        this.leadAutocomplete = new google.maps.places.Autocomplete(
+            addressInput,
+            {
+                types: ["address"],
+                componentRestrictions: { country: "us" },
+            }
+        );
+
+        // Configurar listener del autocompletado
+        this.leadAutocomplete.addListener("place_changed", () => {
+            const place = this.leadAutocomplete.getPlace();
+            this.handlePlaceSelection(place);
+        });
+    }
+
+    /**
+     * Manejar selección de lugar
+     */
+    handlePlaceSelection(place) {
+        if (!place.geometry) return;
+
+        // Actualizar mapa
+        this.leadMap.setCenter(place.geometry.location);
+        this.leadMap.setZoom(15);
+
+        // Limpiar marcador anterior
+        if (this.leadMapMarker) {
+            this.leadMapMarker.setMap(null);
+        }
+
+        // Agregar nuevo marcador
+        this.leadMapMarker = new google.maps.Marker({
+            position: place.geometry.location,
+            map: this.leadMap,
+            title: place.formatted_address,
+        });
+
+        // Extraer componentes de dirección
+        const addressComponents = place.address_components;
+        let streetNumber = "";
+        let route = "";
+        let city = "";
+        let state = "";
+        let zipcode = "";
+        let country = "";
+
+        addressComponents.forEach((component) => {
+            const types = component.types;
+            if (types.includes("street_number")) {
+                streetNumber = component.long_name;
+            } else if (types.includes("route")) {
+                route = component.long_name;
+            } else if (types.includes("locality")) {
+                city = component.long_name;
+            } else if (types.includes("administrative_area_level_1")) {
+                state = component.short_name;
+            } else if (types.includes("postal_code")) {
+                zipcode = component.long_name;
+            } else if (types.includes("country")) {
+                country = component.short_name;
+            }
+        });
+
+        // Actualizar campos ocultos
+        document.getElementById("address").value =
+            `${streetNumber} ${route}`.trim();
+        document.getElementById("city").value = city;
+        document.getElementById("state").value = state;
+        document.getElementById("zipcode").value = zipcode;
+        document.getElementById("country").value = country;
+
+        // Actualizar coordenadas
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        document.getElementById("latitude").value = lat;
+        document.getElementById("longitude").value = lng;
+    }
+
+    /**
+     * Configurar validación en tiempo real
+     */
+    setupFormValidation() {
+        const form = document.getElementById("newAppointmentForm");
+        if (!form) return;
+
+        // Validación de teléfono
+        const phoneInput = document.getElementById("phone");
+        if (phoneInput) {
+            phoneInput.addEventListener("input", (e) => {
+                let value = e.target.value.replace(/\D/g, "");
+                if (value.length >= 6) {
+                    value = value.replace(
+                        /(\d{3})(\d{3})(\d{4})/,
+                        "($1) $2-$3"
+                    );
+                } else if (value.length >= 3) {
+                    value = value.replace(/(\d{3})(\d{0,3})/, "($1) $2");
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Validación de email en tiempo real
+        const emailInput = document.getElementById("email");
+        if (emailInput) {
+            emailInput.addEventListener("blur", this.validateEmail.bind(this));
+        }
+
+        // Validación de nombres
+        const firstNameInput = document.getElementById("first_name");
+        const lastNameInput = document.getElementById("last_name");
+
+        if (firstNameInput) {
+            firstNameInput.addEventListener(
+                "blur",
+                this.validateName.bind(this)
+            );
+        }
+        if (lastNameInput) {
+            lastNameInput.addEventListener(
+                "blur",
+                this.validateName.bind(this)
+            );
+        }
+    }
+
+    /**
+     * Validar email
+     */
+    validateEmail(e) {
+        const email = e.target.value;
+        const errorElement = document.querySelector(
+            '.error-message[data-field="email"]'
+        );
+
+        if (!email) {
+            this.showFieldError(errorElement, "Email is required");
+            return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.showFieldError(
+                errorElement,
+                "Please enter a valid email address"
+            );
+            return false;
+        }
+
+        this.clearFieldError(errorElement);
+        return true;
+    }
+
+    /**
+     * Validar nombre
+     */
+    validateName(e) {
+        const name = e.target.value;
+        const fieldName = e.target.name;
+        const errorElement = document.querySelector(
+            `.error-message[data-field="${fieldName}"]`
+        );
+
+        if (!name) {
+            this.showFieldError(
+                errorElement,
+                `${fieldName.replace("_", " ")} is required`
+            );
+            return false;
+        }
+
+        const nameRegex = /^[a-zA-Z\s'-]+$/;
+        if (!nameRegex.test(name)) {
+            this.showFieldError(errorElement, "Please enter a valid name");
+            return false;
+        }
+
+        this.clearFieldError(errorElement);
+        return true;
+    }
+
+    /**
+     * Mostrar error en campo
+     */
+    showFieldError(errorElement, message) {
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+        }
+    }
+
+    /**
+     * Limpiar error en campo
+     */
+    clearFieldError(errorElement) {
+        if (errorElement) {
+            errorElement.textContent = "";
+            errorElement.style.display = "none";
+        }
+    }
+
+    /**
+     * Validar formulario de lead
+     */
+    validateLeadForm() {
+        const form = document.getElementById("newAppointmentForm");
+        if (!form) return false;
+
+        let isValid = true;
+
+        // Validar campos requeridos
+        const requiredFields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "address_map_input",
+        ];
+        requiredFields.forEach((fieldName) => {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.querySelector(
+                `.error-message[data-field="${fieldName}"]`
+            );
+
+            if (!field || !field.value.trim()) {
+                this.showFieldError(
+                    errorElement,
+                    `${fieldName.replace("_", " ")} is required`
+                );
+                isValid = false;
+            } else {
+                this.clearFieldError(errorElement);
+            }
+        });
+
+        // Validar insurance_property
+        const insuranceRadios = document.querySelectorAll(
+            'input[name="insurance_property"]'
+        );
+        const insuranceChecked = Array.from(insuranceRadios).some(
+            (radio) => radio.checked
+        );
+        const insuranceError = document.querySelector(
+            '.error-message[data-field="insurance_property"]'
+        );
+
+        if (!insuranceChecked) {
+            this.showFieldError(
+                insuranceError,
+                "Please select an insurance option"
+            );
+            isValid = false;
+        } else {
+            this.clearFieldError(insuranceError);
+        }
+
+        return isValid;
+    }
+
+    /**
+     * Manejar errores del formulario
+     */
+    handleFormErrors(errors) {
+        Object.keys(errors).forEach((fieldName) => {
+            const errorElement = document.querySelector(
+                `.error-message[data-field="${fieldName}"]`
+            );
+            if (errorElement && errors[fieldName][0]) {
+                this.showFieldError(errorElement, errors[fieldName][0]);
+            }
+        });
     }
 }
 
