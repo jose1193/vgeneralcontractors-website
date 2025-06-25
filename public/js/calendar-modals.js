@@ -213,7 +213,7 @@ class CalendarModals {
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
-                        this.translations.create_lead || "Create Lead";
+                        this.translations.create_confirmed_lead || "Crear y Confirmar Lead";
                 }
                 // Clear client selector
                 if (clientSelector) {
@@ -233,8 +233,7 @@ class CalendarModals {
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
-                        this.translations.create_confirmed_appointment ||
-                        "Create Confirmed Appointment";
+                        this.translations.create_lead || "Create Lead";
                 }
                 // Load clients if not already loaded
                 this.loadClients();
@@ -700,7 +699,7 @@ class CalendarModals {
         // Reset button text to correct default state (existing client mode)
         const createBtnText = document.getElementById('createBtnText');
         if (createBtnText) {
-            createBtnText.textContent = this.translations.create_confirmed_appointment || 'Create Confirmed Appointment';
+            createBtnText.textContent = this.translations.create_lead || 'Create Lead';
         }
 
         // Ensure we're in existing client mode after reset
@@ -929,7 +928,7 @@ class CalendarModals {
             
             // Reset button text to match existing client mode
             if (createBtnText) {
-                createBtnText.textContent = this.translations.create_confirmed_appointment || "Create Confirmed Appointment";
+                createBtnText.textContent = this.translations.create_lead || "Create Lead";
             }
         }
 
