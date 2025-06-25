@@ -19,7 +19,12 @@ class CalendarEvents {
             // Handle date selection for new appointments
             select: (info) => {
                 if (window.CalendarModals) {
-                    window.CalendarModals.openNewAppointmentModal(info.start, info.end);
+                    // Ensure 3-hour duration for inspections
+                    const start = info.start;
+                    const end =
+                        info.end ||
+                        new Date(start.getTime() + 3 * 60 * 60 * 1000); // Add 3 hours if no end time
+                    window.CalendarModals.openNewAppointmentModal(start, end);
                 }
             },
 
@@ -36,7 +41,7 @@ class CalendarEvents {
             // Handle mouse enter for tooltips
             eventMouseEnter: (info) => {
                 this.setupEventTooltip(info);
-            }
+            },
         };
     }
 
@@ -51,17 +56,20 @@ class CalendarEvents {
         Swal.fire({
             title: this.translations.reschedule_appointment,
             html: this.translations.move_appointment_to
-                .replace('{title}', event.title)
-                .replace('{newTime}', event.start.toLocaleString('en-US', {
-                    dateStyle: 'short',
-                    timeStyle: 'short'
-                })),
-            icon: 'question',
+                .replace("{title}", event.title)
+                .replace(
+                    "{newTime}",
+                    event.start.toLocaleString("en-US", {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                    })
+                ),
+            icon: "question",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
             confirmButtonText: this.translations.yes_move,
-            cancelButtonText: this.translations.cancel
+            cancelButtonText: this.translations.cancel,
         }).then((result) => {
             if (result.isConfirmed) {
                 this.updateEventTime(event.id, newStart, newEnd, info);
@@ -76,27 +84,28 @@ class CalendarEvents {
      */
     updateEventTime(eventId, newStart, newEnd, info) {
         $.ajax({
-            url: this.routes.update.replace(':id', eventId),
-            type: 'PATCH',
+            url: this.routes.update.replace(":id", eventId),
+            type: "PATCH",
             data: {
                 start: newStart,
-                end: newEnd
+                end: newEnd,
             },
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: (response) => {
-                Swal.fire(this.translations.moved, response.message, 'success');
+                Swal.fire(this.translations.moved, response.message, "success");
             },
             error: (xhr) => {
                 console.error("Error updating event:", xhr.responseText);
-                let errorMessage = this.translations.could_not_update_appointment;
+                let errorMessage =
+                    this.translations.could_not_update_appointment;
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage += ` ${xhr.responseJSON.message}`;
                 }
-                Swal.fire(this.translations.error, errorMessage, 'error');
+                Swal.fire(this.translations.error, errorMessage, "error");
                 info.revert();
-            }
+            },
         });
     }
 
@@ -123,13 +132,15 @@ class CalendarEvents {
      * Configurar tooltip para evento
      */
     setupEventTooltip(info) {
-        if (typeof tippy !== 'undefined') {
+        if (typeof tippy !== "undefined") {
             tippy(info.el, {
-                content: `<strong>${info.event.title}</strong><br>Status: ${info.event.extendedProps.status || 'Pending'}`,
+                content: `<strong>${info.event.title}</strong><br>Status: ${
+                    info.event.extendedProps.status || "Pending"
+                }`,
                 allowHTML: true,
-                theme: 'light-border',
-                placement: 'top',
-                arrow: true
+                theme: "light-border",
+                placement: "top",
+                arrow: true,
             });
         }
     }
@@ -143,15 +154,15 @@ class CalendarEvents {
         Swal.fire({
             title: this.translations.confirm_appointment_title,
             text: this.translations.confirm_appointment_text,
-            icon: 'question',
+            icon: "question",
             showCancelButton: true,
-            confirmButtonColor: '#10b981',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: "#10b981",
+            cancelButtonColor: "#6b7280",
             confirmButtonText: this.translations.yes_confirm,
-            cancelButtonText: this.translations.cancel
+            cancelButtonText: this.translations.cancel,
         }).then((result) => {
             if (result.isConfirmed) {
-                this.updateAppointmentStatus(appointmentId, 'Confirmed');
+                this.updateAppointmentStatus(appointmentId, "Confirmed");
             }
         });
     }
@@ -165,15 +176,15 @@ class CalendarEvents {
         Swal.fire({
             title: this.translations.decline_appointment_title,
             text: this.translations.decline_appointment_text,
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
             confirmButtonText: this.translations.yes_decline,
-            cancelButtonText: this.translations.cancel
+            cancelButtonText: this.translations.cancel,
         }).then((result) => {
             if (result.isConfirmed) {
-                this.updateAppointmentStatus(appointmentId, 'Declined');
+                this.updateAppointmentStatus(appointmentId, "Declined");
             }
         });
     }
@@ -182,60 +193,68 @@ class CalendarEvents {
      * Actualizar estado de cita
      */
     updateAppointmentStatus(appointmentId, status) {
-        const button = status === 'Confirmed' ? 
-            document.getElementById('confirmAppointmentBtn') :
-            document.getElementById('declineAppointmentBtn');
-        
+        const button =
+            status === "Confirmed"
+                ? document.getElementById("confirmAppointmentBtn")
+                : document.getElementById("declineAppointmentBtn");
+
         if (button) {
-            const btnText = button.querySelector('.normal-btn-text');
-            const processingText = button.querySelector('.processing-btn-text');
-            
-            btnText.classList.add('hidden');
-            processingText.classList.remove('hidden');
+            const btnText = button.querySelector(".normal-btn-text");
+            const processingText = button.querySelector(".processing-btn-text");
+
+            btnText.classList.add("hidden");
+            processingText.classList.remove("hidden");
             button.disabled = true;
         }
 
         $.ajax({
-            url: this.routes.status.replace(':id', appointmentId),
-            type: 'PATCH',
+            url: this.routes.status.replace(":id", appointmentId),
+            type: "PATCH",
             data: { status: status },
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: (response) => {
-                const message = status === 'Confirmed' ? 
-                    this.translations.confirmed : 
-                    this.translations.declined;
-                
-                Swal.fire(message, response.message, 'success');
+                const message =
+                    status === "Confirmed"
+                        ? this.translations.confirmed
+                        : this.translations.declined;
+
+                Swal.fire(message, response.message, "success");
                 this.calendar.refetchEvents();
-                
+
                 // Cerrar modal
-                const modal = document.getElementById('eventDetailModal');
+                const modal = document.getElementById("eventDetailModal");
                 if (modal) {
-                    modal.classList.add('hidden');
-                    modal.style.display = 'none';
+                    modal.classList.add("hidden");
+                    modal.style.display = "none";
                 }
             },
             error: (xhr) => {
-                const errorMessage = status === 'Confirmed' ?
-                    this.translations.could_not_confirm_appointment :
-                    this.translations.could_not_decline_appointment;
-                
-                console.error("Error updating appointment status:", xhr.responseText);
-                Swal.fire(this.translations.error, errorMessage, 'error');
+                const errorMessage =
+                    status === "Confirmed"
+                        ? this.translations.could_not_confirm_appointment
+                        : this.translations.could_not_decline_appointment;
+
+                console.error(
+                    "Error updating appointment status:",
+                    xhr.responseText
+                );
+                Swal.fire(this.translations.error, errorMessage, "error");
             },
             complete: () => {
                 // Restaurar estado del botón
                 if (button) {
-                    const btnText = button.querySelector('.normal-btn-text');
-                    const processingText = button.querySelector('.processing-btn-text');
-                    
-                    btnText.classList.remove('hidden');
-                    processingText.classList.add('hidden');
+                    const btnText = button.querySelector(".normal-btn-text");
+                    const processingText = button.querySelector(
+                        ".processing-btn-text"
+                    );
+
+                    btnText.classList.remove("hidden");
+                    processingText.classList.add("hidden");
                     button.disabled = false;
                 }
-            }
+            },
         });
     }
 

@@ -99,6 +99,7 @@ class CalendarConfig {
             slotDuration: "00:30:00",
             slotMinTime: "08:00:00",
             slotMaxTime: "20:00:00",
+            defaultTimedEventDuration: "03:00:00", // 3 hours default duration for inspections
             businessHours: {
                 daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
                 startTime: "08:00",
