@@ -192,12 +192,25 @@ class CalendarModals {
             return;
         }
 
-        // Handle toggle change
-        toggle.addEventListener("change", () => {
-            if (toggle.checked) {
+        // Initialize toggle state
+        let isCreateNewMode = false;
+
+        // Handle toggle click
+        toggle.addEventListener("click", () => {
+            isCreateNewMode = !isCreateNewMode;
+            
+            if (isCreateNewMode) {
                 // Create new client mode
                 existingClientSection.classList.add("hidden");
                 newClientSection.classList.remove("hidden");
+                toggle.classList.remove("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.classList.add("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Volver a Seleccionar Cliente
+                `;
                 if (createBtnText) {
                     createBtnText.textContent =
                         this.translations.create_lead || "Create Lead";
@@ -210,6 +223,14 @@ class CalendarModals {
                 // Select existing client mode
                 existingClientSection.classList.remove("hidden");
                 newClientSection.classList.add("hidden");
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+                `;
                 if (createBtnText) {
                     createBtnText.textContent =
                         this.translations.create_confirmed_appointment ||
@@ -221,7 +242,7 @@ class CalendarModals {
         });
 
         // Initialize with default state (select existing client)
-        toggle.checked = false;
+        isCreateNewMode = false;
         existingClientSection.classList.remove("hidden");
         newClientSection.classList.add("hidden");
         if (createBtnText) {
@@ -663,7 +684,8 @@ class CalendarModals {
      */
     handleCreateAppointment() {
         const toggle = document.getElementById("createNewClientToggle");
-        const isNewClient = toggle ? toggle.checked : true;
+        const newClientSection = document.getElementById("newClientSection");
+        const isNewClient = newClientSection ? !newClientSection.classList.contains("hidden") : false;
 
         // Validar formulario según el modo
         if (!this.validateForm(isNewClient)) {
@@ -842,10 +864,21 @@ class CalendarModals {
 
         // Reset toggle to default state (select existing client)
         const toggle = document.getElementById("createNewClientToggle");
-        if (toggle) {
-            toggle.checked = false;
-            // Trigger change event to update UI
-            toggle.dispatchEvent(new Event("change"));
+        const existingClientSection = document.getElementById("existingClientSection");
+        const newClientSection = document.getElementById("newClientSection");
+        
+        if (toggle && existingClientSection && newClientSection) {
+            // Reset to existing client mode
+            existingClientSection.classList.remove("hidden");
+            newClientSection.classList.add("hidden");
+            toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+            toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+            toggle.innerHTML = `
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+            `;
         }
 
         // Clear client selector

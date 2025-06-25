@@ -32,17 +32,6 @@
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
 
-                <!-- Toggle for New Client -->
-                <div class="mb-6">
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="createNewClientToggle"
-                            class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
-                            {{ __('create_new_client') }}
-                        </span>
-                    </label>
-                </div>
-
                 <!-- Existing Client Selector -->
                 <div id="existingClientSection" class="mb-6">
                     <label for="clientSelector" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -53,6 +42,15 @@
                         <option value="">{{ __('please_select_client') }}</option>
                     </select>
                     <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="client_id"></span>
+                    
+                    <!-- Create New Client Button -->
+                    <button type="button" id="createNewClientToggle"
+                        class="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-md border border-gray-300 transition-colors duration-200 flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        {{ __('create_new_client') }}
+                    </button>
                 </div>
 
                 <!-- New Client Fields -->
