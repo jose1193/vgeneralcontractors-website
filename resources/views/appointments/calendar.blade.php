@@ -131,34 +131,66 @@
                 }
             }, true);
 
-            // Debug script to help identify issues
+            // Enhanced debug script to identify module loading issues
             setTimeout(() => {
-                console.log('=== CALENDAR DEBUG INFO ===');
-                console.log('Calendar element exists:', !!document.getElementById('calendar'));
-                console.log('FullCalendar loaded:', typeof FullCalendar !== 'undefined');
-                console.log('jQuery loaded:', typeof $ !== 'undefined');
-                console.log('SweetAlert2 loaded:', typeof Swal !== 'undefined');
-                console.log('CalendarMain exists:', typeof CalendarMain !== 'undefined');
-                console.log('Window calendarMain:', !!window.calendarMain);
+                console.log('=== ENHANCED CALENDAR DEBUG INFO ===');
+
+                // Check basic dependencies
+                console.log('Dependencies Check:');
+                console.log('- Calendar element exists:', !!document.getElementById('calendar'));
+                console.log('- FullCalendar loaded:', typeof FullCalendar !== 'undefined');
+                console.log('- jQuery loaded:', typeof $ !== 'undefined');
+                console.log('- SweetAlert2 loaded:', typeof Swal !== 'undefined');
+                console.log('- Tippy.js loaded:', typeof tippy !== 'undefined');
+
+                // Check calendar modules
+                console.log('Calendar Modules Check:');
+                console.log('- CalendarUtils:', typeof CalendarUtils !== 'undefined' ? '✓' : '✗');
+                console.log('- CalendarConfig:', typeof CalendarConfig !== 'undefined' ? '✓' : '✗');
+                console.log('- CalendarEvents:', typeof CalendarEvents !== 'undefined' ? '✓' : '✗');
+                console.log('- CalendarModals:', typeof CalendarModals !== 'undefined' ? '✓' : '✗');
+                console.log('- CalendarAPI:', typeof CalendarAPI !== 'undefined' ? '✓' : '✗');
+                console.log('- CalendarMain:', typeof CalendarMain !== 'undefined' ? '✓' : '✗');
+
+                // Check window objects
+                console.log('Window Objects:');
+                console.log('- window.CalendarUtils:', !!window.CalendarUtils ? '✓' : '✗');
+                console.log('- window.CalendarConfig:', !!window.CalendarConfig ? '✗' : '✗');
+                console.log('- window.CalendarEvents:', !!window.CalendarEvents ? '✗' : '✗');
+                console.log('- window.CalendarModals:', !!window.CalendarModals ? '✗' : '✗');
+                console.log('- window.CalendarAPI:', !!window.CalendarAPI ? '✗' : '✗');
+                console.log('- window.calendarMain:', !!window.calendarMain ? '✓' : '✗');
 
                 if (window.calendarMain) {
-                    console.log('Calendar status:', window.calendarMain.getStatus());
+                    console.log('Calendar Main Status:', window.calendarMain.getStatus());
                 }
 
                 // Check if calendar has any visible content
                 const calendarEl = document.getElementById('calendar');
                 if (calendarEl) {
-                    console.log('Calendar element dimensions:', {
+                    console.log('Calendar Element Info:', {
                         width: calendarEl.offsetWidth,
                         height: calendarEl.offsetHeight,
                         display: getComputedStyle(calendarEl).display,
-                        visibility: getComputedStyle(calendarEl).visibility
+                        visibility: getComputedStyle(calendarEl).visibility,
+                        innerHTML_length: calendarEl.innerHTML.length
                     });
-                    console.log('Calendar innerHTML length:', calendarEl.innerHTML.length);
                 }
 
-                console.log('=== END DEBUG INFO ===');
-            }, 2000);
+                // Check for JavaScript errors
+                console.log('Checking for script errors...');
+
+                // Try to manually verify each module
+                try {
+                    if (typeof CalendarUtils !== 'undefined') {
+                        console.log('CalendarUtils test:', CalendarUtils.formatPhoneNumber('1234567890'));
+                    }
+                } catch (e) {
+                    console.error('CalendarUtils error:', e);
+                }
+
+                console.log('=== END ENHANCED DEBUG INFO ===');
+            }, 3000);
         </script>
     @endpush
 
