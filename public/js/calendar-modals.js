@@ -329,7 +329,7 @@ class CalendarModals {
                         minute: "numeric",
                         hour12: true,
                     }).format(end);
-                formattedDateTime += " (2 hours)";
+                formattedDateTime += " (3 hours)";
             }
 
             dateTimeElement.textContent = formattedDateTime;
@@ -605,8 +605,8 @@ class CalendarModals {
             year: "numeric",
         });
 
-        // Asegurar que la cita dure 2 horas
-        const actualEnd = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+        // Asegurar que la cita dure 3 horas (estandarizado)
+        const actualEnd = new Date(start.getTime() + 3 * 60 * 60 * 1000);
 
         const formattedTime =
             start.toLocaleTimeString("en-US", {
@@ -620,7 +620,7 @@ class CalendarModals {
                 minute: "2-digit",
                 hour12: false,
             }) +
-            " (2 hours)";
+            " (3 hours)";
 
         // Mostrar fecha y hora formateada
         selectedDateTime.value =

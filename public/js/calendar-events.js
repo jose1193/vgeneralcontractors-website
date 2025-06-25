@@ -19,9 +19,13 @@ class CalendarEvents {
             // Handle date selection for new appointments
             select: (info) => {
                 if (window.CalendarModals) {
+                    // Force 3-hour duration regardless of selection
+                    const endTime = new Date(
+                        info.start.getTime() + 3 * 60 * 60 * 1000
+                    );
                     window.CalendarModals.openNewAppointmentModal(
                         info.start,
-                        info.end
+                        endTime
                     );
                 }
             },
