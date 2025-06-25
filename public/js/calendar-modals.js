@@ -319,15 +319,30 @@ class CalendarModals {
      * Abrir modal de detalles de evento
      */
     openEventDetailModal(event, props) {
+        console.log("DEBUG - openEventDetailModal called with:", {
+            event: event,
+            props: props
+        });
+        
         const modal = document.getElementById("eventDetailModal");
-        if (!modal) return;
+        if (!modal) {
+            console.error("DEBUG - eventDetailModal element not found in DOM");
+            return;
+        }
+        
+        console.log("DEBUG - Modal element found:", modal);
 
         // Poblar datos del modal
+        console.log("DEBUG - Populating modal data");
         this.populateEventDetailModal(event, props);
 
         // Mostrar modal
+        console.log("DEBUG - Showing modal");
         modal.classList.remove("hidden");
         modal.style.display = "block";
+        
+        console.log("DEBUG - Modal classes after show:", modal.classList.toString());
+        console.log("DEBUG - Modal display style:", modal.style.display);
     }
 
     /**
@@ -375,8 +390,9 @@ class CalendarModals {
                         minute: "numeric",
                         hour12: true,
                     }).format(end);
-                // Calculate end time (3 hours later)
-                const endTime = new Date(startTime.getTime() + 3 * 60 * 60 * 1000);
+            } else {
+                // Calculate end time (3 hours later) if no end time provided
+                const endTime = new Date(start.getTime() + 3 * 60 * 60 * 1000);
                 const endTimeStr = endTime.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',

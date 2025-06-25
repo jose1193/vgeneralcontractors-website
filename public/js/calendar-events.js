@@ -143,15 +143,29 @@ class CalendarEvents {
      */
     handleEventClick(info) {
         info.jsEvent.preventDefault();
+        
+        console.log("DEBUG - Event clicked:", {
+            eventId: info.event.id,
+            eventTitle: info.event.title,
+            extendedProps: info.event.extendedProps
+        });
 
         try {
             const props = info.event.extendedProps;
             this.currentAppointmentId = info.event.id;
 
-            // Abrir modal de detalles
-            if (window.CalendarModals) {
-                window.CalendarModals.openEventDetailModal(info.event, props);
+            // Verificar que CalendarModals existe
+            if (!window.CalendarModals) {
+                console.error("CalendarModals not found in window object");
+                return;
             }
+
+            console.log("DEBUG - Opening event detail modal");
+            
+            // Abrir modal de detalles
+            window.CalendarModals.openEventDetailModal(info.event, props);
+            
+            console.log("DEBUG - Modal should be open now");
         } catch (error) {
             console.error("Error in eventClick handler:", error);
         }
