@@ -470,6 +470,7 @@ class AppointmentCalendarController extends Controller
                 'notes' => 'nullable|string',
                 'damage_detail' => 'nullable|string',
                 'intent_to_claim' => 'nullable|boolean',
+                'lead_source' => 'required|in:Website,Facebook Ads,Reference,Retell AI',
                 'sms_consent' => 'nullable|boolean',
                 'inspection_date' => 'nullable|date|after_or_equal:today',
                 'inspection_time' => 'nullable|date_format:H:i',
@@ -500,8 +501,8 @@ class AppointmentCalendarController extends Controller
                 $appointment->sms_consent = $request->sms_consent ?? false;
                 $appointment->registration_date = now();
                 
-                // Set default values as requested
-                $appointment->lead_source = 'Reference';
+                // Set lead source from request
+                $appointment->lead_source = $request->lead_source;
                 
                 // Set inspection details if provided
                 if ($request->inspection_date && $request->inspection_time) {

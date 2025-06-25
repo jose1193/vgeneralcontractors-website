@@ -1456,6 +1456,7 @@ class CalendarModals {
             "email",
             "phone",
             "address_map_input",
+            "lead_source",
         ];
         requiredFields.forEach((fieldName) => {
             const field = document.getElementById(fieldName);

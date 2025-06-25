@@ -192,10 +192,27 @@
                             data-field="insurance_property"></span>
                     </div>
 
+                    <!-- Lead Source -->
+                    <div class="mb-6">
+                        <label for="lead_source" class="block text-sm font-medium text-gray-700">
+                            {{ __('lead_source') }} <span class="text-red-500">*</span>
+                        </label>
+                        <select id="lead_source" name="lead_source" required
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            <option value="">Select Lead Source</option>
+                            <option value="Website">Website</option>
+                            <option value="Facebook Ads">Facebook Ads</option>
+                            <option value="Reference">Reference</option>
+                            <option value="Retell AI">Retell AI</option>
+                        </select>
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                            data-field="lead_source"></span>
+                    </div>
+
                     <!-- Intent to Claim -->
                     <div class="mb-6 text-center">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ __('intent_to_claim') }}
+                            {{ __('intent_to_claim') }} <span class="text-xs text-gray-500">{{ __('optional_label') }}</span>
                         </label>
                         <fieldset class="mt-2">
                             <legend class="sr-only">Intent to Claim</legend>
