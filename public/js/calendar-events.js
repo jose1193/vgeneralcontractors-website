@@ -47,6 +47,9 @@ class CalendarEvents {
                             " minutes",
                     });
 
+                    // Create temporary visual event to show 3-hour duration
+                    this.createTemporarySelectionEvent(info.start, endTime);
+
                     window.CalendarModals.openNewAppointmentModal(
                         info.start,
                         endTime
@@ -289,6 +292,43 @@ class CalendarEvents {
      */
     getCurrentAppointmentId() {
         return this.currentAppointmentId;
+    }
+
+    /**
+     * Create temporary visual event during selection
+     */
+    createTemporarySelectionEvent(start, end) {
+        // Remove any existing temporary event
+        this.removeTemporarySelectionEvent();
+
+        // Create temporary event
+        const tempEvent = {
+            id: "temp-selection",
+            title: "New Appointment (3 hours)",
+            start: start.toISOString(),
+            end: end.toISOString(),
+            backgroundColor: "#3b82f6",
+            borderColor: "#1d4ed8",
+            className: "temp-selection-event",
+            display: "block",
+            editable: false,
+        };
+
+        // Add to calendar
+        this.calendar.addEvent(tempEvent);
+
+        console.log("DEBUG - Temporary event created:", tempEvent);
+    }
+
+    /**
+     * Remove temporary selection event
+     */
+    removeTemporarySelectionEvent() {
+        const tempEvent = this.calendar.getEventById("temp-selection");
+        if (tempEvent) {
+            tempEvent.remove();
+            console.log("DEBUG - Temporary event removed");
+        }
     }
 }
 

@@ -651,6 +651,11 @@ class CalendarModals {
         if (this.calendar) {
             this.calendar.unselect();
         }
+
+        // Remove temporary selection event
+        if (window.CalendarEvents) {
+            window.CalendarEvents.removeTemporarySelectionEvent();
+        }
     }
 
     /**
@@ -701,6 +706,10 @@ class CalendarModals {
                         confirmButtonText: "OK",
                     }).then(() => {
                         this.closeNewAppointmentModal();
+                        // Remove temporary selection event before refreshing
+                        if (window.CalendarEvents) {
+                            window.CalendarEvents.removeTemporarySelectionEvent();
+                        }
                         // Refrescar calendario
                         if (this.calendar) {
                             this.calendar.refetchEvents();

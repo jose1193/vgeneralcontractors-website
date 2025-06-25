@@ -248,6 +248,18 @@
                                     z-index: 1000;
                                 }
 
+                                /* Temporary selection event styling */
+                                .temp-selection-event {
+                                    opacity: 0.8 !important;
+                                    border: 2px dashed #1d4ed8 !important;
+                                    background: linear-gradient(45deg, #3b82f6, #60a5fa) !important;
+                                }
+
+                                .temp-selection-event .fc-event-title {
+                                    font-weight: bold !important;
+                                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+                                }
+
                                 /* Print styles */
                                 @media print {
                                     .fc-header-toolbar {

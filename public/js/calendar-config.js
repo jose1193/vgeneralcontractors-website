@@ -93,7 +93,11 @@ class CalendarConfig {
             eventDurationEditable: true,
             eventStartEditable: true,
             selectable: true,
-            selectMirror: true,
+            selectMirror: false, // Disable mirror to control selection visualization
+            selectAllow: (selectInfo) => {
+                // Always allow selection but control the visual feedback
+                return true;
+            },
             dayMaxEvents: true,
             nowIndicator: true,
 
