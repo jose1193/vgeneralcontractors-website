@@ -321,6 +321,7 @@
     "property_insurance_question": "Do you have property insurance?",
 
     "sms_consent_text": "By checking this box, I consent to receive text messages from <strong>V GENERAL CONTRACTORS</strong>. You can reply <strong>STOP</strong> at any time to opt out. Message and data rates may apply. <strong>Message frequency may vary</strong>, text <strong>HELP</strong> for assistance. For more information, please refer to our privacy policy and SMS Terms and Conditions on our website.",
+    "sms_consent_modal_lead": "By checking this box, consent is given for the user to receive newsletters and updates about roofing services, free inspections, special offers, and maintenance tips from <strong>V GENERAL CONTRACTORS</strong>. The user can reply <strong>STOP</strong> at any time to opt out. Message and data rates may apply.",
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
     "and": "and",
@@ -623,7 +624,7 @@
 
     "create_new_appointment": "Create New Appointment",
     "create_new_lead": "Create New Lead",
-  
+
     "create_lead": "Create Lead",
     "creating": "Creating...",
 
@@ -1670,6 +1671,13 @@
     "first_name_validation": "Only letters and spaces allowed, maximum 50 characters",
     "last_name_validation": "Only letters and spaces allowed, maximum 50 characters",
     "max_50_characters": "Maximum 50 characters",
+    "address_map_input": "Address (Map)",
+    "first_name_is_required": "First Name is required",
+    "last_name_is_required": "Last Name is required",
+    "email_is_required": "Email is required",
+    "phone_is_required": "Phone is required",
+    "address_is_required": "Address is required",
+    "please_select_insurance_option": "Please select an insurance option",
     "appointment_calendar_invalid_date_format": "Invalid date format.",
     "appointment_calendar_schedule_conflict": "Schedule conflict: Another appointment is already scheduled for this time.",
     "appointment_calendar_updated_successfully": "Appointment updated successfully. A notification email has been sent to the client.",

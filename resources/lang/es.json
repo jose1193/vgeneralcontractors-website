@@ -274,7 +274,7 @@
     "get_your_free_inspection": "Obtenga su Inspección Gratuita",
     "fill_form_below": "Complete el formulario a continuación y nuestro equipo se comunicará con usted en breve para programar su inspección gratuita.",
     "enter_complete_address": "Ingrese su dirección completa",
-  
+
     "optional_apt_suite": "(Opcional, ej., Apto, Suite, Unidad)",
     "apt_suite_placeholder": "# Apto, # Suite, etc.",
     "location_map": "Mapa de Ubicación",
@@ -283,6 +283,7 @@
     "property_insurance_question": "¿Tiene seguro de propiedad?",
 
     "sms_consent_text": "Al marcar esta casilla, consiento recibir mensajes de texto de <strong>V GENERAL CONTRACTORS</strong>. Puedes responder <strong>STOP</strong> en cualquier momento para cancelar. Se aplican tarifas de mensajes y datos. <strong>La frecuencia de mensajes puede variar,</strong> envía <strong>HELP</strong> para asistencia. Para más información, consulta nuestra política de privacidad y Términos y Condiciones de SMS en nuestro sitio web.",
+    "sms_consent_modal_lead": "Al marcar esta casilla, se consiente que el usuario recibirá boletines informativos y actualizaciones sobre servicios de techado, inspecciones gratuitas, ofertas especiales y consejos de mantenimiento de <strong>V GENERAL CONTRACTORS</strong>. El usuario puede responder <strong>STOP</strong> en cualquier momento para cancelar. Se aplican tarifas de mensajes y datos.",
     "privacy_policy": "Política de Privacidad",
     "terms_of_service": "Términos de Servicio",
     "and": "y",
@@ -585,7 +586,7 @@
     "create_new_appointment": "Crear Nueva Cita",
     "create_new_lead": "Crear Nuevo Lead",
     "address_2": "Dirección 2",
-   
+
     "create_lead": "Crear Lead",
     "creating": "Creando...",
     "whatsapp": "WhatsApp",
@@ -1675,6 +1676,13 @@
     "copy_failed": "Error al copiar al portapapeles",
     "first_name_validation": "Solo se permiten letras y espacios, máximo 50 caracteres",
     "last_name_validation": "Solo se permiten letras y espacios, máximo 50 caracteres",
+    "address_map_input": "Dirección (Mapa)",
+    "first_name_is_required": "El nombre es requerido",
+    "last_name_is_required": "El apellido es requerido",
+    "email_is_required": "El correo electrónico es requerido",
+    "phone_is_required": "El teléfono es requerido",
+    "address_is_required": "La dirección es requerida",
+    "please_select_insurance_option": "Por favor seleccione una opción de seguro",
     "max_50_characters": "Máximo 50 caracteres",
     "appointment_calendar_invalid_date_format": "Formato de fecha inválido.",
     "appointment_calendar_schedule_conflict": "Conflicto de horario: Ya hay otra cita programada para este horario.",
