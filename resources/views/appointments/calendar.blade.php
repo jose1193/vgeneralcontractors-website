@@ -596,8 +596,8 @@
                             selectedStart = start;
                             selectedEnd = end;
 
-                            // Format date and time for display - in English with Month first
-                            const formattedDate = start.toLocaleDateString('en-US', {
+                            // Format date and time for display - dynamic locale
+                            const formattedDate = start.toLocaleDateString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
                                 month: 'long',
                                 day: 'numeric',
                                 year: 'numeric'
@@ -676,7 +676,7 @@
                                 'content'));
 
                             // Send AJAX request to create appointment
-                            fetch('{{ secure_url(route('appointment-calendar.create', [], false)) }}', {
+                            fetch('{{ route('appointment-calendar.create') }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
@@ -733,11 +733,11 @@
                             // Ensure the end time is 3 hours after start
                             const actualEnd = new Date(start.getTime() + (3 * 60 * 60 * 1000));
 
-                            const formattedTime = start.toLocaleTimeString('en-US', {
+                            const formattedTime = start.toLocaleTimeString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
                                 hour: '2-digit',
                                 minute: '2-digit',
                                 hour12: false
-                            }) + ' - ' + actualEnd.toLocaleTimeString('en-US', {
+                            }) + ' - ' + actualEnd.toLocaleTimeString('{{ app()->getLocale() === "es" ? "es-ES" : "en-US" }}', {
                                 hour: '2-digit',
                                 minute: '2-digit',
                                 hour12: false
@@ -779,7 +779,7 @@
                             console.log('Loading clients from API...');
 
                             // Fetch de clientes desde el endpoint
-                            fetch('{{ secure_url(route('appointment-calendar.clients', [], false)) }}')
+                            fetch('{{ route('appointment-calendar.clients') }}')
                                 .then(response => {
                                     console.log('API response status:', response.status);
                                     return response.json();
@@ -977,7 +977,7 @@
                                 'content'));
 
                             // Send AJAX request to create appointment
-                            fetch('{{ secure_url(route('appointment-calendar.create', [], false)) }}', {
+                            fetch('{{ route('appointment-calendar.create') }}', {
                                     method: 'POST',
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
@@ -1052,7 +1052,7 @@
                                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' // Views
                                 },
                                 initialView: 'timeGridWeek', // Default view
-                                locale: 'en', // English locale
+                                locale: '{{ app()->getLocale() }}', // Dynamic locale based on current language
                                 timeZone: 'local', // Use local timezone
                                 navLinks: true, // allows users to click day/week names to navigate
                                 editable: true, // enable drag and drop
@@ -1127,7 +1127,7 @@
 
                                 // Event Data Source
                                 events: {
-                                    url: '{{ secure_url(route('appointment-calendar.events', [], false)) }}',
+                                    url: '{{ route('appointment-calendar.events') }}',
                                     failure: function(err) {
                                         console.error("Failed to load events:", err);
                                     },
@@ -1168,7 +1168,7 @@
                                         if (result.isConfirmed) {
                                             // Send AJAX request to update backend
                                             $.ajax({
-                                                url: `{{ secure_url(route('appointment-calendar.update', '', false)) }}/${event.id}`,
+                                                url: `{{ route('appointment-calendar.update', '') }}/${event.id}`,
                                                 type: 'PATCH',
                                                 data: {
                                                     start: newStart,
@@ -1415,7 +1415,7 @@
 
                                         // Send AJAX request to update appointment status
                                         $.ajax({
-                                            url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
+                                            url: `{{ route('appointment-calendar.status', '') }}/${currentAppointmentId}`,
                                             type: 'PATCH',
                                             data: {
                                                 status: 'Confirmed'
@@ -1484,7 +1484,7 @@
 
                                         // Send AJAX request to update appointment status
                                         $.ajax({
-                                            url: `{{ secure_url(route('appointment-calendar.status', '', false)) }}/${currentAppointmentId}`,
+                                            url: `{{ route('appointment-calendar.status', '') }}/${currentAppointmentId}`,
                                             type: 'PATCH',
                                             data: {
                                                 status: 'Declined'
