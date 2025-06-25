@@ -90,6 +90,8 @@ class CalendarConfig {
             timeZone: "local",
             navLinks: true,
             editable: true,
+            eventDurationEditable: true,
+            eventStartEditable: true,
             selectable: true,
             selectMirror: true,
             dayMaxEvents: true,
@@ -100,6 +102,9 @@ class CalendarConfig {
             slotMinTime: "08:00:00",
             slotMaxTime: "20:00:00",
             defaultTimedEventDuration: "03:00:00", // 3 hours default duration
+            selectConstraint: "businessHours",
+            selectOverlap: false,
+            selectMinDistance: 0, // Allow selections to start at any time
             businessHours: {
                 daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
                 startTime: "08:00",

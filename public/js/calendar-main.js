@@ -315,7 +315,27 @@ class CalendarMain {
     refreshCalendar() {
         if (this.calendar) {
             CalendarUtils.showToast("Refreshing calendar...", "info", 1000);
-            this.calendar.refetchEvents();
+
+            // Clear cache and refetch events
+            fetch("/appointment-calendar/clear-cache", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                    "Content-Type": "application/json",
+                },
+            })
+                .then(() => {
+                    this.calendar.refetchEvents();
+                })
+                .catch((error) => {
+                    console.log(
+                        "Cache clear failed, but refetching events anyway:",
+                        error
+                    );
+                    this.calendar.refetchEvents();
+                });
         }
     }
 
@@ -325,7 +345,7 @@ class CalendarMain {
     createNewAppointment() {
         if (this.modals) {
             const now = new Date();
-            const end = CalendarUtils.addHours(now, 2);
+            const end = CalendarUtils.addHours(now, 3); // Fixed: 3 hours instead of 2
             this.modals.openNewAppointmentModal(now, end);
         }
     }

@@ -19,10 +19,34 @@ class CalendarEvents {
             // Handle date selection for new appointments
             select: (info) => {
                 if (window.CalendarModals) {
+                    // DEBUG: Log selection info
+                    console.log("DEBUG - Selection Info:", {
+                        originalStart: info.start,
+                        originalEnd: info.end,
+                        originalDuration: info.end
+                            ? (info.end.getTime() - info.start.getTime()) /
+                                  1000 /
+                                  60 +
+                              " minutes"
+                            : "N/A",
+                    });
+
                     // Force 3-hour duration regardless of selection
                     const endTime = new Date(
                         info.start.getTime() + 3 * 60 * 60 * 1000
                     );
+
+                    // DEBUG: Log forced duration
+                    console.log("DEBUG - Forced Duration:", {
+                        forcedStart: info.start,
+                        forcedEnd: endTime,
+                        forcedDuration:
+                            (endTime.getTime() - info.start.getTime()) /
+                                1000 /
+                                60 +
+                            " minutes",
+                    });
+
                     window.CalendarModals.openNewAppointmentModal(
                         info.start,
                         endTime
