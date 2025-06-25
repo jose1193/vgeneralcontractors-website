@@ -1023,7 +1023,7 @@ class CalendarModals {
             } else if (types.includes("postal_code")) {
                 zipcode = component.long_name;
             } else if (types.includes("country")) {
-                country = component.short_name;
+                country = "USA"; // Always set to USA for US addresses
             }
         });
 
@@ -1040,6 +1040,19 @@ class CalendarModals {
         const lng = place.geometry.location.lng();
         document.getElementById("latitude").value = lat;
         document.getElementById("longitude").value = lng;
+
+        // Update the visible address field with complete address including zipcode
+        const addressMapInput = document.getElementById('address_map_input');
+        if (addressMapInput && place.formatted_address) {
+            let completeAddress = place.formatted_address;
+            
+            // Check if zipcode is not already in the formatted address and add it if missing
+            if (zipcode && !completeAddress.includes(zipcode)) {
+                completeAddress += `, ${zipcode}`;
+            }
+            
+            addressMapInput.value = completeAddress;
+        }
     }
 
     /**
