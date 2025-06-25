@@ -300,6 +300,12 @@
                                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
                                 }
 
+                                /* Specific hover effects for confirmed status */
+                                .fc-event-confirmed .status-badge:hover {
+                                    background-color: #f0fdf4 !important;
+                                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+                                }
+
                                 /* Specific event type styling */
                                 .fc-event.fc-event-confirmed .fc-event-content-custom {
                                     border-left: 4px solid #10b981;

@@ -241,19 +241,23 @@ class CalendarConfig {
                 // Status styling
                 statusBadge.style.fontSize = "10px";
                 statusBadge.style.fontWeight = "600";
-                statusBadge.style.padding = "2px 6px";
-                statusBadge.style.borderRadius = "10px";
+                statusBadge.style.padding = "3px 8px";
+                statusBadge.style.borderRadius = "12px";
                 statusBadge.style.textTransform = "uppercase";
                 statusBadge.style.letterSpacing = "0.5px";
                 statusBadge.style.border = "1px solid rgba(255,255,255,0.3)";
+                statusBadge.style.textShadow = "none";
 
                 // Status-specific colors
                 switch (status.toLowerCase()) {
                     case "confirmed":
-                        statusBadge.style.backgroundColor =
-                            "rgba(16, 185, 129, 0.9)";
-                        statusBadge.style.color = "#ffffff";
-                        statusBadge.innerHTML = "✓ CONFIRMED";
+                        statusBadge.style.backgroundColor = "#ffffff";
+                        statusBadge.style.color = "#10b981";
+                        statusBadge.style.border = "1px solid #10b981";
+                        statusBadge.style.boxShadow =
+                            "0 1px 3px rgba(16, 185, 129, 0.2)";
+                        statusBadge.innerHTML =
+                            "<span style='color: #10b981;'>✓</span> CONFIRMED";
                         break;
                     case "completed":
                         statusBadge.style.backgroundColor =
