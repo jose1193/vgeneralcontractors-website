@@ -68,6 +68,9 @@ class CalendarModals {
             });
         }
 
+        // Setup styled radio buttons and checkbox event listeners
+        this.setupStyledFormElements();
+
         // Action buttons
         const confirmAppointmentBtn = document.getElementById(
             "confirmAppointmentBtn"
@@ -91,6 +94,72 @@ class CalendarModals {
                 window.CalendarEvents.declineAppointment(appointmentId);
             });
         }
+    }
+
+    /**
+     * Setup styled form elements (radio buttons and checkboxes)
+     */
+    setupStyledFormElements() {
+        // Handle insurance property radio buttons
+        const insuranceLabels = document.querySelectorAll(".insurance-label");
+        insuranceLabels.forEach((label) => {
+            label.addEventListener("click", (e) => {
+                // Find the associated radio button
+                const radioId = label.getAttribute("for");
+                const radio = document.getElementById(radioId);
+
+                if (radio) {
+                    // Check the radio button
+                    radio.checked = true;
+
+                    // Remove selected class from all insurance labels
+                    document
+                        .querySelectorAll(".insurance-label")
+                        .forEach((l) => {
+                            l.classList.remove("selected");
+                        });
+
+                    // Add selected class to clicked label
+                    label.classList.add("selected");
+
+                    // Trigger change event for form validation
+                    radio.dispatchEvent(new Event("change"));
+                }
+            });
+        });
+
+        // Handle radio button change events for form validation
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach((radio) => {
+            radio.addEventListener("change", () => {
+                // Update insurance label styling if this is an insurance radio
+                if (
+                    radio.name === "insurance_property" ||
+                    radio.name === "intent_to_claim"
+                ) {
+                    const label = document.querySelector(
+                        `label[for="${radio.id}"]`
+                    );
+                    if (label && label.classList.contains("insurance-label")) {
+                        // Remove selected from all labels in this group
+                        const groupLabels = document.querySelectorAll(
+                            `input[name="${radio.name}"]`
+                        );
+                        groupLabels.forEach((groupRadio) => {
+                            const groupLabel = document.querySelector(
+                                `label[for="${groupRadio.id}"]`
+                            );
+                            if (groupLabel) {
+                                groupLabel.classList.remove("selected");
+                            }
+                        });
+
+                        // Add selected to current label
+                        label.classList.add("selected");
+                    }
+                }
+            });
+        });
     }
 
     /**
@@ -557,9 +626,16 @@ class CalendarModals {
         );
         textInputs.forEach((input) => (input.value = ""));
 
-        // Limpiar radio buttons
+        // Limpiar radio buttons y sus labels
         const radioInputs = form.querySelectorAll('input[type="radio"]');
-        radioInputs.forEach((input) => (input.checked = false));
+        radioInputs.forEach((input) => {
+            input.checked = false;
+            // Remover clase selected de labels de insurance
+            const label = form.querySelector(`label[for="${input.id}"]`);
+            if (label && label.classList.contains("insurance-label")) {
+                label.classList.remove("selected");
+            }
+        });
 
         // Limpiar checkboxes
         const checkboxInputs = form.querySelectorAll('input[type="checkbox"]');
