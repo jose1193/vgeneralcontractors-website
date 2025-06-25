@@ -1699,7 +1699,7 @@
     "create_confirmed_appointment": "Crear Cita Confirmada",
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
     "create_new_client": "Crear Nuevo Cliente",
-   
     "email_placeholder": "correo@ejemplo.com",
-    "address_placeholder": "Ingrese dirección completa"
+    "address_placeholder": "Ingrese dirección completa",
+    "apartment_suite_optional": "Apartamento, suite, etc. (opcional)"
 }

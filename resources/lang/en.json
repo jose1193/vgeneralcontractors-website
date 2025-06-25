@@ -1691,5 +1691,9 @@
     "appointment_calendar_validation_error": "Validation error",
     "select_client": "Select Client",
     "create_confirmed_appointment": "Create Confirmed Appointment",
-    "create_confirmed_called_appointment": "Create Confirmed & Called Appointment"
+    "create_confirmed_called_appointment": "Create Confirmed & Called Appointment",
+    "create_new_client": "Create New Client",
+    "address_placeholder": "Enter complete address",
+    "email_placeholder": "email@example.com",
+    "apartment_suite_optional": "Apartment, suite, etc. (optional)"
 }
