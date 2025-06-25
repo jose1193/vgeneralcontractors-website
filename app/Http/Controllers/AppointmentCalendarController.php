@@ -72,10 +72,10 @@ class AppointmentCalendarController extends Controller
                 $color = '#3b82f6'; // Blue by default (pending)
                 switch ($appointment->inspection_status) {
                     case 'Completed':
-                        $color = '#10b981'; // Green
+                        $color = '#059669'; // Dark Green
                         break;
                     case 'Confirmed':
-                        $color = '#8B5CF6'; // Purple
+                        $color = '#10b981'; // Green (changed from purple)
                         break;
                     case 'Declined':
                         $color = '#ef4444'; // Red

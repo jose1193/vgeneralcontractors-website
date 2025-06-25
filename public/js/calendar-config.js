@@ -70,6 +70,7 @@ class CalendarConfig {
                 create_new_client: "Create New Client",
                 create_confirmed_appointment: "Create Confirmed Appointment",
                 create_lead: "Create Lead",
+                new_appointment: "New Appointment",
             }
         );
     }

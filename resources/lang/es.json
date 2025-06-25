@@ -1716,5 +1716,6 @@
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
     "email_placeholder": "correo@ejemplo.com",
     "address_placeholder": "Ingrese dirección completa",
-    "apartment_suite_optional": "Apartamento, suite, etc. (opcional)"
+    "apartment_suite_optional": "Apartamento, suite, etc. (opcional)",
+    "New Appointment": "Nueva Cita"
 }

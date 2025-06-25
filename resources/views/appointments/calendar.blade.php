@@ -121,6 +121,7 @@
                                     'no_clients_available': @json(__('No clients available')),
                                     'loading_clients': @json(__('Loading clients...')),
                                     'client_load_error': @json(__('Error loading clients')),
+                                    'new_appointment': @json(__('New Appointment')),
 
                                     // Date/Time
                                     'select_date_time': @json(__('Please select a date and time')),

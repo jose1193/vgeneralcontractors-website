@@ -628,7 +628,6 @@
     "create_lead": "Create Lead",
     "creating": "Creating...",
 
-    "please_select_client": "Please select a client",
     "appointment_created_successfully": "Appointment created successfully",
 
     "reschedule_appointment": "Reschedule Appointment",
@@ -1711,5 +1710,6 @@
     "create_confirmed_called_appointment": "Create Confirmed & Called Appointment",
     "address_placeholder": "Enter complete address",
     "email_placeholder": "email@example.com",
-    "apartment_suite_optional": "Apartment, suite, etc. (optional)"
+    "apartment_suite_optional": "Apartment, suite, etc. (optional)",
+    "New Appointment": "New Appointment"
 }
