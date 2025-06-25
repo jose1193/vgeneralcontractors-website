@@ -154,16 +154,18 @@ class CalendarConfig {
                     minute: "2-digit",
                     hour12: false,
                 });
-                const endTime = end
-                    ? end.toLocaleTimeString("es-ES", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                      })
-                    : "";
 
-                timeText.innerHTML =
-                    startTime + (endTime ? " - " + endTime : "") + " (3h)";
+                // Force display of 3-hour duration
+                const calculatedEnd = new Date(
+                    start.getTime() + 3 * 60 * 60 * 1000
+                );
+                const endTime = calculatedEnd.toLocaleTimeString("es-ES", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                });
+
+                timeText.innerHTML = startTime + " - " + endTime + " (3h)";
 
                 // 3. Estado (última línea)
                 let statusText = document.createElement("div");
