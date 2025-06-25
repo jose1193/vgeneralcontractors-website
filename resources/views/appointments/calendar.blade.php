@@ -144,68 +144,16 @@
                                     'keyboard_shortcuts_help': @json(__('Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment'))
                                 };
 
-                                // Language change and navigation fix
-                                window.isNavigating = false;
-
                                 // Language change prevention fix
                                 document.addEventListener('click', function(e) {
                                     const target = e.target.closest('a[href*="/lang/"]');
                                     if (target) {
                                         e.preventDefault();
                                         e.stopImmediatePropagation();
-
-                                        // Set navigation flag to prevent AJAX calls
-                                        window.isNavigating = true;
-
-                                        // Stop any ongoing AJAX requests
-                                        if (window.jQuery && window.jQuery.active) {
-                                            window.jQuery.active = 0;
-                                        }
-
-                                        // Clear any pending timeouts
-                                        const highestTimeoutId = setTimeout(";");
-                                        for (let i = 0; i < highestTimeoutId; i++) {
-                                            clearTimeout(i);
-                                        }
-
-                                        // Navigate immediately
                                         window.location.href = target.href;
                                         return false;
                                     }
                                 }, true);
-
-                                // Prevent AJAX calls during navigation
-                                const originalFetch = window.fetch;
-                                window.fetch = function(...args) {
-                                    if (window.isNavigating) {
-                                        console.log('Blocking fetch during navigation:', args[0]);
-                                        return Promise.reject(new Error('Navigation in progress'));
-                                    }
-                                    return originalFetch.apply(this, args);
-                                };
-
-                                // Override jQuery AJAX if present
-                                if (window.jQuery) {
-                                    const originalAjax = window.jQuery.ajax;
-                                    window.jQuery.ajax = function(options) {
-                                        if (window.isNavigating) {
-                                            console.log('Blocking jQuery AJAX during navigation:', options.url);
-                                            return Promise.reject(new Error('Navigation in progress'));
-                                        }
-                                        return originalAjax.apply(this, arguments);
-                                    };
-                                }
-
-                                // Handle beforeunload to prevent showing JSON responses
-                                window.addEventListener('beforeunload', function(e) {
-                                    window.isNavigating = true;
-
-                                    // Hide any potential JSON content
-                                    const body = document.body;
-                                    if (body && body.textContent.trim().startsWith('{"')) {
-                                        body.style.display = 'none';
-                                    }
-                                });
 
                                 // Enhanced debug script to identify module loading issues
                                 setTimeout(() => {

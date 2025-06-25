@@ -240,39 +240,14 @@ class CalendarModals {
         const clientSelector = document.getElementById("clientSelector");
         if (!clientSelector) return;
 
-        // Check if navigation is in progress
-        if (window.isNavigating) {
-            console.log("Skipping client loading due to navigation");
-            return;
-        }
-
         try {
-            const response = await fetch(this.routes.getClients, {
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-            });
-
+            const response = await fetch(this.routes.getClients);
             if (!response.ok) {
-                throw new Error(
-                    `HTTP ${response.status}: ${response.statusText}`
-                );
-            }
-
-            const contentType = response.headers.get("content-type");
-            if (!contentType || !contentType.includes("application/json")) {
-                throw new Error("Response is not JSON");
+                throw new Error("Failed to fetch clients");
             }
 
             const data = await response.json();
             const clients = data.data || data;
-
-            // Validate that we have a proper array of clients
-            if (!Array.isArray(clients)) {
-                throw new Error("Invalid client data format");
-            }
 
             // Clear existing options except the first one
             clientSelector.innerHTML = `<option value="">${
@@ -282,40 +257,15 @@ class CalendarModals {
 
             // Add client options
             clients.forEach((client) => {
-                if (
-                    client &&
-                    client.uuid &&
-                    client.first_name &&
-                    client.last_name
-                ) {
-                    const option = document.createElement("option");
-                    option.value = client.uuid;
-                    option.textContent = `${client.first_name} ${
-                        client.last_name
-                    } - ${client.phone || "N/A"}`;
-                    clientSelector.appendChild(option);
-                }
+                const option = document.createElement("option");
+                option.value = client.uuid;
+                option.textContent = `${client.first_name} ${client.last_name} - ${client.phone}`;
+                clientSelector.appendChild(option);
             });
         } catch (error) {
             console.error("Error loading clients:", error);
-
-            // Don't show error if navigation is in progress
-            if (!window.isNavigating) {
-                // Show user-friendly error
-                clientSelector.innerHTML = `<option value="">Error loading clients</option>`;
-
-                // Only show toast if not navigating
-                if (
-                    typeof CalendarUtils !== "undefined" &&
-                    CalendarUtils.showToast
-                ) {
-                    CalendarUtils.showToast(
-                        "Failed to load clients",
-                        "error",
-                        3000
-                    );
-                }
-            }
+            // Show user-friendly error
+            clientSelector.innerHTML = `<option value="">Error loading clients</option>`;
         }
     }
 
