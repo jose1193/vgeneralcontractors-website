@@ -144,13 +144,23 @@
                                     'keyboard_shortcuts_help': @json(__('Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment'))
                                 };
 
-                                // Language change prevention fix
+                                // Improved language change handling
                                 document.addEventListener('click', function(e) {
                                     const target = e.target.closest('a[href*="/lang/"]');
                                     if (target) {
                                         e.preventDefault();
-                                        e.stopImmediatePropagation();
-                                        window.location.href = target.href;
+                                        
+                                        // Get current page URL without the domain
+                                        const currentPath = window.location.pathname;
+                                        const targetUrl = new URL(target.href, window.location.origin);
+                                        
+                                        // Extract locale from the target URL
+                                        const locale = targetUrl.pathname.split('/lang/')[1];
+                                        
+                                        // Construct the proper redirect URL
+                                        const redirectUrl = `/lang/${locale}?redirect=${encodeURIComponent(currentPath)}`;
+                                        
+                                        window.location.href = redirectUrl;
                                         return false;
                                     }
                                 }, true);
