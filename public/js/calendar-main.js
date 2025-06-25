@@ -19,11 +19,11 @@ class CalendarMain {
      */
     async init() {
         try {
-            console.log('Initializing Calendar...');
+            console.log("Initializing Calendar...");
 
             // Verificar dependencias
             if (!this.checkDependencies()) {
-                console.error('Missing required dependencies');
+                console.error("Missing required dependencies");
                 return;
             }
 
@@ -44,11 +44,12 @@ class CalendarMain {
             // Configurar validaciones
             this.setupValidations();
 
-            console.log('Calendar initialized successfully');
-
+            console.log("Calendar initialized successfully");
         } catch (error) {
-            console.error('Error initializing calendar:', error);
-            this.showError('Failed to initialize calendar. Please refresh the page.');
+            console.error("Error initializing calendar:", error);
+            this.showError(
+                "Failed to initialize calendar. Please refresh the page."
+            );
         }
     }
 
@@ -56,27 +57,60 @@ class CalendarMain {
      * Verificar dependencias necesarias
      */
     checkDependencies() {
-        const dependencies = [
-            { name: 'FullCalendar', check: () => typeof FullCalendar !== 'undefined' },
-            { name: 'jQuery', check: () => typeof $ !== 'undefined' },
-            { name: 'SweetAlert2', check: () => typeof Swal !== 'undefined' },
-            { name: 'CalendarConfig', check: () => typeof CalendarConfig !== 'undefined' },
-            { name: 'CalendarEvents', check: () => typeof CalendarEvents !== 'undefined' },
-            { name: 'CalendarModals', check: () => typeof CalendarModals !== 'undefined' },
-            { name: 'CalendarAPI', check: () => typeof CalendarAPI !== 'undefined' },
-            { name: 'CalendarUtils', check: () => typeof CalendarUtils !== 'undefined' }
+        const coreDependencies = [
+            {
+                name: "FullCalendar",
+                check: () => typeof FullCalendar !== "undefined",
+            },
+            { name: "jQuery", check: () => typeof $ !== "undefined" },
+            { name: "SweetAlert2", check: () => typeof Swal !== "undefined" },
         ];
 
-        let missingDeps = [];
+        const moduleDependencies = [
+            {
+                name: "CalendarConfig",
+                check: () => typeof CalendarConfig !== "undefined",
+            },
+            {
+                name: "CalendarEvents",
+                check: () => typeof CalendarEvents !== "undefined",
+            },
+            {
+                name: "CalendarModals",
+                check: () => typeof CalendarModals !== "undefined",
+            },
+            {
+                name: "CalendarAPI",
+                check: () => typeof CalendarAPI !== "undefined",
+            },
+            {
+                name: "CalendarUtils",
+                check: () => typeof CalendarUtils !== "undefined",
+            },
+        ];
 
-        dependencies.forEach(dep => {
+        let missingCore = [];
+        let missingModules = [];
+
+        coreDependencies.forEach((dep) => {
             if (!dep.check()) {
-                missingDeps.push(dep.name);
+                missingCore.push(dep.name);
             }
         });
 
-        if (missingDeps.length > 0) {
-            console.error('Missing dependencies:', missingDeps);
+        moduleDependencies.forEach((dep) => {
+            if (!dep.check()) {
+                missingModules.push(dep.name);
+            }
+        });
+
+        if (missingCore.length > 0) {
+            console.error("Missing CORE dependencies:", missingCore);
+            return false;
+        }
+
+        if (missingModules.length > 0) {
+            console.error("Missing MODULE dependencies:", missingModules);
             return false;
         }
 
@@ -87,9 +121,9 @@ class CalendarMain {
      * Crear instancia del calendario
      */
     async createCalendarInstance() {
-        const calendarEl = document.getElementById('calendar');
+        const calendarEl = document.getElementById("calendar");
         if (!calendarEl) {
-            throw new Error('Calendar element not found');
+            throw new Error("Calendar element not found");
         }
 
         // Obtener configuración base
@@ -118,21 +152,33 @@ class CalendarMain {
      */
     initializeModules() {
         // Inicializar módulo de eventos
-        this.events = new CalendarEvents(this.calendar, this.translations, this.routes);
+        this.events = new CalendarEvents(
+            this.calendar,
+            this.translations,
+            this.routes
+        );
         window.CalendarEvents = this.events;
 
         // Inicializar módulo de modales
-        this.modals = new CalendarModals(this.calendar, this.translations, this.routes);
+        this.modals = new CalendarModals(
+            this.calendar,
+            this.translations,
+            this.routes
+        );
         window.CalendarModals = this.modals;
 
         // Inicializar módulo de API
-        this.api = new CalendarAPI(this.calendar, this.translations, this.routes);
+        this.api = new CalendarAPI(
+            this.calendar,
+            this.translations,
+            this.routes
+        );
         window.CalendarAPI = this.api;
 
         // Configurar event handlers del calendario
         this.setupCalendarEventHandlers();
 
-        console.log('Calendar modules initialized');
+        console.log("Calendar modules initialized");
     }
 
     /**
@@ -142,7 +188,7 @@ class CalendarMain {
         const eventHandlers = this.events.setupEventHandlers();
 
         // Agregar event handlers al calendario
-        Object.keys(eventHandlers).forEach(eventName => {
+        Object.keys(eventHandlers).forEach((eventName) => {
             this.calendar.on(eventName, eventHandlers[eventName]);
         });
     }
@@ -152,23 +198,26 @@ class CalendarMain {
      */
     setupAdditionalEventListeners() {
         // Manejar cambios de tamaño de ventana
-        window.addEventListener('resize', CalendarUtils.debounce(() => {
-            if (this.calendar) {
-                this.calendar.updateSize();
-            }
-        }, 250));
+        window.addEventListener(
+            "resize",
+            CalendarUtils.debounce(() => {
+                if (this.calendar) {
+                    this.calendar.updateSize();
+                }
+            }, 250)
+        );
 
         // Manejar teclas de teclado
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener("keydown", (e) => {
             this.handleKeyboardShortcuts(e);
         });
 
         // Prevenir pérdida de datos al salir
-        window.addEventListener('beforeunload', (e) => {
+        window.addEventListener("beforeunload", (e) => {
             // Si hay modales abiertos o formularios sin guardar, preguntar antes de salir
             if (this.hasUnsavedChanges()) {
                 e.preventDefault();
-                e.returnValue = '';
+                e.returnValue = "";
             }
         });
     }
@@ -178,18 +227,18 @@ class CalendarMain {
      */
     handleKeyboardShortcuts(e) {
         // ESC para cerrar modales
-        if (e.key === 'Escape') {
+        if (e.key === "Escape") {
             this.closeAllModals();
         }
 
         // F5 o Ctrl+R para refrescar eventos
-        if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+        if (e.key === "F5" || (e.ctrlKey && e.key === "r")) {
             e.preventDefault();
             this.refreshCalendar();
         }
 
         // Ctrl+N para nueva cita
-        if (e.ctrlKey && e.key === 'n') {
+        if (e.ctrlKey && e.key === "n") {
             e.preventDefault();
             this.createNewAppointment();
         }
@@ -199,7 +248,10 @@ class CalendarMain {
      * Configurar validaciones
      */
     setupValidations() {
-        if (this.api && typeof this.api.setupRealTimeValidation === 'function') {
+        if (
+            this.api &&
+            typeof this.api.setupRealTimeValidation === "function"
+        ) {
             this.api.setupRealTimeValidation();
         }
     }
@@ -209,12 +261,12 @@ class CalendarMain {
      */
     hasUnsavedChanges() {
         // Verificar si hay modales abiertos con formularios
-        const modals = ['newAppointmentModal', 'eventDetailModal'];
-        
+        const modals = ["newAppointmentModal", "eventDetailModal"];
+
         for (let modalId of modals) {
             const modal = document.getElementById(modalId);
-            if (modal && !modal.classList.contains('hidden')) {
-                const forms = modal.querySelectorAll('form');
+            if (modal && !modal.classList.contains("hidden")) {
+                const forms = modal.querySelectorAll("form");
                 for (let form of forms) {
                     if (this.formHasChanges(form)) {
                         return true;
@@ -230,12 +282,16 @@ class CalendarMain {
      * Verificar si un formulario tiene cambios
      */
     formHasChanges(form) {
-        const inputs = form.querySelectorAll('input, select, textarea');
-        
+        const inputs = form.querySelectorAll("input, select, textarea");
+
         for (let input of inputs) {
-            if (input.type === 'text' || input.type === 'email' || input.type === 'tel') {
-                if (input.value.trim() !== '') return true;
-            } else if (input.type === 'select-one') {
+            if (
+                input.type === "text" ||
+                input.type === "email" ||
+                input.type === "tel"
+            ) {
+                if (input.value.trim() !== "") return true;
+            } else if (input.type === "select-one") {
                 if (input.selectedIndex > 0) return true;
             }
         }
@@ -258,7 +314,7 @@ class CalendarMain {
      */
     refreshCalendar() {
         if (this.calendar) {
-            CalendarUtils.showToast('Refreshing calendar...', 'info', 1000);
+            CalendarUtils.showToast("Refreshing calendar...", "info", 1000);
             this.calendar.refetchEvents();
         }
     }
@@ -278,8 +334,8 @@ class CalendarMain {
      * Mostrar error
      */
     showError(message) {
-        if (typeof Swal !== 'undefined') {
-            Swal.fire('Error', message, 'error');
+        if (typeof Swal !== "undefined") {
+            Swal.fire("Error", message, "error");
         } else {
             alert(message);
         }
@@ -300,7 +356,7 @@ class CalendarMain {
         window.CalendarModals = null;
         window.CalendarAPI = null;
 
-        console.log('Calendar destroyed');
+        console.log("Calendar destroyed");
     }
 
     /**
@@ -323,26 +379,25 @@ class CalendarMain {
                 config: !!this.config,
                 events: !!this.events,
                 modals: !!this.modals,
-                api: !!this.api
-            }
+                api: !!this.api,
+            },
         };
     }
 }
 
 // Inicialización automática cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
     try {
         // Crear instancia principal del calendario
         window.calendarMain = new CalendarMain();
-        
+
         // Inicializar
         await window.calendarMain.init();
-        
+
         // Log de éxito
-        console.log('Calendar system ready:', window.calendarMain.getStatus());
-        
+        console.log("Calendar system ready:", window.calendarMain.getStatus());
     } catch (error) {
-        console.error('Failed to initialize calendar system:', error);
+        console.error("Failed to initialize calendar system:", error);
     }
 });
 
