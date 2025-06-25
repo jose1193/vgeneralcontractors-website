@@ -192,6 +192,12 @@ class CalendarModals {
             return;
         }
 
+        // Check if already initialized to avoid duplicate listeners
+        if (toggle.hasAttribute('data-initialized')) {
+            return;
+        }
+        toggle.setAttribute('data-initialized', 'true');
+
         // Initialize toggle state
         let isCreateNewMode = false;
 
@@ -243,7 +249,8 @@ class CalendarModals {
 
         // Add event listener for hide button
         const hideNewClientBtn = document.getElementById("hideNewClientBtn");
-        if (hideNewClientBtn) {
+        if (hideNewClientBtn && !hideNewClientBtn.hasAttribute('data-initialized')) {
+            hideNewClientBtn.setAttribute('data-initialized', 'true');
             hideNewClientBtn.addEventListener("click", () => {
                 // Switch back to existing client mode
                 isCreateNewMode = false;
@@ -278,6 +285,43 @@ class CalendarModals {
         }
         // Load clients on initialization
         this.loadClients();
+    }
+
+    /**
+     * Reset client toggle state without adding new event listeners
+     */
+    resetClientToggleState() {
+        const toggle = document.getElementById("createNewClientToggle");
+        const existingClientSection = document.getElementById("existingClientSection");
+        const newClientSection = document.getElementById("newClientSection");
+        const createBtnText = document.getElementById("createBtnText");
+        const clientSelector = document.getElementById("clientSelector");
+
+        if (!toggle || !existingClientSection || !newClientSection) {
+            return;
+        }
+
+        // Reset to existing client mode (default state)
+        existingClientSection.classList.remove("hidden");
+        newClientSection.classList.add("hidden");
+        toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+        toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+        toggle.innerHTML = `
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+        `;
+        
+        // Reset button text to default
+        if (createBtnText) {
+            createBtnText.textContent = this.translations.create_lead || "Crear Lead";
+        }
+        
+        // Clear client selector
+        if (clientSelector) {
+            clientSelector.value = "";
+        }
     }
 
     /**
@@ -624,6 +668,9 @@ class CalendarModals {
             this.setInspectionDateTime(start);
         }
 
+        // Resetear estado del toggle de cliente
+        this.resetClientToggleState();
+
         // Inicializar Google Maps si está disponible
         this.initializeGoogleMaps();
 
@@ -911,6 +958,12 @@ class CalendarModals {
         const clientSelector = document.getElementById("clientSelector");
         if (clientSelector) {
             clientSelector.value = "";
+        }
+
+        // Reset button text to default (create_lead)
+        const createBtnText = document.getElementById("createBtnText");
+        if (createBtnText) {
+            createBtnText.textContent = this.translations.create_lead || "Crear Lead";
         }
 
         // Limpiar mensajes de error
