@@ -23,6 +23,13 @@
         <!-- FullCalendar CSS -->
         <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
 
+        <!-- jQuery (required dependency) -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+        <!-- SweetAlert2 (required dependency) -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
+
         <!-- FullCalendar JS -->
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 
@@ -123,6 +130,35 @@
                     return false;
                 }
             }, true);
+
+            // Debug script to help identify issues
+            setTimeout(() => {
+                console.log('=== CALENDAR DEBUG INFO ===');
+                console.log('Calendar element exists:', !!document.getElementById('calendar'));
+                console.log('FullCalendar loaded:', typeof FullCalendar !== 'undefined');
+                console.log('jQuery loaded:', typeof $ !== 'undefined');
+                console.log('SweetAlert2 loaded:', typeof Swal !== 'undefined');
+                console.log('CalendarMain exists:', typeof CalendarMain !== 'undefined');
+                console.log('Window calendarMain:', !!window.calendarMain);
+
+                if (window.calendarMain) {
+                    console.log('Calendar status:', window.calendarMain.getStatus());
+                }
+
+                // Check if calendar has any visible content
+                const calendarEl = document.getElementById('calendar');
+                if (calendarEl) {
+                    console.log('Calendar element dimensions:', {
+                        width: calendarEl.offsetWidth,
+                        height: calendarEl.offsetHeight,
+                        display: getComputedStyle(calendarEl).display,
+                        visibility: getComputedStyle(calendarEl).visibility
+                    });
+                    console.log('Calendar innerHTML length:', calendarEl.innerHTML.length);
+                }
+
+                console.log('=== END DEBUG INFO ===');
+            }, 2000);
         </script>
     @endpush
 
