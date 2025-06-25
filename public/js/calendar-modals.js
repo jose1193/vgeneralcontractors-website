@@ -10,7 +10,6 @@ class CalendarModals {
         this.routes = routes;
         this.selectedStart = null;
         this.selectedEnd = null;
-        this.isCreateNewMode = false; // Add state property
         this.setupModalEventListeners();
     }
 
@@ -193,103 +192,92 @@ class CalendarModals {
             return;
         }
 
+        // Initialize toggle state
+        let isCreateNewMode = false;
+
         // Handle toggle click
         toggle.addEventListener("click", () => {
-            this.isCreateNewMode = !this.isCreateNewMode;
-            this.updateToggleState();
+            isCreateNewMode = !isCreateNewMode;
+            
+            if (isCreateNewMode) {
+                // Create new client mode
+                existingClientSection.classList.add("hidden");
+                newClientSection.classList.remove("hidden");
+                toggle.classList.remove("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.classList.add("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Volver a Seleccionar Cliente
+                `;
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_lead || "Create Lead";
+                }
+                // Clear client selector
+                if (clientSelector) {
+                    clientSelector.value = "";
+                }
+            } else {
+                // Select existing client mode
+                existingClientSection.classList.remove("hidden");
+                newClientSection.classList.add("hidden");
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+                `;
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_confirmed_appointment ||
+                        "Create Confirmed Appointment";
+                }
+                // Load clients if not already loaded
+                this.loadClients();
+            }
         });
 
         // Add event listener for hide button
         const hideNewClientBtn = document.getElementById("hideNewClientBtn");
         if (hideNewClientBtn) {
             hideNewClientBtn.addEventListener("click", () => {
-                this.isCreateNewMode = false;
-                this.updateToggleState();
+                // Switch back to existing client mode
+                isCreateNewMode = false;
+                existingClientSection.classList.remove("hidden");
+                newClientSection.classList.add("hidden");
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.innerHTML = `
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
+                `;
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_confirmed_appointment ||
+                        "Create Confirmed Appointment";
+                }
+                // Load clients if not already loaded
+                this.loadClients();
             });
         }
 
-        // Initialize with default state
-        this.resetToggleState();
-    }
-
-    /**
-     * Update toggle state based on isCreateNewMode
-     */
-    updateToggleState() {
-        const toggle = document.getElementById("createNewClientToggle");
-        const existingClientSection = document.getElementById("existingClientSection");
-        const newClientSection = document.getElementById("newClientSection");
-        const createBtnText = document.getElementById("createBtnText");
-        const clientSelector = document.getElementById("clientSelector");
-        const createAppointmentBtn = document.getElementById("createAppointmentBtn");
-
-        if (!toggle || !existingClientSection || !newClientSection) {
-            return;
+        // Initialize with default state (select existing client)
+        isCreateNewMode = false;
+        existingClientSection.classList.remove("hidden");
+        newClientSection.classList.add("hidden");
+        if (createBtnText) {
+            createBtnText.textContent =
+                this.translations.create_confirmed_appointment ||
+                "Create Confirmed Appointment";
         }
-
-        if (this.isCreateNewMode) {
-            // Create new client mode
-            existingClientSection.classList.add("hidden");
-            newClientSection.classList.remove("hidden");
-            toggle.classList.remove("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
-            toggle.classList.add("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
-            toggle.innerHTML = `
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Volver a Seleccionar Cliente
-            `;
-            if (createBtnText) {
-                createBtnText.textContent = this.translations.create_lead || "Create Lead";
-            }
-            // Clear client selector
-            if (clientSelector) {
-                clientSelector.value = "";
-            }
-            // Enable button for lead creation
-            if (createAppointmentBtn) {
-                createAppointmentBtn.disabled = false;
-            }
-        } else {
-            // Select existing client mode
-            existingClientSection.classList.remove("hidden");
-            newClientSection.classList.add("hidden");
-            toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
-            toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
-            toggle.innerHTML = `
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                ${this.translations.create_new_client || "Crear Nuevo Cliente"}
-            `;
-            if (createBtnText) {
-                createBtnText.textContent = this.translations.create_confirmed_appointment || "Create Confirmed Appointment";
-            }
-            // Enable/disable button based on client selection
-            if (createAppointmentBtn) {
-                const hasSelectedClient = clientSelector && clientSelector.value !== "";
-                createAppointmentBtn.disabled = !hasSelectedClient;
-            }
-            // Load clients if not already loaded
-            this.loadClients();
-        }
-    }
-
-    /**
-     * Reset toggle to default state
-     */
-    resetToggleState() {
-        this.isCreateNewMode = false;
-        this.updateToggleState();
-    }
-            
-        // Setup client selector change listener
-        const clientSelector = document.getElementById("clientSelector");
-        if (clientSelector) {
-            clientSelector.addEventListener("change", () => {
-                this.updateToggleState(); // Update button state when client selection changes
-            });
-        }
+        // Load clients on initialization
+        this.loadClients();
     }
 
     /**
@@ -631,9 +619,6 @@ class CalendarModals {
         // Limpiar formulario
         this.clearLeadForm();
 
-        // Reset toggle state to default (select existing client mode)
-        this.resetToggleState();
-
         // Configurar fecha y hora de inspección si se seleccionó desde calendario
         if (start) {
             this.setInspectionDateTime(start);
@@ -712,17 +697,10 @@ class CalendarModals {
         // Clear the form when closing
         this.clearLeadForm();
 
-        // Reset toggle state to default
-        this.resetToggleState();
-
-        // Reset button state
-        const createAppointmentBtn = document.getElementById("createAppointmentBtn");
-        if (createAppointmentBtn) {
-            const normalText = createAppointmentBtn.querySelector(".normal-btn-text");
-            const loadingText = createAppointmentBtn.querySelector(".loading-btn-text");
-            if (normalText) normalText.classList.remove("hidden");
-            if (loadingText) loadingText.classList.add("hidden");
-            createAppointmentBtn.disabled = true; // Will be updated by resetToggleState
+        // Reset button text to default
+        const createBtnText = document.getElementById('createBtnText');
+        if (createBtnText) {
+            createBtnText.textContent = this.translations.create_lead || 'Create Lead';
         }
 
         // Limpiar selección en calendario
@@ -740,8 +718,9 @@ class CalendarModals {
      * Manejar creación de cita
      */
     handleCreateAppointment() {
-        // Use the class property instead of checking DOM state
-        const isNewClient = this.isCreateNewMode;
+        const toggle = document.getElementById("createNewClientToggle");
+        const newClientSection = document.getElementById("newClientSection");
+        const isNewClient = newClientSection ? !newClientSection.classList.contains("hidden") : false;
 
         // Validar formulario según el modo
         if (!this.validateForm(isNewClient)) {
