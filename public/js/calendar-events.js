@@ -19,11 +19,21 @@ class CalendarEvents {
             // Handle date selection for new appointments
             select: (info) => {
                 if (window.CalendarModals) {
-                    // Ensure 3-hour duration for inspections
+                    // Force 3-hour duration for all inspections
                     const start = info.start;
-                    const end =
-                        info.end ||
-                        new Date(start.getTime() + 3 * 60 * 60 * 1000); // Add 3 hours if no end time
+                    const end = new Date(start.getTime() + 3 * 60 * 60 * 1000); // Always 3 hours
+                    window.CalendarModals.openNewAppointmentModal(start, end);
+                }
+                // Unselect immediately to prevent default selection display
+                info.view.calendar.unselect();
+            },
+
+            // Handle date click for new appointments (alternative to select)
+            dateClick: (info) => {
+                if (window.CalendarModals) {
+                    // Force 3-hour duration for all inspections
+                    const start = info.date;
+                    const end = new Date(start.getTime() + 3 * 60 * 60 * 1000); // Always 3 hours
                     window.CalendarModals.openNewAppointmentModal(start, end);
                 }
             },
