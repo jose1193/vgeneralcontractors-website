@@ -17,7 +17,7 @@ class CalendarConfig {
             events:
                 document.querySelector('meta[name="calendar-events-url"]')
                     ?.content || "",
-            create:
+            store:
                 document.querySelector('meta[name="calendar-create-url"]')
                     ?.content || "",
             update:
@@ -26,9 +26,13 @@ class CalendarConfig {
             status:
                 document.querySelector('meta[name="calendar-status-url"]')
                     ?.content || "",
-            clients:
+            getClients:
                 document.querySelector('meta[name="calendar-clients-url"]')
                     ?.content || "",
+            createAppointment:
+                document.querySelector(
+                    'meta[name="calendar-create-appointment-url"]'
+                )?.content || "",
         };
     }
 
@@ -63,6 +67,9 @@ class CalendarConfig {
                 yes_decline: "Yes, decline",
                 declined: "Declined",
                 could_not_decline_appointment: "Could not decline appointment",
+                create_new_client: "Create New Client",
+                create_confirmed_appointment: "Create Confirmed Appointment",
+                create_lead: "Create Lead",
             }
         );
     }

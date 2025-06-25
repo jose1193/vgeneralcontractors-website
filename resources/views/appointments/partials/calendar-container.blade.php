@@ -40,3 +40,5 @@
 <meta name="calendar-update-url" content="{{ url()->secure(route('appointment-calendar.update', ':id', [], false)) }}">
 <meta name="calendar-status-url" content="{{ url()->secure(route('appointment-calendar.status', ':id', [], false)) }}">
 <meta name="calendar-clients-url" content="{{ url()->secure(route('appointment-calendar.clients', [], false)) }}">
+<meta name="calendar-create-appointment-url"
+    content="{{ url()->secure(route('appointment-calendar.createAppointment', [], false)) }}">

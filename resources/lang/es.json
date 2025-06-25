@@ -592,7 +592,6 @@
     "whatsapp": "WhatsApp",
     "email_share": "Email",
 
-    "please_select_client": "Por favor seleccione un cliente",
     "appointment_created_successfully": "Cita creada exitosamente",
 
     "unexpected_error": "Ocurrió un error inesperado. Por favor intente de nuevo.",
@@ -1711,9 +1710,10 @@
     "appointment_calendar_validation_error": "Error de validación",
     "select_client": "Seleccionar Cliente",
     "select_client_3_hours": "Seleccionar Cliente (3 horas)",
+    "create_new_client": "Crear Nuevo Cliente",
+    "please_select_client": "Por favor seleccione un cliente",
     "create_confirmed_appointment": "Crear Cita Confirmada",
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
-    "create_new_client": "Crear Nuevo Cliente",
     "email_placeholder": "correo@ejemplo.com",
     "address_placeholder": "Ingrese dirección completa",
     "apartment_suite_optional": "Apartamento, suite, etc. (opcional)"

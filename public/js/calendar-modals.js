@@ -71,6 +71,9 @@ class CalendarModals {
         // Setup styled radio buttons and checkbox event listeners
         this.setupStyledFormElements();
 
+        // Setup client toggle functionality
+        this.setupClientToggle();
+
         // Action buttons
         const confirmAppointmentBtn = document.getElementById(
             "confirmAppointmentBtn"
@@ -170,6 +173,93 @@ class CalendarModals {
                 }
             });
         });
+    }
+
+    /**
+     * Setup client toggle functionality
+     */
+    setupClientToggle() {
+        const toggle = document.getElementById("createNewClientToggle");
+        const existingClientSection = document.getElementById(
+            "existingClientSection"
+        );
+        const newClientSection = document.getElementById("newClientSection");
+        const createBtnText = document.getElementById("createBtnText");
+        const clientSelector = document.getElementById("clientSelector");
+
+        if (!toggle || !existingClientSection || !newClientSection) {
+            console.warn("Client toggle elements not found");
+            return;
+        }
+
+        // Handle toggle change
+        toggle.addEventListener("change", () => {
+            if (toggle.checked) {
+                // Create new client mode
+                existingClientSection.classList.add("hidden");
+                newClientSection.classList.remove("hidden");
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_lead || "Create Lead";
+                }
+                // Clear client selector
+                if (clientSelector) {
+                    clientSelector.value = "";
+                }
+            } else {
+                // Select existing client mode
+                existingClientSection.classList.remove("hidden");
+                newClientSection.classList.add("hidden");
+                if (createBtnText) {
+                    createBtnText.textContent =
+                        this.translations.create_confirmed_appointment ||
+                        "Create Confirmed Appointment";
+                }
+                // Load clients if not already loaded
+                this.loadClients();
+            }
+        });
+
+        // Initialize with default state (create new client)
+        toggle.checked = true;
+        existingClientSection.classList.add("hidden");
+        newClientSection.classList.remove("hidden");
+    }
+
+    /**
+     * Load clients for the selector
+     */
+    async loadClients() {
+        const clientSelector = document.getElementById("clientSelector");
+        if (!clientSelector) return;
+
+        try {
+            const response = await fetch(this.routes.getClients);
+            if (!response.ok) {
+                throw new Error("Failed to fetch clients");
+            }
+
+            const data = await response.json();
+            const clients = data.data || data;
+
+            // Clear existing options except the first one
+            clientSelector.innerHTML = `<option value="">${
+                this.translations.please_select_client ||
+                "Please select a client"
+            }</option>`;
+
+            // Add client options
+            clients.forEach((client) => {
+                const option = document.createElement("option");
+                option.value = client.uuid;
+                option.textContent = `${client.first_name} ${client.last_name} - ${client.phone}`;
+                clientSelector.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading clients:", error);
+            // Show user-friendly error
+            clientSelector.innerHTML = `<option value="">Error loading clients</option>`;
+        }
     }
 
     /**
@@ -560,8 +650,11 @@ class CalendarModals {
      * Manejar creación de cita
      */
     handleCreateAppointment() {
-        // Validar formulario
-        if (!this.validateLeadForm()) {
+        const toggle = document.getElementById("createNewClientToggle");
+        const isNewClient = toggle ? toggle.checked : true;
+
+        // Validar formulario según el modo
+        if (!this.validateForm(isNewClient)) {
             return;
         }
 
@@ -574,11 +667,15 @@ class CalendarModals {
         loadingText.classList.remove("hidden");
         button.disabled = true;
 
-        // Enviar formulario
-        const form = document.getElementById("newAppointmentForm");
-        const formData = new FormData(form);
+        // Preparar datos según el modo
+        const formData = this.prepareFormData(isNewClient);
 
-        fetch(form.action, {
+        // Determinar endpoint
+        const endpoint = isNewClient
+            ? this.routes.store
+            : this.routes.createAppointment;
+
+        fetch(endpoint, {
             method: "POST",
             body: formData,
             headers: {
@@ -624,6 +721,80 @@ class CalendarModals {
     }
 
     /**
+     * Prepare form data based on mode
+     */
+    prepareFormData(isNewClient) {
+        const formData = new FormData();
+
+        if (isNewClient) {
+            // New client mode - get all form data
+            const form = document.getElementById("newAppointmentForm");
+            const formDataFromForm = new FormData(form);
+
+            // Copy all form data
+            for (let [key, value] of formDataFromForm.entries()) {
+                formData.append(key, value);
+            }
+        } else {
+            // Existing client mode - only need client_id and appointment details
+            const clientSelector = document.getElementById("clientSelector");
+            if (clientSelector && clientSelector.value) {
+                formData.append("client_id", clientSelector.value);
+            }
+        }
+
+        // Add appointment date/time (common for both modes)
+        if (this.selectedStart) {
+            formData.append(
+                "appointment_date",
+                this.selectedStart.toISOString().split("T")[0]
+            );
+            formData.append(
+                "appointment_time",
+                this.selectedStart.toTimeString().substring(0, 5)
+            );
+        }
+
+        return formData;
+    }
+
+    /**
+     * Validate form based on mode
+     */
+    validateForm(isNewClient) {
+        if (isNewClient) {
+            // Validate new client form
+            return this.validateLeadForm();
+        } else {
+            // Validate existing client selection
+            const clientSelector = document.getElementById("clientSelector");
+            if (!clientSelector || !clientSelector.value) {
+                const errorElement = document.querySelector(
+                    '.error-message[data-field="client_id"]'
+                );
+                if (errorElement) {
+                    this.showFieldError(
+                        errorElement,
+                        this.translations.please_select_client ||
+                            "Please select a client"
+                    );
+                }
+                return false;
+            }
+
+            // Clear any previous error
+            const errorElement = document.querySelector(
+                '.error-message[data-field="client_id"]'
+            );
+            if (errorElement) {
+                this.clearFieldError(errorElement);
+            }
+
+            return true;
+        }
+    }
+
+    /**
      * Limpiar formulario de lead
      */
     clearLeadForm() {
@@ -647,9 +818,25 @@ class CalendarModals {
             }
         });
 
-        // Limpiar checkboxes
-        const checkboxInputs = form.querySelectorAll('input[type="checkbox"]');
+        // Limpiar checkboxes (except the toggle)
+        const checkboxInputs = form.querySelectorAll(
+            'input[type="checkbox"]:not(#createNewClientToggle)'
+        );
         checkboxInputs.forEach((input) => (input.checked = false));
+
+        // Reset toggle to default state (create new client)
+        const toggle = document.getElementById("createNewClientToggle");
+        if (toggle) {
+            toggle.checked = true;
+            // Trigger change event to update UI
+            toggle.dispatchEvent(new Event("change"));
+        }
+
+        // Clear client selector
+        const clientSelector = document.getElementById("clientSelector");
+        if (clientSelector) {
+            clientSelector.value = "";
+        }
 
         // Limpiar mensajes de error
         const errorMessages = form.querySelectorAll(".error-message");

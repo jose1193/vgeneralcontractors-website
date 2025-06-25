@@ -32,217 +32,249 @@
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
 
-                <!-- Basic Information -->
-                <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
-                    <!-- First Name -->
-                    <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700">
-                            {{ __('first_name') }} <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="first_name" name="first_name" required maxlength="50"
-                            placeholder="{{ __('first_name_placeholder') }}"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                            autocomplete="given-name">
-                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
-                    </div>
-
-                    <!-- Last Name -->
-                    <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700">
-                            {{ __('last_name') }} <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="last_name" name="last_name" required maxlength="50"
-                            placeholder="{{ __('last_name_placeholder') }}"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                            autocomplete="family-name">
-                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
-                    <!-- Phone -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">
-                            {{ __('phone') }} <span class="text-red-500">*</span>
-                        </label>
-                        <input type="tel" id="phone" name="phone" required maxlength="14"
-                            placeholder="{{ __('phone_placeholder') }}"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                            autocomplete="tel">
-                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="phone"></span>
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">
-                            {{ __('email') }} <span class="text-red-500">*</span>
-                        </label>
-                        <input type="email" id="email" name="email" required
-                            placeholder="{{ __('email_placeholder') }}"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                            autocomplete="email">
-                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="email"></span>
-                    </div>
-                </div>
-
-                <!-- Address Map Input Field -->
+                <!-- Toggle for New Client -->
                 <div class="mb-6">
-                    <label for="address_map_input" class="block text-sm font-medium text-gray-700">
-                        {{ __('address') }} <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" id="address_map_input" name="address_map_input" required
-                        placeholder="{{ __('enter_complete_address') }}"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                        autocomplete="off">
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4"
-                        data-field="address_map_input"></span>
-                </div>
-
-                <!-- Hidden Address Fields -->
-                <input type="hidden" id="address" name="address">
-                <input type="hidden" id="city" name="city">
-                <input type="hidden" id="state" name="state">
-                <input type="hidden" id="zipcode" name="zipcode">
-                <input type="hidden" id="country" name="country" value="USA">
-
-                <!-- Address 2 -->
-                <div class="mb-6">
-                    <label for="address_2" class="block text-sm font-medium text-gray-700">
-                        {{ __('address_2') }} <span
-                            class="text-xs text-gray-500">{{ __('optional_apt_suite') }}</span>
-                    </label>
-                    <input type="text" id="address_2" name="address_2"
-                        placeholder="{{ __('apt_suite_placeholder') }}"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                        autocomplete="address-line2">
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_2"></span>
-                </div>
-
-                <!-- Map Display -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('location_map') }}</label>
-                    <div id="location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300">
-                        <!-- Map will be initialized here -->
-                    </div>
-                </div>
-
-                <!-- Property Insurance -->
-                <div class="mb-6 text-center">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ __('property_insurance_question') }} <span class="text-red-500">*</span>
-                    </label>
-                    <fieldset class="mt-2">
-                        <legend class="sr-only">Property Insurance</legend>
-                        <div class="flex items-center justify-center space-x-4">
-                            <div class="radio-option flex items-center">
-                                <input id="insurance_yes" name="insurance_property" type="radio" value="1"
-                                    class="radio-field sr-only" required>
-                                <label for="insurance_yes"
-                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                    {{ __('yes') }}
-                                </label>
-                            </div>
-                            <div class="radio-option flex items-center">
-                                <input id="insurance_no" name="insurance_property" type="radio" value="0"
-                                    class="radio-field sr-only" required>
-                                <label for="insurance_no"
-                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                    {{ __('no') }}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4"
-                        data-field="insurance_property"></span>
-                </div>
-
-                <!-- Intent to Claim -->
-                <div class="mb-6 text-center">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ __('intent_to_claim') }}
-                    </label>
-                    <fieldset class="mt-2">
-                        <legend class="sr-only">Intent to Claim</legend>
-                        <div class="flex items-center justify-center space-x-4">
-                            <div class="radio-option flex items-center">
-                                <input id="intent_yes" name="intent_to_claim" type="radio" value="1"
-                                    class="radio-field sr-only">
-                                <label for="intent_yes"
-                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                    {{ __('yes') }}
-                                </label>
-                            </div>
-                            <div class="radio-option flex items-center">
-                                <input id="intent_no" name="intent_to_claim" type="radio" value="0"
-                                    class="radio-field sr-only">
-                                <label for="intent_no"
-                                    class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                                    {{ __('no') }}
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4"
-                        data-field="intent_to_claim"></span>
-                </div>
-
-                <!-- Damage Detail -->
-                <div class="mb-6">
-                    <label for="damage_detail" class="block text-sm font-medium text-gray-700">
-                        {{ __('damage_detail') }} <span
-                            class="text-xs text-gray-500">{{ __('optional_label') }}</span>
-                    </label>
-                    <textarea id="damage_detail" name="damage_detail" rows="3" placeholder="{{ __('enter_description') }}"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"></textarea>
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="damage_detail"></span>
-                </div>
-
-                <!-- Notes -->
-                <div class="mb-6">
-                    <label for="notes" class="block text-sm font-medium text-gray-700">
-                        {{ __('notes') }} <span class="text-xs text-gray-500">{{ __('optional_label') }}</span>
-                    </label>
-                    <textarea id="notes" name="notes" rows="3" placeholder="{{ __('notes_placeholder') }}"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"></textarea>
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="notes"></span>
-                </div>
-
-                <!-- SMS Consent -->
-                <div class="mb-6">
-                    <label class="inline-flex items-start cursor-pointer">
-                        <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
-                            class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
-                        <span class="ml-2 text-sm text-gray-600">
-                            {!! __('sms_consent_modal_lead') !!}
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="createNewClientToggle" checked
+                            class="form-checkbox h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-bold">
+                            {{ __('create_new_client') }}
                         </span>
                     </label>
-                    <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="sms_consent"></span>
                 </div>
 
-                <!-- Inspection Date/Time (Optional) -->
-                <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
-                    <div>
-                        <label for="inspection_date" class="block text-sm font-medium text-gray-700">
-                            {{ __('inspection_date') }} <span
-                                class="text-xs text-gray-500">{{ __('optional_label') }}</span>
-                        </label>
-                        <input type="date" id="inspection_date" name="inspection_date"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
-                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
-                            data-field="inspection_date"></span>
+                <!-- Existing Client Selector -->
+                <div id="existingClientSection" class="mb-6 hidden">
+                    <label for="clientSelector" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {{ __('select_client_3_hours') }} <span class="text-red-500">*</span>
+                    </label>
+                    <select id="clientSelector" name="client_id"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">{{ __('please_select_client') }}</option>
+                    </select>
+                    <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="client_id"></span>
+                </div>
+
+                <!-- New Client Fields -->
+                <div id="newClientSection">
+
+                    <!-- Basic Information -->
+                    <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
+                        <!-- First Name -->
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700">
+                                {{ __('first_name') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="first_name" name="first_name" required maxlength="50"
+                                placeholder="{{ __('first_name_placeholder') }}"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                                autocomplete="given-name">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                                data-field="first_name"></span>
+                        </div>
+
+                        <!-- Last Name -->
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700">
+                                {{ __('last_name') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="last_name" name="last_name" required maxlength="50"
+                                placeholder="{{ __('last_name_placeholder') }}"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                                autocomplete="family-name">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                                data-field="last_name"></span>
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="inspection_time" class="block text-sm font-medium text-gray-700">
-                            {{ __('inspection_time') }} <span
+                    <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
+                        <!-- Phone -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">
+                                {{ __('phone') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" id="phone" name="phone" required maxlength="14"
+                                placeholder="{{ __('phone_placeholder') }}"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                                autocomplete="tel">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="phone"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">
+                                {{ __('email') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" required
+                                placeholder="{{ __('email_placeholder') }}"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                                autocomplete="email">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="email"></span>
+                        </div>
+                    </div>
+
+                    <!-- Address Map Input Field -->
+                    <div class="mb-6">
+                        <label for="address_map_input" class="block text-sm font-medium text-gray-700">
+                            {{ __('address') }} <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="address_map_input" name="address_map_input" required
+                            placeholder="{{ __('enter_complete_address') }}"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                            autocomplete="off">
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                            data-field="address_map_input"></span>
+                    </div>
+
+                    <!-- Hidden Address Fields -->
+                    <input type="hidden" id="address" name="address">
+                    <input type="hidden" id="city" name="city">
+                    <input type="hidden" id="state" name="state">
+                    <input type="hidden" id="zipcode" name="zipcode">
+                    <input type="hidden" id="country" name="country" value="USA">
+
+                    <!-- Address 2 -->
+                    <div class="mb-6">
+                        <label for="address_2" class="block text-sm font-medium text-gray-700">
+                            {{ __('address_2') }} <span
+                                class="text-xs text-gray-500">{{ __('optional_apt_suite') }}</span>
+                        </label>
+                        <input type="text" id="address_2" name="address_2"
+                            placeholder="{{ __('apt_suite_placeholder') }}"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                            autocomplete="address-line2">
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_2"></span>
+                    </div>
+
+                    <!-- Map Display -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('location_map') }}</label>
+                        <div id="location-map" class="w-full h-48 bg-gray-200 rounded-lg border border-gray-300">
+                            <!-- Map will be initialized here -->
+                        </div>
+                    </div>
+
+                    <!-- Property Insurance -->
+                    <div class="mb-6 text-center">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('property_insurance_question') }} <span class="text-red-500">*</span>
+                        </label>
+                        <fieldset class="mt-2">
+                            <legend class="sr-only">Property Insurance</legend>
+                            <div class="flex items-center justify-center space-x-4">
+                                <div class="radio-option flex items-center">
+                                    <input id="insurance_yes" name="insurance_property" type="radio"
+                                        value="1" class="radio-field sr-only" required>
+                                    <label for="insurance_yes"
+                                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                        {{ __('yes') }}
+                                    </label>
+                                </div>
+                                <div class="radio-option flex items-center">
+                                    <input id="insurance_no" name="insurance_property" type="radio" value="0"
+                                        class="radio-field sr-only" required>
+                                    <label for="insurance_no"
+                                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                        {{ __('no') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                            data-field="insurance_property"></span>
+                    </div>
+
+                    <!-- Intent to Claim -->
+                    <div class="mb-6 text-center">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('intent_to_claim') }}
+                        </label>
+                        <fieldset class="mt-2">
+                            <legend class="sr-only">Intent to Claim</legend>
+                            <div class="flex items-center justify-center space-x-4">
+                                <div class="radio-option flex items-center">
+                                    <input id="intent_yes" name="intent_to_claim" type="radio" value="1"
+                                        class="radio-field sr-only">
+                                    <label for="intent_yes"
+                                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                        {{ __('yes') }}
+                                    </label>
+                                </div>
+                                <div class="radio-option flex items-center">
+                                    <input id="intent_no" name="intent_to_claim" type="radio" value="0"
+                                        class="radio-field sr-only">
+                                    <label for="intent_no"
+                                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                                        {{ __('no') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                            data-field="intent_to_claim"></span>
+                    </div>
+
+                    <!-- Damage Detail -->
+                    <div class="mb-6">
+                        <label for="damage_detail" class="block text-sm font-medium text-gray-700">
+                            {{ __('damage_detail') }} <span
                                 class="text-xs text-gray-500">{{ __('optional_label') }}</span>
                         </label>
-                        <input type="time" id="inspection_time" name="inspection_time"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                        <textarea id="damage_detail" name="damage_detail" rows="3" placeholder="{{ __('enter_description') }}"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"></textarea>
                         <span class="error-message text-xs text-red-500 mt-1 block h-4"
-                            data-field="inspection_time"></span>
+                            data-field="damage_detail"></span>
                     </div>
-                </div>
+
+                    <!-- Notes -->
+                    <div class="mb-6">
+                        <label for="notes" class="block text-sm font-medium text-gray-700">
+                            {{ __('notes') }} <span class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                        </label>
+                        <textarea id="notes" name="notes" rows="3" placeholder="{{ __('notes_placeholder') }}"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"></textarea>
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="notes"></span>
+                    </div>
+
+                    <!-- SMS Consent -->
+                    <div class="mb-6">
+                        <label class="inline-flex items-start cursor-pointer">
+                            <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
+                                class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500">
+                            <span class="ml-2 text-sm text-gray-600">
+                                {!! __('sms_consent_modal_lead') !!}
+                            </span>
+                        </label>
+                        <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                            data-field="sms_consent"></span>
+                    </div>
+
+                    <!-- Inspection Date/Time (Optional) -->
+                    <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
+                        <div>
+                            <label for="inspection_date" class="block text-sm font-medium text-gray-700">
+                                {{ __('inspection_date') }} <span
+                                    class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                            </label>
+                            <input type="date" id="inspection_date" name="inspection_date"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                                data-field="inspection_date"></span>
+                        </div>
+
+                        <div>
+                            <label for="inspection_time" class="block text-sm font-medium text-gray-700">
+                                {{ __('inspection_time') }} <span
+                                    class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                            </label>
+                            <input type="time" id="inspection_time" name="inspection_time"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            <span class="error-message text-xs text-red-500 mt-1 block h-4"
+                                data-field="inspection_time"></span>
+                        </div>
+                    </div>
+
+                </div> <!-- End newClientSection -->
             </form>
 
             <!-- Modal Footer -->
@@ -260,7 +292,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
-                            {{ __('create_lead') }}
+                            <span id="createBtnText">{{ __('create_lead') }}</span>
                         </span>
                         <span class="loading-btn-text hidden flex items-center">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
