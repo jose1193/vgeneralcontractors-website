@@ -1384,6 +1384,7 @@ class CalendarModals {
         if (phoneInput) {
             phoneInput.addEventListener("input", (event) => {
                 formatPhoneInput(phoneInput, event);
+                debouncedPhoneValidation(event.target);
                 checkFormValidity();
             });
             phoneInput.addEventListener("blur", (event) => {
