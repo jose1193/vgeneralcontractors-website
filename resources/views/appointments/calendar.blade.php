@@ -1088,7 +1088,7 @@
 
                         try {
                             console.log("Creating calendar with options");
-                            var calendar = new FullCalendar.Calendar(calendarEl, {
+                            window.calendar = calendar = new FullCalendar.Calendar(calendarEl, {
                                 // Core options
                                 headerToolbar: {
                                     left: 'prev,next today',
@@ -1177,6 +1177,12 @@
                                     },
                                     success: function(events) {
                                         console.log("Events loaded successfully:", events);
+                                    },
+                                    // Add headers to distinguish calendar requests
+                                    extraParams: function() {
+                                        return {
+                                            'calendar_request': 'true'
+                                        };
                                     }
                                 },
                                 eventTimeFormat: { // Format time display on events
@@ -2608,6 +2614,31 @@
 
                 // Initialize autocomplete for new client when Google Maps is loaded
                 window.initializeNewClientAutocomplete = initializeNewClientAutocomplete;
+
+                // Language switcher fix - prevent calendar from interfering with language change
+                document.addEventListener('click', function(e) {
+                    // Check if the clicked element is a language switcher link
+                    const target = e.target.closest('a[href*="/lang/"]');
+                    if (target) {
+                        // Prevent any default FullCalendar behavior
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+
+                        // Force a full page reload to the language switch URL
+                        window.location.href = target.href;
+                        return false;
+                    }
+                }, true); // Use capturing phase to intercept before other handlers
+
+                // Additional protection: if page is being navigated away from calendar due to language change
+                window.addEventListener('beforeunload', function() {
+                    // Clear any pending FullCalendar requests
+                    if (window.calendar) {
+                        window.calendar.getEvents().forEach(function(event) {
+                            // Clean up any pending events
+                        });
+                    }
+                });
 
                 // Add phone formatting for new client phone field
                 const newClientPhoneInput = document.getElementById('newClientPhone');

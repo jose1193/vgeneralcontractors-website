@@ -48,6 +48,11 @@ class AppointmentCalendarController extends Controller
      */
     public function events(Request $request)
     {
+        // Verify this is actually a calendar request to prevent interference with language switching
+        if (!$request->ajax() && !$request->has('calendar_request')) {
+            return redirect()->route('appointment-calendar.index');
+        }
+
         // Get the date range requested by FullCalendar (parameters start, end)
         // Or load all relevant appointments if a range is not initially provided
         $start = $request->query('start') ? Carbon::parse($request->query('start'))->startOfDay() : now()->subMonth();
