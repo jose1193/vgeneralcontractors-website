@@ -701,45 +701,320 @@ class CalendarModals {
         const form = document.getElementById("newAppointmentForm");
         if (!form) return;
 
-        // Validación de teléfono
+        const submitButton = document.getElementById("createAppointmentBtn");
+        const firstNameInput = document.getElementById("first_name");
+        const lastNameInput = document.getElementById("last_name");
+        const emailInput = document.getElementById("email");
         const phoneInput = document.getElementById("phone");
-        if (phoneInput) {
-            phoneInput.addEventListener("input", (e) => {
-                let value = e.target.value.replace(/\D/g, "");
-                if (value.length >= 6) {
-                    value = value.replace(
-                        /(\d{3})(\d{3})(\d{4})/,
-                        "($1) $2-$3"
-                    );
-                } else if (value.length >= 3) {
-                    value = value.replace(/(\d{3})(\d{0,3})/, "($1) $2");
+        const requiredInputs = form.querySelectorAll("[required]");
+
+        // Debounce function for AJAX calls
+        const debounce = (func, wait) => {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        };
+
+        // Check form validity and enable/disable submit button
+        const checkFormValidity = () => {
+            let allRequiredFilled = true;
+            requiredInputs.forEach((input) => {
+                let value = input.value.trim();
+                if (input.type === "radio") {
+                    const groupName = input.name;
+                    if (
+                        !form.querySelector(
+                            `input[name="${groupName}"]:checked`
+                        )
+                    ) {
+                        allRequiredFilled = false;
+                    }
+                } else if (!value) {
+                    allRequiredFilled = false;
                 }
-                e.target.value = value;
+            });
+
+            // Check if any error messages are currently displayed
+            const hasVisibleErrors = Array.from(
+                form.querySelectorAll(".error-message")
+            ).some((span) => span.textContent.trim() !== "");
+
+            // Enable button only if all required fields are filled AND there are no errors
+            submitButton.disabled = !allRequiredFilled || hasVisibleErrors;
+        };
+
+        // Format phone input (improved version from Facebook modal)
+        const formatPhoneInput = (inputElement, event) => {
+            const isBackspace = event?.inputType === "deleteContentBackward";
+            let value = inputElement.value.replace(/\D/g, "");
+
+            if (isBackspace) {
+                // Allow backspace to work naturally
+            } else {
+                value = value.substring(0, 10);
+            }
+
+            let formattedValue = "";
+            if (value.length === 0) {
+                formattedValue = "";
+            } else if (value.length <= 3) {
+                formattedValue = `(${value}`;
+            } else if (value.length <= 6) {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3
+                )}`;
+            } else {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3,
+                    6
+                )}-${value.substring(6, 10)}`;
+            }
+            inputElement.value = formattedValue;
+        };
+
+        // Format name inputs
+        const formatName = (inputElement) => {
+            const cursorPosition = inputElement.selectionStart;
+            let value = inputElement.value;
+
+            if (typeof value === "string" && value.length > 0) {
+                // Limit to 50 characters
+                if (value.length > 50) {
+                    value = value.substring(0, 50);
+                }
+
+                // Check if value ends with space to preserve it
+                const endsWithSpace = value.endsWith(" ");
+
+                // Replace multiple spaces with single space
+                value = value.replace(/\s+/g, " ");
+
+                // Split by spaces and filter out empty parts
+                let parts = value
+                    .trim()
+                    .split(" ")
+                    .filter((part) => part.length > 0);
+
+                // Capitalize each word
+                parts = parts.map((part) => {
+                    return (
+                        part.charAt(0).toUpperCase() +
+                        part.slice(1).toLowerCase()
+                    );
+                });
+
+                // Join parts with single space
+                let formattedValue = parts.join(" ");
+
+                // Preserve trailing space if original had it and we're under 50 chars
+                if (endsWithSpace && formattedValue.length < 50) {
+                    formattedValue += " ";
+                }
+
+                inputElement.value = formattedValue;
+
+                // Restore cursor position
+                const newCursorPosition = Math.min(
+                    cursorPosition,
+                    formattedValue.length
+                );
+                inputElement.setSelectionRange(
+                    newCursorPosition,
+                    newCursorPosition
+                );
+            }
+        };
+
+        // AJAX validation functions
+        const validateEmailAjax = async (email) => {
+            if (!email) return { valid: true, exists: false };
+
+            try {
+                const response = await fetch(
+                    "/appointment-calendar/check-email",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                        },
+                        body: JSON.stringify({ email: email }),
+                    }
+                );
+
+                return await response.json();
+            } catch (error) {
+                console.error("Email validation error:", error);
+                return { valid: true, exists: false };
+            }
+        };
+
+        const validatePhoneAjax = async (phone) => {
+            if (!phone) return { valid: true, exists: false };
+
+            try {
+                const response = await fetch(
+                    "/appointment-calendar/check-phone",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                        },
+                        body: JSON.stringify({ phone: phone }),
+                    }
+                );
+
+                return await response.json();
+            } catch (error) {
+                console.error("Phone validation error:", error);
+                return { valid: true, exists: false };
+            }
+        };
+
+        // Debounced validation functions
+        const debouncedEmailValidation = debounce(async (inputElement) => {
+            const email = inputElement.value.trim();
+            const errorElement = document.querySelector(
+                '.error-message[data-field="email"]'
+            );
+
+            if (!email) {
+                this.showFieldError(errorElement, "Email is required");
+                checkFormValidity();
+                return;
+            }
+
+            const result = await validateEmailAjax(email);
+
+            if (!result.valid) {
+                this.showFieldError(
+                    errorElement,
+                    result.message || "Invalid email format"
+                );
+            } else if (result.exists) {
+                this.showFieldError(
+                    errorElement,
+                    result.message || "This email is already registered"
+                );
+            } else {
+                this.clearFieldError(errorElement);
+            }
+
+            checkFormValidity();
+        }, 500);
+
+        const debouncedPhoneValidation = debounce(async (inputElement) => {
+            const phone = inputElement.value.trim();
+            const errorElement = document.querySelector(
+                '.error-message[data-field="phone"]'
+            );
+
+            if (!phone) {
+                this.showFieldError(errorElement, "Phone is required");
+                checkFormValidity();
+                return;
+            }
+
+            const result = await validatePhoneAjax(phone);
+
+            if (!result.valid) {
+                this.showFieldError(
+                    errorElement,
+                    result.message || "Invalid phone format"
+                );
+            } else if (result.exists) {
+                this.showFieldError(
+                    errorElement,
+                    result.message || "This phone number is already registered"
+                );
+            } else {
+                this.clearFieldError(errorElement);
+            }
+
+            checkFormValidity();
+        }, 500);
+
+        // Setup event listeners
+        if (firstNameInput) {
+            firstNameInput.addEventListener("input", (event) => {
+                formatName(event.target);
+                checkFormValidity();
+            });
+            firstNameInput.addEventListener("blur", (event) => {
+                formatName(event.target);
+                this.validateName(event);
+                checkFormValidity();
             });
         }
 
-        // Validación de email en tiempo real
-        const emailInput = document.getElementById("email");
-        if (emailInput) {
-            emailInput.addEventListener("blur", this.validateEmail.bind(this));
-        }
-
-        // Validación de nombres
-        const firstNameInput = document.getElementById("first_name");
-        const lastNameInput = document.getElementById("last_name");
-
-        if (firstNameInput) {
-            firstNameInput.addEventListener(
-                "blur",
-                this.validateName.bind(this)
-            );
-        }
         if (lastNameInput) {
-            lastNameInput.addEventListener(
-                "blur",
-                this.validateName.bind(this)
-            );
+            lastNameInput.addEventListener("input", (event) => {
+                formatName(event.target);
+                checkFormValidity();
+            });
+            lastNameInput.addEventListener("blur", (event) => {
+                formatName(event.target);
+                this.validateName(event);
+                checkFormValidity();
+            });
         }
+
+        if (emailInput) {
+            emailInput.addEventListener("input", () => {
+                checkFormValidity();
+            });
+            emailInput.addEventListener("blur", (event) => {
+                debouncedEmailValidation(event.target);
+            });
+        }
+
+        if (phoneInput) {
+            phoneInput.addEventListener("input", (event) => {
+                formatPhoneInput(phoneInput, event);
+                checkFormValidity();
+            });
+            phoneInput.addEventListener("blur", (event) => {
+                debouncedPhoneValidation(event.target);
+            });
+        }
+
+        // Setup other inputs
+        const allInputs = form.querySelectorAll(
+            ".input-field, .radio-field, .checkbox-field"
+        );
+        allInputs.forEach((input) => {
+            if (
+                input.name === "first_name" ||
+                input.name === "last_name" ||
+                input.name === "phone" ||
+                input.name === "email"
+            )
+                return;
+
+            if (input.type === "checkbox" || input.type === "radio") {
+                input.addEventListener("change", () => {
+                    checkFormValidity();
+                });
+            } else {
+                input.addEventListener("input", () => {
+                    checkFormValidity();
+                });
+            }
+        });
+
+        // Initial check
+        checkFormValidity();
     }
 
     /**

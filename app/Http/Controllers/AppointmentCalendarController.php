@@ -578,6 +578,93 @@ class AppointmentCalendarController extends Controller
     }
     
     /**
+     * Check if email already exists for duplicate validation.
+     */
+    public function checkEmailExists(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+            
+            if (!$email) {
+                return response()->json([
+                    'exists' => false,
+                    'valid' => true
+                ]);
+            }
+
+            // Validate email format first
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return response()->json([
+                    'exists' => false,
+                    'valid' => false,
+                    'message' => __('invalid_email_format')
+                ]);
+            }
+
+            // Check if email exists in appointments table
+            $exists = Appointment::where('email', $email)->exists();
+            
+            return response()->json([
+                'exists' => $exists,
+                'valid' => true,
+                'message' => $exists ? __('email_already_exists') : null
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error checking email existence', ['error' => $e->getMessage()]);
+            return response()->json([
+                'exists' => false,
+                'valid' => true,
+                'message' => null
+            ], 500);
+        }
+    }
+
+    /**
+     * Check if phone already exists for duplicate validation.
+     */
+    public function checkPhoneExists(Request $request)
+    {
+        try {
+            $phone = $request->input('phone');
+            
+            if (!$phone) {
+                return response()->json([
+                    'exists' => false,
+                    'valid' => true
+                ]);
+            }
+
+            // Clean phone number (remove formatting)
+            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+            
+            // Validate phone format (must be 10 digits)
+            if (strlen($cleanPhone) !== 10) {
+                return response()->json([
+                    'exists' => false,
+                    'valid' => false,
+                    'message' => __('invalid_phone_format')
+                ]);
+            }
+
+            // Check if phone exists in appointments table (compare clean numbers)
+            $exists = Appointment::whereRaw('REGEXP_REPLACE(phone, "[^0-9]", "") = ?', [$cleanPhone])->exists();
+            
+            return response()->json([
+                'exists' => $exists,
+                'valid' => true,
+                'message' => $exists ? __('phone_already_exists') : null
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error checking phone existence', ['error' => $e->getMessage()]);
+            return response()->json([
+                'exists' => false,
+                'valid' => true,
+                'message' => null
+            ], 500);
+        }
+    }
+
+    /**
      * Track calendar event cache keys for efficient invalidation
      */
     private function trackCalendarCacheKey($key)

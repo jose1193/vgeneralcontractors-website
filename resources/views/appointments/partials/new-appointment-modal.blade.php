@@ -40,6 +40,7 @@
                             {{ __('first_name') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="first_name" name="first_name" required maxlength="50"
+                            placeholder="{{ __('first_name_placeholder') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                             autocomplete="given-name">
                         <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
@@ -51,6 +52,7 @@
                             {{ __('last_name') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="last_name" name="last_name" required maxlength="50"
+                            placeholder="{{ __('last_name_placeholder') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                             autocomplete="family-name">
                         <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>

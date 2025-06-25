@@ -17,16 +17,7 @@
                             {{ __('appointment_calendar_subtitle') }}
                         </p>
                     </div>
-                    <div class="mt-4 md:mt-0">
-                        <button id="openCreateLeadModal" type="button"
-                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-200">
-                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            {{ __('create_new_lead') }}
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
