@@ -112,12 +112,22 @@ class CalendarModals {
                     // Check the radio button
                     radio.checked = true;
 
-                    // Remove selected class from all insurance labels
-                    document
-                        .querySelectorAll(".insurance-label")
-                        .forEach((l) => {
-                            l.classList.remove("selected");
-                        });
+                    // Remove selected class from labels in the SAME GROUP only
+                    const groupName = radio.name;
+                    const groupRadios = document.querySelectorAll(
+                        `input[name="${groupName}"]`
+                    );
+                    groupRadios.forEach((groupRadio) => {
+                        const groupLabel = document.querySelector(
+                            `label[for="${groupRadio.id}"]`
+                        );
+                        if (
+                            groupLabel &&
+                            groupLabel.classList.contains("insurance-label")
+                        ) {
+                            groupLabel.classList.remove("selected");
+                        }
+                    });
 
                     // Add selected class to clicked label
                     label.classList.add("selected");
