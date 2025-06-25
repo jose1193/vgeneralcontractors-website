@@ -9,29 +9,32 @@ class CalendarUtils {
      */
     static formatPhoneNumber(value) {
         if (!value) return value;
-        
+
         // Remover todo excepto números
-        const phoneNumber = value.replace(/[^\\d]/g, '');
-        
+        const phoneNumber = value.replace(/[^\d]/g, "");
+
         // Verificar que tenga 10 dígitos
         if (phoneNumber.length !== 10) return value;
-        
+
         // Formatear como (XXX) XXX-XXXX
-        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(
+            3,
+            6
+        )}-${phoneNumber.slice(6, 10)}`;
     }
 
     /**
      * Formatear fecha para mostrar
      */
     static formatDisplayDate(date) {
-        if (!date) return '';
-        
+        if (!date) return "";
+
         const d = new Date(date);
-        return d.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+        return d.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
         });
     }
 
@@ -39,16 +42,16 @@ class CalendarUtils {
      * Formatear hora para mostrar
      */
     static formatDisplayTime(time) {
-        if (!time) return '';
-        
-        const [hours, minutes] = time.split(':');
+        if (!time) return "";
+
+        const [hours, minutes] = time.split(":");
         const d = new Date();
         d.setHours(parseInt(hours), parseInt(minutes));
-        
-        return d.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
+
+        return d.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
         });
     }
 
@@ -56,11 +59,11 @@ class CalendarUtils {
      * Formatear fecha y hora completa
      */
     static formatDateTime(date, time) {
-        if (!date || !time) return '';
-        
+        if (!date || !time) return "";
+
         const displayDate = this.formatDisplayDate(date);
         const displayTime = this.formatDisplayTime(time);
-        
+
         return `${displayDate} at ${displayTime}`;
     }
 
@@ -68,7 +71,7 @@ class CalendarUtils {
      * Validar email
      */
     static isValidEmail(email) {
-        const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
 
@@ -76,7 +79,7 @@ class CalendarUtils {
      * Validar teléfono
      */
     static isValidPhone(phone) {
-        const phoneRegex = /^\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
         return phoneRegex.test(phone);
     }
 
@@ -85,16 +88,16 @@ class CalendarUtils {
      */
     static getEventColor(status) {
         const colorMap = {
-            'New': '#3b82f6',        // blue-500
-            'Called': '#10b981',     // emerald-500
-            'Pending': '#f59e0b',    // amber-500
-            'Confirmed': '#8b5cf6',  // violet-500
-            'Completed': '#059669',  // emerald-600
-            'Declined': '#ef4444',   // red-500
-            'Cancelled': '#6b7280'   // gray-500
+            New: "#3b82f6", // blue-500
+            Called: "#10b981", // emerald-500
+            Pending: "#f59e0b", // amber-500
+            Confirmed: "#8b5cf6", // violet-500
+            Completed: "#059669", // emerald-600
+            Declined: "#ef4444", // red-500
+            Cancelled: "#6b7280", // gray-500
         };
-        
-        return colorMap[status] || '#6b7280';
+
+        return colorMap[status] || "#6b7280";
     }
 
     /**
@@ -102,30 +105,32 @@ class CalendarUtils {
      */
     static createEventTooltip(event) {
         const props = event.extendedProps;
-        
+
         let tooltip = `<div class="text-left">`;
         tooltip += `<div class="font-bold">${event.title}</div>`;
-        
+
         if (props.clientEmail) {
             tooltip += `<div class="text-sm">📧 ${props.clientEmail}</div>`;
         }
-        
+
         if (props.clientPhone) {
             tooltip += `<div class="text-sm">📞 ${props.clientPhone}</div>`;
         }
-        
+
         if (props.address) {
             tooltip += `<div class="text-sm">📍 ${props.address}</div>`;
         }
-        
+
         tooltip += `<div class="text-sm mt-1">`;
-        tooltip += `<span class="inline-block px-2 py-1 text-xs rounded" style="background-color: ${this.getEventColor(props.status)}; color: white;">`;
-        tooltip += `${props.status || 'Pending'}`;
+        tooltip += `<span class="inline-block px-2 py-1 text-xs rounded" style="background-color: ${this.getEventColor(
+            props.status
+        )}; color: white;">`;
+        tooltip += `${props.status || "Pending"}`;
         tooltip += `</span>`;
         tooltip += `</div>`;
-        
+
         tooltip += `</div>`;
-        
+
         return tooltip;
     }
 
@@ -149,13 +154,13 @@ class CalendarUtils {
      */
     static throttle(func, limit) {
         let inThrottle;
-        return function() {
+        return function () {
             const args = arguments;
             const context = this;
             if (!inThrottle) {
                 func.apply(context, args);
                 inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
+                setTimeout(() => (inThrottle = false), limit);
             }
         };
     }
@@ -165,13 +170,13 @@ class CalendarUtils {
      */
     static escapeHtml(text) {
         const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
         };
-        
+
         return text.replace(/[&<>"']/g, (m) => map[m]);
     }
 
@@ -201,7 +206,7 @@ class CalendarUtils {
      * Obtener fecha actual en formato ISO
      */
     static getCurrentDateISO() {
-        return new Date().toISOString().split('T')[0];
+        return new Date().toISOString().split("T")[0];
     }
 
     /**
@@ -227,10 +232,12 @@ class CalendarUtils {
     static isSameDay(date1, date2) {
         const d1 = new Date(date1);
         const d2 = new Date(date2);
-        
-        return d1.getFullYear() === d2.getFullYear() &&
-               d1.getMonth() === d2.getMonth() &&
-               d1.getDate() === d2.getDate();
+
+        return (
+            d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate()
+        );
     }
 
     /**
@@ -239,11 +246,13 @@ class CalendarUtils {
     static getCurrentWeekRange() {
         const now = new Date();
         const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-        const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-        
+        const endOfWeek = new Date(
+            now.setDate(now.getDate() - now.getDay() + 6)
+        );
+
         return {
             start: startOfWeek,
-            end: endOfWeek
+            end: endOfWeek,
         };
     }
 
@@ -254,14 +263,14 @@ class CalendarUtils {
         if (minutes < 60) {
             return `${minutes} min`;
         }
-        
+
         const hours = Math.floor(minutes / 60);
         const remainingMinutes = minutes % 60;
-        
+
         if (remainingMinutes === 0) {
             return `${hours}h`;
         }
-        
+
         return `${hours}h ${remainingMinutes}min`;
     }
 
@@ -273,21 +282,21 @@ class CalendarUtils {
             await navigator.clipboard.writeText(text);
             return true;
         } catch (err) {
-            console.error('Failed to copy text: ', err);
-            
+            console.error("Failed to copy text: ", err);
+
             // Fallback para navegadores que no soportan clipboard API
-            const textArea = document.createElement('textarea');
+            const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
-            
+
             try {
-                document.execCommand('copy');
+                document.execCommand("copy");
                 document.body.removeChild(textArea);
                 return true;
             } catch (fallbackErr) {
-                console.error('Fallback copy failed: ', fallbackErr);
+                console.error("Fallback copy failed: ", fallbackErr);
                 document.body.removeChild(textArea);
                 return false;
             }
@@ -297,24 +306,24 @@ class CalendarUtils {
     /**
      * Mostrar notificación toast
      */
-    static showToast(message, type = 'success', duration = 3000) {
+    static showToast(message, type = "success", duration = 3000) {
         // Si existe Swal, usar toast de SweetAlert2
-        if (typeof Swal !== 'undefined') {
+        if (typeof Swal !== "undefined") {
             const Toast = Swal.mixin({
                 toast: true,
-                position: 'top-end',
+                position: "top-end",
                 showConfirmButton: false,
                 timer: duration,
                 timerProgressBar: true,
                 didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
             });
 
             Toast.fire({
                 icon: type,
-                title: message
+                title: message,
             });
         } else {
             // Fallback simple
@@ -328,7 +337,7 @@ class CalendarUtils {
     static isBusinessHours(date) {
         const day = date.getDay(); // 0 = Sunday, 6 = Saturday
         const hour = date.getHours();
-        
+
         // Lunes a Viernes, 8 AM a 6 PM
         return day >= 1 && day <= 5 && hour >= 8 && hour < 18;
     }
@@ -336,3 +345,6 @@ class CalendarUtils {
 
 // Hacer disponible globalmente
 window.CalendarUtils = CalendarUtils;
+
+// Debug: Verificar que se exportó correctamente
+console.log("CalendarUtils loaded and exported:", typeof window.CalendarUtils);
