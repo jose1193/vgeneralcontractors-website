@@ -240,9 +240,9 @@
                                         </div>
                                     </div>
                                     <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                        <div class="mt-4 space-y-4">
-                                            <form id="newAppointmentForm">
-                                                        @csrf
+                                        <form id="newAppointmentForm">
+                                            @csrf
+                                            <div class="mt-4 space-y-4">
                                                         {{-- Selected Date/Time (readonly) --}}
                                                         <div>
                                                             <label for="selectedDateTime"
@@ -342,7 +342,7 @@
                                                                     {{ __('address_2') }}
                                                                 </label>
                                                                 <input type="text" id="newClientAddress2" name="address_2"
-                                                                    placeholder="{{ __('address_2_placeholder') }}"
+                                                                    placeholder="{{ __('apartment_suite_optional') }}"
                                                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                                             </div>
 
@@ -386,16 +386,14 @@
                                                             <input type="hidden" id="newClientLatitude" name="latitude">
                                                             <input type="hidden" id="newClientLongitude" name="longitude">
                                                         </div>
-                                                    </form>
-                                                </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                    <div
-                                        class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center space-x-3">
-                                        {{-- Botón para crear cita solo como Confirmed --}}
-                                        <button type="button" id="createAppointmentBtn"
-                                            class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row justify-center">
+                                        <div class="flex space-x-3 justify-center">
+                                            {{-- Botón para crear cita solo como Confirmed --}}
+                                            <button type="button" id="createAppointmentBtn"
+                                                class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
                                             <span class="normal-btn-text">{{ __('create_confirmed_appointment') }}</span>
                                             <span class="processing-btn-text hidden">
                                                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
@@ -409,25 +407,26 @@
                                                 </svg>
                                                 {{ __('processing') }}
                                             </span>
-                                        </button>
-                                        
-                                        {{-- Botón para crear cita como Confirmed y Called --}}
-                                        <button type="button" id="createConfirmedCalledBtn"
-                                            class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                                            <span class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
-                                            <span class="processing-btn-text hidden">
-                                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                        stroke="currentColor" stroke-width="4"></circle>
-                                                    <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                    </path>
-                                                </svg>
-                                                {{ __('processing') }}
-                                            </span>
-                                        </button>
+                                            </button>
+                                            
+                                            {{-- Botón para crear cita como Confirmed y Called --}}
+                                            <button type="button" id="createConfirmedCalledBtn"
+                                                class="hidden inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                                <span class="normal-btn-text">{{ __('create_confirmed_called_appointment') }}</span>
+                                                <span class="processing-btn-text hidden">
+                                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                            d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                        </path>
+                                                    </svg>
+                                                    {{ __('processing') }}
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
