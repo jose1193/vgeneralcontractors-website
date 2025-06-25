@@ -1710,6 +1710,7 @@
     "appointment_calendar_error_fetching_clients": "Error al obtener los clientes: ",
     "appointment_calendar_validation_error": "Error de validación",
     "select_client": "Seleccionar Cliente",
+    "select_client_3_hours": "Seleccionar Cliente (3 horas)",
     "create_confirmed_appointment": "Crear Cita Confirmada",
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
     "create_new_client": "Crear Nuevo Cliente",

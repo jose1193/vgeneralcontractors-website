@@ -245,11 +245,12 @@
                                                         <div class="mt-3">
                                                             <label for="clientSelector"
                                                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                Select Client
+                                                                {{ __('select_client_3_hours') }}
                                                             </label>
                                                             <select id="clientSelector" name="client_id" required
                                                                 class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                <option value="">Select a client</option>
+                                                                <option value="">
+                                                                    {{ __('select_client_3_hours') }}</option>
                                                             </select>
                                                         </div>
                                                     </form>
@@ -498,7 +499,8 @@
                                     console.log('Client data received:', data);
                                     if (data.success && data.data && data.data.length > 0) {
                                         // Limpiar opción de carga
-                                        clientSelector.innerHTML = '<option value="">Select a client</option>';
+                                        clientSelector.innerHTML = '<option value="">' + @json(__('select_client_3_hours')) +
+                                            '</option>';
                                         console.log('Found', data.data.length, 'clients');
 
                                         // Agregar clientes al dropdown
@@ -514,7 +516,7 @@
 
                                         // Inicializar Select2 después de cargar las opciones
                                         $('#clientSelector').select2({
-                                            placeholder: "Select a client",
+                                            placeholder: @json(__('select_client_3_hours')),
                                             allowClear: true
                                         });
                                     } else {

@@ -174,7 +174,7 @@
                             $inspectionDate = \Carbon\Carbon::parse($appointment->inspection_date);
                             $inspectionTime = \Carbon\Carbon::parse($appointment->inspection_time);
                             $startDateTime = $inspectionDate->setTimeFrom($inspectionTime);
-                            $endDateTime = $startDateTime->copy()->addHours(2);
+                            $endDateTime = $startDateTime->copy()->addHours(3);
                             $formattedDate = $startDateTime
                                 ->locale('es')
                                 ->isoFormat('dddd D [de] MMMM [de] YYYY [a las] hh:mm A');
