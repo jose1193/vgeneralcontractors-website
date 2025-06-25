@@ -375,7 +375,14 @@ class CalendarModals {
                         minute: "numeric",
                         hour12: true,
                     }).format(end);
-                formattedDateTime += " (3 hours)";
+                // Calculate end time (3 hours later)
+                const endTime = new Date(startTime.getTime() + 3 * 60 * 60 * 1000);
+                const endTimeStr = endTime.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+                formattedDateTime += ` - ${endTimeStr} (3 hours)`;
             }
 
             dateTimeElement.textContent = formattedDateTime;
@@ -822,23 +829,28 @@ class CalendarModals {
                 formData.append(key, value);
             }
         } else {
-            // Existing client mode - only need client_id and appointment details
+            // Existing client mode - only need client_uuid and appointment details
             const clientSelector = document.getElementById("clientSelector");
             if (clientSelector && clientSelector.value) {
-                formData.append("client_id", clientSelector.value);
+                formData.append("client_uuid", clientSelector.value);
             }
         }
 
-        // Add appointment date/time (common for both modes)
+        // Add inspection date/time (common for both modes)
         if (this.selectedStart) {
             formData.append(
-                "appointment_date",
+                "inspection_date",
                 this.selectedStart.toISOString().split("T")[0]
             );
             formData.append(
-                "appointment_time",
+                "inspection_time",
                 this.selectedStart.toTimeString().substring(0, 5)
             );
+            
+            // Add inspection_status for existing client appointments
+            if (!isNewClient) {
+                formData.append("inspection_status", "Confirmed");
+            }
         }
 
         return formData;
@@ -856,7 +868,7 @@ class CalendarModals {
             const clientSelector = document.getElementById("clientSelector");
             if (!clientSelector || !clientSelector.value) {
                 const errorElement = document.querySelector(
-                    '.error-message[data-field="client_id"]'
+                    '.error-message[data-field="client_uuid"]'
                 );
                 if (errorElement) {
                     this.showFieldError(
@@ -870,7 +882,7 @@ class CalendarModals {
 
             // Clear any previous error
             const errorElement = document.querySelector(
-                '.error-message[data-field="client_id"]'
+                '.error-message[data-field="client_uuid"]'
             );
             if (errorElement) {
                 this.clearFieldError(errorElement);
