@@ -430,3 +430,119 @@ input[type="radio"].radio-field:not(.custom-styled):not(
     white-space: nowrap !important;
     border: 0 !important;
 }
+
+/* ===============================================
+   CALENDAR MODAL STYLES
+   =============================================== */
+
+/* Calendar Container */
+#calendar {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+/* FullCalendar Event Customization */
+.fc-event {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+}
+
+/* Custom Event Content Styling */
+.fc-event-content-custom {
+    width: 100%;
+    padding: 1px 2px !important;
+}
+
+/* Client Name (First Line) */
+.client-title {
+    font-weight: bold;
+    font-size: 0.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
+/* Event Time (Second Line) */
+.event-time {
+    font-size: 0.7rem;
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
+/* Appointment Status (Third Line) */
+.appointment-status {
+    font-size: 0.7rem;
+    opacity: 0.9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Hide default FullCalendar event elements */
+.fc-event-title-container,
+.fc-event-time {
+    display: none !important;
+}
+
+/* Improve event layout */
+.fc-timegrid-event-harness {
+    margin-left: 1px !important;
+    margin-right: 1px !important;
+}
+
+.fc-timegrid-event {
+    padding: 1px 2px !important;
+}
+
+/* Tooltip Styling (Tippy.js) */
+.tippy-box[data-theme~='light-border'] {
+    font-size: 0.85rem;
+}
+
+.tippy-box[data-theme~='light-border'] .tippy-content {
+    padding: 0.5rem;
+}
+
+/* ===============================================
+   CALENDAR RESPONSIVE DESIGN
+   =============================================== */
+
+@media (max-width: 768px) {
+    #calendar {
+        margin: 10px auto;
+        padding: 0 5px;
+    }
+    
+    .fc-event {
+        font-size: 0.7rem !important;
+    }
+    
+    .client-title {
+        font-size: 0.75rem;
+    }
+    
+    .event-time,
+    .appointment-status {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fc-event {
+        font-size: 0.65rem !important;
+    }
+    
+    .client-title {
+        font-size: 0.7rem;
+    }
+    
+    .event-time,
+    .appointment-status {
+        font-size: 0.6rem;
+    }
+}
