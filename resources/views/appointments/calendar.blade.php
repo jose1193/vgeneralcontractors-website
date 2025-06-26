@@ -132,17 +132,9 @@
                                     // Form validation
                                     'validation_error_title': @json(__('validation_error_title')),
                                     'please_correct_form_errors': @json(__('please_correct_form_errors')),
-                                    'field_required': @json(__('field_required')),
-                                    'first_name_required': @json(__('first_name_required')),
-                                    'last_name_required': @json(__('last_name_required')),
-                                    'email_required': @json(__('email_required')),
-                                    'phone_required': @json(__('phone_required')),
+                                    'field_required': @json(__('This field is required')),
                                     'invalid_email': @json(__('invalid_email')),
-                                    'invalid_email_format': @json(__('invalid_email_format')),
-                                    'invalid_name': @json(__('Por favor ingrese un nombre válido')),
                                     'invalid_phone': @json(__('Please enter a valid phone number')),
-                                    'invalid_phone_format': @json(__('Please enter a valid phone number')),
-                                    'phone_already_registered': @json(__('phone_number_already_registered')),
                                     'time_slot_unavailable': @json(__('time_slot_unavailable')),
 
                                     // Client management
@@ -192,17 +184,17 @@
                                     const target = e.target.closest('a[href*="/lang/"]');
                                     if (target) {
                                         e.preventDefault();
-
+                                        
                                         // Get current page URL without the domain
                                         const currentPath = window.location.pathname;
                                         const targetUrl = new URL(target.href, window.location.origin);
-
+                                        
                                         // Extract locale from the target URL
                                         const locale = targetUrl.pathname.split('/lang/')[1];
-
+                                        
                                         // Construct the proper redirect URL
                                         const redirectUrl = `/lang/${locale}?redirect=${encodeURIComponent(currentPath)}`;
-
+                                        
                                         window.location.href = redirectUrl;
                                         return false;
                                     }

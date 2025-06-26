@@ -198,22 +198,13 @@ class CalendarModals {
         // Handle toggle click
         toggle.addEventListener("click", () => {
             this.isCreateNewMode = !this.isCreateNewMode;
-
+            
             if (this.isCreateNewMode) {
                 // Create new client mode
                 existingClientSection.classList.add("hidden");
                 newClientSection.classList.remove("hidden");
-                toggle.classList.remove(
-                    "bg-gray-100",
-                    "hover:bg-gray-200",
-                    "text-gray-700"
-                );
-                toggle.classList.add(
-                    "bg-indigo-100",
-                    "hover:bg-indigo-200",
-                    "text-indigo-700",
-                    "border-indigo-300"
-                );
+                toggle.classList.remove("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
+                toggle.classList.add("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
                 toggle.innerHTML = `
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -222,8 +213,7 @@ class CalendarModals {
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
-                        this.translations.create_confirmed_lead ||
-                        "Crear y Confirmar Lead";
+                        this.translations.create_confirmed_lead || "Crear y Confirmar Lead";
                 }
                 // Clear client selector
                 if (clientSelector) {
@@ -233,25 +223,13 @@ class CalendarModals {
                 // Select existing client mode
                 existingClientSection.classList.remove("hidden");
                 newClientSection.classList.add("hidden");
-                toggle.classList.remove(
-                    "bg-indigo-100",
-                    "hover:bg-indigo-200",
-                    "text-indigo-700",
-                    "border-indigo-300"
-                );
-                toggle.classList.add(
-                    "bg-gray-100",
-                    "hover:bg-gray-200",
-                    "text-gray-700"
-                );
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
                 toggle.innerHTML = `
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    ${
-                        this.translations.create_new_client ||
-                        "Crear Nuevo Cliente"
-                    }
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
@@ -270,25 +248,13 @@ class CalendarModals {
                 this.isCreateNewMode = false;
                 existingClientSection.classList.remove("hidden");
                 newClientSection.classList.add("hidden");
-                toggle.classList.remove(
-                    "bg-indigo-100",
-                    "hover:bg-indigo-200",
-                    "text-indigo-700",
-                    "border-indigo-300"
-                );
-                toggle.classList.add(
-                    "bg-gray-100",
-                    "hover:bg-gray-200",
-                    "text-gray-700"
-                );
+                toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+                toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
                 toggle.innerHTML = `
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    ${
-                        this.translations.create_new_client ||
-                        "Crear Nuevo Cliente"
-                    }
+                    ${this.translations.create_new_client || "Crear Nuevo Cliente"}
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
@@ -355,15 +321,15 @@ class CalendarModals {
     openEventDetailModal(event, props) {
         console.log("DEBUG - openEventDetailModal called with:", {
             event: event,
-            props: props,
+            props: props
         });
-
+        
         const modal = document.getElementById("eventDetailModal");
         if (!modal) {
             console.error("DEBUG - eventDetailModal element not found in DOM");
             return;
         }
-
+        
         console.log("DEBUG - Modal element found:", modal);
 
         // Poblar datos del modal
@@ -374,11 +340,8 @@ class CalendarModals {
         console.log("DEBUG - Showing modal");
         modal.classList.remove("hidden");
         modal.style.display = "block";
-
-        console.log(
-            "DEBUG - Modal classes after show:",
-            modal.classList.toString()
-        );
+        
+        console.log("DEBUG - Modal classes after show:", modal.classList.toString());
         console.log("DEBUG - Modal display style:", modal.style.display);
     }
 
@@ -431,9 +394,9 @@ class CalendarModals {
                 // Calculate end time (3 hours later) if no end time provided
                 const endTime = new Date(start.getTime() + 3 * 60 * 60 * 1000);
                 const endTimeStr = endTime.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
                 });
                 formattedDateTime += ` - ${endTimeStr} (3 hours)`;
             }
@@ -754,16 +717,13 @@ class CalendarModals {
         this.clearLeadForm();
 
         // Reset button text to correct default state (existing client mode)
-        const createBtnText = document.getElementById("createBtnText");
+        const createBtnText = document.getElementById('createBtnText');
         if (createBtnText) {
-            createBtnText.textContent =
-                this.translations.create_lead || "Create Lead";
+            createBtnText.textContent = this.translations.create_lead || 'Create Lead';
         }
 
         // Ensure we're in existing client mode after reset
-        const existingClientSection = document.getElementById(
-            "existingClientSection"
-        );
+        const existingClientSection = document.getElementById("existingClientSection");
         const newClientSection = document.getElementById("newClientSection");
         if (existingClientSection && newClientSection) {
             existingClientSection.classList.remove("hidden");
@@ -786,12 +746,12 @@ class CalendarModals {
      */
     handleCreateAppointment() {
         const button = document.getElementById("createAppointmentBtn");
-
+        
         // Prevenir envío si el botón está deshabilitado
         if (button.disabled) {
             return;
         }
-
+        
         const toggle = document.getElementById("createNewClientToggle");
         const newClientSection = document.getElementById("newClientSection");
         const isNewClient = this.isCreateNewMode;
@@ -856,11 +816,7 @@ class CalendarModals {
             })
             .catch((error) => {
                 console.error("Error:", error);
-                Swal.fire(
-                    this.translations.error,
-                    this.translations.unexpected_error,
-                    "error"
-                );
+                Swal.fire(this.translations.error, this.translations.unexpected_error, "error");
             })
             .finally(() => {
                 // Restaurar estado del botón
@@ -903,7 +859,7 @@ class CalendarModals {
                 "inspection_time",
                 this.selectedStart.toTimeString().substring(0, 5)
             );
-
+            
             // Add inspection_status for existing client appointments
             if (!isNewClient) {
                 formData.append("inspection_status", "Confirmed");
@@ -965,9 +921,7 @@ class CalendarModals {
         // Limpiar campo de fecha/hora seleccionada
         const selectedDateTime = document.getElementById("selectedDateTime");
         if (selectedDateTime) {
-            selectedDateTime.textContent =
-                this.translations.select_time_from_calendar ||
-                "Selecciona un horario del calendario";
+            selectedDateTime.textContent = this.translations.select_time_from_calendar || "Selecciona un horario del calendario";
         }
 
         // Limpiar radio buttons y sus labels
@@ -989,41 +943,29 @@ class CalendarModals {
 
         // Reset toggle to default state (select existing client)
         const toggle = document.getElementById("createNewClientToggle");
-        const existingClientSection = document.getElementById(
-            "existingClientSection"
-        );
+        const existingClientSection = document.getElementById("existingClientSection");
         const newClientSection = document.getElementById("newClientSection");
         const createBtnText = document.getElementById("createBtnText");
-
+        
         if (toggle && existingClientSection && newClientSection) {
             // Reset toggle state
             this.isCreateNewMode = false;
-
+            
             // Reset to existing client mode
             existingClientSection.classList.remove("hidden");
             newClientSection.classList.add("hidden");
-            toggle.classList.remove(
-                "bg-indigo-100",
-                "hover:bg-indigo-200",
-                "text-indigo-700",
-                "border-indigo-300"
-            );
-            toggle.classList.add(
-                "bg-gray-100",
-                "hover:bg-gray-200",
-                "text-gray-700"
-            );
+            toggle.classList.remove("bg-indigo-100", "hover:bg-indigo-200", "text-indigo-700", "border-indigo-300");
+            toggle.classList.add("bg-gray-100", "hover:bg-gray-200", "text-gray-700");
             toggle.innerHTML = `
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
                 ${this.translations.create_new_client || "Crear Nuevo Cliente"}
             `;
-
+            
             // Reset button text to match existing client mode
             if (createBtnText) {
-                createBtnText.textContent =
-                    this.translations.create_lead || "Create Lead";
+                createBtnText.textContent = this.translations.create_lead || "Create Lead";
             }
         }
 
@@ -1034,12 +976,12 @@ class CalendarModals {
         }
 
         // Reset all select elements to their first option
-        const selectElements = form.querySelectorAll("select");
-        selectElements.forEach((select) => {
+        const selectElements = form.querySelectorAll('select');
+        selectElements.forEach(select => {
             if (select.options.length > 0) {
                 select.selectedIndex = 0;
                 // Dispatch change event to ensure dependent elements are updated
-                select.dispatchEvent(new Event("change", { bubbles: true }));
+                select.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
 
@@ -1172,15 +1114,15 @@ class CalendarModals {
         document.getElementById("longitude").value = lng;
 
         // Update the visible address field with complete address including zipcode
-        const addressMapInput = document.getElementById("address_map_input");
+        const addressMapInput = document.getElementById('address_map_input');
         if (addressMapInput && place.formatted_address) {
             let completeAddress = place.formatted_address;
-
+            
             // Check if zipcode is not already in the formatted address and add it if missing
             if (zipcode && !completeAddress.includes(zipcode)) {
                 completeAddress += `, ${zipcode}`;
             }
-
+            
             addressMapInput.value = completeAddress;
         }
     }
@@ -1381,10 +1323,7 @@ class CalendarModals {
             );
 
             if (!email) {
-                this.showFieldError(
-                    errorElement,
-                    this.translations.email_required || "Email is required"
-                );
+                this.showFieldError(errorElement, "Email is required");
                 checkFormValidity();
                 return;
             }
@@ -1394,16 +1333,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message ||
-                        this.translations.invalid_email_format ||
-                        "Invalid email format"
+                    result.message || "Invalid email format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message ||
-                        this.translations.email_already_registered ||
-                        "This email is already registered"
+                    result.message || "This email is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1419,10 +1354,7 @@ class CalendarModals {
             );
 
             if (!phone) {
-                this.showFieldError(
-                    errorElement,
-                    this.translations.phone_required || "Phone is required"
-                );
+                this.showFieldError(errorElement, "Phone is required");
                 checkFormValidity();
                 return;
             }
@@ -1432,16 +1364,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message ||
-                        this.translations.invalid_phone_format ||
-                        "Invalid phone format"
+                    result.message || "Invalid phone format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message ||
-                        this.translations.phone_already_registered ||
-                        "This phone number is already registered"
+                    result.message || "This phone number is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1532,11 +1460,7 @@ class CalendarModals {
         );
 
         if (!email) {
-            this.showFieldError(
-                errorElement,
-                this.translations.email_required ||
-                    "El correo electrónico es requerido"
-            );
+            this.showFieldError(errorElement, "Email is required");
             return false;
         }
 
@@ -1544,8 +1468,7 @@ class CalendarModals {
         if (!emailRegex.test(email)) {
             this.showFieldError(
                 errorElement,
-                this.translations.invalid_email_format ||
-                    "Por favor ingrese una dirección de correo válida"
+                "Please enter a valid email address"
             );
             return false;
         }
@@ -1565,26 +1488,16 @@ class CalendarModals {
         );
 
         if (!name) {
-            const requiredMessage =
-                fieldName === "first_name"
-                    ? this.translations.first_name_required ||
-                      "El nombre es requerido"
-                    : fieldName === "last_name"
-                    ? this.translations.last_name_required ||
-                      "El apellido es requerido"
-                    : this.translations.field_required ||
-                      `${fieldName.replace("_", " ")} es requerido`;
-            this.showFieldError(errorElement, requiredMessage);
+            this.showFieldError(
+                errorElement,
+                `${fieldName.replace("_", " ")} is required`
+            );
             return false;
         }
 
         const nameRegex = /^[a-zA-Z\s'-]+$/;
         if (!nameRegex.test(name)) {
-            this.showFieldError(
-                errorElement,
-                this.translations.invalid_name ||
-                    "Por favor ingrese un nombre válido"
-            );
+            this.showFieldError(errorElement, "Please enter a valid name");
             return false;
         }
 
@@ -1637,22 +1550,10 @@ class CalendarModals {
             );
 
             if (!field || !field.value.trim()) {
-                const requiredMessage =
-                    fieldName === "first_name"
-                        ? this.translations.first_name_required ||
-                          "El nombre es requerido"
-                        : fieldName === "last_name"
-                        ? this.translations.last_name_required ||
-                          "El apellido es requerido"
-                        : fieldName === "email"
-                        ? this.translations.email_required ||
-                          "El correo electrónico es requerido"
-                        : fieldName === "phone"
-                        ? this.translations.phone_required ||
-                          "El número de teléfono es requerido"
-                        : this.translations.field_required ||
-                          `${fieldName.replace("_", " ")} es requerido`;
-                this.showFieldError(errorElement, requiredMessage);
+                this.showFieldError(
+                    errorElement,
+                    `${fieldName.replace("_", " ")} is required`
+                );
                 isValid = false;
             } else {
                 this.clearFieldError(errorElement);
@@ -1673,8 +1574,7 @@ class CalendarModals {
         if (!insuranceChecked) {
             this.showFieldError(
                 insuranceError,
-                this.translations.please_select_insurance_option ||
-                    "Por favor seleccione una opción de seguro"
+                "Please select an insurance option"
             );
             isValid = false;
         } else {
