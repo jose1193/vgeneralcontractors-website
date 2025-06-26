@@ -292,8 +292,7 @@ class CalendarModals {
                 `;
                 if (createBtnText) {
                     createBtnText.textContent =
-                        this.translations.create_confirmed_appointment ||
-                        "Create Confirmed Appointment";
+                        this.translations.create_lead || "Create Lead";
                 }
                 // Load clients if not already loaded
                 this.loadClients();
@@ -306,8 +305,7 @@ class CalendarModals {
         newClientSection.classList.add("hidden");
         if (createBtnText) {
             createBtnText.textContent =
-                this.translations.create_confirmed_appointment ||
-                "Create Confirmed Appointment";
+                this.translations.create_lead || "Create Lead";
         }
         // Load clients on initialization
         this.loadClients();
