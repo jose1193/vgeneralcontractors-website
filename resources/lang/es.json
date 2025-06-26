@@ -598,6 +598,7 @@
     "reschedule_appointment": "Reagendar Cita",
     "move_appointment_to": "¿Mover cita de \"{title}\" a {newTime}?",
     "yes_move": "¡Sí, mover!",
+    
     "moved": "¡Movida!",
     "could_not_update_appointment": "No se pudo actualizar la cita.",
     "confirm_appointment_title": "Confirmar Cita",

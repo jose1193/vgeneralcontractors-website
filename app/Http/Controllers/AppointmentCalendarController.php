@@ -317,77 +317,71 @@ class AppointmentCalendarController extends Controller
     public function create(Request $request)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'client_uuid' => 'required|exists:appointments,uuid',
-                'inspection_date' => 'required|date|after_or_equal:today',
-                'inspection_time' => 'required|date_format:H:i',
-                'inspection_status' => 'required|in:Confirmed,Pending'
-            ]);
-
-            // Find the client (existing appointment)
+            // Find the client first to check if we're updating an existing appointment
             $client = Appointment::where('uuid', $request->client_uuid)->first();
             if (!$client) {
-                    return response()->json([
-                        'success' => false,
+                return response()->json([
+                    'success' => false,
                     'message' => 'Client not found'
                 ], 404);
-                }
+            }
 
-                // Check for schedule conflicts
-            $conflictCheck = Appointment::where('inspection_date', $request->inspection_date)
-                ->where('inspection_time', $request->inspection_time)
+            // If no date/time provided, use existing ones (for confirmation scenarios)
+            $inspectionDate = $request->inspection_date ?? $client->inspection_date;
+            $inspectionTime = $request->inspection_time ?? $client->inspection_time;
+            $inspectionStatus = $request->inspection_status ?? 'Confirmed';
+
+            // Validate the request with conditional rules
+            $rules = [
+                'client_uuid' => 'required|exists:appointments,uuid',
+                'inspection_status' => 'required|in:Confirmed,Pending'
+            ];
+
+            // Only require date/time if they're being changed
+            if ($request->has('inspection_date') || $request->has('inspection_time')) {
+                $rules['inspection_date'] = 'required|date|after_or_equal:today';
+                $rules['inspection_time'] = 'required|date_format:H:i';
+            }
+
+            $request->validate($rules);
+
+            // Check for schedule conflicts only if date/time are being changed
+            if ($request->has('inspection_date') || $request->has('inspection_time')) {
+                $conflictCheck = Appointment::where('inspection_date', $inspectionDate)
+                    ->where('inspection_time', $inspectionTime)
                     ->whereNotIn('inspection_status', ['Declined', 'Cancelled'])
-                ->where('uuid', '!=', $client->uuid)
-                ->exists();
+                    ->where('uuid', '!=', $client->uuid)
+                    ->exists();
 
                 if ($conflictCheck) {
                     return response()->json([
                         'success' => false,
-                    'message' => 'This time slot is already booked with another client.',
+                        'message' => 'This time slot is already booked with another client.',
                         'errors' => [
-                        'schedule_conflict' => 'Please select a different date or time for your inspection.'
+                            'schedule_conflict' => 'Please select a different date or time for your inspection.'
                         ]
                     ], 422);
                 }
+            }
 
             // Update the appointment with new inspection details
             $oldStatus = $client->inspection_status;
             $oldInspectionDate = $client->inspection_date;
             $oldInspectionTime = $client->inspection_time;
             
-            $client->inspection_date = $request->inspection_date;
-            
-            // Both date and time must always be provided together
-            if (empty($request->inspection_date) && !empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation error',
-                    'errors' => [
-                        'inspection_date' => ['The inspection date is required when inspection time is present.']
-                    ]
-                ], 422);
-            }
-            
-            if (!empty($request->inspection_date) && empty($request->inspection_time)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation error',
-                    'errors' => [
-                        'inspection_time' => ['The inspection time is required when inspection date is present.']
-                    ]
-                ], 422);
-            }
-            
-            $client->inspection_time = $request->inspection_time;
+            // Use the determined values (either from request or existing)
+            $client->inspection_date = $inspectionDate;
+            $client->inspection_time = $inspectionTime;
             
             // Ensure consistent status handling
-            // If both date and time are provided, always set status to Confirmed
+            // If both date and time are provided, use the determined status
             if (!empty($client->inspection_date) && !empty($client->inspection_time)) {
-                $client->inspection_status = 'Confirmed';
-                $client->status_lead = 'Called';
+                $client->inspection_status = $inspectionStatus;
+                if ($inspectionStatus === 'Confirmed') {
+                    $client->status_lead = 'Called';
+                }
             } else {
-                $client->inspection_status = $request->inspection_status;
+                $client->inspection_status = $inspectionStatus;
                 
                 // Set status_lead based on inspection_status
                 if ($client->inspection_status === 'Confirmed') {

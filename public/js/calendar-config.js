@@ -43,34 +43,34 @@ class CalendarConfig {
         // Las traducciones pueden estar definidas globalmente o en meta tags
         return (
             window.translations || {
-                please_select_client: "Please select a client",
-                appointment_created_successfully:
+                please_select_client: window.translations?.please_select_client || "Please select a client",
+                appointment_created_successfully: window.translations?.appointment_created_successfully ||
                     "Appointment created successfully",
-                success: "Success",
-                error: "Error",
-                unexpected_error: "Unexpected error",
-                reschedule_appointment: "Reschedule Appointment",
-                move_appointment_to: "Move appointment to",
-                yes_move: "Yes, move",
-                cancel: "Cancel",
-                moved: "Moved",
-                could_not_update_appointment: "Could not update appointment",
-                confirm_appointment_title: "Confirm Appointment",
-                confirm_appointment_text:
+                success: window.translations?.success || "Success",
+                error: window.translations?.error || "Error",
+                unexpected_error: window.translations?.unexpected_error || "Unexpected error",
+                reschedule_appointment: window.translations?.reschedule_appointment || "Reschedule Appointment",
+                move_appointment_to: window.translations?.move_appointment_to || "Move appointment to",
+                yes_move: window.translations?.yes_move || "Yes, move",
+                cancel: window.translations?.cancel || "Cancel",
+                moved: window.translations?.moved || "Moved",
+                could_not_update_appointment: window.translations?.could_not_update_appointment || "Could not update appointment",
+                confirm_appointment_title: window.translations?.confirm_appointment_title || "Confirm Appointment",
+                confirm_appointment_text: window.translations?.confirm_appointment_text ||
                     "Are you sure you want to confirm this appointment?",
-                yes_confirm: "Yes, confirm",
-                confirmed: "Confirmed",
-                could_not_confirm_appointment: "Could not confirm appointment",
-                decline_appointment_title: "Decline Appointment",
-                decline_appointment_text:
+                yes_confirm: window.translations?.yes_confirm || "Yes, confirm",
+                confirmed: window.translations?.confirmed || "Confirmed",
+                could_not_confirm_appointment: window.translations?.could_not_confirm_appointment || "Could not confirm appointment",
+                decline_appointment_title: window.translations?.decline_appointment_title || "Decline Appointment",
+                decline_appointment_text: window.translations?.decline_appointment_text ||
                     "Are you sure you want to decline this appointment?",
-                yes_decline: "Yes, decline",
-                declined: "Declined",
-                could_not_decline_appointment: "Could not decline appointment",
-                create_new_client: "Create New Client",
-                create_confirmed_appointment: "Create Confirmed Appointment",
-                create_lead: "Create Lead",
-                new_appointment: "New Appointment",
+                yes_decline: window.translations?.yes_decline || "Yes, decline",
+                declined: window.translations?.declined || "Declined",
+                could_not_decline_appointment: window.translations?.could_not_decline_appointment || "Could not decline appointment",
+                create_new_client: window.translations?.create_new_client || "Create New Client",
+                create_confirmed_appointment: window.translations?.create_confirmed_appointment || "Create Confirmed Appointment",
+                create_lead: window.translations?.create_lead || "Create Lead",
+                new_appointment: window.translations?.new_appointment || "New Appointment",
             }
         );
     }

@@ -76,7 +76,7 @@
                                     'success': @json(__('success')),
                                     'error': @json(__('error')),
                                     'ok': @json(__('ok')),
-                                    'cancel': @json(__('Cancel')),
+                                    'cancel': @json(__('cancel')),
                                     'processing': @json(__('Processing')),
                                     'loading': @json(__('Loading')),
                                     'saving': @json(__('Saving')),

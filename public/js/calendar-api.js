@@ -213,7 +213,7 @@ class CalendarAPI {
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6b7280',
                 confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                cancelButtonText: this.translations.cancel || 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
