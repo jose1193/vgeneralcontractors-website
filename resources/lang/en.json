@@ -1729,6 +1729,8 @@
     "client_load_error": "Error loading clients",
     "time_slot_unavailable": "This time slot is unavailable",
     "past_date_error": "Cannot schedule appointments in the past",
+    "selected_appointment_time": "Selected Appointment Time",
+    "select_time_from_calendar": "Select a time slot from the calendar",
     
     "first_name_placeholder": "First Name",
     "last_name_placeholder": "Last Name",

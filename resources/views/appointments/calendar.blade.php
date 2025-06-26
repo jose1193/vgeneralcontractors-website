@@ -90,12 +90,17 @@
                                     'select_client_3_hours': @json(__('select_client_3_hours')),
                                     'select_lead_source': @json(__('select_lead_source')),
                                     'create_lead': @json(__('create_lead')),
-                                    'create_new_client': @json(__('create_new_client'))
+                                    'create_new_client': @json(__('create_new_client')),
                                     'create_confirmed_appointment': @json(__('create_confirmed_appointment')),
                                     'appointment_created_successfully': @json(__('Appointment created successfully')),
                                     'appointment_updated_successfully': @json(__('Appointment updated successfully')),
                                     'appointment_deleted_successfully': @json(__('Appointment deleted successfully')),
                                     'unexpected_error': @json(__('an_unexpected_error_occurred')),
+                                    'selected_appointment_time': @json(__('selected_appointment_time')),
+                                    'select_time_from_calendar': @json(__('select_time_from_calendar')),
+                                    'loading_clients': @json(__('loading_clients')),
+                                    'no_clients_available': @json(__('no_clients_available')),
+                                    'time_slot_unavailable': @json(__('time_slot_unavailable')),
 
                                     // Appointment actions
                                     'reschedule_appointment': @json(__('Reschedule Appointment')),
@@ -120,6 +125,9 @@
                                     // Delete actions
                                     'deleted': @json(__('deleted')),
                                     'could_not_delete_event': @json(__('could_not_delete_event')),
+                                    'confirm_delete_title': @json(__('Are you sure?')),
+                                    'confirm_delete_text': @json(__('You won\'t be able to revert this!')),
+                                    'yes_delete': @json(__('Yes, delete it!')),
 
                                     // Form validation
                                     'validation_error_title': @json(__('validation_error_title')),

@@ -31,13 +31,32 @@
                 <!-- Hidden Inputs for Coordinates -->
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
+                
+                <!-- Hidden Inputs for Appointment Date/Time -->
+                <input type="hidden" id="appointmentDate" name="appointment_date">
+                <input type="hidden" id="appointmentTime" name="appointment_time">
+
+                <!-- Selected Date and Time Display -->
+                <div class="mb-6 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900">{{ __('selected_appointment_time') }}</h4>
+                            <input type="text" id="selectedDateTime" readonly
+                                class="mt-1 text-lg font-semibold text-purple-700 bg-transparent border-none p-0 focus:ring-0"
+                                placeholder="{{ __('select_time_from_calendar') }}">
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Existing Client Selector -->
                 <div id="existingClientSection" class="mb-6">
                     <label for="clientSelector" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         {{ __('select_client_3_hours') }} <span class="text-red-500">*</span>
                     </label>
-                    <select id="clientSelector" name="client_id"
+                    <select id="clientSelector" name="client_uuid"
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <option value="">{{ __('please_select_client') }}</option>
                     </select>

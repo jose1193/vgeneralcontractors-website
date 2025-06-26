@@ -32,7 +32,7 @@ class CalendarAPI {
                 console.error("Error loading clients:", xhr.responseText);
                 Swal.fire(
                     this.translations.error,
-                    "Could not load clients. Please try again.",
+                    this.translations.client_load_error || "Could not load clients. Please try again.",
                     'error'
                 );
             }
@@ -54,7 +54,7 @@ class CalendarAPI {
         // Agregar clientes
         clients.forEach(client => {
             const option = document.createElement('option');
-            option.value = client.id;
+            option.value = client.uuid;
             option.textContent = `${client.first_name} ${client.last_name} - ${client.email}`;
             clientSelector.appendChild(option);
         });
@@ -63,7 +63,7 @@ class CalendarAPI {
         if (clients.length === 0) {
             const option = document.createElement('option');
             option.value = '';
-            option.textContent = 'No clients available';
+            option.textContent = this.translations.no_clients_available || 'No clients available';
             option.disabled = true;
             clientSelector.appendChild(option);
         }
@@ -206,13 +206,13 @@ class CalendarAPI {
     deleteEvent(eventId) {
         return new Promise((resolve, reject) => {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: this.translations.confirm_delete_title || 'Are you sure?',
+                text: this.translations.confirm_delete_text || "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, delete it!',
+                confirmButtonText: this.translations.yes_delete || 'Yes, delete it!',
                 cancelButtonText: this.translations.cancel || 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -224,7 +224,7 @@ class CalendarAPI {
                         },
                         success: (response) => {
                             const deletedTitle = this.translations?.deleted || 'Deleted!';
-                            Swal.fire(deletedTitle, response.message || 'Event has been deleted.', 'success');
+                            Swal.fire(deletedTitle, response.message || this.translations.appointment_deleted_successfully || 'Event has been deleted.', 'success');
                             this.calendar.refetchEvents();
                             resolve(response);
                         },
@@ -330,7 +330,7 @@ class CalendarAPI {
                 if (!existingError) {
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message text-red-500 text-sm mt-1';
-                    errorDiv.textContent = 'This time slot is already booked. Please select a different time.';
+                    errorDiv.textContent = this.translations.time_slot_unavailable || 'This time slot is already booked. Please select a different time.';
                     timeContainer?.appendChild(errorDiv);
                 }
                 appointmentTime.classList.add('border-red-500');

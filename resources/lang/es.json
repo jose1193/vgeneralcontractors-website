@@ -1736,6 +1736,8 @@
     "client_load_error": "Error al cargar clientes",
     "time_slot_unavailable": "Este horario no está disponible",
     "past_date_error": "No se pueden programar citas en el pasado",
+    "selected_appointment_time": "Hora de Cita Seleccionada",
+    "select_time_from_calendar": "Selecciona un horario del calendario",
     "invalid_email": "Correo electrónico inválido",
     "first_name_placeholder": "Nombre",
     "last_name_placeholder": "Apellido",

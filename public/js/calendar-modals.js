@@ -644,6 +644,8 @@ class CalendarModals {
         // Configurar fecha y hora de inspección si se seleccionó desde calendario
         if (start) {
             this.setInspectionDateTime(start);
+            // Formatear y mostrar la fecha/hora seleccionada
+            this.formatSelectedDateTime(start, end);
         }
 
         // Inicializar Google Maps si está disponible
@@ -920,6 +922,12 @@ class CalendarModals {
             'input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], textarea'
         );
         textInputs.forEach((input) => (input.value = ""));
+
+        // Limpiar campo de fecha/hora seleccionada
+        const selectedDateTime = document.getElementById("selectedDateTime");
+        if (selectedDateTime) {
+            selectedDateTime.textContent = this.translations.select_time_from_calendar || "Selecciona un horario del calendario";
+        }
 
         // Limpiar radio buttons y sus labels
         const radioInputs = form.querySelectorAll('input[type="radio"]');
