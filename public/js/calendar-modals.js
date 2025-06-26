@@ -1485,7 +1485,32 @@ class CalendarModals {
         }
 
         if (emailInput) {
-            emailInput.addEventListener("input", () => {
+            emailInput.addEventListener("input", (event) => {
+                // Basic format validation on input for immediate feedback
+                const email = event.target.value.trim();
+                const errorElement = document.querySelector(
+                    '.error-message[data-field="email"]'
+                );
+
+                if (!email) {
+                    this.showFieldError(
+                        errorElement,
+                        this.translations.email_required || "Email is required"
+                    );
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (emailRegex.test(email)) {
+                        // Clear error if format is valid (AJAX validation will run on blur)
+                        this.clearFieldError(errorElement);
+                    } else {
+                        this.showFieldError(
+                            errorElement,
+                            this.translations.invalid_email_format ||
+                                "Please enter a valid email address"
+                        );
+                    }
+                }
+
                 checkFormValidity();
             });
             emailInput.addEventListener("blur", (event) => {
@@ -1496,6 +1521,33 @@ class CalendarModals {
         if (phoneInput) {
             phoneInput.addEventListener("input", (event) => {
                 formatPhoneInput(phoneInput, event);
+
+                // Basic format validation on input for immediate feedback
+                const phone = event.target.value.trim();
+                const errorElement = document.querySelector(
+                    '.error-message[data-field="phone"]'
+                );
+
+                if (!phone) {
+                    this.showFieldError(
+                        errorElement,
+                        this.translations.phone_required || "Phone is required"
+                    );
+                } else {
+                    // Basic phone validation - check if it has at least 10 digits
+                    const phoneDigits = phone.replace(/\D/g, "");
+                    if (phoneDigits.length >= 10) {
+                        // Clear error if basic format is valid (AJAX validation will run on blur)
+                        this.clearFieldError(errorElement);
+                    } else {
+                        this.showFieldError(
+                            errorElement,
+                            this.translations.invalid_phone_format ||
+                                "Please enter a valid phone number"
+                        );
+                    }
+                }
+
                 checkFormValidity();
             });
             phoneInput.addEventListener("blur", (event) => {
