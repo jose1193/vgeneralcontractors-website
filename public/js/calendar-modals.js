@@ -669,9 +669,9 @@ class CalendarModals {
 
         if (!selectedDateTime || !appointmentDate || !appointmentTime) return;
 
-        // Formatear fecha para mostrar
+        // Formatear fecha para mostrar (formato más compacto)
         const formattedDate = start.toLocaleDateString("en-US", {
-            month: "long",
+            month: "short",
             day: "numeric",
             year: "numeric",
         });
@@ -690,15 +690,10 @@ class CalendarModals {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: false,
-            }) +
-            " (3 hours)";
+            });
 
-        // Mostrar fecha y hora formateada
-        selectedDateTime.value =
-            formattedDate.charAt(0).toUpperCase() +
-            formattedDate.slice(1) +
-            " • " +
-            formattedTime;
+        // Mostrar fecha y hora formateada (formato compacto)
+        selectedDateTime.value = `${formattedDate} • ${formattedTime} (3h)`;
 
         // Configurar campos ocultos para envío
         const dateStr = start.toISOString().split("T")[0]; // YYYY-MM-DD
@@ -1328,7 +1323,7 @@ class CalendarModals {
             );
 
             if (!email) {
-                this.showFieldError(errorElement, "Email is required");
+                this.showFieldError(errorElement, this.translations.email_required || "Email is required");
                 checkFormValidity();
                 return;
             }
@@ -1338,12 +1333,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "Invalid email format"
+                    result.message || this.translations.invalid_email_format || "Invalid email format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "This email is already registered"
+                    result.message || this.translations.email_already_registered || "This email is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1359,7 +1354,7 @@ class CalendarModals {
             );
 
             if (!phone) {
-                this.showFieldError(errorElement, "Phone is required");
+                this.showFieldError(errorElement, this.translations.phone_required || "Phone is required");
                 checkFormValidity();
                 return;
             }
@@ -1493,16 +1488,21 @@ class CalendarModals {
         );
 
         if (!name) {
-            this.showFieldError(
-                errorElement,
-                `${fieldName.replace("_", " ")} is required`
-            );
+            let errorMessage;
+            if (fieldName === 'first_name') {
+                errorMessage = this.translations.first_name_required || 'First name is required';
+            } else if (fieldName === 'last_name') {
+                errorMessage = this.translations.last_name_required || 'Last name is required';
+            } else {
+                errorMessage = this.translations.field_required || `${fieldName.replace("_", " ")} is required`;
+            }
+            this.showFieldError(errorElement, errorMessage);
             return false;
         }
 
         const nameRegex = /^[a-zA-Z\s'-]+$/;
         if (!nameRegex.test(name)) {
-            this.showFieldError(errorElement, "Please enter a valid name");
+            this.showFieldError(errorElement, this.translations.invalid_name || "Please enter a valid name");
             return false;
         }
 
@@ -1555,10 +1555,24 @@ class CalendarModals {
             );
 
             if (!field || !field.value.trim()) {
-                this.showFieldError(
-                    errorElement,
-                    `${fieldName.replace("_", " ")} is required`
-                );
+                let errorMessage;
+                switch(fieldName) {
+                    case 'first_name':
+                        errorMessage = this.translations.first_name_required || 'First name is required';
+                        break;
+                    case 'last_name':
+                        errorMessage = this.translations.last_name_required || 'Last name is required';
+                        break;
+                    case 'email':
+                        errorMessage = this.translations.email_required || 'Email is required';
+                        break;
+                    case 'phone':
+                        errorMessage = this.translations.phone_required || 'Phone is required';
+                        break;
+                    default:
+                        errorMessage = this.translations.field_required || `${fieldName.replace("_", " ")} is required`;
+                }
+                this.showFieldError(errorElement, errorMessage);
                 isValid = false;
             } else {
                 this.clearFieldError(errorElement);

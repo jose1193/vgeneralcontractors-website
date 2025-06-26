@@ -1739,6 +1739,7 @@
     "selected_appointment_time": "Hora de Cita Seleccionada",
     "select_time_from_calendar": "Selecciona un horario del calendario",
     "invalid_email": "Correo electrónico inválido",
+    "Please enter a valid name": "Por favor ingrese un nombre válido",
     "first_name_placeholder": "Nombre",
     "last_name_placeholder": "Apellido",
     "email_placeholder": "Correo electrónico",

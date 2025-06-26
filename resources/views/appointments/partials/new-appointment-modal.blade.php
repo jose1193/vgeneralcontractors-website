@@ -42,10 +42,10 @@
                         <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <div>
+                        <div class="flex-1 min-w-0">
                             <h4 class="text-sm font-medium text-gray-900">{{ __('selected_appointment_time') }}</h4>
                             <input type="text" id="selectedDateTime" readonly
-                                class="mt-1 text-lg font-semibold text-purple-700 bg-transparent border-none p-0 focus:ring-0"
+                                class="mt-1 text-lg font-semibold text-purple-700 bg-transparent border-none p-0 focus:ring-0 w-full"
                                 placeholder="{{ __('select_time_from_calendar') }}">
                         </div>
                     </div>
