@@ -57,13 +57,17 @@ export default function formValidation(config = {}) {
         validateEmail(email) {
             this.errors.email = "";
             if (!email) {
-                this.errors.email = "Email is required";
+                this.errors.email =
+                    window.translations?.email_required ||
+                    "El correo electrónico es requerido";
                 return false;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                this.errors.email = "Please enter a valid email address";
+                this.errors.email =
+                    window.translations?.invalid_email_format ||
+                    "Por favor ingrese una dirección de correo válida";
                 return false;
             }
 
@@ -226,7 +230,9 @@ export default function formValidation(config = {}) {
         validateLastName(lastName) {
             this.errors.last_name = "";
             if (!lastName) {
-                this.errors.last_name = "Last name is required";
+                this.errors.last_name =
+                    window.translations?.last_name_required ||
+                    "El apellido es requerido";
                 return false;
             }
 

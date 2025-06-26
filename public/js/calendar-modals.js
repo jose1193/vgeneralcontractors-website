@@ -1534,7 +1534,8 @@ class CalendarModals {
         if (!email) {
             this.showFieldError(
                 errorElement,
-                this.translations.email_required || "Email is required"
+                this.translations.email_required ||
+                    "El correo electrónico es requerido"
             );
             return false;
         }
@@ -1544,7 +1545,7 @@ class CalendarModals {
             this.showFieldError(
                 errorElement,
                 this.translations.invalid_email_format ||
-                    "Please enter a valid email address"
+                    "Por favor ingrese una dirección de correo válida"
             );
             return false;
         }
@@ -1567,12 +1568,12 @@ class CalendarModals {
             const requiredMessage =
                 fieldName === "first_name"
                     ? this.translations.first_name_required ||
-                      "First name is required"
+                      "El nombre es requerido"
                     : fieldName === "last_name"
                     ? this.translations.last_name_required ||
-                      "Last name is required"
+                      "El apellido es requerido"
                     : this.translations.field_required ||
-                      `${fieldName.replace("_", " ")} is required`;
+                      `${fieldName.replace("_", " ")} es requerido`;
             this.showFieldError(errorElement, requiredMessage);
             return false;
         }
@@ -1581,7 +1582,8 @@ class CalendarModals {
         if (!nameRegex.test(name)) {
             this.showFieldError(
                 errorElement,
-                this.translations.invalid_name || "Please enter a valid name"
+                this.translations.invalid_name ||
+                    "Por favor ingrese un nombre válido"
             );
             return false;
         }
@@ -1638,18 +1640,18 @@ class CalendarModals {
                 const requiredMessage =
                     fieldName === "first_name"
                         ? this.translations.first_name_required ||
-                          "First name is required"
+                          "El nombre es requerido"
                         : fieldName === "last_name"
                         ? this.translations.last_name_required ||
-                          "Last name is required"
+                          "El apellido es requerido"
                         : fieldName === "email"
                         ? this.translations.email_required ||
-                          "Email is required"
+                          "El correo electrónico es requerido"
                         : fieldName === "phone"
                         ? this.translations.phone_required ||
-                          "Phone is required"
+                          "El número de teléfono es requerido"
                         : this.translations.field_required ||
-                          `${fieldName.replace("_", " ")} is required`;
+                          `${fieldName.replace("_", " ")} es requerido`;
                 this.showFieldError(errorElement, requiredMessage);
                 isValid = false;
             } else {
@@ -1672,7 +1674,7 @@ class CalendarModals {
             this.showFieldError(
                 insuranceError,
                 this.translations.please_select_insurance_option ||
-                    "Please select an insurance option"
+                    "Por favor seleccione una opción de seguro"
             );
             isValid = false;
         } else {
