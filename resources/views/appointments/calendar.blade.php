@@ -73,8 +73,9 @@
                                 // Global translations object for JavaScript modules
                                 window.translations = {
                                     // General
-                                    'success': @json(__('Success')),
-                                    'error': @json(__('Error')),
+                                    'success': @json(__('success')),
+                                    'error': @json(__('error')),
+                                    'ok': @json(__('ok')),
                                     'cancel': @json(__('Cancel')),
                                     'processing': @json(__('Processing')),
                                     'loading': @json(__('Loading')),
@@ -93,7 +94,7 @@
                                     'appointment_created_successfully': @json(__('Appointment created successfully')),
                                     'appointment_updated_successfully': @json(__('Appointment updated successfully')),
                                     'appointment_deleted_successfully': @json(__('Appointment deleted successfully')),
-                                    'unexpected_error': @json(__('An unexpected error occurred')),
+                                    'unexpected_error': @json(__('an_unexpected_error_occurred')),
 
                                     // Appointment actions
                                     'reschedule_appointment': @json(__('Reschedule Appointment')),
@@ -114,6 +115,10 @@
                                     'yes_decline': @json(__('Yes, decline')),
                                     'declined': @json(__('Declined!')),
                                     'could_not_decline_appointment': @json(__('Could not decline appointment')),
+
+                                    // Delete actions
+                                    'deleted': @json(__('deleted')),
+                                    'could_not_delete_event': @json(__('could_not_delete_event')),
 
                                     // Form validation
                                     'field_required': @json(__('This field is required')),

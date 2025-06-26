@@ -223,13 +223,16 @@ class CalendarAPI {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: (response) => {
-                            Swal.fire('Deleted!', response.message || 'Event has been deleted.', 'success');
+                            const deletedTitle = this.translations?.deleted || 'Deleted!';
+                            Swal.fire(deletedTitle, response.message || 'Event has been deleted.', 'success');
                             this.calendar.refetchEvents();
                             resolve(response);
                         },
                         error: (xhr) => {
                             console.error("Error deleting event:", xhr.responseText);
-                            Swal.fire('Error!', 'Could not delete the event.', 'error');
+                            const errorTitle = this.translations?.error || 'Error!';
+                            const errorMessage = this.translations?.could_not_delete_event || 'Could not delete the event.';
+                            Swal.fire(errorTitle, errorMessage, 'error');
                             reject(xhr);
                         }
                     });

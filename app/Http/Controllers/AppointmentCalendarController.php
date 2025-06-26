@@ -353,29 +353,32 @@ class AppointmentCalendarController extends Controller
 
             // Update the appointment with new inspection details
             $oldStatus = $client->inspection_status;
+            $oldInspectionDate = $client->inspection_date;
+            $oldInspectionTime = $client->inspection_time;
+            
             $client->inspection_date = $request->inspection_date;
             
             // Both date and time must always be provided together
             if (empty($request->inspection_date) && !empty($request->inspection_time)) {
-                    return response()->json([
-                        'success' => false,
+                return response()->json([
+                    'success' => false,
                     'message' => 'Validation error',
                     'errors' => [
                         'inspection_date' => ['The inspection date is required when inspection time is present.']
                     ]
-                    ], 422);
-                }
-
+                ], 422);
+            }
+            
             if (!empty($request->inspection_date) && empty($request->inspection_time)) {
-                    return response()->json([
-                        'success' => false,
+                return response()->json([
+                    'success' => false,
                     'message' => 'Validation error',
-                        'errors' => [
+                    'errors' => [
                         'inspection_time' => ['The inspection time is required when inspection date is present.']
-                        ]
-                    ], 422);
-                }
-
+                    ]
+                ], 422);
+            }
+            
             $client->inspection_time = $request->inspection_time;
             
             // Ensure consistent status handling
@@ -417,11 +420,20 @@ class AppointmentCalendarController extends Controller
             
             if ($client->inspection_status === 'Confirmed') {
                 if ($oldStatus !== 'Confirmed') {
-                $emailType = 'confirmed';
+                    $emailType = 'confirmed';
                     $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
                 } else {
-                    $emailType = 'rescheduled';
-                    $message = 'Appointment rescheduled successfully. A notification email has been sent to the client.';
+                    // Check if the date or time actually changed (this would be a reschedule)
+                    $dateChanged = ($client->inspection_date !== $oldInspectionDate);
+                    $timeChanged = ($client->inspection_time !== $oldInspectionTime);
+                    
+                    if ($dateChanged || $timeChanged) {
+                        $emailType = 'rescheduled';
+                        $message = 'Appointment rescheduled successfully. A notification email has been sent to the client.';
+                    } else {
+                        $emailType = 'confirmed';
+                        $message = 'Appointment confirmed successfully. A confirmation email has been sent to the client.';
+                    }
                 }
             }
             

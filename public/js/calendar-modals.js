@@ -793,10 +793,10 @@ class CalendarModals {
             .then((data) => {
                 if (data.success) {
                     Swal.fire({
-                        title: "Success!",
+                        title: this.translations.success,
                         text: data.message,
                         icon: "success",
-                        confirmButtonText: "OK",
+                        confirmButtonText: this.translations.ok,
                     }).then(() => {
                         this.closeNewAppointmentModal();
                         // Remove temporary selection event before refreshing
@@ -811,15 +811,15 @@ class CalendarModals {
                 } else {
                     this.handleFormErrors(data.errors || {});
                     Swal.fire(
-                        "Error",
-                        data.message || "An error occurred",
+                        this.translations.error,
+                        data.message || this.translations.unexpected_error,
                         "error"
                     );
                 }
             })
             .catch((error) => {
                 console.error("Error:", error);
-                Swal.fire("Error", "An unexpected error occurred", "error");
+                Swal.fire(this.translations.error, this.translations.unexpected_error, "error");
             })
             .finally(() => {
                 // Restaurar estado del botón

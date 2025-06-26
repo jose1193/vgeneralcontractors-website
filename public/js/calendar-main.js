@@ -355,7 +355,8 @@ class CalendarMain {
      */
     showError(message) {
         if (typeof Swal !== "undefined") {
-            Swal.fire("Error", message, "error");
+            const errorTitle = window.translations?.error || "Error";
+            Swal.fire(errorTitle, message, "error");
         } else {
             alert(message);
         }

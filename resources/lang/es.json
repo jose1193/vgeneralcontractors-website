@@ -1412,8 +1412,7 @@
     "no_images": "Sin imágenes",
     "images_count": "{count} imagen{plural}",
     "available": "Disponible",
-    "success": "Éxito",
-    "error": "Error",
+   
     "yes": "Sí",
     "no": "No",
     "create": "Crear",
@@ -1719,5 +1718,11 @@
     "email_placeholder": "correo@ejemplo.com",
     "address_placeholder": "Ingrese dirección completa",
     "apartment_suite_optional": "Apartamento, suite, etc. (opcional)",
-    "New Appointment": "Nueva Cita"
+    "New Appointment": "Nueva Cita",
+    "success": "¡Éxito!",
+    "error": "Error",
+    "ok": "OK",
+    "an_unexpected_error_occurred": "Ocurrió un error inesperado",
+    "deleted": "¡Eliminado!",
+    "could_not_delete_event": "No se pudo eliminar el evento."
 }
