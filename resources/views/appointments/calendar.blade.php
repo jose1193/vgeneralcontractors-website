@@ -136,15 +136,6 @@
                                     'invalid_email': @json(__('invalid_email')),
                                     'invalid_phone': @json(__('Please enter a valid phone number')),
                                     'time_slot_unavailable': @json(__('time_slot_unavailable')),
-                                    
-                                    // Specific field validation messages
-                                    'first_name_required': @json(__('first_name_required')),
-                                    'last_name_required': @json(__('last_name_required')),
-                                    'email_required': @json(__('email_required')),
-                                    'phone_required': @json(__('phone_required')),
-                                    'invalid_email_format': @json(__('invalid_email')),
-                                    'email_already_registered': @json(__('This email is already registered')),
-                                    'invalid_name': @json(__('Please enter a valid name')),
 
                                     // Client management
                                     'no_clients_available': @json(__('no_clients_available')),

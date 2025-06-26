@@ -985,15 +985,9 @@ class CalendarModals {
             }
         });
 
-        // Limpiar mensajes de error y estilos de validación
+        // Limpiar mensajes de error
         const errorMessages = form.querySelectorAll(".error-message");
         errorMessages.forEach((error) => (error.textContent = ""));
-        
-        // Remover estilos de error de todos los campos de entrada
-        const allInputs = form.querySelectorAll('input, select, textarea');
-        allInputs.forEach(input => {
-            input.classList.remove('border-red-500');
-        });
 
         // Limpiar mapa si existe
         if (this.leadMap) {
@@ -1003,27 +997,6 @@ class CalendarModals {
                 this.leadMapMarker.setMap(null);
             }
         }
-        
-        // Resetear estado del botón
-        this.resetButtonState();
-    }
-    
-    /**
-     * Resetear estado del botón de crear cita
-     */
-    resetButtonState() {
-        const button = document.getElementById("createAppointmentBtn");
-        if (!button) return;
-        
-        const normalText = button.querySelector(".normal-btn-text");
-        const loadingText = button.querySelector(".loading-btn-text");
-        
-        if (normalText && loadingText) {
-            normalText.classList.remove("hidden");
-            loadingText.classList.add("hidden");
-        }
-        
-        button.disabled = false;
     }
 
     /**
@@ -1350,7 +1323,7 @@ class CalendarModals {
             );
 
             if (!email) {
-                this.showFieldError(errorElement, this.translations.email_required || "Email is required");
+                this.showFieldError(errorElement, "Email is required");
                 checkFormValidity();
                 return;
             }
@@ -1360,12 +1333,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message || this.translations.invalid_email_format || "Invalid email format"
+                    result.message || "Invalid email format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message || this.translations.email_already_registered || "This email is already registered"
+                    result.message || "This email is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1381,7 +1354,7 @@ class CalendarModals {
             );
 
             if (!phone) {
-                this.showFieldError(errorElement, this.translations.phone_required || "Phone is required");
+                this.showFieldError(errorElement, "Phone is required");
                 checkFormValidity();
                 return;
             }
@@ -1515,21 +1488,16 @@ class CalendarModals {
         );
 
         if (!name) {
-            let errorMessage;
-            if (fieldName === 'first_name') {
-                errorMessage = this.translations.first_name_required || 'First name is required';
-            } else if (fieldName === 'last_name') {
-                errorMessage = this.translations.last_name_required || 'Last name is required';
-            } else {
-                errorMessage = this.translations.field_required || `${fieldName.replace("_", " ")} is required`;
-            }
-            this.showFieldError(errorElement, errorMessage);
+            this.showFieldError(
+                errorElement,
+                `${fieldName.replace("_", " ")} is required`
+            );
             return false;
         }
 
         const nameRegex = /^[a-zA-Z\s'-]+$/;
         if (!nameRegex.test(name)) {
-            this.showFieldError(errorElement, this.translations.invalid_name || "Please enter a valid name");
+            this.showFieldError(errorElement, "Please enter a valid name");
             return false;
         }
 
@@ -1582,24 +1550,10 @@ class CalendarModals {
             );
 
             if (!field || !field.value.trim()) {
-                let errorMessage;
-                switch(fieldName) {
-                    case 'first_name':
-                        errorMessage = this.translations.first_name_required || 'First name is required';
-                        break;
-                    case 'last_name':
-                        errorMessage = this.translations.last_name_required || 'Last name is required';
-                        break;
-                    case 'email':
-                        errorMessage = this.translations.email_required || 'Email is required';
-                        break;
-                    case 'phone':
-                        errorMessage = this.translations.phone_required || 'Phone is required';
-                        break;
-                    default:
-                        errorMessage = this.translations.field_required || `${fieldName.replace("_", " ")} is required`;
-                }
-                this.showFieldError(errorElement, errorMessage);
+                this.showFieldError(
+                    errorElement,
+                    `${fieldName.replace("_", " ")} is required`
+                );
                 isValid = false;
             } else {
                 this.clearFieldError(errorElement);

@@ -1731,7 +1731,6 @@
     "past_date_error": "Cannot schedule appointments in the past",
     "selected_appointment_time": "Selected Appointment Time",
     "select_time_from_calendar": "Select a time slot from the calendar",
-    "Please enter a valid name": "Please enter a valid name",
     
     "first_name_placeholder": "First Name",
     "last_name_placeholder": "Last Name",
