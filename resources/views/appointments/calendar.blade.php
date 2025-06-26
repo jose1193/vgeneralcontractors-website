@@ -142,6 +142,7 @@
                                     'invalid_email_format': @json(__('invalid_email_format')),
                                     'invalid_phone_format': @json(__('invalid_phone_format')),
                                     'email_already_registered': @json(__('email_already_registered')),
+                                    'email_already_exists': @json(__('email_already_exists')),
                                     'phone_already_exists': @json(__('phone_already_exists')),
                                     'invalid_name': @json(__('Please enter a valid name')),
                                     'invalid_name_format': @json(__('Please enter a valid {field}')),

@@ -1411,7 +1411,7 @@ class CalendarModals {
                 this.showFieldError(
                     errorElement,
                     result.message ||
-                        this.translations.email_already_registered ||
+                        this.translations.email_already_exists ||
                         "This email is already registered"
                 );
             } else {
