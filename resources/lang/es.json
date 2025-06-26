@@ -581,14 +581,13 @@
     "has_insurance": "¿Tiene Seguro?",
     "confirm_appointment": "Confirmar Cita",
     "decline_appointment": "Rechazar Cita",
-    
 
     "create_new_appointment": "Crear Nueva Cita",
     "create_new_lead": "Crear Nuevo Lead",
     "address_2": "Dirección 2",
 
     "create_lead": "Crear Lead",
-    
+
     "whatsapp": "WhatsApp",
     "email_share": "Email",
 
@@ -598,7 +597,7 @@
     "reschedule_appointment": "Reagendar Cita",
     "move_appointment_to": "¿Mover cita de \"{title}\" a {newTime}?",
     "yes_move": "¡Sí, mover!",
-    
+
     "moved": "¡Movida!",
     "could_not_update_appointment": "No se pudo actualizar la cita.",
     "confirm_appointment_title": "Confirmar Cita",
@@ -804,7 +803,6 @@
     "contact_support_page": "Contactar Soporte",
     "here_to_help_roofing_needs": "Estamos Aquí para Ayudar con Todas tus Necesidades de Techado",
 
-   
     "sending_page": "Enviando...",
     "sms_consent_text_page": "Al marcar esta casilla, consiento recibir mensajes de texto de <strong>V GENERAL CONTRACTORS</strong>. Puedes responder <strong>STOP</strong> en cualquier momento para cancelar. Se aplican tarifas de mensajes y datos. <strong>La frecuencia de mensajes puede variar,</strong> envía <strong>HELP :phone</strong> para asistencia. Para más información, consulta nuestra <a href=':privacy_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Política de Privacidad</a> y <a href=':terms_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Términos de Servicio</a>.",
 
@@ -1091,16 +1089,13 @@
     "view_details": "Ver",
     "play_audio": "Reproducir",
     "unknown": "Desconocido",
-    
 
     "_comment_modals": "=== MODALES ===",
     "save": "Guardar",
 
-    
-
     "confirm_deletion": "Confirmar Eliminación",
     "delete": "Eliminar",
-    
+
     "confirm_restoration": "Confirmar Restauración",
     "restore": "Restaurar",
     "restoring": "Restaurando...",
@@ -1413,7 +1408,7 @@
     "no_images": "Sin imágenes",
     "images_count": "{count} imagen{plural}",
     "available": "Disponible",
-   
+
     "yes": "Sí",
     "no": "No",
     "create": "Crear",
@@ -1584,7 +1579,6 @@
     "The company name must be a string.": "El nombre de la empresa debe ser una cadena de texto.",
     "validation_errors": "Errores de validación",
     "invalid_format": "Formato inválido",
-    
 
     "name_already_in_use": "Este nombre ya está en uso",
     "username_already_in_use": "Este username ya está en uso",
@@ -1709,14 +1703,13 @@
     "appointment_calendar_validation_error": "Error de validación",
     "select_client": "Seleccionar Cliente",
     "select_client_3_hours": "Seleccionar Cliente (3 horas)",
-    
+
     "hide": "Ocultar Formulario",
     "please_select_client": "Por favor seleccione un cliente",
     "select_lead_source": "Seleccionar Fuente de Lead",
     "create_confirmed_appointment": "Crear Cita Confirmada",
     "create_confirmed_called_appointment": "Crear Cita Confirmada y Llamada",
 
-    
     "apartment_suite_optional": "Apartamento, suite, etc. (opcional)",
     "New Appointment": "Nueva Cita",
     "success": "¡Éxito!",
@@ -1727,9 +1720,9 @@
     "could_not_delete_event": "No se pudo eliminar el evento.",
     "validation_error_title": "¡Error de Validación!",
     "please_correct_form_errors": "Por favor corrija los errores en el formulario antes de enviar.",
-    
+
     "_comment_calendar_missing_translations": "=== TRADUCCIONES FALTANTES DEL CALENDARIO ===",
-  
+
     "create_new_client": "Crear Nuevo Cliente",
     "loading_clients": "Cargando clientes...",
     "no_clients_available": "No hay clientes disponibles",
@@ -1752,7 +1745,14 @@
     "updating": "Actualizando...",
     "deleting": "Eliminando...",
     "calendar_refresh": "Calendario actualizado",
-  
+
     "show": "Mostrar",
-    "keyboard_shortcuts_help": "Presione ESC para cerrar modales, F5 para actualizar, Ctrl+N para nueva cita"
+    "keyboard_shortcuts_help": "Presione ESC para cerrar modales, F5 para actualizar, Ctrl+N para nueva cita",
+
+    "_comment_form_validation": "=== VALIDACIÓN DE FORMULARIOS ===",
+    "username_required": "El nombre de usuario es requerido",
+    "username_min_length": "El nombre de usuario debe tener al menos 7 caracteres",
+    "username_min_numbers": "El nombre de usuario debe contener al menos 2 números",
+    "username_already_exists": "Este nombre de usuario ya está en uso",
+    "invalid_name_format": "Por favor ingrese un {field} válido"
 }

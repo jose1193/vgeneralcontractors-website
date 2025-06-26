@@ -77,12 +77,16 @@ export default function formValidation(config = {}) {
         validateUsername(username) {
             this.errors.username = "";
             if (!username) {
-                this.errors.username = "Username is required";
+                this.errors.username =
+                    window.translations?.username_required ||
+                    "Username is required";
                 return false;
             }
 
             if (username.length < 7) {
-                this.errors.username = "Username must be at least 7 characters";
+                this.errors.username =
+                    window.translations?.username_min_length ||
+                    "Username must be at least 7 characters";
                 return false;
             }
 
@@ -90,6 +94,7 @@ export default function formValidation(config = {}) {
             const numbers = username.replace(/[^0-9]/g, "");
             if (numbers.length < 2) {
                 this.errors.username =
+                    window.translations?.username_min_numbers ||
                     "Username must contain at least 2 numbers";
                 return false;
             }
@@ -99,7 +104,14 @@ export default function formValidation(config = {}) {
 
         validateRequired(value, fieldName, customMessage = null) {
             if (!value || value.trim() === "") {
-                return customMessage || `${fieldName} is required`;
+                return (
+                    customMessage ||
+                    window.translations?.field_required?.replace(
+                        "{field}",
+                        fieldName
+                    ) ||
+                    `${fieldName} is required`
+                );
             }
             return "";
         },
@@ -110,7 +122,12 @@ export default function formValidation(config = {}) {
 
             // Check if name contains only letters and spaces
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u.test(name)) {
-                return `${fieldName} should only contain letters and spaces`;
+                return (
+                    window.translations?.invalid_name_format?.replace(
+                        "{field}",
+                        fieldName
+                    ) || `${fieldName} should only contain letters and spaces`
+                );
             }
 
             return "";
@@ -199,6 +216,7 @@ export default function formValidation(config = {}) {
             return phoneFormat.validatePhone(phone)
                 ? true
                 : ((this.errors.phone =
+                      window.translations?.invalid_phone_format ||
                       "Please enter a valid phone number format: (XXX) XXX-XXXX"),
                   false);
         },
@@ -209,7 +227,9 @@ export default function formValidation(config = {}) {
             // Only check availability if email is valid
             this.$wire.checkEmailExists(email).then((exists) => {
                 if (exists) {
-                    this.errors.email = "This email is already in use";
+                    this.errors.email =
+                        window.translations?.email_already_registered ||
+                        "This email is already in use";
                 }
             });
         },
@@ -221,7 +241,9 @@ export default function formValidation(config = {}) {
             // Only check availability if phone is valid
             this.$wire.checkPhoneExists(phone).then((exists) => {
                 if (exists) {
-                    this.errors.phone = "This phone number is already in use";
+                    this.errors.phone =
+                        window.translations?.phone_already_exists ||
+                        "This phone number is already in use";
                     this.$dispatch("phone-validation-failed");
                 }
             });
@@ -239,7 +261,10 @@ export default function formValidation(config = {}) {
             // Check if lastName contains only letters and spaces
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/u.test(lastName)) {
                 this.errors.last_name =
-                    "Last name should only contain letters and spaces";
+                    window.translations?.invalid_name_format?.replace(
+                        "{field}",
+                        "Last name"
+                    ) || "Last name should only contain letters and spaces";
                 return false;
             }
 
@@ -252,7 +277,9 @@ export default function formValidation(config = {}) {
             // Only check availability if username is valid
             this.$wire.checkUsernameExists(username).then((exists) => {
                 if (exists) {
-                    this.errors.username = "This username is already in use";
+                    this.errors.username =
+                        window.translations?.username_already_exists ||
+                        "This username is already in use";
                 }
             });
         },

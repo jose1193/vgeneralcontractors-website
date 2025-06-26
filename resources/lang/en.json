@@ -1427,7 +1427,7 @@
     "no_posts_found": "No posts found",
     "confirm_delete_post": "Are you sure you want to delete the post \"{title}\"?",
     "confirm_restore_post": "Are you sure you want to restore the post \"{title}\"?",
-  
+
     "n_a": "N/A",
     "create_new_post": "Create New Post",
     "create_new_post_subtitle": "Create a new blog post with rich content",
@@ -1519,7 +1519,7 @@
     "no_images": "No images",
     "images_count": "{count} image{plural}",
     "available": "Available",
-    
+
     "yes": "Yes",
     "no": "No",
     "create": "Create",
@@ -1721,9 +1721,9 @@
     "could_not_delete_event": "Could not delete the event.",
     "validation_error_title": "Validation Error!",
     "please_correct_form_errors": "Please correct the errors in the form before submitting.",
-    
+
     "_comment_calendar_missing_translations": "=== MISSING CALENDAR TRANSLATIONS ===",
-    
+
     "loading_clients": "Loading clients...",
     "no_clients_available": "No clients available",
     "client_load_error": "Error loading clients",
@@ -1731,16 +1731,23 @@
     "past_date_error": "Cannot schedule appointments in the past",
     "selected_appointment_time": "Selected Appointment Time",
     "select_time_from_calendar": "Select a time slot from the calendar",
-    
+
     "first_name_placeholder": "First Name",
     "last_name_placeholder": "Last Name",
     "email_placeholder": "Email Address",
     "phone_placeholder": "Phone Number",
-    
+
     "updating": "Updating...",
-    
+
     "calendar_refresh": "Calendar refreshed",
-   
+
     "show": "Show",
-    "keyboard_shortcuts_help": "Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment"
+    "keyboard_shortcuts_help": "Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment",
+
+    "_comment_form_validation": "=== FORM VALIDATION ===",
+    "username_required": "Username is required",
+    "username_min_length": "Username must be at least 7 characters",
+    "username_min_numbers": "Username must contain at least 2 numbers",
+    "username_already_exists": "This username is already in use",
+    "invalid_name_format": "Please enter a valid {field}"
 }
