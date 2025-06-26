@@ -1743,5 +1743,6 @@
     "show": "Show",
     "keyboard_shortcuts_help": "Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment",
     "please_enter_valid_email": "Please enter a valid email address",
-    "phone_number_already_registered": "This phone number is already registered"
+    "phone_number_already_registered": "This phone number is already registered",
+    "field_required": "This field is required"
 }

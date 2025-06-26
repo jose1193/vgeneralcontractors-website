@@ -1755,5 +1755,6 @@
     "show": "Mostrar",
     "keyboard_shortcuts_help": "Presione ESC para cerrar modales, F5 para actualizar, Ctrl+N para nueva cita",
     "please_enter_valid_email": "Por favor ingrese una dirección de correo válida",
-    "phone_number_already_registered": "Este número de teléfono ya está registrado"
+    "phone_number_already_registered": "Este número de teléfono ya está registrado",
+    "field_required": "Este campo es requerido"
 }

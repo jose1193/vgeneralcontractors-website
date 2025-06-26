@@ -1555,9 +1555,18 @@ class CalendarModals {
             );
 
             if (!field || !field.value.trim()) {
+                const requiredMessage = fieldName === 'first_name' ? 
+                    (this.translations.first_name_required || "First name is required") :
+                    fieldName === 'last_name' ? 
+                    (this.translations.last_name_required || "Last name is required") :
+                    fieldName === 'email' ? 
+                    (this.translations.email_required || "Email is required") :
+                    fieldName === 'phone' ? 
+                    (this.translations.phone_required || "Phone is required") :
+                    (this.translations.field_required || `${fieldName.replace("_", " ")} is required`);
                 this.showFieldError(
                     errorElement,
-                    `${fieldName.replace("_", " ")} is required`
+                    requiredMessage
                 );
                 isValid = false;
             } else {
