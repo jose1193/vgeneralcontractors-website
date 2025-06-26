@@ -25,13 +25,13 @@
 
             <!-- Modal Body -->
             <form id="newAppointmentForm" class="bg-white px-6 py-4" action="{{ route('appointment-calendar.store') }}"
-                method="POST">
+                method="POST" novalidate>
                 @csrf
 
                 <!-- Hidden Inputs for Coordinates -->
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
-                
+
                 <!-- Hidden Inputs for Appointment Date/Time -->
                 <input type="hidden" id="appointmentDate" name="appointment_date">
                 <input type="hidden" id="appointmentTime" name="appointment_time">
@@ -39,8 +39,11 @@
                 <!-- Selected Date and Time Display -->
                 <div class="mb-6 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-4">
                     <div class="flex items-center">
-                        <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
                         </svg>
                         <div class="flex-1 min-w-0">
                             <h4 class="text-sm font-medium text-gray-900">{{ __('selected_appointment_time') }}</h4>
@@ -61,12 +64,13 @@
                         <option value="">{{ __('please_select_client') }}</option>
                     </select>
                     <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="client_uuid"></span>
-                    
+
                     <!-- Create New Client Button -->
                     <button type="button" id="createNewClientToggle"
                         class="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-md border border-gray-300 transition-colors duration-200 flex items-center justify-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         {{ __('create_new_client') }}
                     </button>
@@ -79,7 +83,8 @@
                         <button type="button" id="hideNewClientBtn"
                             class="bg-red-100 hover:bg-red-200 text-red-700 py-2 px-4 rounded-md border border-red-300 transition-colors duration-200 flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                             {{ __('hide') }}
                         </button>
@@ -231,7 +236,8 @@
                     <!-- Intent to Claim -->
                     <div class="mb-6 text-center">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ __('intent_to_claim') }} <span class="text-xs text-gray-500">{{ __('optional_label') }}</span>
+                            {{ __('intent_to_claim') }} <span
+                                class="text-xs text-gray-500">{{ __('optional_label') }}</span>
                         </label>
                         <fieldset class="mt-2">
                             <legend class="sr-only">Intent to Claim</legend>
