@@ -294,6 +294,17 @@ class CalendarModals {
                     createBtnText.textContent =
                         this.translations.create_lead || "Create Lead";
                 }
+                // Clear all error messages when hiding the new client form
+                const form = document.getElementById("newAppointmentForm");
+                if (form) {
+                    const errorMessages =
+                        form.querySelectorAll(".error-message");
+                    errorMessages.forEach((error) => {
+                        error.textContent = "";
+                        error.style.display = "none";
+                    });
+                }
+
                 // Load clients if not already loaded
                 this.loadClients();
             });
