@@ -985,9 +985,15 @@ class CalendarModals {
             }
         });
 
-        // Limpiar mensajes de error
+        // Limpiar mensajes de error y estilos de validación
         const errorMessages = form.querySelectorAll(".error-message");
         errorMessages.forEach((error) => (error.textContent = ""));
+        
+        // Remover estilos de error de todos los campos de entrada
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        allInputs.forEach(input => {
+            input.classList.remove('border-red-500');
+        });
 
         // Limpiar mapa si existe
         if (this.leadMap) {
@@ -997,6 +1003,27 @@ class CalendarModals {
                 this.leadMapMarker.setMap(null);
             }
         }
+        
+        // Resetear estado del botón
+        this.resetButtonState();
+    }
+    
+    /**
+     * Resetear estado del botón de crear cita
+     */
+    resetButtonState() {
+        const button = document.getElementById("createAppointmentBtn");
+        if (!button) return;
+        
+        const normalText = button.querySelector(".normal-btn-text");
+        const loadingText = button.querySelector(".loading-btn-text");
+        
+        if (normalText && loadingText) {
+            normalText.classList.remove("hidden");
+            loadingText.classList.add("hidden");
+        }
+        
+        button.disabled = false;
     }
 
     /**
