@@ -444,7 +444,7 @@ class AppointmentCalendarController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => __('appointment_calendar_validation_error'),
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
@@ -566,7 +566,7 @@ class AppointmentCalendarController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => __('appointment_calendar_validation_error'),
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
