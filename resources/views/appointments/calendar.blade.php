@@ -134,7 +134,10 @@
                                     'please_correct_form_errors': @json(__('please_correct_form_errors')),
                                     'field_required': @json(__('This field is required')),
                                     'invalid_email': @json(__('invalid_email')),
+                                    'invalid_email_format': @json(__('please_enter_valid_email')),
                                     'invalid_phone': @json(__('Please enter a valid phone number')),
+                                    'invalid_phone_format': @json(__('Please enter a valid phone number')),
+                                    'phone_already_registered': @json(__('phone_number_already_registered')),
                                     'time_slot_unavailable': @json(__('time_slot_unavailable')),
 
                                     // Client management

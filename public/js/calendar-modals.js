@@ -1323,7 +1323,7 @@ class CalendarModals {
             );
 
             if (!email) {
-                this.showFieldError(errorElement, "Email is required");
+                this.showFieldError(errorElement, this.translations.email_required || "Email is required");
                 checkFormValidity();
                 return;
             }
@@ -1333,12 +1333,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "Invalid email format"
+                    result.message || this.translations.invalid_email_format || "Invalid email format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "This email is already registered"
+                    result.message || this.translations.email_already_registered || "This email is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1354,7 +1354,7 @@ class CalendarModals {
             );
 
             if (!phone) {
-                this.showFieldError(errorElement, "Phone is required");
+                this.showFieldError(errorElement, this.translations.phone_required || "Phone is required");
                 checkFormValidity();
                 return;
             }
@@ -1364,12 +1364,12 @@ class CalendarModals {
             if (!result.valid) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "Invalid phone format"
+                    result.message || this.translations.invalid_phone_format || "Invalid phone format"
                 );
             } else if (result.exists) {
                 this.showFieldError(
                     errorElement,
-                    result.message || "This phone number is already registered"
+                    result.message || this.translations.phone_already_registered || "This phone number is already registered"
                 );
             } else {
                 this.clearFieldError(errorElement);
@@ -1460,7 +1460,7 @@ class CalendarModals {
         );
 
         if (!email) {
-            this.showFieldError(errorElement, "Email is required");
+            this.showFieldError(errorElement, this.translations.email_required || "Email is required");
             return false;
         }
 
@@ -1468,7 +1468,7 @@ class CalendarModals {
         if (!emailRegex.test(email)) {
             this.showFieldError(
                 errorElement,
-                "Please enter a valid email address"
+                this.translations.invalid_email_format || "Please enter a valid email address"
             );
             return false;
         }
@@ -1488,16 +1488,21 @@ class CalendarModals {
         );
 
         if (!name) {
+            const requiredMessage = fieldName === 'first_name' ? 
+                (this.translations.first_name_required || "First name is required") :
+                fieldName === 'last_name' ? 
+                (this.translations.last_name_required || "Last name is required") :
+                (this.translations.field_required || `${fieldName.replace("_", " ")} is required`);
             this.showFieldError(
                 errorElement,
-                `${fieldName.replace("_", " ")} is required`
+                requiredMessage
             );
             return false;
         }
 
         const nameRegex = /^[a-zA-Z\s'-]+$/;
         if (!nameRegex.test(name)) {
-            this.showFieldError(errorElement, "Please enter a valid name");
+            this.showFieldError(errorElement, this.translations.invalid_name || "Please enter a valid name");
             return false;
         }
 

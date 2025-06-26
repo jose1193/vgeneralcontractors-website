@@ -1686,7 +1686,6 @@
     "invalid_email_format": "Formato de correo electrónico inválido",
     "email_already_exists": "Este correo electrónico ya está registrado",
     "invalid_phone_format": "Formato de teléfono inválido",
-    "phone_already_exists": "Este número de teléfono ya está registrado",
     "max_50_characters": "Máximo 50 caracteres",
     "appointment_calendar_invalid_date_format": "Formato de fecha inválido.",
     "appointment_calendar_schedule_conflict": "Conflicto de horario: Ya hay otra cita programada para este horario.",
@@ -1754,5 +1753,7 @@
     "calendar_refresh": "Calendario actualizado",
   
     "show": "Mostrar",
-    "keyboard_shortcuts_help": "Presione ESC para cerrar modales, F5 para actualizar, Ctrl+N para nueva cita"
+    "keyboard_shortcuts_help": "Presione ESC para cerrar modales, F5 para actualizar, Ctrl+N para nueva cita",
+    "please_enter_valid_email": "Por favor ingrese una dirección de correo válida",
+    "phone_number_already_registered": "Este número de teléfono ya está registrado"
 }
