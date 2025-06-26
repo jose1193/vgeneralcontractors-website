@@ -838,7 +838,7 @@
     "contact_support_hero_alt": "Contact V General Contractors Support",
     "contact_support_page": "Contact Support",
     "here_to_help_roofing_needs": "We're Here to Help with All Your Roofing Needs",
-    "phone_placeholder": "(XXX) XXX-XXXX",
+
     "notes_placeholder": "Additional notes about the lead...",
     "sending_page": "Sending...",
     "sms_consent_text_page": "By checking this box, I consent to receive text messages from <strong>V GENERAL CONTRACTORS</strong>. You can reply <strong>STOP</strong> at any time to opt out. Message and data rates may apply. <strong>Message frequency may vary</strong>, text <strong>HELP :phone</strong> for assistance. For more information, please refer to our <a href=':privacy_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Privacy Policy</a> and <a href=':terms_url' target='_blank' class='text-yellow-500 hover:text-yellow-600 no-underline'>Terms of Service</a>.",
@@ -1677,8 +1677,7 @@
     "phone_is_required": "Phone is required",
     "address_is_required": "Address is required",
     "please_select_insurance_option": "Please select an insurance option",
-    "first_name_placeholder": "Enter first name",
-    "last_name_placeholder": "Enter last name",
+
     "invalid_email_format": "Invalid email format",
     "email_already_exists": "This email is already registered",
     "invalid_phone_format": "Invalid phone format",
@@ -1711,7 +1710,7 @@
     "create_confirmed_appointment": "Create Confirmed Appointment",
     "create_confirmed_called_appointment": "Create Confirmed & Called Appointment",
     "address_placeholder": "Enter complete address",
-    "email_placeholder": "email@example.com",
+
     "apartment_suite_optional": "Apartment, suite, etc. (optional)",
     "New Appointment": "New Appointment",
     "success": "Success!",
@@ -1719,5 +1718,27 @@
     "ok": "OK",
     "an_unexpected_error_occurred": "An unexpected error occurred",
     "deleted": "Deleted!",
-    "could_not_delete_event": "Could not delete the event."
+    "could_not_delete_event": "Could not delete the event.",
+    "validation_error_title": "Validation Error!",
+    "please_correct_form_errors": "Please correct the errors in the form before submitting.",
+    
+    "_comment_calendar_missing_translations": "=== MISSING CALENDAR TRANSLATIONS ===",
+    
+    "loading_clients": "Loading clients...",
+    "no_clients_available": "No clients available",
+    "client_load_error": "Error loading clients",
+    "time_slot_unavailable": "This time slot is unavailable",
+    "past_date_error": "Cannot schedule appointments in the past",
+    
+    "first_name_placeholder": "First Name",
+    "last_name_placeholder": "Last Name",
+    "email_placeholder": "Email Address",
+    "phone_placeholder": "Phone Number",
+    
+    "updating": "Updating...",
+    
+    "calendar_refresh": "Calendar refreshed",
+   
+    "show": "Show",
+    "keyboard_shortcuts_help": "Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment"
 }

@@ -86,10 +86,11 @@
                                     'close': @json(__('Close')),
 
                                     // Calendar specific
-                                    'please_select_client': @json(__('Please select a client')),
+                                    'please_select_client': @json(__('please_select_client')),
+                                    'select_client_3_hours': @json(__('select_client_3_hours')),
                                     'select_lead_source': @json(__('select_lead_source')),
                                     'create_lead': @json(__('create_lead')),
-                                    'create_new_client': @json(__('create_new_client')),
+                                    'create_new_client': @json(__('create_new_client'))
                                     'create_confirmed_appointment': @json(__('create_confirmed_appointment')),
                                     'appointment_created_successfully': @json(__('Appointment created successfully')),
                                     'appointment_updated_successfully': @json(__('Appointment updated successfully')),
@@ -121,22 +122,24 @@
                                     'could_not_delete_event': @json(__('could_not_delete_event')),
 
                                     // Form validation
+                                    'validation_error_title': @json(__('validation_error_title')),
+                                    'please_correct_form_errors': @json(__('please_correct_form_errors')),
                                     'field_required': @json(__('This field is required')),
-                                    'invalid_email': @json(__('Please enter a valid email address')),
+                                    'invalid_email': @json(__('invalid_email')),
                                     'invalid_phone': @json(__('Please enter a valid phone number')),
-                                    'time_slot_unavailable': @json(__('This time slot is already booked')),
+                                    'time_slot_unavailable': @json(__('time_slot_unavailable')),
 
                                     // Client management
-                                    'no_clients_available': @json(__('No clients available')),
-                                    'loading_clients': @json(__('Loading clients...')),
-                                    'client_load_error': @json(__('Error loading clients')),
+                                    'no_clients_available': @json(__('no_clients_available')),
+                                    'loading_clients': @json(__('loading_clients')),
+                                    'client_load_error': @json(__('client_load_error')),
                                     'new_appointment': @json(__('New Appointment')),
 
                                     // Date/Time
                                     'select_date_time': @json(__('Please select a date and time')),
                                     'invalid_date': @json(__('Please select a valid date')),
                                     'invalid_time': @json(__('Please select a valid time')),
-                                    'past_date_error': @json(__('Cannot schedule appointments in the past')),
+                                    'past_date_error': @json(__('past_date_error')),
 
                                     // Sharing
                                     'link_copied': @json(__('Link copied to clipboard')),
@@ -144,13 +147,28 @@
                                     'share_location': @json(__('Share Location')),
                                     'open_in_maps': @json(__('Open in Maps')),
 
+                                    // Form placeholders
+                                    'first_name_placeholder': @json(__('first_name_placeholder')),
+                                    'last_name_placeholder': @json(__('last_name_placeholder')),
+                                    'email_placeholder': @json(__('email_placeholder')),
+                                    'phone_placeholder': @json(__('phone_placeholder')),
+                                    'address_placeholder': @json(__('address_placeholder')),
+                                    'notes_placeholder': @json(__('notes_placeholder')),
+
+                                    // Process states
+                                    'creating': @json(__('creating')),
+                                    'updating': @json(__('updating')),
+                                    'deleting': @json(__('deleting')),
+                                    'hide': @json(__('hide')),
+                                    'show': @json(__('show')),
+
                                     // Status messages
                                     'loading_events': @json(__('Loading events...')),
                                     'no_events_found': @json(__('No events found')),
-                                    'calendar_refresh': @json(__('Calendar refreshed')),
+                                    'calendar_refresh': @json(__('calendar_refresh')),
 
                                     // Keyboard shortcuts
-                                    'keyboard_shortcuts_help': @json(__('Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment'))
+                                    'keyboard_shortcuts_help': @json(__('keyboard_shortcuts_help'))
                                 };
 
                                 // Improved language change handling

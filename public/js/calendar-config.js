@@ -71,6 +71,39 @@ class CalendarConfig {
                 create_confirmed_appointment: window.translations?.create_confirmed_appointment || "Create Confirmed Appointment",
                 create_lead: window.translations?.create_lead || "Create Lead",
                 new_appointment: window.translations?.new_appointment || "New Appointment",
+                
+                // Client management
+                select_client_3_hours: window.translations?.select_client_3_hours || "Select a client to create a 3-hour appointment",
+                loading_clients: window.translations?.loading_clients || "Loading clients...",
+                no_clients_available: window.translations?.no_clients_available || "No clients available",
+                client_load_error: window.translations?.client_load_error || "Error loading clients",
+                
+                // Validation and errors
+                time_slot_unavailable: window.translations?.time_slot_unavailable || "This time slot is unavailable",
+                past_date_error: window.translations?.past_date_error || "Cannot schedule appointments in the past",
+                invalid_email: window.translations?.invalid_email || "Invalid email address",
+                
+                // Form placeholders
+                first_name_placeholder: window.translations?.first_name_placeholder || "First Name",
+                last_name_placeholder: window.translations?.last_name_placeholder || "Last Name",
+                email_placeholder: window.translations?.email_placeholder || "Email Address",
+                phone_placeholder: window.translations?.phone_placeholder || "Phone Number",
+                address_placeholder: window.translations?.address_placeholder || "Address",
+                notes_placeholder: window.translations?.notes_placeholder || "Additional notes",
+                
+                // Process states
+                loading: window.translations?.loading || "Loading...",
+                saving: window.translations?.saving || "Saving...",
+                processing: window.translations?.processing || "Processing...",
+                creating: window.translations?.creating || "Creating...",
+                updating: window.translations?.updating || "Updating...",
+                deleting: window.translations?.deleting || "Deleting...",
+                
+                // UI states
+                hide: window.translations?.hide || "Hide",
+                show: window.translations?.show || "Show",
+                calendar_refresh: window.translations?.calendar_refresh || "Calendar refreshed",
+                keyboard_shortcuts_help: window.translations?.keyboard_shortcuts_help || "Press ESC to close modals, F5 to refresh, Ctrl+N for new appointment"
             }
         );
     }
