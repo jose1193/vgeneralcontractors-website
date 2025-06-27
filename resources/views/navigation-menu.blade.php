@@ -450,6 +450,29 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 </div>
             @endif
 
+            <!-- Invoice Demo -->
+            @if (auth()->check() && auth()->user()->can('READ_INVOICE_DEMO'))
+                <div class="relative group">
+                    <a href="{{ route('invoice-demos.index') }}"
+                        class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('invoice-demos.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !request()->routeIs('invoice-demos.*') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !request()->routeIs('invoice-demos.*') ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </a>
+                    @if (!request()->routeIs('invoice-demos.*'))
+                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
+                            style="background-color: #2C2E36;">
+                            {{ __('Invoice Demos') }}
+                            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                                style="background-color: #2C2E36;"></div>
+                        </div>
+                    @endif
+                </div>
+            @endif
+
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
                 <div class="relative group">
@@ -707,6 +730,18 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                     <span class="font-medium">{{ __('Call Records') }}</span>
+                </a>
+            @endif
+
+            <!-- Invoice Demo -->
+            @if (auth()->check() && auth()->user()->can('READ_INVOICE_DEMO'))
+                <a href="{{ route('invoice-demos.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('invoice-demos.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-medium">{{ __('Invoice Demos') }}</span>
                 </a>
             @endif
 
