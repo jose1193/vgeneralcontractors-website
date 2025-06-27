@@ -117,6 +117,19 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\ServiceCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
+    // Invoice Demos Resource Routes (CRUD) - NEW
+    Route::prefix('invoice-demos')->name('invoice-demos.')->group(function () {
+        Route::get('/', [App\Http\Controllers\InvoiceDemoController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\InvoiceDemoController::class, 'store'])->name('store');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\InvoiceDemoController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\InvoiceDemoController::class, 'restore'])->name('restore');
+        Route::post('/check-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'checkInvoiceNumberExists'])->name('check-invoice-number');
+        Route::get('/generate-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'generateInvoiceNumber'])->name('generate-invoice-number');
+        Route::get('/form-data', [App\Http\Controllers\InvoiceDemoController::class, 'getFormData'])->name('form-data');
+    });
+
     // API Routes for Service Categories (needed by Portfolio CRUD)
     Route::prefix('api')->name('api.')->group(function () {
         Route::get('/service-categories', [App\Http\Controllers\ServiceCategoryController::class, 'getForApi'])->name('service-categories');
