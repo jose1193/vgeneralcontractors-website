@@ -679,16 +679,26 @@ function invoiceDemoData() {
             }
 
             try {
+                const formData = new FormData();
+                formData.append("invoice_number", this.form.invoice_number);
+                if (this.isEditing && this.currentInvoice?.uuid) {
+                    formData.append("exclude_id", this.currentInvoice.uuid);
+                }
+
                 const response = await fetch(
-                    `/invoice-demos/check-number/${encodeURIComponent(
-                        this.form.invoice_number
-                    )}`
+                    "/invoice-demos/check-invoice-number",
+                    {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-CSRF-TOKEN": document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                        },
+                    }
                 );
                 const data = await response.json();
-                this.invoiceNumberExists =
-                    data.exists &&
-                    (!this.isEditing ||
-                        data.uuid !== this.currentInvoice?.uuid);
+                this.invoiceNumberExists = data.exists;
             } catch (error) {
                 console.error("Error checking invoice number:", error);
                 this.invoiceNumberExists = false;

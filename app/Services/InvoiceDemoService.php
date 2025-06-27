@@ -469,7 +469,12 @@ class InvoiceDemoService
         $query = InvoiceDemo::where('invoice_number', $invoiceNumber);
         
         if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
+            // Check if excludeId is UUID or numeric ID
+            if (is_numeric($excludeId)) {
+                $query->where('id', '!=', $excludeId);
+            } else {
+                $query->where('uuid', '!=', $excludeId);
+            }
         }
         
         return $query->exists();

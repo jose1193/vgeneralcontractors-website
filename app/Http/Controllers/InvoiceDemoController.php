@@ -22,8 +22,7 @@ class InvoiceDemoController extends BaseCrudController
 {
     use CacheTraitCrud;
     
-    protected string $modelClass = InvoiceDemo::class;
-    protected string $entityName = 'invoice demo';
+    protected string $entityName = 'INVOICE_DEMO';
     protected string $routePrefix = 'invoice-demos';
     protected string $viewPrefix = 'invoice-demos';
     protected int $cacheTime = 300; // 5 minutes
@@ -34,6 +33,9 @@ class InvoiceDemoController extends BaseCrudController
     {
         parent::__construct($transactionService);
         $this->invoiceService = $invoiceService;
+        
+        // Set model class for parent compatibility
+        $this->modelClass = InvoiceDemo::class;
     }
 
     /**
@@ -250,8 +252,12 @@ class InvoiceDemoController extends BaseCrudController
     public function checkInvoiceNumberExists(Request $request)
     {
         try {
-            $invoiceNumber = $request->get('invoice_number');
-            $excludeId = $request->get('exclude_id'); // For edit mode
+            $invoiceNumber = $request->input('invoice_number');
+            $excludeId = $request->input('exclude_id'); // For edit mode
+            
+            if (!$invoiceNumber) {
+                return response()->json(['exists' => false]);
+            }
             
             $exists = $this->invoiceService->checkInvoiceNumberExists($invoiceNumber, $excludeId);
             
@@ -261,7 +267,7 @@ class InvoiceDemoController extends BaseCrudController
         } catch (Throwable $e) {
             Log::error('Error checking invoice number existence', [
                 'error' => $e->getMessage(),
-                'invoice_number' => $request->get('invoice_number')
+                'invoice_number' => $request->input('invoice_number')
             ]);
             
             return response()->json([
@@ -309,5 +315,25 @@ class InvoiceDemoController extends BaseCrudController
     protected function getNameField(): string
     {
         return 'invoice_number';
+    }
+
+    /**
+     * Get validation rules (required by BaseCrudController)
+     */
+    protected function getValidationRules($id = null): array
+    {
+        // Since we use InvoiceDemoRequest, return empty array
+        // The actual validation is handled by the Request class
+        return [];
+    }
+
+    /**
+     * Get validation messages (required by BaseCrudController)
+     */
+    protected function getValidationMessages(): array
+    {
+        // Since we use InvoiceDemoRequest, return empty array
+        // The actual validation messages are handled by the Request class
+        return [];
     }
 }
