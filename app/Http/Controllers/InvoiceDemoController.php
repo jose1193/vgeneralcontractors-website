@@ -154,6 +154,74 @@ class InvoiceDemoController extends BaseCrudController
     }
 
     /**
+     * Show a specific invoice demo
+     */
+    public function show($uuid)
+    {
+        try {
+            // Check permissions
+            if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to view invoice demos"
+                ], 403);
+            }
+
+            $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
+
+            return response()->json([
+                'success' => true,
+                'data' => new InvoiceDemoResource($invoice)
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to show invoice demo', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load invoice demo'
+            ], 404);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified invoice demo
+     */
+    public function edit($uuid)
+    {
+        try {
+            // Check permissions
+            if (!$this->checkPermissionWithMessage("UPDATE_{$this->entityName}", "You don't have permission to edit {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to edit invoice demos"
+                ], 403);
+            }
+
+            $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
+
+            return response()->json([
+                'success' => true,
+                'data' => new InvoiceDemoResource($invoice)
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to load invoice demo for editing', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load invoice demo for editing'
+            ], 404);
+        }
+    }
+
+    /**
      * Update an existing invoice demo using InvoiceDemoRequest
      */
     public function update(Request $request, $uuid)
@@ -213,7 +281,7 @@ class InvoiceDemoController extends BaseCrudController
     /**
      * Delete invoice demo (soft delete)
      */
-    public function destroy(string $id)
+    public function destroy($uuid)
     {
         try {
             // Check permissions
@@ -224,7 +292,7 @@ class InvoiceDemoController extends BaseCrudController
                 ], 403);
             }
 
-            $invoice = InvoiceDemo::findOrFail($id);
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->deleteInvoice($invoice, auth()->id());
 
@@ -235,7 +303,7 @@ class InvoiceDemoController extends BaseCrudController
         } catch (Throwable $e) {
             Log::error('Failed to delete invoice demo', [
                 'error' => $e->getMessage(),
-                'invoice_id' => $id,
+                'invoice_uuid' => $uuid,
                 'user_id' => auth()->id()
             ]);
 
@@ -249,7 +317,7 @@ class InvoiceDemoController extends BaseCrudController
     /**
      * Restore deleted invoice demo
      */
-    public function restore(string $id)
+    public function restore($uuid)
     {
         try {
             // Check permissions
@@ -260,7 +328,7 @@ class InvoiceDemoController extends BaseCrudController
                 ], 403);
             }
 
-            $invoice = InvoiceDemo::withTrashed()->findOrFail($id);
+            $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->restoreInvoice($invoice, auth()->id());
 
@@ -271,7 +339,7 @@ class InvoiceDemoController extends BaseCrudController
         } catch (Throwable $e) {
             Log::error('Failed to restore invoice demo', [
                 'error' => $e->getMessage(),
-                'invoice_id' => $id,
+                'invoice_uuid' => $uuid,
                 'user_id' => auth()->id()
             ]);
 
