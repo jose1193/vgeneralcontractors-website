@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Services\TransactionService;
 use Carbon\Carbon;
@@ -45,7 +46,16 @@ class InvoiceDemoController extends BaseCrudController
     {
         try {
             // Check permissions
-            $this->checkPermission('view');
+            if (!$this->checkPermission("READ_{$this->entityName}", false)) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You do not have permission to view invoice demos',
+                    ], 403);
+                }
+                
+                return redirect()->route('dashboard')->with('error', 'You do not have permission to view invoice demos');
+            }
 
             if ($request->ajax()) {
                 $invoices = $this->invoiceService->getPaginatedInvoices(
@@ -93,14 +103,34 @@ class InvoiceDemoController extends BaseCrudController
     /**
      * Store a new invoice demo using InvoiceDemoRequest
      */
-    public function store(InvoiceDemoRequest $request)
+    public function store(Request $request)
     {
         try {
             // Check permissions
-            $this->checkPermission('create');
+            if (!$this->checkPermissionWithMessage("CREATE_{$this->entityName}", "You don't have permission to create {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to create invoice demos"
+                ], 403);
+            }
+
+            // Manual validation using InvoiceDemoRequest rules
+            $invoiceDemoRequest = new InvoiceDemoRequest();
+            $validator = Validator::make(
+                $request->all(), 
+                $invoiceDemoRequest->rules(),
+                $invoiceDemoRequest->messages()
+            );
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
 
             $invoice = $this->invoiceService->createInvoice(
-                $request->validated(),
+                $validator->validated(),
                 auth()->id()
             );
 
@@ -126,17 +156,37 @@ class InvoiceDemoController extends BaseCrudController
     /**
      * Update an existing invoice demo using InvoiceDemoRequest
      */
-    public function update(InvoiceDemoRequest $request, string $id)
+    public function update(Request $request, $uuid)
     {
         try {
             // Check permissions
-            $this->checkPermission('edit');
+            if (!$this->checkPermissionWithMessage("UPDATE_{$this->entityName}", "You don't have permission to update {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to update invoice demos"
+                ], 403);
+            }
 
-            $invoice = InvoiceDemo::findOrFail($id);
+            // Manual validation using InvoiceDemoRequest rules
+            $invoiceDemoRequest = new InvoiceDemoRequest();
+            $validator = Validator::make(
+                $request->all(), 
+                $invoiceDemoRequest->rules(),
+                $invoiceDemoRequest->messages()
+            );
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             $updatedInvoice = $this->invoiceService->updateInvoice(
                 $invoice,
-                $request->validated(),
+                $validator->validated(),
                 auth()->id()
             );
 
@@ -148,7 +198,7 @@ class InvoiceDemoController extends BaseCrudController
         } catch (Throwable $e) {
             Log::error('Failed to update invoice demo', [
                 'error' => $e->getMessage(),
-                'invoice_id' => $id,
+                'invoice_uuid' => $uuid,
                 'data' => $request->all(),
                 'user_id' => auth()->id()
             ]);
@@ -167,7 +217,12 @@ class InvoiceDemoController extends BaseCrudController
     {
         try {
             // Check permissions
-            $this->checkPermission('delete');
+            if (!$this->checkPermissionWithMessage("DELETE_{$this->entityName}", "You don't have permission to delete {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to delete invoice demos"
+                ], 403);
+            }
 
             $invoice = InvoiceDemo::findOrFail($id);
             
@@ -198,7 +253,12 @@ class InvoiceDemoController extends BaseCrudController
     {
         try {
             // Check permissions
-            $this->checkPermission('restore');
+            if (!$this->checkPermissionWithMessage("RESTORE_{$this->entityName}", "You don't have permission to restore {$this->entityName}")) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You don't have permission to restore invoice demos"
+                ], 403);
+            }
 
             $invoice = InvoiceDemo::withTrashed()->findOrFail($id);
             
