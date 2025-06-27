@@ -22,9 +22,8 @@ class InvoiceDemoController extends BaseCrudController
 {
     use CacheTraitCrud;
     
-    protected string $entityName = 'INVOICE_DEMO';
-    protected string $routePrefix = 'invoice-demos';
-    protected string $viewPrefix = 'invoice-demos';
+    protected $routePrefix = 'invoice-demos';
+    protected $viewPrefix = 'invoice-demos';
     protected int $cacheTime = 300; // 5 minutes
 
     protected InvoiceDemoService $invoiceService;
@@ -34,8 +33,9 @@ class InvoiceDemoController extends BaseCrudController
         parent::__construct($transactionService);
         $this->invoiceService = $invoiceService;
         
-        // Set model class for parent compatibility
+        // Set properties for parent compatibility
         $this->modelClass = InvoiceDemo::class;
+        $this->entityName = 'INVOICE_DEMO';
     }
 
     /**
