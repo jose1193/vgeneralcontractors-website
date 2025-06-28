@@ -21,8 +21,9 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->nullable();
             $table->string('unit')->nullable();
             $table->string('order_position')->nullable();
-            $table->softDeletes();
+            
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

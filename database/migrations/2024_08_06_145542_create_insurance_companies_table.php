@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('website')->nullable();
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
+             $table->softDeletes();
         });
     }
 

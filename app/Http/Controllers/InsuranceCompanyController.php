@@ -375,4 +375,60 @@ class InsuranceCompanyController extends BaseCrudController
         }
         return response()->json(['success' => true, 'message' => 'Insurance company restored successfully']);
     }
+
+    /**
+     * Check if email is unique for AJAX validation
+     */
+    public function checkEmail(Request $request): JsonResponse
+    {
+        $email = $request->input('email');
+        $uuid = $request->input('uuid') ?: $request->input('exclude_uuid'); // For update operations
+        
+        if (empty($email)) {
+            return response()->json(['valid' => false, 'message' => 'Email is required']);
+        }
+        
+        $query = InsuranceCompany::where('email', $email);
+        
+        // If updating, exclude current record
+        if ($uuid) {
+            $query->where('uuid', '!=', $uuid);
+        }
+        
+        $exists = $query->exists();
+        
+        return response()->json([
+            'exists' => $exists,
+            'valid' => !$exists,
+            'message' => $exists ? 'This email is already registered' : 'Email is available'
+        ]);
+    }
+
+    /**
+     * Check if company name is unique for AJAX validation
+     */
+    public function checkName(Request $request): JsonResponse
+    {
+        $name = $request->input('insurance_company_name');
+        $uuid = $request->input('uuid') ?: $request->input('exclude_uuid'); // For update operations
+        
+        if (empty($name)) {
+            return response()->json(['valid' => false, 'message' => 'Company name is required']);
+        }
+        
+        $query = InsuranceCompany::where('insurance_company_name', $name);
+        
+        // If updating, exclude current record
+        if ($uuid) {
+            $query->where('uuid', '!=', $uuid);
+        }
+        
+        $exists = $query->exists();
+        
+        return response()->json([
+            'exists' => $exists,
+            'valid' => !$exists,
+            'message' => $exists ? 'This company name is already registered' : 'Company name is available'
+        ]);
+    }
 }

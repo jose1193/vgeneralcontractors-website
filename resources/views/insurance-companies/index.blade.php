@@ -67,7 +67,12 @@
                             validation: {
                                 required: true,
                                 minLength: 2,
-                                maxLength: 255
+                                maxLength: 255,
+                                unique: {
+                                    url: "{{ route('insurance-companies.check-name') }}",
+                                    errorMessage: 'This company name is already registered',
+                                    successMessage: 'Company name is available'
+                                }
                             },
                             capitalize: true
                         },
@@ -96,7 +101,8 @@
                                 email: true,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-email') }}",
-                                    message: 'This email is already taken'
+                                    errorMessage: 'This email is already registered',
+                                    successMessage: 'Email is available'
                                 }
                             }
                         },

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('claim_status_name');
             $table->string('background_color', 7)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

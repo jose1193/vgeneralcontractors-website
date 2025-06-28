@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('cause_loss_name');
             $table->text('description')->nullable();
             $table->enum('severity', ['low', 'medium', 'high'])->default('low');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
