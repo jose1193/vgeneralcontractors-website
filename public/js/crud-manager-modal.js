@@ -1145,9 +1145,10 @@ class CrudManagerModal {
     }
 
     /**
-     * Verificar si hay errores de validación visibles
+     * Verificar si hay errores de validación visibles o campos requeridos vacíos
      */
     hasValidationErrors() {
+        // Verificar errores de validación visibles
         const visibleErrors = $(".error-message:not(.hidden)").filter(
             function () {
                 return (
@@ -1156,7 +1157,38 @@ class CrudManagerModal {
                 );
             }
         );
-        return visibleErrors.length > 0;
+        
+        // Verificar si hay campos requeridos vacíos
+        const isEditMode = $(".swal2-popup").hasClass("swal-edit");
+        let hasEmptyRequiredFields = false;
+        
+        this.formFields.forEach((field) => {
+            // Verificar si el campo debe estar presente en el modo actual
+            if (field.showInCreate === false && !isEditMode) {
+                return; // Saltar validación para campos no visibles en creación
+            }
+            if (field.showInEdit === false && isEditMode) {
+                return; // Saltar validación para campos no visibles en edición
+            }
+            
+            if (field.required) {
+                const element = $(`#${field.name}`);
+                let value = "";
+                
+                if (field.type === "checkbox") {
+                    // Los checkboxes no se consideran "vacíos" para propósitos de required
+                    return;
+                } else {
+                    value = element.val();
+                }
+                
+                if (!value || value.toString().trim() === "") {
+                    hasEmptyRequiredFields = true;
+                }
+            }
+        });
+        
+        return visibleErrors.length > 0 || hasEmptyRequiredFields;
     }
 
     /**
@@ -1170,7 +1202,7 @@ class CrudManagerModal {
                 submitButton.addClass("opacity-50 cursor-not-allowed");
                 submitButton.attr(
                     "title",
-                    "Corrija los errores de validación antes de continuar"
+                    "Complete todos los campos requeridos y corrija los errores antes de continuar"
                 );
             } else {
                 submitButton.prop("disabled", false);
