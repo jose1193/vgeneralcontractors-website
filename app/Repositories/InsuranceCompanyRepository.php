@@ -168,13 +168,13 @@ class InsuranceCompanyRepository extends BaseRepository implements InsuranceComp
         return $query->paginate($perPage);
     }
 
-    public function findByUuid($uuid)
+    public function findByUuid(string $uuid): ?InsuranceCompany
     {
         return $this->model->where('uuid', $uuid)->first();
     }
 
-    public function findByUuidWithTrashed($uuid)
+    public function findByUuidWithTrashed(string $uuid): ?InsuranceCompany
     {
         return $this->model->withTrashed()->where('uuid', $uuid)->first();
     }
-} 
+}

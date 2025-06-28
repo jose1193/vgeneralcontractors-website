@@ -223,12 +223,12 @@ class InsuranceCompanyService extends BaseService
         ]);
     }
 
-    public function findByUuid($uuid)
+    public function findByUuid(string $uuid): ?\Illuminate\Database\Eloquent\Model
     {
         return $this->insuranceCompanyRepository->findByUuid($uuid);
     }
 
-    public function delete($uuid): bool
+    public function delete(string $uuid): bool
     {
         $entity = $this->insuranceCompanyRepository->findByUuid($uuid);
         if (!$entity) return false;
@@ -237,7 +237,7 @@ class InsuranceCompanyService extends BaseService
         return true;
     }
 
-    public function restore($uuid): bool
+    public function restore(string $uuid): bool
     {
         $entity = $this->insuranceCompanyRepository->findByUuidWithTrashed($uuid);
         if (!$entity) return false;
@@ -245,4 +245,4 @@ class InsuranceCompanyService extends BaseService
         $this->afterRestore($entity);
         return true;
     }
-} 
+}

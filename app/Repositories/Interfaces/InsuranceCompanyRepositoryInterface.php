@@ -56,10 +56,10 @@ interface InsuranceCompanyRepositoryInterface extends BaseRepositoryInterface
     /**
      * Find insurance company by UUID
      */
-    public function findByUuid($uuid);
+    public function findByUuid(string $uuid): ?InsuranceCompany;
 
     /**
      * Find insurance company by UUID with trashed
      */
-    public function findByUuidWithTrashed($uuid);
-} 
+    public function findByUuidWithTrashed(string $uuid): ?InsuranceCompany;
+}
