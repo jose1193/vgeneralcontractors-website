@@ -331,7 +331,7 @@ class InsuranceCompanyController extends BaseCrudController
     {
         $validated = $request->validate($this->getValidationRules(), $this->getValidationMessages());
         $dto = InsuranceCompanyDTO::fromArray($validated);
-        $insuranceCompany = $this->insuranceCompanyService->create($dto);
+        $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
         return response()->json([
             'success' => true,
             'message' => __('Insurance company created successfully'),

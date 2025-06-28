@@ -197,7 +197,7 @@
                         },
                         {
                             field: 'user_name',
-                            name: 'Assigned User',
+                            name: 'Created By',
                             sortable: true,
                             getter: (entity) => {
                                 return entity.user_name || 'No user assigned';
