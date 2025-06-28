@@ -461,6 +461,12 @@ class CrudManagerModal {
         const required = field.required ? "required" : "";
         const disabled = field.disabled ? "disabled" : "";
 
+        // Para campos hidden, no necesitamos wrapper ni label
+        if (field.type === "hidden") {
+            const hiddenValue = field.value || value || "";
+            return `<input type="hidden" id="${field.name}" name="${field.name}" value="${hiddenValue}">`;
+        }
+
         let html = `<div class="form-group mb-4">`;
         const labelClass = field.required
             ? "block text-sm font-medium text-gray-700 mb-2 required"
