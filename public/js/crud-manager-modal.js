@@ -1328,13 +1328,9 @@ class CrudManagerModal {
 
             // Validación requerida
             if (field.required && (!value || value.toString().trim() === "")) {
-                const requiredMessage =
-                    field.name === "last_name"
-                        ? this.translations.lastNameRequired ||
-                          "Last name is required"
-                        : `${field.label} ${
-                              this.translations.isRequired || "is required"
-                          }`;
+                const requiredMessage = `${field.label} ${
+                    this.translations.isRequired || "is required"
+                }`;
                 this.showFieldError(field.name, requiredMessage);
                 isValid = false;
             }
