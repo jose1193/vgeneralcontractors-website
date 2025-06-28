@@ -117,8 +117,8 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\ServiceCategoryController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
-    // Invoice Demos Resource Routes (CRUD) - NEW
-    Route::prefix('invoice-demos')->name('invoice-demos.')->group(function () {
+    // Invoice Management Resource Routes (CRUD) - NEW
+    Route::prefix('invoices')->name('invoices.')->group(function () {
         Route::get('/', [App\Http\Controllers\InvoiceDemoController::class, 'index'])->name('index');
         Route::post('/', [App\Http\Controllers\InvoiceDemoController::class, 'store'])->name('store');
         Route::get('/{uuid}/edit', [App\Http\Controllers\InvoiceDemoController::class, 'edit'])->name('edit');

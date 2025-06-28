@@ -6,7 +6,7 @@
 
 class InvoiceDemoManager {
     constructor() {
-        this.baseUrl = "/invoice-demos";
+        this.baseUrl = "/invoices";
         this.csrfToken = document
             .querySelector('meta[name="csrf-token"]')
             ?.getAttribute("content");

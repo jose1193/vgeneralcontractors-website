@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invoice Demos Management')
+@section('title', 'Invoice Management')
 
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 py-8" x-data="invoiceDemoData()"
@@ -11,8 +11,8 @@
                 <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-8 py-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-white mb-2">Invoice Demos Management</h1>
-                            <p class="text-purple-100">Manage and track invoice demonstrations for clients</p>
+                            <h1 class="text-3xl font-bold text-white mb-2">Invoice Management</h1>
+                            <p class="text-purple-100">Manage and track invoices for clients</p>
                         </div>
                         <div class="mt-4 sm:mt-0">
                             <button @click="openCreateModal()"
@@ -21,7 +21,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                New Invoice Demo
+                                Create Invoice
                             </button>
                         </div>
                     </div>
@@ -232,8 +232,8 @@
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                             </path>
                         </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">No invoice demos found</h3>
-                        <p class="mt-1 text-sm text-gray-500">Get started by creating a new invoice demo.</p>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No invoices found</h3>
+                        <p class="mt-1 text-sm text-gray-500">Get started by creating a new invoice.</p>
                     </div>
                 </div>
 
@@ -269,7 +269,7 @@
             </div>
         </div>
 
-        <!-- Invoice Demo Modal -->
+        <!-- Invoice Modal -->
         @include('invoice-demos.partials.invoice-modal')
 
         <!-- Success/Error Messages -->
