@@ -36,7 +36,7 @@ class InvoiceDemoController extends BaseController
         // Set properties for parent compatibility
         $this->modelClass = InvoiceDemo::class;
         $this->entityName = 'INVOICE_DEMO';
-        $this->viewPrefix = 'invoices';
+        $this->viewPrefix = 'invoice-demos';
         $this->routePrefix = 'invoices';
     }
 
