@@ -125,7 +125,7 @@ Route::middleware([
         Route::put('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'update'])->name('update');
         Route::delete('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'destroy'])->name('destroy');
         Route::patch('/{uuid}/restore', [App\Http\Controllers\InvoiceDemoController::class, 'restore'])->name('restore');
-        Route::post('/check-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'checkInvoiceNumberExists'])->name('check-invoice-number');
+        Route::get('/check-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'checkInvoiceNumberExists'])->name('check-invoice-number');
         Route::get('/generate-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'generateInvoiceNumber'])->name('generate-invoice-number');
         Route::get('/form-data', [App\Http\Controllers\InvoiceDemoController::class, 'getFormData'])->name('form-data');
     });

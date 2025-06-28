@@ -306,17 +306,7 @@ function invoiceDemoData() {
         errors: {},
         invoiceNumberExists: false,
 
-        // Form data (dropdowns)
-        formData: {
-            statuses: [
-                { value: "draft", label: "Draft" },
-                { value: "sent", label: "Sent" },
-                { value: "paid", label: "Paid" },
-                { value: "cancelled", label: "Cancelled" },
-            ],
-            type_of_loss_options: [],
-            common_insurance_companies: [],
-        },
+        // Form data (dropdowns) - removed duplicate
 
         // Initialize component
         async init() {
@@ -592,7 +582,7 @@ function invoiceDemoData() {
                 const response =
                     await window.invoiceDemoManager.checkInvoiceNumberExists(
                         this.form.invoice_number,
-                        this.isEditing ? this.currentInvoice.id : null
+                        this.isEditing ? this.currentInvoice.uuid : null
                     );
                 this.invoiceNumberExists = response.exists;
             } catch (error) {
@@ -660,100 +650,7 @@ function invoiceDemoData() {
             }
         },
 
-        // Generate invoice number
-        generateInvoiceNumber() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, "0");
-            const randomNum = Math.floor(Math.random() * 9999) + 1;
-            this.form.invoice_number = `INV-${year}${month}-${String(
-                randomNum
-            ).padStart(4, "0")}`;
-        },
-
-        // Check if invoice number exists
-        async checkInvoiceNumberExists() {
-            if (!this.form.invoice_number) {
-                this.invoiceNumberExists = false;
-                return;
-            }
-
-            try {
-                const formData = new FormData();
-                formData.append("invoice_number", this.form.invoice_number);
-                if (this.isEditing && this.currentInvoice?.uuid) {
-                    formData.append("exclude_id", this.currentInvoice.uuid);
-                }
-
-                const response = await fetch(
-                    "/invoice-demos/check-invoice-number",
-                    {
-                        method: "POST",
-                        body: formData,
-                        headers: {
-                            "X-CSRF-TOKEN": document
-                                .querySelector('meta[name="csrf-token"]')
-                                .getAttribute("content"),
-                        },
-                    }
-                );
-                const data = await response.json();
-                this.invoiceNumberExists = data.exists;
-            } catch (error) {
-                console.error("Error checking invoice number:", error);
-                this.invoiceNumberExists = false;
-            }
-        },
-
-        // Calculate totals
-        calculateTotals() {
-            // Calculate subtotal from items
-            let itemsSubtotal = 0;
-            if (this.form.items && this.form.items.length > 0) {
-                itemsSubtotal = this.form.items.reduce((sum, item) => {
-                    return (
-                        sum +
-                        (parseFloat(item.quantity) || 0) *
-                            (parseFloat(item.rate) || 0)
-                    );
-                }, 0);
-            }
-
-            // Use manual subtotal if no items, otherwise use calculated
-            const subtotal =
-                this.form.items.length > 0
-                    ? itemsSubtotal
-                    : parseFloat(this.form.subtotal) || 0;
-            const taxAmount = parseFloat(this.form.tax_amount) || 0;
-
-            this.form.subtotal = subtotal;
-            this.form.balance_due = subtotal + taxAmount;
-        },
-
-        // Add item
-        addItem() {
-            this.form.items.push({
-                service_name: "",
-                description: "",
-                quantity: 1,
-                rate: 0,
-                sort_order: this.form.items.length + 1,
-            });
-        },
-
-        // Remove item
-        removeItem(index) {
-            this.form.items.splice(index, 1);
-            this.calculateTotals();
-        },
-
-        // Format currency
-        formatCurrency(amount) {
-            return new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount || 0);
-        },
+        // Helper methods moved to avoid duplication - see methods above
     };
 }
 
