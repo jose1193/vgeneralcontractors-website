@@ -80,11 +80,11 @@
                             name: 'address',
                             type: 'textarea',
                             label: 'Address',
-                            placeholder: 'Enter company address',
-                            required: true,
+                            placeholder: 'Enter company address (optional)',
+                            required: false,
                             rows: 3,
                             validation: {
-                                required: true,
+                                required: false,
                                 minLength: 10,
                                 maxLength: 500
                             },
@@ -94,10 +94,10 @@
                             name: 'email',
                             type: 'email',
                             label: 'Email',
-                            placeholder: 'Enter email address',
-                            required: true,
+                            placeholder: 'Enter email address (optional)',
+                            required: false,
                             validation: {
-                                required: true,
+                                required: false,
                                 email: true,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-email') }}",
@@ -110,10 +110,10 @@
                             name: 'phone',
                             type: 'tel',
                             label: 'Phone',
-                            placeholder: 'Enter phone number',
-                            required: true,
+                            placeholder: 'Enter phone number (optional)',
+                            required: false,
                             validation: {
-                                required: true,
+                                required: false,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-phone') }}",
                                     message: 'This phone number is already taken'
@@ -127,25 +127,14 @@
                             placeholder: 'Enter website URL (optional)',
                             required: false,
                             validation: {
+                                required: false,
                                 url: true
                             }
                         },
                         {
                             name: 'user_id',
-                            type: 'select',
-                            label: 'Assigned User',
-                            placeholder: 'Select assigned user',
-                            required: true,
-                            options: [
-                                @if (isset($users))
-                                    @foreach ($users as $user)
-                                        {
-                                            value: '{{ $user->id }}',
-                                            text: '{{ $user->name }} ({{ $user->email }})'
-                                        },
-                                    @endforeach
-                                @endif
-                            ]
+                            type: 'hidden',
+                            value: '{{ auth()->id() }}'
                         }
                     ],
                     tableHeaders: [{

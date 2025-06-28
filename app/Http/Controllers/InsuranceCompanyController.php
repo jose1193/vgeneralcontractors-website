@@ -94,11 +94,19 @@ class InsuranceCompanyController extends BaseCrudController
     public function checkNameExists(Request $request): JsonResponse
     {
         $name = $request->input('insurance_company_name');
-        $excludeUuid = $request->input('uuid');
+        $excludeUuid = $request->input('uuid') ?: $request->input('exclude_uuid');
+        
+        if (empty($name)) {
+            return response()->json(['valid' => false, 'exists' => false, 'message' => 'Company name is required']);
+        }
         
         $exists = $this->insuranceCompanyService->nameExists($name, $excludeUuid);
         
-        return response()->json(['exists' => $exists]);
+        return response()->json([
+            'exists' => $exists,
+            'valid' => !$exists,
+            'message' => $exists ? 'This company name is already registered' : 'Company name is available'
+        ]);
     }
 
     /**
@@ -155,8 +163,8 @@ class InsuranceCompanyController extends BaseCrudController
     protected function getValidationRules($id = null)
     {
         $nameRule = 'required|string|max:255|unique:insurance_companies,insurance_company_name';
-        $emailRule = 'required|email|max:255|unique:insurance_companies,email';
-        $phoneRule = 'required|string|max:20|unique:insurance_companies,phone';
+        $emailRule = 'nullable|email|max:255|unique:insurance_companies,email';
+        $phoneRule = 'nullable|string|max:20|unique:insurance_companies,phone';
         
         // If we have an ID (UUID in this case), exclude it from the unique check
         if ($id) {
@@ -167,7 +175,7 @@ class InsuranceCompanyController extends BaseCrudController
         
         return [
             'insurance_company_name' => $nameRule . '|regex:/^[a-zA-Z\s\-\.\&\,\']+$/',
-            'address' => 'required|string|max:500',
+            'address' => 'nullable|string|max:500',
             'phone' => $phoneRule . '|regex:/^[\+]?[1-9][\d\-\(\)\s]{8,20}$/',
             'email' => $emailRule,
             'website' => 'nullable|url|max:255',
@@ -185,13 +193,10 @@ class InsuranceCompanyController extends BaseCrudController
             'insurance_company_name.unique' => 'This insurance company name is already taken.',
             'insurance_company_name.max' => 'The insurance company name may not be greater than 255 characters.',
             'insurance_company_name.regex' => 'The insurance company name contains invalid characters.',
-            'address.required' => 'The address is required.',
             'address.max' => 'The address may not be greater than 500 characters.',
-            'phone.required' => 'The phone number is required.',
             'phone.unique' => 'This phone number is already taken.',
             'phone.max' => 'The phone number may not be greater than 20 characters.',
             'phone.regex' => 'The phone number format is invalid.',
-            'email.required' => 'The email is required.',
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'This email is already taken.',
             'email.max' => 'The email may not be greater than 255 characters.',
@@ -384,8 +389,9 @@ class InsuranceCompanyController extends BaseCrudController
         $email = $request->input('email');
         $uuid = $request->input('uuid') ?: $request->input('exclude_uuid'); // For update operations
         
+        // If email is empty, it's valid since it's optional
         if (empty($email)) {
-            return response()->json(['valid' => false, 'message' => 'Email is required']);
+            return response()->json(['valid' => true, 'exists' => false, 'message' => 'Email is optional']);
         }
         
         $query = InsuranceCompany::where('email', $email);
@@ -404,31 +410,5 @@ class InsuranceCompanyController extends BaseCrudController
         ]);
     }
 
-    /**
-     * Check if company name is unique for AJAX validation
-     */
-    public function checkName(Request $request): JsonResponse
-    {
-        $name = $request->input('insurance_company_name');
-        $uuid = $request->input('uuid') ?: $request->input('exclude_uuid'); // For update operations
-        
-        if (empty($name)) {
-            return response()->json(['valid' => false, 'message' => 'Company name is required']);
-        }
-        
-        $query = InsuranceCompany::where('insurance_company_name', $name);
-        
-        // If updating, exclude current record
-        if ($uuid) {
-            $query->where('uuid', '!=', $uuid);
-        }
-        
-        $exists = $query->exists();
-        
-        return response()->json([
-            'exists' => $exists,
-            'valid' => !$exists,
-            'message' => $exists ? 'This company name is already registered' : 'Company name is available'
-        ]);
-    }
+
 }

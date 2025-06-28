@@ -224,7 +224,7 @@ Route::middleware([
         Route::put('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'update'])->name('update');
         Route::delete('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'destroy'])->name('destroy');
         Route::patch('/{uuid}/restore', [App\Http\Controllers\InsuranceCompanyController::class, 'restore'])->name('restore');
-        Route::post('/check-name', [App\Http\Controllers\InsuranceCompanyController::class, 'checkName'])->name('check-name');
+        Route::post('/check-name', [App\Http\Controllers\InsuranceCompanyController::class, 'checkNameExists'])->name('check-name');
         Route::post('/check-email', [App\Http\Controllers\InsuranceCompanyController::class, 'checkEmail'])->name('check-email');
         Route::post('/check-phone', [App\Http\Controllers\InsuranceCompanyController::class, 'checkPhoneExists'])->name('check-phone');
         Route::get('/form-data', [App\Http\Controllers\InsuranceCompanyController::class, 'getFormData'])->name('form-data');
