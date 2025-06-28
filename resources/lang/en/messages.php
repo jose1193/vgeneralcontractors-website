@@ -225,4 +225,19 @@ return [
     'demo' => 'Demo',
     'current_language' => 'Current Language',
     'navigation' => 'Navigation',
+    
+    // Admin sections
+    'administration' => 'Administration',
+    'users' => 'Users',
+    'insurance_companies' => 'Insurance Companies',
+    'company_data_title' => 'Company Data',
+    'emails' => 'Email Data',
+    'service_categories' => 'Service Categories',
+    'appointments' => 'Appointments',
+    'manage_appointments' => 'Manage Appointments',
+    'calendar_view' => 'Calendar View',
+    'blog_management' => 'Blog Management',
+    'posts' => 'Posts',
+    'blog_categories' => 'Blog Categories',
+    'model_ai_title' => 'AI Models',
 ]; 

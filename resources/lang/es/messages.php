@@ -225,4 +225,19 @@ return [
     'demo' => 'Demostración',
     'current_language' => 'Idioma Actual',
     'navigation' => 'Navegación',
+    
+    // Admin sections
+    'administration' => 'Administración',
+    'users' => 'Usuarios',
+    'insurance_companies' => 'Compañías de Seguros',
+    'company_data_title' => 'Datos de la Empresa',
+    'emails' => 'Datos de Email',
+    'service_categories' => 'Categorías de Servicios',
+    'appointments' => 'Citas',
+    'manage_appointments' => 'Gestionar Citas',
+    'calendar_view' => 'Vista de Calendario',
+    'blog_management' => 'Gestión del Blog',
+    'posts' => 'Publicaciones',
+    'blog_categories' => 'Categorías del Blog',
+    'model_ai_title' => 'Modelos de IA',
 ]; 

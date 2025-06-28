@@ -13,6 +13,8 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CompanyDataController;
+use App\Repositories\Interfaces\InsuranceCompanyRepositoryInterface;
+use App\Repositories\InsuranceCompanyRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(FacebookConversionApi::class, function ($app) {
             return new FacebookConversionApi();
         });
+
+        // Repository bindings
+        $this->app->bind(InsuranceCompanyRepositoryInterface::class, InsuranceCompanyRepository::class);
     }
 
     /**

@@ -216,6 +216,20 @@ Route::middleware([
         Route::get('/test-crud-cache', [App\Http\Controllers\EmailDataController::class, 'testCrudCache'])->name('test-crud-cache');
     });
 
+    // Insurance Companies Resource Routes (CRUD) - NEW
+    Route::prefix('insurance-companies')->name('insurance-companies.')->group(function () {
+        Route::get('/', [App\Http\Controllers\InsuranceCompanyController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\InsuranceCompanyController::class, 'store'])->name('store');
+        Route::get('/{uuid}/edit', [App\Http\Controllers\InsuranceCompanyController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\InsuranceCompanyController::class, 'restore'])->name('restore');
+        Route::post('/check-name', [App\Http\Controllers\InsuranceCompanyController::class, 'checkNameExists'])->name('check-name');
+        Route::post('/check-email', [App\Http\Controllers\InsuranceCompanyController::class, 'checkEmailExists'])->name('check-email');
+        Route::post('/check-phone', [App\Http\Controllers\InsuranceCompanyController::class, 'checkPhoneExists'])->name('check-phone');
+        Route::get('/form-data', [App\Http\Controllers\InsuranceCompanyController::class, 'getFormData'])->name('form-data');
+    });
+
     // Model AI Resource Routes (CRUD) - NEW
     Route::prefix('model-ais')->name('model-ais.')->group(function () {
         Route::get('/', [App\Http\Controllers\ModelAIController::class, 'index'])->name('index');

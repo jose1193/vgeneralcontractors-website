@@ -319,11 +319,14 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </div>
 
             <!-- Administration Group -->
-            @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
+            @if (auth()->check() &&
+                    (auth()->user()->can('READ_COMPANY_DATA') ||
+                        auth()->user()->can('READ_USER') ||
+                        auth()->user()->can('READ_INSURANCE_COMPANY')))
                 <div class="relative group">
-                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data.*') || request()->routeIs('users') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -348,6 +351,12 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 <a href="{{ route('users.index') }}"
                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                     {{ __('users') }}
+                                </a>
+                            @endcan
+                            @can('READ_INSURANCE_COMPANY')
+                                <a href="{{ route('insurance-companies.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('insurance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('insurance_companies') }}
                                 </a>
                             @endcan
                         </div>
@@ -616,7 +625,10 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </a>
 
             <!-- Administration Group -->
-            @if (auth()->check() && (auth()->user()->can('READ_COMPANY_DATA') || auth()->user()->can('READ_USER')))
+            @if (auth()->check() &&
+                    (auth()->user()->can('READ_COMPANY_DATA') ||
+                        auth()->user()->can('READ_USER') ||
+                        auth()->user()->can('READ_INSURANCE_COMPANY')))
                 <div x-data="{ adminOpen: false }">
                     <button @click="adminOpen = !adminOpen"
                         class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
@@ -647,6 +659,12 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             <a href="{{ route('users.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('users') }}
+                            </a>
+                        @endcan
+                        @can('READ_INSURANCE_COMPANY')
+                            <a href="{{ route('insurance-companies.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('insurance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('insurance_companies') }}
                             </a>
                         @endcan
                     </div>
