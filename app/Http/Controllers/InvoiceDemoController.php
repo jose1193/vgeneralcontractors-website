@@ -11,6 +11,8 @@ use App\Services\TransactionService;
 use App\Traits\CacheTraitCrud;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
@@ -41,7 +43,7 @@ class InvoiceDemoController extends BaseController
     /**
      * Override index method to use service and resource
      */
-    public function index(Request $request)
+    public function index(Request $request): View|JsonResponse|RedirectResponse
     {
         try {
             // Check permissions using the correct method from BaseController
