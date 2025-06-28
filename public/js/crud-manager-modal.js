@@ -652,6 +652,18 @@ class CrudManagerModal {
                 }, 500); // Debounce de 500ms
             });
         }
+
+        // Validación de insurance_company_name (para duplicados)
+        const insuranceCompanyNameField = document.getElementById("insurance_company_name");
+        if (insuranceCompanyNameField) {
+            let insuranceNameTimeout;
+            insuranceCompanyNameField.addEventListener("input", (e) => {
+                clearTimeout(insuranceNameTimeout);
+                insuranceNameTimeout = setTimeout(() => {
+                    this.validateInsuranceCompanyNameField(e.target.value);
+                }, 500); // Debounce de 500ms
+            });
+        }
     }
 
     /**
@@ -923,6 +935,66 @@ class CrudManagerModal {
             console.error("Error validating name:", error);
             // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
             this.clearFieldError("name");
+            this.updateSubmitButtonState();
+        }
+    }
+
+    /**
+     * Validar campo de insurance_company_name en tiempo real (para duplicados)
+     */
+    async validateInsuranceCompanyNameField(companyName) {
+        if (!companyName) {
+            this.clearFieldError("insurance_company_name");
+            this.updateSubmitButtonState();
+            return;
+        }
+
+        // Verificar si hay endpoint de checkName configurado
+        if (!this.routes.checkName) {
+            // Si no hay endpoint, solo limpiar errores
+            this.clearFieldError("insurance_company_name");
+            this.updateSubmitButtonState();
+            return;
+        }
+
+        try {
+            const response = await $.ajax({
+                url: this.routes.checkName,
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                data: {
+                    insurance_company_name: companyName,
+                    exclude_uuid:
+                        this.isEditing && this.currentEntity
+                            ? this.currentEntity.uuid
+                            : null,
+                },
+            });
+
+            if (response.exists) {
+                this.showFieldError(
+                    "insurance_company_name",
+                    this.translations.nameAlreadyInUse ||
+                        "This company name is already in use"
+                );
+                this.updateSubmitButtonState();
+            } else {
+                this.clearFieldError("insurance_company_name");
+                this.showFieldSuccess(
+                    "insurance_company_name",
+                    this.translations.nameAvailable || "Company name available"
+                );
+                this.updateSubmitButtonState();
+            }
+        } catch (error) {
+            console.error("Error validating insurance company name:", error);
+            // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
+            this.clearFieldError("insurance_company_name");
             this.updateSubmitButtonState();
         }
     }
