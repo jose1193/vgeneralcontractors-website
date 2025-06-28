@@ -192,12 +192,23 @@
                             <!-- Insurance Company -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Insurance Company</label>
-                                <input type="text" x-model="form.insurance_company" list="insurance_companies"
-                                    :class="errors.insurance_company ?
-                                        'border-red-300 focus:ring-red-500 focus:border-red-500' :
-                                        'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
-                                    class="w-full rounded-xl shadow-sm transition-all duration-200"
-                                    placeholder="State Farm, Allstate, etc.">
+                                <div class="flex space-x-2">
+                                    <input type="text" x-model="form.insurance_company" list="insurance_companies"
+                                        :class="errors.insurance_company ?
+                                            'border-red-300 focus:ring-red-500 focus:border-red-500' :
+                                            'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
+                                        class="flex-1 rounded-xl shadow-sm transition-all duration-200"
+                                        placeholder="State Farm, Allstate, etc.">
+                                    <button type="button" @click="showAddInsuranceModal = true"
+                                        class="px-3 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors duration-200 flex items-center justify-center"
+                                        title="Add new insurance company">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <datalist id="insurance_companies">
                                     <template x-for="company in formData.common_insurance_companies"
                                         :key="company">
@@ -211,11 +222,22 @@
                             <!-- Type of Loss -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Type of Loss</label>
-                                <input type="text" x-model="form.type_of_loss" list="type_of_loss_options"
-                                    :class="errors.type_of_loss ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
-                                        'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
-                                    class="w-full rounded-xl shadow-sm transition-all duration-200"
-                                    placeholder="Wind, Hail, Fire, etc.">
+                                <div class="flex space-x-2">
+                                    <input type="text" x-model="form.type_of_loss" list="type_of_loss_options"
+                                        :class="errors.type_of_loss ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
+                                            'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
+                                        class="flex-1 rounded-xl shadow-sm transition-all duration-200"
+                                        placeholder="Wind, Hail, Fire, etc.">
+                                    <button type="button" @click="showAddTypeOfLossModal = true"
+                                        class="px-3 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors duration-200 flex items-center justify-center"
+                                        title="Add new type of loss">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <datalist id="type_of_loss_options">
                                     <template x-for="loss_type in formData.type_of_loss_options"
                                         :key="loss_type">
@@ -476,6 +498,104 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Insurance Company Modal -->
+<div x-show="showAddInsuranceModal" x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <div
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <form @submit.prevent="addNewInsuranceCompany()">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div
+                            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                                Add New Insurance Company
+                            </h3>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                                <input type="text" x-model="newInsuranceCompany.name" required
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                    placeholder="Enter insurance company name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="submit"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Add Company
+                    </button>
+                    <button type="button" @click="showAddInsuranceModal = false; newInsuranceCompany.name = ''"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Type of Loss Modal -->
+<div x-show="showAddTypeOfLossModal" x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <div
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <form @submit.prevent="addNewTypeOfLoss()">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div
+                            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                                Add New Type of Loss
+                            </h3>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Loss</label>
+                                <input type="text" x-model="newTypeOfLoss.name" required
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                    placeholder="Enter type of loss (e.g., Wind, Hail, Fire)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="submit"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Add Type
+                    </button>
+                    <button type="button" @click="showAddTypeOfLossModal = false; newTypeOfLoss.name = ''"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

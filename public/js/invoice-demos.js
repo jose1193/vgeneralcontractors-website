@@ -306,6 +306,12 @@ function invoiceDemoData() {
         errors: {},
         invoiceNumberExists: false,
 
+        // Mini-modals for adding new options
+        showAddInsuranceModal: false,
+        showAddTypeOfLossModal: false,
+        newInsuranceCompany: { name: "" },
+        newTypeOfLoss: { name: "" },
+
         // Form data (dropdowns) - removed duplicate
 
         // Initialize component
@@ -651,6 +657,72 @@ function invoiceDemoData() {
         },
 
         // Helper methods moved to avoid duplication - see methods above
+
+        // ==================== MINI-MODAL METHODS ====================
+
+        // Add new insurance company
+        async addNewInsuranceCompany() {
+            if (!this.newInsuranceCompany.name.trim()) return;
+
+            try {
+                // Add to local list immediately for better UX
+                const newCompany = this.newInsuranceCompany.name.trim();
+                if (
+                    !this.formData.common_insurance_companies.includes(
+                        newCompany
+                    )
+                ) {
+                    this.formData.common_insurance_companies.push(newCompany);
+                    this.formData.common_insurance_companies.sort();
+                }
+
+                // Set the new company as selected
+                this.form.insurance_company = newCompany;
+
+                // Close modal and reset
+                this.showAddInsuranceModal = false;
+                this.newInsuranceCompany.name = "";
+
+                window.invoiceDemoManager.showSuccess(
+                    `Insurance company "${newCompany}" added successfully`
+                );
+            } catch (error) {
+                console.error("Failed to add insurance company:", error);
+                window.invoiceDemoManager.showError(
+                    "Failed to add insurance company"
+                );
+            }
+        },
+
+        // Add new type of loss
+        async addNewTypeOfLoss() {
+            if (!this.newTypeOfLoss.name.trim()) return;
+
+            try {
+                // Add to local list immediately for better UX
+                const newType = this.newTypeOfLoss.name.trim();
+                if (!this.formData.type_of_loss_options.includes(newType)) {
+                    this.formData.type_of_loss_options.push(newType);
+                    this.formData.type_of_loss_options.sort();
+                }
+
+                // Set the new type as selected
+                this.form.type_of_loss = newType;
+
+                // Close modal and reset
+                this.showAddTypeOfLossModal = false;
+                this.newTypeOfLoss.name = "";
+
+                window.invoiceDemoManager.showSuccess(
+                    `Type of loss "${newType}" added successfully`
+                );
+            } catch (error) {
+                console.error("Failed to add type of loss:", error);
+                window.invoiceDemoManager.showError(
+                    "Failed to add type of loss"
+                );
+            }
+        },
 
         // ==================== FORMATTING METHODS ====================
 
