@@ -117,7 +117,7 @@
                             <!-- Bill To Name -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Bill To Name *</label>
-                                <input type="text" x-model="form.bill_to_name"
+                                <input type="text" x-model="form.bill_to_name" @input="formatNameInput($event)"
                                     :class="errors.bill_to_name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                     class="w-full rounded-xl shadow-sm transition-all duration-200"
@@ -129,7 +129,7 @@
                             <!-- Bill To Phone -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Bill To Phone</label>
-                                <input type="tel" x-model="form.bill_to_phone"
+                                <input type="tel" x-model="form.bill_to_phone" @input="formatPhoneInput($event)"
                                     :class="errors.bill_to_phone ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                     class="w-full rounded-xl shadow-sm transition-all duration-200"
@@ -142,7 +142,7 @@
                         <!-- Bill To Address -->
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Bill To Address *</label>
-                            <textarea x-model="form.bill_to_address" rows="3"
+                            <textarea x-model="form.bill_to_address" rows="3" @input="formatAddressInput($event)"
                                 :class="errors.bill_to_address ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                     'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                 class="w-full rounded-xl shadow-sm transition-all duration-200" placeholder="123 Main St, City, State 12345"></textarea>
@@ -167,6 +167,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Claim Number</label>
                                 <input type="text" x-model="form.claim_number"
+                                    @input="formatUppercaseInput($event, 'claim_number')"
                                     :class="errors.claim_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                     class="w-full rounded-xl shadow-sm transition-all duration-200"
@@ -179,6 +180,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Policy Number</label>
                                 <input type="text" x-model="form.policy_number"
+                                    @input="formatUppercaseInput($event, 'policy_number')"
                                     :class="errors.policy_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                     class="w-full rounded-xl shadow-sm transition-all duration-200"
@@ -319,6 +321,7 @@
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-1">Service/Item</label>
                                             <input type="text" x-model="item.service_name"
+                                                @input="formatServiceDescriptionInput($event, index)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="Service name">
                                         </div>
@@ -327,8 +330,8 @@
                                         <div>
                                             <label
                                                 class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                            <textarea x-model="item.description" rows="2" class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
-                                                placeholder="Description"></textarea>
+                                            <textarea x-model="item.description" rows="2" @input="formatItemDescriptionInput($event, index)"
+                                                class="w-full rounded-lg border-gray-300 shadow-sm text-sm" placeholder="Description"></textarea>
                                         </div>
 
                                         <!-- Quantity -->
@@ -443,7 +446,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-                            <textarea x-model="form.notes" rows="4"
+                            <textarea x-model="form.notes" rows="4" @input="formatNotesInput($event)"
                                 :class="errors.notes ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                     'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                 class="w-full rounded-xl shadow-sm transition-all duration-200" placeholder="Any additional notes or comments..."></textarea>

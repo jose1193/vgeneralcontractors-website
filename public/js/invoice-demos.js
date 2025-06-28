@@ -651,6 +651,156 @@ function invoiceDemoData() {
         },
 
         // Helper methods moved to avoid duplication - see methods above
+
+        // ==================== FORMATTING METHODS ====================
+
+        // Format phone input in real-time
+        formatPhoneInput(event) {
+            const input = event.target;
+            const isBackspace = event.inputType === "deleteContentBackward";
+            let value = input.value.replace(/\D/g, "");
+
+            if (isBackspace) {
+                // Para backspace, mantener el valor actual sin agregar más caracteres
+            } else {
+                // Limitar a 10 dígitos
+                value = value.substring(0, 10);
+            }
+
+            let formattedValue = "";
+            if (value.length === 0) {
+                formattedValue = "";
+            } else if (value.length <= 3) {
+                formattedValue = `(${value}`;
+            } else if (value.length <= 6) {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3
+                )}`;
+            } else {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3,
+                    6
+                )}-${value.substring(6)}`;
+            }
+
+            input.value = formattedValue;
+            this.form.bill_to_phone = formattedValue;
+        },
+
+        // Format name input (capitalize with spaces)
+        formatNameInput(event) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Capitalizar la primera letra de cada palabra
+            const capitalizedValue = value.replace(/\b\w/g, (match) =>
+                match.toUpperCase()
+            );
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (capitalizedValue !== value) {
+                input.value = capitalizedValue;
+                this.form.bill_to_name = capitalizedValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // Format uppercase input (for claim/policy numbers)
+        formatUppercaseInput(event, fieldName) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Convertir letras a mayúsculas, mantener números y guiones
+            const uppercaseValue = value.toUpperCase();
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (uppercaseValue !== value) {
+                input.value = uppercaseValue;
+                this.form[fieldName] = uppercaseValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // Format service description (all uppercase)
+        formatServiceDescriptionInput(event, itemIndex) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Convertir todo a mayúsculas
+            const uppercaseValue = value.toUpperCase();
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (uppercaseValue !== value) {
+                input.value = uppercaseValue;
+                this.form.items[itemIndex].service_name = uppercaseValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // Format notes input (capitalize only first letter)
+        formatNotesInput(event) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Capitalizar solo la primera letra del texto completo
+            const capitalizedValue =
+                value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (capitalizedValue !== value && value.length > 0) {
+                input.value = capitalizedValue;
+                this.form.notes = capitalizedValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // Format address input (capitalize each word)
+        formatAddressInput(event) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Capitalizar la primera letra de cada palabra
+            const capitalizedValue = value.replace(/\b\w/g, (match) =>
+                match.toUpperCase()
+            );
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (capitalizedValue !== value) {
+                input.value = capitalizedValue;
+                this.form.bill_to_address = capitalizedValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // Format item description input (capitalize each word)
+        formatItemDescriptionInput(event, itemIndex) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Capitalizar la primera letra de cada palabra
+            const capitalizedValue = value.replace(/\b\w/g, (match) =>
+                match.toUpperCase()
+            );
+
+            // Solo actualizar si hay cambios para evitar loops
+            if (capitalizedValue !== value) {
+                input.value = capitalizedValue;
+                this.form.items[itemIndex].description = capitalizedValue;
+                // Restaurar la posición del cursor
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
     };
 }
 
