@@ -62,10 +62,10 @@ class InvoiceDemoController extends BaseController
                 $invoices = $this->invoiceService->getPaginatedInvoices(
                     page: (int) $request->get('page', 1),
                     perPage: (int) $request->get('per_page', 10),
-                    search: $request->get('search', ''),
-                    status: $request->get('status', ''),
-                    sortBy: $request->get('sort_by', 'created_at'),
-                    sortOrder: $request->get('sort_order', 'desc'),
+                    search: (string) $request->get('search', ''),
+                    status: (string) $request->get('status', ''),
+                    sortBy: (string) $request->get('sort_by', 'created_at'),
+                    sortOrder: (string) $request->get('sort_order', 'desc'),
                     includeDeleted: $request->boolean('include_deleted')
                 );
 
@@ -170,7 +170,7 @@ class InvoiceDemoController extends BaseController
                     'errors' => $e->errors()
                 ], 422);
             }
-
+            
             $updatedInvoice = $this->invoiceService->updateInvoice(
                 $invoice,
                 $request->all(),
@@ -369,7 +369,7 @@ class InvoiceDemoController extends BaseController
     {
         return 'invoice_number';
     }
-    
+
     protected function getEntityDisplayName($entity): string
     {
         return $entity->invoice_number;
