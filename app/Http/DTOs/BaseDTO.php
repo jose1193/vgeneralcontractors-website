@@ -8,6 +8,18 @@ use Illuminate\Contracts\Support\Arrayable;
 abstract class BaseDTO implements JsonSerializable, Arrayable
 {
     /**
+     * Constructor to initialize DTO properties from array data
+     */
+    public function __construct(array $data = [])
+    {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
      * Create a new DTO instance from array data
      */
     public static function fromArray(array $data): static
@@ -88,4 +100,4 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
         $mergeData = $data instanceof self ? $data->toArray() : $data;
         return array_merge($this->toArray(), $mergeData);
     }
-} 
+}
