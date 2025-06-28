@@ -360,7 +360,7 @@ class InsuranceCompanyController extends BaseCrudController
 
     public function destroy($uuid)
     {
-        $deleted = $this->insuranceCompanyService->delete($uuid);
+        $deleted = $this->insuranceCompanyService->deleteByUuid($uuid);
         if (!$deleted) {
             return response()->json(['success' => false, 'message' => 'Unable to delete insurance company'], 404);
         }
@@ -369,7 +369,7 @@ class InsuranceCompanyController extends BaseCrudController
 
     public function restore($uuid)
     {
-        $restored = $this->insuranceCompanyService->restore($uuid);
+        $restored = $this->insuranceCompanyService->restoreByUuid($uuid);
         if (!$restored) {
             return response()->json(['success' => false, 'message' => 'Unable to restore insurance company'], 404);
         }

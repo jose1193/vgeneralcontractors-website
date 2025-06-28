@@ -228,21 +228,27 @@ class InsuranceCompanyService extends BaseService
         return $this->insuranceCompanyRepository->findByUuid($uuid);
     }
 
-    public function delete(string $uuid): bool
+    public function delete(Model $entity): bool
+    {
+        return parent::delete($entity);
+    }
+
+    public function deleteByUuid(string $uuid): bool
     {
         $entity = $this->insuranceCompanyRepository->findByUuid($uuid);
         if (!$entity) return false;
-        $entity->delete();
-        $this->afterDelete($entity);
-        return true;
+        return $this->delete($entity);
     }
 
-    public function restore(string $uuid): bool
+    public function restore(Model $entity): bool
+    {
+        return parent::restore($entity);
+    }
+
+    public function restoreByUuid(string $uuid): bool
     {
         $entity = $this->insuranceCompanyRepository->findByUuidWithTrashed($uuid);
         if (!$entity) return false;
-        $entity->restore();
-        $this->afterRestore($entity);
-        return true;
+        return $this->restore($entity);
     }
 }
