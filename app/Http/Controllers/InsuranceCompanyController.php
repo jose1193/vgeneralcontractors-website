@@ -77,6 +77,12 @@ class InsuranceCompanyController extends BaseCrudController
             $perPage = (int) $request->input('per_page', 10);
             $entities = $query->paginate($perPage);
             
+            // Transform the collection to include user_name
+            $entities->getCollection()->transform(function ($entity) {
+                $entity->user_name = $entity->user ? $entity->user->name . ' ' . $entity->user->last_name : null;
+                return $entity;
+            });
+            
             return response()->json($entities);
         }
         
