@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 use App\Traits\CacheTraitCrud;
 use Throwable;
 use App\Http\DTOs\InsuranceCompanyDTO;
@@ -29,10 +30,13 @@ class InsuranceCompanyController extends BaseCrudController
     
     // Cache time for insurance companies - 5 minutes (default is good for this data)
     protected $cacheTime = 300;
+    
+    protected InsuranceCompanyService $insuranceCompanyService;
 
-    public function __construct(TransactionService $transactionService)
+    public function __construct(TransactionService $transactionService, InsuranceCompanyService $insuranceCompanyService)
     {
         parent::__construct($transactionService);
+        $this->insuranceCompanyService = $insuranceCompanyService;
         
         // Initialize cache properties with defaults
         $this->initializeCacheProperties();
@@ -337,6 +341,15 @@ class InsuranceCompanyController extends BaseCrudController
     }
 
     public function show($uuid)
+    {
+        $insuranceCompany = $this->insuranceCompanyService->findByUuid($uuid);
+        if (!$insuranceCompany) {
+            return response()->json(['success' => false, 'message' => 'Insurance company not found'], 404);
+        }
+        return response()->json(['success' => true, 'data' => $insuranceCompany]);
+    }
+
+    public function edit($uuid)
     {
         $insuranceCompany = $this->insuranceCompanyService->findByUuid($uuid);
         if (!$insuranceCompany) {

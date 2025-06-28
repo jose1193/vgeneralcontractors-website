@@ -134,6 +134,13 @@ class InsuranceCompanySeeder extends Seeder
                 'website' => '',
             ],
             [
+                'insurance_company_name' => 'American Automobile Association',
+                'address' => '',
+                'phone' => '(800) 222-4357',
+                'email' => '',
+                'website' => 'https://www.aaa.com/',
+            ],
+            [
                 'insurance_company_name' => 'American Commerce Insurance Company',
                 'address' => '',
                 'phone' => '(877) 627-3731',
@@ -448,4 +455,4 @@ class InsuranceCompanySeeder extends Seeder
             ]);
         }
     }
-} 
+}
