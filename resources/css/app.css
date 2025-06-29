@@ -116,7 +116,7 @@ input:checked ~ .block {
     top: 1rem !important;
     background: #ef4444 !important;
     color: white !important;
-    border-radius: 9999px !important;
+    border-radius: 50% !important;
     width: 2.5rem !important;
     height: 2.5rem !important;
     display: flex !important;
@@ -124,12 +124,15 @@ input:checked ~ .block {
     justify-content: center !important;
     border: none !important;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    line-height: 1 !important;
 }
 
 .swal2-close:hover {
     background: #dc2626 !important;
     color: white !important;
-    border-radius: 9999px !important;
+    border-radius: 50% !important;
     transform: scale(1.05) !important;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
 }
