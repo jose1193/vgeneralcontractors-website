@@ -671,8 +671,97 @@ class CrudManagerModal {
             });
         }
 
+        // Configurar validación básica para todos los campos
+        this.setupBasicFieldValidation();
+        
         // Configurar limpieza general de errores para todos los campos
         this.setupGeneralErrorClearance();
+    }
+
+    /**
+     * Configurar validación básica para todos los campos del formulario
+     */
+    setupBasicFieldValidation() {
+        this.formFields.forEach((field) => {
+            const fieldElement = document.getElementById(field.name);
+            if (fieldElement) {
+                // Skip fields that already have specific validation
+                const fieldsWithSpecificValidation = ['email', 'phone', 'username', 'name', 'insurance_company_name'];
+                if (fieldsWithSpecificValidation.includes(field.name)) {
+                    return;
+                }
+                
+                let validationTimeout;
+                fieldElement.addEventListener("input", (e) => {
+                    clearTimeout(validationTimeout);
+                    validationTimeout = setTimeout(() => {
+                        this.validateBasicField(field, e.target.value);
+                    }, 300); // Debounce más corto para validación básica
+                });
+                
+                // También validar en blur para campos requeridos
+                fieldElement.addEventListener("blur", (e) => {
+                    this.validateBasicField(field, e.target.value);
+                });
+            }
+        });
+    }
+
+    /**
+     * Validación básica para campos sin validación específica
+     */
+    validateBasicField(field, value) {
+        // Limpiar error previo
+        this.clearFieldError(field.name);
+        
+        // Obtener configuración de validación (puede estar en field.validation o directamente en field)
+        const validation = field.validation || field;
+        const isRequired = validation.required || field.required;
+        const minLength = validation.minLength || field.minLength;
+        const maxLength = validation.maxLength || field.maxLength;
+        const pattern = validation.pattern || field.pattern;
+        
+        // Validar campo requerido
+        if (isRequired && (!value || value.trim() === "")) {
+            this.showFieldError(
+                field.name,
+                this.translations.fieldRequired || `${field.label || field.name} is required`
+            );
+            return;
+        }
+        
+        // Solo validar longitud y patrón si hay valor
+        if (value && value.trim() !== "") {
+            // Validar longitud mínima si está definida
+            if (minLength && value.length < minLength) {
+                this.showFieldError(
+                    field.name,
+                    this.translations.minLength || `Minimum ${minLength} characters required`
+                );
+                return;
+            }
+            
+            // Validar longitud máxima si está definida
+            if (maxLength && value.length > maxLength) {
+                this.showFieldError(
+                    field.name,
+                    this.translations.maxLength || `Maximum ${maxLength} characters allowed`
+                );
+                return;
+            }
+            
+            // Validar patrón si está definido
+            if (pattern && !new RegExp(pattern).test(value)) {
+                this.showFieldError(
+                    field.name,
+                    this.translations.invalidFormat || "Invalid format"
+                );
+                return;
+            }
+        }
+        
+        // Si llegamos aquí, el campo es válido
+        this.updateSubmitButtonState();
     }
 
     /**
