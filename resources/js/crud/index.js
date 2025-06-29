@@ -69,7 +69,7 @@ class CrudManagerModal extends CrudCore {
     // Métodos de compatibilidad con la API existente
     async loadEntities() {
         try {
-            const response = await this.api.getEntities({
+            const response = await this.apiManager.getEntities({
                 search: this.getSearchValue(),
                 page: this.currentPage,
                 per_page: this.getPerPageValue(),
@@ -89,7 +89,7 @@ class CrudManagerModal extends CrudCore {
     
     async createEntity(data) {
         try {
-            const response = await this.api.createEntity(data);
+            const response = await this.apiManager.createEntity(data);
             this.modalManager.close();
             this.showAlert(`${this.entityName} created successfully`, 'success');
             this.loadEntities();
@@ -103,7 +103,7 @@ class CrudManagerModal extends CrudCore {
     
     async updateEntity(id, data) {
         try {
-            const response = await this.api.updateEntity(id, data);
+            const response = await this.apiManager.updateEntity(id, data);
             this.modalManager.close();
             this.showAlert(`${this.entityName} updated successfully`, 'success');
             this.loadEntities();
@@ -117,13 +117,18 @@ class CrudManagerModal extends CrudCore {
     
     async deleteEntity(id) {
         try {
-            const confirmed = await this.modalManager.showConfirmation(
+            const result = await this.modalManager.showConfirmModal(
                 this.translations.confirmDelete || 'Are you sure?',
-                this.translations.deleteMessage || 'This action cannot be undone.'
+                this.translations.deleteMessage || 'This action cannot be undone.',
+                {
+                    confirmButtonText: this.translations.yesDelete || 'Yes, delete',
+                    cancelButtonText: this.translations.cancel || 'Cancel'
+                }
             );
+            const confirmed = result.isConfirmed;
             
             if (confirmed) {
-                await this.api.deleteEntity(id);
+                await this.apiManager.deleteEntity(id);
                 this.showAlert(`${this.entityName} deleted successfully`, 'success');
                 this.loadEntities();
             }
@@ -135,13 +140,19 @@ class CrudManagerModal extends CrudCore {
     
     async restoreEntity(id) {
         try {
-            const confirmed = await this.modalManager.showConfirmation(
+            const result = await this.modalManager.showConfirmModal(
                 this.translations.confirmRestore || 'Restore record?',
-                this.translations.restoreMessage || 'Do you want to restore this record?'
+                this.translations.restoreMessage || 'Do you want to restore this record?',
+                {
+                    confirmButtonText: this.translations.yesRestore || 'Yes, restore',
+                    cancelButtonText: this.translations.cancel || 'Cancel',
+                    confirmButtonColor: '#28a745'
+                }
             );
+             const confirmed = result.isConfirmed;
             
             if (confirmed) {
-                await this.api.restoreEntity(id);
+                await this.apiManager.restoreEntity(id);
                 this.showAlert(`${this.entityName} restored successfully`, 'success');
                 this.loadEntities();
             }
@@ -153,25 +164,33 @@ class CrudManagerModal extends CrudCore {
     
     showCreateModal() {
         const formHtml = this.formManager.generateFormHtml(this.formFields);
-        this.modalManager.showForm(
+        this.modalManager.showFormModal(
             `Create ${this.entityName}`,
             formHtml,
-            async (formData) => {
-                await this.createEntity(formData);
+            {
+                preConfirm: async () => {
+                    const formData = this.formManager.getFormData();
+                    await this.createEntity(formData);
+                    return true;
+                }
             }
         );
     }
     
     async showEditModal(id) {
         try {
-            const entity = await this.api.getEntity(id);
+            const entity = await this.apiManager.getEntity(id);
             const formHtml = this.formManager.generateFormHtml(this.formFields, entity);
             
-            this.modalManager.showForm(
+            this.modalManager.showFormModal(
                 `Edit ${this.entityName}`,
                 formHtml,
-                async (formData) => {
-                    await this.updateEntity(id, formData);
+                {
+                    preConfirm: async () => {
+                        const formData = this.formManager.getFormData();
+                        await this.updateEntity(id, formData);
+                        return true;
+                    }
                 }
             );
         } catch (error) {

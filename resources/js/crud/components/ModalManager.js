@@ -240,4 +240,13 @@ export class ModalManager {
 
         return data;
     }
+
+    /**
+     * Cerrar modal actual
+     */
+    close() {
+        if (Swal.isVisible()) {
+            Swal.close();
+        }
+    }
 }

@@ -274,24 +274,11 @@
                     }
                 };
 
-                try {
-                    // Inicializar el nuevo sistema CRUD modular
-                    window.insuranceCompanyManager = new window.CrudSystem.CrudManager(insuranceCompanyConfig);
-                    console.log('Insurance Company Manager initialized:', window.insuranceCompanyManager);
-                    
-                    // Cargar datos iniciales con delay para asegurar que todo esté listo
-                    setTimeout(() => {
-                        if (window.insuranceCompanyManager && typeof window.insuranceCompanyManager.loadEntities === 'function') {
-                            window.insuranceCompanyManager.loadEntities();
-                        } else {
-                            console.error('loadEntities method not available');
-                        }
-                    }, 100);
-                    
-                } catch (error) {
-                    console.error('Error initializing CRUD system:', error);
-                    console.error('Error stack:', error.stack);
-                }
+                // Inicializar con CrudManagerModal (sistema original que funciona)
+                window.insuranceCompanyManager = new CrudManagerModal(insuranceCompanyConfig);
+                
+                // Cargar datos iniciales
+                window.insuranceCompanyManager.loadEntities();
             });
         </script>
     @endpush
