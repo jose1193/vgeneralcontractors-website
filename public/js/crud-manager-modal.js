@@ -611,9 +611,6 @@ class CrudManagerModal {
      * Configurar validación en tiempo real
      */
     setupRealTimeValidation() {
-        // Configurar limpieza automática de errores para todos los campos
-        this.setupGeneralErrorClearance();
-
         // Validación de email
         const emailField = document.getElementById("email");
         if (emailField) {
@@ -673,49 +670,58 @@ class CrudManagerModal {
                 }, 500); // Debounce de 500ms
             });
         }
+
+        // Configurar limpieza general de errores para todos los campos
+        this.setupGeneralErrorClearance();
     }
 
     /**
-     * Configurar limpieza automática de errores para todos los campos
+     * Configurar limpieza general de errores para todos los campos del formulario
      */
     setupGeneralErrorClearance() {
-        // Agregar event listeners a todos los campos del formulario para limpiar errores
         this.formFields.forEach((field) => {
             const fieldElement = document.getElementById(field.name);
             if (fieldElement) {
-                // Limpiar errores cuando el usuario empiece a escribir/cambiar el campo
+                // Agregar listener para input
                 fieldElement.addEventListener("input", (e) => {
-                    this.clearFieldErrorOnInput(field.name, e.target.value);
+                    this.clearFieldErrorOnInput(field.name);
                 });
                 
-                // También para campos select y checkbox
-                if (field.type === "select" || field.type === "checkbox") {
-                    fieldElement.addEventListener("change", (e) => {
-                        this.clearFieldErrorOnInput(field.name, e.target.value);
-                    });
-                }
+                // Agregar listener para change (útil para selects)
+                fieldElement.addEventListener("change", (e) => {
+                    this.clearFieldErrorOnInput(field.name);
+                });
             }
         });
     }
 
     /**
-     * Limpiar error de campo cuando el usuario empiece a corregir
+     * Limpiar error de campo cuando el usuario empieza a escribir
      */
-    clearFieldErrorOnInput(fieldName, value) {
+    clearFieldErrorOnInput(fieldName) {
         const errorElement = $(`#error-${fieldName}`);
+        const inputElement = $(`#${fieldName}`);
         
         // Solo limpiar si hay un error visible
         if (errorElement.length && !errorElement.hasClass("hidden") && errorElement.hasClass("text-red-500")) {
-            // Para campos requeridos, solo limpiar si el usuario ha empezado a escribir algo
             const field = this.formFields.find(f => f.name === fieldName);
-            if (field && field.required) {
-                // Si el campo es requerido y tiene valor, limpiar el error
-                if (value && value.toString().trim() !== "") {
-                    this.clearFieldError(fieldName);
-                }
-            } else {
-                // Para campos no requeridos, limpiar inmediatamente
+            const currentValue = inputElement.val();
+            
+            // Para campos requeridos, solo limpiar si el usuario ha escrito algo
+            // Para campos no requeridos, limpiar inmediatamente
+            if (!field?.required || (currentValue && currentValue.trim() !== "")) {
                 this.clearFieldError(fieldName);
+                
+                // Limpiar mensaje de validación general de SweetAlert si no hay más errores
+                setTimeout(() => {
+                    if (!this.hasValidationErrors()) {
+                        // Limpiar el mensaje de validación de SweetAlert
+                        const validationMessage = $('.swal2-validation-message');
+                        if (validationMessage.length && validationMessage.is(':visible')) {
+                            validationMessage.hide();
+                        }
+                    }
+                }, 100);
             }
         }
     }
@@ -1161,28 +1167,6 @@ class CrudManagerModal {
     }
 
     /**
-     * Mostrar mensaje de éxito en campo
-     */
-    showFieldSuccess(fieldName, message) {
-        const errorElement = $(`#error-${fieldName}`);
-        const inputElement = $(`#${fieldName}`);
-
-        if (errorElement.length) {
-            errorElement
-                .removeClass("hidden text-red-500")
-                .addClass("text-green-500")
-                .text(message);
-        }
-
-        if (inputElement.length) {
-            inputElement.removeClass("error").addClass("valid");
-        }
-
-        // Actualizar estado del botón después de mostrar éxito
-        setTimeout(() => this.updateSubmitButtonState(), 100);
-    }
-
-    /**
      * Poblar formulario con datos
      */
     populateForm(entity) {
@@ -1296,20 +1280,18 @@ class CrudManagerModal {
      * Verificar si hay errores de validación visibles o campos requeridos vacíos
      */
     hasValidationErrors() {
-        // Verificar errores de validación visibles (buscar por ID que empiece con 'error-')
-        let hasVisibleErrors = false;
-        this.formFields.forEach((field) => {
-            const errorElement = $(`#error-${field.name}`);
-            if (errorElement.length && 
-                !errorElement.hasClass("hidden") && 
-                errorElement.hasClass("text-red-500") &&
-                errorElement.text().trim() !== "") {
-                hasVisibleErrors = true;
+        // Verificar errores de validación visibles
+        const visibleErrors = $(".error-message:not(.hidden)").filter(
+            function () {
+                return (
+                    $(this).hasClass("text-red-500") &&
+                    $(this).text().trim() !== ""
+                );
             }
-        });
+        );
         
         // Verificar si hay campos requeridos vacíos
-        const isEditMode = this.isEditing;
+        const isEditMode = $(".swal2-popup").hasClass("swal-edit");
         let hasEmptyRequiredFields = false;
         
         this.formFields.forEach((field) => {
@@ -1338,7 +1320,7 @@ class CrudManagerModal {
             }
         });
         
-        return hasVisibleErrors || hasEmptyRequiredFields;
+        return visibleErrors.length > 0 || hasEmptyRequiredFields;
     }
 
     /**
@@ -1358,6 +1340,12 @@ class CrudManagerModal {
                 submitButton.prop("disabled", false);
                 submitButton.removeClass("opacity-50 cursor-not-allowed");
                 submitButton.removeAttr("title");
+                
+                // Limpiar mensaje de validación de SweetAlert si no hay errores
+                const validationMessage = $('.swal2-validation-message');
+                if (validationMessage.length && validationMessage.is(':visible')) {
+                    validationMessage.hide();
+                }
             }
         }
     }
