@@ -217,7 +217,7 @@ export class CrudCore {
      * Obtener configuración de header de tabla
      */
     getHeaderConfig(fieldName) {
-        return this.tableHeaders.find(header => header.key === fieldName) || {};
+        return this.tableHeaders.find(header => (header.field || header.key) === fieldName) || {};
     }
 
     /**

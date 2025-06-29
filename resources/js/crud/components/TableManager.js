@@ -68,12 +68,14 @@ export class TableManager {
      */
     generateTableHeader() {
         const headerCells = this.headers.map(header => {
-            const sortIcon = this.getSortIcon(header.key);
+            const fieldKey = header.field || header.key;
+            const label = header.name || header.label || fieldKey;
+            const sortIcon = this.getSortIcon(fieldKey);
             const sortClass = this.sortable && header.sortable !== false ? 'sortable' : '';
             
             return `
-                <th class="${sortClass}" data-sort="${header.key}">
-                    ${header.label}
+                <th class="${sortClass}" data-sort="${fieldKey}">
+                    ${label}
                     ${sortIcon}
                 </th>
             `;
@@ -102,7 +104,20 @@ export class TableManager {
      * Obtener valor de celda
      */
     getCellValue(row, header) {
-        let value = this.getNestedValue(row, header.key);
+        // Usar field o key como identificador del campo
+        const fieldKey = header.field || header.key;
+        
+        if (!fieldKey) {
+            console.warn('Header missing field/key property:', header);
+            return '';
+        }
+        
+        let value = this.getNestedValue(row, fieldKey);
+        
+        // Aplicar getter personalizado si está definido
+        if (header.getter && typeof header.getter === 'function') {
+            value = header.getter(row);
+        }
         
         // Aplicar formato si está definido
         if (header.format) {
@@ -121,6 +136,11 @@ export class TableManager {
      * Obtener valor anidado de objeto
      */
     getNestedValue(obj, path) {
+        if (!path || typeof path !== 'string') {
+            console.warn('Invalid path provided to getNestedValue:', path);
+            return null;
+        }
+        
         return path.split('.').reduce((current, key) => {
             return current && current[key] !== undefined ? current[key] : null;
         }, obj);
