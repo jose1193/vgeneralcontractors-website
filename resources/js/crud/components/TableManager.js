@@ -23,9 +23,14 @@ export class TableManager {
      * Renderizar tabla con datos
      */
     renderTable(data) {
-        const tableBody = document.querySelector(`${this.tableSelector}-body`);
+        // Construir selector del tbody, evitando duplicar '-body'
+        const tbodySelector = this.tableSelector.endsWith('-body') 
+            ? this.tableSelector 
+            : `${this.tableSelector}-body`;
+            
+        const tableBody = document.querySelector(tbodySelector);
         if (!tableBody) {
-            console.error('Table body not found:', `${this.tableSelector}-body`);
+            console.error('Table body not found:', tbodySelector);
             return;
         }
 
@@ -351,7 +356,10 @@ export class TableManager {
         }
 
         // Eventos de acciones en el tbody
-        const tableBody = document.querySelector(`${this.tableSelector}-body`);
+        const tbodySelector = this.tableSelector.endsWith('-body') 
+            ? this.tableSelector 
+            : `${this.tableSelector}-body`;
+        const tableBody = document.querySelector(tbodySelector);
         if (tableBody) {
             tableBody.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
