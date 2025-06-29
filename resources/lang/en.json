@@ -71,8 +71,6 @@
 
     "view": "View",
     "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
 
     "filter": "Filter",
     "sort": "Sort",
@@ -180,6 +178,9 @@
     "error_updating_record": "Error updating record",
 
     "confirm_restoration": "Confirm Restoration",
+
+    "next": "Next",
+    "previous": "Previous",
 
     "_comment_dashboard_content": "=== DASHBOARD CONTENT ===",
     "dashboard_title": "Dashboard",

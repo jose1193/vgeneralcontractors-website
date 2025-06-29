@@ -71,8 +71,6 @@
 
     "view": "Ver",
     "back": "Volver",
-    "next": "Siguiente",
-    "previous": "Anterior",
 
     "filter": "Filtrar",
     "sort": "Ordenar",
@@ -130,7 +128,6 @@
     "edit_company_information": "Editar Información",
     "could_not_load_company_info": "No se pudo cargar la información de la empresa",
     "error_loading_company_info": "Error al cargar la información de la empresa",
-    "error_loading_data_for_edit": "Error al cargar los datos para editar",
 
     "actions": "Acciones",
     "no_companies_available": "No hay empresas disponibles",
@@ -138,7 +135,7 @@
     "add_company": "Agregar Empresa",
     "create_new_company": "Crear Nueva Empresa",
     "edit_company": "Editar Empresa",
-    "per_page": "por página",
+
     "users": "Usuarios",
     "emails": "Correos",
     "service_categories": "Categorías de Servicios",
@@ -1075,25 +1072,22 @@
 
     "refresh_list": "ACTUALIZAR LISTA",
     "from": "Desde",
-    "to": "Para",
+
     "duration": "Duración",
 
     "sentiment": "Sentimiento",
     "date_time": "Fecha/Hora",
     "call_details": "Detalles de Llamada",
 
-    "showing": "Mostrando",
     "to_lowercase": "a",
-    "of": "de",
-    "results": "resultados",
+
     "view_details": "Ver",
     "play_audio": "Reproducir",
     "unknown": "Desconocido",
 
     "_comment_modals": "=== MODALES ===",
     "save": "Guardar",
-    "cancel": "Cancelar",
-    "update": "Actualizar",
+
     "no_data": "Sin datos",
     "element": "elemento",
     "this_element": "este elemento",
@@ -1102,20 +1096,21 @@
     "delete": "Eliminar",
     "delete_element_question": "¿Deseas eliminar este elemento?",
     "restore_element_question": "¿Deseas restaurar este elemento?",
-    "deleted_successfully": "eliminado exitosamente",
-    "restored_successfully": "restaurado exitosamente",
-    "error_deleting": "Error al eliminar el registro",
-    "error_restoring": "Error al restaurar el registro",
+
     "error_loading_data_for_edit": "Error al cargar los datos para editar",
     "error_creating_record": "Error al crear el registro",
     "error_updating_record": "Error al actualizar el registro",
-    "are_you_sure": "¿Estás seguro?",
-    "yes_delete": "Sí, eliminar",
-    "yes_restore": "Sí, restaurar",
 
     "confirm_restoration": "Confirmar Restauración",
     "restore": "Restaurar",
     "restoring": "Restaurando...",
+    "per_page": "por página",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "showing": "Mostrando",
+    "to": "a",
+    "of": "de",
+    "results": "resultados",
 
     "this_action_cannot_be_undone": "? Esta acción no se puede deshacer.",
 

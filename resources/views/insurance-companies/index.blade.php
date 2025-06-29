@@ -1,6 +1,6 @@
 <x-crud.index-layout title="Insurance Companies Management" subtitle="Manage insurance companies and their information"
     entity-name="Insurance Company" entity-name-plural="Insurance Companies"
-    search-placeholder="Search insurance companies..." show-deleted-label="Show inactive records"
+    search-placeholder="Search insurance companies..." show-deleted-label="{{ __('show_inactive_records') }}"
     add-new-label="Add Insurance Company" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
     create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
     per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[

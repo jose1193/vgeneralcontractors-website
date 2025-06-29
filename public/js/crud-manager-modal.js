@@ -2073,14 +2073,19 @@ class CrudManagerModal {
 
         if (data.last_page > 1) {
             paginationHtml += '<div class="flex items-center justify-between">';
-            paginationHtml += `<div class="text-sm text-gray-700">Mostrando ${data.from} a ${data.to} de ${data.total} resultados</div>`;
+            paginationHtml += `<div class="text-sm text-gray-700">${__(
+                "showing",
+                "Showing"
+            )} ${data.from} ${__("to", "to")} ${data.to} ${__("of", "of")} ${
+                data.total
+            } ${__("results", "results")}</div>`;
             paginationHtml += '<div class="flex space-x-1">';
 
             // Botón anterior
             if (data.current_page > 1) {
                 paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
                     data.current_page - 1
-                }">Anterior</button>`;
+                }">${__("previous", "Previous")}</button>`;
             }
 
             // Números de página
@@ -2100,7 +2105,7 @@ class CrudManagerModal {
             if (data.current_page < data.last_page) {
                 paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
                     data.current_page + 1
-                }">Siguiente</button>`;
+                }">${__("next", "Next")}</button>`;
             }
 
             paginationHtml += "</div></div>";
@@ -2121,12 +2126,14 @@ class CrudManagerModal {
     showTableLoading() {
         const loadingHtml = `
             <tr id="loadingRow">
-                <td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center">
+                <td colspan="${
+                    this.tableHeaders.length
+                }" class="px-6 py-4 text-center">
                     <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Cargando...
+                    ${__("loading", "Loading...")}
                 </td>
             </tr>
         `;
