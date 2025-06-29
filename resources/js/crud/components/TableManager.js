@@ -23,14 +23,14 @@ export class TableManager {
      * Renderizar tabla con datos
      */
     renderTable(data) {
-        const tableContainer = document.querySelector(this.tableSelector);
-        if (!tableContainer) {
-            console.error('Table container not found:', this.tableSelector);
+        const tableBody = document.querySelector(`${this.tableSelector}-body`);
+        if (!tableBody) {
+            console.error('Table body not found:', `${this.tableSelector}-body`);
             return;
         }
 
-        const tableHtml = this.generateTableHtml(data.data || data);
-        tableContainer.innerHTML = tableHtml;
+        const rowsHtml = this.generateTableRows(data.data || data);
+        tableBody.innerHTML = rowsHtml;
 
         // Vincular eventos
         this.bindTableEvents();
@@ -42,7 +42,18 @@ export class TableManager {
     }
 
     /**
-     * Generar HTML de la tabla
+     * Generar filas de la tabla
+     */
+    generateTableRows(data) {
+        if (!data || data.length === 0) {
+            return this.generateEmptyRow();
+        }
+
+        return data.map(row => this.generateTableRow(row)).join('');
+    }
+
+    /**
+     * Generar HTML de la tabla (solo para casos especiales)
      */
     generateTableHtml(data) {
         if (!data || data.length === 0) {
@@ -265,7 +276,24 @@ export class TableManager {
     }
 
     /**
-     * Generar tabla vacía
+     * Generar fila vacía
+     */
+    generateEmptyRow() {
+        const colspan = this.headers.length + (this.actions.length > 0 ? 1 : 0);
+        return `
+            <tr>
+                <td colspan="${colspan}" class="px-6 py-4 text-center">
+                    <div class="text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <p>No hay datos disponibles</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    /**
+     * Generar tabla vacía (solo para casos especiales)
      */
     generateEmptyTableHtml() {
         const colspan = this.headers.length + (this.actions.length > 0 ? 1 : 0);
@@ -314,38 +342,41 @@ export class TableManager {
 
         // Eventos de ordenamiento
         if (this.sortable) {
-            table.querySelectorAll('th.sortable').forEach(th => {
+            table.querySelectorAll('th.sort-header').forEach(th => {
                 th.addEventListener('click', (e) => {
-                    const field = e.currentTarget.dataset.sort;
+                    const field = e.currentTarget.dataset.field;
                     this.handleSort(field);
                 });
             });
         }
 
-        // Eventos de acciones
-        table.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                this.onEdit(id);
+        // Eventos de acciones en el tbody
+        const tableBody = document.querySelector(`${this.tableSelector}-body`);
+        if (tableBody) {
+            tableBody.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    this.onEdit(id);
+                });
             });
-        });
 
-        table.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                this.onDelete(id);
+            tableBody.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    this.onDelete(id);
+                });
             });
-        });
 
-        table.querySelectorAll('.custom-action-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                const action = e.currentTarget.dataset.action;
-                if (this.onCustomAction) {
-                    this.onCustomAction(action, id);
-                }
+            tableBody.querySelectorAll('.custom-action-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const action = e.currentTarget.dataset.action;
+                    if (this.onCustomAction) {
+                        this.onCustomAction(action, id);
+                    }
+                });
             });
-        });
+        }
     }
 
     /**
