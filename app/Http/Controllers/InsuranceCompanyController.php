@@ -314,7 +314,7 @@ class InsuranceCompanyController extends BaseController
         // Create and validate using InsuranceCompanyRequest
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
-        $formRequest->setRedirector(app('redirect'));
+        $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
         
         // Manually validate the request
         $validator = app('validator')->make(
@@ -347,7 +347,7 @@ class InsuranceCompanyController extends BaseController
         // Create and validate using InsuranceCompanyRequest
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
-        $formRequest->setRedirector(app('redirect'));
+        $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
         
         // Manually validate the request
         $validator = app('validator')->make(
@@ -366,12 +366,16 @@ class InsuranceCompanyController extends BaseController
         }
         
         $validated = $validator->validated();
-        $dto = InsuranceCompanyDTO::fromArray(array_merge($validated, ['uuid' => $uuid]));
-        $insuranceCompany = $this->insuranceCompanyService->update($dto);
+        
+        // Find the existing insurance company
+        $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
+        
+        // Update using the service with model and data
+        $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $validated);
         return response()->json([
             'success' => true,
             'message' => __('Insurance company updated successfully'),
-            'data' => $insuranceCompany,
+            'data' => $updatedInsuranceCompany,
         ]);
     }
 
