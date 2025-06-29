@@ -9,7 +9,7 @@
         ['field' => 'email', 'label' => 'Email', 'sortable' => true],
         ['field' => 'phone', 'label' => 'Phone', 'sortable' => false],
         ['field' => 'website', 'label' => 'Website', 'sortable' => false],
-        ['field' => 'user_name', 'label' => 'Assigned User', 'sortable' => true],
+        ['field' => 'user_name', 'label' => 'Created By', 'sortable' => true],
         ['field' => 'created_at', 'label' => 'Created', 'sortable' => true],
         ['field' => 'actions', 'label' => 'Actions', 'sortable' => false],
     ]">

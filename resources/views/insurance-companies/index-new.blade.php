@@ -9,7 +9,7 @@
         ['field' => 'email', 'label' => 'Email', 'sortable' => true],
         ['field' => 'phone', 'label' => 'Phone', 'sortable' => false],
         ['field' => 'website', 'label' => 'Website', 'sortable' => false],
-        ['field' => 'user_name', 'label' => 'Assigned User', 'sortable' => true],
+        ['field' => 'user_name', 'label' => 'Created By', 'sortable' => true],
         ['field' => 'created_at', 'label' => 'Created', 'sortable' => true],
         ['field' => 'actions', 'label' => 'Actions', 'sortable' => false],
     ]">
@@ -17,19 +17,21 @@
     @push('scripts')
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
+
         @vite(['resources/js/crud/index.js'])
 
         <script>
             // Asegurar que SweetAlert2 esté disponible globalmente
             window.Swal = Swal;
         </script>
-        
+
         <!-- Nuevo Sistema CRUD Modular -->
         <script type="module">
             // Importar el nuevo sistema modular
-            import { CrudSystem } from '{{ asset('js/crud/index.js') }}';
-            
+            import {
+                CrudSystem
+            } from '{{ asset('js/crud/index.js') }}';
+
             $(document).ready(function() {
                 // Recuperar estado del toggle de localStorage antes de inicializar el manager
                 const showDeletedState = localStorage.getItem('showDeleted') === 'true';
@@ -206,7 +208,8 @@
                             name: 'Created',
                             sortable: true,
                             getter: (entity) => {
-                                return entity.created_at ? new Date(entity.created_at).toLocaleDateString() : 'N/A';
+                                return entity.created_at ? new Date(entity.created_at)
+                                    .toLocaleDateString() : 'N/A';
                             }
                         },
                         {
@@ -274,13 +277,13 @@
 
                 // Inicializar el nuevo sistema CRUD modular
                 const crudManager = new CrudSystem.CrudManagerModal(insuranceCompanyConfig);
-                
+
                 // Hacer el manager globalmente accesible para compatibilidad
                 window.insuranceCompanyManager = crudManager;
-                
+
                 // Cargar datos iniciales
                 crudManager.loadEntities();
-                
+
                 console.log('Insurance Company Manager inicializado con el nuevo sistema modular');
             });
         </script>

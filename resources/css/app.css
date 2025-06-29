@@ -60,6 +60,7 @@ input:checked ~ .block {
 .swal2-header {
     padding: 0 !important;
     border-radius: 12px 12px 0 0 !important;
+    position: relative !important; /* Añadido para posicionamiento correcto del botón X */
 }
 
 .swal2-popup.swal-create .swal2-header,
@@ -68,7 +69,7 @@ input:checked ~ .block {
 }
 
 .swal2-title {
-    padding: 1.5rem !important;
+    padding: 1.5rem 4rem 1.5rem 1.5rem !important; /* Agregado padding-right para el botón X */
     margin: 0 !important;
     width: 100% !important;
     text-align: center !important;
@@ -106,14 +107,14 @@ input:checked ~ .block {
     font-size: 1.5rem !important;
     font-weight: 600 !important;
     margin: 0 !important;
-    padding: 1rem !important;
+    padding: 1rem 4rem 1rem 1rem !important; /* Consistente con el padding anterior */
 }
 
 .swal2-close {
     font-size: 1.5rem !important;
     font-weight: 300 !important;
-    right: 1rem !important;
-    top: 1rem !important;
+    right: 1.25rem !important; /* Ajustado para mejor posicionamiento */
+    top: 1.25rem !important; /* Ajustado para mejor posicionamiento */
     background: #ef4444 !important;
     color: white !important;
     border-radius: 50% !important;
@@ -127,6 +128,7 @@ input:checked ~ .block {
     overflow: hidden !important;
     padding: 0 !important;
     line-height: 1 !important;
+    z-index: 10 !important; /* Asegurar que esté por encima del título */
 }
 
 .swal2-close:hover {
@@ -516,11 +518,11 @@ input[type="radio"].radio-field:not(.custom-styled):not(
 }
 
 /* Tooltip Styling (Tippy.js) */
-.tippy-box[data-theme~='light-border'] {
+.tippy-box[data-theme~="light-border"] {
     font-size: 0.85rem;
 }
 
-.tippy-box[data-theme~='light-border'] .tippy-content {
+.tippy-box[data-theme~="light-border"] .tippy-content {
     padding: 0.5rem;
 }
 
@@ -533,15 +535,15 @@ input[type="radio"].radio-field:not(.custom-styled):not(
         margin: 10px auto;
         padding: 0 5px;
     }
-    
+
     .fc-event {
         font-size: 0.7rem !important;
     }
-    
+
     .client-title {
         font-size: 0.75rem;
     }
-    
+
     .event-time,
     .appointment-status {
         font-size: 0.65rem;
@@ -552,11 +554,11 @@ input[type="radio"].radio-field:not(.custom-styled):not(
     .fc-event {
         font-size: 0.65rem !important;
     }
-    
+
     .client-title {
         font-size: 0.7rem;
     }
-    
+
     .event-time,
     .appointment-status {
         font-size: 0.6rem;
