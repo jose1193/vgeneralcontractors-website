@@ -311,14 +311,28 @@ class InsuranceCompanyController extends BaseController
 
     public function store(Request $request): JsonResponse
     {
-        // Create InsuranceCompanyRequest instance for validation
+        // Create and validate using InsuranceCompanyRequest
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
         $formRequest->setRedirector(app('redirect'));
         
-        // Validate using InsuranceCompanyRequest
-        $validated = $formRequest->validated();
+        // Manually validate the request
+        $validator = app('validator')->make(
+            $request->all(),
+            $formRequest->rules(),
+            $formRequest->messages(),
+            $formRequest->attributes()
+        );
         
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        
+        $validated = $validator->validated();
         $dto = InsuranceCompanyDTO::fromArray($validated);
         $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
         return response()->json([
@@ -330,13 +344,28 @@ class InsuranceCompanyController extends BaseController
 
     public function update(Request $request, string $uuid): JsonResponse
     {
-        // Create InsuranceCompanyRequest instance for validation
+        // Create and validate using InsuranceCompanyRequest
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
         $formRequest->setRedirector(app('redirect'));
         
-        // Validate using InsuranceCompanyRequest
-        $validated = $formRequest->validated();
+        // Manually validate the request
+        $validator = app('validator')->make(
+            $request->all(),
+            $formRequest->rules(),
+            $formRequest->messages(),
+            $formRequest->attributes()
+        );
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors occurred.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        
+        $validated = $validator->validated();
         $dto = InsuranceCompanyDTO::fromArray(array_merge($validated, ['uuid' => $uuid]));
         $insuranceCompany = $this->insuranceCompanyService->update($dto);
         return response()->json([
