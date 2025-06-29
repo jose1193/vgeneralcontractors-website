@@ -149,7 +149,7 @@ class CrudManagerModal extends CrudCore {
     }
     
     showCreateModal() {
-        const formHtml = this.formManager.generateForm(this.formFields);
+        const formHtml = this.formManager.generateFormHtml(this.formFields);
         this.modalManager.showForm(
             `Create ${this.entityName}`,
             formHtml,
@@ -162,7 +162,7 @@ class CrudManagerModal extends CrudCore {
     async showEditModal(id) {
         try {
             const entity = await this.api.getEntity(id);
-            const formHtml = this.formManager.generateForm(this.formFields, entity);
+            const formHtml = this.formManager.generateFormHtml(this.formFields, entity);
             
             this.modalManager.showForm(
                 `Edit ${this.entityName}`,

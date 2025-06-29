@@ -108,12 +108,12 @@ export class TableManager {
     generateTableRow(row) {
         const cells = this.headers.map(header => {
             const value = this.getCellValue(row, header);
-            return `<td>${value}</td>`;
+            return `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${value}</td>`;
         }).join('');
 
         const actionsCell = this.actions.length > 0 ? this.generateActionsCell(row) : '';
         
-        return `<tr data-id="${row.id || row[this.idField] || ''}">${cells}${actionsCell}</tr>`;
+        return `<tr class="hover:bg-gray-50 dark:hover:bg-gray-700" data-id="${row.id || row[this.idField] || ''}">${cells}${actionsCell}</tr>`;
     }
 
     /**
