@@ -25,7 +25,7 @@ class InsuranceCompanyController extends BaseController
     
     protected string $modelClass = InsuranceCompany::class;
     protected string $entityName = 'INSURANCE_COMPANY';
-    protected $routePrefix = 'insurance-companies';
+    protected string $routePrefix = 'insurance-companies';
     protected string $viewPrefix = 'insurance-companies';
     
     // Cache time for insurance companies - 5 minutes (default is good for this data)
