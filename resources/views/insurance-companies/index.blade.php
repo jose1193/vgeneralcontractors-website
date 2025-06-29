@@ -1,4 +1,4 @@
-<x-crud.index-layout title="Insurance Companies Management" subtitle="Manage insurance companies and their information"
+<x-crud.index-layout
     entity-name="Insurance Company" entity-name-plural="Insurance Companies"
     search-placeholder="Search insurance companies..." show-deleted-label="Show inactive records"
     add-new-label="Add Insurance Company" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
@@ -11,66 +11,23 @@
         ['field' => 'website', 'label' => 'Website', 'sortable' => false],
         ['field' => 'user_name', 'label' => 'Assigned User', 'sortable' => true],
         ['field' => 'created_at', 'label' => 'Created', 'sortable' => true],
+        ['field' => 'actions', 'label' => 'Actions', 'sortable' => false],
     ]">
 
     @push('scripts')
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
-        @vite(['resources/js/crud/index.js'])
+        <!-- CrudManagerModal -->
+        <script src="{{ asset('js/crud-manager-modal.js') }}"></script>
 
         <script>
-            // Asegurar que SweetAlert2 esté disponible globalmente
-            window.Swal = Swal;
-            
-            // Esperar a que el módulo esté cargado
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM Content Loaded');
-                
-                // Función para verificar elementos DOM requeridos
-                function checkRequiredElements() {
-                    const requiredSelectors = [
-                        '#insuranceCompanyTable-body',
-                        '#searchInput',
-                        '#perPage',
-                        '#pagination',
-                        '#alertContainer'
-                    ];
-                    
-                    const missing = [];
-                    requiredSelectors.forEach(selector => {
-                        if (!document.querySelector(selector)) {
-                            missing.push(selector);
-                        }
-                    });
-                    
-                    if (missing.length > 0) {
-                        console.warn('Missing DOM elements:', missing);
-                        return false;
-                    }
-                    return true;
-                }
-                
-                // Verificar que CrudSystem esté disponible
-                if (typeof window.CrudSystem === 'undefined') {
-                    console.error('CrudSystem not loaded');
-                    return;
-                }
-                
-                console.log('CrudSystem available:', window.CrudSystem);
-                
-                // Verificar elementos DOM
-                if (!checkRequiredElements()) {
-                    console.error('Required DOM elements not found');
-                    return;
-                }
-                
+            $(document).ready(function() {
                 // Recuperar estado del toggle de localStorage antes de inicializar el manager
                 const showDeletedState = localStorage.getItem('showDeleted') === 'true';
                 console.log('Estado inicial de showDeleted:', showDeletedState);
 
-                // Configuración específica para Insurance Companies
-                const insuranceCompanyConfig = {
+                // Make the manager globally accessible
+                window.insuranceCompanyManager = new CrudManagerModal({
                     entityName: 'Insurance Company',
                     entityNamePlural: 'Insurance Companies',
                     routes: {
@@ -84,18 +41,16 @@
                         checkPhone: "{{ secure_url(route('insurance-companies.check-phone', [], false)) }}",
                         checkName: "{{ secure_url(route('insurance-companies.check-name', [], false)) }}"
                     },
-                    selectors: {
-                        table: '#insuranceCompanyTable-body',
-                        search: '#searchInput',
-                        perPage: '#perPage',
-                        showDeleted: '#showDeleted',
-                        pagination: '#pagination',
-                        alert: '#alertContainer',
-                        createButton: '#createInsuranceCompanyBtn'
-                    },
+                    tableSelector: '#insuranceCompanyTable-body',
+                    searchSelector: '#searchInput',
+                    perPageSelector: '#perPage',
+                    showDeletedSelector: '#showDeleted',
+                    paginationSelector: '#pagination',
+                    alertSelector: '#alertContainer',
+                    createButtonSelector: '#createInsuranceCompanyBtn',
                     idField: 'uuid',
-                    actions: ['edit', 'delete', 'restore'],
                     searchFields: ['insurance_company_name', 'address', 'email', 'phone', 'website'],
+                    // Establecer el valor inicial basado en localStorage
                     showDeleted: showDeletedState,
                     entityConfig: {
                         identifierField: 'insurance_company_name',
@@ -193,6 +148,7 @@
                             sortable: false,
                             getter: (entity) => {
                                 if (!entity.address) return 'N/A';
+                                // Truncate long addresses
                                 return entity.address.length > 50 ?
                                     entity.address.substring(0, 50) + '...' :
                                     entity.address;
@@ -202,7 +158,9 @@
                             field: 'email',
                             name: 'Email',
                             sortable: true,
-                            getter: (entity) => entity.email || 'N/A'
+                            getter: (entity) => {
+                                return entity.email || 'N/A';
+                            }
                         },
                         {
                             field: 'phone',
@@ -210,13 +168,21 @@
                             sortable: false,
                             getter: (entity) => {
                                 if (!entity.phone) return 'N/A';
+
+                                // Extraer solo los dígitos
                                 const cleaned = entity.phone.replace(/\D/g, '');
+
+                                // Si tiene 11 dígitos y empieza con 1 (formato +1XXXXXXXXXX)
                                 if (cleaned.length === 11 && cleaned.startsWith('1')) {
-                                    const phoneDigits = cleaned.substring(1);
+                                    const phoneDigits = cleaned.substring(1); // Remover el 1
                                     return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(6, 10)}`;
-                                } else if (cleaned.length === 10) {
+                                }
+                                // Si tiene 10 dígitos (formato XXXXXXXXXX)
+                                else if (cleaned.length === 10) {
                                     return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6, 10)}`;
                                 }
+
+                                // Para otros formatos, devolver tal como está
                                 return entity.phone;
                             }
                         },
@@ -226,6 +192,8 @@
                             sortable: false,
                             getter: (entity) => {
                                 if (!entity.website) return 'N/A';
+
+                                // Create clickable link
                                 const displayUrl = entity.website.replace(/^https?:\/\//, '');
                                 return `<a href="${entity.website}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${displayUrl}</a>`;
                             }
@@ -234,17 +202,53 @@
                             field: 'user_name',
                             name: 'Created By',
                             sortable: true,
-                            getter: (entity) => entity.user_name || 'No user assigned'
+                            getter: (entity) => {
+                                return entity.user_name || 'No user assigned';
+                            }
                         },
                         {
                             field: 'created_at',
                             name: 'Created',
                             sortable: true,
                             getter: (entity) => {
-                                return entity.created_at ? new Date(entity.created_at).toLocaleDateString() : 'N/A';
+                                return entity.created_at ? new Date(entity.created_at)
+                                    .toLocaleDateString() : 'N/A';
                             }
                         },
+                        {
+                            field: 'actions',
+                            name: 'Actions',
+                            sortable: false,
+                            getter: (entity) => {
+                                const isDeleted = entity.deleted_at !== null;
+                                let buttons = '';
 
+                                // Edit button (always available)
+                                buttons += `<button data-id="${entity.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" title="Edit Insurance Company">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </button>`;
+
+                                if (isDeleted) {
+                                    // Restore button
+                                    buttons += `<button data-id="${entity.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg" title="Restore Insurance Company">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                    </svg>
+                                                </button>`;
+                                } else {
+                                    // Delete button
+                                    buttons += `<button data-id="${entity.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg" title="Delete Insurance Company">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                </button>`;
+                                }
+
+                                return buttons;
+                            }
+                        }
                     ],
                     translations: {
                         confirmDelete: '¿Estás seguro?',
@@ -272,12 +276,9 @@
                         pleaseCorrectErrors: 'Por favor corrige los errores antes de continuar',
                         noRecordsFound: 'No se encontraron registros'
                     }
-                };
+                });
 
-                // Inicializar con CrudManagerModal (sistema original que funciona)
-                window.insuranceCompanyManager = new CrudManagerModal(insuranceCompanyConfig);
-                
-                // Cargar datos iniciales
+                // Load initial data
                 window.insuranceCompanyManager.loadEntities();
             });
         </script>
