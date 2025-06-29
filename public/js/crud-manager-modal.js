@@ -2,6 +2,18 @@
  * CRUD Manager Modal - Maneja operaciones CRUD usando SweetAlert2 modales
  * Basado en crud-manager.js pero optimizado para modales
  */
+
+// Función helper para obtener traducciones
+function __(key, fallback = "") {
+    if (
+        typeof window.translations !== "undefined" &&
+        window.translations[key]
+    ) {
+        return window.translations[key];
+    }
+    return fallback || key;
+}
+
 class CrudManagerModal {
     constructor(options) {
         // Configuración básica
@@ -44,8 +56,8 @@ class CrudManagerModal {
             width: options.modalWidth || "800px",
             showCloseButton: true,
             showCancelButton: true,
-            confirmButtonText: "Guardar",
-            cancelButtonText: "Cancelar",
+            confirmButtonText: __("save", "Save"),
+            cancelButtonText: __("cancel", "Cancel"),
             customClass: {
                 container: "swal-modal-container",
                 popup: "swal-modal-popup",
@@ -69,17 +81,29 @@ class CrudManagerModal {
 
         // Configuración de traducciones
         this.translations = options.translations || {
-            confirmDelete: "¿Estás seguro?",
-            deleteMessage: "¿Deseas eliminar este elemento?",
-            confirmRestore: "¿Restaurar registro?",
-            restoreMessage: "¿Deseas restaurar este elemento?",
-            yesDelete: "Sí, eliminar",
-            yesRestore: "Sí, restaurar",
-            cancel: "Cancelar",
-            deletedSuccessfully: "eliminado exitosamente",
-            restoredSuccessfully: "restaurado exitosamente",
-            errorDeleting: "Error al eliminar el registro",
-            errorRestoring: "Error al restaurar el registro",
+            confirmDelete: __("are_you_sure", "Are you sure?"),
+            deleteMessage: __(
+                "delete_element_question",
+                "Do you want to delete this element?"
+            ),
+            confirmRestore: __("confirm_restoration", "Restore record?"),
+            restoreMessage: __(
+                "restore_element_question",
+                "Do you want to restore this element?"
+            ),
+            yesDelete: __("yes_delete", "Yes, delete"),
+            yesRestore: __("yes_restore", "Yes, restore"),
+            cancel: __("cancel", "Cancel"),
+            deletedSuccessfully: __(
+                "deleted_successfully",
+                "deleted successfully"
+            ),
+            restoredSuccessfully: __(
+                "restored_successfully",
+                "restored successfully"
+            ),
+            errorDeleting: __("error_deleting", "Error deleting record"),
+            errorRestoring: __("error_restoring", "Error restoring record"),
         };
 
         // Configuración de campos para identificar entidades
@@ -111,7 +135,7 @@ class CrudManagerModal {
         //
         this.entityConfig = options.entityConfig || {
             identifierField: "name", // Campo principal para identificar
-            displayName: "elemento", // Nombre para mostrar en español
+            displayName: __("element", "element"), // Nombre para mostrar
             fallbackFields: ["title", "description", "email"], // Campos alternativos
         };
 
@@ -305,7 +329,7 @@ class CrudManagerModal {
             // Si no hay datos, mostrar mensaje
             Swal.fire({
                 icon: "info",
-                title: "Sin datos",
+                title: __("no_data", "No data"),
                 text: "No se encontró información para editar. Contacte al administrador.",
             });
             return;
@@ -388,7 +412,7 @@ class CrudManagerModal {
                 width: this.modalConfig.width,
                 showCloseButton: this.modalConfig.showCloseButton,
                 showCancelButton: this.modalConfig.showCancelButton,
-                confirmButtonText: "Actualizar",
+                confirmButtonText: __("update", "Update"),
                 cancelButtonText: this.modalConfig.cancelButtonText,
                 confirmButtonColor: this.colorConfig.edit.confirmButtonColor,
                 customClass: this.modalConfig.customClass,
@@ -425,7 +449,10 @@ class CrudManagerModal {
             this.showAlert(
                 "error",
                 this.translations.errorLoadingDataForEdit ||
-                    "Error al cargar los datos para editar"
+                    __(
+                        "error_loading_data_for_edit",
+                        "Error loading data for editing"
+                    )
             );
         }
     }
@@ -660,7 +687,9 @@ class CrudManagerModal {
         }
 
         // Validación de insurance_company_name (para duplicados)
-        const insuranceCompanyNameField = document.getElementById("insurance_company_name");
+        const insuranceCompanyNameField = document.getElementById(
+            "insurance_company_name"
+        );
         if (insuranceCompanyNameField) {
             let insuranceNameTimeout;
             insuranceCompanyNameField.addEventListener("input", (e) => {
@@ -673,7 +702,7 @@ class CrudManagerModal {
 
         // Configurar validación básica para todos los campos
         this.setupBasicFieldValidation();
-        
+
         // Configurar limpieza general de errores para todos los campos
         this.setupGeneralErrorClearance();
     }
@@ -686,11 +715,17 @@ class CrudManagerModal {
             const fieldElement = document.getElementById(field.name);
             if (fieldElement) {
                 // Skip fields that already have specific validation
-                const fieldsWithSpecificValidation = ['email', 'phone', 'username', 'name', 'insurance_company_name'];
+                const fieldsWithSpecificValidation = [
+                    "email",
+                    "phone",
+                    "username",
+                    "name",
+                    "insurance_company_name",
+                ];
                 if (fieldsWithSpecificValidation.includes(field.name)) {
                     return;
                 }
-                
+
                 let validationTimeout;
                 fieldElement.addEventListener("input", (e) => {
                     clearTimeout(validationTimeout);
@@ -698,7 +733,7 @@ class CrudManagerModal {
                         this.validateBasicField(field, e.target.value);
                     }, 300); // Debounce más corto para validación básica
                 });
-                
+
                 // También validar en blur para campos requeridos
                 fieldElement.addEventListener("blur", (e) => {
                     this.validateBasicField(field, e.target.value);
@@ -713,43 +748,46 @@ class CrudManagerModal {
     validateBasicField(field, value) {
         // Limpiar error previo
         this.clearFieldError(field.name);
-        
+
         // Obtener configuración de validación (puede estar en field.validation o directamente en field)
         const validation = field.validation || field;
         const isRequired = validation.required || field.required;
         const minLength = validation.minLength || field.minLength;
         const maxLength = validation.maxLength || field.maxLength;
         const pattern = validation.pattern || field.pattern;
-        
+
         // Validar campo requerido
         if (isRequired && (!value || value.trim() === "")) {
             this.showFieldError(
                 field.name,
-                this.translations.fieldRequired || `${field.label || field.name} is required`
+                this.translations.fieldRequired ||
+                    `${field.label || field.name} is required`
             );
             return;
         }
-        
+
         // Solo validar longitud y patrón si hay valor
         if (value && value.trim() !== "") {
             // Validar longitud mínima si está definida
             if (minLength && value.length < minLength) {
                 this.showFieldError(
                     field.name,
-                    this.translations.minLength || `Minimum ${minLength} characters required`
+                    this.translations.minLength ||
+                        `Minimum ${minLength} characters required`
                 );
                 return;
             }
-            
+
             // Validar longitud máxima si está definida
             if (maxLength && value.length > maxLength) {
                 this.showFieldError(
                     field.name,
-                    this.translations.maxLength || `Maximum ${maxLength} characters allowed`
+                    this.translations.maxLength ||
+                        `Maximum ${maxLength} characters allowed`
                 );
                 return;
             }
-            
+
             // Validar patrón si está definido
             if (pattern && !new RegExp(pattern).test(value)) {
                 this.showFieldError(
@@ -759,7 +797,7 @@ class CrudManagerModal {
                 return;
             }
         }
-        
+
         // Si llegamos aquí, el campo es válido
         this.updateSubmitButtonState();
     }
@@ -775,7 +813,7 @@ class CrudManagerModal {
                 fieldElement.addEventListener("input", (e) => {
                     this.clearFieldErrorOnInput(field.name);
                 });
-                
+
                 // Agregar listener para change (útil para selects)
                 fieldElement.addEventListener("change", (e) => {
                     this.clearFieldErrorOnInput(field.name);
@@ -790,23 +828,35 @@ class CrudManagerModal {
     clearFieldErrorOnInput(fieldName) {
         const errorElement = $(`#error-${fieldName}`);
         const inputElement = $(`#${fieldName}`);
-        
+
         // Solo limpiar si hay un error visible
-        if (errorElement.length && !errorElement.hasClass("hidden") && errorElement.hasClass("text-red-500")) {
-            const field = this.formFields.find(f => f.name === fieldName);
+        if (
+            errorElement.length &&
+            !errorElement.hasClass("hidden") &&
+            errorElement.hasClass("text-red-500")
+        ) {
+            const field = this.formFields.find((f) => f.name === fieldName);
             const currentValue = inputElement.val();
-            
+
             // Para campos requeridos, solo limpiar si el usuario ha escrito algo
             // Para campos no requeridos, limpiar inmediatamente
-            if (!field?.required || (currentValue && currentValue.trim() !== "")) {
+            if (
+                !field?.required ||
+                (currentValue && currentValue.trim() !== "")
+            ) {
                 this.clearFieldError(fieldName);
-                
+
                 // Limpiar mensaje de validación general de SweetAlert si no hay más errores
                 setTimeout(() => {
                     if (!this.hasValidationErrors()) {
                         // Limpiar el mensaje de validación de SweetAlert
-                        const validationMessage = $('.swal2-validation-message');
-                        if (validationMessage.length && validationMessage.is(':visible')) {
+                        const validationMessage = $(
+                            ".swal2-validation-message"
+                        );
+                        if (
+                            validationMessage.length &&
+                            validationMessage.is(":visible")
+                        ) {
                             validationMessage.hide();
                         }
                     }
@@ -1378,11 +1428,11 @@ class CrudManagerModal {
                 );
             }
         );
-        
+
         // Verificar si hay campos requeridos vacíos
         const isEditMode = $(".swal2-popup").hasClass("swal-edit");
         let hasEmptyRequiredFields = false;
-        
+
         this.formFields.forEach((field) => {
             // Verificar si el campo debe estar presente en el modo actual
             if (field.showInCreate === false && !isEditMode) {
@@ -1391,24 +1441,24 @@ class CrudManagerModal {
             if (field.showInEdit === false && isEditMode) {
                 return; // Saltar validación para campos no visibles en edición
             }
-            
+
             if (field.required) {
                 const element = $(`#${field.name}`);
                 let value = "";
-                
+
                 if (field.type === "checkbox") {
                     // Los checkboxes no se consideran "vacíos" para propósitos de required
                     return;
                 } else {
                     value = element.val();
                 }
-                
+
                 if (!value || value.toString().trim() === "") {
                     hasEmptyRequiredFields = true;
                 }
             }
         });
-        
+
         return visibleErrors.length > 0 || hasEmptyRequiredFields;
     }
 
@@ -1429,10 +1479,13 @@ class CrudManagerModal {
                 submitButton.prop("disabled", false);
                 submitButton.removeClass("opacity-50 cursor-not-allowed");
                 submitButton.removeAttr("title");
-                
+
                 // Limpiar mensaje de validación de SweetAlert si no hay errores
-                const validationMessage = $('.swal2-validation-message');
-                if (validationMessage.length && validationMessage.is(':visible')) {
+                const validationMessage = $(".swal2-validation-message");
+                if (
+                    validationMessage.length &&
+                    validationMessage.is(":visible")
+                ) {
                     validationMessage.hide();
                 }
             }
@@ -1647,7 +1700,8 @@ class CrudManagerModal {
             } else {
                 this.showAlert(
                     "error",
-                    error.responseJSON?.message || "Error al crear el registro"
+                    error.responseJSON?.message ||
+                        __("error_creating_record", "Error creating record")
                 );
             }
         }
@@ -1694,7 +1748,7 @@ class CrudManagerModal {
                 this.showAlert(
                     "error",
                     error.responseJSON?.message ||
-                        "Error al actualizar el registro"
+                        __("error_updating_record", "Error updating record")
                 );
             }
         }
@@ -1768,8 +1822,8 @@ class CrudManagerModal {
 
         // Fallback final
         return {
-            identifier: "este elemento",
-            displayName: "elemento",
+            identifier: __("this_element", "this element"),
+            displayName: __("element", "element"),
             field: null,
         };
     }
@@ -1809,8 +1863,8 @@ class CrudManagerModal {
                     error
                 );
                 // Fallback: usar el nombre genérico de la entidad
-                entityIdentifier = "este elemento";
-                entityDisplayName = "elemento";
+                entityIdentifier = __("this_element", "this element");
+                entityDisplayName = __("element", "element");
             }
         }
 
@@ -1823,7 +1877,10 @@ class CrudManagerModal {
 
         // Crear mensaje personalizado con la información específica del registro
         let customMessage = this.translations.deleteMessage;
-        if (entityIdentifier && entityIdentifier !== "este elemento") {
+        if (
+            entityIdentifier &&
+            entityIdentifier !== __("this_element", "this element")
+        ) {
             customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
@@ -1898,8 +1955,8 @@ class CrudManagerModal {
                     error
                 );
                 // Fallback: usar el nombre genérico de la entidad
-                entityIdentifier = "este elemento";
-                entityDisplayName = "elemento";
+                entityIdentifier = __("this_element", "this element");
+                entityDisplayName = __("element", "element");
             }
         }
 
@@ -1912,7 +1969,10 @@ class CrudManagerModal {
 
         // Crear mensaje personalizado con la información específica del registro
         let customMessage = this.translations.restoreMessage;
-        if (entityIdentifier && entityIdentifier !== "este elemento") {
+        if (
+            entityIdentifier &&
+            entityIdentifier !== __("this_element", "this element")
+        ) {
             customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 

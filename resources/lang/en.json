@@ -138,7 +138,6 @@
     "company_information_entity": "company information",
     "could_not_load_company_info": "Could not load company information",
     "error_loading_company_info": "Error loading company information",
-    "error_loading_data_for_edit": "Error loading data for editing",
 
     "status": "Status",
     "actions": "Actions",
@@ -167,6 +166,20 @@
     "profile": "Profile",
     "api_tokens": "API Tokens",
     "log_out": "Log Out",
+
+    "_comment_modals": "=== MODALS ===",
+
+    "no_data": "No data",
+    "element": "element",
+    "this_element": "this element",
+    "delete_element_question": "Do you want to delete this element?",
+    "restore_element_question": "Do you want to restore this element?",
+
+    "error_loading_data_for_edit": "Error loading data for editing",
+    "error_creating_record": "Error creating record",
+    "error_updating_record": "Error updating record",
+
+    "confirm_restoration": "Confirm Restoration",
 
     "_comment_dashboard_content": "=== DASHBOARD CONTENT ===",
     "dashboard_title": "Dashboard",
@@ -1261,14 +1274,13 @@
 
     "NRO": "No.",
 
-    "_comment_modals": "=== MODALS ===",
     "save": "Save",
 
     "cancel": "Cancel",
     "confirm_deletion": "Confirm Deletion",
     "delete": "Delete",
     "deleting": "Deleting...",
-    "confirm_restoration": "Confirm Restoration",
+
     "restore": "Restore",
     "restoring": "Restoring...",
     "are_you_sure_delete": "Are you sure you want to delete the",
