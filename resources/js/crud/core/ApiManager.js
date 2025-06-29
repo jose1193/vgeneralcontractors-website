@@ -81,12 +81,32 @@ export class ApiManager {
     }
 
     /**
+     * Obtener una entidad específica
+     */
+    async getEntity(id) {
+        const url = this.routes.edit.replace(':id', id);
+        return await this.request(url, {
+            method: 'GET'
+        });
+    }
+
+    /**
      * Eliminar entidad
      */
     async deleteEntity(id) {
         const url = this.routes.destroy.replace(':id', id);
         return await this.request(url, {
             method: 'DELETE'
+        });
+    }
+
+    /**
+     * Restaurar entidad eliminada
+     */
+    async restoreEntity(id) {
+        const url = this.routes.restore.replace(':id', id);
+        return await this.request(url, {
+            method: 'POST'
         });
     }
 

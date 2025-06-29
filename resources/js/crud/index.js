@@ -27,7 +27,13 @@ class CrudManagerModal extends CrudCore {
         
         // Inicializar managers
         this.apiManager = new ApiManager(config.routes);
-        this.tableManager = new TableManager(config.selectors?.table || config.tableSelector);
+        this.tableManager = new TableManager({
+            tableSelector: config.selectors?.table || config.tableSelector,
+            headers: config.tableHeaders,
+            onSort: (field, direction) => this.changeSort(field),
+            onEdit: (id) => this.showEditModal(id),
+            onDelete: (id) => this.deleteEntity(id)
+        });
         this.formManager = new FormManager();
         this.modalManager = new ModalManager();
         this.validationManager = new ValidationManager();
@@ -60,16 +66,16 @@ class CrudManagerModal extends CrudCore {
     // Métodos de compatibilidad con la API existente
     async loadEntities() {
         try {
-            const response = await this.apiManager.getEntities({
+            const response = await this.api.getEntities({
                 search: this.getSearchValue(),
                 page: this.currentPage,
                 per_page: this.getPerPageValue(),
-                sort_by: this.sortBy,
+                sort_field: this.sortField,
                 sort_direction: this.sortDirection,
                 show_deleted: this.showDeleted
             });
             
-            this.tableManager.renderTable(response.data, this.tableHeaders);
+            this.tableManager.renderTable(response);
             this.updatePagination(response);
             
         } catch (error) {
@@ -80,7 +86,7 @@ class CrudManagerModal extends CrudCore {
     
     async createEntity(data) {
         try {
-            const response = await this.apiManager.createEntity(data);
+            const response = await this.api.createEntity(data);
             this.modalManager.close();
             this.showAlert(`${this.entityName} created successfully`, 'success');
             this.loadEntities();
@@ -94,7 +100,7 @@ class CrudManagerModal extends CrudCore {
     
     async updateEntity(id, data) {
         try {
-            const response = await this.apiManager.updateEntity(id, data);
+            const response = await this.api.updateEntity(id, data);
             this.modalManager.close();
             this.showAlert(`${this.entityName} updated successfully`, 'success');
             this.loadEntities();
@@ -114,7 +120,7 @@ class CrudManagerModal extends CrudCore {
             );
             
             if (confirmed) {
-                await this.apiManager.deleteEntity(id);
+                await this.api.deleteEntity(id);
                 this.showAlert(`${this.entityName} deleted successfully`, 'success');
                 this.loadEntities();
             }
@@ -132,7 +138,7 @@ class CrudManagerModal extends CrudCore {
             );
             
             if (confirmed) {
-                await this.apiManager.restoreEntity(id);
+                await this.api.restoreEntity(id);
                 this.showAlert(`${this.entityName} restored successfully`, 'success');
                 this.loadEntities();
             }
@@ -155,7 +161,7 @@ class CrudManagerModal extends CrudCore {
     
     async showEditModal(id) {
         try {
-            const entity = await this.apiManager.getEntity(id);
+            const entity = await this.api.getEntity(id);
             const formHtml = this.formManager.generateForm(this.formFields, entity);
             
             this.modalManager.showForm(

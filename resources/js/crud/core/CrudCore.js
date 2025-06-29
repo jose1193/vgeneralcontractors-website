@@ -227,4 +227,89 @@ export class CrudCore {
         this.currentEntity = null;
         this.isEditing = false;
     }
+
+    /**
+     * Obtener valor del campo de búsqueda
+     */
+    getSearchValue() {
+        const searchInput = document.querySelector(this.searchSelector);
+        return searchInput ? searchInput.value.trim() : '';
+    }
+
+    /**
+     * Obtener valor del selector de registros por página
+     */
+    getPerPageValue() {
+        const perPageSelect = document.querySelector(this.perPageSelector);
+        return perPageSelect ? parseInt(perPageSelect.value) : this.perPage;
+    }
+
+    /**
+     * Actualizar paginación
+     */
+    updatePagination(response) {
+        const paginationContainer = document.querySelector(this.paginationSelector);
+        if (!paginationContainer || !response.meta) return;
+
+        const { current_page, last_page, from, to, total } = response.meta;
+        
+        let paginationHtml = '<nav aria-label="Page navigation">';
+        paginationHtml += '<ul class="pagination justify-content-center">';
+        
+        // Botón anterior
+        if (current_page > 1) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${current_page - 1}">Previous</a></li>`;
+        } else {
+            paginationHtml += '<li class="page-item disabled"><span class="page-link">Previous</span></li>';
+        }
+        
+        // Páginas
+        const startPage = Math.max(1, current_page - 2);
+        const endPage = Math.min(last_page, current_page + 2);
+        
+        for (let i = startPage; i <= endPage; i++) {
+            if (i === current_page) {
+                paginationHtml += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+            } else {
+                paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+            }
+        }
+        
+        // Botón siguiente
+        if (current_page < last_page) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${current_page + 1}">Next</a></li>`;
+        } else {
+            paginationHtml += '<li class="page-item disabled"><span class="page-link">Next</span></li>';
+        }
+        
+        paginationHtml += '</ul></nav>';
+        
+        // Información de registros
+        paginationHtml += `<div class="text-center mt-2"><small class="text-muted">Showing ${from} to ${to} of ${total} results</small></div>`;
+        
+        paginationContainer.innerHTML = paginationHtml;
+        
+        // Agregar event listeners
+        paginationContainer.querySelectorAll('a[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.currentPage = parseInt(e.target.dataset.page);
+                this.loadData();
+            });
+        });
+    }
+
+    /**
+     * Obtener configuración de selectores desde options
+     */
+    getSelectors() {
+        return {
+            table: this.tableSelector,
+            search: this.searchSelector,
+            perPage: this.perPageSelector,
+            showDeleted: this.showDeletedSelector,
+            pagination: this.paginationSelector,
+            alert: this.alertSelector
+        };
+    }
 }

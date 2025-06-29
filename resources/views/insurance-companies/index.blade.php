@@ -23,14 +23,49 @@
         <script>
             // Asegurar que SweetAlert2 esté disponible globalmente
             window.Swal = Swal;
-        </script>
-        
-        <!-- Nuevo Sistema CRUD Modular -->
-        <script type="module">
-            // Importar el nuevo sistema modular
-            import { CrudSystem } from '{{ asset('js/crud/index.js') }}';
             
-            $(document).ready(function() {
+            // Esperar a que el módulo esté cargado
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM Content Loaded');
+                
+                // Función para verificar elementos DOM requeridos
+                function checkRequiredElements() {
+                    const requiredSelectors = [
+                        '#insuranceCompanyTable-body',
+                        '#searchInput',
+                        '#perPage',
+                        '#pagination',
+                        '#alertContainer'
+                    ];
+                    
+                    const missing = [];
+                    requiredSelectors.forEach(selector => {
+                        if (!document.querySelector(selector)) {
+                            missing.push(selector);
+                        }
+                    });
+                    
+                    if (missing.length > 0) {
+                        console.warn('Missing DOM elements:', missing);
+                        return false;
+                    }
+                    return true;
+                }
+                
+                // Verificar que CrudSystem esté disponible
+                if (typeof window.CrudSystem === 'undefined') {
+                    console.error('CrudSystem not loaded');
+                    return;
+                }
+                
+                console.log('CrudSystem available:', window.CrudSystem);
+                
+                // Verificar elementos DOM
+                if (!checkRequiredElements()) {
+                    console.error('Required DOM elements not found');
+                    return;
+                }
+                
                 // Recuperar estado del toggle de localStorage antes de inicializar el manager
                 const showDeletedState = localStorage.getItem('showDeleted') === 'true';
                 console.log('Estado inicial de showDeleted:', showDeletedState);
@@ -272,16 +307,24 @@
                     }
                 };
 
-                // Inicializar el nuevo sistema CRUD modular
-                const crudManager = new CrudSystem.CrudManagerModal(insuranceCompanyConfig);
-                
-                // Hacer el manager globalmente accesible para compatibilidad
-                window.insuranceCompanyManager = crudManager;
-                
-                // Cargar datos iniciales
-                crudManager.loadEntities();
-                
-                console.log('Insurance Company Manager inicializado con el nuevo sistema modular');
+                try {
+                    // Inicializar el sistema CRUD modular
+                    window.insuranceCompanyManager = new window.CrudSystem.CrudManagerModal(insuranceCompanyConfig);
+                    console.log('Insurance Company Manager initialized:', window.insuranceCompanyManager);
+                    
+                    // Cargar datos iniciales con delay para asegurar que todo esté listo
+                    setTimeout(() => {
+                        if (window.insuranceCompanyManager && typeof window.insuranceCompanyManager.loadEntities === 'function') {
+                            window.insuranceCompanyManager.loadEntities();
+                        } else {
+                            console.error('loadEntities method not available');
+                        }
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('Error initializing CRUD system:', error);
+                    console.error('Error stack:', error.stack);
+                }
             });
         </script>
     @endpush
