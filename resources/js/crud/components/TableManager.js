@@ -255,20 +255,20 @@ export class TableManager {
         const buttons = this.actions.map(action => {
             switch (action) {
                 case 'edit':
-                    return `<button class="btn btn-sm btn-outline-primary me-1 edit-btn" data-id="${row.id}" title="Editar">
+                    return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium text-blue-600 bg-blue-100 border border-blue-300 rounded hover:bg-blue-200 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-600 dark:hover:bg-blue-700 edit-btn" data-id="${row.id}" title="Editar">
                         <i class="fas fa-edit"></i>
                     </button>`;
                 case 'delete':
-                    return `<button class="btn btn-sm btn-outline-danger delete-btn" data-id="${row.id}" title="Eliminar">
+                    return `<button class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-100 border border-red-300 rounded hover:bg-red-200 dark:bg-red-800 dark:text-red-200 dark:border-red-600 dark:hover:bg-red-700 delete-btn" data-id="${row.id}" title="Eliminar">
                         <i class="fas fa-trash"></i>
                     </button>`;
                 case 'view':
-                    return `<button class="btn btn-sm btn-outline-info me-1 view-btn" data-id="${row.id}" title="Ver">
+                    return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium text-green-600 bg-green-100 border border-green-300 rounded hover:bg-green-200 dark:bg-green-800 dark:text-green-200 dark:border-green-600 dark:hover:bg-green-700 view-btn" data-id="${row.id}" title="Ver">
                         <i class="fas fa-eye"></i>
                     </button>`;
                 default:
                     if (typeof action === 'object') {
-                        return `<button class="btn btn-sm ${action.class || 'btn-outline-secondary'} me-1 custom-action-btn" 
+                        return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium ${action.class || 'text-gray-600 bg-gray-100 border border-gray-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'} rounded custom-action-btn" 
                             data-id="${row.id}" data-action="${action.name}" title="${action.title || action.name}">
                             <i class="${action.icon || 'fas fa-cog'}"></i>
                         </button>`;
@@ -277,7 +277,7 @@ export class TableManager {
             }
         }).join('');
 
-        return `<td class="text-center">${buttons}</td>`;
+        return `<td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">${buttons}</td>`;
     }
 
     /**
