@@ -30,9 +30,12 @@ class CrudManagerModal extends CrudCore {
         this.tableManager = new TableManager({
             tableSelector: config.selectors?.table || config.tableSelector,
             headers: config.tableHeaders,
+            actions: config.actions || ['edit', 'delete'],
+            idField: config.idField || 'id',
             onSort: (field, direction) => this.changeSort(field),
             onEdit: (id) => this.showEditModal(id),
-            onDelete: (id) => this.deleteEntity(id)
+            onDelete: (id) => this.deleteEntity(id),
+            onRestore: (id) => this.restoreEntity(id)
         });
         this.formManager = new FormManager();
         this.modalManager = new ModalManager();

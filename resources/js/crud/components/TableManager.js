@@ -8,6 +8,7 @@ export class TableManager {
         this.paginationSelector = config.paginationSelector || '#pagination';
         this.headers = config.headers || [];
         this.actions = config.actions || ['edit', 'delete'];
+        this.idField = config.idField || 'id';
         this.sortable = config.sortable !== false;
         this.currentSort = {
             field: config.defaultSortField || 'created_at',
@@ -16,6 +17,7 @@ export class TableManager {
         this.onSort = config.onSort || (() => {});
         this.onEdit = config.onEdit || (() => {});
         this.onDelete = config.onDelete || (() => {});
+        this.onRestore = config.onRestore || (() => {});
         this.onPageChange = config.onPageChange || (() => {});
     }
 
@@ -252,30 +254,48 @@ export class TableManager {
      * Generar celda de acciones
      */
     generateActionsCell(row) {
+        const rowId = row[this.idField] || row.id;
+        const isDeleted = row.deleted_at !== null;
+        
         const buttons = this.actions.map(action => {
             switch (action) {
                 case 'edit':
-                    return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium text-blue-600 bg-blue-100 border border-blue-300 rounded hover:bg-blue-200 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-600 dark:hover:bg-blue-700 edit-btn" data-id="${row.id}" title="Editar">
-                        <i class="fas fa-edit"></i>
+                    return `<button class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" data-id="${rowId}" title="Edit">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
                     </button>`;
                 case 'delete':
-                    return `<button class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-100 border border-red-300 rounded hover:bg-red-200 dark:bg-red-800 dark:text-red-200 dark:border-red-600 dark:hover:bg-red-700 delete-btn" data-id="${row.id}" title="Eliminar">
-                        <i class="fas fa-trash"></i>
+                    if (isDeleted) return '';
+                    return `<button class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg" data-id="${rowId}" title="Delete">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>`;
+                case 'restore':
+                    if (!isDeleted) return '';
+                    return `<button class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg" data-id="${rowId}" title="Restore">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
                     </button>`;
                 case 'view':
-                    return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium text-green-600 bg-green-100 border border-green-300 rounded hover:bg-green-200 dark:bg-green-800 dark:text-green-200 dark:border-green-600 dark:hover:bg-green-700 view-btn" data-id="${row.id}" title="Ver">
-                        <i class="fas fa-eye"></i>
+                    return `<button class="view-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" data-id="${rowId}" title="View">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
                     </button>`;
                 default:
                     if (typeof action === 'object') {
-                        return `<button class="inline-flex items-center px-2 py-1 mr-1 text-xs font-medium ${action.class || 'text-gray-600 bg-gray-100 border border-gray-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700'} rounded custom-action-btn" 
-                            data-id="${row.id}" data-action="${action.name}" title="${action.title || action.name}">
+                        return `<button class="inline-flex items-center justify-center w-9 h-9 ${action.class || 'bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700'} rounded-lg transition-all duration-200 shadow-md hover:shadow-lg mr-2 custom-action-btn" 
+                            data-id="${rowId}" data-action="${action.name}" title="${action.title || action.name}">
                             <i class="${action.icon || 'fas fa-cog'}"></i>
                         </button>`;
                     }
                     return '';
             }
-        }).join('');
+        }).filter(button => button !== '').join('');
 
         return `<td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">${buttons}</td>`;
     }
@@ -372,6 +392,13 @@ export class TableManager {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.dataset.id;
                     this.onDelete(id);
+                });
+            });
+
+            tableBody.querySelectorAll('.restore-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    this.onRestore(id);
                 });
             });
 
