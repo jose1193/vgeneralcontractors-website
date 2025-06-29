@@ -33,8 +33,6 @@ resources/
   views/
     insurance-companies/
       index.blade.php
-    components/
-      crud-manager-modal.blade.php
   js/
     crud-manager-modal.js
 
