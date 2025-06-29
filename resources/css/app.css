@@ -69,10 +69,11 @@ input:checked ~ .block {
 }
 
 .swal2-title {
-    padding: 1.5rem 4rem 1.5rem 1.5rem !important; /* Agregado padding-right para el botón X */
+    padding: 2rem 3rem 1.5rem 1.5rem !important; /* Más padding superior, menos derecho ya que el botón es más pequeño */
     margin: 0 !important;
     width: 100% !important;
     text-align: center !important;
+    position: relative !important; /* Para que el posicionamiento sea independiente del botón X */
 }
 
 /* Estilos generales para el modal */
@@ -80,6 +81,7 @@ input:checked ~ .block {
     border-radius: 12px !important;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     overflow: hidden !important;
+    position: relative !important; /* Para posicionamiento correcto del botón X */
 }
 
 /* Asegurar que el header también tenga border radius */
@@ -107,19 +109,19 @@ input:checked ~ .block {
     font-size: 1.5rem !important;
     font-weight: 600 !important;
     margin: 0 !important;
-    padding: 1rem 4rem 1rem 1rem !important; /* Consistente con el padding anterior */
+    padding: 1.5rem 3rem 1rem 1rem !important; /* Más padding superior, menos derecho */
 }
 
 .swal2-close {
-    font-size: 1.5rem !important;
+    font-size: 1.2rem !important; /* Reducido ligeramente */
     font-weight: 300 !important;
-    right: 1.25rem !important; /* Ajustado para mejor posicionamiento */
-    top: 1.25rem !important; /* Ajustado para mejor posicionamiento */
+    right: 0.75rem !important; /* Más pegado al borde */
+    top: 0.5rem !important; /* Mucho más arriba */
     background: #ef4444 !important;
     color: white !important;
     border-radius: 50% !important;
-    width: 2.5rem !important;
-    height: 2.5rem !important;
+    width: 2rem !important; /* Reducido para que interfiera menos */
+    height: 2rem !important; /* Reducido para que interfiera menos */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -128,15 +130,18 @@ input:checked ~ .block {
     overflow: hidden !important;
     padding: 0 !important;
     line-height: 1 !important;
-    z-index: 10 !important; /* Asegurar que esté por encima del título */
+    z-index: 1000 !important; /* Z-index muy alto */
+    position: absolute !important; /* Asegurar posicionamiento absoluto */
 }
 
 .swal2-close:hover {
     background: #dc2626 !important;
     color: white !important;
     border-radius: 50% !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.1) !important; /* Ligeramente más grande en hover */
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+    width: 2rem !important; /* Mantener dimensiones consistentes */
+    height: 2rem !important; /* Mantener dimensiones consistentes */
 }
 
 /* Estilos para el formulario */
