@@ -772,6 +772,7 @@ class CrudManagerModal {
                 "email",
                 this.translations.invalidEmail || "Invalid email format"
             );
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -802,17 +803,20 @@ class CrudManagerModal {
                         this.translations.emailAlreadyInUse ||
                             "This email is already in use"
                     );
+                    this.updateSubmitButtonState();
                 } else {
                     this.clearFieldError("email");
                     this.showFieldSuccess(
                         "email",
                         this.translations.emailAvailable || "Email available"
                     );
+                    this.updateSubmitButtonState();
                 }
             } catch (error) {
                 console.error("Error validating email:", error);
                 // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
                 this.clearFieldError("email");
+                this.updateSubmitButtonState();
             }
         } else {
             // Si no hay endpoint, solo limpiar errores (formato válido)
@@ -887,6 +891,7 @@ class CrudManagerModal {
     async validateNameField(name) {
         if (!name) {
             this.clearFieldError("name");
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -894,6 +899,7 @@ class CrudManagerModal {
         if (!this.routes.checkName) {
             // Si no hay endpoint, solo limpiar errores
             this.clearFieldError("name");
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -922,17 +928,20 @@ class CrudManagerModal {
                     this.translations.nameAlreadyInUse ||
                         "This name is already in use"
                 );
+                this.updateSubmitButtonState();
             } else {
                 this.clearFieldError("name");
                 this.showFieldSuccess(
                     "name",
                     this.translations.nameAvailable || "Name available"
                 );
+                this.updateSubmitButtonState();
             }
         } catch (error) {
             console.error("Error validating name:", error);
             // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
             this.clearFieldError("name");
+            this.updateSubmitButtonState();
         }
     }
 
@@ -942,6 +951,7 @@ class CrudManagerModal {
     async validateInsuranceCompanyNameField(companyName) {
         if (!companyName) {
             this.clearFieldError("insurance_company_name");
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -949,6 +959,7 @@ class CrudManagerModal {
         if (!this.routes.checkName) {
             // Si no hay endpoint, solo limpiar errores
             this.clearFieldError("insurance_company_name");
+            this.updateSubmitButtonState();
             return;
         }
 
@@ -977,17 +988,20 @@ class CrudManagerModal {
                     this.translations.nameAlreadyInUse ||
                         "This company name is already in use"
                 );
+                this.updateSubmitButtonState();
             } else {
                 this.clearFieldError("insurance_company_name");
                 this.showFieldSuccess(
                     "insurance_company_name",
                     this.translations.nameAvailable || "Company name available"
                 );
+                this.updateSubmitButtonState();
             }
         } catch (error) {
             console.error("Error validating insurance company name:", error);
             // Si hay error en la validación, solo limpiar el error sin mostrar mensaje de éxito
             this.clearFieldError("insurance_company_name");
+            this.updateSubmitButtonState();
         }
     }
 
@@ -1074,9 +1088,6 @@ class CrudManagerModal {
         if (inputElement.length) {
             inputElement.removeClass("error").addClass("valid");
         }
-
-        // Actualizar estado del botón después de mostrar éxito
-        setTimeout(() => this.updateSubmitButtonState(), 50);
     }
 
     /**
@@ -1098,7 +1109,7 @@ class CrudManagerModal {
         }
 
         // Actualizar estado del botón después de limpiar error
-        setTimeout(() => this.updateSubmitButtonState(), 50);
+        setTimeout(() => this.updateSubmitButtonState(), 100);
     }
 
     /**
@@ -1216,10 +1227,9 @@ class CrudManagerModal {
      */
     hasValidationErrors() {
         // Verificar errores de validación visibles
-        const visibleErrors = $(".error-message").filter(
+        const visibleErrors = $(".error-message:not(.hidden)").filter(
             function () {
                 return (
-                    !$(this).hasClass("hidden") &&
                     $(this).hasClass("text-red-500") &&
                     $(this).text().trim() !== ""
                 );
@@ -1448,7 +1458,7 @@ class CrudManagerModal {
         }
 
         // Actualizar estado del botón después de mostrar error
-        setTimeout(() => this.updateSubmitButtonState(), 50);
+        setTimeout(() => this.updateSubmitButtonState(), 100);
     }
 
     /**
