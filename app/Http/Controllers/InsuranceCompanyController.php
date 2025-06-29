@@ -23,7 +23,7 @@ class InsuranceCompanyController extends BaseController
 {
     use CacheTraitCrud;
     
-    protected $modelClass = InsuranceCompany::class;
+    protected string $modelClass = InsuranceCompany::class;
     protected $entityName = 'INSURANCE_COMPANY';
     protected $routePrefix = 'insurance-companies';
     protected $viewPrefix = 'insurance-companies';
