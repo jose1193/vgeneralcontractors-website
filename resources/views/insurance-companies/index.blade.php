@@ -17,8 +17,6 @@
     @push('scripts')
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- CrudManagerModal -->
-        <script src="{{ asset('js/crud-main.js') }}"></script>
 
         <script>
             $(document).ready(function() {
