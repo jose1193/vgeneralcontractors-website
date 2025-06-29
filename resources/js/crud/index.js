@@ -197,6 +197,7 @@ export {
 if (typeof window !== 'undefined') {
     window.CrudSystem = {
         CrudManagerModal,
+        CrudManager: CrudManagerModal, // Alias for compatibility
         CrudCore,
         TableManager,
         FormManager,
