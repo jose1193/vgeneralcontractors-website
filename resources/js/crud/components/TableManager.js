@@ -66,12 +66,12 @@ export class TableManager {
         }
 
         return `
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
                         ${this.generateTableHeader()}
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                         ${data.map(row => this.generateTableRow(row)).join('')}
                     </tbody>
                 </table>
@@ -87,17 +87,17 @@ export class TableManager {
             const fieldKey = header.field || header.key;
             const label = header.name || header.label || fieldKey;
             const sortIcon = this.getSortIcon(fieldKey);
-            const sortClass = this.sortable && header.sortable !== false ? 'sortable' : '';
+            const sortClass = this.sortable && header.sortable !== false ? 'sortable cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700' : '';
             
             return `
-                <th class="${sortClass}" data-sort="${fieldKey}">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider ${sortClass}" data-sort="${fieldKey}">
                     ${label}
                     ${sortIcon}
                 </th>
             `;
         }).join('');
 
-        const actionsHeader = this.actions.length > 0 ? '<th class="text-center">Acciones</th>' : '';
+        const actionsHeader = this.actions.length > 0 ? '<th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Acciones</th>' : '';
         
         return `<tr>${headerCells}${actionsHeader}</tr>`;
     }
@@ -303,15 +303,15 @@ export class TableManager {
     generateEmptyTableHtml() {
         const colspan = this.headers.length + (this.actions.length > 0 ? 1 : 0);
         return `
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead class="table-dark">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
                         ${this.generateTableHeader()}
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                         <tr>
-                            <td colspan="${colspan}" class="text-center py-4">
-                                <div class="text-muted">
+                            <td colspan="${colspan}" class="px-6 py-4 text-center">
+                                <div class="text-gray-500 dark:text-gray-400">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <p>No hay datos disponibles</p>
                                 </div>

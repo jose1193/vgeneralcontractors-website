@@ -308,8 +308,8 @@
                 };
 
                 try {
-                    // Inicializar el sistema CRUD modular
-                    window.insuranceCompanyManager = new window.CrudSystem.CrudManagerModal(insuranceCompanyConfig);
+                    // Inicializar el nuevo sistema CRUD modular
+                    window.insuranceCompanyManager = new window.CrudSystem.CrudManager(insuranceCompanyConfig);
                     console.log('Insurance Company Manager initialized:', window.insuranceCompanyManager);
                     
                     // Cargar datos iniciales con delay para asegurar que todo esté listo
