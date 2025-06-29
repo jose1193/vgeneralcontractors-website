@@ -148,17 +148,23 @@ class InsuranceCompanyService extends BaseService
      */
     protected function formatPhoneForStorage(string $phone): string
     {
+        // If phone is already in (xxx) xxx-xxxx format, keep it as is
+        if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $phone)) {
+            return $phone;
+        }
+        
         // Remove all non-digits
         $cleaned = preg_replace('/\D/', '', $phone);
         
-        // If it's 10 digits, add +1 prefix for US numbers
+        // If it's 10 digits, format to (xxx) xxx-xxxx
         if (strlen($cleaned) === 10) {
-            return '+1' . $cleaned;
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
         }
         
-        // If it's 11 digits and starts with 1, add + prefix
+        // If it's 11 digits and starts with 1, remove the 1 and format
         if (strlen($cleaned) === 11 && str_starts_with($cleaned, '1')) {
-            return '+' . $cleaned;
+            $cleaned = substr($cleaned, 1);
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
         }
         
         return $cleaned;

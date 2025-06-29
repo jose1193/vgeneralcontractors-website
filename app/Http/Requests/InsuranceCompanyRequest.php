@@ -23,13 +23,25 @@ class InsuranceCompanyRequest extends BaseFormRequest
                     : 'unique:insurance_companies,insurance_company_name',
                 'not_regex:/test|example|fake|asdf/i'
             ],
-            'address' => $this->getAddressRules(10, 500),
-            'phone' => $this->getPhoneRules(),
-            'email' => array_merge($this->getEmailRules(), [
+            'address' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'phone' => [
+                 'nullable',
+                 'string',
+                 'max:20',
+                 'regex:/^\(\d{3}\)\s\d{3}-\d{4}$/'
+             ],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
                 $isUpdate 
                     ? "unique:insurance_companies,email,{$uuid},uuid"
                     : 'unique:insurance_companies,email'
-            ]),
+            ],
             'website' => [
                 'nullable',
                 'url',
@@ -38,7 +50,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'not_regex:/test|example|fake|localhost/i'
             ],
             'user_id' => [
-                'required',
+                'nullable',
                 'exists:users,id'
             ]
         ]);
@@ -58,16 +70,19 @@ class InsuranceCompanyRequest extends BaseFormRequest
             'insurance_company_name.max' => 'Company name may not be greater than 255 characters.',
             'insurance_company_name.not_regex' => 'Please provide a real company name.',
             
-            'address.required' => 'Address is required.',
-            'address.min' => 'Address must be at least 10 characters.',
             'address.max' => 'Address may not be greater than 500 characters.',
-            'address.not_regex' => 'Please provide a real address.',
+            
+            'phone.max' => 'Phone number may not be greater than 20 characters.',
+            'phone.regex' => 'Phone number format is invalid.',
+            
+            'email.email' => 'Email must be a valid email address.',
+            'email.unique' => 'This email is already taken.',
+            'email.max' => 'Email may not be greater than 255 characters.',
             
             'website.url' => 'Website must be a valid URL.',
             'website.regex' => 'Website must start with http:// or https://',
             'website.not_regex' => 'Please provide a real website URL.',
             
-            'user_id.required' => 'Assigned user is required.',
             'user_id.exists' => 'Selected user does not exist.',
         ]);
     }
@@ -92,12 +107,13 @@ class InsuranceCompanyRequest extends BaseFormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Clean and format phone number
-        if ($this->has('phone')) {
+        // Clean and format phone number to (xxx) xxx-xxxx
+        if ($this->has('phone') && !empty($this->phone)) {
             $phone = preg_replace('/\D/', '', $this->phone);
             if (strlen($phone) === 10) {
+                $formatted = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4);
                 $this->merge([
-                    'phone' => $phone
+                    'phone' => $formatted
                 ]);
             }
         }
@@ -127,4 +143,4 @@ class InsuranceCompanyRequest extends BaseFormRequest
             ]);
         }
     }
-} 
+}

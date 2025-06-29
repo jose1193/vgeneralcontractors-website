@@ -19,7 +19,7 @@ use App\Traits\CacheTraitCrud;
 use Throwable;
 use App\Http\DTOs\InsuranceCompanyDTO;
 
-class InsuranceCompanyController extends BaseCrudController
+class InsuranceCompanyController extends BaseController
 {
     use CacheTraitCrud;
     
@@ -163,59 +163,33 @@ class InsuranceCompanyController extends BaseCrudController
         ]);
     }
 
+    // Validation is now handled entirely by InsuranceCompanyRequest
+    // These methods are required by BaseController but not used since we use FormRequest validation
+    
     /**
-     * Get validation rules for insurance company
+     * Get validation rules - Not used, validation handled by InsuranceCompanyRequest
      */
-    protected function getValidationRules($id = null)
+    protected function getValidationRules(?int $id = null): array
     {
-        $nameRule = 'required|string|max:255|unique:insurance_companies,insurance_company_name';
-        $emailRule = 'nullable|email|max:255|unique:insurance_companies,email';
-        $phoneRule = 'nullable|string|max:20|unique:insurance_companies,phone';
-        
-        // If we have an ID (UUID in this case), exclude it from the unique check
-        if ($id) {
-            $nameRule .= ',' . $id . ',uuid';
-            $emailRule .= ',' . $id . ',uuid';
-            $phoneRule .= ',' . $id . ',uuid';
-        }
-        
-        return [
-            'insurance_company_name' => $nameRule . '|regex:/^[a-zA-Z\s\-\.\&\,\']+$/',
-            'address' => 'nullable|string|max:500',
-            'phone' => $phoneRule . '|regex:/^[\+]?[1-9][\d\-\(\)\s]{8,20}$/',
-            'email' => $emailRule,
-            'website' => 'nullable|url|max:255',
-            'user_id' => 'nullable|exists:users,id',
-        ];
+        // This method is required by BaseController but not used
+        // Validation is handled by InsuranceCompanyRequest
+        return [];
     }
 
     /**
-     * Get validation messages for insurance company
+     * Get validation messages - Not used, validation handled by InsuranceCompanyRequest
      */
-    protected function getValidationMessages()
+    protected function getValidationMessages(): array
     {
-        return [
-            'insurance_company_name.required' => 'The insurance company name is required.',
-            'insurance_company_name.unique' => 'This insurance company name is already taken.',
-            'insurance_company_name.max' => 'The insurance company name may not be greater than 255 characters.',
-            'insurance_company_name.regex' => 'The insurance company name contains invalid characters.',
-            'address.max' => 'The address may not be greater than 500 characters.',
-            'phone.unique' => 'This phone number is already taken.',
-            'phone.max' => 'The phone number may not be greater than 20 characters.',
-            'phone.regex' => 'The phone number format is invalid.',
-            'email.email' => 'The email must be a valid email address.',
-            'email.unique' => 'This email is already taken.',
-            'email.max' => 'The email may not be greater than 255 characters.',
-            'website.url' => 'The website must be a valid URL.',
-            'website.max' => 'The website may not be greater than 255 characters.',
-            'user_id.exists' => 'The selected user does not exist.',
-        ];
+        // This method is required by BaseController but not used
+        // Validation is handled by InsuranceCompanyRequest
+        return [];
     }
 
     /**
      * Get the search field for the entity
      */
-    protected function getSearchField()
+    protected function getSearchField(): string
     {
         return 'insurance_company_name';
     }
@@ -223,7 +197,7 @@ class InsuranceCompanyController extends BaseCrudController
     /**
      * Get the name field for the entity
      */
-    protected function getNameField()
+    protected function getNameField(): string
     {
         return 'insurance_company_name';
     }
@@ -231,7 +205,7 @@ class InsuranceCompanyController extends BaseCrudController
     /**
      * Get entity display name
      */
-    protected function getEntityDisplayName($entity)
+    protected function getEntityDisplayName($entity): string
     {
         return $entity->insurance_company_name . ' (' . $entity->email . ')';
     }
@@ -239,7 +213,7 @@ class InsuranceCompanyController extends BaseCrudController
     /**
      * Prepare data for storing
      */
-    protected function prepareStoreData(Request $request)
+    protected function prepareStoreData(Request $request): array
     {
         $formattedPhone = $this->formatPhoneForStorage($request->phone);
         $formattedWebsite = $this->formatWebsite($request->website);
@@ -265,7 +239,7 @@ class InsuranceCompanyController extends BaseCrudController
     /**
      * Prepare data for updating
      */
-    protected function prepareUpdateData(Request $request)
+    protected function prepareUpdateData(Request $request): array
     {
         $formattedPhone = $this->formatPhoneForStorage($request->phone);
         $formattedWebsite = $this->formatWebsite($request->website);
@@ -287,22 +261,30 @@ class InsuranceCompanyController extends BaseCrudController
         ], fn ($value) => !is_null($value));
     }
 
+
+
     /**
      * Format phone number for storage
      */
     private function formatPhoneForStorage(string $phone): string
     {
+        // If phone is already in (xxx) xxx-xxxx format, keep it as is
+        if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $phone)) {
+            return $phone;
+        }
+        
         // Remove all non-digits
         $cleaned = preg_replace('/\D/', '', $phone);
         
-        // If it's 10 digits, add +1 prefix for US numbers
+        // If it's 10 digits, format to (xxx) xxx-xxxx
         if (strlen($cleaned) === 10) {
-            return '+1' . $cleaned;
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
         }
         
-        // If it's 11 digits and starts with 1, add + prefix
+        // If it's 11 digits and starts with 1, remove the 1 and format
         if (strlen($cleaned) === 11 && str_starts_with($cleaned, '1')) {
-            return '+' . $cleaned;
+            $cleaned = substr($cleaned, 1);
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
         }
         
         return $cleaned;
@@ -327,9 +309,16 @@ class InsuranceCompanyController extends BaseCrudController
         return $website;
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate($this->getValidationRules(), $this->getValidationMessages());
+        // Create InsuranceCompanyRequest instance for validation
+        $formRequest = InsuranceCompanyRequest::createFrom($request);
+        $formRequest->setContainer(app());
+        $formRequest->setRedirector(app('redirect'));
+        
+        // Validate using InsuranceCompanyRequest
+        $validated = $formRequest->validated();
+        
         $dto = InsuranceCompanyDTO::fromArray($validated);
         $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
         return response()->json([
@@ -339,9 +328,15 @@ class InsuranceCompanyController extends BaseCrudController
         ]);
     }
 
-    public function update(Request $request, $uuid)
+    public function update(Request $request, string $uuid): JsonResponse
     {
-        $validated = $request->validate($this->getValidationRules($uuid), $this->getValidationMessages());
+        // Create InsuranceCompanyRequest instance for validation
+        $formRequest = InsuranceCompanyRequest::createFrom($request);
+        $formRequest->setContainer(app());
+        $formRequest->setRedirector(app('redirect'));
+        
+        // Validate using InsuranceCompanyRequest
+        $validated = $formRequest->validated();
         $dto = InsuranceCompanyDTO::fromArray(array_merge($validated, ['uuid' => $uuid]));
         $insuranceCompany = $this->insuranceCompanyService->update($dto);
         return response()->json([
@@ -351,7 +346,7 @@ class InsuranceCompanyController extends BaseCrudController
         ]);
     }
 
-    public function show($uuid)
+    public function show(string $uuid): JsonResponse
     {
         $insuranceCompany = $this->insuranceCompanyService->findByUuid($uuid);
         if (!$insuranceCompany) {
@@ -360,7 +355,7 @@ class InsuranceCompanyController extends BaseCrudController
         return response()->json(['success' => true, 'data' => $insuranceCompany]);
     }
 
-    public function edit($uuid)
+    public function edit(string $uuid): JsonResponse
     {
         $insuranceCompany = $this->insuranceCompanyService->findByUuid($uuid);
         if (!$insuranceCompany) {
@@ -369,7 +364,7 @@ class InsuranceCompanyController extends BaseCrudController
         return response()->json(['success' => true, 'data' => $insuranceCompany]);
     }
 
-    public function destroy($uuid)
+    public function destroy(string $uuid): JsonResponse
     {
         $deleted = $this->insuranceCompanyService->deleteByUuid($uuid);
         if (!$deleted) {
@@ -378,7 +373,7 @@ class InsuranceCompanyController extends BaseCrudController
         return response()->json(['success' => true, 'message' => 'Insurance company deleted successfully']);
     }
 
-    public function restore($uuid)
+    public function restore(string $uuid): JsonResponse
     {
         $restored = $this->insuranceCompanyService->restoreByUuid($uuid);
         if (!$restored) {
