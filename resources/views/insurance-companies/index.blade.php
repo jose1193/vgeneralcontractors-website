@@ -157,7 +157,10 @@
                         {
                             field: 'email',
                             name: 'Email',
-                            sortable: true
+                            sortable: true,
+                            getter: (entity) => {
+                                return entity.email || 'N/A';
+                            }
                         },
                         {
                             field: 'phone',

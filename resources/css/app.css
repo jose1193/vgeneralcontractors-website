@@ -114,11 +114,24 @@ input:checked ~ .block {
     font-weight: 300 !important;
     right: 1rem !important;
     top: 1rem !important;
+    background: #ef4444 !important;
+    color: white !important;
+    border-radius: 9999px !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
 }
 
 .swal2-close:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 50% !important;
+    background: #dc2626 !important;
+    color: white !important;
+    border-radius: 9999px !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
 }
 
 /* Estilos para el formulario */
