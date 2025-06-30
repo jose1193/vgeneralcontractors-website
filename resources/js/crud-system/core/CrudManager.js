@@ -59,7 +59,19 @@ export class CrudManager {
         };
 
         // Configuración de traducciones
-        this.translations = options.translations || {};
+        this.translations = options.translations || {
+            confirmDelete: "Are you sure?",
+            deleteMessage: "Do you want to delete this element?",
+            confirmRestore: "Restore record?",
+            restoreMessage: "Do you want to restore this element?",
+            yesDelete: "Yes, delete",
+            yesRestore: "Yes, restore",
+            cancel: "Cancel",
+            deletedSuccessfully: "deleted successfully",
+            restoredSuccessfully: "restored successfully",
+            errorDeleting: "Error deleting record",
+            errorRestoring: "Error restoring record",
+        };
 
         // Configuración de entidad
         this.entityConfig = options.entityConfig || {
@@ -81,6 +93,8 @@ export class CrudManager {
             this.colorConfig
         );
         this.eventHandler = new CrudEventHandler(this);
+
+        this.init();
     }
 
     /**
@@ -102,7 +116,7 @@ export class CrudManager {
         this.currentPage = page;
 
         // Mostrar loading
-        this.tableRenderer.showTableLoading();
+        this.showTableLoading();
 
         const requestData = {
             page: this.currentPage,
@@ -114,35 +128,18 @@ export class CrudManager {
         };
 
         try {
-            const response = await $.ajax({
-                url: this.routes.index,
-                type: "GET",
-                dataType: "json",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                data: requestData,
-            });
-
+            const response = await this.apiClient.fetchEntities(requestData);
             console.log("AJAX success response:", response);
             this.currentData = response;
-            this.tableRenderer.renderTable(response, this.singleRecordMode);
-            this.tableRenderer.renderPagination(
-                response,
-                this.singleRecordMode,
-                this.paginationSelector
-            );
+            this.renderTable(response);
+            this.renderPagination(response);
         } catch (error) {
             console.error("Error loading entities:", error);
             this.modalManager.showAlert(
                 "error",
-                `Error loading ${this.entityNamePlural}: ${error.status} ${error.statusText}`
+                `Error loading ${this.entityNamePlural}: ${error.message}`
             );
-            this.tableRenderer.hideTableLoading();
-            throw error;
+            this.hideTableLoading();
         }
     }
 
@@ -150,7 +147,10 @@ export class CrudManager {
      * Mostrar modal de creación
      */
     async showCreateModal() {
-        // En modo de registro único, redirigir a editar
+        // Limpiar alertas previas
+        this.modalManager.clearAlerts(this.alertSelector);
+
+        // En modo de registro único, redirigir a editar el registro existente
         if (this.singleRecordMode) {
             await this.loadEntities();
             if (
@@ -162,24 +162,25 @@ export class CrudManager {
                 await this.showEditModal(entity[this.idField]);
                 return;
             }
-            Swal.fire({
-                icon: "info",
-                title: "No data",
-                text: "No se encontró información para editar. Contacte al administrador.",
-            });
+            this.modalManager.showAlert(
+                "info",
+                "No se encontró información para editar. Contacte al administrador."
+            );
             return;
         }
 
         this.isEditing = false;
         this.currentEntity = null;
+        this.validator.setEditingContext(false, null, this.translations);
 
         const formHtml = this.formBuilder.generateFormHtml();
+
         await this.modalManager.showCreateModal(
             `Crear ${this.entityName}`,
             formHtml,
-            () => this.validateAndGetFormData(),
+            () => this.validator.validateAndGetFormData(false),
             () => this.initializeFormElements(),
-            (result) => this.createEntity(result.value)
+            async (result) => await this.createEntity(result.value)
         );
     }
 
@@ -189,6 +190,12 @@ export class CrudManager {
     async showEditModal(id) {
         console.log("showEditModal called with id:", id);
 
+        // Limpiar alertas previas
+        this.modalManager.clearAlerts(this.alertSelector);
+
+        this.isEditing = true;
+
+        // Validar que tenemos un ID válido
         if (!id || id === "undefined" || id === "null") {
             console.error("Invalid ID provided to showEditModal:", id);
             this.modalManager.showAlert(
@@ -198,10 +205,10 @@ export class CrudManager {
             return;
         }
 
-        this.isEditing = true;
-
         try {
             const editUrl = this.routes.edit.replace(":id", id);
+            console.log("Edit URL:", editUrl);
+
             const response = await $.ajax({
                 url: editUrl,
                 type: "GET",
@@ -213,7 +220,14 @@ export class CrudManager {
                 },
             });
 
+            console.log("Edit AJAX response received successfully");
             this.currentEntity = response.data || response;
+            this.validator.setEditingContext(
+                true,
+                this.currentEntity,
+                this.translations
+            );
+
             const formHtml = this.formBuilder.generateFormHtml(
                 this.currentEntity
             );
@@ -221,13 +235,20 @@ export class CrudManager {
             await this.modalManager.showEditModal(
                 `Editar ${this.entityName}`,
                 formHtml,
-                () => this.validateAndGetFormData(),
+                () => this.validator.validateAndGetFormData(true),
                 () => {
                     this.initializeFormElements();
                     this.formBuilder.populateForm(this.currentEntity);
-                    this.validator.verifyAndFixSelectValues(this.currentEntity);
+
+                    // Verificar y corregir valores de select después de un breve delay
+                    setTimeout(() => {
+                        this.formBuilder.verifyAndFixSelectValues(
+                            this.currentEntity
+                        );
+                        this.validator.updateSubmitButtonState();
+                    }, 200);
                 },
-                (result) => this.updateEntity(id, result.value)
+                async (result) => await this.updateEntity(id, result.value)
             );
         } catch (error) {
             console.error("Error loading entity for edit:", error);
@@ -244,24 +265,28 @@ export class CrudManager {
     async createEntity(data) {
         try {
             Swal.showLoading();
-            await this.apiClient.createEntity(data);
+
+            const response = await this.apiClient.createEntity(data);
+
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} creado exitosamente`
+                `${this.entityName} creado exitosamente`,
+                this.alertSelector
             );
             this.loadEntities();
         } catch (error) {
             Swal.close();
             console.error("Error creating entity:", error);
-            if (error.status === 422 && error.responseJSON?.errors) {
+
+            if (error.message.includes("422") && error.responseJSON?.errors) {
                 this.modalManager.showValidationErrors(
                     error.responseJSON.errors
                 );
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.responseJSON?.message || "Error creating record"
+                    error.message || "Error creating record"
                 );
             }
         }
@@ -273,24 +298,28 @@ export class CrudManager {
     async updateEntity(id, data) {
         try {
             Swal.showLoading();
-            await this.apiClient.updateEntity(id, data);
+
+            const response = await this.apiClient.updateEntity(id, data);
+
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} actualizado exitosamente`
+                `${this.entityName} actualizado exitosamente`,
+                this.alertSelector
             );
             this.loadEntities();
         } catch (error) {
             Swal.close();
             console.error("Error updating entity:", error);
-            if (error.status === 422 && error.responseJSON?.errors) {
+
+            if (error.message.includes("422") && error.responseJSON?.errors) {
                 this.modalManager.showValidationErrors(
                     error.responseJSON.errors
                 );
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.responseJSON?.message || "Error updating record"
+                    error.message || "Error updating record"
                 );
             }
         }
@@ -300,12 +329,52 @@ export class CrudManager {
      * Eliminar entidad
      */
     async deleteEntity(id) {
-        const entity = await this.getEntityForConfirmation(id);
-        const entityInfo = this.getEntityIdentifier(entity);
+        let entityDisplayName = "";
+        let entityIdentifier = "";
+        let entity = null;
 
+        // Intentar obtener datos desde la fila de la tabla
+        const buttonElement = $(`.delete-btn[data-id="${id}"]`)[0];
+        if (buttonElement) {
+            entity = this.getEntityDataFromRow(buttonElement);
+        }
+
+        // Si no se pudo obtener desde la tabla, hacer llamada AJAX como fallback
+        if (!entity) {
+            try {
+                const response = await $.ajax({
+                    url: this.routes.edit.replace(":id", id),
+                    type: "GET",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                });
+
+                entity = response.data || response;
+            } catch (error) {
+                console.error(
+                    "Error getting entity data for delete confirmation:",
+                    error
+                );
+                entityIdentifier = "this element";
+                entityDisplayName = "element";
+            }
+        }
+
+        // Obtener identificador usando la configuración
+        if (entity) {
+            const entityInfo = this.getEntityIdentifier(entity);
+            entityIdentifier = entityInfo.identifier;
+            entityDisplayName = entityInfo.displayName;
+        }
+
+        // Crear mensaje personalizado
         let customMessage = this.translations.deleteMessage;
-        if (entityInfo.identifier && entityInfo.identifier !== "this element") {
-            customMessage = `¿Deseas eliminar ${entityInfo.displayName}: <strong>${entityInfo.identifier}</strong>?`;
+        if (entityIdentifier && entityIdentifier !== "this element") {
+            customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
@@ -324,7 +393,8 @@ export class CrudManager {
                 await this.apiClient.deleteEntity(id);
                 this.modalManager.showAlert(
                     "success",
-                    `${this.entityName} ${this.translations.deletedSuccessfully}`
+                    `${this.entityName} ${this.translations.deletedSuccessfully}`,
+                    this.alertSelector
                 );
                 this.loadEntities();
             } catch (error) {
@@ -341,12 +411,52 @@ export class CrudManager {
      * Restaurar entidad
      */
     async restoreEntity(id) {
-        const entity = await this.getEntityForConfirmation(id);
-        const entityInfo = this.getEntityIdentifier(entity);
+        let entityDisplayName = "";
+        let entityIdentifier = "";
+        let entity = null;
 
+        // Intentar obtener datos desde la fila de la tabla
+        const buttonElement = $(`.restore-btn[data-id="${id}"]`)[0];
+        if (buttonElement) {
+            entity = this.getEntityDataFromRow(buttonElement);
+        }
+
+        // Si no se pudo obtener desde la tabla, hacer llamada AJAX como fallback
+        if (!entity) {
+            try {
+                const response = await $.ajax({
+                    url: this.routes.edit.replace(":id", id),
+                    type: "GET",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                        Accept: "application/json",
+                    },
+                });
+
+                entity = response.data || response;
+            } catch (error) {
+                console.error(
+                    "Error getting entity data for restore confirmation:",
+                    error
+                );
+                entityIdentifier = "this element";
+                entityDisplayName = "element";
+            }
+        }
+
+        // Obtener identificador usando la configuración
+        if (entity) {
+            const entityInfo = this.getEntityIdentifier(entity);
+            entityIdentifier = entityInfo.identifier;
+            entityDisplayName = entityInfo.displayName;
+        }
+
+        // Crear mensaje personalizado
         let customMessage = this.translations.restoreMessage;
-        if (entityInfo.identifier && entityInfo.identifier !== "this element") {
-            customMessage = `¿Deseas restaurar ${entityInfo.displayName}: <strong>${entityInfo.identifier}</strong>?`;
+        if (entityIdentifier && entityIdentifier !== "this element") {
+            customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
@@ -365,7 +475,8 @@ export class CrudManager {
                 await this.apiClient.restoreEntity(id);
                 this.modalManager.showAlert(
                     "success",
-                    `${this.entityName} ${this.translations.restoredSuccessfully}`
+                    `${this.entityName} ${this.translations.restoredSuccessfully}`,
+                    this.alertSelector
                 );
                 this.loadEntities();
             } catch (error) {
@@ -388,51 +499,20 @@ export class CrudManager {
     }
 
     /**
-     * Validar y obtener datos del formulario
-     */
-    validateAndGetFormData() {
-        return this.validator.validateAndGetFormData(this.isEditing);
-    }
-
-    /**
-     * Obtener entidad para confirmación
-     */
-    async getEntityForConfirmation(id) {
-        const buttonElement = $(
-            `.delete-btn[data-id="${id}"], .restore-btn[data-id="${id}"]`
-        )[0];
-        if (buttonElement) {
-            return this.getEntityDataFromRow(buttonElement);
-        }
-
-        try {
-            const response = await $.ajax({
-                url: this.routes.edit.replace(":id", id),
-                type: "GET",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-            });
-            return response.data || response;
-        } catch (error) {
-            console.error("Error getting entity data:", error);
-            return null;
-        }
-    }
-
-    /**
      * Obtener datos de entidad desde la fila de la tabla
      */
     getEntityDataFromRow(button) {
         try {
             const row = $(button).closest("tr");
             const entityDataString = row.attr("data-entity");
+
             if (entityDataString) {
-                return JSON.parse(entityDataString.replace(/&quot;/g, '"'));
+                const entityData = JSON.parse(
+                    entityDataString.replace(/&quot;/g, '"')
+                );
+                return entityData;
             }
+
             return null;
         } catch (error) {
             console.error("Error parsing entity data from row:", error);
@@ -441,9 +521,10 @@ export class CrudManager {
     }
 
     /**
-     * Obtener identificador de entidad
+     * Obtener identificador de entidad usando configuración
      */
     getEntityIdentifier(entity) {
+        // Si hay una función personalizada de formato, usarla
         if (
             this.entityConfig.detailFormat &&
             typeof this.entityConfig.detailFormat === "function"
@@ -460,28 +541,174 @@ export class CrudManager {
             }
         }
 
+        // Intentar con el campo principal configurado
         if (entity && entity[this.entityConfig.identifierField]) {
+            const identifier = entity[this.entityConfig.identifierField];
             return {
-                identifier: entity[this.entityConfig.identifierField],
+                identifier: identifier,
                 displayName: this.entityConfig.displayName,
                 field: this.entityConfig.identifierField,
             };
         }
 
+        // Intentar con campos alternativos
         for (const field of this.entityConfig.fallbackFields) {
             if (entity && entity[field]) {
+                const identifier = entity[field];
                 return {
-                    identifier: entity[field],
+                    identifier: identifier,
                     displayName: this.entityConfig.displayName,
                     field: field,
                 };
             }
         }
 
+        // Fallback final
         return {
             identifier: "this element",
             displayName: "element",
             field: null,
         };
+    }
+
+    /**
+     * Renderizar tabla
+     */
+    renderTable(data) {
+        // En modo de registro único, no renderizamos tabla
+        if (this.singleRecordMode) {
+            console.log("Single record mode - skipping table rendering");
+            return;
+        }
+
+        const entities = data.data;
+        let html = "";
+
+        if (entities.length === 0) {
+            const noRecordsText =
+                this.translations.noRecordsFound ||
+                "No se encontraron registros";
+            html = `<tr><td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
+        } else {
+            entities.forEach((entity) => {
+                const isDeleted = entity.deleted_at !== null;
+                const rowClass = isDeleted
+                    ? "bg-red-50 dark:bg-red-900 opacity-60"
+                    : "";
+
+                // Almacenar datos de la entidad como JSON en atributo data
+                const entityData = JSON.stringify(entity).replace(
+                    /"/g,
+                    "&quot;"
+                );
+
+                html += `<tr class="${rowClass}" data-entity="${entityData}">`;
+
+                this.tableHeaders.forEach((header) => {
+                    let value = header.getter
+                        ? header.getter(entity)
+                        : entity[header.field];
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">${value}</td>`;
+                });
+
+                html += `</tr>`;
+            });
+        }
+
+        $(this.tableSelector).html(html);
+    }
+
+    /**
+     * Renderizar paginación
+     */
+    renderPagination(data) {
+        // En modo de registro único, no renderizamos paginación
+        if (this.singleRecordMode) {
+            console.log("Single record mode - skipping pagination rendering");
+            return;
+        }
+
+        let paginationHtml = "";
+
+        if (data.last_page > 1) {
+            paginationHtml += '<div class="flex items-center justify-between">';
+            paginationHtml += `<div class="text-sm text-gray-700">Showing ${data.from} to ${data.to} of ${data.total} results</div>`;
+            paginationHtml += '<div class="flex space-x-1">';
+
+            // Botón anterior
+            if (data.current_page > 1) {
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
+                    data.current_page - 1
+                }">Previous</button>`;
+            }
+
+            // Números de página
+            for (
+                let i = Math.max(1, data.current_page - 2);
+                i <= Math.min(data.last_page, data.current_page + 2);
+                i++
+            ) {
+                const activeClass =
+                    i === data.current_page
+                        ? "bg-blue-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50";
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border border-gray-300 rounded-md ${activeClass}" data-page="${i}">${i}</button>`;
+            }
+
+            // Botón siguiente
+            if (data.current_page < data.last_page) {
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
+                    data.current_page + 1
+                }">Next</button>`;
+            }
+
+            paginationHtml += "</div></div>";
+        }
+
+        $(this.paginationSelector).html(paginationHtml);
+
+        // Event listener para paginación
+        $(".pagination-btn").on("click", (e) => {
+            const page = $(e.target).data("page");
+            this.loadEntities(page);
+        });
+    }
+
+    /**
+     * Mostrar loading en tabla
+     */
+    showTableLoading() {
+        const loadingHtml = `
+            <tr id="loadingRow">
+                <td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center">
+                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Loading...
+                </td>
+            </tr>
+        `;
+        $(this.tableSelector).html(loadingHtml);
+    }
+
+    /**
+     * Ocultar loading en tabla
+     */
+    hideTableLoading() {
+        $("#loadingRow").remove();
+    }
+
+    // Getters para acceso desde otros módulos
+    get formBuilder() {
+        return this.formBuilder;
+    }
+
+    get modalManager() {
+        return this.modalManager;
+    }
+
+    get validator() {
+        return this.validator;
     }
 }
