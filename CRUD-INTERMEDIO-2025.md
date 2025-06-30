@@ -33,8 +33,22 @@ resources/
   views/
     insurance-companies/
       index.blade.php
-  js/
-    crud-manager-modal.js
+resources/js/
+├── crud-system/
+│   ├── core/
+│   │   ├── CrudManager.js           # 🎯 Orquestador principal
+│   │   ├── CrudApiClient.js         # 🌐 Comunicación con APIs
+│   │   ├── CrudFormBuilder.js       # 📝 Construcción de formularios
+│   │   ├── CrudValidator.js         # ✅ Validación de datos
+│   │   ├── CrudTableRenderer.js     # 📊 Renderizado de tablas
+│   │   ├── CrudModalManager.js      # 🪟 Gestión de modales
+│   │   └── CrudEventHandler.js      # ⚡ Gestión de eventos
+│   ├── utils/
+│   │   ├── CrudUtils.js             # 🔧 Utilidades generales
+│   │   └── CrudConstants.js         # 📋 Constantes del sistema
+│   └── index.js                     # 📦 Punto de entrada
+├── crud-main.js                     # 🚀 Archivo principal
+└── crud-manager-modal.js            # 🔄 (Mantener retrocompatibilidad)
 
 routes/
   web.php
