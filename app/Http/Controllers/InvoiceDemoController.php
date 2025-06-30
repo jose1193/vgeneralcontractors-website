@@ -154,12 +154,6 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
-            // IMPORTANT: Clear both cache systems after creating invoice
-            $this->markSignificantDataChange();
-            $this->clearCrudCache('invoice_demo');
-            // Also ensure service cache is cleared (belt and suspenders approach)
-            $this->invoiceService->clearInvoiceCaches();
-            
             // Queue PDF generation in background
             GenerateInvoicePdf::dispatch($invoice);
             
@@ -234,12 +228,6 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
-            // IMPORTANT: Clear both cache systems after updating invoice
-            $this->markSignificantDataChange();
-            $this->clearCrudCache('invoice_demo');
-            // Also ensure service cache is cleared (belt and suspenders approach)
-            $this->invoiceService->clearInvoiceCaches();
-            
             // Queue PDF regeneration in background
             GenerateInvoicePdf::dispatch($updatedInvoice, true);
             
@@ -282,12 +270,6 @@ class InvoiceDemoController extends BaseController
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->deleteInvoice($invoice, auth()->id());
-            
-            // IMPORTANT: Clear both cache systems after deleting invoice
-            $this->markSignificantDataChange();
-            $this->clearCrudCache('invoice_demo');
-            // Also ensure service cache is cleared (belt and suspenders approach)
-            $this->invoiceService->clearInvoiceCaches();
 
             return response()->json([
                 'success' => true,
@@ -323,12 +305,6 @@ class InvoiceDemoController extends BaseController
             $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->restoreInvoice($invoice, auth()->id());
-            
-            // IMPORTANT: Clear both cache systems after restoring invoice
-            $this->markSignificantDataChange();
-            $this->clearCrudCache('invoice_demo');
-            // Also ensure service cache is cleared (belt and suspenders approach)
-            $this->invoiceService->clearInvoiceCaches();
 
             return response()->json([
                 'success' => true,
