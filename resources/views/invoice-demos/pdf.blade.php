@@ -142,7 +142,15 @@
                 <div class="company-info">
                     {{ $company->address ?? '1522 Waugh Dr # 510' }}<br>
                     {{ $company->city ?? 'Houston' }}, {{ $company->state ?? 'TX' }} {{ $company->zip ?? '77019' }}<br>
-                    {{ $company->phone ?? '+1(346)200-5737' }}<br>
+                    @php
+                        $phone = $collectionsEmail->phone ?? '+17133646240';
+                        // Format phone number as (xxx) xxx-xxxx
+                        if (strlen($phone) >= 10) {
+                            $phone = preg_replace('/[^0-9]/', '', $phone);
+                            $phone = '(' . substr($phone, -10, 3) . ') ' . substr($phone, -7, 3) . '-' . substr($phone, -4);
+                        }
+                    @endphp
+                    {{ $phone }}<br>
                     {{ $collectionsEmail->email ?? 'collection@vgeneralcontractors.com' }}<br>
                     {{ $company->website ?? 'https://vgeneralcontractors.com/' }}
                 </div>
