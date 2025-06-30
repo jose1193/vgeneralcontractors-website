@@ -652,11 +652,23 @@ function invoiceDemoData() {
         calculateTotals() {
             let subtotal = 0;
             this.form.items.forEach((item) => {
-                subtotal += (item.quantity || 0) * (item.rate || 0);
+                // Asegurar que quantity y rate sean números con 2 decimales
+                item.quantity = parseFloat(item.quantity || 0).toFixed(2);
+                item.rate = parseFloat(item.rate || 0).toFixed(2);
+                
+                // Calcular el monto del ítem y formatearlo con 2 decimales
+                const itemAmount = (parseFloat(item.quantity) * parseFloat(item.rate));
+                item.amount = itemAmount.toFixed(2);
+                
+                subtotal += itemAmount;
             });
 
-            this.form.subtotal = subtotal;
-            this.form.balance_due = subtotal + (this.form.tax_amount || 0);
+            // Formatear subtotal y tax_amount con 2 decimales
+            this.form.subtotal = parseFloat(subtotal).toFixed(2);
+            this.form.tax_amount = parseFloat(this.form.tax_amount || 0).toFixed(2);
+            
+            // Calcular y formatear balance_due con 2 decimales
+            this.form.balance_due = (parseFloat(this.form.subtotal) + parseFloat(this.form.tax_amount)).toFixed(2);
         },
 
         // Submit form
@@ -1013,22 +1025,50 @@ function invoiceDemoData() {
         },
 
         // Format uppercase input (for claim/policy numbers)
-        formatUppercaseInput(event, fieldName) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
+    formatUppercaseInput(event, fieldName) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
 
-            // Convertir letras a mayúsculas, mantener números y guiones
-            const uppercaseValue = value.toUpperCase();
+        // Convertir letras a mayúsculas, mantener números y guiones
+        const uppercaseValue = value.toUpperCase();
 
-            // Solo actualizar si hay cambios para evitar loops
-            if (uppercaseValue !== value) {
-                input.value = uppercaseValue;
-                this.form[fieldName] = uppercaseValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
+        // Solo actualizar si hay cambios para evitar loops
+        if (uppercaseValue !== value) {
+            input.value = uppercaseValue;
+            this.form[fieldName] = uppercaseValue;
+            // Restaurar la posición del cursor
+            input.setSelectionRange(cursorPosition, cursorPosition);
+        }
+    },
+    
+    // Format invoice number input (ensure it starts with VG- and is uppercase)
+    formatInvoiceNumberInput(event) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+        
+        // Convertir a mayúsculas
+        let uppercaseValue = value.toUpperCase();
+        
+        // Asegurar que comience con VG-
+        if (!uppercaseValue.startsWith('VG-') && uppercaseValue.length > 0) {
+            if (uppercaseValue.startsWith('VG')) {
+                uppercaseValue = 'VG-' + uppercaseValue.substring(2);
+            } else {
+                uppercaseValue = 'VG-' + uppercaseValue;
             }
-        },
+        }
+        
+        // Solo actualizar si hay cambios para evitar loops
+        if (uppercaseValue !== value) {
+            input.value = uppercaseValue;
+            this.form.invoice_number = uppercaseValue;
+            // Ajustar la posición del cursor si se agregó el prefijo
+            const cursorAdjustment = uppercaseValue.length - value.length;
+            input.setSelectionRange(cursorPosition + cursorAdjustment, cursorPosition + cursorAdjustment);
+        }
+    },
 
         // Format service description (all uppercase)
         formatServiceDescriptionInput(event, itemIndex) {
