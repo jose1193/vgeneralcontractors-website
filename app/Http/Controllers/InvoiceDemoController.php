@@ -605,9 +605,11 @@ class InvoiceDemoController extends BaseController
     /**
      * ✅ NEW: After store hook for better job timing
      */
-    protected function afterStore(InvoiceDemo $invoice): void
+    protected function afterStore($entity): void
     {
         try {
+            $invoice = $entity; // $entity is already an InvoiceDemo instance
+            
             // Queue PDF generation in background AFTER transaction is committed
             GenerateInvoicePdf::dispatch($invoice);
             
@@ -621,7 +623,7 @@ class InvoiceDemoController extends BaseController
         } catch (Throwable $e) {
             Log::error('Error dispatching jobs after invoice creation', [
                 'error' => $e->getMessage(),
-                'invoice_id' => $invoice->id
+                'invoice_id' => $entity->id ?? 'unknown'
             ]);
         }
     }
@@ -629,9 +631,11 @@ class InvoiceDemoController extends BaseController
     /**
      * ✅ NEW: After update hook for better job timing
      */
-    protected function afterUpdate(InvoiceDemo $invoice): void
+    protected function afterUpdate($entity): void
     {
         try {
+            $invoice = $entity; // $entity is already an InvoiceDemo instance
+            
             // Queue PDF regeneration in background AFTER transaction is committed
             GenerateInvoicePdf::dispatch($invoice, true);
             
@@ -645,7 +649,7 @@ class InvoiceDemoController extends BaseController
         } catch (Throwable $e) {
             Log::error('Error dispatching jobs after invoice update', [
                 'error' => $e->getMessage(),
-                'invoice_id' => $invoice->id
+                'invoice_id' => $entity->id ?? 'unknown'
             ]);
         }
     }
