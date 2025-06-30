@@ -26,7 +26,7 @@
         }
 
         .logo img {
-            max-width: 180px;
+            max-width: 173px;
             height: auto;
         }
 
@@ -147,7 +147,7 @@
     <div class="container">
         <!-- Logo -->
         <div class="logo">
-            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="173"
                 alt="Logo V General Contractors">
         </div>
 
@@ -343,7 +343,7 @@
         <!-- Pie de Página -->
         <div class="footer">
             <p>Horario de atención:<br>
-                Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+                {{ $companyData->business_hours ?? 'Lunes a Viernes: 9:00 AM - 5:00 PM' }}</p>
             <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
                 Todos los derechos reservados.</p>
 

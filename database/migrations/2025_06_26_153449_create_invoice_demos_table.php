@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('bill_to_name');
             $table->text('bill_to_address');
             $table->string('bill_to_phone', 20)->nullable();
+            $table->string('bill_to_email', 100)->nullable();
             
             // Financial information
             $table->decimal('subtotal', 10, 2)->default(0);

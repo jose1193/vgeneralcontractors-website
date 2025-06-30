@@ -24,6 +24,7 @@ class InvoiceDemo extends Model
         'invoice_number',
         'invoice_date',
         'bill_to_name',
+        'bill_to_email',
         'bill_to_address',
         'bill_to_phone',
         'subtotal',
