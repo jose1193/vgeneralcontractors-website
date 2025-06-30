@@ -71,9 +71,17 @@ class InvoicePdfService
             // Load invoice with its items
             $invoice->load(['items']);
             
+            // Get company data
+            $company = \App\Models\CompanyData::first();
+            
+            // Get collections email
+            $collectionsEmail = \App\Models\EmailData::where('type', 'Collections')->first();
+            
             // Generate PDF using Laravel DomPDF
             $pdf = PDF::loadView('invoice-demos.pdf', [
-                'invoice' => $invoice
+                'invoice' => $invoice,
+                'company' => $company,
+                'collectionsEmail' => $collectionsEmail
             ]);
             
             // Set paper size and orientation

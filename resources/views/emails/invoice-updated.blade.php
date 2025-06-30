@@ -100,9 +100,9 @@
                                     <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">
                                         {{ $item['quantity'] }}</td>
                                     <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">
-                                        ${{ number_format($item['unit_price'], 2) }}</td>
+                                        ${{ number_format($item['rate'], 2) }}</td>
                                     <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">
-                                        ${{ number_format($item['quantity'] * $item['unit_price'], 2) }}</td>
+                                        ${{ number_format($item['quantity'] * $item['rate'], 2) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

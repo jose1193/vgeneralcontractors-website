@@ -32,7 +32,7 @@
             vertical-align: top;
         }
         .logo {
-            max-width: 180px;
+            max-width: 173px;
             height: auto;
             margin-top: 10px;
         }
@@ -131,16 +131,16 @@
         <!-- Header Section -->
         <div class="header">
             <div class="header-left">
-                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="V General Contractors" class="logo">
+                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $company->company_name ?? 'V General Contractors' }}" class="logo">
             </div>
             <div class="header-right">
-                <div class="company-name">V GENERAL CONTRACTORS</div>
+                <div class="company-name">{{ $company->company_name ?? 'V GENERAL CONTRACTORS' }}</div>
                 <div class="company-info">
-                    1522 Waugh Dr # 510<br>
-                    Houston, TX 77019<br>
-                    +1(346)200-5737<br>
-                    info@vgeneralcontractors.com<br>
-                    https://vgeneralcontractors.com/
+                    {{ $company->address ?? '1522 Waugh Dr # 510' }}<br>
+                    {{ $company->city ?? 'Houston' }}, {{ $company->state ?? 'TX' }} {{ $company->zip ?? '77019' }}<br>
+                    {{ $company->phone ?? '+1(346)200-5737' }}<br>
+                    {{ $collectionsEmail->email ?? 'collection@vgeneralcontractors.com' }}<br>
+                    {{ $company->website ?? 'https://vgeneralcontractors.com/' }}
                 </div>
             </div>
         </div>
@@ -157,7 +157,7 @@
                 @if($invoice->bill_to_address_2)
                 {{ $invoice->bill_to_address_2 }}<br>
                 @endif
-                {{ $invoice->bill_to_city }}, {{ $invoice->bill_to_state }} {{ $invoice->bill_to_zip }}
+                {{ $invoice->bill_to_city }}, {{ $invoice->bill_to_state }}, {{ $invoice->bill_to_zip }}
             </div>
             <div class="invoice-info">
                 <table>
