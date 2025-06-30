@@ -18,7 +18,7 @@ trait HandlesCompanyData
                     $this->companyData = CompanyData::create([
                         'company_name' => 'V General Contractors',
                         'company_email' => 'info@vgeneralcontractors.com',
-                        'company_phone' => '(349) 692-0757',
+                        'company_phone' => '(713) 587-6423',
                         'company_address' => '1302 Waugh Dr # 810 Houston TX 77019',
                         // otros campos necesarios...
                     ]);

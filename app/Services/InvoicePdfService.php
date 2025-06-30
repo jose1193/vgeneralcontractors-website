@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\InvoiceDemo;
+use App\Models\CompanyData;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -56,9 +57,26 @@ class InvoicePdfService
             // Load invoice with its items
             $invoice->load(['items']);
             
+            // Get company data
+            $companyData = CompanyData::first();
+            if (!$companyData) {
+                Log::warning('CompanyData not found in database, creating default record');
+                // Crear un registro por defecto si no existe
+                $companyData = CompanyData::create([
+                    'name' => 'V General Contractors',
+                    'company_name' => 'V General Contractors',
+                    'email' => 'info@vgeneralcontractors.com',
+                    'phone' => '(346)200-5737',
+                    'address' => '1522 Waugh Dr # 510, Houston, TX 77019',
+                    'website' => 'https://vgeneralcontractors.com/',
+                    'signature_path' => 'assets/logo/logo-png.png',
+                ]);
+            }
+            
             // Generate PDF using Laravel DomPDF
             $pdf = PDF::loadView('invoice-demos.pdf', [
-                'invoice' => $invoice
+                'invoice' => $invoice,
+                'companyData' => $companyData
             ]);
             
             // Set paper size and orientation

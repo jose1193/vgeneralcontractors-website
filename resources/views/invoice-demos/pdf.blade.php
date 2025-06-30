@@ -32,7 +32,7 @@
             vertical-align: top;
         }
         .logo {
-            max-width: 180px;
+            max-width: 175px;
             height: auto;
             margin-top: 10px;
         }
@@ -131,16 +131,15 @@
         <!-- Header Section -->
         <div class="header">
             <div class="header-left">
-                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="V General Contractors" class="logo">
+                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $companyData->company_name ?? $companyData->name }}" class="logo">
             </div>
             <div class="header-right">
-                <div class="company-name">V GENERAL CONTRACTORS</div>
+                <div class="company-name">{{ strtoupper($companyData->company_name ?? $companyData->name) }}</div>
                 <div class="company-info">
-                    1522 Waugh Dr # 510<br>
-                    Houston, TX 77019<br>
-                    +1(346)200-5737<br>
-                    info@vgeneralcontractors.com<br>
-                    https://vgeneralcontractors.com/
+                    {!! nl2br(e($companyData->address)) !!}<br>
+                    {{ $companyData->phone }}<br>
+                    {{ $companyData->email }}<br>
+                    {{ $companyData->website ?? 'https://vgeneralcontractors.com/' }}
                 </div>
             </div>
         </div>

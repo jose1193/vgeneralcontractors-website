@@ -60,6 +60,8 @@ class ProcessInvoiceEmail implements ShouldQueue
             $notificationClass = $this->getNotificationClass();
 
             // Send notification to the client if we have an email
+            // Comentado temporalmente para evitar envío de correos al cliente
+            /*
             if ($this->invoice->bill_to_email) {
                 $notification = new $notificationClass($this->invoice, false, $this->companyData);
                 Notification::route('mail', $this->invoice->bill_to_email)
@@ -68,6 +70,9 @@ class ProcessInvoiceEmail implements ShouldQueue
             } else {
                 Log::warning('Invoice does not have an email address. Cannot send notification. UUID: ' . $this->invoice->uuid);
             }
+            */
+            // Registramos que se ha omitido el envío de correo al cliente
+            Log::info("Invoice {$this->emailType} email to client SKIPPED (function commented out): " . ($this->invoice->bill_to_email ?? 'No email') . ' for invoice UUID: ' . $this->invoice->uuid);
 
             // Send internal notification to admin
             $adminEmailData = EmailData::where('type', 'Admin')->first();
