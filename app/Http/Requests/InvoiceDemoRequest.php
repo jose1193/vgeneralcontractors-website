@@ -83,7 +83,7 @@ class InvoiceDemoRequest extends FormRequest
                 'required',
                 'string',
                 'max:20',
-                'regex:/^[\+]?[1-9]?[0-9]{7,15}$/'
+                'regex:/^\(\d{3}\)\s\d{3}-\d{4}$|^[\+]?[1-9]?[0-9]{7,15}$/'
             ],
             
             // Financial information
@@ -432,8 +432,14 @@ class InvoiceDemoRequest extends FormRequest
     {
         // Clean and format phone number
         if ($this->has('bill_to_phone')) {
-            $phone = preg_replace('/[^\d+]/', '', $this->bill_to_phone);
-            $this->merge(['bill_to_phone' => $phone ?: null]);
+            // Check if the phone is already in the format (xxx) xxx-xxxx
+            if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $this->bill_to_phone)) {
+                // Keep the formatted phone number as is
+            } else {
+                // For other formats, clean to just digits
+                $phone = preg_replace('/[^\d+]/', '', $this->bill_to_phone);
+                $this->merge(['bill_to_phone' => $phone ?: null]);
+            }
         }
         
         // Clean and format invoice number
