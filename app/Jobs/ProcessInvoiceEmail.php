@@ -90,6 +90,17 @@ class ProcessInvoiceEmail implements ShouldQueue
             } else {
                 Log::warning('Could not find info email address in EmailData table for type Info.');
             }
+            
+            // Send internal notification to Collections email
+            $collectionsEmailData = EmailData::where('type', 'Collections')->first();
+            if ($collectionsEmailData && $collectionsEmailData->email) {
+                $notification = new $notificationClass($this->invoice, true, $this->companyData);
+                Notification::route('mail', $collectionsEmailData->email)
+                    ->notify($notification);
+                Log::info("Internal invoice {$this->emailType} notification sent to collections: {$collectionsEmailData->email} for invoice UUID: " . $this->invoice->uuid);
+            } else {
+                Log::warning('Could not find collections email address in EmailData table for type Collections.');
+            }
         } catch (\Exception $e) {
             Log::error("Error sending invoice {$this->emailType} email for invoice UUID: " . $this->invoice->uuid . ' - Error: ' . $e->getMessage());
             throw $e;

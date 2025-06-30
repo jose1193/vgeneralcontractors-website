@@ -42,6 +42,9 @@ class InvoiceDemoService
             'include_deleted' => $includeDeleted
         ]);
 
+        // Track this cache key for later cleanup
+        $this->trackCacheKey($cacheKey);
+
         return Cache::remember($cacheKey, $this->cacheTime, function () use (
             $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted
         ) {
@@ -495,26 +498,73 @@ class InvoiceDemoService
     }
 
     /**
+     * Track cache key for later cleanup
+     */
+    protected function trackCacheKey(string $cacheKey): void
+    {
+        $trackedKeys = Cache::get('invoice_demo_cache_keys', []);
+        if (!in_array($cacheKey, $trackedKeys)) {
+            $trackedKeys[] = $cacheKey;
+            // Keep only last 1000 keys to prevent memory issues
+            if (count($trackedKeys) > 1000) {
+                $trackedKeys = array_slice($trackedKeys, -1000);
+            }
+            Cache::put('invoice_demo_cache_keys', $trackedKeys, $this->cacheTime * 10);
+        }
+    }
+
+    /**
      * Clear invoice-related caches
      */
-    protected function clearInvoiceCaches(): void
+    public function clearInvoiceCaches(): void
     {
-        $patterns = [
-            'invoice_demo_invoices_*',
+        // Clear specific known cache keys
+        $specificKeys = [
             'invoice_demo_form_data',
             'invoice_demo_statistics'
         ];
         
-        foreach ($patterns as $pattern) {
-            Cache::forget($pattern);
+        foreach ($specificKeys as $key) {
+            Cache::forget($key);
         }
         
-        // Clear paginated results cache
+        // Clear paginated results cache by tracking all keys
         $cacheKeys = Cache::get('invoice_demo_cache_keys', []);
         foreach ($cacheKeys as $key) {
             Cache::forget($key);
         }
         Cache::forget('invoice_demo_cache_keys');
+        
+        // Clear cache by pattern using Redis/Memcached commands if available
+        try {
+            if (config('cache.default') === 'redis') {
+                $redis = Cache::getRedis();
+                $keys = $redis->keys('laravel_cache:invoice_demo_*');
+                if (!empty($keys)) {
+                    $redis->del($keys);
+                }
+            } else {
+                // For file/database cache, we need to manually track keys
+                // This is a fallback when Redis is not available
+                $patterns = [
+                    'invoice_demo_invoices_',
+                    'invoice_demo_crud_'
+                ];
+                
+                foreach ($patterns as $pattern) {
+                    // Clear up to 1000 possible variations
+                    for ($i = 0; $i < 1000; $i++) {
+                        Cache::forget($pattern . md5($i));
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('Failed to clear pattern-based cache', [
+                'error' => $e->getMessage()
+            ]);
+        }
+        
+        Log::info('Invoice caches cleared successfully');
     }
 
     /**

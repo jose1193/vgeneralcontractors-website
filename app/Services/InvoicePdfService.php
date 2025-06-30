@@ -93,22 +93,51 @@ class InvoicePdfService
             $uniqueId = $this->generateUniqueFilename($invoice);
             $filename = $uniqueId . '.pdf';
             
-            // Full path in S3
-            $pdfS3Path = $storagePath . '/' . $filename;
+            // Full path
+            $pdfPath = $storagePath . '/' . $filename;
             
             // Get PDF content
             $pdfContent = $pdf->output();
             
-            // Upload to S3
-            Storage::disk('s3')->put($pdfS3Path, $pdfContent);
-            
-            // Return the PDF URL
-            return Storage::disk('s3')->url($pdfS3Path);
+            // Try S3 first, then fallback to local storage
+            try {
+                Storage::disk('s3')->put($pdfPath, $pdfContent);
+                $pdfUrl = Storage::disk('s3')->url($pdfPath);
+                
+                Log::info('PDF stored in S3 successfully', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_path' => $pdfPath,
+                    'pdf_url' => $pdfUrl
+                ]);
+                
+                return $pdfUrl;
+            } catch (Throwable $s3Error) {
+                Log::warning('S3 storage failed, trying local storage', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    's3_error' => $s3Error->getMessage()
+                ]);
+                
+                // Fallback to local storage
+                Storage::disk('public')->put($pdfPath, $pdfContent);
+                $pdfUrl = Storage::disk('public')->url($pdfPath);
+                
+                Log::info('PDF stored in local storage successfully', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_path' => $pdfPath,
+                    'pdf_url' => $pdfUrl
+                ]);
+                
+                return $pdfUrl;
+            }
         } catch (Throwable $e) {
             Log::error('Error storing invoice PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             return null;
         }
@@ -116,34 +145,23 @@ class InvoicePdfService
     
     /**
      * Generate a unique filename for the invoice PDF
-     * Format: vg-{invoice_number}-{date}-{claim_number}
+     * Format: VG-{invoice_number}-{datetime}
      *
      * @param InvoiceDemo $invoice
      * @return string
      */
     private function generateUniqueFilename(InvoiceDemo $invoice): string
     {
-        // Clean invoice number (remove VG- prefix if present)
-        $invoiceNumber = str_replace('VG-', '', $invoice->invoice_number);
+        // Use invoice number as-is (keeping VG- prefix)
+        $invoiceNumber = $invoice->invoice_number;
         
-        // Format date
-        $date = Carbon::parse($invoice->invoice_date)->format('Ymd');
+        // Current datetime
+        $datetime = Carbon::now()->format('YmdHis');
         
-        // Clean claim number (remove special characters)
-        $claimNumber = preg_replace('/[^a-zA-Z0-9]/', '', $invoice->claim_number ?? '');
+        // Create filename: VG-NUMBERINVOICE-DATETIME
+        $filename = $invoiceNumber . '-' . $datetime;
         
-        // Create base filename
-        $baseFilename = 'vg-' . $invoiceNumber . '-' . $date;
-        
-        // Add claim number if available
-        if (!empty($claimNumber)) {
-            $baseFilename .= '-' . $claimNumber;
-        }
-        
-        // Encrypt the filename for security
-        $encryptedFilename = Str::slug($baseFilename);
-        
-        return $encryptedFilename;
+        return $filename;
     }
     
     /**
@@ -190,16 +208,42 @@ class InvoicePdfService
     public function findExistingPdf(InvoiceDemo $invoice): ?string
     {
         try {
-            // Generate the filename pattern
-            $filenamePattern = $this->generateUniqueFilename($invoice);
+            // Check database first for existing PDF URL
+            if (!empty($invoice->pdf_url)) {
+                return $invoice->pdf_url;
+            }
             
-            // Search in S3 for matching files
-            $files = Storage::disk('s3')->files('invoices');
+            // If no URL in database, search files by invoice number pattern
+            $invoiceNumber = $invoice->invoice_number;
             
-            foreach ($files as $file) {
-                if (Str::contains($file, $filenamePattern) && Str::endsWith($file, '.pdf')) {
-                    return Storage::disk('s3')->url($file);
+            // Try S3 first
+            try {
+                $s3Files = Storage::disk('s3')->files('invoices');
+                foreach ($s3Files as $file) {
+                    if (Str::contains($file, $invoiceNumber) && Str::endsWith($file, '.pdf')) {
+                        return Storage::disk('s3')->url($file);
+                    }
                 }
+            } catch (Throwable $s3Error) {
+                Log::warning('S3 search failed, trying local storage', [
+                    'invoice_id' => $invoice->id,
+                    's3_error' => $s3Error->getMessage()
+                ]);
+            }
+            
+            // Try local storage
+            try {
+                $localFiles = Storage::disk('public')->files('invoices');
+                foreach ($localFiles as $file) {
+                    if (Str::contains($file, $invoiceNumber) && Str::endsWith($file, '.pdf')) {
+                        return Storage::disk('public')->url($file);
+                    }
+                }
+            } catch (Throwable $localError) {
+                Log::warning('Local storage search failed', [
+                    'invoice_id' => $invoice->id,
+                    'local_error' => $localError->getMessage()
+                ]);
             }
             
             return null;
