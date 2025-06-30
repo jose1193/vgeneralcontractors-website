@@ -9,9 +9,15 @@ export class CrudApiClient {
         Object.keys(params).forEach((key) =>
             url.searchParams.append(key, params[key])
         );
-        const response = await fetch(url, { credentials: "same-origin" });
-        if (!response.ok) throw new Error("Error fetching entities");
-        return await response.json();
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            credentials: "same-origin",
+        });
+        return this._handleResponse(response);
     }
 
     async createEntity(data) {
@@ -19,13 +25,13 @@ export class CrudApiClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Accept: "application/json",
                 "X-Requested-With": "XMLHttpRequest",
             },
             body: JSON.stringify(data),
             credentials: "same-origin",
         });
-        if (!response.ok) throw new Error("Error creating entity");
-        return await response.json();
+        return this._handleResponse(response);
     }
 
     async updateEntity(id, data) {
@@ -34,34 +40,54 @@ export class CrudApiClient {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Accept: "application/json",
                 "X-Requested-With": "XMLHttpRequest",
             },
             body: JSON.stringify(data),
             credentials: "same-origin",
         });
-        if (!response.ok) throw new Error("Error updating entity");
-        return await response.json();
+        return this._handleResponse(response);
     }
 
     async deleteEntity(id) {
         const url = this.routes.destroy.replace(":id", id);
         const response = await fetch(url, {
             method: "DELETE",
-            headers: { "X-Requested-With": "XMLHttpRequest" },
+            headers: {
+                Accept: "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+            },
             credentials: "same-origin",
         });
-        if (!response.ok) throw new Error("Error deleting entity");
-        return await response.json();
+        return this._handleResponse(response);
     }
 
     async restoreEntity(id) {
         const url = this.routes.restore.replace(":id", id);
         const response = await fetch(url, {
             method: "POST",
-            headers: { "X-Requested-With": "XMLHttpRequest" },
+            headers: {
+                Accept: "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+            },
             credentials: "same-origin",
         });
-        if (!response.ok) throw new Error("Error restoring entity");
+        return this._handleResponse(response);
+    }
+
+    async _handleResponse(response) {
+        // Si la respuesta no es JSON, lanza error con el texto recibido (probablemente HTML)
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error(
+                "Respuesta inesperada del servidor:\n" + text.substring(0, 200)
+            );
+        }
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || "Error en la petición");
+        }
         return await response.json();
     }
 }
