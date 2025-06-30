@@ -9,9 +9,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
+use Throwable;
+use App\Traits\HandlesCompanyData;
 
 class InvoicePdfService
 {
+    use HandlesCompanyData;
     /**
      * Generate and store PDF for an invoice
      *
@@ -32,7 +35,7 @@ class InvoicePdfService
             $pdfUrl = $this->storePdf($pdf, $invoice);
             
             return $pdfUrl;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error generating and storing invoice PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
@@ -55,16 +58,20 @@ class InvoicePdfService
             // Load invoice with its items
             $invoice->load(['items']);
             
+            // Get company data using the trait
+            $companyData = $this->getCompanyData();
+            
             // Generate PDF using Laravel DomPDF
             $pdf = PDF::loadView('invoice-demos.pdf', [
-                'invoice' => $invoice
+                'invoice' => $invoice,
+                'companyData' => $companyData
             ]);
             
             // Set paper size and orientation
             $pdf->setPaper('a4', 'portrait');
             
             return $pdf;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error generating invoice PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
@@ -103,7 +110,7 @@ class InvoicePdfService
             
             // Return the PDF URL
             return Storage::disk('s3')->url($pdfS3Path);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error storing invoice PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
@@ -170,7 +177,7 @@ class InvoicePdfService
             
             // Otherwise generate a new one
             return $this->generateAndStorePdf($invoice);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error getting PDF URL', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
@@ -202,7 +209,7 @@ class InvoicePdfService
             }
             
             return null;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error finding existing PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
@@ -242,7 +249,7 @@ class InvoicePdfService
             ]);
             
             return $deleted;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error deleting invoice PDF', [
                 'invoice_id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,

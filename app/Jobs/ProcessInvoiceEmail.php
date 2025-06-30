@@ -14,10 +14,11 @@ use App\Notifications\NewInvoiceNotification;
 use App\Notifications\UpdatedInvoiceNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
+use App\Traits\HandlesCompanyData;
 
 class ProcessInvoiceEmail implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, HandlesCompanyData;
 
     protected $invoice;
     protected $emailType;
@@ -33,12 +34,7 @@ class ProcessInvoiceEmail implements ShouldQueue
     {
         $this->invoice = $invoice;
         $this->emailType = $emailType;
-        $this->companyData = CompanyData::first();
-        
-        if (!$this->companyData) {
-            Log::error('CompanyData not found in database');
-            throw new \RuntimeException('CompanyData not found in database');
-        }
+        $this->companyData = $this->getCompanyData();
     }
 
     /**
@@ -47,14 +43,8 @@ class ProcessInvoiceEmail implements ShouldQueue
     public function handle()
     {
         try {
-            // Ensure we have company data
-            if (!$this->companyData) {
-                $this->companyData = CompanyData::first();
-                if (!$this->companyData) {
-                    Log::error('CompanyData not found in database');
-                    throw new \RuntimeException('CompanyData not found in database');
-                }
-            }
+            // Ensure we have company data using the trait
+            $this->companyData = $this->getCompanyData();
 
             // Get the notification class
             $notificationClass = $this->getNotificationClass();

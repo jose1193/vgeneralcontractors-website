@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Throwable;
 
 class GenerateInvoicePdf implements ShouldQueue
 {
@@ -99,11 +100,17 @@ class GenerateInvoicePdf implements ShouldQueue
             $this->invoice->pdf_url = $pdfUrl;
             $this->invoice->save();
 
-            // Send notification if requested
+            // If notification is requested, send it to the user who created the invoice
             if ($this->shouldNotify && $this->invoice->user) {
                 $this->invoice->user->notify(new InvoicePdfGenerated($this->invoice, $pdfUrl));
+                
+                Log::info('PDF generation notification sent', [
+                    'invoice_id' => $this->invoice->id,
+                    'invoice_number' => $this->invoice->invoice_number,
+                    'user_id' => $this->invoice->user->id
+                ]);
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Error in PDF generation job', [
                 'invoice_id' => $this->invoice->id ?? null,
                 'invoice_number' => $this->invoice->invoice_number ?? null,
@@ -119,10 +126,10 @@ class GenerateInvoicePdf implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param Exception $exception
+     * @param Throwable $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(Throwable $exception)
     {
         Log::error('PDF generation job failed', [
             'invoice_id' => $this->invoice->id ?? null,

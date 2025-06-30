@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notification;
 use App\Models\InvoiceDemo;
 use App\Models\CompanyData;
 use Illuminate\Support\HtmlString;
+use App\Traits\HandlesCompanyData;
 
 class UpdatedInvoiceNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, HandlesCompanyData;
 
     protected $invoice;
     protected $isInternal;
@@ -23,13 +24,13 @@ class UpdatedInvoiceNotification extends Notification implements ShouldQueue
      *
      * @param InvoiceDemo $invoice
      * @param bool $isInternal
-     * @param CompanyData $companyData
+     * @param CompanyData|null $companyData
      */
-    public function __construct(InvoiceDemo $invoice, bool $isInternal, CompanyData $companyData)
+    public function __construct(InvoiceDemo $invoice, bool $isInternal, ?CompanyData $companyData = null)
     {
         $this->invoice = $invoice;
         $this->isInternal = $isInternal;
-        $this->companyData = $companyData;
+        $this->companyData = $companyData ?? $this->getCompanyData();
     }
 
     /**
