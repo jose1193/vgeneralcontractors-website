@@ -83,15 +83,11 @@ export class CrudManager {
         // Inicializar módulos
         this.apiClient = new CrudApiClient(this.routes);
         this.formBuilder = new CrudFormBuilder(this.formFields);
-        this.validator = new CrudValidator(this.formFields, this.routes);
-        this.tableRenderer = new CrudTableRenderer(
-            this.tableHeaders,
-            this.tableSelector
-        );
         this.modalManager = new CrudModalManager(
             this.modalConfig,
             this.colorConfig
         );
+        this.validator = new CrudValidator(this.formFields, this.routes);
         this.eventHandler = new CrudEventHandler(this);
 
         this.init();
@@ -699,16 +695,6 @@ export class CrudManager {
         $("#loadingRow").remove();
     }
 
-    // Getters para acceso desde otros módulos
-    get formBuilder() {
-        return this.formBuilder;
-    }
-
-    get modalManager() {
-        return this.modalManager;
-    }
-
-    get validator() {
-        return this.validator;
-    }
+    // Los módulos están disponibles directamente como propiedades de la instancia
+    // No necesitamos getters que causen conflictos
 }
