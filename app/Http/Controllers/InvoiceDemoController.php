@@ -154,6 +154,10 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
+            // IMPORTANT: Clear CRUD cache after creating invoice
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demo');
+            
             // Queue PDF generation in background
             GenerateInvoicePdf::dispatch($invoice);
             
@@ -228,6 +232,10 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
+            // IMPORTANT: Clear CRUD cache after updating invoice
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demo');
+            
             // Queue PDF regeneration in background
             GenerateInvoicePdf::dispatch($updatedInvoice, true);
             
@@ -270,6 +278,10 @@ class InvoiceDemoController extends BaseController
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->deleteInvoice($invoice, auth()->id());
+            
+            // IMPORTANT: Clear CRUD cache after deleting invoice
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demo');
 
             return response()->json([
                 'success' => true,
@@ -305,6 +317,10 @@ class InvoiceDemoController extends BaseController
             $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->restoreInvoice($invoice, auth()->id());
+            
+            // IMPORTANT: Clear CRUD cache after restoring invoice
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demo');
 
             return response()->json([
                 'success' => true,
