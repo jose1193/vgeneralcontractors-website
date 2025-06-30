@@ -134,13 +134,14 @@
                 <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="V General Contractors" class="logo">
             </div>
             <div class="header-right">
-                <div class="company-name">{{ $companyData->company_name ?? 'V GENERAL CONTRACTORS' }}</div> 
-                 <div class="company-info"> 
-                     {!! nl2br(e($companyData->address ?? '1522 Waugh Dr # 510\nHouston, TX 77019')) !!}<br> 
-                     {{ $companyData->phone ?? '+1(346)200-5737' }}<br> 
-                     {{ $companyData->email ?? 'info@vgeneralcontractors.com' }}<br> 
-                     {{ $companyData->website ?? 'https://vgeneralcontractors.com/' }}  
-                 </div>
+                <div class="company-name">V GENERAL CONTRACTORS</div>
+                <div class="company-info">
+                    1522 Waugh Dr # 510<br>
+                    Houston, TX 77019<br>
+                    +1(346)200-5737<br>
+                    info@vgeneralcontractors.com<br>
+                    https://vgeneralcontractors.com/
+                </div>
             </div>
         </div>
         

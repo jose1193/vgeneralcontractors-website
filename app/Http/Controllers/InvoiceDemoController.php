@@ -12,7 +12,6 @@ use App\Services\InvoiceDemoService;
 use App\Services\InvoicePdfService;
 use App\Services\TransactionService;
 use App\Traits\CacheTraitCrud;
-use App\Traits\HandlesCompanyData;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -28,7 +27,7 @@ use Throwable;
 
 class InvoiceDemoController extends BaseController
 {
-    use CacheTraitCrud, HandlesCompanyData;
+    use CacheTraitCrud;
     
     protected int $cacheTime = 300; // 5 minutes
     protected InvoiceDemoService $invoiceService;
@@ -460,9 +459,6 @@ class InvoiceDemoController extends BaseController
         try {
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
-            // Ensure company data is available
-            $this->getCompanyData();
-            
             // Generate PDF
             $pdf = $this->pdfService->generatePdf($invoice);
             
@@ -503,9 +499,6 @@ class InvoiceDemoController extends BaseController
 
         try {
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
-            
-            // Ensure company data is available
-            $this->getCompanyData();
             
             // Generate PDF
             $pdf = $this->pdfService->generatePdf($invoice);

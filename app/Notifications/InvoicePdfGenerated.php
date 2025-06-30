@@ -8,11 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
-use App\Traits\HandlesCompanyData;
 
 class InvoicePdfGenerated extends Notification implements ShouldQueue
 {
-    use Queueable, HandlesCompanyData;
+    use Queueable;
 
     /**
      * The invoice instance.
@@ -39,7 +38,6 @@ class InvoicePdfGenerated extends Notification implements ShouldQueue
     {
         $this->invoice = $invoice;
         $this->pdfUrl = $pdfUrl;
-        $this->companyData = $this->getCompanyData();
     }
 
     /**
@@ -65,7 +63,6 @@ class InvoicePdfGenerated extends Notification implements ShouldQueue
         $billToName = $this->invoice->bill_to_name;
         $amount = '$' . number_format($this->invoice->balance_due, 2);
         $date = $this->invoice->invoice_date->format('m/d/Y');
-        $companyName = $this->companyData->company_name ?? 'V GENERAL CONTRACTORS';
 
         return (new MailMessage)
             ->subject("Invoice {$invoiceNumber} PDF Generated")
@@ -78,7 +75,7 @@ class InvoicePdfGenerated extends Notification implements ShouldQueue
             ->line(new HtmlString("<strong>Date:</strong> {$date}"))
             ->action('View Invoice PDF', $this->pdfUrl)
             ->line('You can download or print this PDF for your records.')
-            ->line("Thank you for choosing {$companyName}!");
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -96,7 +93,6 @@ class InvoicePdfGenerated extends Notification implements ShouldQueue
             'balance_due' => $this->invoice->balance_due,
             'invoice_date' => $this->invoice->invoice_date->format('Y-m-d'),
             'pdf_url' => $this->pdfUrl,
-            'company_name' => $this->companyData->company_name ?? 'V GENERAL CONTRACTORS',
         ];
     }
 }

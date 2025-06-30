@@ -10,11 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use Throwable;
-use App\Traits\HandlesCompanyData;
 
 class InvoicePdfService
 {
-    use HandlesCompanyData;
     /**
      * Generate and store PDF for an invoice
      *
@@ -58,13 +56,9 @@ class InvoicePdfService
             // Load invoice with its items
             $invoice->load(['items']);
             
-            // Get company data using the trait
-            $companyData = $this->getCompanyData();
-            
             // Generate PDF using Laravel DomPDF
             $pdf = PDF::loadView('invoice-demos.pdf', [
-                'invoice' => $invoice,
-                'companyData' => $companyData
+                'invoice' => $invoice
             ]);
             
             // Set paper size and orientation

@@ -100,15 +100,9 @@ class GenerateInvoicePdf implements ShouldQueue
             $this->invoice->pdf_url = $pdfUrl;
             $this->invoice->save();
 
-            // If notification is requested, send it to the user who created the invoice
+            // Send notification if requested
             if ($this->shouldNotify && $this->invoice->user) {
                 $this->invoice->user->notify(new InvoicePdfGenerated($this->invoice, $pdfUrl));
-                
-                Log::info('PDF generation notification sent', [
-                    'invoice_id' => $this->invoice->id,
-                    'invoice_number' => $this->invoice->invoice_number,
-                    'user_id' => $this->invoice->user->id
-                ]);
             }
         } catch (Throwable $e) {
             Log::error('Error in PDF generation job', [
