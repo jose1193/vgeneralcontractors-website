@@ -360,9 +360,8 @@
                                         <!-- Quantity -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Qty</label>
-                                            <input type="number" min="1" x-model="item.quantity"
+                                            <input type="number" min="1" x-model.number="item.quantity"
                                                 @input="calculateTotals()"
-                                                @blur="item.quantity = parseFloat(item.quantity || 0).toFixed(2)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="1">
                                         </div>
@@ -370,9 +369,8 @@
                                         <!-- Rate -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
-                                            <input type="number" step="0.01" min="0" x-model="item.rate"
+                                            <input type="number" step="0.01" min="0" x-model.number="item.rate"
                                                 @input="calculateTotals()"
-                                                @blur="item.rate = parseFloat(item.rate || 0).toFixed(2)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
@@ -383,7 +381,7 @@
                                                 <label
                                                     class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
                                                 <div class="text-sm font-semibold text-gray-900 py-2 px-3 bg-gray-50 rounded-lg"
-                                                    x-text="formatCurrency((item.quantity || 0) * (item.rate || 0))">
+                                                    x-text="formatCurrency(item.amount || 0)">
                                                 </div>
                                             </div>
                                             <button type="button" @click="removeItem(index)"
@@ -421,9 +419,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Subtotal</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
-                                    <input type="number" step="0.01" min="0" x-model="form.subtotal"
+                                    <input type="number" step="0.01" min="0" x-model.number="form.subtotal"
                                         @input="calculateTotals()"
-                                        @blur="form.subtotal = parseFloat(form.subtotal || 0).toFixed(2)"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
@@ -438,9 +435,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Tax Amount</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
-                                    <input type="number" step="0.01" min="0" x-model="form.tax_amount"
+                                    <input type="number" step="0.01" min="0" x-model.number="form.tax_amount"
                                         @input="calculateTotals()"
-                                        @blur="form.tax_amount = parseFloat(form.tax_amount || 0).toFixed(2)"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"

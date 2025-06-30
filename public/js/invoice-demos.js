@@ -652,23 +652,20 @@ function invoiceDemoData() {
         calculateTotals() {
             let subtotal = 0;
             this.form.items.forEach((item) => {
-                // Asegurar que quantity y rate sean números con 2 decimales
-                item.quantity = parseFloat(item.quantity || 0).toFixed(2);
-                item.rate = parseFloat(item.rate || 0).toFixed(2);
+                // Asegurar que quantity y rate sean números
+                const quantity = parseFloat(item.quantity || 0);
+                const rate = parseFloat(item.rate || 0);
                 
-                // Calcular el monto del ítem y formatearlo con 2 decimales
-                const itemAmount = (parseFloat(item.quantity) * parseFloat(item.rate));
-                item.amount = itemAmount.toFixed(2);
+                // Calcular el monto del ítem
+                const itemAmount = quantity * rate;
+                item.amount = itemAmount.toFixed(2); // Solo formateamos el amount para mostrar
                 
                 subtotal += itemAmount;
             });
 
-            // Formatear subtotal y tax_amount con 2 decimales
-            this.form.subtotal = parseFloat(subtotal).toFixed(2);
-            this.form.tax_amount = parseFloat(this.form.tax_amount || 0).toFixed(2);
-            
-            // Calcular y formatear balance_due con 2 decimales
-            this.form.balance_due = (parseFloat(this.form.subtotal) + parseFloat(this.form.tax_amount)).toFixed(2);
+            // Calcular balance_due
+            const taxAmount = parseFloat(this.form.tax_amount || 0);
+            this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar
         },
 
         // Submit form
@@ -1058,6 +1055,15 @@ function invoiceDemoData() {
             } else {
                 uppercaseValue = 'VG-' + uppercaseValue;
             }
+        }
+        
+        // Permitir solo números después del prefijo VG-
+        if (uppercaseValue.startsWith('VG-')) {
+            const prefix = 'VG-';
+            const numericPart = uppercaseValue.substring(prefix.length);
+            // Reemplazar cualquier carácter no numérico en la parte después del prefijo
+            const numericOnly = numericPart.replace(/[^0-9]/g, '');
+            uppercaseValue = prefix + numericOnly;
         }
         
         // Solo actualizar si hay cambios para evitar loops
