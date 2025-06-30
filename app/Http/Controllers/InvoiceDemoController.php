@@ -113,9 +113,26 @@ class InvoiceDemoController extends BaseController
             ], 403);
         }
 
+        // Log the request data for debugging - Enhanced logging
+        Log::info('Invoice Demo store request data:', [
+            'all_data' => $request->all(),
+            'bill_to_phone' => $request->input('bill_to_phone'),
+            'invoice_number' => $request->input('invoice_number'),
+            'items' => $request->input('items'),
+            'headers' => $request->header(),
+            'content_type' => $request->header('Content-Type'),
+            'request_format' => $request->format(),
+            'is_json' => $request->isJson(),
+            'is_ajax' => $request->ajax()
+        ]);
+
         try {
             $this->validateRequest($request);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Invoice Demo validation failed:', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors()
@@ -159,12 +176,31 @@ class InvoiceDemoController extends BaseController
             ], 403);
         }
 
+        // Log the request data for debugging - Enhanced logging
+        Log::info('Invoice Demo update request data:', [
+            'uuid' => $uuid,
+            'all_data' => $request->all(),
+            'bill_to_phone' => $request->input('bill_to_phone'),
+            'invoice_number' => $request->input('invoice_number'),
+            'items' => $request->input('items'),
+            'headers' => $request->header(),
+            'content_type' => $request->header('Content-Type'),
+            'request_format' => $request->format(),
+            'is_json' => $request->isJson(),
+            'is_ajax' => $request->ajax()
+        ]);
+
         try {
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             try {
                 $this->validateRequest($request, $invoice->id);
             } catch (\Illuminate\Validation\ValidationException $e) {
+                Log::error('Invoice Demo update validation failed:', [
+                    'errors' => $e->errors(),
+                    'request_data' => $request->all(),
+                    'invoice_id' => $invoice->id
+                ]);
                 return response()->json([
                     'success' => false,
                     'errors' => $e->errors()

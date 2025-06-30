@@ -14,7 +14,7 @@ class InvoiceDemoManager {
     }
 
     /**
-     * Fetch API wrapper with error handling
+     * Fetch API wrapper with enhanced error handling and logging
      */
     async apiRequest(url, options = {}) {
         const defaultOptions = {
@@ -26,15 +26,54 @@ class InvoiceDemoManager {
         };
 
         const config = { ...defaultOptions, ...options };
+        
+        console.group('API Request');
+        console.log('URL:', url);
+        console.log('Method:', options.method || 'GET');
+        
+        // Log request body if present (but sanitize sensitive data)
+        if (options.body) {
+            try {
+                const bodyData = JSON.parse(options.body);
+                // Create a sanitized copy for logging (remove sensitive fields)
+                const sanitizedBody = { ...bodyData };
+                console.log('Request body:', sanitizedBody);
+            } catch (e) {
+                console.log('Request body: [Unable to parse]');
+            }
+        }
+        console.groupEnd();
 
         try {
             const response = await fetch(url, config);
-            const data = await response.json();
+            let data;
+            
+            // Log response status
+            console.group('API Response');
+            console.log('Status:', response.status);
+            console.log('Status Text:', response.statusText);
+            
+            // Try to parse JSON response
+            try {
+                data = await response.json();
+                console.log('Response data:', data);
+            } catch (parseError) {
+                console.error('Error parsing response:', parseError);
+                data = { message: 'Invalid response format' };
+            }
+            console.groupEnd();
 
             if (!response.ok) {
-                throw new Error(
+                // Enhanced error object with response details
+                const error = new Error(
                     data.message || `HTTP error! status: ${response.status}`
                 );
+                error.response = {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: data
+                };
+                throw error;
             }
 
             return data;
@@ -69,6 +108,7 @@ class InvoiceDemoManager {
      * Create new invoice
      */
     async createInvoice(formData) {
+        console.log('Creating invoice with data:', JSON.parse(JSON.stringify(formData)));
         return await this.apiRequest(this.baseUrl, {
             method: "POST",
             body: JSON.stringify(formData),
@@ -79,6 +119,8 @@ class InvoiceDemoManager {
      * Update existing invoice
      */
     async updateInvoice(id, formData) {
+        console.log('Updating invoice with ID:', id);
+        console.log('Update data:', JSON.parse(JSON.stringify(formData)));
         return await this.apiRequest(`${this.baseUrl}/${id}`, {
             method: "PUT",
             body: JSON.stringify(formData),
@@ -173,6 +215,65 @@ class InvoiceDemoManager {
      */
     showError(message) {
         this.showNotification(message, "error");
+    }
+
+    /**
+     * Handle API errors with detailed logging
+     */
+    handleApiError(error) {
+        console.group('🔴 API ERROR DETAILS');
+        console.error('Error object:', error);
+        
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const status = error.response.status;
+            const data = error.response.data;
+            
+            console.log('Response status:', status);
+            console.log('Response status text:', error.response.statusText);
+            console.log('Response data:', data);
+
+            if (status === 422) {
+                // Validation error
+                const errorMessage = data.message || "Validation failed";
+                console.log('Validation errors:', data.errors);
+                
+                // Log detailed validation errors
+                if (data.errors) {
+                    console.group('📋 Validation Errors Detail');
+                    console.table(Object.entries(data.errors).map(([field, messages]) => {
+                        return { field, message: Array.isArray(messages) ? messages.join(', ') : messages };
+                    }));
+                    
+                    // Log specific problematic fields that commonly cause issues
+                    if (data.errors.invoice_number) console.log('📝 Invoice number error:', data.errors.invoice_number);
+                    if (data.errors.bill_to_phone) console.log('📞 Phone error:', data.errors.bill_to_phone);
+                    if (data.errors.items) console.log('📦 Items error:', data.errors.items);
+                    console.groupEnd();
+                }
+                
+                this.showError(errorMessage);
+            } else if (status === 403) {
+                // Permission error
+                const errorMessage = data.message || "Permission denied";
+                this.showError(errorMessage);
+            } else {
+                // Other server errors
+                const errorMessage = data.message || "Server error";
+                this.showError(errorMessage);
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log('No response received:', error.request);
+            this.showError("No response from server. Please try again later.");
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error message:', error.message);
+            this.showError(error.message || "An error occurred");
+        }
+        
+        console.groupEnd();
     }
 
     /**
@@ -497,46 +598,100 @@ function invoiceDemoData() {
         },
 
         // Submit form
-        async submitForm() {
-            this.submitting = true;
-            this.errors = {};
+    async submitForm() {
+        if (this.submitting) return;
 
-            try {
-                let response;
-                if (this.isEditing) {
-                    response = await window.invoiceDemoManager.updateInvoice(
-                        this.currentInvoice.id,
-                        this.form
-                    );
-                } else {
-                    response = await window.invoiceDemoManager.createInvoice(
-                        this.form
-                    );
-                }
+        this.submitting = true;
+        this.errors = {};
+        this.generalError = "";
 
-                window.invoiceDemoManager.showSuccess(response.message);
-                this.closeModal();
-                await this.loadInvoices();
-            } catch (error) {
-                if (
-                    error.message.includes("validation") ||
-                    error.message.includes("422")
-                ) {
-                    // Handle validation errors
-                    try {
-                        const errorData = JSON.parse(error.message);
-                        this.errors = errorData.errors || {};
-                    } catch {
-                        this.errors = { general: "Validation failed" };
-                    }
-                } else {
-                    window.invoiceDemoManager.showError(
-                        error.message || "Failed to save invoice"
-                    );
-                }
-            } finally {
-                this.submitting = false;
+        // Enhanced logging for debugging
+        console.group('Form Submission');
+        console.log('Operation:', this.isEditing ? 'UPDATE' : 'CREATE');
+        console.log('Invoice ID:', this.isEditing ? this.currentInvoice?.id : 'New Invoice');
+        
+        // Log critical fields that often cause validation issues
+        console.log('Critical fields:', {
+            invoice_number: this.form.invoice_number,
+            bill_to_phone: this.form.bill_to_phone,
+            invoice_date: this.form.invoice_date,
+            items_count: this.form.items.length
+        });
+        
+        // Log complete form data
+        console.log('Complete form data:', JSON.parse(JSON.stringify(this.form)));
+        console.groupEnd();
+
+        try {
+            let response;
+            if (this.isEditing) {
+                console.log('Calling updateInvoice with ID:', this.currentInvoice.id);
+                response = await window.invoiceDemoManager.updateInvoice(
+                    this.currentInvoice.id,
+                    this.form
+                );
+                console.log('Update response:', response);
+            } else {
+                console.log('Calling createInvoice');
+                response = await window.invoiceDemoManager.createInvoice(
+                    this.form
+                );
+                console.log('Create response:', response);
             }
+
+            window.invoiceDemoManager.showSuccess(response.message);
+            this.closeModal();
+            await this.loadInvoices();
+        } catch (error) {
+            console.error('Form submission error:', error);
+            
+            if (error.response && error.response.status === 422) {
+                // Enhanced 422 validation error handling
+                console.group('Validation Error (422)');
+                console.log('Error response:', error.response);
+                
+                try {
+                    const errorData = error.response.data || JSON.parse(error.message);
+                    this.errors = errorData.errors || {};
+                    
+                    // Log detailed validation errors
+                    console.log('All validation errors:', this.errors);
+                    console.table(Object.entries(this.errors).map(([field, messages]) => {
+                        return { 
+                            field, 
+                            message: Array.isArray(messages) ? messages.join(', ') : messages 
+                        };
+                    }));
+                    
+                    // Log specific problematic fields
+                    if (this.errors.invoice_number) console.log('Invoice number error:', this.errors.invoice_number);
+                    if (this.errors.bill_to_phone) console.log('Phone error:', this.errors.bill_to_phone);
+                    if (this.errors.items) console.log('Items error:', this.errors.items);
+                    
+                    console.groupEnd();
+                } catch (parseError) {
+                    console.error('Error parsing validation response:', parseError);
+                    console.groupEnd();
+                    this.errors = { general: "Validation failed" };
+                }
+            } else if (error.response && error.response.status === 500) {
+                console.group('Server Error (500)');
+                console.log('Error response:', error.response);
+                console.groupEnd();
+                window.invoiceDemoManager.showError(
+                    "Server error: " + (error.response.data?.message || "Failed to save invoice")
+                );
+            } else {
+                console.group('Other Error');
+                console.log('Error object:', error);
+                console.groupEnd();
+                window.invoiceDemoManager.showError(
+                    error.message || "Failed to save invoice"
+                );
+            }
+        } finally {
+            this.submitting = false;
+        }
         },
 
         // Delete invoice
