@@ -32,7 +32,7 @@
             vertical-align: top;
         }
         .logo {
-            max-width: 173px;
+            max-width: 164px;
             height: auto;
             margin-top: 10px;
         }
@@ -84,6 +84,7 @@
         table.items td {
             padding: 8px;
             border-bottom: 1px solid #ddd;
+            font-weight: 600;
         }
         table.items .amount {
             text-align: right;
@@ -123,6 +124,9 @@
         .claim-info {
             margin-top: 20px;
             font-size: 10px;
+        }
+        .claim-info .value {
+            font-weight: 600;
         }
     </style>
 </head>
@@ -210,16 +214,16 @@
         <div class="claim-info">
             <table>
                 <tr>
-                    <td>INVOICE #: {{ $invoice->invoice_number }}</td>
+                    <td>INVOICE #: <span class="value">{{ $invoice->invoice_number }}</span></td>
                 </tr>
                 <tr>
-                    <td>CLAIM #: {{ $invoice->claim_number }}</td>
+                    <td>CLAIM #: <span class="value">{{ $invoice->claim_number }}</span></td>
                 </tr>
                 <tr>
-                    <td>INSURANCE COMPANY: {{ $invoice->insurance_company }}</td>
+                    <td>INSURANCE COMPANY: <span class="value">{{ $invoice->insurance_company }}</span></td>
                 </tr>
                 <tr>
-                    <td>POLICY NUMBER: {{ $invoice->policy_number }}</td>
+                    <td>POLICY NUMBER: <span class="value">{{ $invoice->policy_number }}</span></td>
                 </tr>
             </table>
         </div>
