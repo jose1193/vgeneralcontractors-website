@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceDemoRequest extends FormRequest
 {
@@ -13,6 +16,33 @@ class InvoiceDemoRequest extends FormRequest
     public function authorize(): bool
     {
         return true; // Authorization is handled by the controller
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        Log::error('InvoiceDemoRequest validation failed', [
+            'errors' => $validator->errors()->toArray(),
+            'input' => $this->except(['password', 'password_confirmation']),
+            'url' => $this->url(),
+            'method' => $this->method(),
+            'user_agent' => $this->userAgent(),
+            'ip' => $this->ip()
+        ]);
+
+        if ($this->wantsJson() || $this->ajax()) {
+            throw new HttpResponseException(
+                response()->json([
+                    'success' => false,
+                    'message' => 'Validation errors occurred.',
+                    'errors' => $validator->errors()
+                ], 422)
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 
     /**
