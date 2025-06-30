@@ -4,10 +4,10 @@
     <div class="email-container">
         <div class="email-header"
             style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 5px 5px 0 0;">
-            @if ($companyData->logo_url)
-                <img src="{{ $companyData->logo_url }}" alt="{{ $companyData->company_name }}"
-                    style="max-height: 80px; margin-bottom: 15px;">
-            @endif
+            <div style="text-align: center; width: 100%;">
+                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $companyData->company_name }}"
+                    style="max-height: 80px; margin-bottom: 15px; display: inline-block;">
+            </div>
             <h1 style="color: #2c3e50; margin: 0; font-size: 24px;">
                 {{ $isInternal ? 'Invoice Updated' : 'Your Invoice Has Been Updated' }}</h1>
         </div>
@@ -65,11 +65,14 @@
                         <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
                             <span
                                 style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background-color: 
-                            @if ($invoice->status == 'Paid') #28a745 
-                            @elseif($invoice->status == 'Overdue') #dc3545 
-                            @elseif($invoice->status == 'Pending') #ffc107 
+                            @if (strtolower($invoice->status) == 'paid') #28a745 
+                            @elseif(strtolower($invoice->status) == 'overdue') #dc3545 
+                            @elseif(strtolower($invoice->status) == 'pending') #ffc107 
+                            @elseif(strtolower($invoice->status) == 'draft') #6c757d 
+                            @elseif(strtolower($invoice->status) == 'sent') #17a2b8 
+                            @elseif(strtolower($invoice->status) == 'cancelled') #dc3545 
                             @else #6c757d @endif; 
-                            color: #fff;">
+                            color: #fff; text-transform: uppercase;">
                                 {{ $invoice->status }}
                             </span>
                         </td>

@@ -69,7 +69,8 @@ class ProcessInvoiceEmail implements ShouldQueue
                 Log::warning('Invoice does not have an email address. Cannot send notification. UUID: ' . $this->invoice->uuid);
             }
 
-            // Send internal notification to admin
+            // Send internal notification to admin - COMMENTED OUT
+            /*
             $adminEmailData = EmailData::where('type', 'Admin')->first();
             if ($adminEmailData && $adminEmailData->email) {
                 $notification = new $notificationClass($this->invoice, true, $this->companyData);
@@ -79,6 +80,7 @@ class ProcessInvoiceEmail implements ShouldQueue
             } else {
                 Log::warning('Could not find admin email address in EmailData table for type Admin.');
             }
+            */
             
             // Send internal notification to Info email
             $infoEmailData = EmailData::where('type', 'Info')->first();
