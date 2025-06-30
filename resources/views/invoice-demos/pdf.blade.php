@@ -5,7 +5,7 @@
     <title>Invoice {{ $invoice->invoice_number }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             font-size: 12px;
             color: #333;
             line-height: 1.4;
@@ -161,7 +161,7 @@
                 @if($invoice->bill_to_address_2)
                 {{ $invoice->bill_to_address_2 }}<br>
                 @endif
-                {{ $invoice->bill_to_city }}, {{ $invoice->bill_to_state }}, {{ $invoice->bill_to_zip }}
+                {{ $invoice->bill_to_city }}{{ !empty($invoice->bill_to_state) ? ', '.$invoice->bill_to_state : '' }}{{ !empty($invoice->bill_to_zip) ? ' '.$invoice->bill_to_zip : '' }}
             </div>
             <div class="invoice-info">
                 <table>
