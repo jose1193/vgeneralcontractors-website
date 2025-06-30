@@ -16,9 +16,9 @@ use Exception;
 class InvoiceDemoService
 {
     /**
-     * Cache duration in seconds (5 minutes)
+     * Cache duration in seconds (1 minute - improved responsiveness)
      */
-    protected int $cacheTime = 300;
+    protected int $cacheTime = 60;
 
     /**
      * Get paginated invoices with filters and search
@@ -495,10 +495,11 @@ class InvoiceDemoService
     }
 
     /**
-     * Clear invoice-related caches
+     * ✅ IMPROVED: Clear invoice-related caches more effectively
      */
     protected function clearInvoiceCaches(): void
     {
+        // Clear specific cache keys
         $patterns = [
             'invoice_demo_invoices_*',
             'invoice_demo_form_data',
@@ -515,6 +516,20 @@ class InvoiceDemoService
             Cache::forget($key);
         }
         Cache::forget('invoice_demo_cache_keys');
+        
+        // ✅ NEW: Also clear controller-level CRUD caches
+        // This ensures compatibility with the modern cache system
+        $crudCachePatterns = [
+            'invoice_demos_*',
+            'crud_cache_invoice_demos_*',
+            'significant_data_change'
+        ];
+        
+        foreach ($crudCachePatterns as $pattern) {
+            Cache::forget($pattern);
+        }
+        
+        Log::info('Invoice demo caches cleared comprehensively');
     }
 
     /**

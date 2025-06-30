@@ -83,8 +83,8 @@ class GenerateInvoicePdf implements ShouldQueue
                 'force_regenerate' => $this->forceRegenerate
             ]);
 
-            // Generate and store the PDF
-            $pdfUrl = $pdfService->getPdfUrl($this->invoice, $this->forceRegenerate);
+            // ✅ IMPROVED: Use direct PDF generation instead of getPdfUrl
+            $pdfUrl = $pdfService->generateAndStorePdf($this->invoice);
 
             if (!$pdfUrl) {
                 throw new Exception('Failed to generate PDF for invoice ' . $this->invoice->invoice_number);
@@ -96,9 +96,9 @@ class GenerateInvoicePdf implements ShouldQueue
                 'pdf_url' => $pdfUrl
             ]);
 
-            // Store the PDF URL in the invoice record
-            $this->invoice->pdf_url = $pdfUrl;
-            $this->invoice->save();
+            // ✅ IMPROVED: Refresh invoice model to get updated pdf_url
+            // (The pdf_url is already updated in generateAndStorePdf method)
+            $this->invoice->refresh();
 
             // Send notification if requested
             if ($this->shouldNotify && $this->invoice->user) {

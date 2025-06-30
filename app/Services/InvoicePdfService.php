@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use Throwable;
+use Illuminate\Support\Facades\Cache;
 
 class InvoicePdfService
 {
@@ -31,6 +32,20 @@ class InvoicePdfService
             
             // Store PDF in S3
             $pdfUrl = $this->storePdf($pdf, $invoice);
+            
+            // ✅ UPDATE: Save PDF URL to database
+            if ($pdfUrl) {
+                $invoice->update(['pdf_url' => $pdfUrl]);
+                
+                // ✅ NEW: Clear cache immediately after PDF generation
+                $this->invalidatePdfCache($invoice);
+                
+                Log::info('PDF URL updated in database', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_url' => $pdfUrl
+                ]);
+            }
             
             return $pdfUrl;
         } catch (Throwable $e) {
@@ -116,7 +131,7 @@ class InvoicePdfService
     
     /**
      * Generate a unique filename for the invoice PDF
-     * Format: vg-{invoice_number}-{date}-{claim_number}
+     * Format: Invoice-vg-{invoice_number}-{datetime}-{claim_number}
      *
      * @param InvoiceDemo $invoice
      * @return string
@@ -126,21 +141,21 @@ class InvoicePdfService
         // Clean invoice number (remove VG- prefix if present)
         $invoiceNumber = str_replace('VG-', '', $invoice->invoice_number);
         
-        // Format date
-        $date = Carbon::parse($invoice->invoice_date)->format('Ymd');
+        // Format datetime with full timestamp
+        $datetime = Carbon::parse($invoice->invoice_date)->format('Ymd-His');
         
         // Clean claim number (remove special characters)
         $claimNumber = preg_replace('/[^a-zA-Z0-9]/', '', $invoice->claim_number ?? '');
         
-        // Create base filename
-        $baseFilename = 'vg-' . $invoiceNumber . '-' . $date;
+        // ✅ UPDATE: Create filename with Invoice prefix
+        $baseFilename = 'Invoice-vg-' . $invoiceNumber . '-' . $datetime;
         
         // Add claim number if available
         if (!empty($claimNumber)) {
             $baseFilename .= '-' . $claimNumber;
         }
         
-        // Encrypt the filename for security
+        // Create clean filename for security
         $encryptedFilename = Str::slug($baseFilename);
         
         return $encryptedFilename;
@@ -276,5 +291,45 @@ class InvoicePdfService
         $path = preg_replace("/^{$bucketName}\//", '', $path);
         
         return $path;
+    }
+    
+    /**
+     * ✅ NEW: Invalidate cache specifically for PDF operations
+     *
+     * @param InvoiceDemo $invoice
+     * @return void
+     */
+    protected function invalidatePdfCache(InvoiceDemo $invoice): void
+    {
+        try {
+            // Clear invoice-specific caches
+            $cacheKeys = [
+                "invoice_demo_invoices_*",
+                "invoice_demos_*",
+                "crud_cache_invoice_demos_*",
+                "invoice_demo_form_data",
+                "invoice_demo_statistics",
+                "invoice_pdf_{$invoice->id}",
+                "invoice_pdf_{$invoice->uuid}"
+            ];
+            
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            
+            // Also trigger general cache invalidation flag
+            Cache::forget('significant_data_change');
+            Cache::put('significant_data_change', now(), 60); // 1 minute flag
+            
+            Log::info('PDF cache invalidated successfully', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error invalidating PDF cache', [
+                'invoice_id' => $invoice->id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

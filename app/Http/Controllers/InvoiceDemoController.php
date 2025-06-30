@@ -154,11 +154,12 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
-            // Queue PDF generation in background
-            GenerateInvoicePdf::dispatch($invoice);
+            // ✅ IMPROVED: Clear cache immediately after creation
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demos');
             
-            // Send email notification for new invoice
-            ProcessInvoiceEmail::dispatch($invoice, 'new');
+            // Dispatch jobs in afterStore for better timing
+            $this->afterStore($invoice);
 
             return response()->json([
                 'success' => true,
@@ -228,11 +229,12 @@ class InvoiceDemoController extends BaseController
                 auth()->id()
             );
             
-            // Queue PDF regeneration in background
-            GenerateInvoicePdf::dispatch($updatedInvoice, true);
+            // ✅ IMPROVED: Clear cache immediately after update
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demos');
             
-            // Send email notification for updated invoice
-            ProcessInvoiceEmail::dispatch($updatedInvoice, 'updated');
+            // Dispatch jobs in afterUpdate for better timing
+            $this->afterUpdate($updatedInvoice);
 
             return response()->json([
                 'success' => true,
@@ -597,6 +599,54 @@ class InvoiceDemoController extends BaseController
                 'success' => false,
                 'message' => 'Failed to get invoice PDF URL'
             ], 500);
+        }
+    }
+
+    /**
+     * ✅ NEW: After store hook for better job timing
+     */
+    protected function afterStore(InvoiceDemo $invoice): void
+    {
+        try {
+            // Queue PDF generation in background AFTER transaction is committed
+            GenerateInvoicePdf::dispatch($invoice);
+            
+            // Send email notification for new invoice AFTER PDF is queued
+            ProcessInvoiceEmail::dispatch($invoice, 'new');
+            
+            Log::info('Jobs dispatched after invoice creation', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error dispatching jobs after invoice creation', [
+                'error' => $e->getMessage(),
+                'invoice_id' => $invoice->id
+            ]);
+        }
+    }
+
+    /**
+     * ✅ NEW: After update hook for better job timing
+     */
+    protected function afterUpdate(InvoiceDemo $invoice): void
+    {
+        try {
+            // Queue PDF regeneration in background AFTER transaction is committed
+            GenerateInvoicePdf::dispatch($invoice, true);
+            
+            // Send email notification for updated invoice AFTER PDF is queued
+            ProcessInvoiceEmail::dispatch($invoice, 'updated');
+            
+            Log::info('Jobs dispatched after invoice update', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Error dispatching jobs after invoice update', [
+                'error' => $e->getMessage(),
+                'invoice_id' => $invoice->id
+            ]);
         }
     }
 }
