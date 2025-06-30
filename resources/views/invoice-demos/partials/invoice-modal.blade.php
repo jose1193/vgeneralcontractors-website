@@ -360,8 +360,8 @@
                                         <!-- Quantity -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Qty</label>
-                                            <input type="number" min="1" x-model.number="item.quantity"
-                                                @input="calculateTotals()"
+                                            <input type="text" x-model="item.quantity"
+                                                @input="item.quantity = item.quantity.replace(/[^0-9]/g, ''); calculateTotals()"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="1">
                                         </div>
@@ -369,8 +369,8 @@
                                         <!-- Rate -->
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
-                                            <input type="number" step="0.01" min="0" x-model.number="item.rate"
-                                                @input="calculateTotals()"
+                                            <input type="text" x-model="item.rate"
+                                                @input="item.rate = item.rate.replace(/[^0-9.]/g, ''); calculateTotals()"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
@@ -419,8 +419,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Subtotal</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
-                                    <input type="number" step="0.01" min="0" x-model.number="form.subtotal"
-                                        @input="calculateTotals()"
+                                    <input type="text" x-model="form.subtotal"
+                                        @input="form.subtotal = form.subtotal.replace(/[^0-9.]/g, ''); calculateTotals()"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
@@ -435,8 +435,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Tax Amount</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
-                                    <input type="number" step="0.01" min="0" x-model.number="form.tax_amount"
-                                        @input="calculateTotals()"
+                                    <input type="text" x-model="form.tax_amount"
+                                        @input="form.tax_amount = form.tax_amount.replace(/[^0-9.]/g, ''); calculateTotals()"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"

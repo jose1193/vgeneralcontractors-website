@@ -663,6 +663,9 @@ function invoiceDemoData() {
                 subtotal += itemAmount;
             });
 
+            // Actualizar el subtotal en el formulario
+            this.form.subtotal = subtotal.toFixed(2);
+            
             // Calcular balance_due
             const taxAmount = parseFloat(this.form.tax_amount || 0);
             this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar

@@ -5,7 +5,7 @@
         <div class="email-header"
             style="background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 5px 5px 0 0;">
             <div style="text-align: center; width: 100%;">
-                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $companyData->company_name }}"
+                <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" alt="{{ $companyData->company_name }}"
                     style="max-height: 80px; margin-bottom: 15px; display: inline-block;">
             </div>
             <h1 style="color: #2c3e50; margin: 0; font-size: 24px;">
