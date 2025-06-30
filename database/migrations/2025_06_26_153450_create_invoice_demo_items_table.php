@@ -26,6 +26,8 @@ return new class extends Migration
             // Order for display
             $table->integer('sort_order')->default(0);
             
+          
+
             $table->timestamps();
             $table->softDeletes();
             

@@ -29,6 +29,7 @@ class InvoiceDemo extends Model
         'subtotal',
         'tax_amount',
         'balance_due',
+        'pdf_url',
         'claim_number',
         'policy_number',
         'insurance_company',

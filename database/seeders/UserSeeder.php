@@ -150,13 +150,14 @@ class UserSeeder extends Seeder
             'USER', 'EMAIL_DATA', 'SERVICE_CATEGORY', 'PORTFOLIO', 'COMPANY_DATA',
             'PROJECT_TYPE', 'APPOINTMENT', 'BLOG_CATEGORY', 'POST', 'SEO',
             'CALL_RECORD', 'MODEL_AI', 'ROLE', 'PERMISSION', 'INSURANCE_COMPANY',
-            'INVOICE_DEMO', 'PUBLIC_COMPANY', 'TYPE_DAMAGE', 'CAUSE_OF_LOSS',
+            'INVOICE_DEMO', 'INVOICE', 'PUBLIC_COMPANY', 'TYPE_DAMAGE', 'CAUSE_OF_LOSS',
             'CLAIM_STATU', 'ALLIANCE_COMPANY', 'ZONE', 'CATEGORY_PRODUCT',
             'CLAIM', 'SCOPE_SHEET', 'MANAGER', 'SALESPERSON', 'MARKETING_MANAGER',
             'DIRECTOR_ASSISTANT', 'TECHNICAL_SUPERVISOR', 'REPRESENTATION_COMPANY',
             'EXTERNAL_OPERATORS', 'PUBLIC_ADJUSTER', 'INSURANCE_ADJUSTER',
             'TECHNICAL_SERVICES', 'MARKETING', 'WAREHOUSE', 'ADMINISTRATIVE',
-            'COLLECTIONS', 'REPORTES', 'LEAD', 'EMPLOYEES', 'CLIENT', 'CONTACT', 'SPECTATOR'
+            'COLLECTIONS', 'REPORTES', 'LEAD', 'EMPLOYEES', 'CLIENT', 'CONTACT', 'SPECTATOR',
+            'W9FORM', 'SALESPERSON_SIGNATURE', 'SERVICE_REQUEST', 'PRODUCT', 'MORTGAGE_COMPANY'
         ];
 
         // Define actions for permissions
@@ -189,9 +190,43 @@ class UserSeeder extends Seeder
         ];
         $adminRole->givePermissionTo($adminPermissions);
         
-        // Manager - Invoice Demo and Manager specific permissions
+        // Manager - Invoice Demo, Invoice and other specific permissions
         $managerPermissions = [
+            // Invoice Demo permissions
             'CREATE_INVOICE_DEMO', 'READ_INVOICE_DEMO', 'UPDATE_INVOICE_DEMO', 'DELETE_INVOICE_DEMO', 'RESTORE_INVOICE_DEMO',
+            // Invoice permissions
+            'CREATE_INVOICE', 'READ_INVOICE', 'UPDATE_INVOICE', 'DELETE_INVOICE', 'RESTORE_INVOICE',
+            // Insurance Company permissions
+            'CREATE_INSURANCE_COMPANY', 'READ_INSURANCE_COMPANY', 'UPDATE_INSURANCE_COMPANY', 'DELETE_INSURANCE_COMPANY', 'RESTORE_INSURANCE_COMPANY',
+            // Public Company permissions
+            'CREATE_PUBLIC_COMPANY', 'READ_PUBLIC_COMPANY', 'UPDATE_PUBLIC_COMPANY', 'DELETE_PUBLIC_COMPANY', 'RESTORE_PUBLIC_COMPANY',
+            // Type Damage permissions
+            'CREATE_TYPE_DAMAGE', 'READ_TYPE_DAMAGE', 'UPDATE_TYPE_DAMAGE', 'DELETE_TYPE_DAMAGE', 'RESTORE_TYPE_DAMAGE',
+            // Cause of Loss permissions
+            'CREATE_CAUSE_OF_LOSS', 'READ_CAUSE_OF_LOSS', 'UPDATE_CAUSE_OF_LOSS', 'DELETE_CAUSE_OF_LOSS', 'RESTORE_CAUSE_OF_LOSS',
+            // Claim permissions
+            'CREATE_CLAIM', 'READ_CLAIM', 'UPDATE_CLAIM', 'DELETE_CLAIM', 'RESTORE_CLAIM',
+            // Public Adjuster permissions
+            'CREATE_PUBLIC_ADJUSTER', 'READ_PUBLIC_ADJUSTER', 'UPDATE_PUBLIC_ADJUSTER', 'DELETE_PUBLIC_ADJUSTER', 'RESTORE_PUBLIC_ADJUSTER',
+            // Product permissions
+            'CREATE_PRODUCT', 'READ_PRODUCT', 'UPDATE_PRODUCT', 'DELETE_PRODUCT', 'RESTORE_PRODUCT',
+            // Service Category permissions
+            'CREATE_SERVICE_CATEGORY', 'READ_SERVICE_CATEGORY', 'UPDATE_SERVICE_CATEGORY', 'DELETE_SERVICE_CATEGORY', 'RESTORE_SERVICE_CATEGORY',
+            // Service Request permissions
+            'CREATE_SERVICE_REQUEST', 'READ_SERVICE_REQUEST', 'UPDATE_SERVICE_REQUEST', 'DELETE_SERVICE_REQUEST', 'RESTORE_SERVICE_REQUEST',
+            // W9 Form permissions
+            'CREATE_W9FORM', 'READ_W9FORM', 'UPDATE_W9FORM', 'DELETE_W9FORM', 'RESTORE_W9FORM',
+            // Category Product permissions
+            'CREATE_CATEGORY_PRODUCT', 'READ_CATEGORY_PRODUCT', 'UPDATE_CATEGORY_PRODUCT', 'DELETE_CATEGORY_PRODUCT', 'RESTORE_CATEGORY_PRODUCT',
+            // Claim Status permissions
+            'CREATE_CLAIM_STATU', 'READ_CLAIM_STATU', 'UPDATE_CLAIM_STATU', 'DELETE_CLAIM_STATU', 'RESTORE_CLAIM_STATU',
+            // Alliance Company permissions
+            'CREATE_ALLIANCE_COMPANY', 'READ_ALLIANCE_COMPANY', 'UPDATE_ALLIANCE_COMPANY', 'DELETE_ALLIANCE_COMPANY', 'RESTORE_ALLIANCE_COMPANY',
+            // Salesperson Signature permissions
+            'CREATE_SALESPERSON_SIGNATURE', 'READ_SALESPERSON_SIGNATURE', 'UPDATE_SALESPERSON_SIGNATURE', 'DELETE_SALESPERSON_SIGNATURE', 'RESTORE_SALESPERSON_SIGNATURE',
+            // Mortgage Company permissions
+            'CREATE_MORTGAGE_COMPANY', 'READ_MORTGAGE_COMPANY', 'UPDATE_MORTGAGE_COMPANY', 'DELETE_MORTGAGE_COMPANY', 'RESTORE_MORTGAGE_COMPANY',
+            // Manager permissions
             'CREATE_MANAGER', 'READ_MANAGER', 'UPDATE_MANAGER', 'DELETE_MANAGER', 'RESTORE_MANAGER'
         ];
         $managerRole->givePermissionTo($managerPermissions);

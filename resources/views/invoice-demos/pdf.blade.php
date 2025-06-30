@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{ $invoice->invoice_number }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            width: 100%;
+            display: table;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        .header-right {
+            display: table-cell;
+            width: 50%;
+            text-align: right;
+            vertical-align: top;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .company-info {
+            font-size: 10px;
+            line-height: 1.2;
+            margin-top: 5px;
+        }
+        .invoice-title {
+            color: #6c9bd0;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .invoice-details {
+            width: 100%;
+            display: table;
+            margin-bottom: 20px;
+        }
+        .bill-to {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        .invoice-info {
+            display: table-cell;
+            width: 50%;
+            text-align: right;
+            vertical-align: top;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table.items th {
+            background-color: #e6f0fa;
+            color: #6c9bd0;
+            font-weight: bold;
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        table.items td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        table.items .amount {
+            text-align: right;
+        }
+        table.items .qty {
+            text-align: center;
+        }
+        table.items .rate {
+            text-align: right;
+        }
+        .totals-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .totals-table td {
+            padding: 5px;
+        }
+        .totals-table .label {
+            text-align: right;
+            font-weight: normal;
+        }
+        .totals-table .value {
+            text-align: right;
+            width: 120px;
+        }
+        .balance-due {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+        .claim-info {
+            margin-top: 20px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-left">
+                <img src="{{ public_path('images/logo.png') }}" alt="V General Contractors" class="logo">
+            </div>
+            <div class="header-right">
+                <div class="company-name">V GENERAL CONTRACTORS</div>
+                <div class="company-info">
+                    1522 Waugh Dr # 510<br>
+                    Houston, TX 77019<br>
+                    +1(346)200-5737<br>
+                    info@vgeneralcontractors.com<br>
+                    https://vgeneralcontractors.com/
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invoice Title -->
+        <div class="invoice-title">INVOICE</div>
+        
+        <!-- Invoice Details -->
+        <div class="invoice-details">
+            <div class="bill-to">
+                <div class="section-title">BILL TO</div>
+                {{ $invoice->bill_to_name }}<br>
+                {{ $invoice->bill_to_address }}<br>
+                @if($invoice->bill_to_address_2)
+                {{ $invoice->bill_to_address_2 }}<br>
+                @endif
+                {{ $invoice->bill_to_city }}, {{ $invoice->bill_to_state }} {{ $invoice->bill_to_zip }}
+            </div>
+            <div class="invoice-info">
+                <table>
+                    <tr>
+                        <td class="section-title">INVOICE</td>
+                        <td>{{ $invoice->invoice_number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="section-title">DATE</td>
+                        <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Invoice Items -->
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>SERVICE</th>
+                    <th>DESCRIPTION</th>
+                    <th class="qty">QTY</th>
+                    <th class="rate">RATE</th>
+                    <th class="amount">AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($invoice->items as $item)
+                <tr>
+                    <td>{{ $item->service_name }}</td>
+                    <td>{{ $item->description }}</td>
+                    <td class="qty">{{ number_format($item->quantity, 2) }}</td>
+                    <td class="rate">${{ number_format($item->rate, 2) }}</td>
+                    <td class="amount">${{ number_format($item->amount, 2) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        
+        <!-- Totals -->
+        <table class="totals-table">
+            <tr>
+                <td></td>
+                <td class="label">BALANCE DUE</td>
+                <td class="value balance-due">${{ number_format($invoice->balance_due, 2) }}</td>
+            </tr>
+        </table>
+        
+        <!-- Claim Information -->
+        <div class="claim-info">
+            <table>
+                <tr>
+                    <td>INVOICE #: {{ $invoice->invoice_number }}</td>
+                </tr>
+                <tr>
+                    <td>CLAIM #: {{ $invoice->claim_number }}</td>
+                </tr>
+                <tr>
+                    <td>INSURANCE COMPANY: {{ $invoice->insurance_company }}</td>
+                </tr>
+                <tr>
+                    <td>POLICY NUMBER: {{ $invoice->policy_number }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            Thank you for your business. Please make payment within {{ $invoice->payment_terms ?? 30 }} days.
+        </div>
+    </div>
+</body>
+</html>

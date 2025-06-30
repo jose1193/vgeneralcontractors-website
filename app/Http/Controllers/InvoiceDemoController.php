@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\InvoiceDemoResource;
 use App\Http\Requests\InvoiceDemoRequest;
+use App\Jobs\GenerateInvoicePdf;
+use App\Jobs\ProcessInvoiceEmail;
 use App\Models\InvoiceDemo;
 use App\Services\InvoiceDemoService;
+use App\Services\InvoicePdfService;
 use App\Services\TransactionService;
 use App\Traits\CacheTraitCrud;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
@@ -27,11 +31,16 @@ class InvoiceDemoController extends BaseController
     
     protected int $cacheTime = 300; // 5 minutes
     protected InvoiceDemoService $invoiceService;
+    protected InvoicePdfService $pdfService;
 
-    public function __construct(InvoiceDemoService $invoiceService, TransactionService $transactionService)
-    {
+    public function __construct(
+        InvoiceDemoService $invoiceService, 
+        TransactionService $transactionService,
+        InvoicePdfService $pdfService
+    ) {
         parent::__construct($transactionService);
         $this->invoiceService = $invoiceService;
+        $this->pdfService = $pdfService;
         
         // Set properties for parent compatibility
         $this->modelClass = InvoiceDemo::class;
@@ -144,6 +153,12 @@ class InvoiceDemoController extends BaseController
                 $request->all(),
                 auth()->id()
             );
+            
+            // Queue PDF generation in background
+            GenerateInvoicePdf::dispatch($invoice);
+            
+            // Send email notification for new invoice
+            ProcessInvoiceEmail::dispatch($invoice, 'new');
 
             return response()->json([
                 'success' => true,
@@ -212,6 +227,12 @@ class InvoiceDemoController extends BaseController
                 $request->all(),
                 auth()->id()
             );
+            
+            // Queue PDF regeneration in background
+            GenerateInvoicePdf::dispatch($updatedInvoice, true);
+            
+            // Send email notification for updated invoice
+            ProcessInvoiceEmail::dispatch($updatedInvoice, 'updated');
 
             return response()->json([
                 'success' => true,
@@ -421,5 +442,161 @@ class InvoiceDemoController extends BaseController
     protected function prepareUpdateData(Request $request): array
     {
         return $request->all();
+    }
+    
+    /**
+     * Generate and download PDF for an invoice
+     */
+    public function downloadPdf(string $uuid): Response|JsonResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view invoice demos")) {
+            return response()->json([
+                'success' => false,
+                'message' => "You don't have permission to view invoice demos"
+            ], 403);
+        }
+
+        try {
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
+            
+            // Generate PDF
+            $pdf = $this->pdfService->generatePdf($invoice);
+            
+            if (!$pdf) {
+                throw new \Exception('Failed to generate PDF');
+            }
+            
+            // Set filename
+            $filename = Str::slug("invoice-{$invoice->invoice_number}-{$invoice->invoice_date->format('Y-m-d')}") . '.pdf';
+            
+            // Return PDF for download
+            return $pdf->download($filename);
+        } catch (Throwable $e) {
+            Log::error('Failed to download invoice PDF', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to download invoice PDF'
+            ], 500);
+        }
+    }
+    
+    /**
+     * View PDF in browser
+     */
+    public function viewPdf(string $uuid): Response|JsonResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view invoice demos")) {
+            return response()->json([
+                'success' => false,
+                'message' => "You don't have permission to view invoice demos"
+            ], 403);
+        }
+
+        try {
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
+            
+            // Generate PDF
+            $pdf = $this->pdfService->generatePdf($invoice);
+            
+            if (!$pdf) {
+                throw new \Exception('Failed to generate PDF');
+            }
+            
+            // Stream PDF to browser
+            return $pdf->stream("invoice-{$invoice->invoice_number}.pdf");
+        } catch (Throwable $e) {
+            Log::error('Failed to view invoice PDF', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to view invoice PDF'
+            ], 500);
+        }
+    }
+    
+    /**
+     * Generate PDF and return S3 URL
+     */
+    public function generatePdf(string $uuid): JsonResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view invoice demos")) {
+            return response()->json([
+                'success' => false,
+                'message' => "You don't have permission to view invoice demos"
+            ], 403);
+        }
+
+        try {
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
+            
+            // Queue PDF generation with notification
+            GenerateInvoicePdf::dispatch($invoice, true, true);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'PDF generation has been queued. You will be notified when it is ready.'
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to queue invoice PDF generation', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate invoice PDF'
+            ], 500);
+        }
+    }
+    
+    /**
+     * Get PDF URL for an invoice
+     */
+    public function getPdfUrl(string $uuid): JsonResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view invoice demos")) {
+            return response()->json([
+                'success' => false,
+                'message' => "You don't have permission to view invoice demos"
+            ], 403);
+        }
+
+        try {
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
+            
+            if (!$invoice->pdf_url) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'PDF not yet generated for this invoice',
+                    'pdf_url' => null
+                ]);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'pdf_url' => $invoice->pdf_url
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Failed to get invoice PDF URL', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get invoice PDF URL'
+            ], 500);
+        }
     }
 }

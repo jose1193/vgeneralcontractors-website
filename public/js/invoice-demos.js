@@ -146,6 +146,29 @@ class InvoiceDemoManager {
     }
 
     /**
+     * Generate PDF for invoice
+     */
+    async generatePdf(id) {
+        return await this.apiRequest(`${this.baseUrl}/${id}/generate-pdf`, {
+            method: "POST",
+        });
+    }
+
+    /**
+     * Get URL for viewing PDF
+     */
+    getPdfViewUrl(id) {
+        return `${this.baseUrl}/${id}/pdf`;
+    }
+
+    /**
+     * Get URL for downloading PDF
+     */
+    getPdfDownloadUrl(id) {
+        return `${this.baseUrl}/${id}/download-pdf`;
+    }
+
+    /**
      * Get form data (dropdowns, etc.)
      */
     async getFormData() {
@@ -189,6 +212,44 @@ class InvoiceDemoManager {
             style: "currency",
             currency: "USD",
         }).format(amount);
+    }
+
+    /**
+     * Show success message
+     */
+    showSuccess(message) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Success',
+                text: message,
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } else {
+            alert(message);
+        }
+    }
+
+    /**
+     * Show error message
+     */
+    showError(message) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Error',
+                text: message,
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } else {
+            alert('Error: ' + message);
+        }
     }
 
     /**
@@ -334,6 +395,7 @@ function invoiceDemoData() {
         isEditing: false,
         submitting: false,
         currentInvoice: null,
+        pdfGenerating: false,
 
         // Pagination
         currentPage: 1,
@@ -714,6 +776,22 @@ function invoiceDemoData() {
                 window.invoiceDemoManager.showError(
                     error.message || "Failed to delete invoice"
                 );
+            }
+        },
+        
+        // Generate PDF for invoice
+        async generatePdf(invoiceId) {
+            this.pdfGenerating = true;
+            try {
+                await window.invoiceDemoManager.generatePdf(invoiceId);
+                window.invoiceDemoManager.showSuccess("PDF generated successfully");
+                // Refresh the invoice list to get updated pdf_url
+                await this.loadInvoices();
+            } catch (error) {
+                console.error("Failed to generate PDF:", error);
+                window.invoiceDemoManager.showError("Failed to generate PDF");
+            } finally {
+                this.pdfGenerating = false;
             }
         },
 

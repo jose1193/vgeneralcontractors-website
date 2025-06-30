@@ -128,7 +128,13 @@ Route::middleware([
         Route::get('/check-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'checkInvoiceNumberExists'])->name('check-invoice-number');
         Route::get('/generate-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'generateInvoiceNumber'])->name('generate-invoice-number');
         Route::get('/form-data', [App\Http\Controllers\InvoiceDemoController::class, 'getFormData'])->name('form-data');
+        
+        // PDF Routes
+        Route::get('/{uuid}/pdf', [App\Http\Controllers\InvoiceDemoController::class, 'viewPdf'])->name('view-pdf');
+        Route::get('/{uuid}/download-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'downloadPdf'])->name('download-pdf');
+        Route::post('/{uuid}/generate-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'generatePdf'])->name('generate-pdf');
     });
+
 
     // API Routes for Service Categories (needed by Portfolio CRUD)
     Route::prefix('api')->name('api.')->group(function () {
