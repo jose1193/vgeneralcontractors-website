@@ -140,8 +140,7 @@
             <div class="header-right">
                 <div class="company-name">{{ $company->company_name ?? 'V GENERAL CONTRACTORS' }}</div>
                 <div class="company-info">
-                    {{ $company->address ?? '1522 Waugh Dr # 510' }}<br>
-                    {{ $company->city ?? 'Houston' }}, {{ $company->state ?? 'TX' }} {{ $company->zip ?? '77019' }}<br>
+                    {{ $company->address ?? '1522 Waugh Dr # 510, Houston, TX 77019' }}<br>
                     @php
                         $phone = $collectionsEmail->phone ?? '+17133646240';
                         // Format phone number as (xxx) xxx-xxxx
