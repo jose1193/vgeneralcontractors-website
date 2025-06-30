@@ -50,7 +50,7 @@ class InvoiceDemoRequest extends FormRequest
                 'max:1000'
             ],
             'bill_to_phone' => [
-                'nullable',
+                'required',
                 'string',
                 'max:20',
                 'regex:/^[\+]?[1-9]?[0-9]{7,15}$/'
@@ -76,27 +76,33 @@ class InvoiceDemoRequest extends FormRequest
                 'max:999999.99'
             ],
             
-            // Insurance and claim information
+            // Insurance and claim information - All mandatory except specified optional fields
             'claim_number' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255'
             ],
             'policy_number' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255'
             ],
             'insurance_company' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255'
             ],
             'date_of_loss' => [
-                'nullable',
+                'required',
                 'date',
                 'before_or_equal:today'
             ],
+            'type_of_loss' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+            // Optional fields in Insurance & Claim Information
             'date_received' => [
                 'nullable',
                 'date',
@@ -112,17 +118,10 @@ class InvoiceDemoRequest extends FormRequest
                 'date',
                 'after_or_equal:date_of_loss'
             ],
-            
-            // Additional fields
             'price_list_code' => [
                 'nullable',
                 'string',
                 'max:50'
-            ],
-            'type_of_loss' => [
-                'nullable',
-                'string',
-                'max:255'
             ],
             'notes' => [
                 'nullable',
@@ -137,10 +136,11 @@ class InvoiceDemoRequest extends FormRequest
                 Rule::in(['draft', 'sent', 'paid', 'cancelled'])
             ],
             
-            // Invoice items (for creation/update with items)
+            // Invoice items (mandatory section)
             'items' => [
-                'nullable',
-                'array'
+                'required',
+                'array',
+                'min:1'
             ],
             'items.*.service_name' => [
                 'required_with:items',
@@ -194,6 +194,7 @@ class InvoiceDemoRequest extends FormRequest
             'bill_to_address.required' => 'The bill to address is required.',
             'bill_to_address.max' => 'The bill to address cannot exceed 1000 characters.',
             
+            'bill_to_phone.required' => 'The bill to phone number is required.',
             'bill_to_phone.regex' => 'Please enter a valid phone number.',
             'bill_to_phone.max' => 'The phone number cannot exceed 20 characters.',
             
@@ -212,9 +213,16 @@ class InvoiceDemoRequest extends FormRequest
             'balance_due.max' => 'The balance due cannot exceed $999,999.99.',
             
             // Insurance and claim messages
+            'claim_number.required' => 'The claim number is required.',
             'claim_number.max' => 'The claim number cannot exceed 255 characters.',
+            'policy_number.required' => 'The policy number is required.',
             'policy_number.max' => 'The policy number cannot exceed 255 characters.',
+            'insurance_company.required' => 'The insurance company is required.',
             'insurance_company.max' => 'The insurance company name cannot exceed 255 characters.',
+            
+            'date_of_loss.required' => 'The date of loss is required.',
+            'type_of_loss.required' => 'The type of loss is required.',
+            'type_of_loss.max' => 'The type of loss cannot exceed 255 characters.',
             
             'date_of_loss.date' => 'Please enter a valid date of loss.',
             'date_of_loss.before_or_equal' => 'The date of loss cannot be in the future.',
@@ -230,7 +238,6 @@ class InvoiceDemoRequest extends FormRequest
             
             // Additional fields messages
             'price_list_code.max' => 'The price list code cannot exceed 50 characters.',
-            'type_of_loss.max' => 'The type of loss cannot exceed 255 characters.',
             'notes.max' => 'The notes cannot exceed 2000 characters.',
             
             // Status messages
@@ -238,7 +245,9 @@ class InvoiceDemoRequest extends FormRequest
             'status.in' => 'The selected status is invalid.',
             
             // Items validation messages
+            'items.required' => 'At least one invoice item is required.',
             'items.array' => 'Items must be an array.',
+            'items.min' => 'At least one invoice item is required.',
             'items.*.service_name.required_with' => 'Service name is required for each item.',
             'items.*.service_name.max' => 'Service name cannot exceed 255 characters.',
             'items.*.description.required_with' => 'Description is required for each item.',
@@ -330,13 +339,15 @@ class InvoiceDemoRequest extends FormRequest
         $taxAmount = (float) $this->input('tax_amount', 0);
         $balanceDue = (float) $this->input('balance_due', 0);
         
-        // Validate balance due equals subtotal + tax
-        $expectedBalance = $subtotal + $taxAmount;
-        if (abs($balanceDue - $expectedBalance) > 0.01) { // Allow small rounding differences
-            $validator->errors()->add(
-                'balance_due',
-                'Balance due must equal subtotal plus tax amount.'
-            );
+        // Only validate balance calculation if we have items (subtotal > 0)
+        if ($subtotal > 0) {
+            $expectedBalance = $subtotal + $taxAmount;
+            if (abs($balanceDue - $expectedBalance) > 0.01) { // Allow small rounding differences
+                $validator->errors()->add(
+                    'balance_due',
+                    'Balance due must equal subtotal plus tax amount.'
+                );
+            }
         }
     }
 
@@ -392,13 +403,21 @@ class InvoiceDemoRequest extends FormRequest
         // Clean and format phone number
         if ($this->has('bill_to_phone')) {
             $phone = preg_replace('/[^\d+]/', '', $this->bill_to_phone);
-            $this->merge(['bill_to_phone' => $phone]);
+            $this->merge(['bill_to_phone' => $phone ?: null]);
         }
         
         // Clean and format invoice number
         if ($this->has('invoice_number')) {
             $invoiceNumber = strtoupper(trim($this->invoice_number));
             $this->merge(['invoice_number' => $invoiceNumber]);
+        }
+        
+        // Convert empty strings to null for optional fields
+        $optionalFields = ['date_received', 'date_inspected', 'date_entered', 'price_list_code', 'notes'];
+        foreach ($optionalFields as $field) {
+            if ($this->has($field) && trim($this->input($field)) === '') {
+                $this->merge([$field => null]);
+            }
         }
         
         // Ensure financial amounts are properly formatted
@@ -411,7 +430,7 @@ class InvoiceDemoRequest extends FormRequest
         }
         
         // Set default status if not provided
-        if (!$this->has('status')) {
+        if (!$this->has('status') || trim($this->input('status')) === '') {
             $this->merge(['status' => 'draft']);
         }
     }

@@ -62,7 +62,7 @@
                                             'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="flex-1 rounded-xl shadow-sm transition-all duration-200"
-                                        placeholder="INV-202501-0001">
+                                        placeholder="VG-0001">
                                     <button type="button" @click="generateInvoiceNumber()"
                                         class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors duration-200">
                                         Generate
@@ -128,7 +128,7 @@
 
                             <!-- Bill To Phone -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Bill To Phone</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bill To Phone *</label>
                                 <input type="tel" x-model="form.bill_to_phone" @input="formatPhoneInput($event)"
                                     :class="errors.bill_to_phone ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
@@ -165,7 +165,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Claim Number -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Claim Number</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Claim Number *</label>
                                 <input type="text" x-model="form.claim_number"
                                     @input="formatUppercaseInput($event, 'claim_number')"
                                     :class="errors.claim_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -178,7 +178,7 @@
 
                             <!-- Policy Number -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Policy Number</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Policy Number *</label>
                                 <input type="text" x-model="form.policy_number"
                                     @input="formatUppercaseInput($event, 'policy_number')"
                                     :class="errors.policy_number ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -191,7 +191,7 @@
 
                             <!-- Insurance Company -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Insurance Company</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Insurance Company *</label>
                                 <div class="flex space-x-2">
                                     <input type="text" x-model="form.insurance_company" list="insurance_companies"
                                         :class="errors.insurance_company ?
@@ -221,7 +221,7 @@
 
                             <!-- Type of Loss -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Loss</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type of Loss *</label>
                                 <div class="flex space-x-2">
                                     <input type="text" x-model="form.type_of_loss" list="type_of_loss_options"
                                         :class="errors.type_of_loss ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -250,7 +250,7 @@
 
                             <!-- Date of Loss -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Loss</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Loss *</label>
                                 <input type="date" x-model="form.date_of_loss"
                                     :class="errors.date_of_loss ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                         'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
@@ -316,7 +316,7 @@
                                         d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
                                     </path>
                                 </svg>
-                                Invoice Items
+                                Invoice Items *
                             </div>
                             <button type="button" @click="addItem()"
                                 class="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors duration-200 text-sm">
