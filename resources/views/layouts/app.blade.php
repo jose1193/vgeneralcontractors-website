@@ -25,6 +25,15 @@
     <!-- Alpine.js Mask Plugin -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Debug Alpine.js Mask -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine.js initialized');
+            console.log('Alpine.js version:', Alpine.version);
+            console.log('Alpine.js mask plugin available:', typeof Alpine.plugin === 'function');
+            console.log('$money function available:', typeof window.Alpine?.magic?.money === 'function');
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Styles -->
     @livewireStyles

@@ -370,7 +370,8 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
                                                 x-mask:dynamic="$money($input, '.', ',', 2)"
-                                                @input="calculateTotals()"
+                                                @input="calculateTotals(); console.log('Rate input changed:', $event.target.value)"
+                                                x-init="console.log('Rate input initialized with mask:', $el.getAttribute('x-mask:dynamic'))"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
