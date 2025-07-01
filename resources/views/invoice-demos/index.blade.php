@@ -110,6 +110,119 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    /* Modern Glassmorphic Inputs */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            0 4px 16px rgba(139, 92, 246, 0.1),
+            0 2px 8px rgba(99, 102, 241, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #1f2937;
+        font-weight: 500;
+    }
+    
+    .glass-input::placeholder {
+        color: rgba(107, 114, 128, 0.8);
+        font-weight: 400;
+    }
+    
+    .glass-input:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        box-shadow: 
+            0 0 0 3px rgba(139, 92, 246, 0.1),
+            0 8px 24px rgba(139, 92, 246, 0.15),
+            0 4px 12px rgba(99, 102, 241, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+    }
+    
+    .glass-input:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateY(-0.5px);
+        box-shadow: 
+            0 6px 20px rgba(139, 92, 246, 0.12),
+            0 3px 10px rgba(99, 102, 241, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    
+    /* Modern Glassmorphic Container */
+    .glass-container {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.1) 0%, 
+            rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            0 8px 32px rgba(139, 92, 246, 0.1),
+            0 4px 16px rgba(99, 102, 241, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .glass-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(139, 92, 246, 0.3) 50%, 
+            transparent 100%);
+        animation: shimmer 3s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+        0%, 100% { opacity: 0; }
+        50% { opacity: 1; }
+    }
+    
+    /* Modern Toggle Switch */
+    .glass-toggle {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-toggle.active {
+        background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        box-shadow: 
+            0 4px 16px rgba(139, 92, 246, 0.3),
+            0 2px 8px rgba(99, 102, 241, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    .glass-toggle-thumb {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.15),
+            0 1px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Search Icon Enhancement */
+    .glass-search-icon {
+        color: rgba(139, 92, 246, 0.7);
+        transition: all 0.3s ease;
+    }
+    
+    .glass-input:focus + .glass-search-icon,
+    .glass-input:hover + .glass-search-icon {
+        color: rgba(139, 92, 246, 1);
+        transform: scale(1.1);
+    }
 </style>
     <div class="min-h-screen  py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,14 +249,14 @@
             </div>
 
             <!-- Filters and Search Section -->
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 mb-8 p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-container rounded-2xl mb-8 p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Search Input -->
-                    <div class="relative">
+                    <div class="relative group">
                         <input type="text" x-model="search" @input="searchInvoices()"
                             placeholder="Search by invoice number, client name..."
-                            class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                        <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                            class="glass-input w-full pl-12 pr-4 py-4 rounded-xl">
+                        <svg class="glass-search-icon absolute left-4 top-4 h-5 w-5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -151,36 +264,47 @@
                     </div>
 
                     <!-- Status Filter -->
-                    <select x-model="statusFilter" @change="filterByStatus()"
-                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                        <option value="">All Statuses</option>
-                        <option value="draft">Draft</option>
-                        <option value="sent">Sent</option>
-                        <option value="paid">Paid</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
+                    <div class="relative">
+                        <select x-model="statusFilter" @change="filterByStatus()"
+                            class="glass-input w-full px-4 py-4 rounded-xl appearance-none cursor-pointer">
+                            <option value="">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="sent">Sent</option>
+                            <option value="paid">Paid</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <svg class="absolute right-3 top-4 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
 
                     <!-- Date Range Filter -->
-                    <select x-model="dateFilter" @change="filterByStatus()"
-                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                        <option value="">All Dates</option>
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month">This Month</option>
-                        <option value="year">This Year</option>
-                    </select>
+                    <div class="relative">
+                        <select x-model="dateFilter" @change="filterByStatus()"
+                            class="glass-input w-full px-4 py-4 rounded-xl appearance-none cursor-pointer">
+                            <option value="">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                        <svg class="absolute right-3 top-4 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
 
                     <!-- Show Deleted Toggle -->
-                    <div class="flex items-center space-x-3">
-                        <label class="flex items-center cursor-pointer">
+                    <div class="flex items-center justify-center space-x-4">
+                        <label class="flex items-center cursor-pointer group">
                             <input type="checkbox" x-model="showDeleted" @change="loadInvoices()" class="sr-only">
                             <div class="relative">
-                                <div class="w-10 h-6 bg-gray-200 rounded-full shadow-inner transition-colors duration-200"
-                                    :class="showDeleted ? 'bg-purple-500' : 'bg-gray-200'"></div>
-                                <div class="absolute w-4 h-4 bg-white rounded-full shadow top-1 left-1 transition-transform duration-200"
-                                    :class="showDeleted ? 'transform translate-x-4' : ''"></div>
+                                <div class="glass-toggle w-12 h-6 rounded-full transition-all duration-300"
+                                    :class="showDeleted ? 'active' : ''">
+                                </div>
+                                <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
+                                    :class="showDeleted ? 'transform translate-x-6' : ''"></div>
                             </div>
-                            <span class="ml-3 text-sm font-medium text-gray-700">Show Deleted</span>
+                            <span class="ml-4 text-sm font-semibold text-gray-700 group-hover:text-purple-600 transition-colors duration-200">Show Deleted</span>
                         </label>
                     </div>
                 </div>
