@@ -210,6 +210,16 @@ class InvoiceDemoManager {
     /**
      * Format currency
      */
+    formatDecimal(value) {
+        if (isNaN(parseFloat(value))) {
+            return '0.00';
+        }
+        return parseFloat(value).toFixed(2);
+    }
+
+    /**
+     * Format currency
+     */
     formatCurrency(amount) {
         return new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -656,9 +666,10 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: 0,
+                rate: '0.00',
                 sort_order: this.form.items.length,
             });
+            this.calculateTotals();
         },
 
         // Remove item from invoice
