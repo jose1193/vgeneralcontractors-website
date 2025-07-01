@@ -26,20 +26,20 @@ class InvoiceDemoManager {
         };
 
         const config = { ...defaultOptions, ...options };
-
-        console.group("API Request");
-        console.log("URL:", url);
-        console.log("Method:", options.method || "GET");
-
+        
+        console.group('API Request');
+        console.log('URL:', url);
+        console.log('Method:', options.method || 'GET');
+        
         // Log request body if present (but sanitize sensitive data)
         if (options.body) {
             try {
                 const bodyData = JSON.parse(options.body);
                 // Create a sanitized copy for logging (remove sensitive fields)
                 const sanitizedBody = { ...bodyData };
-                console.log("Request body:", sanitizedBody);
+                console.log('Request body:', sanitizedBody);
             } catch (e) {
-                console.log("Request body: [Unable to parse]");
+                console.log('Request body: [Unable to parse]');
             }
         }
         console.groupEnd();
@@ -47,19 +47,19 @@ class InvoiceDemoManager {
         try {
             const response = await fetch(url, config);
             let data;
-
+            
             // Log response status
-            console.group("API Response");
-            console.log("Status:", response.status);
-            console.log("Status Text:", response.statusText);
-
+            console.group('API Response');
+            console.log('Status:', response.status);
+            console.log('Status Text:', response.statusText);
+            
             // Try to parse JSON response
             try {
                 data = await response.json();
-                console.log("Response data:", data);
+                console.log('Response data:', data);
             } catch (parseError) {
-                console.error("Error parsing response:", parseError);
-                data = { message: "Invalid response format" };
+                console.error('Error parsing response:', parseError);
+                data = { message: 'Invalid response format' };
             }
             console.groupEnd();
 
@@ -71,7 +71,7 @@ class InvoiceDemoManager {
                 error.response = {
                     status: response.status,
                     statusText: response.statusText,
-                    data: data,
+                    data: data
                 };
                 throw error;
             }
@@ -108,10 +108,7 @@ class InvoiceDemoManager {
      * Create new invoice
      */
     async createInvoice(formData) {
-        console.log(
-            "Creating invoice with data:",
-            JSON.parse(JSON.stringify(formData))
-        );
+        console.log('Creating invoice with data:', JSON.parse(JSON.stringify(formData)));
         return await this.apiRequest(this.baseUrl, {
             method: "POST",
             body: JSON.stringify(formData),
@@ -122,8 +119,8 @@ class InvoiceDemoManager {
      * Update existing invoice
      */
     async updateInvoice(id, formData) {
-        console.log("Updating invoice with ID:", id);
-        console.log("Update data:", JSON.parse(JSON.stringify(formData)));
+        console.log('Updating invoice with ID:', id);
+        console.log('Update data:', JSON.parse(JSON.stringify(formData)));
         return await this.apiRequest(`${this.baseUrl}/${id}`, {
             method: "PUT",
             body: JSON.stringify(formData),
@@ -211,28 +208,25 @@ class InvoiceDemoManager {
      * Format currency
      */
     formatCurrency(amount) {
-        const numValue = parseFloat(amount) || 0;
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(numValue);
+        }).format(amount);
     }
 
     /**
      * Show success message
      */
     showSuccess(message) {
-        if (typeof Swal !== "undefined") {
+        if (typeof Swal !== 'undefined') {
             Swal.fire({
-                title: "Success",
+                title: 'Success',
                 text: message,
-                icon: "success",
+                icon: 'success',
                 toast: true,
-                position: "top-end",
+                position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         } else {
             alert(message);
@@ -243,18 +237,18 @@ class InvoiceDemoManager {
      * Show error message
      */
     showError(message) {
-        if (typeof Swal !== "undefined") {
+        if (typeof Swal !== 'undefined') {
             Swal.fire({
-                title: "Error",
+                title: 'Error',
                 text: message,
-                icon: "error",
+                icon: 'error',
                 toast: true,
-                position: "top-end",
+                position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         } else {
-            alert("Error: " + message);
+            alert('Error: ' + message);
         }
     }
 
@@ -271,39 +265,75 @@ class InvoiceDemoManager {
     }
 
     /**
+     * Show success notification
+     */
+    showSuccess(message) {
+        this.showNotification(message, "success");
+    }
+
+    /**
+     * Show error notification
+     */
+    showError(message) {
+        this.showNotification(message, "error");
+    }
+
+    /**
      * Handle API errors with detailed logging
      */
     handleApiError(error) {
-        console.group("🔴 API ERROR DETAILS");
-        console.error("Error object:", error);
-
+        console.group('🔴 API ERROR DETAILS');
+        console.error('Error object:', error);
+        
         if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
             const status = error.response.status;
             const data = error.response.data;
-
-            console.log("Response status:", status);
-            console.log("Response status text:", error.response.statusText);
-            console.log("Response data:", data);
+            
+            console.log('Response status:', status);
+            console.log('Response status text:', error.response.statusText);
+            console.log('Response data:', data);
 
             if (status === 422) {
+                // Validation error
                 const errorMessage = data.message || "Validation failed";
-                console.log("Validation errors:", data.errors);
+                console.log('Validation errors:', data.errors);
+                
+                // Log detailed validation errors
+                if (data.errors) {
+                    console.group('📋 Validation Errors Detail');
+                    console.table(Object.entries(data.errors).map(([field, messages]) => {
+                        return { field, message: Array.isArray(messages) ? messages.join(', ') : messages };
+                    }));
+                    
+                    // Log specific problematic fields that commonly cause issues
+                    if (data.errors.invoice_number) console.log('📝 Invoice number error:', data.errors.invoice_number);
+                    if (data.errors.bill_to_phone) console.log('📞 Phone error:', data.errors.bill_to_phone);
+                    if (data.errors.items) console.log('📦 Items error:', data.errors.items);
+                    console.groupEnd();
+                }
+                
                 this.showError(errorMessage);
             } else if (status === 403) {
+                // Permission error
                 const errorMessage = data.message || "Permission denied";
                 this.showError(errorMessage);
             } else {
+                // Other server errors
                 const errorMessage = data.message || "Server error";
                 this.showError(errorMessage);
             }
         } else if (error.request) {
-            console.log("No response received:", error.request);
+            // The request was made but no response was received
+            console.log('No response received:', error.request);
             this.showError("No response from server. Please try again later.");
         } else {
-            console.log("Error message:", error.message);
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error message:', error.message);
             this.showError(error.message || "An error occurred");
         }
-
+        
         console.groupEnd();
     }
 
@@ -350,16 +380,13 @@ class InvoiceDemoManager {
     }
 }
 
-// ⚡ INITIALIZE IMMEDIATELY - CRITICAL FOR ALPINE.JS
+// Initialize global instance
 window.invoiceDemoManager = new InvoiceDemoManager();
-console.log("🎯 InvoiceDemoManager initialized:", window.invoiceDemoManager);
 
 /**
  * Alpine.js Invoice Demo Component
  */
 function invoiceDemoData() {
-    console.log("🎯 Alpine.js invoiceDemoData() called");
-
     return {
         // State
         invoices: [],
@@ -408,7 +435,7 @@ function invoiceDemoData() {
             items: [],
         },
 
-        // Form data options - SIMPLIFIED (NO TRANSLATIONS)
+        // Form data options
         formData: {
             statuses: [
                 { value: "draft", label: "Draft" },
@@ -448,12 +475,12 @@ function invoiceDemoData() {
         newInsuranceCompany: { name: "" },
         newTypeOfLoss: { name: "" },
 
+        // Form data (dropdowns) - removed duplicate
+
         // Initialize component
         async init() {
-            console.log("🚀 Initializing invoiceDemoData component...");
             await this.loadFormData();
             await this.loadInvoices();
-            console.log("✅ Component initialized successfully");
         },
 
         // Load form data
@@ -625,73 +652,108 @@ function invoiceDemoData() {
         calculateTotals() {
             let subtotal = 0;
             this.form.items.forEach((item) => {
-                const quantity = parseFloat(item.quantity) || 0;
-                const rate = parseFloat(item.rate) || 0;
-                const itemAmount = quantity * rate;
-                item.amount = itemAmount.toFixed(2);
-                subtotal += itemAmount;
+                subtotal += (item.quantity || 0) * (item.rate || 0);
             });
 
-            this.form.subtotal = subtotal.toFixed(2);
-            const taxAmount = parseFloat(this.form.tax_amount) || 0;
-            this.form.balance_due = (subtotal + taxAmount).toFixed(2);
+            this.form.subtotal = subtotal;
+            this.form.balance_due = subtotal + (this.form.tax_amount || 0);
         },
 
         // Submit form
-        async submitForm() {
-            if (this.submitting) return;
+    async submitForm() {
+        if (this.submitting) return;
 
-            this.submitting = true;
-            this.errors = {};
+        this.submitting = true;
+        this.errors = {};
+        this.generalError = "";
 
-            console.group("Form Submission");
-            console.log("Operation:", this.isEditing ? "UPDATE" : "CREATE");
-            console.log(
-                "Complete form data:",
-                JSON.parse(JSON.stringify(this.form))
-            );
-            console.groupEnd();
+        // Enhanced logging for debugging
+        console.group('Form Submission');
+        console.log('Operation:', this.isEditing ? 'UPDATE' : 'CREATE');
+        console.log('Invoice ID:', this.isEditing ? this.currentInvoice?.id : 'New Invoice');
+        
+        // Log critical fields that often cause validation issues
+        console.log('Critical fields:', {
+            invoice_number: this.form.invoice_number,
+            bill_to_phone: this.form.bill_to_phone,
+            invoice_date: this.form.invoice_date,
+            items_count: this.form.items.length
+        });
+        
+        // Log complete form data
+        console.log('Complete form data:', JSON.parse(JSON.stringify(this.form)));
+        console.groupEnd();
 
-            try {
-                let response;
-                if (this.isEditing) {
-                    response = await window.invoiceDemoManager.updateInvoice(
-                        this.currentInvoice.id,
-                        this.form
-                    );
-                } else {
-                    response = await window.invoiceDemoManager.createInvoice(
-                        this.form
-                    );
-                }
-
-                window.invoiceDemoManager.showSuccess(response.message);
-                this.closeModal();
-                await this.loadInvoices();
-            } catch (error) {
-                console.error("Form submission error:", error);
-
-                if (error.response && error.response.status === 422) {
-                    try {
-                        const errorData =
-                            error.response.data || JSON.parse(error.message);
-                        this.errors = errorData.errors || {};
-                        console.log("Validation errors:", this.errors);
-                    } catch (parseError) {
-                        console.error(
-                            "Error parsing validation response:",
-                            parseError
-                        );
-                        this.errors = { general: "Validation failed" };
-                    }
-                } else {
-                    window.invoiceDemoManager.showError(
-                        error.message || "Failed to save invoice"
-                    );
-                }
-            } finally {
-                this.submitting = false;
+        try {
+            let response;
+            if (this.isEditing) {
+                console.log('Calling updateInvoice with ID:', this.currentInvoice.id);
+                response = await window.invoiceDemoManager.updateInvoice(
+                    this.currentInvoice.id,
+                    this.form
+                );
+                console.log('Update response:', response);
+            } else {
+                console.log('Calling createInvoice');
+                response = await window.invoiceDemoManager.createInvoice(
+                    this.form
+                );
+                console.log('Create response:', response);
             }
+
+            window.invoiceDemoManager.showSuccess(response.message);
+            this.closeModal();
+            await this.loadInvoices();
+        } catch (error) {
+            console.error('Form submission error:', error);
+            
+            if (error.response && error.response.status === 422) {
+                // Enhanced 422 validation error handling
+                console.group('Validation Error (422)');
+                console.log('Error response:', error.response);
+                
+                try {
+                    const errorData = error.response.data || JSON.parse(error.message);
+                    this.errors = errorData.errors || {};
+                    
+                    // Log detailed validation errors
+                    console.log('All validation errors:', this.errors);
+                    console.table(Object.entries(this.errors).map(([field, messages]) => {
+                        return { 
+                            field, 
+                            message: Array.isArray(messages) ? messages.join(', ') : messages 
+                        };
+                    }));
+                    
+                    // Log specific problematic fields
+                    if (this.errors.invoice_number) console.log('Invoice number error:', this.errors.invoice_number);
+                    if (this.errors.bill_to_phone) console.log('Phone error:', this.errors.bill_to_phone);
+                    if (this.errors.items) console.log('Items error:', this.errors.items);
+                    
+                    console.groupEnd();
+                } catch (parseError) {
+                    console.error('Error parsing validation response:', parseError);
+                    console.groupEnd();
+                    this.errors = { general: "Validation failed" };
+                }
+            } else if (error.response && error.response.status === 500) {
+                console.group('Server Error (500)');
+                console.log('Error response:', error.response);
+                console.groupEnd();
+                window.invoiceDemoManager.showError(
+                    "Server error: " + (error.response.data?.message || "Failed to save invoice")
+                );
+            } else {
+                console.group('Other Error');
+                console.log('Error object:', error);
+                console.groupEnd();
+                window.invoiceDemoManager.showError(
+                    error.message || "Failed to save invoice"
+                );
+            }
+        } finally {
+            this.submitting = false;
+        }
         },
 
         // Delete invoice
@@ -716,15 +778,14 @@ function invoiceDemoData() {
                 );
             }
         },
-
+        
         // Generate PDF for invoice
         async generatePdf(invoiceId) {
             this.pdfGenerating = true;
             try {
                 await window.invoiceDemoManager.generatePdf(invoiceId);
-                window.invoiceDemoManager.showSuccess(
-                    "PDF generated successfully"
-                );
+                window.invoiceDemoManager.showSuccess("PDF generated successfully");
+                // Refresh the invoice list to get updated pdf_url
                 await this.loadInvoices();
             } catch (error) {
                 console.error("Failed to generate PDF:", error);
@@ -828,11 +889,16 @@ function invoiceDemoData() {
             }
         },
 
+        // Helper methods moved to avoid duplication - see methods above
+
+        // ==================== MINI-MODAL METHODS ====================
+
         // Add new insurance company
         async addNewInsuranceCompany() {
             if (!this.newInsuranceCompany.name.trim()) return;
 
             try {
+                // Add to local list immediately for better UX
                 const newCompany = this.newInsuranceCompany.name.trim();
                 if (
                     !this.formData.common_insurance_companies.includes(
@@ -843,7 +909,10 @@ function invoiceDemoData() {
                     this.formData.common_insurance_companies.sort();
                 }
 
+                // Set the new company as selected
                 this.form.insurance_company = newCompany;
+
+                // Close modal and reset
                 this.showAddInsuranceModal = false;
                 this.newInsuranceCompany.name = "";
 
@@ -863,13 +932,17 @@ function invoiceDemoData() {
             if (!this.newTypeOfLoss.name.trim()) return;
 
             try {
+                // Add to local list immediately for better UX
                 const newType = this.newTypeOfLoss.name.trim();
                 if (!this.formData.type_of_loss_options.includes(newType)) {
                     this.formData.type_of_loss_options.push(newType);
                     this.formData.type_of_loss_options.sort();
                 }
 
+                // Set the new type as selected
                 this.form.type_of_loss = newType;
+
+                // Close modal and reset
                 this.showAddTypeOfLossModal = false;
                 this.newTypeOfLoss.name = "";
 
@@ -883,6 +956,8 @@ function invoiceDemoData() {
                 );
             }
         },
+
+        // ==================== FORMATTING METHODS ====================
 
         // Format phone input in real-time
         formatPhoneInput(event) {
@@ -923,13 +998,16 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Capitalizar la primera letra de cada palabra
             const capitalizedValue = value.replace(/\b\w/g, (match) =>
                 match.toUpperCase()
             );
 
+            // Solo actualizar si hay cambios para evitar loops
             if (capitalizedValue !== value) {
                 input.value = capitalizedValue;
                 this.form.bill_to_name = capitalizedValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
@@ -940,26 +1018,32 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Convertir letras a mayúsculas, mantener números y guiones
             const uppercaseValue = value.toUpperCase();
 
+            // Solo actualizar si hay cambios para evitar loops
             if (uppercaseValue !== value) {
                 input.value = uppercaseValue;
                 this.form[fieldName] = uppercaseValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
 
-        // Format service description input (all uppercase)
+        // Format service description (all uppercase)
         formatServiceDescriptionInput(event, itemIndex) {
             const input = event.target;
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Convertir todo a mayúsculas
             const uppercaseValue = value.toUpperCase();
 
+            // Solo actualizar si hay cambios para evitar loops
             if (uppercaseValue !== value) {
                 input.value = uppercaseValue;
                 this.form.items[itemIndex].service_name = uppercaseValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
@@ -970,12 +1054,15 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Capitalizar solo la primera letra del texto completo
             const capitalizedValue =
                 value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 
+            // Solo actualizar si hay cambios para evitar loops
             if (capitalizedValue !== value && value.length > 0) {
                 input.value = capitalizedValue;
                 this.form.notes = capitalizedValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
@@ -986,13 +1073,16 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Capitalizar la primera letra de cada palabra
             const capitalizedValue = value.replace(/\b\w/g, (match) =>
                 match.toUpperCase()
             );
 
+            // Solo actualizar si hay cambios para evitar loops
             if (capitalizedValue !== value) {
                 input.value = capitalizedValue;
                 this.form.bill_to_address = capitalizedValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
@@ -1003,13 +1093,16 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
+            // Capitalizar la primera letra de cada palabra
             const capitalizedValue = value.replace(/\b\w/g, (match) =>
                 match.toUpperCase()
             );
 
+            // Solo actualizar si hay cambios para evitar loops
             if (capitalizedValue !== value) {
                 input.value = capitalizedValue;
                 this.form.items[itemIndex].description = capitalizedValue;
+                // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
