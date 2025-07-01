@@ -23,31 +23,70 @@ class InvoicePdfService
     public function generateAndStorePdf(InvoiceDemo $invoice): ?string
     {
         try {
+            Log::info('Starting PDF generation and storage', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number
+            ]);
+            
             // Generate PDF content
             $pdf = $this->generatePdf($invoice);
             
             if (!$pdf) {
+                Log::error('PDF generation failed', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number
+                ]);
                 return null;
             }
             
             // Store PDF in S3
             $pdfUrl = $this->storePdf($pdf, $invoice);
             
-            // ✅ UPDATE: Save PDF URL to database
-            if ($pdfUrl) {
-                $invoice->update(['pdf_url' => $pdfUrl]);
-                
-                // ✅ NEW: Clear cache immediately after PDF generation
-                $this->invalidatePdfCache($invoice);
-                
-                Log::info('PDF URL updated in database', [
+            if (!$pdfUrl) {
+                Log::error('PDF storage in S3 failed', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number
+                ]);
+                return null;
+            }
+            
+            // ✅ UPDATE: Save PDF URL to database with verification
+            $updateResult = $invoice->update(['pdf_url' => $pdfUrl]);
+            
+            if (!$updateResult) {
+                Log::error('Failed to update PDF URL in database', [
                     'invoice_id' => $invoice->id,
                     'invoice_number' => $invoice->invoice_number,
                     'pdf_url' => $pdfUrl
                 ]);
+                return null;
             }
             
+            // ✅ VERIFY: Confirm PDF URL was saved
+            $verificationResult = $this->verifyPdfUrlSaved($invoice);
+            
+            if (!$verificationResult) {
+                Log::error('PDF URL verification failed after update', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_url' => $pdfUrl
+                ]);
+                return null;
+            }
+            
+            // ✅ CLEAR CACHE: Invalidate cache after successful update
+            $this->invalidatePdfCache($invoice);
+            
+            Log::info('PDF generation and storage completed successfully', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'pdf_url' => $pdfUrl,
+                'database_updated' => $updateResult,
+                'verification_passed' => $verificationResult
+            ]);
+            
             return $pdfUrl;
+            
         } catch (Throwable $e) {
             Log::error('Error generating and storing invoice PDF', [
                 'invoice_id' => $invoice->id,
@@ -338,6 +377,38 @@ class InvoicePdfService
                 'invoice_id' => $invoice->id,
                 'error' => $e->getMessage()
             ]);
+        }
+    }
+    
+    /**
+     * ✅ NEW: Verify that PDF URL was saved correctly
+     *
+     * @param InvoiceDemo $invoice
+     * @return bool
+     */
+    public function verifyPdfUrlSaved(InvoiceDemo $invoice): bool
+    {
+        try {
+            // Refresh the model to get latest data
+            $invoice->refresh();
+            
+            $hasPdfUrl = !empty($invoice->pdf_url);
+            
+            Log::info('PDF URL verification', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'has_pdf_url' => $hasPdfUrl,
+                'pdf_url' => $invoice->pdf_url
+            ]);
+            
+            return $hasPdfUrl;
+            
+        } catch (Throwable $e) {
+            Log::error('Error verifying PDF URL', [
+                'invoice_id' => $invoice->id,
+                'error' => $e->getMessage()
+            ]);
+            return false;
         }
     }
 }

@@ -603,54 +603,158 @@ class InvoiceDemoController extends BaseController
     }
 
     /**
-     * ✅ NEW: After store hook for better job timing
+     * ✅ IMPROVED: After store hook with SYNCHRONOUS PDF generation
      */
     protected function afterStore($entity): void
     {
         try {
             $invoice = $entity; // $entity is already an InvoiceDemo instance
             
-            // Queue PDF generation in background AFTER transaction is committed
-            GenerateInvoicePdf::dispatch($invoice);
+            // ✅ GENERATE PDF SYNCHRONOUSLY (like images in other controllers)
+            $pdfUrl = $this->pdfService->generateAndStorePdf($invoice);
             
-            // Send email notification for new invoice AFTER PDF is queued
-            ProcessInvoiceEmail::dispatch($invoice, 'new');
-            
-            Log::info('Jobs dispatched after invoice creation', [
-                'invoice_id' => $invoice->id,
-                'invoice_number' => $invoice->invoice_number
-            ]);
+            if ($pdfUrl) {
+                Log::info('PDF generated synchronously after invoice creation', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_url' => $pdfUrl
+                ]);
+                
+                // Send email notification AFTER PDF is ready
+                ProcessInvoiceEmail::dispatch($invoice, 'new');
+            } else {
+                Log::warning('PDF generation failed for invoice', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number
+                ]);
+                
+                // Fallback: Queue PDF generation as backup
+                GenerateInvoicePdf::dispatch($invoice);
+            }
         } catch (Throwable $e) {
-            Log::error('Error dispatching jobs after invoice creation', [
+            Log::error('Error in synchronous PDF generation after invoice creation', [
                 'error' => $e->getMessage(),
                 'invoice_id' => $entity->id ?? 'unknown'
             ]);
+            
+            // Fallback: Queue PDF generation as backup
+            GenerateInvoicePdf::dispatch($entity);
         }
     }
 
     /**
-     * ✅ NEW: After update hook for better job timing
+     * ✅ IMPROVED: After update hook with SYNCHRONOUS PDF regeneration
      */
     protected function afterUpdate($entity): void
     {
         try {
             $invoice = $entity; // $entity is already an InvoiceDemo instance
             
-            // Queue PDF regeneration in background AFTER transaction is committed
-            GenerateInvoicePdf::dispatch($invoice, true);
+            // ✅ REGENERATE PDF SYNCHRONOUSLY (like images in other controllers)
+            $pdfUrl = $this->pdfService->generateAndStorePdf($invoice);
             
-            // Send email notification for updated invoice AFTER PDF is queued
-            ProcessInvoiceEmail::dispatch($invoice, 'updated');
-            
-            Log::info('Jobs dispatched after invoice update', [
-                'invoice_id' => $invoice->id,
-                'invoice_number' => $invoice->invoice_number
-            ]);
+            if ($pdfUrl) {
+                Log::info('PDF regenerated synchronously after invoice update', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'pdf_url' => $pdfUrl
+                ]);
+                
+                // Send email notification AFTER PDF is ready
+                ProcessInvoiceEmail::dispatch($invoice, 'updated');
+            } else {
+                Log::warning('PDF regeneration failed for invoice', [
+                    'invoice_id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number
+                ]);
+                
+                // Fallback: Queue PDF generation as backup
+                GenerateInvoicePdf::dispatch($invoice, true);
+            }
         } catch (Throwable $e) {
-            Log::error('Error dispatching jobs after invoice update', [
+            Log::error('Error in synchronous PDF regeneration after invoice update', [
                 'error' => $e->getMessage(),
                 'invoice_id' => $entity->id ?? 'unknown'
             ]);
+            
+            // Fallback: Queue PDF generation as backup
+            GenerateInvoicePdf::dispatch($entity, true);
+        }
+    }
+
+    /**
+     * ✅ NEW: Verify PDF status and regenerate if needed
+     */
+    public function verifyPdfStatus(string $uuid, Request $request): JsonResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view invoice demos")) {
+            return response()->json([
+                'success' => false,
+                'message' => "You don't have permission to view invoice demos"
+            ], 403);
+        }
+
+        try {
+            $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
+            $forceRegenerate = $request->boolean('force_regenerate', false);
+            
+            $status = [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'has_pdf_url' => !empty($invoice->pdf_url),
+                'pdf_url' => $invoice->pdf_url,
+                'needs_regeneration' => empty($invoice->pdf_url)
+            ];
+            
+            // If PDF URL is missing or force regeneration is requested
+            if (empty($invoice->pdf_url) || $forceRegenerate) {
+                Log::info('Regenerating PDF due to missing URL or force flag', [
+                    'invoice_id' => $invoice->id,
+                    'force_regenerate' => $forceRegenerate,
+                    'current_pdf_url' => $invoice->pdf_url
+                ]);
+                
+                $pdfUrl = $this->pdfService->generateAndStorePdf($invoice);
+                
+                if ($pdfUrl) {
+                    $status['pdf_url'] = $pdfUrl;
+                    $status['has_pdf_url'] = true;
+                    $status['needs_regeneration'] = false;
+                    $status['regenerated'] = true;
+                    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'PDF regenerated successfully',
+                        'status' => $status
+                    ]);
+                } else {
+                    $status['regeneration_failed'] = true;
+                    
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'PDF regeneration failed',
+                        'status' => $status
+                    ], 500);
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'PDF status verified',
+                'status' => $status
+            ]);
+            
+        } catch (Throwable $e) {
+            Log::error('Failed to verify PDF status', [
+                'error' => $e->getMessage(),
+                'invoice_uuid' => $uuid,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to verify PDF status'
+            ], 500);
         }
     }
 }
