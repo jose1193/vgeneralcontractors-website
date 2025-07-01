@@ -17,7 +17,7 @@
     "billing": "Facturación",
     "collections": "Cobranzas",
     "admin": "Administrador",
-    "info": "Información",
+
     "navigation": "Navegación",
 
     "_comment_language": "=== IDIOMA Y LOCALIZACIÓN ===",
@@ -533,7 +533,7 @@
     "portfolios_title": "Gestión de Portafolios",
     "portfolios_subtitle": "Exhiba y gestione sus proyectos completados y portafolios de servicios",
     "project_name": "Nombre del Proyecto",
-    "description": "Descripción",
+
     "service_category": "Categoría de Servicio",
 
     "add_new": "Agregar Nuevo",
@@ -566,7 +566,7 @@
 
     "appointment_status": "Estado de Cita",
     "lead_status": "Estado de Lead",
-    "notes": "Notas",
+
     "lead_source": "Fuente de Prospecto",
     "owner": "Propietario",
     "damage_detail": "Detalle del Daño",
@@ -1017,7 +1017,7 @@
     "personal": "Personal",
     "work": "Trabajo",
     "business": "Negocio",
-    "other": "Otro",
+
     "no_email_data_found": "No se encontraron datos de correo. Comience agregando uno nuevo.",
     "edit_email_data": "Editar Datos de Correo",
     "delete_email_data": "Eliminar Datos de Correo",
@@ -1341,7 +1341,7 @@
     "enter_post_title": "Ingrese el título de la publicación...",
     "post_content": "Contenido de la Publicación",
     "publish": "Publicar",
-    "status": "Estado",
+
     "published": "Publicado",
     "scheduled": "Programado",
     "schedule_date": "Fecha de Programación",
@@ -1423,8 +1423,7 @@
 
     "yes": "Sí",
     "no": "No",
-    "create": "Crear",
-    "update": "Actualizar",
+
     "are_you_sure": "¿Está seguro?",
     "are_you_sure_delete": "¿Está seguro de que desea eliminar",
     "are_you_sure_restore": "¿Está seguro de que desea restaurar",
@@ -1724,8 +1723,7 @@
 
     "apartment_suite_optional": "Apartamento, suite, etc. (opcional)",
     "New Appointment": "Nueva Cita",
-    "success": "¡Éxito!",
-    "error": "Error",
+
     "ok": "OK",
     "an_unexpected_error_occurred": "Ocurrió un error inesperado",
     "deleted": "¡Eliminado!",
