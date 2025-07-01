@@ -6,9 +6,9 @@
 <style>
     /* Modern Animated Gradient Background */
     .animated-gradient-header {
-        background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #1d4ed8, #7c3aed);
-        background-size: 400% 400%;
-        animation: gradientShift 8s ease-in-out infinite;
+        background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #1d4ed8, #7c3aed, #f59e0b, #eab308);
+        background-size: 500% 500%;
+        animation: gradientShift 10s ease-in-out infinite;
         position: relative;
         overflow: hidden;
     }
@@ -86,7 +86,7 @@
     .modern-button {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: none;
         box-shadow: 
             0 8px 32px rgba(139, 92, 246, 0.2),
             0 4px 16px rgba(99, 102, 241, 0.1),
@@ -98,7 +98,8 @@
         transform: translateY(-2px);
         box-shadow: 
             0 12px 40px rgba(139, 92, 246, 0.3),
-            0 6px 20px rgba(99, 102, 241, 0.15),
+            0 6px 20px rgba(245, 158, 11, 0.2),
+            0 4px 12px rgba(99, 102, 241, 0.15),
             inset 0 1px 0 rgba(255, 255, 255, 0.5);
         background: rgba(255, 255, 255, 0.98);
     }
