@@ -1212,49 +1212,6 @@ function invoiceDemoData() {
                 input.setSelectionRange(cursorPosition, cursorPosition);
             }
         },
-
-        // Formatear campo rate con decimales
-        formatRateInput(event, itemIndex) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Remover caracteres no numéricos excepto punto decimal
-            let numericValue = value.replace(/[^0-9.]/g, '');
-            
-            // Asegurar solo un punto decimal
-            const parts = numericValue.split('.');
-            if (parts.length > 2) {
-                numericValue = parts[0] + '.' + parts.slice(1).join('');
-            }
-            
-            // Limitar a 2 decimales
-            if (parts[1] && parts[1].length > 2) {
-                numericValue = parts[0] + '.' + parts[1].substring(0, 2);
-            }
-
-            // Actualizar el valor en el input y en el modelo
-            if (numericValue !== value) {
-                input.value = numericValue;
-                this.form.items[itemIndex].rate = numericValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            } else {
-                this.form.items[itemIndex].rate = numericValue;
-            }
-
-            // Recalcular totales
-            this.calculateTotals();
-        },
-
-        // Formatear rate para mostrar con formato de moneda (solo para visualización)
-        formatRateDisplay(rate) {
-            const numericRate = parseFloat(rate || 0);
-            return new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(numericRate);
-        },
     };
 }
 
