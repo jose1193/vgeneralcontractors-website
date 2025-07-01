@@ -79,46 +79,46 @@
             </div>
 
             <!-- Data Table Section -->
-            <div class="rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
                 <!-- Loading State -->
-                <div x-show="loading" class="flex items-center justify-center py-12">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-                    <span class="ml-3 text-gray-600">Loading invoices...</span>
+                <div x-show="loading" class="flex items-center justify-center py-12 bg-gray-900">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
+                    <span class="ml-3 text-gray-300">Loading invoices...</span>
                 </div>
 
                 <!-- Table -->
                 <div x-show="!loading" class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-purple-50 to-indigo-50">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                             <tr>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                     Nro
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                     @click="sortInvoices('invoice_number')">
                                     Invoice Number
-                                    <svg x-show="sortBy === 'invoice_number'" class="inline w-4 h-4 ml-1"
+                                    <svg x-show="sortBy === 'invoice_number'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                     @click="sortInvoices('bill_to_name')">
                                     Bill To
-                                    <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1"
+                                    <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                     @click="sortInvoices('balance_due')">
                                     Balance Due
-                                    <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1"
+                                    <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -126,22 +126,22 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                     Status</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                     @click="sortInvoices('invoice_date')">
                                     Invoice Date
-                                    <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1"
+                                    <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                     @click="sortInvoices('date_of_loss')">
                                     Date of Loss
-                                    <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1"
+                                    <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -149,25 +149,28 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
                                     Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody class="divide-y divide-gray-700">
                             <template x-for="(invoice, index) in invoices" :key="invoice.uuid">
-                                <tr class="hover:bg-purple-25 transition-colors duration-200"
-                                    :class="invoice.deleted_at ? 'bg-red-50 opacity-75' : ''">
+                                <tr class="transition-colors duration-200 hover:bg-slate-700"
+                                    :class="[
+                                        invoice.deleted_at ? 'bg-red-900 bg-opacity-30' : '',
+                                        index % 2 === 0 ? 'bg-gray-800 bg-opacity-30' : 'bg-transparent'
+                                    ]">
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="text-sm font-medium text-gray-900"
+                                        <div class="text-sm font-medium text-gray-100"
                                             x-text="((currentPage - 1) * perPage) + index + 1">
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="flex items-center justify-center">
-                                            <div class="text-sm font-medium text-gray-900"
+                                            <div class="text-sm font-medium text-gray-100"
                                                 x-text="invoice.invoice_number">
                                             </div>
-                                            <div x-show="invoice.pdf_url" class="ml-2 text-green-500"
+                                            <div x-show="invoice.pdf_url" class="ml-2 text-green-400"
                                                 title="PDF Available">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -179,15 +182,15 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="text-sm font-medium text-gray-900" x-text="invoice.bill_to_name">
+                                        <div class="text-sm font-medium text-gray-100" x-text="invoice.bill_to_name">
                                         </div>
-                                        <div class="text-sm text-gray-500"
+                                        <div class="text-sm text-gray-400"
                                             x-text="invoice.bill_to_phone_formatted || invoice.bill_to_phone"></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <div class="text-sm font-medium text-gray-900"
+                                        <div class="text-sm font-medium text-gray-100"
                                             x-text="formatCurrency(invoice.balance_due)"></div>
-                                        <div class="text-xs text-gray-500">Subtotal: <span
+                                        <div class="text-xs text-gray-400">Subtotal: <span
                                                 x-text="formatCurrency(invoice.subtotal)"></span></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -195,9 +198,9 @@
                                             :class="getStatusBadgeClass(invoice.status)"
                                             x-text="invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900"
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-100"
                                         x-text="formatDate(invoice.invoice_date)"></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900"
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-100"
                                         x-text="formatDate(invoice.date_of_loss)"></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex items-center justify-center space-x-2">
@@ -206,7 +209,7 @@
                                                     <!-- PDF Actions -->
                                                     <div class="relative" x-data="{ showPdfMenu: false }">
                                                         <button @click="showPdfMenu = !showPdfMenu"
-                                                            class="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors duration-200">
+                                                            class="text-green-400 hover:text-green-300 p-2 rounded-lg hover:bg-green-900 hover:bg-opacity-30 transition-colors duration-200">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                                 viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -216,11 +219,11 @@
                                                             </svg>
                                                         </button>
                                                         <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                                            class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-600">
                                                             <div class="py-1">
                                                                 <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice.uuid)"
                                                                     target="_blank"
-                                                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900">
+                                                                    class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
                                                                     <svg class="w-4 h-4 mr-2" fill="none"
                                                                         stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path stroke-linecap="round"
@@ -235,7 +238,7 @@
                                                                 </a>
                                                                 <a :href="window.invoiceDemoManager.getPdfDownloadUrl(invoice
                                                                     .uuid)"
-                                                                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900">
+                                                                    class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
                                                                     <svg class="w-4 h-4 mr-2" fill="none"
                                                                         stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path stroke-linecap="round"
@@ -247,7 +250,7 @@
                                                                 </a>
                                                                 <button
                                                                     @click="generatePdf(invoice.uuid); showPdfMenu = false"
-                                                                    class="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900"
+                                                                    class="flex w-full items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white"
                                                                     :class="{ 'opacity-50 cursor-not-allowed': pdfGenerating }"
                                                                     :disabled="pdfGenerating">
                                                                     <svg class="w-4 h-4 mr-2" fill="none"
@@ -264,7 +267,7 @@
                                                         </div>
                                                     </div>
                                                     <button @click="openEditModal(invoice)"
-                                                        class="text-indigo-600 hover:text-indigo-900 p-2 rounded-lg hover:bg-indigo-50 transition-colors duration-200">
+                                                        class="text-blue-400 hover:text-blue-300 p-2 rounded-lg hover:bg-blue-900 hover:bg-opacity-30 transition-colors duration-200">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -274,7 +277,7 @@
                                                         </svg>
                                                     </button>
                                                     <button @click="deleteInvoice(invoice)"
-                                                        class="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors duration-200">
+                                                        class="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-900 hover:bg-opacity-30 transition-colors duration-200">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -287,7 +290,7 @@
                                             </template>
                                             <template x-if="invoice.deleted_at">
                                                 <button @click="restoreInvoice(invoice)"
-                                                    class="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition-colors duration-200">
+                                                    class="text-green-400 hover:text-green-300 p-2 rounded-lg hover:bg-green-900 hover:bg-opacity-30 transition-colors duration-200">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -305,42 +308,42 @@
                     </table>
 
                     <!-- Empty State -->
-                    <div x-show="invoices.length === 0" class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor"
+                    <div x-show="invoices.length === 0" class="text-center py-12 bg-gray-900">
+                        <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                             </path>
                         </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">No invoices found</h3>
-                        <p class="mt-1 text-sm text-gray-500">Get started by creating a new invoice.</p>
+                        <h3 class="mt-2 text-sm font-medium text-gray-200">No invoices found</h3>
+                        <p class="mt-1 text-sm text-gray-400">Get started by creating a new invoice.</p>
                     </div>
                 </div>
 
                 <!-- Pagination -->
-                <div x-show="totalPages > 1" class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div x-show="totalPages > 1" class="bg-gray-800 px-6 py-4 border-t border-gray-700">
                     <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-700">
+                        <div class="text-sm text-gray-300">
                             Showing <span x-text="((currentPage - 1) * perPage) + 1"></span> to
                             <span x-text="Math.min(currentPage * perPage, total)"></span> of
                             <span x-text="total"></span> results
                         </div>
                         <div class="flex space-x-2">
                             <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                                class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                                 Previous
                             </button>
                             <template
                                 x-for="page in Array.from({length: Math.min(5, totalPages)}, (_, i) => Math.max(1, currentPage - 2) + i).filter(p => p <= totalPages)"
                                 :key="page">
                                 <button @click="goToPage(page)"
-                                    :class="page === currentPage ? 'bg-purple-600 text-white' :
-                                        'bg-white text-gray-500 hover:bg-gray-50'"
-                                    class="px-3 py-2 text-sm font-medium border border-gray-300 rounded-lg transition-colors duration-200"
+                                    :class="page === currentPage ? 'bg-purple-600 text-white border-purple-600' :
+                                        'bg-gray-700 text-gray-300 hover:bg-gray-600 border-gray-600'"
+                                    class="px-3 py-2 text-sm font-medium border rounded-lg transition-colors duration-200"
                                     x-text="page"></button>
                             </template>
                             <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
-                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                                class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                                 Next
                             </button>
                         </div>
