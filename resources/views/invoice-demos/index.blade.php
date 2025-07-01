@@ -121,13 +121,16 @@
             0 2px 8px rgba(99, 102, 241, 0.05),
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        color: #1f2937;
+        color: rgb(243, 244, 246);
         font-weight: 500;
+        line-height: 1.5;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .glass-input::placeholder {
-        color: rgba(107, 114, 128, 0.8);
+        color: rgb(209, 213, 219);
         font-weight: 400;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     }
     
     .glass-input:focus {
@@ -140,6 +143,7 @@
             0 4px 12px rgba(99, 102, 241, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.3);
         transform: translateY(-1px);
+        color: rgb(255, 255, 255);
     }
     
     .glass-input:hover {
@@ -150,6 +154,7 @@
             0 6px 20px rgba(139, 92, 246, 0.12),
             0 3px 10px rgba(99, 102, 241, 0.08),
             inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        color: rgb(248, 250, 252);
     }
     
     /* Modern Glassmorphic Container */
@@ -212,6 +217,21 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
+    /* Glass Text Styling */
+    .glass-text {
+        color: rgb(243, 244, 246);
+        font-weight: 500;
+        line-height: 1.5;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    .glass-label {
+        color: rgb(229, 231, 235);
+        font-weight: 600;
+        line-height: 1.4;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    
     /* Search Icon Enhancement */
     .glass-search-icon {
         color: rgba(139, 92, 246, 0.7);
@@ -223,6 +243,37 @@
         color: rgba(139, 92, 246, 1);
         transform: scale(1.1);
     }
+    
+    /* Glass Button Styling */
+    .glass-button {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px 24px;
+        color: rgb(255, 255, 255);
+        font-weight: 600;
+        line-height: 1.4;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.1),
+            0 2px 4px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    
+    .glass-button:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: rgb(255, 255, 255);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.15),
+            0 4px 8px rgba(0, 0, 0, 0.1),
+            0 2px 4px rgba(255, 193, 7, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
 </style>
     <div class="min-h-screen  py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -231,9 +282,9 @@
                 <div class="animated-gradient-header px-8 py-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-white mb-2">Invoice Management</h1>
-                            <p class="text-purple-100">Manage and track invoices for clients</p>
-                        </div>
+                    <h1 class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); line-height: 1.3;">Invoice Management</h1>
+                    <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
+                </div>
                         <div class="mt-4 sm:mt-0">
                             <button @click="openCreateModal()"
                                 class="modern-button inline-flex items-center px-6 py-3 text-purple-600 font-semibold rounded-xl relative z-10">
@@ -304,7 +355,7 @@
                                 <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
                                     :class="showDeleted ? 'transform translate-x-6' : ''"></div>
                             </div>
-                            <span class="ml-4 text-sm font-semibold text-gray-700 group-hover:text-purple-600 transition-colors duration-200">Show Deleted</span>
+                            <span class="ml-4 glass-label text-sm">Show Deleted</span>
                         </label>
                     </div>
                 </div>
@@ -324,11 +375,11 @@
                         <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                             <tr>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Nro
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('invoice_number')">
+                                    @click="sortInvoices('invoice_number')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Invoice Number
                                     <svg x-show="sortBy === 'invoice_number'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -338,7 +389,7 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('bill_to_name')">
+                                    @click="sortInvoices('bill_to_name')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Bill To
                                     <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -348,7 +399,7 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('balance_due')">
+                                    @click="sortInvoices('balance_due')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Balance Due
                                     <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -358,10 +409,10 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Status</th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('invoice_date')">
+                                    @click="sortInvoices('invoice_date')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Invoice Date
                                     <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -371,7 +422,7 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('date_of_loss')">
+                                    @click="sortInvoices('date_of_loss')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Date of Loss
                                     <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -381,7 +432,7 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Actions</th>
                             </tr>
                         </thead>
