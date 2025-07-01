@@ -91,7 +91,9 @@ class InvoiceDemoManager {
         search = "",
         status = "",
         sortBy = "created_at",
-        sortOrder = "desc"
+        sortOrder = "desc",
+        startDate = "",
+        endDate = ""
     ) {
         const params = new URLSearchParams({
             page,
@@ -100,6 +102,13 @@ class InvoiceDemoManager {
             sort_by: sortBy,
             sort_order: sortOrder,
         });
+
+        if (startDate) {
+            params.append('start_date', startDate);
+        }
+        if (endDate) {
+            params.append('end_date', endDate);
+        }
 
         return await this.apiRequest(`${this.baseUrl}?${params}`);
     }
@@ -426,6 +435,8 @@ function invoiceDemoData() {
         search: "",
         statusFilter: "",
         dateFilter: "",
+        startDate: "",
+        endDate: "",
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
@@ -525,7 +536,9 @@ function invoiceDemoData() {
                     this.search,
                     this.statusFilter,
                     this.sortBy,
-                    this.sortOrder
+                    this.sortOrder,
+                    this.startDate,
+                    this.endDate
                 );
 
                 this.invoices = response.data.data || [];
@@ -551,6 +564,12 @@ function invoiceDemoData() {
 
         // Filter by status
         filterByStatus() {
+            this.currentPage = 1;
+            this.loadInvoices();
+        },
+
+        // Filter by date range
+        filterByDateRange() {
             this.currentPage = 1;
             this.loadInvoices();
         },

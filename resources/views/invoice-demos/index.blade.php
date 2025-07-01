@@ -274,6 +274,24 @@
             0 2px 4px rgba(255, 193, 7, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+    
+    /* Glass Select Options Styling */
+    .glass-input option {
+        background: rgb(31, 41, 55);
+        color: rgb(243, 244, 246);
+        padding: 8px 12px;
+        font-weight: 500;
+    }
+    
+    .glass-input option:hover {
+        background: rgb(55, 65, 81);
+        color: rgb(255, 255, 255);
+    }
+    
+    .glass-input option:checked {
+        background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        color: rgb(255, 255, 255);
+    }
 </style>
     <div class="min-h-screen  py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -301,9 +319,9 @@
 
             <!-- Filters and Search Section -->
             <div class="glass-container rounded-2xl mb-8 p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
                     <!-- Search Input -->
-                    <div class="relative group">
+                    <div class="relative group lg:col-span-2">
                         <input type="text" x-model="search" @input="searchInvoices()"
                             placeholder="Search by invoice number, client name..."
                             class="glass-input w-full pl-12 pr-4 py-4 rounded-xl">
@@ -329,19 +347,18 @@
                         </svg>
                     </div>
 
-                    <!-- Date Range Filter -->
+                    <!-- Start Date Filter -->
                     <div class="relative">
-                        <select x-model="dateFilter" @change="filterByStatus()"
-                            class="glass-input w-full px-4 py-4 rounded-xl appearance-none cursor-pointer">
-                            <option value="">All Dates</option>
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                            <option value="year">This Year</option>
-                        </select>
-                        <svg class="absolute right-3 top-4 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <label class="glass-label text-xs mb-2 block">Start Date</label>
+                        <input type="date" x-model="startDate" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl">
+                    </div>
+
+                    <!-- End Date Filter -->
+                    <div class="relative">
+                        <label class="glass-label text-xs mb-2 block">End Date</label>
+                        <input type="date" x-model="endDate" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl">
                     </div>
 
                     <!-- Show Deleted Toggle -->
