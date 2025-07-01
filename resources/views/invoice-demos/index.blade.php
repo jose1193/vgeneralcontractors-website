@@ -3,306 +3,125 @@
 @section('title', 'Invoice Management')
 
 @section('content')
-<style>
-    /* Modern Animated Gradient Background */
-    .animated-gradient-header {
-        background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #1d4ed8, #7c3aed, #f59e0b, #eab308);
-        background-size: 500% 500%;
-        animation: gradientShift 10s ease-in-out infinite;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    @keyframes gradientShift {
-        0% {
-            background-position: 0% 50%;
+    <style>
+        /* Simplified Modern Glassmorphic Design */
+        .animated-gradient-header {
+            background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #7c3aed);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease-in-out infinite;
+            position: relative;
         }
-        50% {
-            background-position: 100% 50%;
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
-        100% {
-            background-position: 0% 50%;
+
+        /* Modern Glass Container */
+        .glass-container {
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 8px 32px rgba(139, 92, 246, 0.1),
+                0 4px 16px rgba(99, 102, 241, 0.05);
         }
-    }
-    
-    /* Modern Box Shadow */
-    .modern-shadow {
-        box-shadow: 
-            0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -1px rgba(0, 0, 0, 0.06),
-            0 20px 25px -5px rgba(139, 92, 246, 0.1),
-            0 10px 10px -5px rgba(99, 102, 241, 0.04),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Floating Abstract Elements */
-    .animated-gradient-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-        background-size: 50px 50px;
-        animation: floatPattern 20s linear infinite;
-        pointer-events: none;
-    }
-    
-    .animated-gradient-header::after {
-        content: '';
-        position: absolute;
-        top: 20%;
-        right: 10%;
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-        border-radius: 50%;
-        animation: floatBubble 6s ease-in-out infinite;
-        pointer-events: none;
-    }
-    
-    @keyframes floatPattern {
-        0% {
-            transform: translate(0, 0) rotate(0deg);
+
+        /* Modern Glass Input */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgb(243, 244, 246);
+            transition: all 0.3s ease;
         }
-        100% {
-            transform: translate(-50px, -50px) rotate(360deg);
+
+        .glass-input::placeholder {
+            color: rgb(209, 213, 219);
         }
-    }
-    
-    @keyframes floatBubble {
-        0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.7;
+
+        .glass-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            color: rgb(255, 255, 255);
         }
-        50% {
-            transform: translateY(-20px) scale(1.1);
-            opacity: 0.9;
+
+        .glass-input:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-    }
-    
-    /* Enhanced Button Styling */
-    .modern-button {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border: none;
-        box-shadow: 
-            0 8px 32px rgba(139, 92, 246, 0.2),
-            0 4px 16px rgba(99, 102, 241, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .modern-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 
-            0 12px 40px rgba(139, 92, 246, 0.3),
-            0 6px 20px rgba(245, 158, 11, 0.2),
-            0 4px 12px rgba(99, 102, 241, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-        background: rgba(255, 255, 255, 0.98);
-    }
-    
-    /* Glassmorphism effect for content */
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Modern Glassmorphic Inputs */
-    .glass-input {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-            0 4px 16px rgba(139, 92, 246, 0.1),
-            0 2px 8px rgba(99, 102, 241, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        color: rgb(243, 244, 246);
-        font-weight: 500;
-        line-height: 1.5;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    
-    .glass-input::placeholder {
-        color: rgb(209, 213, 219);
-        font-weight: 400;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    }
-    
-    .glass-input:focus {
-        outline: none;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(139, 92, 246, 0.4);
-        box-shadow: 
-            0 0 0 3px rgba(139, 92, 246, 0.1),
-            0 8px 24px rgba(139, 92, 246, 0.15),
-            0 4px 12px rgba(99, 102, 241, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        transform: translateY(-1px);
-        color: rgb(255, 255, 255);
-    }
-    
-    .glass-input:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transform: translateY(-0.5px);
-        box-shadow: 
-            0 6px 20px rgba(139, 92, 246, 0.12),
-            0 3px 10px rgba(99, 102, 241, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.25);
-        color: rgb(248, 250, 252);
-    }
-    
-    /* Modern Glassmorphic Container */
-    .glass-container {
-        background: linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.1) 0%, 
-            rgba(255, 255, 255, 0.05) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-            0 8px 32px rgba(139, 92, 246, 0.1),
-            0 4px 16px rgba(99, 102, 241, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .glass-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, 
-            transparent 0%, 
-            rgba(139, 92, 246, 0.3) 50%, 
-            transparent 100%);
-        animation: shimmer 3s ease-in-out infinite;
-    }
-    
-    @keyframes shimmer {
-        0%, 100% { opacity: 0; }
-        50% { opacity: 1; }
-    }
-    
-    /* Modern Toggle Switch */
-    .glass-toggle {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .glass-toggle.active {
-        background: linear-gradient(135deg, #8b5cf6, #6366f1);
-        box-shadow: 
-            0 4px 16px rgba(139, 92, 246, 0.3),
-            0 2px 8px rgba(99, 102, 241, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-    
-    .glass-toggle-thumb {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        box-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.15),
-            0 1px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    /* Glass Text Styling */
-    .glass-text {
-        color: rgb(243, 244, 246);
-        font-weight: 500;
-        line-height: 1.5;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    
-    .glass-label {
-        color: rgb(229, 231, 235);
-        font-weight: 600;
-        line-height: 1.4;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    }
-    
-    /* Search Icon Enhancement */
-    .glass-search-icon {
-        color: rgba(139, 92, 246, 0.7);
-        transition: all 0.3s ease;
-    }
-    
-    .glass-input:focus + .glass-search-icon,
-    .glass-input:hover + .glass-search-icon {
-        color: rgba(139, 92, 246, 1);
-        transform: scale(1.1);
-    }
-    
-    /* Glass Button Styling */
-    .glass-button {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        padding: 12px 24px;
-        color: rgb(255, 255, 255);
-        font-weight: 600;
-        line-height: 1.4;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 
-            0 4px 15px rgba(0, 0, 0, 0.1),
-            0 2px 4px rgba(0, 0, 0, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    }
-    
-    .glass-button:hover {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-        border-color: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        color: rgb(255, 255, 255);
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-        box-shadow: 
-            0 8px 25px rgba(0, 0, 0, 0.15),
-            0 4px 8px rgba(0, 0, 0, 0.1),
-            0 2px 4px rgba(255, 193, 7, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Glass Select Options Styling */
-    .glass-input option {
-        background: rgb(31, 41, 55);
-        color: rgb(243, 244, 246);
-        padding: 8px 12px;
-        font-weight: 500;
-    }
-    
-    .glass-input option:hover {
-        background: rgb(55, 65, 81);
-        color: rgb(255, 255, 255);
-    }
-    
-    .glass-input option:checked {
-        background: linear-gradient(135deg, #8b5cf6, #6366f1);
-        color: rgb(255, 255, 255);
-    }
-</style>
-    <div class="min-h-screen  py-8" x-data="invoiceDemoData()" x-init="init()">
+
+        /* Modern Toggle */
+        .glass-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .glass-toggle.active {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        .glass-toggle-thumb {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* Text Styling */
+        .glass-text {
+            color: rgb(243, 244, 246);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-label {
+            color: rgb(229, 231, 235);
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modern Button Styling */
+        .modern-button {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .modern-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        /* Option Styling for Dark Theme */
+        .glass-input option {
+            background: rgb(31, 41, 55);
+            color: rgb(243, 244, 246);
+        }
+    </style>
+    <div class="min-h-screen py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header Section -->
-            <div class="bg-white rounded-2xl modern-shadow border border-purple-100 mb-8 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-xl border border-purple-100 mb-8 overflow-hidden">
                 <div class="animated-gradient-header px-8 py-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                    <h1 class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); line-height: 1.3;">Invoice Management</h1>
-                    <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
-                </div>
+                            <h1 class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
+                                Invoice Management</h1>
+                            <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
+                        </div>
                         <div class="mt-4 sm:mt-0">
                             <button @click="openCreateModal()"
                                 class="modern-button inline-flex items-center px-6 py-3 text-purple-600 font-semibold rounded-xl relative z-10">
@@ -319,13 +138,14 @@
 
             <!-- Filters and Search Section -->
             <div class="glass-container rounded-2xl mb-8 p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                     <!-- Search Input -->
                     <div class="relative group lg:col-span-2">
+                        <label class="glass-label text-xs mb-2 block">Search</label>
                         <input type="text" x-model="search" @input="searchInvoices()"
                             placeholder="Search by invoice number, client name..."
                             class="glass-input w-full pl-12 pr-4 py-4 rounded-xl">
-                        <svg class="glass-search-icon absolute left-4 top-4 h-5 w-5" fill="none" stroke="currentColor"
+                        <svg class="absolute left-4 top-10 h-5 w-5 text-purple-400" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -334,6 +154,7 @@
 
                     <!-- Status Filter -->
                     <div class="relative">
+                        <label class="glass-label text-xs mb-2 block">Status</label>
                         <select x-model="statusFilter" @change="filterByStatus()"
                             class="glass-input w-full px-4 py-4 rounded-xl appearance-none cursor-pointer">
                             <option value="">All Statuses</option>
@@ -342,7 +163,8 @@
                             <option value="paid">Paid</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
-                        <svg class="absolute right-3 top-4 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="absolute right-3 top-10 h-5 w-5 text-purple-400 pointer-events-none" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
@@ -362,7 +184,8 @@
                     </div>
 
                     <!-- Show Deleted Toggle -->
-                    <div class="flex items-center justify-center space-x-4">
+                    <div class="flex flex-col justify-center items-center space-y-3">
+                        <label class="glass-label text-xs">Show Deleted</label>
                         <label class="flex items-center cursor-pointer group">
                             <input type="checkbox" x-model="showDeleted" @change="loadInvoices()" class="sr-only">
                             <div class="relative">
@@ -372,7 +195,6 @@
                                 <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
                                     :class="showDeleted ? 'transform translate-x-6' : ''"></div>
                             </div>
-                            <span class="ml-4 glass-label text-sm">Show Deleted</span>
                         </label>
                     </div>
                 </div>
@@ -391,12 +213,13 @@
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                             <tr>
-                                <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Nro
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('invoice_number')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                    @click="sortInvoices('invoice_number')"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Invoice Number
                                     <svg x-show="sortBy === 'invoice_number'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -406,7 +229,8 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('bill_to_name')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                    @click="sortInvoices('bill_to_name')"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Bill To
                                     <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -416,7 +240,8 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('balance_due')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                    @click="sortInvoices('balance_due')"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Balance Due
                                     <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -425,11 +250,12 @@
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Status</th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('invoice_date')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                    @click="sortInvoices('invoice_date')"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Invoice Date
                                     <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -439,7 +265,8 @@
                                     </svg>
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
-                                    @click="sortInvoices('date_of_loss')" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                    @click="sortInvoices('date_of_loss')"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Date of Loss
                                     <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1 text-gray-300"
                                         :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -448,8 +275,8 @@
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
+                                    style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                     Actions</th>
                             </tr>
                         </thead>
@@ -509,7 +336,8 @@
                                                     <!-- PDF Actions -->
                                                     <div class="relative" x-data="{ showPdfMenu: false }">
                                                         <button @click="showPdfMenu = !showPdfMenu"
-                                                            class="text-green-400 hover:text-green-300 p-2 rounded-lg hover:bg-green-900 hover:bg-opacity-30 transition-colors duration-200">
+                                                            class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                            title="PDF Actions">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                                 viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -567,7 +395,8 @@
                                                         </div>
                                                     </div>
                                                     <button @click="openEditModal(invoice)"
-                                                        class="text-blue-400 hover:text-blue-300 p-2 rounded-lg hover:bg-blue-900 hover:bg-opacity-30 transition-colors duration-200">
+                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                        title="Edit Invoice">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -577,7 +406,8 @@
                                                         </svg>
                                                     </button>
                                                     <button @click="deleteInvoice(invoice)"
-                                                        class="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-900 hover:bg-opacity-30 transition-colors duration-200">
+                                                        class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                        title="Delete Invoice">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -590,7 +420,8 @@
                                             </template>
                                             <template x-if="invoice.deleted_at">
                                                 <button @click="restoreInvoice(invoice)"
-                                                    class="text-green-400 hover:text-green-300 p-2 rounded-lg hover:bg-green-900 hover:bg-opacity-30 transition-colors duration-200">
+                                                    class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                                    title="Restore Invoice">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
