@@ -1215,69 +1215,82 @@ function invoiceDemoData() {
 
         // ==================== CURRENCY INPUT FORMATTING ====================
 
-        // Format currency input with thousands separator and decimals (jQuery Mask style)
+        // Format currency input with thousands separator and decimals
         formatCurrencyInput(event, itemIndex) {
             const input = event.target;
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
-            // Detectar si se está borrando (backspace/delete)
-            const isDeleting =
-                event.inputType === "deleteContentBackward" ||
-                event.inputType === "deleteContentForward";
+            // Remove all non-numeric characters except decimal point
+            let numericValue = value.replace(/[^0-9.]/g, "");
 
-            // Remove all non-numeric characters
-            let numericValue = value.replace(/[^0-9]/g, "");
+            // Handle multiple decimal points - keep only the first one
+            const decimalParts = numericValue.split(".");
+            if (decimalParts.length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts.slice(1).join("");
+            }
 
-            // If empty, set to empty string
-            if (numericValue === "") {
-                input.value = "";
-                this.form.items[itemIndex].rate = "";
+            // Limit to 2 decimal places
+            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
+            }
+
+            // Convert to number for formatting
+            const numberValue = parseFloat(numericValue) || 0;
+
+            // Format for display with thousands separator
+            let formattedValue = "";
+            if (numericValue === "" || numericValue === "0") {
+                formattedValue = "";
+            } else if (numericValue.endsWith(".")) {
+                // If user is typing decimal point, keep it
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                formattedValue = integerPart + ".";
+            } else if (
+                numericValue.includes(".") &&
+                numericValue.split(".")[1].length === 1
+            ) {
+                // If user has typed one decimal place
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                const decimalPart = numericValue.split(".")[1];
+                formattedValue = integerPart + "." + decimalPart;
+            } else {
+                // Format with full decimals or whole number
+                formattedValue = numberValue.toLocaleString("en-US", {
+                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            // Update input value and model
+            if (formattedValue !== value) {
+                input.value = formattedValue;
+
+                // Store raw numeric value for calculations
+                this.form.items[itemIndex].rate = numericValue;
+
+                // Calculate totals after updating rate
                 this.calculateTotals();
-                return;
-            }
 
-            // Lógica inteligente de formateo similar a jQuery Mask
-            let formattedNumber;
-
-            if (numericValue.length <= 2) {
-                // Para 1-2 dígitos, tratarlos como centavos
-                formattedNumber = parseInt(numericValue) / 100;
-            } else {
-                // Para 3+ dígitos, los últimos 2 son centavos
-                // Ejemplo: 250 = 2.50, 2500 = 25.00, 25016 = 250.16
-                const cents = numericValue.slice(-2);
-                const dollars = numericValue.slice(0, -2);
-                formattedNumber = parseFloat(dollars + "." + cents);
-            }
-
-            // Format with locale
-            let formattedValue = formattedNumber.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
-
-            // Update input and model
-            input.value = formattedValue;
-            this.form.items[itemIndex].rate = formattedNumber.toString();
-            this.calculateTotals();
-
-            // Handle cursor positioning - mantener al final si es escritura normal
-            let newCursorPos;
-            if (isDeleting) {
-                const lengthDiff = formattedValue.length - value.length;
-                newCursorPos = Math.max(
+                // Adjust cursor position after formatting
+                const lengthDifference = formattedValue.length - value.length;
+                const newCursorPosition = Math.max(
                     0,
-                    Math.min(formattedValue.length, cursorPosition + lengthDiff)
+                    cursorPosition + lengthDifference
                 );
-            } else {
-                // Para escritura normal, poner cursor al final
-                newCursorPos = formattedValue.length;
-            }
 
-            setTimeout(() => {
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }, 0);
+                // Set cursor position in next tick to avoid conflicts
+                setTimeout(() => {
+                    input.setSelectionRange(
+                        newCursorPosition,
+                        newCursorPosition
+                    );
+                }, 0);
+            }
         },
 
         // Format general currency inputs (for subtotal, tax_amount, etc.)
@@ -1286,69 +1299,78 @@ function invoiceDemoData() {
             const cursorPosition = input.selectionStart;
             let value = input.value;
 
-            // Detectar si se está borrando (backspace/delete)
-            const isDeleting =
-                event.inputType === "deleteContentBackward" ||
-                event.inputType === "deleteContentForward";
+            // Remove all non-numeric characters except decimal point
+            let numericValue = value.replace(/[^0-9.]/g, "");
 
-            // Remove all non-numeric characters
-            let numericValue = value.replace(/[^0-9]/g, "");
+            // Handle multiple decimal points - keep only the first one
+            const decimalParts = numericValue.split(".");
+            if (decimalParts.length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts.slice(1).join("");
+            }
 
-            // If empty, set to empty string
-            if (numericValue === "") {
-                input.value = "";
-                this.form[fieldName] = "";
+            // Limit to 2 decimal places
+            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
+            }
+
+            // Convert to number for formatting
+            const numberValue = parseFloat(numericValue) || 0;
+
+            // Format for display with thousands separator
+            let formattedValue = "";
+            if (numericValue === "" || numericValue === "0") {
+                formattedValue = "";
+            } else if (numericValue.endsWith(".")) {
+                // If user is typing decimal point, keep it
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                formattedValue = integerPart + ".";
+            } else if (
+                numericValue.includes(".") &&
+                numericValue.split(".")[1].length === 1
+            ) {
+                // If user has typed one decimal place
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                const decimalPart = numericValue.split(".")[1];
+                formattedValue = integerPart + "." + decimalPart;
+            } else {
+                // Format with full decimals or whole number
+                formattedValue = numberValue.toLocaleString("en-US", {
+                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            // Update input value and model
+            if (formattedValue !== value) {
+                input.value = formattedValue;
+
+                // Store raw numeric value for calculations
+                this.form[fieldName] = numericValue;
+
+                // Calculate totals after updating financial fields
                 if (fieldName === "subtotal" || fieldName === "tax_amount") {
                     this.calculateTotals();
                 }
-                return;
-            }
 
-            // Lógica inteligente de formateo similar a jQuery Mask
-            let formattedNumber;
-
-            if (numericValue.length <= 2) {
-                // Para 1-2 dígitos, tratarlos como centavos
-                formattedNumber = parseInt(numericValue) / 100;
-            } else {
-                // Para 3+ dígitos, los últimos 2 son centavos
-                // Ejemplo: 250 = 2.50, 2500 = 25.00, 25016 = 250.16
-                const cents = numericValue.slice(-2);
-                const dollars = numericValue.slice(0, -2);
-                formattedNumber = parseFloat(dollars + "." + cents);
-            }
-
-            // Format with locale
-            let formattedValue = formattedNumber.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
-
-            // Update input and model
-            input.value = formattedValue;
-            this.form[fieldName] = formattedNumber.toString();
-
-            // Calculate totals for financial fields
-            if (fieldName === "subtotal" || fieldName === "tax_amount") {
-                this.calculateTotals();
-            }
-
-            // Handle cursor positioning - mantener al final si es escritura normal
-            let newCursorPos;
-            if (isDeleting) {
-                const lengthDiff = formattedValue.length - value.length;
-                newCursorPos = Math.max(
+                // Adjust cursor position after formatting
+                const lengthDifference = formattedValue.length - value.length;
+                const newCursorPosition = Math.max(
                     0,
-                    Math.min(formattedValue.length, cursorPosition + lengthDiff)
+                    cursorPosition + lengthDifference
                 );
-            } else {
-                // Para escritura normal, poner cursor al final
-                newCursorPos = formattedValue.length;
-            }
 
-            setTimeout(() => {
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }, 0);
+                // Set cursor position in next tick to avoid conflicts
+                setTimeout(() => {
+                    input.setSelectionRange(
+                        newCursorPosition,
+                        newCursorPosition
+                    );
+                }, 0);
+            }
         },
     };
 }
