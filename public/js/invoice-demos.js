@@ -646,10 +646,7 @@ function invoiceDemoData() {
                 type_of_loss: invoice.type_of_loss || "",
                 notes: invoice.notes || "",
                 status: invoice.status || "draft",
-                items: invoice.items ? invoice.items.map(item => ({
-                    ...item,
-                    rate: window.invoiceDemoManager.formatCurrency(parseFloat(item.rate || 0)) // Format rate for display
-                })) : [],
+                items: invoice.items || [],
             };
         },
 
@@ -659,7 +656,7 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: window.invoiceDemoManager.formatCurrency(0), // Format initial rate for display
+                rate: 0,
                 sort_order: this.form.items.length,
             });
         },
@@ -690,24 +687,11 @@ function invoiceDemoData() {
 
             // Calcular balance_due
             const taxAmount = parseFloat(this.form.tax_amount || 0);
-                this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar
-            },
+            this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar
+        },
 
-            // New functions for rate input formatting
-            formatRateDisplay(index) {
-                let rate = parseFloat(this.form.items[index].rate.replace(/[^0-9.]/g, '') || 0);
-                this.form.items[index].rate = window.invoiceDemoManager.formatCurrency(rate);
-            },
-
-            unformatRateDisplay(index) {
-                let rate = this.form.items[index].rate;
-                // Remove currency symbols, commas, and then parse as float
-                rate = rate.replace(/[^0-9.]/g, '');
-                this.form.items[index].rate = parseFloat(rate || 0);
-            },
-
-            // Submit form
-            async submitForm() {
+        // Submit form
+        async submitForm() {
             if (this.submitting) return;
 
             this.submitting = true;
