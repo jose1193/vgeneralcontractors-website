@@ -80,7 +80,7 @@
             </div>
 
             <!-- Data Table Section -->
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                 <!-- Loading State -->
                 <div x-show="loading" class="flex items-center justify-center py-12">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
@@ -90,9 +90,13 @@
                 <!-- Table -->
                 <div x-show="!loading" class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-purple-50 to-indigo-50">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Nro
+                                </th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
                                     @click="sortInvoices('invoice_number')">
                                     Invoice Number
                                     <svg x-show="sortBy === 'invoice_number'" class="inline w-4 h-4 ml-1"
@@ -102,7 +106,7 @@
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
                                     @click="sortInvoices('bill_to_name')">
                                     Bill To
                                     <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1"
@@ -112,7 +116,7 @@
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
                                     @click="sortInvoices('balance_due')">
                                     Balance Due
                                     <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1"
@@ -123,9 +127,9 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
                                     @click="sortInvoices('invoice_date')">
                                     Invoice Date
                                     <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1"
@@ -135,7 +139,7 @@
                                             d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-purple-100 transition-colors duration-200"
                                     @click="sortInvoices('date_of_loss')">
                                     Date of Loss
                                     <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1"
@@ -146,16 +150,21 @@
                                     </svg>
                                 </th>
                                 <th
-                                    class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <template x-for="invoice in invoices" :key="invoice.uuid">
+                        <tbody class="divide-y divide-gray-200">
+                            <template x-for="(invoice, index) in invoices" :key="invoice.uuid">
                                 <tr class="hover:bg-purple-25 transition-colors duration-200"
                                     :class="invoice.deleted_at ? 'bg-red-50 opacity-75' : ''">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="text-sm font-medium text-gray-900"
+                                            x-text="((currentPage - 1) * perPage) + index + 1">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center">
                                             <div class="text-sm font-medium text-gray-900"
                                                 x-text="invoice.invoice_number">
                                             </div>
@@ -170,29 +179,29 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm font-medium text-gray-900" x-text="invoice.bill_to_name">
                                         </div>
                                         <div class="text-sm text-gray-500"
                                             x-text="invoice.bill_to_phone_formatted || invoice.bill_to_phone"></div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-sm font-medium text-gray-900"
                                             x-text="formatCurrency(invoice.balance_due)"></div>
                                         <div class="text-xs text-gray-500">Subtotal: <span
                                                 x-text="formatCurrency(invoice.subtotal)"></span></div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full"
                                             :class="getStatusBadgeClass(invoice.status)"
                                             x-text="invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900"
                                         x-text="formatDate(invoice.invoice_date)"></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900"
                                         x-text="formatDate(invoice.date_of_loss)"></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end space-x-2">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                        <div class="flex items-center justify-center space-x-2">
                                             <template x-if="!invoice.deleted_at">
                                                 <div class="flex space-x-2">
                                                     <!-- PDF Actions -->
@@ -310,7 +319,7 @@
                 </div>
 
                 <!-- Pagination -->
-                <div x-show="totalPages > 1" class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div x-show="totalPages > 1" class="px-6 py-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-gray-700">
                             Showing <span x-text="((currentPage - 1) * perPage) + 1"></span> to
