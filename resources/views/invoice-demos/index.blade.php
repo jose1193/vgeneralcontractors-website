@@ -11,8 +11,8 @@
                 <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-8 py-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-white mb-2">{{ __('Invoice Management') }}</h1>
-                            <p class="text-purple-100">{{ __('Manage and track invoices for clients') }}</p>
+                            <h1 class="text-3xl font-bold text-white mb-2">Invoice Management</h1>
+                            <p class="text-purple-100">Manage and track invoices for clients</p>
                         </div>
                         <div class="mt-4 sm:mt-0">
                             <button @click="openCreateModal()"
@@ -21,7 +21,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                {{ __('Create Invoice') }}
+                                Create Invoice
                             </button>
                         </div>
                     </div>
@@ -382,10 +382,6 @@
     </div>
 
     @push('scripts')
-        <!-- Load translations for JavaScript -->
-        <script>
-            window.translations = @json(__('*'));
-        </script>
         <script src="{{ asset('js/invoice-demos.js') }}"></script>
     @endpush
 @endsection

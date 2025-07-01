@@ -52,7 +52,7 @@ class InvoicePdfService
             
             // ✅ UPDATE: Save PDF URL to database with verification
             $updateResult = $invoice->update(['pdf_url' => $pdfUrl]);
-            
+                
             if (!$updateResult) {
                 Log::error('Failed to update PDF URL in database', [
                     'invoice_id' => $invoice->id,
