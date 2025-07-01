@@ -3,11 +3,118 @@
 @section('title', 'Invoice Management')
 
 @section('content')
+<style>
+    /* Modern Animated Gradient Background */
+    .animated-gradient-header {
+        background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #1d4ed8, #7c3aed);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* Modern Box Shadow */
+    .modern-shadow {
+        box-shadow: 
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06),
+            0 20px 25px -5px rgba(139, 92, 246, 0.1),
+            0 10px 10px -5px rgba(99, 102, 241, 0.04),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Floating Abstract Elements */
+    .animated-gradient-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: floatPattern 20s linear infinite;
+        pointer-events: none;
+    }
+    
+    .animated-gradient-header::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        right: 10%;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        border-radius: 50%;
+        animation: floatBubble 6s ease-in-out infinite;
+        pointer-events: none;
+    }
+    
+    @keyframes floatPattern {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+        }
+        100% {
+            transform: translate(-50px, -50px) rotate(360deg);
+        }
+    }
+    
+    @keyframes floatBubble {
+        0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0.7;
+        }
+        50% {
+            transform: translateY(-20px) scale(1.1);
+            opacity: 0.9;
+        }
+    }
+    
+    /* Enhanced Button Styling */
+    .modern-button {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 8px 32px rgba(139, 92, 246, 0.2),
+            0 4px 16px rgba(99, 102, 241, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .modern-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 12px 40px rgba(139, 92, 246, 0.3),
+            0 6px 20px rgba(99, 102, 241, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.98);
+    }
+    
+    /* Glassmorphism effect for content */
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
     <div class="min-h-screen  py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header Section -->
-            <div class="bg-white rounded-2xl shadow-xl border border-purple-100 mb-8 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-8 py-6">
+            <div class="bg-white rounded-2xl modern-shadow border border-purple-100 mb-8 overflow-hidden">
+                <div class="animated-gradient-header px-8 py-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-2">Invoice Management</h1>
@@ -15,7 +122,7 @@
                         </div>
                         <div class="mt-4 sm:mt-0">
                             <button @click="openCreateModal()"
-                                class="inline-flex items-center px-6 py-3 bg-white text-purple-600 font-semibold rounded-xl shadow-lg hover:bg-purple-50 hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+                                class="modern-button inline-flex items-center px-6 py-3 text-purple-600 font-semibold rounded-xl relative z-10">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
