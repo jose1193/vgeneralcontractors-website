@@ -507,13 +507,42 @@ class InvoiceDemoManager {
     }
 }
 
-// Initialize global instance
-window.invoiceDemoManager = new InvoiceDemoManager();
+// Initialize global instance when DOM is ready
+document.addEventListener("DOMContentLoaded", function () {
+    window.invoiceDemoManager = new InvoiceDemoManager();
+    console.log(
+        "🎯 InvoiceDemoManager initialized:",
+        window.invoiceDemoManager
+    );
+});
+
+/**
+ * Helper function to safely get translations
+ */
+function getTranslation(key, fallback = key) {
+    if (
+        window.invoiceDemoManager &&
+        typeof window.invoiceDemoManager.__ === "function"
+    ) {
+        return window.invoiceDemoManager.__(key);
+    }
+    if (window.translations && window.translations[key]) {
+        return window.translations[key];
+    }
+    return fallback;
+}
 
 /**
  * Alpine.js Invoice Demo Component
  */
 function invoiceDemoData() {
+    console.log("🎯 Alpine.js invoiceDemoData() called");
+    console.log("🔍 Checking dependencies:", {
+        invoiceDemoManager: !!window.invoiceDemoManager,
+        translations: !!window.translations,
+        Alpine: !!window.Alpine,
+    });
+
     return {
         // State
         invoices: [],
@@ -565,10 +594,13 @@ function invoiceDemoData() {
         // Form data options
         formData: {
             statuses: [
-                { value: "draft", label: this.__("draft") },
-                { value: "sent", label: this.__("sent") },
-                { value: "paid", label: this.__("paid") },
-                { value: "cancelled", label: this.__("cancelled") },
+                { value: "draft", label: getTranslation("draft", "Draft") },
+                { value: "sent", label: getTranslation("sent", "Sent") },
+                { value: "paid", label: getTranslation("paid", "Paid") },
+                {
+                    value: "cancelled",
+                    label: getTranslation("cancelled", "Cancelled"),
+                },
             ],
             common_insurance_companies: [
                 "State Farm",
@@ -582,19 +614,44 @@ function invoiceDemoData() {
                 "American Family",
             ],
             type_of_loss_options: [
-                this.__("wind"),
-                this.__("hail"),
-                this.__("fire"),
-                this.__("water"),
-                this.__("theft"),
-                this.__("vandalism"),
-                this.__("other"),
+                getTranslation("wind", "Wind"),
+                getTranslation("hail", "Hail"),
+                getTranslation("fire", "Fire"),
+                getTranslation("water", "Water"),
+                getTranslation("theft", "Theft"),
+                getTranslation("vandalism", "Vandalism"),
+                getTranslation("other", "Other"),
             ],
         },
 
         // Form validation
         errors: {},
         invoiceNumberExists: false,
+
+        // Helper methods
+        showError(message) {
+            if (
+                window.invoiceDemoManager &&
+                window.invoiceDemoManager.showError
+            ) {
+                window.invoiceDemoManager.showError(message);
+            } else {
+                console.error("❌", message);
+                alert("Error: " + message);
+            }
+        },
+
+        showSuccess(message) {
+            if (
+                window.invoiceDemoManager &&
+                window.invoiceDemoManager.showSuccess
+            ) {
+                window.invoiceDemoManager.showSuccess(message);
+            } else {
+                console.log("✅", message);
+                alert("Success: " + message);
+            }
+        },
 
         // Mini-modals for adding new options
         showAddInsuranceModal: false,
@@ -604,8 +661,20 @@ function invoiceDemoData() {
 
         // Initialize component
         async init() {
-            await this.loadFormData();
-            await this.loadInvoices();
+            console.log("🚀 Initializing invoiceDemoData component...");
+            try {
+                console.log("📊 Loading form data...");
+                await this.loadFormData();
+                console.log("📋 Loading invoices...");
+                await this.loadInvoices();
+                console.log("✅ Component initialized successfully");
+            } catch (error) {
+                console.error("❌ Failed to initialize component:", error);
+                // Show error to user
+                this.showError(
+                    "Failed to initialize invoice system. Please refresh the page."
+                );
+            }
         },
 
         // Load form data
