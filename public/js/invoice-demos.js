@@ -1136,7 +1136,7 @@ function invoiceDemoData() {
             }
         },
 
-        // Format service description (all uppercase)
+        // Format service description input (all uppercase)
         formatServiceDescriptionInput(event, itemIndex) {
             const input = event.target;
             const cursorPosition = input.selectionStart;
@@ -1210,6 +1210,166 @@ function invoiceDemoData() {
                 this.form.items[itemIndex].description = capitalizedValue;
                 // Restaurar la posición del cursor
                 input.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        },
+
+        // ==================== CURRENCY INPUT FORMATTING ====================
+
+        // Format currency input with thousands separator and decimals
+        formatCurrencyInput(event, itemIndex) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Remove all non-numeric characters except decimal point
+            let numericValue = value.replace(/[^0-9.]/g, "");
+
+            // Handle multiple decimal points - keep only the first one
+            const decimalParts = numericValue.split(".");
+            if (decimalParts.length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts.slice(1).join("");
+            }
+
+            // Limit to 2 decimal places
+            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
+            }
+
+            // Convert to number for formatting
+            const numberValue = parseFloat(numericValue) || 0;
+
+            // Format for display with thousands separator
+            let formattedValue = "";
+            if (numericValue === "" || numericValue === "0") {
+                formattedValue = "";
+            } else if (numericValue.endsWith(".")) {
+                // If user is typing decimal point, keep it
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                formattedValue = integerPart + ".";
+            } else if (
+                numericValue.includes(".") &&
+                numericValue.split(".")[1].length === 1
+            ) {
+                // If user has typed one decimal place
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                const decimalPart = numericValue.split(".")[1];
+                formattedValue = integerPart + "." + decimalPart;
+            } else {
+                // Format with full decimals or whole number
+                formattedValue = numberValue.toLocaleString("en-US", {
+                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            // Update input value and model
+            if (formattedValue !== value) {
+                input.value = formattedValue;
+
+                // Store raw numeric value for calculations
+                this.form.items[itemIndex].rate = numericValue;
+
+                // Calculate totals after updating rate
+                this.calculateTotals();
+
+                // Adjust cursor position after formatting
+                const lengthDifference = formattedValue.length - value.length;
+                const newCursorPosition = Math.max(
+                    0,
+                    cursorPosition + lengthDifference
+                );
+
+                // Set cursor position in next tick to avoid conflicts
+                setTimeout(() => {
+                    input.setSelectionRange(
+                        newCursorPosition,
+                        newCursorPosition
+                    );
+                }, 0);
+            }
+        },
+
+        // Format general currency inputs (for subtotal, tax_amount, etc.)
+        formatGeneralCurrencyInput(event, fieldName) {
+            const input = event.target;
+            const cursorPosition = input.selectionStart;
+            let value = input.value;
+
+            // Remove all non-numeric characters except decimal point
+            let numericValue = value.replace(/[^0-9.]/g, "");
+
+            // Handle multiple decimal points - keep only the first one
+            const decimalParts = numericValue.split(".");
+            if (decimalParts.length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts.slice(1).join("");
+            }
+
+            // Limit to 2 decimal places
+            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
+                numericValue =
+                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
+            }
+
+            // Convert to number for formatting
+            const numberValue = parseFloat(numericValue) || 0;
+
+            // Format for display with thousands separator
+            let formattedValue = "";
+            if (numericValue === "" || numericValue === "0") {
+                formattedValue = "";
+            } else if (numericValue.endsWith(".")) {
+                // If user is typing decimal point, keep it
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                formattedValue = integerPart + ".";
+            } else if (
+                numericValue.includes(".") &&
+                numericValue.split(".")[1].length === 1
+            ) {
+                // If user has typed one decimal place
+                const integerPart =
+                    Math.floor(numberValue).toLocaleString("en-US");
+                const decimalPart = numericValue.split(".")[1];
+                formattedValue = integerPart + "." + decimalPart;
+            } else {
+                // Format with full decimals or whole number
+                formattedValue = numberValue.toLocaleString("en-US", {
+                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            // Update input value and model
+            if (formattedValue !== value) {
+                input.value = formattedValue;
+
+                // Store raw numeric value for calculations
+                this.form[fieldName] = numericValue;
+
+                // Calculate totals after updating financial fields
+                if (fieldName === "subtotal" || fieldName === "tax_amount") {
+                    this.calculateTotals();
+                }
+
+                // Adjust cursor position after formatting
+                const lengthDifference = formattedValue.length - value.length;
+                const newCursorPosition = Math.max(
+                    0,
+                    cursorPosition + lengthDifference
+                );
+
+                // Set cursor position in next tick to avoid conflicts
+                setTimeout(() => {
+                    input.setSelectionRange(
+                        newCursorPosition,
+                        newCursorPosition
+                    );
+                }, 0);
             }
         },
     };

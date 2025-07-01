@@ -369,7 +369,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="item.rate = item.rate.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                                @input="formatCurrencyInput($event, index)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
@@ -419,7 +419,7 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
-                                        @input="form.subtotal = form.subtotal.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                        @input="formatGeneralCurrencyInput($event, 'subtotal')"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
@@ -435,7 +435,7 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
-                                        @input="form.tax_amount = form.tax_amount.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                        @input="formatGeneralCurrencyInput($event, 'tax_amount')"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
