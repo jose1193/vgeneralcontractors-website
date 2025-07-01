@@ -178,34 +178,31 @@ class InvoicePdfService
     
     /**
      * Generate a unique filename for the invoice PDF
-     * Format: Invoice-vg-{invoice_number}-{datetime}-{claim_number}
+     * Format: {invoice_number}-{client_name}-{datetime}
      *
      * @param InvoiceDemo $invoice
      * @return string
      */
     private function generateUniqueFilename(InvoiceDemo $invoice): string
     {
-        // Clean invoice number (remove VG- prefix if present)
+        // Clean invoice number (remove VG- prefix if present, keep only the number)
         $invoiceNumber = str_replace('VG-', '', $invoice->invoice_number);
         
-        // Format datetime with full timestamp
+        // Clean client name (remove special characters, spaces to dashes, limit length)
+        $clientName = $invoice->bill_to_name ?? 'client';
+        $clientName = Str::slug($clientName); // Converts to URL-friendly format
+        $clientName = Str::limit($clientName, 30, ''); // Limit to 30 characters max
+        
+        // Format datetime - more readable format (YYYYMMDD-HHMMSS)
         $datetime = Carbon::parse($invoice->invoice_date)->format('Ymd-His');
         
-        // Clean claim number (remove special characters)
-        $claimNumber = preg_replace('/[^a-zA-Z0-9]/', '', $invoice->claim_number ?? '');
+        // ✅ NEW FORMAT: {invoice_number}-{client_name}-{datetime}
+        $baseFilename = $invoiceNumber . '-' . $clientName . '-' . $datetime;
         
-        // ✅ UPDATE: Create filename with Invoice prefix
-        $baseFilename = 'Invoice-vg-' . $invoiceNumber . '-' . $datetime;
+        // Clean filename for security (removes any remaining special characters)
+        $cleanFilename = Str::slug($baseFilename);
         
-        // Add claim number if available
-        if (!empty($claimNumber)) {
-            $baseFilename .= '-' . $claimNumber;
-        }
-        
-        // Create clean filename for security
-        $encryptedFilename = Str::slug($baseFilename);
-        
-        return $encryptedFilename;
+        return $cleanFilename;
     }
     
     /**

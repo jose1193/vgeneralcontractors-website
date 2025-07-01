@@ -57,8 +57,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Number *</label>
                                 <div class="flex space-x-2">
                                     <input type="text" x-model="form.invoice_number"
-                                        @input="formatInvoiceNumberInput($event)"
-                                        @blur="checkInvoiceNumberExists()"
+                                        @input="formatInvoiceNumberInput($event)" @blur="checkInvoiceNumberExists()"
                                         :class="errors.invoice_number ?
                                             'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
@@ -361,7 +360,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Qty</label>
                                             <input type="text" x-model="item.quantity"
-                                                @input="item.quantity = item.quantity.replace(/[^0-9]/g, ''); calculateTotals()"
+                                                @input="formatDecimalField($event, 'quantity')"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="1">
                                         </div>
@@ -370,9 +369,9 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="item.rate = item.rate.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                                @input="formatDecimalField($event, 'rate')"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
-                                                placeholder="0.00">
+                                                placeholder="2,500.00">
                                         </div>
 
                                         <!-- Amount & Remove Button -->
@@ -420,11 +419,11 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
-                                        @input="form.subtotal = form.subtotal.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                        @input="formatDecimalField($event, 'subtotal')"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
-                                        placeholder="0.00">
+                                        placeholder="2,500.00" readonly>
                                 </div>
                                 <p x-show="errors.subtotal" class="mt-1 text-sm text-red-600"
                                     x-text="errors.subtotal"></p>
@@ -436,11 +435,11 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
-                                        @input="form.tax_amount = form.tax_amount.replace(/[^0-9.]/g, ''); calculateTotals()"
+                                        @input="formatDecimalField($event, 'tax_amount')"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
-                                        placeholder="0.00">
+                                        placeholder="250.00">
                                 </div>
                                 <p x-show="errors.tax_amount" class="mt-1 text-sm text-red-600"
                                     x-text="errors.tax_amount"></p>
