@@ -664,6 +664,17 @@ function invoiceDemoData() {
             this.calculateTotals();
         },
 
+        formatRate(index) {
+            let item = this.form.items[index];
+            if (item && item.rate !== null && item.rate !== '') {
+                const value = parseFloat(String(item.rate).replace(/[^0-9.-]+/g,""));
+                item.rate = !isNaN(value) ? value.toFixed(2) : '0.00';
+            } else if (item) {
+                item.rate = '0.00';
+            }
+            this.calculateTotals();
+        },
+
         // Remove item from invoice
         removeItem(index) {
             this.form.items.splice(index, 1);
@@ -674,13 +685,13 @@ function invoiceDemoData() {
         calculateTotals() {
             let subtotal = 0;
             this.form.items.forEach((item) => {
-                // Asegurar que quantity y rate sean números
+                // Ensure quantity and rate are treated as numbers for calculation
                 const quantity = parseFloat(item.quantity || 0);
                 const rate = parseFloat(item.rate || 0);
 
-                // Calcular el monto del ítem
+                // Calculate the item amount
                 const itemAmount = quantity * rate;
-                item.amount = itemAmount.toFixed(2); // Solo formateamos el amount para mostrar
+                item.amount = itemAmount.toFixed(2); // Set item amount for display
 
                 subtotal += itemAmount;
             });

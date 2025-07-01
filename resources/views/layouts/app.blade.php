@@ -23,18 +23,6 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/crud-main.js'])
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-            console.log('Alpine.js initialized');
-            if (window.Alpine && window.Alpine.mask) {
-                console.log('Alpine.js Mask plugin loaded successfully.');
-            } else {
-                console.error('Alpine.js Mask plugin failed to load.');
-            }
-        });
-    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Styles -->
     @livewireStyles
