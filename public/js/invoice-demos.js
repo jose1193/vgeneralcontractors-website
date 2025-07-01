@@ -207,8 +207,6 @@ class InvoiceDemoManager {
         this.debounceTimer = setTimeout(callback, delay);
     }
 
-
-
     /**
      * Format currency
      */
@@ -658,21 +656,9 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: '0.00',
+                rate: 0,
                 sort_order: this.form.items.length,
             });
-            this.calculateTotals();
-        },
-
-        formatRate(index) {
-            let item = this.form.items[index];
-            if (item && item.rate !== null && item.rate !== '') {
-                const value = parseFloat(String(item.rate).replace(/[^0-9.-]+/g,""));
-                item.rate = !isNaN(value) ? value.toFixed(2) : '0.00';
-            } else if (item) {
-                item.rate = '0.00';
-            }
-            this.calculateTotals();
         },
 
         // Remove item from invoice
@@ -685,13 +671,13 @@ function invoiceDemoData() {
         calculateTotals() {
             let subtotal = 0;
             this.form.items.forEach((item) => {
-                // Ensure quantity and rate are treated as numbers for calculation
+                // Asegurar que quantity y rate sean números
                 const quantity = parseFloat(item.quantity || 0);
                 const rate = parseFloat(item.rate || 0);
 
-                // Calculate the item amount
+                // Calcular el monto del ítem
                 const itemAmount = quantity * rate;
-                item.amount = itemAmount.toFixed(2); // Set item amount for display
+                item.amount = itemAmount.toFixed(2); // Solo formateamos el amount para mostrar
 
                 subtotal += itemAmount;
             });
