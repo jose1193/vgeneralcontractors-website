@@ -207,15 +207,7 @@ class InvoiceDemoManager {
         this.debounceTimer = setTimeout(callback, delay);
     }
 
-    /**
-     * Format currency
-     */
-    formatDecimal(value) {
-        if (isNaN(parseFloat(value))) {
-            return '0.00';
-        }
-        return parseFloat(value).toFixed(2);
-    }
+
 
     /**
      * Format currency
