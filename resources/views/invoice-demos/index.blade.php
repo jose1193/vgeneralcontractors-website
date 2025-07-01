@@ -768,7 +768,7 @@
         </div>
     </div>
 
-    @push('scripts')
+   
         <!-- Flatpickr JS - Librería moderna de date picker para 2025 -->
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/es.js"></script>
@@ -899,5 +899,5 @@
         </script>
         
         <script src="{{ asset('js/invoice-demos.js') }}"></script>
-    @endpush
+    
 @endsection
