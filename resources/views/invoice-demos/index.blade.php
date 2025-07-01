@@ -90,7 +90,7 @@
                 <!-- Table -->
                 <div x-show="!loading" class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
+                        <thead class="bg-gradient-to-r from-purple-50 to-indigo-50">
                             <tr>
                                 <th
                                     class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -319,7 +319,7 @@
                 </div>
 
                 <!-- Pagination -->
-                <div x-show="totalPages > 1" class="px-6 py-4 border-t border-gray-200">
+                <div x-show="totalPages > 1" class="bg-gray-50 px-6 py-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-gray-700">
                             Showing <span x-text="((currentPage - 1) * perPage) + 1"></span> to
