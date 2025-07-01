@@ -369,7 +369,8 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="formatRateInput($event, index)"
+                                                x-mask:dynamic="$money($input, '.', ',', 2)"
+                                                @input="calculateTotals()"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
