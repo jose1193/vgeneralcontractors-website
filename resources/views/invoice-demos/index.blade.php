@@ -4,23 +4,77 @@
 
 @section('content')
     <style>
-        /* Simplified Modern Glassmorphic Design */
+        /* Modern Animated Gradient Header with Particles */
         .animated-gradient-header {
-            background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #7c3aed);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease-in-out infinite;
+            background: linear-gradient(-45deg, #8b5cf6, #6366f1, #3b82f6, #1d4ed8, #7c3aed, #f59e0b, #eab308);
+            background-size: 500% 500%;
+            animation: gradientShift 10s ease-in-out infinite;
             position: relative;
+            overflow: hidden;
         }
 
         @keyframes gradientShift {
-
-            0%,
-            100% {
+            0% {
                 background-position: 0% 50%;
             }
 
             50% {
                 background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Floating White Particles */
+        .animated-gradient-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: floatPattern 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .animated-gradient-header::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 50%;
+            animation: floatBubble 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatPattern {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50px, -50px) rotate(360deg);
+            }
+        }
+
+        @keyframes floatBubble {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.1);
+                opacity: 0.9;
             }
         }
 
@@ -91,18 +145,51 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
-        /* Modern Button Styling */
+        /* Enhanced Modern Button with Circle Effect */
         .modern-button {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
-            transition: all 0.3s ease;
+            box-shadow:
+                0 8px 32px rgba(139, 92, 246, 0.2),
+                0 4px 16px rgba(99, 102, 241, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.2), rgba(139, 92, 246, 0.1));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+            z-index: 0;
+        }
+
+        .modern-button:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .modern-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+            box-shadow:
+                0 12px 40px rgba(139, 92, 246, 0.3),
+                0 6px 20px rgba(245, 158, 11, 0.2),
+                0 4px 12px rgba(99, 102, 241, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
             background: rgba(255, 255, 255, 0.98);
+        }
+
+        .modern-button>* {
+            position: relative;
+            z-index: 1;
         }
 
         /* Option Styling for Dark Theme */
@@ -138,7 +225,7 @@
 
             <!-- Filters and Search Section -->
             <div class="glass-container rounded-2xl mb-8 p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Search Input -->
                     <div class="relative group lg:col-span-2">
                         <label class="glass-label text-xs mb-2 block">Search</label>
@@ -169,6 +256,24 @@
                         </svg>
                     </div>
 
+                    <!-- Show Deleted Toggle -->
+                    <div class="flex flex-col justify-center items-center space-y-2">
+                        <label class="glass-label text-xs text-center">Show Deleted</label>
+                        <label class="flex items-center cursor-pointer group">
+                            <input type="checkbox" x-model="showDeleted" @change="loadInvoices()" class="sr-only">
+                            <div class="relative">
+                                <div class="glass-toggle w-12 h-6 rounded-full transition-all duration-300"
+                                    :class="showDeleted ? 'active' : ''">
+                                </div>
+                                <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
+                                    :class="showDeleted ? 'transform translate-x-6' : ''"></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Date Range Filters - Second Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <!-- Start Date Filter -->
                     <div class="relative">
                         <label class="glass-label text-xs mb-2 block">Start Date</label>
@@ -181,21 +286,6 @@
                         <label class="glass-label text-xs mb-2 block">End Date</label>
                         <input type="date" x-model="endDate" @change="filterByDateRange()"
                             class="glass-input w-full px-4 py-4 rounded-xl">
-                    </div>
-
-                    <!-- Show Deleted Toggle -->
-                    <div class="flex flex-col justify-center items-center space-y-3">
-                        <label class="glass-label text-xs">Show Deleted</label>
-                        <label class="flex items-center cursor-pointer group">
-                            <input type="checkbox" x-model="showDeleted" @change="loadInvoices()" class="sr-only">
-                            <div class="relative">
-                                <div class="glass-toggle w-12 h-6 rounded-full transition-all duration-300"
-                                    :class="showDeleted ? 'active' : ''">
-                                </div>
-                                <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
-                                    :class="showDeleted ? 'transform translate-x-6' : ''"></div>
-                            </div>
-                        </label>
                     </div>
                 </div>
             </div>
