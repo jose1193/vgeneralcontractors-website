@@ -1055,7 +1055,19 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
+                // Si no estamos mostrando facturas eliminadas, mantener la vista actual
+                // Si estamos mostrando facturas activas, la factura eliminada desaparecerá
                 await this.loadInvoices();
+                
+                // Opcionalmente, mostrar un mensaje sugiriendo ver facturas eliminadas
+                if (!this.showDeleted) {
+                    setTimeout(() => {
+                        window.invoiceDemoManager.showNotification(
+                            "Puedes ver las facturas eliminadas activando el filtro 'Mostrar eliminadas'",
+                            "info"
+                        );
+                    }, 2500); // Mostrar después de que se cierre el mensaje de éxito
+                }
             } catch (error) {
                 console.error('Error al eliminar factura:', error);
                 Swal.fire({
@@ -1115,6 +1127,12 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
+                // Cambiar a mostrar facturas activas después de restaurar
+                if (this.showDeleted) {
+                    this.showDeleted = false;
+                    this.currentPage = 1; // Reiniciar a la primera página
+                }
+                
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
@@ -1128,7 +1146,23 @@ function invoiceDemoData() {
         // ============ ADDITIONAL METHODS ============
 
         toggleDeleted() {
+            // Reiniciar a la primera página cuando se cambia el filtro
             this.currentPage = 1;
+            
+            // Mostrar mensaje informativo según el estado del toggle
+            if (this.showDeleted) {
+                window.invoiceDemoManager.showNotification(
+                    "Mostrando facturas eliminadas",
+                    "info"
+                );
+            } else {
+                window.invoiceDemoManager.showNotification(
+                    "Mostrando facturas activas",
+                    "info"
+                );
+            }
+            
+            // Recargar la lista de facturas con el nuevo filtro
             this.loadInvoices();
         },
 
