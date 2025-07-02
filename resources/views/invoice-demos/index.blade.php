@@ -733,7 +733,7 @@
                                 <tr>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Nro
+                                        #
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('invoice_number')"
@@ -796,7 +796,7 @@
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Actionss</th>
+                                        Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-700">
@@ -854,7 +854,7 @@
                                                     getStatusBadgeClass(invoice.status),
                                                     invoice.deleted_at ? 'opacity-60' : ''
                                                 ]"
-                                                x-text="(invoice.deleted_at ? 'DELETED - ' : '') + invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
+                                                x-text="invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1) + (invoice.deleted_at ? ' - DELETED' : '')"></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm"
                                             :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
