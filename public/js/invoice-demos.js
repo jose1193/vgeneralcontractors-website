@@ -855,12 +855,24 @@ function invoiceDemoData() {
                   })
                 : [];
 
+            // ✅ Format phone for display - use the stored phone and format it
+            const phoneToDisplay =
+                invoice.bill_to_phone_raw || invoice.bill_to_phone || "";
+            const formattedPhone = phoneToDisplay
+                ? this.formatPhoneForDisplay(phoneToDisplay)
+                : "";
+
+            console.log("Phone formatting in populateForm:", {
+                original: phoneToDisplay,
+                formatted: formattedPhone,
+            });
+
             this.form = {
                 invoice_number: invoice.invoice_number || "",
                 invoice_date: formatDateForInput(invoice.invoice_date),
                 bill_to_name: invoice.bill_to_name || "",
                 bill_to_address: invoice.bill_to_address || "",
-                bill_to_phone: invoice.bill_to_phone_raw || "",
+                bill_to_phone: formattedPhone, // ✅ Use formatted phone
                 subtotal: invoice.subtotal || 0,
                 tax_amount: invoice.tax_amount || 0,
                 balance_due: invoice.balance_due || 0,
@@ -986,6 +998,21 @@ function invoiceDemoData() {
             console.groupEnd();
 
             try {
+                // ✅ Prepare form data with properly formatted phone
+                const formDataToSubmit = { ...this.form };
+
+                // Format phone for storage before sending
+                if (formDataToSubmit.bill_to_phone) {
+                    const originalPhone = formDataToSubmit.bill_to_phone;
+                    formDataToSubmit.bill_to_phone =
+                        this.formatPhoneForStorage(originalPhone);
+
+                    console.log("Phone formatting for submission:", {
+                        original: originalPhone,
+                        formatted: formDataToSubmit.bill_to_phone,
+                    });
+                }
+
                 let response;
                 if (this.isEditing) {
                     console.log(
@@ -994,13 +1021,13 @@ function invoiceDemoData() {
                     );
                     response = await window.invoiceDemoManager.updateInvoice(
                         this.currentInvoice.uuid,
-                        this.form
+                        formDataToSubmit
                     );
                     console.log("Update response:", response);
                 } else {
                     console.log("Calling createInvoice");
                     response = await window.invoiceDemoManager.createInvoice(
-                        this.form
+                        formDataToSubmit
                     );
                     console.log("Create response:", response);
                 }
@@ -1296,24 +1323,46 @@ function invoiceDemoData() {
             }
 
             try {
+                const excludeId =
+                    this.isEditing && this.currentInvoice
+                        ? this.currentInvoice.uuid
+                        : null;
+
+                // ✅ ENHANCED logging for debugging validation issues
+                console.log("🔍 Starting invoice number validation:", {
+                    invoice_number: this.form.invoice_number,
+                    exclude_id: excludeId,
+                    is_editing: this.isEditing,
+                    current_invoice_exists: !!this.currentInvoice,
+                    current_invoice_uuid: this.currentInvoice?.uuid,
+                    current_invoice_number: this.currentInvoice?.invoice_number,
+                });
+
                 const response =
                     await window.invoiceDemoManager.checkInvoiceNumberExists(
                         this.form.invoice_number,
-                        this.isEditing ? this.currentInvoice.uuid : null
+                        excludeId
                     );
+
                 this.invoiceNumberExists = response.exists;
 
-                // ✅ LOG for debugging
-                console.log("Invoice number validation:", {
+                // ✅ DETAILED result logging
+                console.log("✅ Invoice number validation result:", {
                     invoice_number: this.form.invoice_number,
-                    exclude_id: this.isEditing
-                        ? this.currentInvoice.uuid
-                        : null,
+                    exclude_id: excludeId,
                     exists: response.exists,
-                    is_editing: this.isEditing,
+                    status: response.exists ? "❌ DUPLICATE" : "✅ AVAILABLE",
                 });
+
+                // ✅ Show visual feedback
+                if (this.invoiceNumberExists) {
+                    console.warn("❌ Invoice number already exists!");
+                    window.invoiceDemoManager.showError(
+                        `Invoice number "${this.form.invoice_number}" already exists. Please use a different number.`
+                    );
+                }
             } catch (error) {
-                console.error("Failed to check invoice number:", error);
+                console.error("❌ Failed to check invoice number:", error);
                 this.invoiceNumberExists = false;
             }
         },
@@ -1336,6 +1385,94 @@ function invoiceDemoData() {
                     error.message || "Failed to generate invoice number"
                 );
             }
+        },
+
+        // ✅ Format phone for display (xxx) xxx-xxxx
+        formatPhoneForDisplay(phone) {
+            if (!phone) return "";
+
+            // Extract only digits
+            const cleaned = phone.replace(/\D/g, "");
+
+            // If it has 11 digits and starts with 1 (format +1XXXXXXXXXX)
+            if (cleaned.length === 11 && cleaned.startsWith("1")) {
+                const phoneDigits = cleaned.substring(1); // Remove the 1
+                return `(${phoneDigits.substring(
+                    0,
+                    3
+                )}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(
+                    6,
+                    10
+                )}`;
+            }
+            // If it has 10 digits (format XXXXXXXXXX)
+            else if (cleaned.length === 10) {
+                return `(${cleaned.substring(0, 3)}) ${cleaned.substring(
+                    3,
+                    6
+                )}-${cleaned.substring(6, 10)}`;
+            }
+
+            // For other formats, return as is
+            return phone;
+        },
+
+        // ✅ Format phone for storage/comparison
+        formatPhoneForStorage(phone) {
+            if (!phone) return "";
+
+            // Extract only digits to send to backend
+            const cleaned = phone.replace(/\D/g, "");
+
+            // Backend expects only digits and handles +1XXXXXXXXXX format
+            if (cleaned.length === 10) {
+                return cleaned; // Send only 10 digits
+            }
+
+            // If already has 11 digits and starts with 1, send as is
+            if (cleaned.length === 11 && cleaned.startsWith("1")) {
+                return cleaned;
+            }
+
+            return cleaned;
+        },
+
+        // ✅ Format phone input in real-time (called from modal)
+        formatPhoneInput(event) {
+            const input = event.target;
+            const isBackspace = event.inputType === "deleteContentBackward";
+            let value = input.value.replace(/\D/g, "");
+
+            if (isBackspace) {
+                // For backspace, keep current value without adding more characters
+            } else {
+                // Limit to 10 digits
+                value = value.substring(0, 10);
+            }
+
+            let formattedValue = "";
+            if (value.length === 0) {
+                formattedValue = "";
+            } else if (value.length <= 3) {
+                formattedValue = `(${value}`;
+            } else if (value.length <= 6) {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3
+                )}`;
+            } else {
+                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
+                    3,
+                    6
+                )}-${value.substring(6)}`;
+            }
+
+            // Update the form field directly
+            this.form.bill_to_phone = formattedValue;
+
+            console.log("Phone formatted in real-time:", {
+                original: input.value,
+                formatted: formattedValue,
+            });
         },
 
         // Get status badge class
