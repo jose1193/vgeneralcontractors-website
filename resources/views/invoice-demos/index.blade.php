@@ -511,7 +511,7 @@
                 class="glass-container-filter backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="p-6">
                     <!-- Main Filter Row -->
-                    <div class="grid grid-cols-1 lg:grid-cols-14 gap-4 items-end">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                         <!-- Search - Takes more space -->
                         <div class="lg:col-span-5">
                             <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
@@ -577,20 +577,6 @@
                             </button>
                         </div>
 
-                        <!-- Show Deleted Toggle -->
-                        <div class="lg:col-span-2">
-                            <label class="block text-sm font-medium text-white/90 mb-2">🗑️ Show Deleted</label>
-                            <div class="flex items-center justify-center h-11">
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
-                                        class="sr-only peer">
-                                    <div
-                                        class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
                         <!-- Create Button -->
                         <div class="lg:col-span-2">
                             <button @click="openCreateModal()"
@@ -617,7 +603,7 @@
                         x-transition:leave-end="opacity-0 transform -translate-y-4"
                         class="mt-6 pt-6 border-t border-white/20">
 
-                        <div class="grid grid-cols-1 lg:grid-cols-9 gap-4 items-end">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                             <!-- Date Range -->
                             <div class="lg:col-span-4">
                                 <label class="block text-sm font-medium text-white/90 mb-2">📅 Date Range</label>
@@ -671,6 +657,23 @@
                                         </div>
                                     </button>
                                 </div>
+                            </div>
+
+                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
+                            <div class="lg:col-span-3 flex items-end justify-between">
+                                <!-- Toggle Switch for Show Deleted -->
+                                <div class="flex items-center space-x-3">
+                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
+                                            class="sr-only peer">
+                                        <div
+                                            class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
