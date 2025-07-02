@@ -57,8 +57,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Number *</label>
                                 <div class="flex space-x-2">
                                     <input type="text" x-model="form.invoice_number"
-                                        @input="formatInvoiceNumberInput($event)"
-                                        @blur="if (form.invoice_number && (!isEditing || form.invoice_number !== currentInvoice?.invoice_number)) { checkInvoiceNumberExists(); }"
+                                        @input="formatInvoiceNumberInput($event)" @blur="checkInvoiceNumberExists()"
                                         :class="errors.invoice_number ?
                                             'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
