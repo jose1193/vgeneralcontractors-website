@@ -585,6 +585,9 @@ function invoiceDemoData() {
                         dateFormat: 'Y-m-d',
                         allowInput: false,
                         clickOpens: true,
+                        disableMobile: true,
+                        static: true,
+                        appendTo: document.body,
                         locale: {
                             rangeSeparator: ' to '
                         },
@@ -603,6 +606,20 @@ function invoiceDemoData() {
                         },
                         onReady: function(selectedDates, dateStr, instance) {
                             console.log('📅 Flatpickr initialized successfully');
+                            // Fix positioning issues
+                            const calendar = instance.calendarContainer;
+                            if (calendar) {
+                                calendar.style.position = 'fixed';
+                                calendar.style.zIndex = '10000';
+                            }
+                        },
+                        onOpen: function(selectedDates, dateStr, instance) {
+                            // Ensure proper positioning when opened
+                            const calendar = instance.calendarContainer;
+                            if (calendar) {
+                                calendar.style.position = 'fixed';
+                                calendar.style.zIndex = '10000';
+                            }
                         }
                     });
                 } else {

@@ -4,13 +4,13 @@
 
 @push('styles')
     <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/themes/dark.css" crossorigin="anonymous">
 @endpush
 
 @push('scripts')
     <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" crossorigin="anonymous"></script>
 @endpush
 
 @section('content')
@@ -122,23 +122,49 @@
             color: rgb(255, 255, 255);
         }
 
-        /* Flatpickr Custom Styles */
+        /* Flatpickr Custom Styles - Safe CSS Rules */
         .flatpickr-calendar {
             background: rgba(30, 30, 30, 0.95) !important;
             backdrop-filter: blur(20px) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+            z-index: 9999 !important;
         }
 
         .flatpickr-day.selected {
             background: rgba(147, 51, 234, 0.8) !important;
             border-color: rgba(147, 51, 234, 1) !important;
+            color: white !important;
         }
 
         .flatpickr-day.inRange {
             background: rgba(147, 51, 234, 0.3) !important;
             border-color: rgba(147, 51, 234, 0.5) !important;
+            color: white !important;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(147, 51, 234, 0.5) !important;
+            border-color: rgba(147, 51, 234, 0.7) !important;
+        }
+
+        .flatpickr-months {
+            background: rgba(30, 30, 30, 0.9) !important;
+        }
+
+        .flatpickr-weekdays {
+            background: rgba(30, 30, 30, 0.8) !important;
+        }
+
+        /* Fix for arrows and pagination after footer */
+        .flatpickr-calendar {
+            position: fixed !important;
+        }
+
+        /* Ensure proper stacking order */
+        body > .flatpickr-calendar {
+            z-index: 10000 !important;
         }
 
         /* Modern Button Styles */
