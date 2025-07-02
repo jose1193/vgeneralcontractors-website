@@ -713,5 +713,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/invoice-demos.js') }}"></script>
+    @push('scripts')
+        <script src="{{ asset('js/invoice-demos.js') }}"></script>
+    @endpush
 @endsection
