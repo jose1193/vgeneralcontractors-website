@@ -345,6 +345,67 @@
             background: rgb(31, 41, 55);
             color: rgb(243, 244, 246);
         }
+
+        /* ========== MARQUEE ANIMATION ========== */
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 15s linear infinite;
+        }
+
+        .marquee-container:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+
+        /* ========== GLASSMORPHIC FILTER STYLES ========== */
+        .glass-container-filter {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15), 0 4px 16px rgba(99, 102, 241, 0.1);
+        }
+
+        .glass-input-filter {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-input-filter:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .glass-input-filter:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .glass-button-filter {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+        }
+
+        .glass-button-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.25);
+        }
+
+        .glass-button-filter:active {
+            transform: translateY(-1px);
+        }
     </style>
     <div class="min-h-screen py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -357,77 +418,101 @@
                                 Invoice Management</h1>
                             <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
                         </div>
+                        <!-- Motivational Quote Section with Icon -->
                         <div class="mt-4 sm:mt-0">
-                            <button @click="openCreateModal()"
-                                class="modern-button inline-flex items-center px-6 py-3 text-purple-600 font-semibold rounded-xl relative z-10">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Create Invoice
-                            </button>
+                            <div class="flex items-center space-x-4">
+                                <!-- Animated Invoice Icon -->
+                                <div class="relative">
+                                    <div
+                                        class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center animate-pulse">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Marquee Motivational Text -->
+                                <div
+                                    class="hidden sm:block bg-white/10 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20">
+                                    <div class="marquee-container overflow-hidden w-64">
+                                        <div
+                                            class="marquee-text animate-marquee whitespace-nowrap text-white/90 text-sm font-medium">
+                                            ✨ Create professional invoices effortlessly • 🚀 Boost your business success •
+                                            💼 Stay organized and efficient • 📊 Track your financial progress •
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Filters Section - Optimized UX Design -->
-            <div class="bg-white rounded-2xl shadow-xl border border-purple-100 mb-8 overflow-hidden">
+            <!-- Glassmorphic Filters Section -->
+            <div
+                class="glass-container-filter backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="p-6">
                     <!-- Main Filter Row -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                         <!-- Search - Takes more space -->
                         <div class="lg:col-span-5">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
                             <div class="relative">
-                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                                 <input type="text" x-model="search" @input.debounce.500ms="searchInvoices()"
                                     placeholder="Search invoices..."
-                                    class="w-full h-11 pl-10 pr-4 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                                    class="glass-input-filter w-full h-11 pl-10 pr-4 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
                             </div>
                         </div>
 
                         <!-- Status Filter -->
                         <div class="lg:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">📋 Status</label>
                             <select x-model="statusFilter" @change="filterByStatus()"
-                                class="w-full h-11 px-3 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                <option value="">All Statuses</option>
-                                <option value="draft">Draft</option>
-                                <option value="sent">Sent</option>
-                                <option value="paid">Paid</option>
-                                <option value="cancelled">Cancelled</option>
+                                class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
+                                <option value="" class="bg-gray-800 text-white">All Statuses</option>
+                                <option value="draft" class="bg-gray-800 text-white">Draft</option>
+                                <option value="sent" class="bg-gray-800 text-white">Sent</option>
+                                <option value="paid" class="bg-gray-800 text-white">Paid</option>
+                                <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
                             </select>
                         </div>
 
                         <!-- Items Per Page -->
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Show</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
                             <select x-model="perPage" @change="changePerPage()"
-                                class="w-full h-11 px-3 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
+                                class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
+                                <option value="10" class="bg-gray-800 text-white">10</option>
+                                <option value="25" class="bg-gray-800 text-white">25</option>
+                                <option value="50" class="bg-gray-800 text-white">50</option>
+                                <option value="100" class="bg-gray-800 text-white">100</option>
                             </select>
                         </div>
 
                         <!-- Advanced Filters Toggle -->
                         <div class="lg:col-span-2">
                             <button @click="showAdvancedFilters = !showAdvancedFilters"
-                                class="w-full h-11 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 flex items-center justify-center"
-                                :class="{ 'ring-2 ring-purple-300': showAdvancedFilters }">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-purple-500/30 to-blue-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-purple-600/40 hover:to-blue-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group"
+                                :class="{ 'ring-2 ring-purple-400/50': showAdvancedFilters }">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                </div>
+                                <svg class="w-4 h-4 mr-2 relative z-10" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4">
                                     </path>
                                 </svg>
-                                <span x-text="showAdvancedFilters ? 'Hide Filters' : 'More Filters'"></span>
-                                <svg class="w-4 h-4 ml-2 transition-transform duration-200"
+                                <span x-text="showAdvancedFilters ? 'Hide Filters' : 'More Filters'"
+                                    class="relative z-10"></span>
+                                <svg class="w-4 h-4 ml-2 transition-transform duration-200 relative z-10"
                                     :class="{ 'rotate-180': showAdvancedFilters }" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -439,96 +524,118 @@
                         <!-- Create Button -->
                         <div class="lg:col-span-2">
                             <button @click="openCreateModal()"
-                                class="w-full h-11 px-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center justify-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-green-500/30 to-emerald-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-green-600/40 hover:to-emerald-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-r from-green-600/20 to-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                </div>
+                                <svg class="w-4 h-4 mr-2 relative z-10" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                New Invoice
+                                <span class="relative z-10">New Invoice</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- Advanced Filters - Collapsible -->
-                    <div x-show="showAdvancedFilters" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                    <div x-show="showAdvancedFilters" x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform -translate-y-4"
                         x-transition:enter-end="opacity-100 transform translate-y-0"
-                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave="transition ease-in duration-200"
                         x-transition:leave-start="opacity-100 transform translate-y-0"
-                        x-transition:leave-end="opacity-0 transform -translate-y-2"
-                        class="mt-6 pt-6 border-t border-gray-200">
+                        x-transition:leave-end="opacity-0 transform -translate-y-4"
+                        class="mt-6 pt-6 border-t border-white/20">
 
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                             <!-- Date Range -->
                             <div class="lg:col-span-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                                <label class="block text-sm font-medium text-white/90 mb-2">📅 Date Range</label>
                                 <input type="text" id="dateRangePicker" x-model="dateRangeDisplay"
                                     placeholder="Select date range..."
-                                    class="w-full h-11 px-4 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 cursor-pointer"
+                                    class="glass-input-filter w-full h-11 px-4 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200 cursor-pointer"
                                     readonly>
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Quick Filters</label>
+                            <div class="lg:col-span-5">
+                                <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
-                                        class="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
-                                        :class="{ 'bg-purple-100 text-purple-700': activeQuickFilter === 'today' }">
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
+                                        :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'today' }">
                                         Today
                                     </button>
                                     <button @click="setDateRange('last7days')"
-                                        class="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
-                                        :class="{ 'bg-purple-100 text-purple-700': activeQuickFilter === 'last7days' }">
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
+                                        :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'last7days' }">
                                         7 Days
                                     </button>
                                     <button @click="setDateRange('last30days')"
-                                        class="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
-                                        :class="{ 'bg-purple-100 text-purple-700': activeQuickFilter === 'last30days' }">
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
+                                        :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'last30days' }">
                                         30 Days
                                     </button>
                                     <button @click="setDateRange('thisMonth')"
-                                        class="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
-                                        :class="{ 'bg-purple-100 text-purple-700': activeQuickFilter === 'thisMonth' }">
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
+                                        :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisMonth' }">
                                         This Month
                                     </button>
                                     <button @click="setDateRange('thisYear')"
-                                        class="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-purple-100 hover:text-purple-700 transition-colors duration-200"
-                                        :class="{ 'bg-purple-100 text-purple-700': activeQuickFilter === 'thisYear' }">
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
+                                        :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisYear' }">
                                         This Year
+                                    </button>
+                                    <!-- Clear Filters Button -->
+                                    <button @click="clearAllFilters()"
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-red-500/20 border border-red-400/30 text-red-200 rounded-md hover:bg-red-500/30 hover:text-white transition-colors duration-200"
+                                        title="Clear all filters">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Show Deleted Toggle & Clear Filters -->
-                            <div class="lg:col-span-2 flex gap-2">
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="showDeleted" x-model="showDeleted"
-                                        @change="toggleDeleted()"
-                                        class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="showDeleted" class="ml-2 text-sm text-gray-700">Show Deleted</label>
+                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
+                            <div class="lg:col-span-3 flex items-end justify-between">
+                                <!-- Toggle Switch for Show Deleted -->
+                                <div class="flex items-center space-x-3">
+                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
+                                            class="sr-only peer">
+                                        <div
+                                            class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
+                                        </div>
+                                    </label>
                                 </div>
-                                <button @click="clearAllFilters()"
-                                    class="px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200"
-                                    title="Clear all filters">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                                <!-- Collapse Indicator -->
+                                <div class="flex items-center">
+                                    <span class="text-xs text-white/60 mr-2">Collapse</span>
+                                    <svg class="w-5 h-5 text-white/60 animate-bounce" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12"></path>
+                                            d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                                     </svg>
-                                </button>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Active Filters Indicator -->
-                        <div x-show="hasActiveFilters()" class="mt-4 flex items-center gap-2 text-sm text-gray-600">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div x-show="hasActiveFilters()"
+                            class="mt-4 flex items-center gap-2 text-sm text-white/70 bg-white/5 backdrop-blur-md rounded-lg px-4 py-2 border border-white/10">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z">
                                 </path>
                             </svg>
                             <span>Active filters applied</span>
                             <span
-                                class="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full"
+                                class="inline-flex items-center px-2 py-1 text-xs bg-purple-500/30 text-purple-200 rounded-full border border-purple-400/30"
                                 x-text="getActiveFiltersCount()"></span>
                         </div>
                     </div>
@@ -863,8 +970,6 @@
         </div>
 
         @push('scripts')
-            <!-- SweetAlert2 -->
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
         @endpush
     @endsection

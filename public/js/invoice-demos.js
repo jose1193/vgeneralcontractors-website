@@ -538,7 +538,7 @@ function invoiceDemoData() {
             console.log("🚀 Initializing Invoice Demo Manager...");
             await this.loadFormData();
             await this.loadInvoices();
-            this.initializeFlatpickr();
+            this.initializeDatePicker();
         },
 
         // Load form data
@@ -604,90 +604,59 @@ function invoiceDemoData() {
         },
 
         // Initialize Flatpickr
-        initializeFlatpickr() {
-            const self = this;
+        initializeDatePicker() {
+            // Initialize flatpickr for date range
+            const picker = flatpickr("#dateRangePicker", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "M j, Y",
+                showMonths: 2,
+                theme: "dark",
+                onClose: (selectedDates) => {
+                    if (selectedDates.length === 2) {
+                        this.startDate = selectedDates[0]
+                            .toISOString()
+                            .split("T")[0];
+                        this.endDate = selectedDates[1]
+                            .toISOString()
+                            .split("T")[0];
+                        this.currentPage = 1;
+                        this.loadInvoices();
+                    }
+                },
+                onClear: () => {
+                    this.startDate = "";
+                    this.endDate = "";
+                    this.dateRangeDisplay = "";
+                    this.currentPage = 1;
+                    this.loadInvoices();
+                },
+            });
 
-            // Wait for DOM to be ready
-            setTimeout(() => {
-                const dateRangeInput =
-                    document.getElementById("dateRangePicker");
-                if (dateRangeInput && typeof flatpickr !== "undefined") {
-                    this.flatpickrInstance = flatpickr(dateRangeInput, {
-                        mode: "range",
-                        dateFormat: "Y-m-d",
-                        allowInput: false,
-                        clickOpens: true,
-                        disableMobile: true,
-                        static: true,
-                        appendTo: document.body,
-                        locale: {
-                            rangeSeparator: " to ",
-                        },
-                        onChange: function (selectedDates, dateStr, instance) {
-                            if (selectedDates.length === 2) {
-                                self.startDate = selectedDates[0]
-                                    .toISOString()
-                                    .split("T")[0];
-                                self.endDate = selectedDates[1]
-                                    .toISOString()
-                                    .split("T")[0];
-                                self.dateRangeDisplay = `${self.startDate} to ${self.endDate}`;
-                                self.filterByDateRange();
-                            } else if (selectedDates.length === 0) {
-                                self.startDate = "";
-                                self.endDate = "";
-                                self.dateRangeDisplay = "";
-                                self.filterByDateRange();
-                            }
-                        },
-                        onReady: function (selectedDates, dateStr, instance) {
-                            console.log(
-                                "📅 Flatpickr initialized successfully"
-                            );
-                            // Fix positioning issues
-                            const calendar = instance.calendarContainer;
-                            if (calendar) {
-                                calendar.style.position = "fixed";
-                                calendar.style.zIndex = "10000";
-                            }
-                        },
-                        onOpen: function (selectedDates, dateStr, instance) {
-                            // Ensure proper positioning when opened
-                            const calendar = instance.calendarContainer;
-                            if (calendar) {
-                                calendar.style.position = "fixed";
-                                calendar.style.zIndex = "10000";
-                            }
-                        },
-                    });
-                } else {
-                    console.warn(
-                        "⚠️ Flatpickr not available or dateRangePicker element not found"
-                    );
-                }
-            }, 100);
+            this.dateRangePicker = picker;
         },
 
         // Set predefined date ranges
-        setDateRange(range) {
+        setDateRange(period) {
             const today = new Date();
             let startDate, endDate;
 
-            switch (range) {
+            switch (period) {
                 case "today":
                     startDate = endDate = today;
                     break;
                 case "last7days":
-                    endDate = today;
                     startDate = new Date(
                         today.getTime() - 7 * 24 * 60 * 60 * 1000
                     );
+                    endDate = today;
                     break;
                 case "last30days":
-                    endDate = today;
                     startDate = new Date(
                         today.getTime() - 30 * 24 * 60 * 60 * 1000
                     );
+                    endDate = today;
                     break;
                 case "thisMonth":
                     startDate = new Date(
@@ -709,18 +678,17 @@ function invoiceDemoData() {
                     return;
             }
 
-            // Format dates
             this.startDate = startDate.toISOString().split("T")[0];
             this.endDate = endDate.toISOString().split("T")[0];
-            this.dateRangeDisplay = `${this.startDate} to ${this.endDate}`;
+            this.activeQuickFilter = period;
+            this.currentPage = 1;
 
-            // Update Flatpickr
-            if (this.flatpickrInstance) {
-                this.flatpickrInstance.setDate([startDate, endDate], true);
+            // Update flatpickr display
+            if (this.dateRangePicker) {
+                this.dateRangePicker.setDate([startDate, endDate]);
             }
 
-            // Apply filter
-            this.filterByDateRange();
+            this.loadInvoices();
         },
 
         // Clear date range
@@ -730,8 +698,8 @@ function invoiceDemoData() {
             this.dateRangeDisplay = "";
 
             // Clear Flatpickr
-            if (this.flatpickrInstance) {
-                this.flatpickrInstance.clear();
+            if (this.dateRangePicker) {
+                this.dateRangePicker.clear();
             }
 
             // Apply filter (show all)
@@ -1636,7 +1604,8 @@ function invoiceDemoData() {
             return !!(
                 this.search ||
                 this.statusFilter ||
-                this.dateRangeDisplay ||
+                this.startDate ||
+                this.endDate ||
                 this.showDeleted
             );
         },
@@ -1646,7 +1615,7 @@ function invoiceDemoData() {
             let count = 0;
             if (this.search) count++;
             if (this.statusFilter) count++;
-            if (this.dateRangeDisplay) count++;
+            if (this.startDate || this.endDate) count++;
             if (this.showDeleted) count++;
             return count;
         },
