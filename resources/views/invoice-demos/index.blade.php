@@ -451,28 +451,7 @@
 
         /* ========== DELETED ITEMS STYLING ========== */
         .deleted-item {
-            background: linear-gradient(135deg, rgba(185, 28, 28, 0.4) 0%, rgba(153, 27, 27, 0.3) 100%) !important;
-            position: relative;
-        }
-
-        .deleted-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg,
-                    rgba(185, 28, 28, 0.1) 0%,
-                    rgba(185, 28, 28, 0.05) 50%,
-                    rgba(185, 28, 28, 0.1) 100%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .deleted-item>* {
-            position: relative;
-            z-index: 2;
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.3) 0%, rgba(153, 27, 27, 0.2) 100%) !important;
         }
 
         /* ========== IMPROVED GLASS INPUT STYLES ========== */
