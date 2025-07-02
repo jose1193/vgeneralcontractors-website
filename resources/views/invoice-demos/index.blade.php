@@ -499,7 +499,7 @@
                     <!-- Main Filter Row -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                         <!-- Search - Takes more space -->
-                        <div class="lg:col-span-5">
+                        <div class="lg:col-span-4">
                             <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
                             <div class="relative">
                                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
@@ -538,6 +538,19 @@
                             </select>
                         </div>
 
+                        <!-- Clear Filters Button -->
+                        <div class="lg:col-span-1">
+                            <button @click="clearAllFilters()"
+                                class="w-full h-11 px-3 glass-button-filter backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-lg hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md flex items-center justify-center"
+                                title="Clear all filters and reset"
+                                :class="{ 'animate-pulse': hasActiveFilters() }">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <span class="text-xs font-medium">Clear Filters</span>
+                            </button>
+                        </div>
+
                         <!-- Advanced Filters Toggle -->
                         <div class="lg:col-span-2">
                             <button @click="showAdvancedFilters = !showAdvancedFilters"
@@ -563,19 +576,28 @@
                             </button>
                         </div>
 
+                        <!-- Show Deleted Toggle -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-sm font-medium text-white/90 mb-2">🗑️ Deleted</label>
+                            <label class="relative inline-flex items-center cursor-pointer w-full justify-center">
+                                <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()" class="sr-only peer">
+                                <div class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500"></div>
+                            </label>
+                        </div>
+
                         <!-- Create Button -->
-                        <div class="lg:col-span-2">
+                        <div class="lg:col-span-1">
                             <button @click="openCreateModal()"
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-green-500/30 to-emerald-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-green-600/40 hover:to-emerald-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
                                     class="absolute inset-0 bg-gradient-to-r from-green-600/20 to-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                 </div>
-                                <svg class="w-4 h-4 mr-2 relative z-10" fill="none" stroke="currentColor"
+                                <svg class="w-4 h-4 mr-1 relative z-10" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                <span class="relative z-10">New Invoice</span>
+                                <span class="relative z-10 text-xs font-medium">New Invoice</span>
                             </button>
                         </div>
                     </div>
@@ -591,7 +613,7 @@
 
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                             <!-- Date Range -->
-                            <div class="lg:col-span-4">
+                            <div class="lg:col-span-6">
                                 <label class="block text-sm font-medium text-white/90 mb-2">📅 Date Range</label>
                                 <input type="text" id="dateRangePicker" x-model="dateRangeDisplay"
                                     placeholder="Select date range..."
@@ -600,7 +622,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-5">
+                            <div class="lg:col-span-6">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
@@ -628,38 +650,7 @@
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisYear' }">
                                         This Year
                                     </button>
-                                    <!-- Clear Filters Button -->
-                                    <button @click="clearAllFilters()"
-                                        class="px-3 py-2 text-xs backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-md hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md"
-                                        title="Clear all filters and reset"
-                                        :class="{ 'animate-pulse': hasActiveFilters() }">
-                                        <div class="flex items-center space-x-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                            <span class="hidden sm:inline text-xs">Clear</span>
-                                        </div>
-                                    </button>
                                 </div>
-                            </div>
-
-                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
-                            <div class="lg:col-span-3 flex items-end justify-between">
-                                <!-- Toggle Switch for Show Deleted -->
-                                <div class="flex items-center space-x-3">
-                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
-                                            class="sr-only peer">
-                                        <div
-                                            class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
