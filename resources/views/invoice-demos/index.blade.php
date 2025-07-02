@@ -600,7 +600,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-5">
+                            <div class="lg:col-span-8">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
@@ -639,27 +639,10 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                     d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
-                                            <span class="hidden sm:inline text-xs">Clear</span>
+                                            <span class="hidden sm:inline text-xs">Clear Filter</span>
                                         </div>
                                     </button>
                                 </div>
-                            </div>
-
-                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
-                            <div class="lg:col-span-3 flex items-end justify-between">
-                                <!-- Toggle Switch for Show Deleted -->
-                                <div class="flex items-center space-x-3">
-                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
-                                            class="sr-only peer">
-                                        <div
-                                            class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
