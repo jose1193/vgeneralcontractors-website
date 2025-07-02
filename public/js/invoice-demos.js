@@ -94,7 +94,8 @@ class InvoiceDemoManager {
         sortOrder = "desc",
         startDate = "",
         endDate = "",
-        perPage = 10
+        perPage = 10,
+        includeDeleted = false
     ) {
         const params = new URLSearchParams({
             page,
@@ -110,6 +111,9 @@ class InvoiceDemoManager {
         }
         if (endDate) {
             params.append("end_date", endDate);
+        }
+        if (includeDeleted) {
+            params.append("include_deleted", "1");
         }
 
         return await this.apiRequest(`${this.baseUrl}?${params}`);
@@ -567,7 +571,8 @@ function invoiceDemoData() {
                     this.sortOrder,
                     this.startDate,
                     this.endDate,
-                    this.perPage
+                    this.perPage,
+                    this.showDeleted
                 );
 
                 this.invoices = response.data.data || [];
@@ -1072,48 +1077,44 @@ function invoiceDemoData() {
             }
         },
 
-        // Check if invoice number exists
-        async checkInvoiceNumberExists() {
-            if (!this.form.invoice_number) {
-                this.invoiceNumberExists = false;
-                return;
-            }
+        // ============ ADDITIONAL METHODS ============
 
-            try {
-                const response =
-                    await window.invoiceDemoManager.checkInvoiceNumberExists(
-                        this.form.invoice_number,
-                        this.isEditing ? this.currentInvoice.uuid : null
-                    );
-                this.invoiceNumberExists = response.exists;
-            } catch (error) {
-                console.error("Failed to check invoice number:", error);
-            }
+        toggleDeleted() {
+            this.currentPage = 1;
+            this.loadInvoices();
         },
 
-        // Generate invoice number
-        async generateInvoiceNumber() {
-            try {
-                const response =
-                    await window.invoiceDemoManager.generateInvoiceNumber();
-                this.form.invoice_number = response.invoice_number;
-                this.invoiceNumberExists = false;
-            } catch (error) {
-                window.invoiceDemoManager.showError(
-                    error.message || "Failed to generate invoice number"
-                );
+        clearAllFilters() {
+            this.search = "";
+            this.statusFilter = "";
+            this.dateRangeDisplay = "";
+            this.activeQuickFilter = null;
+            this.currentPage = 1;
+
+            if (this.dateRangePicker) {
+                this.dateRangePicker.clear();
             }
+
+            this.loadInvoices();
         },
 
-        // Get status badge class
-        getStatusBadgeClass(status) {
-            const classes = {
-                draft: "bg-gray-100 text-gray-800",
-                sent: "bg-blue-100 text-blue-800",
-                paid: "bg-green-100 text-green-800",
-                cancelled: "bg-red-100 text-red-800",
-            };
-            return classes[status] || "bg-gray-100 text-gray-800";
+        hasActiveFilters() {
+            return !!(
+                this.search ||
+                this.statusFilter ||
+                this.startDate ||
+                this.endDate ||
+                this.showDeleted
+            );
+        },
+
+        getActiveFiltersCount() {
+            let count = 0;
+            if (this.search) count++;
+            if (this.statusFilter) count++;
+            if (this.startDate || this.endDate) count++;
+            if (this.showDeleted) count++;
+            return count;
         },
 
         // Format currency
@@ -1126,557 +1127,15 @@ function invoiceDemoData() {
             return window.invoiceDemoManager.formatDate(dateString);
         },
 
-        // Additional helper methods for pagination and UI
-        getPageNumbers() {
-            const pages = [];
-            const start = Math.max(1, this.currentPage - 2);
-            const end = Math.min(this.totalPages, start + 4);
-
-            for (let i = start; i <= end; i++) {
-                pages.push(i);
-            }
-            return pages;
-        },
-
-        // Change page helper
-        changePage(page) {
-            this.goToPage(page);
-        },
-
-        // Edit invoice helper
-        editInvoice(uuid) {
-            const invoice = this.invoices.find((inv) => inv.uuid === uuid);
-            if (invoice) {
-                this.openEditModal(invoice);
-            }
-        },
-
-        // Helper methods moved to avoid duplication - see methods above
-
-        // ==================== MINI-MODAL METHODS ====================
-
-        // Add new insurance company
-        async addNewInsuranceCompany() {
-            if (!this.newInsuranceCompany.name.trim()) return;
-
-            try {
-                // Add to local list immediately for better UX
-                const newCompany = this.newInsuranceCompany.name.trim();
-                if (
-                    !this.formData.common_insurance_companies.includes(
-                        newCompany
-                    )
-                ) {
-                    this.formData.common_insurance_companies.push(newCompany);
-                    this.formData.common_insurance_companies.sort();
-                }
-
-                // Set the new company as selected
-                this.form.insurance_company = newCompany;
-
-                // Close modal and reset
-                this.showAddInsuranceModal = false;
-                this.newInsuranceCompany.name = "";
-
-                window.invoiceDemoManager.showSuccess(
-                    `Insurance company "${newCompany}" added successfully`
-                );
-            } catch (error) {
-                console.error("Failed to add insurance company:", error);
-                window.invoiceDemoManager.showError(
-                    "Failed to add insurance company"
-                );
-            }
-        },
-
-        // Add new type of loss
-        async addNewTypeOfLoss() {
-            if (!this.newTypeOfLoss.name.trim()) return;
-
-            try {
-                // Add to local list immediately for better UX
-                const newType = this.newTypeOfLoss.name.trim();
-                if (!this.formData.type_of_loss_options.includes(newType)) {
-                    this.formData.type_of_loss_options.push(newType);
-                    this.formData.type_of_loss_options.sort();
-                }
-
-                // Set the new type as selected
-                this.form.type_of_loss = newType;
-
-                // Close modal and reset
-                this.showAddTypeOfLossModal = false;
-                this.newTypeOfLoss.name = "";
-
-                window.invoiceDemoManager.showSuccess(
-                    `Type of loss "${newType}" added successfully`
-                );
-            } catch (error) {
-                console.error("Failed to add type of loss:", error);
-                window.invoiceDemoManager.showError(
-                    "Failed to add type of loss"
-                );
-            }
-        },
-
-        // ==================== FORMATTING METHODS ====================
-
-        // Format phone input in real-time
-        formatPhoneInput(event) {
-            const input = event.target;
-            const isBackspace = event.inputType === "deleteContentBackward";
-            let value = input.value.replace(/\D/g, "");
-
-            if (isBackspace) {
-                // Para backspace, mantener el valor actual sin agregar más caracteres
-            } else {
-                // Limitar a 10 dígitos
-                value = value.substring(0, 10);
-            }
-
-            let formattedValue = "";
-            if (value.length === 0) {
-                formattedValue = "";
-            } else if (value.length <= 3) {
-                formattedValue = `(${value}`;
-            } else if (value.length <= 6) {
-                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
-                    3
-                )}`;
-            } else {
-                formattedValue = `(${value.substring(0, 3)}) ${value.substring(
-                    3,
-                    6
-                )}-${value.substring(6)}`;
-            }
-
-            input.value = formattedValue;
-            this.form.bill_to_phone = formattedValue;
-        },
-
-        // Format name input (capitalize with spaces)
-        formatNameInput(event) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Capitalizar la primera letra de cada palabra
-            const capitalizedValue = value.replace(/\b\w/g, (match) =>
-                match.toUpperCase()
-            );
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (capitalizedValue !== value) {
-                input.value = capitalizedValue;
-                this.form.bill_to_name = capitalizedValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // Format uppercase input (for claim/policy numbers)
-        formatUppercaseInput(event, fieldName) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Convertir letras a mayúsculas, mantener números y guiones
-            const uppercaseValue = value.toUpperCase();
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (uppercaseValue !== value) {
-                input.value = uppercaseValue;
-                this.form[fieldName] = uppercaseValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // Format invoice number input (ensure it starts with VG- and is uppercase)
-        formatInvoiceNumberInput(event) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Convertir a mayúsculas
-            let uppercaseValue = value.toUpperCase();
-
-            // Asegurar que comience con VG-
-            if (
-                !uppercaseValue.startsWith("VG-") &&
-                uppercaseValue.length > 0
-            ) {
-                if (uppercaseValue.startsWith("VG")) {
-                    uppercaseValue = "VG-" + uppercaseValue.substring(2);
-                } else {
-                    uppercaseValue = "VG-" + uppercaseValue;
-                }
-            }
-
-            // Permitir solo números después del prefijo VG-
-            if (uppercaseValue.startsWith("VG-")) {
-                const prefix = "VG-";
-                const numericPart = uppercaseValue.substring(prefix.length);
-                // Reemplazar cualquier carácter no numérico en la parte después del prefijo
-                const numericOnly = numericPart.replace(/[^0-9]/g, "");
-                uppercaseValue = prefix + numericOnly;
-            }
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (uppercaseValue !== value) {
-                input.value = uppercaseValue;
-                this.form.invoice_number = uppercaseValue;
-                // Ajustar la posición del cursor si se agregó el prefijo
-                const cursorAdjustment = uppercaseValue.length - value.length;
-                input.setSelectionRange(
-                    cursorPosition + cursorAdjustment,
-                    cursorPosition + cursorAdjustment
-                );
-            }
-        },
-
-        // Format service description input (all uppercase)
-        formatServiceDescriptionInput(event, itemIndex) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Convertir todo a mayúsculas
-            const uppercaseValue = value.toUpperCase();
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (uppercaseValue !== value) {
-                input.value = uppercaseValue;
-                this.form.items[itemIndex].service_name = uppercaseValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // Format notes input (capitalize only first letter)
-        formatNotesInput(event) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Capitalizar solo la primera letra del texto completo
-            const capitalizedValue =
-                value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (capitalizedValue !== value && value.length > 0) {
-                input.value = capitalizedValue;
-                this.form.notes = capitalizedValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // Format address input (capitalize each word)
-        formatAddressInput(event) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Capitalizar la primera letra de cada palabra
-            const capitalizedValue = value.replace(/\b\w/g, (match) =>
-                match.toUpperCase()
-            );
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (capitalizedValue !== value) {
-                input.value = capitalizedValue;
-                this.form.bill_to_address = capitalizedValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // Format item description input (capitalize each word)
-        formatItemDescriptionInput(event, itemIndex) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Capitalizar la primera letra de cada palabra
-            const capitalizedValue = value.replace(/\b\w/g, (match) =>
-                match.toUpperCase()
-            );
-
-            // Solo actualizar si hay cambios para evitar loops
-            if (capitalizedValue !== value) {
-                input.value = capitalizedValue;
-                this.form.items[itemIndex].description = capitalizedValue;
-                // Restaurar la posición del cursor
-                input.setSelectionRange(cursorPosition, cursorPosition);
-            }
-        },
-
-        // ==================== CURRENCY INPUT FORMATTING ====================
-
-        // Format currency input with thousands separator and decimals
-        formatCurrencyInput(event, itemIndex) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Remove all non-numeric characters except decimal point
-            let numericValue = value.replace(/[^0-9.]/g, "");
-
-            // Handle multiple decimal points - keep only the first one
-            const decimalParts = numericValue.split(".");
-            if (decimalParts.length > 2) {
-                numericValue =
-                    decimalParts[0] + "." + decimalParts.slice(1).join("");
-            }
-
-            // Limit to 2 decimal places
-            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
-                numericValue =
-                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
-            }
-
-            // Convert to number for formatting
-            const numberValue = parseFloat(numericValue) || 0;
-
-            // Format for display with thousands separator
-            let formattedValue = "";
-            if (numericValue === "" || numericValue === "0") {
-                formattedValue = "";
-            } else if (numericValue.endsWith(".")) {
-                // If user is typing decimal point, keep it
-                const integerPart =
-                    Math.floor(numberValue).toLocaleString("en-US");
-                formattedValue = integerPart + ".";
-            } else if (
-                numericValue.includes(".") &&
-                numericValue.split(".")[1].length === 1
-            ) {
-                // If user has typed one decimal place
-                const integerPart =
-                    Math.floor(numberValue).toLocaleString("en-US");
-                const decimalPart = numericValue.split(".")[1];
-                formattedValue = integerPart + "." + decimalPart;
-            } else {
-                // Format with full decimals or whole number
-                formattedValue = numberValue.toLocaleString("en-US", {
-                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
-                    maximumFractionDigits: 2,
-                });
-            }
-
-            // Update input value and model
-            if (formattedValue !== value) {
-                input.value = formattedValue;
-
-                // Store raw numeric value for calculations
-                this.form.items[itemIndex].rate = numericValue;
-
-                // Calculate totals after updating rate
-                this.calculateTotals();
-
-                // Adjust cursor position after formatting
-                const lengthDifference = formattedValue.length - value.length;
-                const newCursorPosition = Math.max(
-                    0,
-                    cursorPosition + lengthDifference
-                );
-
-                // Set cursor position in next tick to avoid conflicts
-                setTimeout(() => {
-                    input.setSelectionRange(
-                        newCursorPosition,
-                        newCursorPosition
-                    );
-                }, 0);
-            }
-        },
-
-        // Format general currency inputs (for subtotal, tax_amount, etc.)
-        formatGeneralCurrencyInput(event, fieldName) {
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Remove all non-numeric characters except decimal point
-            let numericValue = value.replace(/[^0-9.]/g, "");
-
-            // Handle multiple decimal points - keep only the first one
-            const decimalParts = numericValue.split(".");
-            if (decimalParts.length > 2) {
-                numericValue =
-                    decimalParts[0] + "." + decimalParts.slice(1).join("");
-            }
-
-            // Limit to 2 decimal places
-            if (decimalParts.length === 2 && decimalParts[1].length > 2) {
-                numericValue =
-                    decimalParts[0] + "." + decimalParts[1].substring(0, 2);
-            }
-
-            // Convert to number for formatting
-            const numberValue = parseFloat(numericValue) || 0;
-
-            // Format for display with thousands separator
-            let formattedValue = "";
-            if (numericValue === "" || numericValue === "0") {
-                formattedValue = "";
-            } else if (numericValue.endsWith(".")) {
-                // If user is typing decimal point, keep it
-                const integerPart =
-                    Math.floor(numberValue).toLocaleString("en-US");
-                formattedValue = integerPart + ".";
-            } else if (
-                numericValue.includes(".") &&
-                numericValue.split(".")[1].length === 1
-            ) {
-                // If user has typed one decimal place
-                const integerPart =
-                    Math.floor(numberValue).toLocaleString("en-US");
-                const decimalPart = numericValue.split(".")[1];
-                formattedValue = integerPart + "." + decimalPart;
-            } else {
-                // Format with full decimals or whole number
-                formattedValue = numberValue.toLocaleString("en-US", {
-                    minimumFractionDigits: numericValue.includes(".") ? 2 : 0,
-                    maximumFractionDigits: 2,
-                });
-            }
-
-            // Update input value and model
-            if (formattedValue !== value) {
-                input.value = formattedValue;
-
-                // Store raw numeric value for calculations
-                this.form[fieldName] = numericValue;
-
-                // Calculate totals after updating financial fields
-                if (fieldName === "subtotal" || fieldName === "tax_amount") {
-                    this.calculateTotals();
-                }
-
-                // Adjust cursor position after formatting
-                const lengthDifference = formattedValue.length - value.length;
-                const newCursorPosition = Math.max(
-                    0,
-                    cursorPosition + lengthDifference
-                );
-
-                // Set cursor position in next tick to avoid conflicts
-                setTimeout(() => {
-                    input.setSelectionRange(
-                        newCursorPosition,
-                        newCursorPosition
-                    );
-                }, 0);
-            }
-        },
-
-        toggleDeleted() {
-            this.currentPage = 1;
-            this.loadInvoices();
-        },
-
-        // ========== NUEVAS FUNCIONES PARA FILTROS OPTIMIZADOS ==========
-
-        // Toggle advanced filters
-        showAdvancedFilters: false,
-        activeQuickFilter: null,
-
-        // Clear all filters
-        clearAllFilters() {
-            this.search = "";
-            this.statusFilter = "";
-            this.dateRangeDisplay = "";
-            this.activeQuickFilter = null;
-            this.currentPage = 1;
-
-            // Clear flatpickr if exists
-            if (this.dateRangePicker) {
-                this.dateRangePicker.clear();
-            }
-
-            this.loadInvoices();
-        },
-
-        // Check if there are active filters
-        hasActiveFilters() {
-            return !!(
-                this.search ||
-                this.statusFilter ||
-                this.startDate ||
-                this.endDate ||
-                this.showDeleted
-            );
-        },
-
-        // Get count of active filters
-        getActiveFiltersCount() {
-            let count = 0;
-            if (this.search) count++;
-            if (this.statusFilter) count++;
-            if (this.startDate || this.endDate) count++;
-            if (this.showDeleted) count++;
-            return count;
-        },
-
-        // Enhanced setDateRange with active filter tracking
-        setDateRange(range) {
-            this.activeQuickFilter = range;
-            const today = new Date();
-            let startDate, endDate;
-
-            switch (range) {
-                case "today":
-                    startDate = endDate = today.toISOString().split("T")[0];
-                    break;
-                case "last7days":
-                    startDate = new Date(today.setDate(today.getDate() - 7))
-                        .toISOString()
-                        .split("T")[0];
-                    endDate = new Date().toISOString().split("T")[0];
-                    break;
-                case "last30days":
-                    startDate = new Date(today.setDate(today.getDate() - 30))
-                        .toISOString()
-                        .split("T")[0];
-                    endDate = new Date().toISOString().split("T")[0];
-                    break;
-                case "thisMonth":
-                    startDate = new Date(
-                        today.getFullYear(),
-                        today.getMonth(),
-                        1
-                    )
-                        .toISOString()
-                        .split("T")[0];
-                    endDate = new Date(
-                        today.getFullYear(),
-                        today.getMonth() + 1,
-                        0
-                    )
-                        .toISOString()
-                        .split("T")[0];
-                    break;
-                case "thisYear":
-                    startDate = new Date(today.getFullYear(), 0, 1)
-                        .toISOString()
-                        .split("T")[0];
-                    endDate = new Date(today.getFullYear(), 11, 31)
-                        .toISOString()
-                        .split("T")[0];
-                    break;
-            }
-
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.dateRangeDisplay = `${startDate} to ${endDate}`;
-
-            if (this.dateRangePicker) {
-                this.dateRangePicker.setDate([startDate, endDate]);
-            }
-
-            this.filterByDateRange();
+        // Get status badge class
+        getStatusBadgeClass(status) {
+            const classes = {
+                draft: "bg-gray-100 text-gray-800",
+                sent: "bg-blue-100 text-blue-800",
+                paid: "bg-green-100 text-green-800",
+                cancelled: "bg-red-100 text-red-800",
+            };
+            return classes[status] || "bg-gray-100 text-gray-800";
         },
     };
 }

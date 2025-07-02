@@ -30,7 +30,9 @@ class InvoiceDemoService
         string $status = '',
         string $sortBy = 'created_at',
         string $sortOrder = 'desc',
-        bool $includeDeleted = false
+        bool $includeDeleted = false,
+        string $startDate = '',
+        string $endDate = ''
     ): LengthAwarePaginator {
         $cacheKey = $this->generateCacheKey('invoices', [
             'page' => $page,
@@ -39,11 +41,13 @@ class InvoiceDemoService
             'status' => $status,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
-            'include_deleted' => $includeDeleted
+            'include_deleted' => $includeDeleted,
+            'start_date' => $startDate,
+            'end_date' => $endDate
         ]);
 
         return Cache::remember($cacheKey, $this->cacheTime, function () use (
-            $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted
+            $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted, $startDate, $endDate
         ) {
             $query = InvoiceDemo::with(['user', 'items']);
 
@@ -70,6 +74,31 @@ class InvoiceDemoService
             // Apply status filter
             if (!empty($status)) {
                 $query->where('status', $status);
+            }
+
+            // ✅ NEW: Apply date range filters
+            if (!empty($startDate)) {
+                try {
+                    $startDateTime = Carbon::parse($startDate)->startOfDay();
+                    $query->where('invoice_date', '>=', $startDateTime);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid start date format', [
+                        'start_date' => $startDate,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            if (!empty($endDate)) {
+                try {
+                    $endDateTime = Carbon::parse($endDate)->endOfDay();
+                    $query->where('invoice_date', '<=', $endDateTime);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid end date format', [
+                        'end_date' => $endDate,
+                        'error' => $e->getMessage()
+                    ]);
+                }
             }
 
             // Apply sorting

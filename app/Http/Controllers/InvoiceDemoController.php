@@ -75,7 +75,9 @@ class InvoiceDemoController extends BaseController
                     status: (string) $request->get('status', ''),
                     sortBy: (string) $request->get('sort_by', 'created_at'),
                     sortOrder: (string) $request->get('sort_order', 'desc'),
-                    includeDeleted: $request->boolean('include_deleted')
+                    includeDeleted: $request->boolean('include_deleted'),
+                    startDate: (string) $request->get('start_date', ''),
+                    endDate: (string) $request->get('end_date', '')
                 );
 
                 return response()->json([
