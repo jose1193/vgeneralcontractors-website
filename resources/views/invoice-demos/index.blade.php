@@ -605,7 +605,7 @@
 
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                             <!-- Date Range -->
-                            <div class="lg:col-span-4">
+                            <div class="lg:col-span-5">
                                 <label class="block text-sm font-medium text-white/90 mb-2">📅 Date Range</label>
                                 <input type="text" id="dateRangePicker" x-model="dateRangeDisplay"
                                     placeholder="Select date range..."
@@ -614,7 +614,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-6">
+                            <div class="lg:col-span-5">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
