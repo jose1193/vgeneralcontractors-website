@@ -3,10 +3,6 @@
 @section('title', 'Invoice Management')
 
 
-
-
-
-
 @section('content')
     <style>
         /* Modern Animated Gradient Header with Particles */
@@ -231,7 +227,7 @@
         }
 
         /* Ensure maximum z-index and proper positioning */
-        body > .flatpickr-calendar,
+        body>.flatpickr-calendar,
         .flatpickr-calendar.open,
         .flatpickr-calendar.inline {
             z-index: 999999 !important;
@@ -1040,6 +1036,6 @@
             </div>
         </div>
 
-            <script src="{{ asset('js/invoice-demos.js') }}"></script>
-        
+        <script src="{{ asset('js/invoice-demos.js') }}"></script>
+
     @endsection

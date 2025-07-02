@@ -244,7 +244,7 @@ class InvoiceDemoManager {
                 confirmButtonText: "OK",
                 showConfirmButton: true,
                 timer: 5000,
-                timerProgressBar: true
+                timerProgressBar: true,
             });
         } else {
             alert(message);
@@ -281,8 +281,6 @@ class InvoiceDemoManager {
             day: "numeric",
         });
     }
-
-
 
     /**
      * Show error notification
@@ -535,10 +533,10 @@ function invoiceDemoData() {
         // Initialize component
         async init() {
             console.log("🚀 Initializing Invoice Demo Manager...");
-            
+
             // Ensure DOM is ready before initializing
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", () => {
                     this.initializeComponents();
                 });
             } else {
@@ -550,12 +548,7 @@ function invoiceDemoData() {
             console.log("🔧 Initializing components...");
             await this.loadFormData();
             await this.loadInvoices();
-            
-            // Initialize date picker with a delay to ensure all scripts and DOM are ready
-            setTimeout(() => {
-                console.log("🔧 Starting date picker initialization...");
-                this.initializeDatePicker();
-            }, 300);
+            this.initializeDatePicker();
         },
 
         // Load form data
@@ -575,6 +568,10 @@ function invoiceDemoData() {
         // Load invoices
         async loadInvoices() {
             this.loading = true;
+            console.log(
+                "📊 Loading invoices with showDeleted:",
+                this.showDeleted
+            );
             try {
                 const response = await window.invoiceDemoManager.loadInvoices(
                     this.currentPage,
@@ -623,124 +620,55 @@ function invoiceDemoData() {
 
         // Initialize Flatpickr
         initializeDatePicker() {
-            console.log("🔧 Initializing date picker...");
-
-            // Check if flatpickr is available
-            if (typeof flatpickr === 'undefined') {
-                console.warn("⚠️ Flatpickr not available, retrying in 500ms...");
-                setTimeout(() => this.initializeDatePicker(), 500);
-                return;
-            }
-
-            const dateInput = document.getElementById('dateRangePicker');
-            if (!dateInput) {
-                console.warn("⚠️ Date input element not found, retrying in 500ms...");
-                setTimeout(() => this.initializeDatePicker(), 500);
-                return;
-            }
-
-            console.log("📅 Found date input element:", dateInput);
-            console.log("📅 Input styles:", window.getComputedStyle(dateInput));
-
-            try {
-                // Destroy any existing instance
-                if (this.dateRangePicker && typeof this.dateRangePicker.destroy === 'function') {
-                    console.log("🗑️ Destroying existing Flatpickr instance...");
-                    this.dateRangePicker.destroy();
-                }
-
-                // Remove readonly temporarily to test
-                dateInput.removeAttribute('readonly');
-
-                // Initialize Flatpickr with enhanced config
-                this.dateRangePicker = flatpickr(dateInput, {
+            // Wait for DOM to be ready
+            this.$nextTick(() => {
+                // Initialize flatpickr for date range
+                const picker = flatpickr("#dateRangePicker", {
                     mode: "range",
                     dateFormat: "Y-m-d",
                     altInput: true,
                     altFormat: "M j, Y",
-                    allowInput: false,
-                    clickOpens: true,
-                    static: false,
+                    showMonths: window.innerWidth > 768 ? 2 : 1,
                     appendTo: document.body,
-                    positionElement: dateInput,
-                    ignoredFocusElements: [],
-                    onReady: function(selectedDates, dateStr, instance) {
-                        console.log("📅 Flatpickr ready!", instance);
-                        // Re-add readonly after initialization
-                        dateInput.setAttribute('readonly', 'readonly');
-                    },
-                    onOpen: function(selectedDates, dateStr, instance) {
-                        console.log("📅 Flatpickr opened!");
-                        // Force maximum z-index and positioning
-                        const calendar = instance.calendarContainer;
-                        if (calendar) {
-                            calendar.style.zIndex = "999999";
-                            calendar.style.position = "fixed";
-                            calendar.style.pointerEvents = "auto";
-                            console.log("📅 Calendar z-index set to 999999");
-                        }
-                    },
-                    onClose: function(selectedDates, dateStr, instance) {
-                        console.log("📅 Flatpickr closed with dates:", selectedDates);
+                    static: false,
+
+                    onClose: (selectedDates) => {
                         if (selectedDates.length === 2) {
-                            // Update the display and trigger filtering
-                            const startDate = selectedDates[0].toISOString().split('T')[0];
-                            const endDate = selectedDates[1].toISOString().split('T')[0];
-                            console.log("📅 Date range selected:", startDate, "to", endDate);
+                            this.startDate = selectedDates[0]
+                                .toISOString()
+                                .split("T")[0];
+                            this.endDate = selectedDates[1]
+                                .toISOString()
+                                .split("T")[0];
+                            this.activeQuickFilter = null; // Clear active quick filter
+                            this.currentPage = 1;
+                            this.loadInvoices();
+                        } else if (selectedDates.length === 0) {
+                            // Handle clear case
+                            this.startDate = "";
+                            this.endDate = "";
+                            this.dateRangeDisplay = "";
+                            this.activeQuickFilter = null;
+                            this.currentPage = 1;
+                            this.loadInvoices();
                         }
                     },
-                    onChange: function(selectedDates, dateStr, instance) {
-                        console.log("📅 Date changed:", selectedDates, dateStr);
+
+                    onClear: () => {
+                        this.startDate = "";
+                        this.endDate = "";
+                        this.dateRangeDisplay = "";
+                        this.activeQuickFilter = null;
+                        this.currentPage = 1;
+                        this.loadInvoices();
                     },
-                    onClear: function() {
-                        console.log("📅 Date cleared");
-                    }
                 });
 
-                // Store reference for later use
-                this.flatpickrInstance = this.dateRangePicker;
+                this.dateRangePicker = picker;
 
-                console.log("✅ Flatpickr initialized successfully");
-                console.log("📅 Picker instance:", this.dateRangePicker);
-
-                // Add multiple event listeners for debugging and manual opening
-                dateInput.addEventListener('click', (e) => {
-                    console.log("🖱️ Input clicked!", e);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (this.dateRangePicker) {
-                        console.log("📅 Manually opening calendar...");
-                        this.dateRangePicker.open();
-                    }
-                });
-
-                dateInput.addEventListener('focus', (e) => {
-                    console.log("🎯 Input focused!", e);
-                    if (this.dateRangePicker) {
-                        this.dateRangePicker.open();
-                    }
-                });
-
-                // Test if calendar opens programmatically
-                setTimeout(() => {
-                    console.log("🧪 Testing calendar open...");
-                    if (this.dateRangePicker) {
-                        this.dateRangePicker.open();
-                        setTimeout(() => {
-                            this.dateRangePicker.close();
-                            console.log("🧪 Test complete - calendar should have opened and closed");
-                        }, 1000);
-                    }
-                }, 2000);
-
-            } catch (error) {
-                console.error("❌ Error initializing Flatpickr:", error);
-                // Retry after a delay
-                setTimeout(() => {
-                    console.log("🔄 Retrying Flatpickr initialization...");
-                    this.initializeDatePicker();
-                }, 1000);
-            }
+                // Debug log
+                console.log("📅 Flatpickr initialized successfully");
+            });
         },
 
         // Set predefined date ranges
@@ -805,10 +733,8 @@ function invoiceDemoData() {
             this.activeQuickFilter = null;
 
             // Update flatpickr display
-            if (this.dateRangePicker && typeof this.dateRangePicker.clear === 'function') {
+            if (this.dateRangePicker) {
                 this.dateRangePicker.clear();
-            } else if (this.flatpickrInstance && typeof this.flatpickrInstance.clear === 'function') {
-                this.flatpickrInstance.clear();
             }
 
             this.currentPage = 1;
@@ -1113,8 +1039,6 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
-                // ✅ FIXED: Automatically enable "Show Deleted" to see the deleted invoice
-                this.showDeleted = true;
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
@@ -1173,8 +1097,6 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
-                // ✅ FIXED: Automatically disable "Show Deleted" to see the restored invoice in normal view
-                this.showDeleted = false;
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
@@ -1188,6 +1110,7 @@ function invoiceDemoData() {
         // ============ ADDITIONAL METHODS ============
 
         toggleDeleted() {
+            console.log("🔄 Toggle Show Deleted:", this.showDeleted);
             this.currentPage = 1;
             this.loadInvoices();
         },
@@ -1205,17 +1128,9 @@ function invoiceDemoData() {
             this.showDeleted = false;
             this.currentPage = 1;
 
-            // Clear flatpickr instance if exists
-            if (this.flatpickrInstance && typeof this.flatpickrInstance.clear === 'function') {
-                this.flatpickrInstance.clear();
-            } else if (this.dateRangePicker && typeof this.dateRangePicker.clear === 'function') {
+            // Clear flatpickr
+            if (this.dateRangePicker) {
                 this.dateRangePicker.clear();
-            }
-            
-            // Also try to clear using the global flatpickr approach
-            const dateInput = document.getElementById("dateRangePicker");
-            if (dateInput && dateInput._flatpickr && typeof dateInput._flatpickr.clear === 'function') {
-                dateInput._flatpickr.clear();
             }
 
             // Force reload invoices with cleared filters
