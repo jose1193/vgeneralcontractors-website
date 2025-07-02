@@ -578,7 +578,7 @@
                         </div>
 
                         <!-- Create Button -->
-                        <div class="lg:col-span-2">
+                        <div class="lg:col-span-3">
                             <button @click="openCreateModal()"
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-green-500/30 to-emerald-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-green-600/40 hover:to-emerald-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
@@ -659,11 +659,11 @@
                                 </div>
                             </div>
 
-                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
-                            <div class="lg:col-span-3 flex items-end justify-between">
+                            <!-- Show Deleted Toggle Switch -->
+                            <div class="lg:col-span-2 flex items-end justify-start">
                                 <!-- Toggle Switch for Show Deleted -->
-                                <div class="flex items-center space-x-3">
-                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
+                                <div class="flex items-center space-x-2">
+                                    <label class="text-sm text-white/90 font-medium whitespace-nowrap">🗑️ Show Deleted</label>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
                                             class="sr-only peer">
@@ -672,8 +672,6 @@
                                         </div>
                                     </label>
                                 </div>
-
-                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
