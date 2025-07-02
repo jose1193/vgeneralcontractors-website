@@ -99,7 +99,7 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             border-radius: 1rem;
-            border: 2px solid transparent;
+            border: 1px solid transparent;
             background: linear-gradient(90deg, #f59e0b, #eab308, #8b5cf6, #d946ef, #f59e0b) border-box;
             background-size: 200% auto;
             -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
@@ -107,6 +107,29 @@
             mask-composite: exclude;
             z-index: 0; 
             animation: rotateGradient 3s linear infinite;
+        }
+
+        .table-container {
+            position: relative;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+            overflow: hidden; /* Ensures the child table respects the border radius */
+        }
+
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1rem;
+            border: 1px solid transparent;
+            background: linear-gradient(90deg, #f59e0b, #eab308, #8b5cf6, #d946ef, #f59e0b) border-box;
+            background-size: 200% auto;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            z-index: 1; 
+            animation: rotateGradient 3s linear infinite;
+            pointer-events: none; /* Allows interaction with the table */
         }
 
         /* Modern Glass Input */
@@ -442,8 +465,9 @@
                 </div>
 
                 <!-- Table -->
-                <div x-show="!loading" class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-700">
+                 <div x-show="!loading" class="table-container">
+                     <div class="overflow-x-auto rounded-lg">
+                        <table class="min-w-full text-sm text-left text-gray-300 bg-gray-800/50 divide-y divide-gray-700">
                         <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                             <tr>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
