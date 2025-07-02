@@ -169,7 +169,11 @@
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
-            z-index: 9999 !important;
+            z-index: 99999 !important;
+            position: fixed !important;
+            top: auto !important;
+            max-height: 400px !important;
+            overflow-y: auto !important;
         }
 
         .flatpickr-day.selected {
@@ -204,7 +208,33 @@
 
         /* Ensure proper stacking order */
         body>.flatpickr-calendar {
-            z-index: 10000 !important;
+            z-index: 99999 !important;
+        }
+
+        /* Additional Flatpickr positioning fixes */
+        .flatpickr-calendar.open {
+            z-index: 99999 !important;
+        }
+
+        .flatpickr-calendar.arrowTop:before,
+        .flatpickr-calendar.arrowTop:after {
+            border-bottom-color: rgba(30, 30, 30, 0.95) !important;
+        }
+
+        /* Prevent calendar from being cut off */
+        .flatpickr-input[readonly] {
+            cursor: pointer !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* Improve flatpickr responsiveness */
+        @media (max-width: 768px) {
+            .flatpickr-calendar {
+                width: 90vw !important;
+                max-width: 350px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
         }
 
         /* Modern Button Styles */
@@ -588,12 +618,17 @@
                                     </button>
                                     <!-- Clear Filters Button -->
                                     <button @click="clearAllFilters()"
-                                        class="px-3 py-2 text-xs backdrop-blur-md bg-red-500/20 border border-red-400/30 text-red-200 rounded-md hover:bg-red-500/30 hover:text-white transition-colors duration-200"
-                                        title="Clear all filters">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-md hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md"
+                                        title="Clear all filters and reset"
+                                        :class="{ 'animate-pulse': hasActiveFilters() }">
+                                        <div class="flex items-center space-x-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                            <span class="hidden sm:inline text-xs">Clear</span>
+                                        </div>
                                     </button>
                                 </div>
                             </div>
@@ -614,10 +649,10 @@
 
                                 <!-- Collapse Indicator -->
                                 <div class="flex items-center">
-                                    <span class="text-xs text-white/60 mr-2">Collapse</span>
-                                    <svg class="w-5 h-5 text-white/60 animate-bounce" fill="none"
+                                    <span class="text-xs text-purple-200 mr-2 font-medium">Collapse</span>
+                                    <svg class="w-5 h-5 text-purple-300 animate-bounce drop-shadow-sm" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                                     </svg>
                                 </div>
@@ -688,8 +723,8 @@
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
                                         Balance Due
                                         <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1 text-gray-300"
-                                            :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            :class="sortOrder === 'asc' ? 'transform rotate-180' : ''"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 9l-7 7-7-7"></path>
                                         </svg>

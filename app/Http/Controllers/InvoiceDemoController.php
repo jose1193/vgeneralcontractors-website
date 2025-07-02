@@ -28,8 +28,8 @@ use Throwable;
 class InvoiceDemoController extends BaseController
 {
     use CacheTraitCrud;
-    
-    protected int $cacheTime = 300; // 5 minutes
+        
+    protected int int $cacheTim3 0= 3005 // 5 mt
     protected InvoiceDemoService $invoiceService;
     protected InvoicePdfService $pdfService;
 
@@ -274,6 +274,13 @@ class InvoiceDemoController extends BaseController
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
             $this->invoiceService->deleteInvoice($invoice, auth()->id());
+            
+            // ✅ IMPROVED: Clear cache immediately after delete
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demos');
+            
+            // ✅ IMPROVED: Call afterDelete hook
+            $this->afterDelete($invoice);
 
             return response()->json([
                 'success' => true,
@@ -308,19 +315,19 @@ class InvoiceDemoController extends BaseController
         try {
             $invoice = InvoiceDemo::withTrashed()->where('uuid', $uuid)->firstOrFail();
             
-            $this->invoiceService->restoreInvoice($invoice, auth()->id());
+            $restoredInvoice = $this->invoiceService->restoreInvoice($invoice, auth()->id());
+            
+            // ✅ IMPROVED: CleaM: Clearimmadictelymmediately after restore
+            $this->markSignificantDataChange();
+            $this->clearCrudCache('invoice_demos');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Invoice demo restored successfully'
-            ]);
-        } catch (Throwable $e) {
+            h (Throwable $e) {
             Log::error('Failed to restore invoice demo', [
                 'error' => $e->getMessage(),
-                'invoice_uuid' => $uuid,
-                'user_id' => auth()->id()
-            ]);
-
+             
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to restore invoice demo'
@@ -681,6 +688,56 @@ class InvoiceDemoController extends BaseController
             
             // Fallback: Queue PDF generation as backup
             GenerateInvoicePdf::dispatch($entity, true);
+        }
+    }
+
+    /**
+     * ✅ NEW: After restore hook
+     */
+    protected function afterRestore($entity): void
+    {
+        try {
+            $invoice = $entity; // $entity is already an InvoiceDemo instance
+            
+            Log::info('Invoice restored successfully', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'user_id' => auth()->id()
+            ]);
+            
+            // Send email notification for restored invoice
+            ProcessInvoiceEmail::dispatch($invoice, 'restored');
+            
+        } catch (Throwable $e) {
+            Log::error('Error in afterRestore hook', [
+                'error' => $e->getMessage(),
+                'invoice_id' => $entity->id ?? 'unknown'
+            ]);
+        }
+    }
+
+    /**
+     * ✅ NEW: After delete hook
+     */
+    protected function afterDelete($entity): void
+    {
+        try {
+            $invoice = $entity; // $entity is already an InvoiceDemo instance
+            
+            Log::info('Invoice deleted successfully', [
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'user_id' => auth()->id()
+            ]);
+            
+            // Send email notification for deleted invoice
+            ProcessInvoiceEmail::dispatch($invoice, 'deleted');
+            
+        } catch (Throwable $e) {
+            Log::error('Error in afterDelete hook', [
+                'error' => $e->getMessage(),
+                'invoice_id' => $entity->id ?? 'unknown'
+            ]);
         }
     }
 

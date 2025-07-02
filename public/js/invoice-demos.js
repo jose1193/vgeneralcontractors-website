@@ -610,36 +610,71 @@ function invoiceDemoData() {
 
         // Initialize Flatpickr
         initializeDatePicker() {
-            // Initialize flatpickr for date range
-            const picker = flatpickr("#dateRangePicker", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                altInput: true,
-                altFormat: "M j, Y",
-                showMonths: 2,
-                theme: "dark",
-                onClose: (selectedDates) => {
-                    if (selectedDates.length === 2) {
-                        this.startDate = selectedDates[0]
-                            .toISOString()
-                            .split("T")[0];
-                        this.endDate = selectedDates[1]
-                            .toISOString()
-                            .split("T")[0];
+            // Wait for DOM to be ready
+            this.$nextTick(() => {
+                // Initialize flatpickr for date range with improved positioning
+                const picker = flatpickr("#dateRangePicker", {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "M j, Y",
+                    showMonths: window.innerWidth > 768 ? 2 : 1,
+                    theme: "dark",
+                    position: "auto",
+                    appendTo: document.body,
+                    static: false,
+
+                    // Improved positioning
+                    positionElement: document.getElementById("dateRangePicker"),
+
+                    // Better callbacks
+                    onOpen: () => {
+                        // Ensure proper z-index when opened
+                        const calendar = document.querySelector(
+                            ".flatpickr-calendar"
+                        );
+                        if (calendar) {
+                            calendar.style.zIndex = "99999";
+                        }
+                    },
+
+                    onClose: (selectedDates) => {
+                        if (selectedDates.length === 2) {
+                            this.startDate = selectedDates[0]
+                                .toISOString()
+                                .split("T")[0];
+                            this.endDate = selectedDates[1]
+                                .toISOString()
+                                .split("T")[0];
+                            this.activeQuickFilter = null; // Clear active quick filter
+                            this.currentPage = 1;
+                            this.loadInvoices();
+                        } else if (selectedDates.length === 0) {
+                            // Handle clear case
+                            this.startDate = "";
+                            this.endDate = "";
+                            this.dateRangeDisplay = "";
+                            this.activeQuickFilter = null;
+                            this.currentPage = 1;
+                            this.loadInvoices();
+                        }
+                    },
+
+                    onClear: () => {
+                        this.startDate = "";
+                        this.endDate = "";
+                        this.dateRangeDisplay = "";
+                        this.activeQuickFilter = null;
                         this.currentPage = 1;
                         this.loadInvoices();
-                    }
-                },
-                onClear: () => {
-                    this.startDate = "";
-                    this.endDate = "";
-                    this.dateRangeDisplay = "";
-                    this.currentPage = 1;
-                    this.loadInvoices();
-                },
-            });
+                    },
+                });
 
-            this.dateRangePicker = picker;
+                this.dateRangePicker = picker;
+
+                // Debug log
+                console.log("📅 Flatpickr initialized successfully");
+            });
         },
 
         // Set predefined date ranges
@@ -1085,17 +1120,33 @@ function invoiceDemoData() {
         },
 
         clearAllFilters() {
+            // Clear all search and filter variables
             this.search = "";
             this.statusFilter = "";
+            this.startDate = "";
+            this.endDate = "";
             this.dateRangeDisplay = "";
             this.activeQuickFilter = null;
             this.currentPage = 1;
 
+            // Clear flatpickr instance if exists
             if (this.dateRangePicker) {
                 this.dateRangePicker.clear();
             }
 
+            // Also try to clear using the global flatpickr approach
+            const dateInput = document.getElementById("dateRangePicker");
+            if (dateInput && dateInput._flatpickr) {
+                dateInput._flatpickr.clear();
+            }
+
+            // Force reload invoices with cleared filters
             this.loadInvoices();
+
+            // Show confirmation message
+            window.invoiceDemoManager.showSuccess(
+                "Filters cleared successfully"
+            );
         },
 
         hasActiveFilters() {
