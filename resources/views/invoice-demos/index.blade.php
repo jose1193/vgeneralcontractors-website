@@ -198,6 +198,57 @@
 
         .glass-toggle-thumb {
             background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Animated Gradient Border for Radio Buttons */
+        .animated-gradient-label {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgb(209, 213, 219);
+        }
+
+        .animated-gradient-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #f59e0b, #eab308, #8b5cf6, #d946ef) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        input[type="radio"]:checked + .animated-gradient-label::before {
+            opacity: 1;
+            animation: rotateGradient 4s linear infinite;
+        }
+
+        input[type="radio"]:checked + .animated-gradient-label {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        @keyframes rotateGradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
         }
@@ -347,30 +398,26 @@
                     <!-- Quick Date Ranges -->
                     <div class="lg:col-span-10">
                         <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Quick Date Ranges</label>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button @click="setDateRange('today')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Today
-                            </button>
-                            <button @click="setDateRange('last7days')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                7d
-                            </button>
-                            <button @click="setDateRange('last30days')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                30d
-                            </button>
-                            <button @click="setDateRange('thisMonth')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Month
-                            </button>
-                            <button @click="setDateRange('thisYear')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Year
-                            </button>
-                            <button @click="clearDateRange()"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition-all duration-300 hover:scale-105">
-                                &#x2715;
+                        <div class="flex flex-wrap items-center gap-3">
+                            <input type="radio" id="q_today" name="quick_date_range" class="hidden" @click="setDateRange('today')">
+                            <label for="q_today" class="animated-gradient-label">Today</label>
+
+                            <input type="radio" id="q_7d" name="quick_date_range" class="hidden" @click="setDateRange('last7days')">
+                            <label for="q_7d" class="animated-gradient-label">7d</label>
+
+                            <input type="radio" id="q_30d" name="quick_date_range" class="hidden" @click="setDateRange('last30days')">
+                            <label for="q_30d" class="animated-gradient-label">30d</label>
+
+                            <input type="radio" id="q_month" name="quick_date_range" class="hidden" @click="setDateRange('thisMonth')">
+                            <label for="q_month" class="animated-gradient-label">Month</label>
+
+                            <input type="radio" id="q_year" name="quick_date_range" class="hidden" @click="setDateRange('thisYear')">
+                            <label for="q_year" class="animated-gradient-label">Year</label>
+
+                            <button type="button" @click="clearDateRange()" class="p-2 text-sm rounded-lg modern-button text-red-400 hover:text-red-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
                         </div>
                     </div>
