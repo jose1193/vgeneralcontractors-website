@@ -499,7 +499,7 @@
                     <!-- Main Filter Row -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                         <!-- Search - Takes more space -->
-                        <div class="lg:col-span-3">
+                        <div class="lg:col-span-5">
                             <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
                             <div class="relative">
                                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
@@ -578,8 +578,6 @@
                                 <span class="relative z-10">New Invoice</span>
                             </button>
                         </div>
-
-
                     </div>
 
                     <!-- Advanced Filters - Collapsible -->
@@ -602,7 +600,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-8">
+                            <div class="lg:col-span-5">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
@@ -630,27 +628,26 @@
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisYear' }">
                                         This Year
                                     </button>
+                                    <!-- Clear Filters Button -->
+                                    <button @click="clearAllFilters()"
+                                        class="px-3 py-2 text-xs backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-md hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md"
+                                        title="Clear all filters and reset"
+                                        :class="{ 'animate-pulse': hasActiveFilters() }">
+                                        <div class="flex items-center space-x-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                            <span class="hidden sm:inline text-xs">Clear</span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="mt-6 flex flex-wrap items-center justify-start gap-6">
-                            <!-- Clear Filters Button -->
-                            <div class="flex items-center">
-                                <button @click="clearAllFilters()"
-                                    class="h-11 px-4 glass-button-filter backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-lg hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md"
-                                    title="Clear all filters and reset"
-                                    :class="{ 'animate-pulse': hasActiveFilters() }">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                    <span>Clear Filters</span>
-                                </button>
-                            </div>
-
-                            <!-- Show Deleted Toggle Switch -->
-                            <div class="flex items-center">
+                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
+                            <div class="lg:col-span-3 flex items-end justify-between">
+                                <!-- Toggle Switch for Show Deleted -->
                                 <div class="flex items-center space-x-3">
                                     <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
                                     <label class="relative inline-flex items-center cursor-pointer">
@@ -661,6 +658,8 @@
                                         </div>
                                     </label>
                                 </div>
+
+                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
