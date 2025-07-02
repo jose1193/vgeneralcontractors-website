@@ -1107,7 +1107,7 @@ function invoiceDemoData() {
 
             try {
                 const response = await window.invoiceDemoManager.deleteInvoice(
-                    invoice.id
+                    invoice.uuid
                 );
 
                 Swal.fire({
@@ -1129,10 +1129,10 @@ function invoiceDemoData() {
         },
 
         // Generate PDF for invoice
-        async generatePdf(invoiceId) {
+        async generatePdf(invoiceUuid) {
             this.pdfGenerating = true;
             try {
-                await window.invoiceDemoManager.generatePdf(invoiceId);
+                await window.invoiceDemoManager.generatePdf(invoiceUuid);
                 window.invoiceDemoManager.showSuccess(
                     "PDF generated successfully"
                 );
@@ -1165,7 +1165,7 @@ function invoiceDemoData() {
 
             try {
                 const response = await window.invoiceDemoManager.restoreInvoice(
-                    invoice.id
+                    invoice.uuid
                 );
 
                 Swal.fire({
