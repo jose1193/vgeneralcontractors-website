@@ -150,6 +150,23 @@ class InvoiceDemoController extends BaseController
             ], 422);
         }
 
+        // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers
+        $invoiceNumber = $request->input('invoice_number');
+        if ($invoiceNumber && $this->invoiceService->checkInvoiceNumberExists($invoiceNumber)) {
+            Log::warning('Attempted to create invoice with duplicate number', [
+                'invoice_number' => $invoiceNumber,
+                'user_id' => auth()->id(),
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'invoice_number' => ['This invoice number already exists.']
+                ]
+            ], 422);
+        }
+
         try {
             $invoice = $this->invoiceService->createInvoice(
                 $request->all(),
@@ -222,6 +239,24 @@ class InvoiceDemoController extends BaseController
                 return response()->json([
                     'success' => false,
                     'errors' => $e->errors()
+                ], 422);
+            }
+
+            // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers on update
+            $invoiceNumber = $request->input('invoice_number');
+            if ($invoiceNumber && $this->invoiceService->checkInvoiceNumberExists($invoiceNumber, $invoice->uuid)) {
+                Log::warning('Attempted to update invoice with duplicate number', [
+                    'invoice_number' => $invoiceNumber,
+                    'invoice_uuid' => $invoice->uuid,
+                    'user_id' => auth()->id(),
+                    'request_data' => $request->all()
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'invoice_number' => ['This invoice number already exists.']
+                    ]
                 ], 422);
             }
             

@@ -491,22 +491,34 @@ class InvoiceDemoService
     }
 
     /**
-     * Check if invoice number exists
+     * ✅ FIXED: Check if invoice number exists (UUID-based validation)
      */
     public function checkInvoiceNumberExists(string $invoiceNumber, ?string $excludeId = null): bool
     {
         $query = InvoiceDemo::where('invoice_number', $invoiceNumber);
         
         if ($excludeId) {
-            // Check if excludeId is UUID or numeric ID
-            if (is_numeric($excludeId)) {
-                $query->where('id', '!=', $excludeId);
-            } else {
-                $query->where('uuid', '!=', $excludeId);
-            }
+            // ✅ ALWAYS use UUID for exclusion (modern approach)
+            $query->where('uuid', '!=', $excludeId);
+            
+            // ✅ LOG for debugging
+            Log::info('Invoice number validation check', [
+                'invoice_number' => $invoiceNumber,
+                'exclude_uuid' => $excludeId,
+                'query' => $query->toSql()
+            ]);
         }
         
-        return $query->exists();
+        $exists = $query->exists();
+        
+        // ✅ LOG result for debugging
+        Log::info('Invoice number validation result', [
+            'invoice_number' => $invoiceNumber,
+            'exclude_uuid' => $excludeId,
+            'exists' => $exists
+        ]);
+        
+        return $exists;
     }
 
     /**

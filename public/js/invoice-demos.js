@@ -787,12 +787,19 @@ function invoiceDemoData() {
             this.showModal = true;
         },
 
-        // Close modal
+        // ✅ IMPROVED: Close modal with complete state cleanup
         closeModal() {
             this.showModal = false;
+            this.isEditing = false;
+            this.currentInvoice = null;
             this.resetForm();
             this.errors = {};
             this.invoiceNumberExists = false;
+            this.submitting = false;
+            this.generalError = "";
+
+            // ✅ LOG for debugging
+            console.log("Modal closed and state reset");
         },
 
         // Reset form
@@ -828,24 +835,26 @@ function invoiceDemoData() {
                 if (!dateString) return "";
                 const date = new Date(dateString);
                 if (isNaN(date.getTime())) return ""; // Fecha inválida
-                
+
                 // Para inputs de tipo date: YYYY-MM-DD
                 if (!includeTime) {
-                    return date.toISOString().split('T')[0];
+                    return date.toISOString().split("T")[0];
                 }
-                
+
                 // Para inputs de tipo datetime-local: YYYY-MM-DDThh:mm
                 return date.toISOString().slice(0, 16);
             };
-            
+
             // Procesar los items para eliminar los UUIDs y evitar duplicidad
-            const processedItems = invoice.items ? invoice.items.map(item => {
-                // Crear una copia del item sin el UUID
-                const { uuid, ...itemWithoutUuid } = item;
-                console.log('Removed UUID from item:', uuid);
-                return itemWithoutUuid;
-            }) : [];
-            
+            const processedItems = invoice.items
+                ? invoice.items.map((item) => {
+                      // Crear una copia del item sin el UUID
+                      const { uuid, ...itemWithoutUuid } = item;
+                      console.log("Removed UUID from item:", uuid);
+                      return itemWithoutUuid;
+                  })
+                : [];
+
             this.form = {
                 invoice_number: invoice.invoice_number || "",
                 invoice_date: formatDateForInput(invoice.invoice_date),
@@ -860,7 +869,10 @@ function invoiceDemoData() {
                 insurance_company: invoice.insurance_company || "",
                 date_of_loss: formatDateForInput(invoice.date_of_loss),
                 date_received: formatDateForInput(invoice.date_received, true),
-                date_inspected: formatDateForInput(invoice.date_inspected, true),
+                date_inspected: formatDateForInput(
+                    invoice.date_inspected,
+                    true
+                ),
                 date_entered: formatDateForInput(invoice.date_entered, true),
                 price_list_code: invoice.price_list_code || "",
                 type_of_loss: invoice.type_of_loss || "",
@@ -889,39 +901,62 @@ function invoiceDemoData() {
 
         // Calculate invoice totals
         calculateTotals() {
-            console.log('Calculating totals...');
+            console.log("Calculating totals...");
             let subtotal = 0;
             this.form.items.forEach((item, index) => {
                 // Asegurar que quantity y rate sean números
                 const quantity = parseFloat(item.quantity || 0);
                 const rate = parseFloat(item.rate || 0);
-                
-                console.log(`Item ${index+1}: quantity=${quantity}, rate=${rate}`);
+
+                console.log(
+                    `Item ${index + 1}: quantity=${quantity}, rate=${rate}`
+                );
 
                 // Calcular el monto del ítem
                 const itemAmount = quantity * rate;
                 item.amount = itemAmount.toFixed(2); // Solo formateamos el amount para mostrar
-                
-                console.log(`Item ${index+1} amount: ${itemAmount}`);
+
+                console.log(`Item ${index + 1} amount: ${itemAmount}`);
 
                 subtotal += itemAmount;
             });
 
             console.log(`Subtotal: ${subtotal}`);
-            
+
             // Actualizar el subtotal en el formulario
             this.form.subtotal = subtotal.toFixed(2);
 
             // Calcular balance_due
             const taxAmount = parseFloat(this.form.tax_amount || 0);
             this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar
-            
-            console.log(`Tax: ${taxAmount}, Balance Due: ${this.form.balance_due}`);
+
+            console.log(
+                `Tax: ${taxAmount}, Balance Due: ${this.form.balance_due}`
+            );
         },
 
         // Submit form
         async submitForm() {
             if (this.submitting) return;
+
+            // ✅ PREVENT submission if invoice number exists
+            if (this.invoiceNumberExists) {
+                window.invoiceDemoManager.showError(
+                    "Cannot save: Invoice number already exists. Please use a different number."
+                );
+                return;
+            }
+
+            // ✅ VALIDATE invoice number before submission
+            if (!this.isEditing) {
+                await this.checkInvoiceNumberExists();
+                if (this.invoiceNumberExists) {
+                    window.invoiceDemoManager.showError(
+                        "Cannot create: Invoice number already exists. Please generate a new number."
+                    );
+                    return;
+                }
+            }
 
             this.submitting = true;
             this.errors = {};
@@ -972,7 +1007,12 @@ function invoiceDemoData() {
 
                 window.invoiceDemoManager.showSuccess(response.message);
                 this.closeModal();
+
+                // ✅ FORCE reload with cache bypass
                 await this.loadInvoices();
+
+                // ✅ Revalidate invoice number for future use
+                this.invoiceNumberExists = false;
             } catch (error) {
                 console.error("Form submission error:", error);
 
@@ -1065,7 +1105,7 @@ function invoiceDemoData() {
 
             try {
                 // Usar uuid en lugar de id para la eliminación
-                console.log('Eliminando factura con UUID:', invoice.uuid);
+                console.log("Eliminando factura con UUID:", invoice.uuid);
                 const response = await window.invoiceDemoManager.deleteInvoice(
                     invoice.uuid
                 );
@@ -1081,7 +1121,7 @@ function invoiceDemoData() {
                 // Si no estamos mostrando facturas eliminadas, mantener la vista actual
                 // Si estamos mostrando facturas activas, la factura eliminada desaparecerá
                 await this.loadInvoices();
-                
+
                 // Opcionalmente, mostrar un mensaje sugiriendo ver facturas eliminadas
                 if (!this.showDeleted) {
                     setTimeout(() => {
@@ -1092,7 +1132,7 @@ function invoiceDemoData() {
                     }, 2500); // Mostrar después de que se cierre el mensaje de éxito
                 }
             } catch (error) {
-                console.error('Error al eliminar factura:', error);
+                console.error("Error al eliminar factura:", error);
                 Swal.fire({
                     title: "Error",
                     text: error.message || "Error al eliminar la factura",
@@ -1104,7 +1144,7 @@ function invoiceDemoData() {
         // Generate PDF for invoice
         async generatePdf(invoice) {
             this.pdfGenerating = true;
-            console.log('Generating PDF for invoice UUID:', invoice.uuid);
+            console.log("Generating PDF for invoice UUID:", invoice.uuid);
             try {
                 await window.invoiceDemoManager.generatePdf(invoice.uuid);
                 window.invoiceDemoManager.showSuccess(
@@ -1155,7 +1195,7 @@ function invoiceDemoData() {
                     this.showDeleted = false;
                     this.currentPage = 1; // Reiniciar a la primera página
                 }
-                
+
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
@@ -1171,7 +1211,7 @@ function invoiceDemoData() {
         toggleDeleted() {
             // Reiniciar a la primera página cuando se cambia el filtro
             this.currentPage = 1;
-            
+
             // Mostrar mensaje informativo según el estado del toggle
             if (this.showDeleted) {
                 window.invoiceDemoManager.showNotification(
@@ -1184,7 +1224,7 @@ function invoiceDemoData() {
                     "info"
                 );
             }
-            
+
             // Recargar la lista de facturas con el nuevo filtro
             this.loadInvoices();
         },
@@ -1248,6 +1288,56 @@ function invoiceDemoData() {
             return window.invoiceDemoManager.formatDate(dateString);
         },
 
+        // ✅ Check if invoice number exists (REAL-TIME VALIDATION)
+        async checkInvoiceNumberExists() {
+            if (!this.form.invoice_number) {
+                this.invoiceNumberExists = false;
+                return;
+            }
+
+            try {
+                const response =
+                    await window.invoiceDemoManager.checkInvoiceNumberExists(
+                        this.form.invoice_number,
+                        this.isEditing ? this.currentInvoice.uuid : null
+                    );
+                this.invoiceNumberExists = response.exists;
+
+                // ✅ LOG for debugging
+                console.log("Invoice number validation:", {
+                    invoice_number: this.form.invoice_number,
+                    exclude_id: this.isEditing
+                        ? this.currentInvoice.uuid
+                        : null,
+                    exists: response.exists,
+                    is_editing: this.isEditing,
+                });
+            } catch (error) {
+                console.error("Failed to check invoice number:", error);
+                this.invoiceNumberExists = false;
+            }
+        },
+
+        // ✅ Generate invoice number
+        async generateInvoiceNumber() {
+            try {
+                const response =
+                    await window.invoiceDemoManager.generateInvoiceNumber();
+                this.form.invoice_number = response.invoice_number;
+                this.invoiceNumberExists = false;
+
+                // ✅ LOG for debugging
+                console.log(
+                    "Generated invoice number:",
+                    response.invoice_number
+                );
+            } catch (error) {
+                window.invoiceDemoManager.showError(
+                    error.message || "Failed to generate invoice number"
+                );
+            }
+        },
+
         // Get status badge class
         getStatusBadgeClass(status) {
             const classes = {
@@ -1266,25 +1356,27 @@ window.invoiceDemoData = invoiceDemoData;
 
 // Extend the invoiceDemoData function to include formatting functions
 const originalInvoiceDemoData = invoiceDemoData;
-invoiceDemoData = function() {
+invoiceDemoData = function () {
     const data = originalInvoiceDemoData();
-    
+
     // Format invoice number input (only numbers and starts with VG-)
-    data.formatInvoiceNumberInput = function(event) {
+    data.formatInvoiceNumberInput = function (event) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
-        
+
         // Asegurar que comience con VG-
-        if (!value.startsWith('VG-')) {
-            value = 'VG-' + value.replace('VG-', '');
+        if (!value.startsWith("VG-")) {
+            value = "VG-" + value.replace("VG-", "");
         }
-        
+
         // Después del prefijo VG-, solo permitir números
-        const prefix = 'VG-';
-        const numberPart = value.substring(prefix.length).replace(/[^0-9]/g, '');
+        const prefix = "VG-";
+        const numberPart = value
+            .substring(prefix.length)
+            .replace(/[^0-9]/g, "");
         const newValue = prefix + numberPart;
-        
+
         // Solo actualizar si hay cambios para evitar loops
         if (newValue !== value) {
             input.value = newValue;
@@ -1294,10 +1386,9 @@ invoiceDemoData = function() {
             input.setSelectionRange(newCursorPos, newCursorPos);
         }
     };
-    
-    
+
     // Add formatting functions
-    data.formatPhoneInput = function(event) {
+    data.formatPhoneInput = function (event) {
         const input = event.target;
         const isBackspace = event.inputType === "deleteContentBackward";
         let value = input.value.replace(/\D/g, "");
@@ -1315,9 +1406,7 @@ invoiceDemoData = function() {
         } else if (value.length <= 3) {
             formattedValue = `(${value}`;
         } else if (value.length <= 6) {
-            formattedValue = `(${value.substring(0, 3)}) ${value.substring(
-                3
-            )}`;
+            formattedValue = `(${value.substring(0, 3)}) ${value.substring(3)}`;
         } else {
             formattedValue = `(${value.substring(0, 3)}) ${value.substring(
                 3,
@@ -1330,7 +1419,7 @@ invoiceDemoData = function() {
     };
 
     // Format name input (capitalize with spaces)
-    data.formatNameInput = function(event) {
+    data.formatNameInput = function (event) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1350,7 +1439,7 @@ invoiceDemoData = function() {
     };
 
     // Format uppercase input (for claim/policy numbers)
-    data.formatUppercaseInput = function(event, fieldName) {
+    data.formatUppercaseInput = function (event, fieldName) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1368,7 +1457,7 @@ invoiceDemoData = function() {
     };
 
     // Format service description (all uppercase)
-    data.formatServiceDescriptionInput = function(event, itemIndex) {
+    data.formatServiceDescriptionInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1386,7 +1475,7 @@ invoiceDemoData = function() {
     };
 
     // Format notes input (capitalize only first letter)
-    data.formatNotesInput = function(event) {
+    data.formatNotesInput = function (event) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1405,7 +1494,7 @@ invoiceDemoData = function() {
     };
 
     // Format address input (capitalize each word)
-    data.formatAddressInput = function(event) {
+    data.formatAddressInput = function (event) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1425,7 +1514,7 @@ invoiceDemoData = function() {
     };
 
     // Format item description input (capitalize each word)
-    data.formatItemDescriptionInput = function(event, itemIndex) {
+    data.formatItemDescriptionInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
@@ -1442,28 +1531,28 @@ invoiceDemoData = function() {
             // Restaurar la posición del cursor
             input.setSelectionRange(cursorPosition, cursorPosition);
         }
-     };
-     
-     // Format currency input for rate field
-     data.formatCurrencyInput = function(event, itemIndex) {
+    };
+
+    // Format currency input for rate field
+    data.formatCurrencyInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
-        
+
         // Eliminar todo excepto números y punto decimal
-        value = value.replace(/[^0-9.]/g, '');
-        
+        value = value.replace(/[^0-9.]/g, "");
+
         // Asegurar que solo haya un punto decimal
-        const parts = value.split('.');
+        const parts = value.split(".");
         if (parts.length > 2) {
-            value = parts[0] + '.' + parts.slice(1).join('');
+            value = parts[0] + "." + parts.slice(1).join("");
         }
-        
+
         // Limitar a dos decimales
         if (parts.length > 1 && parts[1].length > 2) {
-            value = parts[0] + '.' + parts[1].substring(0, 2);
+            value = parts[0] + "." + parts[1].substring(0, 2);
         }
-        
+
         // Actualizar el valor en el input y en el modelo
         if (value !== input.value) {
             input.value = value;
@@ -1472,31 +1561,31 @@ invoiceDemoData = function() {
             const newCursorPos = Math.min(cursorPosition, value.length);
             input.setSelectionRange(newCursorPos, newCursorPos);
         }
-        
+
         // Calcular totales después de actualizar el valor
         this.calculateTotals();
-     };
-     
-     // Format general currency input (for subtotal, tax_amount)
-     data.formatGeneralCurrencyInput = function(event, fieldName) {
+    };
+
+    // Format general currency input (for subtotal, tax_amount)
+    data.formatGeneralCurrencyInput = function (event, fieldName) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
-        
+
         // Eliminar todo excepto números y punto decimal
-        value = value.replace(/[^0-9.]/g, '');
-        
+        value = value.replace(/[^0-9.]/g, "");
+
         // Asegurar que solo haya un punto decimal
-        const parts = value.split('.');
+        const parts = value.split(".");
         if (parts.length > 2) {
-            value = parts[0] + '.' + parts.slice(1).join('');
+            value = parts[0] + "." + parts.slice(1).join("");
         }
-        
+
         // Limitar a dos decimales
         if (parts.length > 1 && parts[1].length > 2) {
-            value = parts[0] + '.' + parts[1].substring(0, 2);
+            value = parts[0] + "." + parts[1].substring(0, 2);
         }
-        
+
         // Actualizar el valor en el input y en el modelo
         if (value !== input.value) {
             input.value = value;
@@ -1505,12 +1594,12 @@ invoiceDemoData = function() {
             const newCursorPos = Math.min(cursorPosition, value.length);
             input.setSelectionRange(newCursorPos, newCursorPos);
         }
-        
+
         // Calcular totales después de actualizar el valor
         this.calculateTotals();
-     };
-     
-     return data;
+    };
+
+    return data;
 };
 
 // Update global reference
