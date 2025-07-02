@@ -294,20 +294,20 @@
 
             <!-- Filters and Search Section - Improved UX/UI -->
             <div class="glass-container rounded-2xl mb-8 p-6">
-                <!-- Primary Filters Row -->
+                <!-- Row 1: Search, Status, and Quick Date Ranges -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    <!-- Search Input (takes more space) -->
-                    <div class="lg:col-span-2">
+                    <!-- Search Input -->
+                    <div>
                         <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Search</label>
                         <div class="relative">
-                            <input type="text" x-model="search" @input="searchInvoices()"
-                                placeholder="Search by invoice number, client name..."
-                                class="glass-input w-full h-12 pl-10 pr-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
+                            <input type="text" x-model="search" @input="searchInvoices()"
+                                placeholder="Search by invoice number, client name..."
+                                class="glass-input w-full h-12 pl-10 pr-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15">
                         </div>
                     </div>
 
@@ -323,41 +323,41 @@
                             <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
                         </select>
                     </div>
-                </div>
 
-                <!-- Secondary Filters Row -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Quick Date Ranges -->
-                    <div class="lg:col-span-2">
-                        <label class="glass-label text-xs font-medium mb-3 block text-gray-200">Quick Date Ranges</label>
-                        <div class="flex flex-wrap gap-2">
+                    <div>
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Quick Date Ranges</label>
+                        <div class="flex flex-wrap gap-1">
                             <button @click="setDateRange('today')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Hoy
                             </button>
                             <button @click="setDateRange('last7days')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Últimos 7 días
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                                7d
                             </button>
                             <button @click="setDateRange('last30days')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Últimos 30 días
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                                30d
                             </button>
                             <button @click="setDateRange('thisMonth')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Este mes
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                                Mes
                             </button>
                             <button @click="setDateRange('thisYear')"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                                Este año
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                                Año
                             </button>
                             <button @click="clearDateRange()"
-                                class="modern-button px-3 py-2 text-xs rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition-all duration-300 hover:scale-105">
-                                Limpiar
+                                class="modern-button px-2 py-1 text-xs rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition-all duration-300 hover:scale-105">
+                                ✕
                             </button>
                         </div>
                     </div>
+                </div>
 
+                <!-- Row 2: Custom Date Range, Items Per Page, and Show Deleted -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Custom Date Range Picker -->
                     <div>
                         <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Custom Date Range</label>
@@ -378,19 +378,24 @@
                             <option value="100" class="bg-gray-800 text-white">100</option>
                         </select>
                     </div>
-                </div>
 
-                <!-- Show Deleted Toggle - Separate Row -->
-                <div class="mt-4 flex items-center justify-center">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" x-model="showDeleted" @change="loadInvoices()"
-                            class="sr-only peer">
-                        <div
-                            class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+                    <!-- Show Deleted Toggle -->
+                    <div class="flex items-end">
+                        <div class="w-full">
+                            <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Show Deleted</label>
+                            <div class="flex items-center h-12">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="showDeleted" @change="loadInvoices()"
+                                        class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+                                    </div>
+                                    <span class="ml-3 text-sm font-medium text-gray-200"
+                                        x-text="showDeleted ? 'Yes' : 'No'"></span>
+                                </label>
+                            </div>
                         </div>
-                        <span class="ml-3 text-sm font-medium text-gray-200"
-                            x-text="showDeleted ? 'Show Deleted: Yes' : 'Show Deleted: No'"></span>
-                    </label>
+                    </div>
                 </div>
             </div>
 
