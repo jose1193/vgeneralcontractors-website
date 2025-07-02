@@ -159,7 +159,7 @@ class InvoiceDemoManager {
      */
     async restoreInvoice(id) {
         return await this.apiRequest(`${this.baseUrl}/${id}/restore`, {
-            method: "PATCH",
+            method: "POST",
         });
     }
 
@@ -241,10 +241,10 @@ class InvoiceDemoManager {
                 title: "Success",
                 text: message,
                 icon: "success",
-                confirmButtonText: "OK",
-                showConfirmButton: true,
-                timer: 5000,
-                timerProgressBar: true,
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
             });
         } else {
             alert(message);
@@ -280,6 +280,13 @@ class InvoiceDemoManager {
             month: "short",
             day: "numeric",
         });
+    }
+
+    /**
+     * Show success notification
+     */
+    showSuccess(message) {
+        this.showNotification(message, "success");
     }
 
     /**
@@ -533,19 +540,6 @@ function invoiceDemoData() {
         // Initialize component
         async init() {
             console.log("🚀 Initializing Invoice Demo Manager...");
-
-            // Ensure DOM is ready before initializing
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", () => {
-                    this.initializeComponents();
-                });
-            } else {
-                this.initializeComponents();
-            }
-        },
-
-        async initializeComponents() {
-            console.log("🔧 Initializing components...");
             await this.loadFormData();
             await this.loadInvoices();
             this.initializeDatePicker();
@@ -568,10 +562,6 @@ function invoiceDemoData() {
         // Load invoices
         async loadInvoices() {
             this.loading = true;
-            console.log(
-                "📊 Loading invoices with showDeleted:",
-                this.showDeleted
-            );
             try {
                 const response = await window.invoiceDemoManager.loadInvoices(
                     this.currentPage,
@@ -620,55 +610,36 @@ function invoiceDemoData() {
 
         // Initialize Flatpickr
         initializeDatePicker() {
-            // Wait for DOM to be ready
-            this.$nextTick(() => {
-                // Initialize flatpickr for date range
-                const picker = flatpickr("#dateRangePicker", {
-                    mode: "range",
-                    dateFormat: "Y-m-d",
-                    altInput: true,
-                    altFormat: "M j, Y",
-                    showMonths: window.innerWidth > 768 ? 2 : 1,
-                    appendTo: document.body,
-                    static: false,
-
-                    onClose: (selectedDates) => {
-                        if (selectedDates.length === 2) {
-                            this.startDate = selectedDates[0]
-                                .toISOString()
-                                .split("T")[0];
-                            this.endDate = selectedDates[1]
-                                .toISOString()
-                                .split("T")[0];
-                            this.activeQuickFilter = null; // Clear active quick filter
-                            this.currentPage = 1;
-                            this.loadInvoices();
-                        } else if (selectedDates.length === 0) {
-                            // Handle clear case
-                            this.startDate = "";
-                            this.endDate = "";
-                            this.dateRangeDisplay = "";
-                            this.activeQuickFilter = null;
-                            this.currentPage = 1;
-                            this.loadInvoices();
-                        }
-                    },
-
-                    onClear: () => {
-                        this.startDate = "";
-                        this.endDate = "";
-                        this.dateRangeDisplay = "";
-                        this.activeQuickFilter = null;
+            // Initialize flatpickr for date range
+            const picker = flatpickr("#dateRangePicker", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "M j, Y",
+                showMonths: 2,
+                theme: "dark",
+                onClose: (selectedDates) => {
+                    if (selectedDates.length === 2) {
+                        this.startDate = selectedDates[0]
+                            .toISOString()
+                            .split("T")[0];
+                        this.endDate = selectedDates[1]
+                            .toISOString()
+                            .split("T")[0];
                         this.currentPage = 1;
                         this.loadInvoices();
-                    },
-                });
-
-                this.dateRangePicker = picker;
-
-                // Debug log
-                console.log("📅 Flatpickr initialized successfully");
+                    }
+                },
+                onClear: () => {
+                    this.startDate = "";
+                    this.endDate = "";
+                    this.dateRangeDisplay = "";
+                    this.currentPage = 1;
+                    this.loadInvoices();
+                },
             });
+
+            this.dateRangePicker = picker;
         },
 
         // Set predefined date ranges
@@ -730,15 +701,14 @@ function invoiceDemoData() {
             this.startDate = "";
             this.endDate = "";
             this.dateRangeDisplay = "";
-            this.activeQuickFilter = null;
 
-            // Update flatpickr display
+            // Clear Flatpickr
             if (this.dateRangePicker) {
                 this.dateRangePicker.clear();
             }
 
-            this.currentPage = 1;
-            this.loadInvoices();
+            // Apply filter (show all)
+            this.filterByDateRange();
         },
 
         // Filter by date range
@@ -1028,7 +998,7 @@ function invoiceDemoData() {
 
             try {
                 const response = await window.invoiceDemoManager.deleteInvoice(
-                    invoice.uuid
+                    invoice.id
                 );
 
                 Swal.fire({
@@ -1050,10 +1020,10 @@ function invoiceDemoData() {
         },
 
         // Generate PDF for invoice
-        async generatePdf(invoiceUuid) {
+        async generatePdf(invoiceId) {
             this.pdfGenerating = true;
             try {
-                await window.invoiceDemoManager.generatePdf(invoiceUuid);
+                await window.invoiceDemoManager.generatePdf(invoiceId);
                 window.invoiceDemoManager.showSuccess(
                     "PDF generated successfully"
                 );
@@ -1086,7 +1056,7 @@ function invoiceDemoData() {
 
             try {
                 const response = await window.invoiceDemoManager.restoreInvoice(
-                    invoice.uuid
+                    invoice.id
                 );
 
                 Swal.fire({
@@ -1110,38 +1080,22 @@ function invoiceDemoData() {
         // ============ ADDITIONAL METHODS ============
 
         toggleDeleted() {
-            console.log("🔄 Toggle Show Deleted:", this.showDeleted);
             this.currentPage = 1;
             this.loadInvoices();
         },
 
         clearAllFilters() {
-            console.log("🧹 Clearing all filters...");
-
-            // Clear all search and filter variables
             this.search = "";
             this.statusFilter = "";
-            this.startDate = "";
-            this.endDate = "";
             this.dateRangeDisplay = "";
             this.activeQuickFilter = null;
-            this.showDeleted = false;
             this.currentPage = 1;
 
-            // Clear flatpickr
             if (this.dateRangePicker) {
                 this.dateRangePicker.clear();
             }
 
-            // Force reload invoices with cleared filters
             this.loadInvoices();
-
-            // Show confirmation message
-            window.invoiceDemoManager.showSuccess(
-                "Filters cleared successfully"
-            );
-
-            console.log("✅ All filters cleared successfully");
         },
 
         hasActiveFilters() {
