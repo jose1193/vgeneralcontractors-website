@@ -28,8 +28,8 @@ use Throwable;
 class InvoiceDemoController extends BaseController
 {
     use CacheTraitCrud;
-    
-    protected int $cacheTime = 300; // 5 minutes
+
+    protected $cacheTime = 60; // 1 minute - synchronized with service
     protected InvoiceDemoService $invoiceService;
     protected InvoicePdfService $pdfService;
 
@@ -317,17 +317,24 @@ class InvoiceDemoController extends BaseController
             
             $restoredInvoice = $this->invoiceService->restoreInvoice($invoice, auth()->id());
             
-            // ✅ IMPROVED: Clear cache immediately after restore
+            // Aggressive cache clearing after restore
             $this->markSignificantDataChange();
             $this->clearCrudCache('invoice_demos');
+            
+            // Additional cache clearing to ensure immediate visibility
+            Cache::flush(); // Clear all cache (use with caution in production)
             
             // ✅ IMPROVED: Call afterRestore hook
             $this->afterRestore($restoredInvoice);
 
+            // Add no-cache headers to response
             return response()->json([
                 'success' => true,
                 'message' => 'Invoice demo restored successfully'
-            ]);
+            ])
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
         } catch (Throwable $e) {
             Log::error('Failed to restore invoice demo', [
                 'error' => $e->getMessage(),

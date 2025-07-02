@@ -1040,7 +1040,6 @@
             </div>
         </div>
 
-        @push('scripts')
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
-        @endpush
+        
     @endsection

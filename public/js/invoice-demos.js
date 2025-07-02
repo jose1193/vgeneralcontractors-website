@@ -25,6 +25,13 @@ class InvoiceDemoManager {
             },
         };
 
+        // Add no-cache headers for POST, PUT, DELETE operations
+        if (options.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(options.method.toUpperCase())) {
+            defaultOptions.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+            defaultOptions.headers['Pragma'] = 'no-cache';
+            defaultOptions.headers['Expires'] = '0';
+        }
+
         const config = { ...defaultOptions, ...options };
 
         console.group("API Request");
@@ -601,6 +608,51 @@ function invoiceDemoData() {
             }
         },
 
+        // Load invoices with cache busting
+        async loadInvoicesWithCacheBusting() {
+            this.loading = true;
+            try {
+                const params = new URLSearchParams({
+                    page: this.currentPage,
+                    search: this.search,
+                    status: this.statusFilter,
+                    sort_by: this.sortBy,
+                    sort_order: this.sortOrder,
+                    per_page: this.perPage,
+                    _t: Date.now() // Cache busting parameter
+                });
+
+                if (this.startDate) {
+                    params.append("start_date", this.startDate);
+                }
+                if (this.endDate) {
+                    params.append("end_date", this.endDate);
+                }
+                if (this.showDeleted) {
+                    params.append("include_deleted", "1");
+                }
+
+                const response = await window.invoiceDemoManager.apiRequest(`${window.invoiceDemoManager.baseUrl}?${params}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+
+                this.invoices = response.data.data || [];
+                this.currentPage = response.data.current_page || 1;
+                this.totalPages = response.data.last_page || 1;
+                this.perPage = response.data.per_page || 10;
+                this.total = response.data.total || 0;
+            } catch (error) {
+                console.error("Failed to load invoices with cache busting:", error);
+                window.invoiceDemoManager.handleApiError(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
         // Search invoices (debounced)
         searchInvoices() {
             window.invoiceDemoManager.debounceSearch(() => {
@@ -1115,7 +1167,10 @@ function invoiceDemoData() {
 
                 // ✅ FIXED: Automatically enable "Show Deleted" to see the deleted invoice
                 this.showDeleted = true;
-                await this.loadInvoices();
+                // Usar cache busting para asegurar que se vean los cambios inmediatamente
+                setTimeout(async () => {
+                    await this.loadInvoicesWithCacheBusting();
+                }, 500);
             } catch (error) {
                 Swal.fire({
                     title: "Error",
@@ -1173,9 +1228,19 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
-                // ✅ FIXED: Automatically disable "Show Deleted" to see the restored invoice in normal view
-                this.showDeleted = false;
-                await this.loadInvoices();
+                // Mantener showDeleted=true temporalmente para mostrar el cambio visual
+                // Agregar delay para permitir que el cache se limpie en el backend
+                setTimeout(async () => {
+                    await this.loadInvoicesWithCacheBusting();
+                    
+                    // Después de 3 segundos, cambiar a vista normal si estaba en vista de eliminados
+                    setTimeout(() => {
+                        if (this.showDeleted) {
+                            this.showDeleted = false;
+                            this.loadInvoicesWithCacheBusting();
+                        }
+                    }, 3000);
+                }, 1000);
             } catch (error) {
                 Swal.fire({
                     title: "Error",
