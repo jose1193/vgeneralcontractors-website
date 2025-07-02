@@ -497,9 +497,9 @@
                 class="glass-container-filter backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="p-6">
                     <!-- Main Filter Row -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
-                        <!-- Search - Takes more space -->
-                        <div class="lg:col-span-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+                        <!-- Search - Reduced space -->
+                        <div class="lg:col-span-3">
                             <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
                             <div class="relative">
                                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
@@ -527,7 +527,7 @@
                         </div>
 
                         <!-- Items Per Page -->
-                        <div class="lg:col-span-1">
+                        <div class="lg:col-span-2">
                             <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
                             <select x-model="perPage" @change="changePerPage()"
                                 class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
@@ -539,7 +539,7 @@
                         </div>
 
                         <!-- Clear Filters Button -->
-                        <div class="lg:col-span-1">
+                        <div class="lg:col-span-2">
                             <button @click="clearAllFilters()"
                                 class="w-full h-11 px-3 glass-button-filter backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-lg hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 hover:scale-105 shadow-sm hover:shadow-md flex items-center justify-center"
                                 title="Clear all filters and reset"
@@ -574,15 +574,6 @@
                                         d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </button>
-                        </div>
-
-                        <!-- Show Deleted Toggle -->
-                        <div class="lg:col-span-1">
-                            <label class="block text-sm font-medium text-white/90 mb-2">🗑️ Deleted</label>
-                            <label class="relative inline-flex items-center cursor-pointer w-full justify-center">
-                                <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()" class="sr-only peer">
-                                <div class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500"></div>
-                            </label>
                         </div>
 
                         <!-- Create Button -->
@@ -953,6 +944,19 @@
                                     class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
                                     Next
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Show Deleted Toggle - Bottom Section -->
+                    <div class="bg-gray-800 px-6 py-4 border-t border-gray-700">
+                        <div class="flex items-center justify-center">
+                            <div class="flex items-center space-x-3">
+                                <label class="text-sm text-gray-300 font-medium">🗑️ Show Deleted Invoices</label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()" class="sr-only peer">
+                                    <div class="relative w-11 h-6 bg-gray-600 backdrop-blur-md border border-gray-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500"></div>
+                                </label>
                             </div>
                         </div>
                     </div>
