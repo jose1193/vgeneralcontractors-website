@@ -148,8 +148,8 @@ class InvoiceDemoManager {
     /**
      * Delete invoice (soft delete)
      */
-    async deleteInvoice(id) {
-        return await this.apiRequest(`${this.baseUrl}/${id}`, {
+    async deleteInvoice(uuid) {
+        return await this.apiRequest(`${this.baseUrl}/${uuid}`, {
             method: "DELETE",
         });
     }
