@@ -437,6 +437,8 @@ function invoiceDemoData() {
         dateFilter: "",
         startDate: "",
         endDate: "",
+        dateRangeDisplay: "",
+        flatpickrInstance: null,
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
@@ -509,8 +511,10 @@ function invoiceDemoData() {
 
         // Initialize component
         async init() {
+            console.log("🚀 Initializing Invoice Demo Manager...");
             await this.loadFormData();
             await this.loadInvoices();
+            this.initializeFlatpickr();
         },
 
         // Load form data
@@ -566,6 +570,103 @@ function invoiceDemoData() {
         filterByStatus() {
             this.currentPage = 1;
             this.loadInvoices();
+        },
+
+        // Initialize Flatpickr
+        initializeFlatpickr() {
+            const self = this;
+            
+            // Wait for DOM to be ready
+            setTimeout(() => {
+                const dateRangeInput = document.getElementById('dateRangePicker');
+                if (dateRangeInput && typeof flatpickr !== 'undefined') {
+                    this.flatpickrInstance = flatpickr(dateRangeInput, {
+                        mode: 'range',
+                        dateFormat: 'Y-m-d',
+                        allowInput: false,
+                        clickOpens: true,
+                        locale: {
+                            rangeSeparator: ' to '
+                        },
+                        onChange: function(selectedDates, dateStr, instance) {
+                            if (selectedDates.length === 2) {
+                                self.startDate = selectedDates[0].toISOString().split('T')[0];
+                                self.endDate = selectedDates[1].toISOString().split('T')[0];
+                                self.dateRangeDisplay = `${self.startDate} to ${self.endDate}`;
+                                self.filterByDateRange();
+                            } else if (selectedDates.length === 0) {
+                                self.startDate = '';
+                                self.endDate = '';
+                                self.dateRangeDisplay = '';
+                                self.filterByDateRange();
+                            }
+                        },
+                        onReady: function(selectedDates, dateStr, instance) {
+                            console.log('📅 Flatpickr initialized successfully');
+                        }
+                    });
+                } else {
+                    console.warn('⚠️ Flatpickr not available or dateRangePicker element not found');
+                }
+            }, 100);
+        },
+
+        // Set predefined date ranges
+        setDateRange(range) {
+            const today = new Date();
+            let startDate, endDate;
+
+            switch (range) {
+                case 'today':
+                    startDate = endDate = today;
+                    break;
+                case 'last7days':
+                    endDate = today;
+                    startDate = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'last30days':
+                    endDate = today;
+                    startDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'thisMonth':
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    break;
+                case 'thisYear':
+                    startDate = new Date(today.getFullYear(), 0, 1);
+                    endDate = new Date(today.getFullYear(), 11, 31);
+                    break;
+                default:
+                    return;
+            }
+
+            // Format dates
+            this.startDate = startDate.toISOString().split('T')[0];
+            this.endDate = endDate.toISOString().split('T')[0];
+            this.dateRangeDisplay = `${this.startDate} to ${this.endDate}`;
+
+            // Update Flatpickr
+            if (this.flatpickrInstance) {
+                this.flatpickrInstance.setDate([startDate, endDate], true);
+            }
+
+            // Apply filter
+            this.filterByDateRange();
+        },
+
+        // Clear date range
+        clearDateRange() {
+            this.startDate = '';
+            this.endDate = '';
+            this.dateRangeDisplay = '';
+
+            // Clear Flatpickr
+            if (this.flatpickrInstance) {
+                this.flatpickrInstance.clear();
+            }
+
+            // Apply filter (show all)
+            this.filterByDateRange();
         },
 
         // Filter by date range

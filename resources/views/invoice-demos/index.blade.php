@@ -2,6 +2,17 @@
 
 @section('title', 'Invoice Management')
 
+@push('styles')
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+@endpush
+
+@push('scripts')
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+@endpush
+
 @section('content')
     <style>
         /* Modern Animated Gradient Header with Particles */
@@ -109,6 +120,44 @@
             border: 1px solid rgba(139, 92, 246, 0.4);
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
             color: rgb(255, 255, 255);
+        }
+
+        /* Flatpickr Custom Styles */
+        .flatpickr-calendar {
+            background: rgba(30, 30, 30, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .flatpickr-day.selected {
+            background: rgba(147, 51, 234, 0.8) !important;
+            border-color: rgba(147, 51, 234, 1) !important;
+        }
+
+        .flatpickr-day.inRange {
+            background: rgba(147, 51, 234, 0.3) !important;
+            border-color: rgba(147, 51, 234, 0.5) !important;
+        }
+
+        /* Modern Button Styles */
+        .modern-button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .modern-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(147, 51, 234, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+        }
+
+        .modern-button:active {
+            transform: translateY(0);
         }
 
         .glass-input:hover {
@@ -272,20 +321,51 @@
                     </div>
                 </div>
 
-                <!-- Date Range Filters - Second Row -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <!-- Start Date Filter -->
-                    <div class="relative">
-                        <label class="glass-label text-xs mb-2 block">Start Date</label>
-                        <input type="date" x-model="startDate" @change="filterByDateRange()"
-                            class="glass-input w-full px-4 py-4 rounded-xl">
+                <!-- Date Range Filters with Flatpickr - Second Row -->
+                <div class="mt-6">
+                    <!-- Quick Date Range Buttons -->
+                    <div class="mb-4">
+                        <label class="glass-label text-xs mb-3 block">Quick Date Ranges</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button @click="setDateRange('today')" 
+                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Hoy
+                            </button>
+                            <button @click="setDateRange('last7days')" 
+                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Últimos 7 días
+                            </button>
+                            <button @click="setDateRange('last30days')" 
+                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Últimos 30 días
+                            </button>
+                            <button @click="setDateRange('thisMonth')" 
+                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Este mes
+                            </button>
+                            <button @click="setDateRange('thisYear')" 
+                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Este año
+                            </button>
+                            <button @click="clearDateRange()" 
+                                class="modern-button px-4 py-2 text-sm text-red-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                                Limpiar
+                            </button>
+                        </div>
                     </div>
-
-                    <!-- End Date Filter -->
-                    <div class="relative">
-                        <label class="glass-label text-xs mb-2 block">End Date</label>
-                        <input type="date" x-model="endDate" @change="filterByDateRange()"
-                            class="glass-input w-full px-4 py-4 rounded-xl">
+                    
+                    <!-- Custom Date Range Picker -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Date Range Picker -->
+                        <div class="relative md:col-span-2">
+                            <label class="glass-label text-xs mb-2 block">Custom Date Range</label>
+                            <input type="text" id="dateRangePicker" x-model="dateRangeDisplay" 
+                                placeholder="Select date range..." readonly
+                                class="glass-input w-full px-4 py-4 rounded-xl cursor-pointer">
+                            <svg class="absolute right-4 top-10 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
