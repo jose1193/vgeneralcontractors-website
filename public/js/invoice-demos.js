@@ -1760,132 +1760,69 @@ invoiceDemoData = function () {
         }
     };
 
-    // Custom currency formatter that handles large numbers properly
-    data.formatCurrencyValue = function (value) {
-        // Remove all non-numeric characters except decimal point
-        const cleanValue = value.toString().replace(/[^0-9.]/g, '');
-        
-        if (cleanValue === '' || cleanValue === '.') {
-            return '0.00';
-        }
-        
-        // Parse as float and format with commas
-        const numericValue = parseFloat(cleanValue);
-        
-        if (isNaN(numericValue)) {
-            return '0.00';
-        }
-        
-        // Format with commas and 2 decimal places
-        return numericValue.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    };
-    
-    // Format and update item rate with custom formatting
-    data.formatAndUpdateItemRate = function (event, itemIndex) {
+    // Format currency input for rate field
+    data.formatCurrencyInput = function (event, itemIndex) {
         const input = event.target;
+        const cursorPosition = input.selectionStart;
         let value = input.value;
-        
-        // Remove currency symbols, commas, and extract numeric value
-        const cleanValue = value.replace(/[^0-9.]/g, '');
-        
-        // Ensure we have a valid number
-        const numericValue = cleanValue === '' ? '0' : cleanValue;
-        
-        console.log('Rate input value:', value, 'Clean value:', cleanValue, 'Numeric value:', numericValue);
-        
-        // Update the model with clean numeric value
-        this.form.items[itemIndex].rate = numericValue;
-        
-        // Calculate totals after updating the value
-        this.calculateTotals();
-    };
-    
-    // Format display value on blur
-    data.formatDisplayValue = function (event) {
-        const input = event.target;
-        const cleanValue = input.value.replace(/[^0-9.]/g, '');
-        
-        if (cleanValue !== '') {
-            const formattedValue = this.formatCurrencyValue(cleanValue);
-            input.value = formattedValue;
+
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, "");
+
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
         }
-    };
-    
-    // Update item rate with proper decimal handling (legacy function)
-    data.updateItemRate = function (event, itemIndex) {
-        const input = event.target;
-        let value = input.value;
-        
-        // Remove currency symbols, commas, and extract numeric value
-        const cleanValue = value.replace(/[^0-9.]/g, '');
-        
-        // Ensure we have a valid number
-        const numericValue = cleanValue === '' ? '0' : cleanValue;
-        
-        console.log('Rate input value:', value, 'Clean value:', cleanValue, 'Numeric value:', numericValue);
-        
-        // Update the model with clean numeric value
-        this.form.items[itemIndex].rate = numericValue;
-        
-        // Calculate totals after updating the value
+
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form.items[itemIndex].rate = value;
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+
+        // Calcular totales después de actualizar el valor
         this.calculateTotals();
     };
 
-    // Update subtotal with proper decimal handling
-    data.updateSubtotal = function (event) {
-        const input = event.target;
-        let value = input.value;
-        
-        // Remove currency symbols, commas, and extract numeric value
-        const cleanValue = value.replace(/[^0-9.]/g, '');
-        
-        // Ensure we have a valid number
-        const numericValue = cleanValue === '' ? '0' : cleanValue;
-        
-        console.log('Subtotal input value:', value, 'Clean value:', cleanValue, 'Numeric value:', numericValue);
-        
-        // Update the model with clean numeric value
-        this.form.subtotal = numericValue;
-        
-        // Calculate totals after updating the value
-        this.calculateTotals();
-    };
-
-    // Update tax amount with proper decimal handling
-    data.updateTaxAmount = function (event) {
-        const input = event.target;
-        let value = input.value;
-        
-        // Remove currency symbols, commas, and extract numeric value
-        const cleanValue = value.replace(/[^0-9.]/g, '');
-        
-        // Ensure we have a valid number
-        const numericValue = cleanValue === '' ? '0' : cleanValue;
-        
-        console.log('Tax amount input value:', value, 'Clean value:', cleanValue, 'Numeric value:', numericValue);
-        
-        // Update the model with clean numeric value
-        this.form.tax_amount = numericValue;
-        
-        // Calculate totals after updating the value
-        this.calculateTotals();
-    };
-
-    // Format general currency input (for tax_amount and other fields)
+    // Format general currency input (for subtotal, tax_amount)
     data.formatGeneralCurrencyInput = function (event, fieldName) {
         const input = event.target;
+        const cursorPosition = input.selectionStart;
         let value = input.value;
-        
-        // Remove currency symbols and extract numeric value
-        const numericValue = value.replace(/[^0-9.]/g, '');
-        
-        // Update the model with clean numeric value
-        this.form[fieldName] = numericValue;
-        
-        // Calculate totals after updating the value
+
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, "");
+
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
+
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form[fieldName] = value;
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+
+        // Calcular totales después de actualizar el valor
         this.calculateTotals();
     };
 
