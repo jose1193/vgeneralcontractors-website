@@ -409,6 +409,18 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
+        /* Estilos para hacer visibles las flechas de los selectores */
+        select.glass-input-filter {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
         .glass-input-filter:hover {
             background: rgba(255, 255, 255, 0.12);
@@ -647,15 +659,7 @@
                                     </label>
                                 </div>
 
-                                <!-- Collapse Indicator -->
-                                <div class="flex items-center">
-                                    <span class="text-xs text-purple-200 mr-2 font-medium">Collapse</span>
-                                    <svg class="w-5 h-5 text-purple-300 animate-bounce drop-shadow-sm" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
-                                    </svg>
-                                </div>
+                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
