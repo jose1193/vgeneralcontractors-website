@@ -796,7 +796,7 @@
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Actions</th>
+                                        Actionss</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-700">
