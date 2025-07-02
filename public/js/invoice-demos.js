@@ -451,20 +451,7 @@ function invoiceDemoData() {
         sortOrder: "desc",
         showDeleted: false,
 
-        // Filtros y paginación
-        search: "",
-        statusFilter: "",
-        currentPage: 1,
-        perPage: 10,
-        totalPages: 1,
-        total: 0,
-        sortBy: "created_at",
-        sortOrder: "desc",
-
         // Filtros de fecha
-        startDate: "",
-        endDate: "",
-        dateRangeDisplay: "",
         dateRangePicker: null,
 
         // Nuevas variables para filtros optimizados
