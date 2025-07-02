@@ -17,15 +17,20 @@ class InvoiceDemoManager {
      * Fetch API wrapper with enhanced error handling and logging
      */
     async apiRequest(url, options = {}) {
+        // ✅ AGGRESSIVE cache busting with unique timestamp
+        const timestamp = Date.now() + Math.random();
         const defaultOptions = {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": this.csrfToken,
                 "X-Requested-With": "XMLHttpRequest",
-                // ✅ FORCE cache bypass for all requests
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                Pragma: "no-cache",
-                Expires: "0",
+                // ✅ AGGRESSIVE cache bypass headers
+                "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+                "Pragma": "no-cache",
+                "Expires": "0",
+                "If-Modified-Since": "0",
+                "If-None-Match": "no-match",
+                "X-Cache-Bust": timestamp.toString(),
             },
         };
 
@@ -101,6 +106,9 @@ class InvoiceDemoManager {
         perPage = 10,
         includeDeleted = false
     ) {
+        // ✅ AGGRESSIVE cache busting parameters
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(7);
         const params = new URLSearchParams({
             page,
             search,
@@ -108,8 +116,10 @@ class InvoiceDemoManager {
             sort_by: sortBy,
             sort_order: sortOrder,
             per_page: perPage,
-            // ✅ Add timestamp to force cache bypass
-            _t: Date.now(),
+            // ✅ Multiple cache busting parameters
+            _t: timestamp,
+            _r: random,
+            _cb: `${timestamp}-${random}`,
         });
 
         if (startDate) {
@@ -133,10 +143,20 @@ class InvoiceDemoManager {
             "Creating invoice with data:",
             JSON.parse(JSON.stringify(formData))
         );
-        return await this.apiRequest(this.baseUrl, {
+        const response = await this.apiRequest(this.baseUrl, {
             method: "POST",
             body: JSON.stringify(formData),
         });
+        
+        // ✅ Force immediate cache invalidation after create
+        if (response.success) {
+            // Clear any browser cache for this endpoint
+            if ('caches' in window) {
+                caches.delete('invoice-demos-cache');
+            }
+        }
+        
+        return response;
     }
 
     /**
@@ -145,28 +165,58 @@ class InvoiceDemoManager {
     async updateInvoice(uuid, formData) {
         console.log("Updating invoice with UUID:", uuid);
         console.log("Update data:", JSON.parse(JSON.stringify(formData)));
-        return await this.apiRequest(`${this.baseUrl}/${uuid}`, {
+        const response = await this.apiRequest(`${this.baseUrl}/${uuid}`, {
             method: "PUT",
             body: JSON.stringify(formData),
         });
+        
+        // ✅ Force immediate cache invalidation after update
+        if (response.success) {
+            // Clear any browser cache for this endpoint
+            if ('caches' in window) {
+                caches.delete('invoice-demos-cache');
+            }
+        }
+        
+        return response;
     }
 
     /**
      * Delete invoice (soft delete)
      */
     async deleteInvoice(uuid) {
-        return await this.apiRequest(`${this.baseUrl}/${uuid}`, {
+        const response = await this.apiRequest(`${this.baseUrl}/${uuid}`, {
             method: "DELETE",
         });
+        
+        // ✅ Force immediate cache invalidation after delete
+        if (response.success) {
+            // Clear any browser cache for this endpoint
+            if ('caches' in window) {
+                caches.delete('invoice-demos-cache');
+            }
+        }
+        
+        return response;
     }
 
     /**
      * Restore deleted invoice
      */
     async restoreInvoice(uuid) {
-        return await this.apiRequest(`${this.baseUrl}/${uuid}/restore`, {
+        const response = await this.apiRequest(`${this.baseUrl}/${uuid}/restore`, {
             method: "PATCH",
         });
+        
+        // ✅ Force immediate cache invalidation after restore
+        if (response.success) {
+            // Clear any browser cache for this endpoint
+            if ('caches' in window) {
+                caches.delete('invoice-demos-cache');
+            }
+        }
+        
+        return response;
     }
 
     /**

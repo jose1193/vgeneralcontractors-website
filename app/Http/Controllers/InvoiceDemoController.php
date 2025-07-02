@@ -183,7 +183,8 @@ class InvoiceDemoController extends BaseController
             return response()->json([
                 'success' => true,
                 'message' => 'Invoice demo created successfully',
-                'data' => new InvoiceDemoResource($invoice)
+                'data' => new InvoiceDemoResource($invoice),
+                'timestamp' => now()->timestamp // ✅ Add timestamp for cache busting
             ], 201);
         } catch (Throwable $e) {
             Log::error('Failed to create invoice demo', [
@@ -276,7 +277,8 @@ class InvoiceDemoController extends BaseController
             return response()->json([
                 'success' => true,
                 'message' => 'Invoice demo updated successfully',
-                'data' => new InvoiceDemoResource($updatedInvoice)
+                'data' => new InvoiceDemoResource($updatedInvoice),
+                'timestamp' => now()->timestamp // ✅ Add timestamp for cache busting
             ]);
         } catch (Throwable $e) {
             Log::error('Failed to update invoice demo', [
@@ -319,7 +321,8 @@ class InvoiceDemoController extends BaseController
 
             return response()->json([
                 'success' => true,
-                'message' => 'Invoice demo deleted successfully'
+                'message' => 'Invoice demo deleted successfully',
+                'timestamp' => now()->timestamp // ✅ Add timestamp for cache busting
             ]);
         } catch (Throwable $e) {
             Log::error('Failed to delete invoice demo', [
@@ -355,10 +358,15 @@ class InvoiceDemoController extends BaseController
             // ✅ IMPROVED: Clear cache immediately after restore
             $this->markSignificantDataChange();
             $this->clearCrudCache('invoice_demos');
+            
+            // ✅ IMPROVED: Call afterRestore hook
+            $this->afterRestore($restoredInvoice);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Invoice demo restored successfully'
+                'message' => 'Invoice demo restored successfully',
+                'data' => new InvoiceDemoResource($restoredInvoice),
+                'timestamp' => now()->timestamp // ✅ Add timestamp for cache busting
             ]);
         } catch (Throwable $e) {
             Log::error('Failed to restore invoice demo', [
