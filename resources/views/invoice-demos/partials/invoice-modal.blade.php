@@ -369,7 +369,8 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="formatCurreucyIneuyent, index)"
+                                                @input="formatCurrencyInput($event, index)"
+                                                class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
 
@@ -419,7 +420,8 @@
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
                                         @input="formatGeneralCurrencyInput($event, 'subtotal')"
-                                        @rnput.sftrmatGeotralCurrencaI 'bo($eventrdesy-300 f'ng-purple-500 focus:border-purple-500'"
+                                        :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
+                                            'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
                                         placeholder="0.00">
                                 </div>
@@ -434,8 +436,9 @@
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
                                         @input="formatGeneralCurrencyInput($event, 'tax_amount')"
-                                        :class="errors.tax_amount ? 'border-rsifocus:border-purple-500'"
-                                        class="wformllGen rllCorrencyIupunded-xnt, 'tax_amoul 'shadow-sm transition-all duration-200"
+                                        :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
+                                            'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
+                                        class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
                                         placeholder="0.00">
                                 </div>
                                 <p x-show="errors.tax_amount" class="mt-1 text-sm text-red-600"
