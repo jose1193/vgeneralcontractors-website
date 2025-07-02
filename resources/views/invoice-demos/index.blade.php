@@ -2,16 +2,16 @@
 
 @section('title', 'Invoice Management')
 
-@push('styles')
+
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/themes/dark.css" crossorigin="anonymous">
-@endpush
 
-@push('scripts')
+
+
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" crossorigin="anonymous"></script>
-@endpush
+
 
 @section('content')
     <style>
