@@ -277,15 +277,15 @@
                     <!-- Start Date Filter -->
                     <div class="relative">
                         <label class="glass-label text-xs mb-2 block">Start Date</label>
-                        <input type="date" x-model="startDate" @change="filterByDateRange()"
-                            class="glass-input w-full px-4 py-4 rounded-xl">
+                        <input type="text" x-ref="startDatePicker" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl" placeholder="Select start date">
                     </div>
 
                     <!-- End Date Filter -->
                     <div class="relative">
                         <label class="glass-label text-xs mb-2 block">End Date</label>
-                        <input type="date" x-model="endDate" @change="filterByDateRange()"
-                            class="glass-input w-full px-4 py-4 rounded-xl">
+                        <input type="text" x-ref="endDatePicker" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl" placeholder="Select end date">
                     </div>
                 </div>
             </div>
@@ -614,6 +614,50 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('js/invoice-demos.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ asset('js/invoice-demos.js') }}"></script>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('invoiceDemoData', () => ({
+            initFlatpickr() {
+                flatpickr(this.$refs.startDatePicker, {
+                    enableTime: false,
+                    dateFormat: "Y-m-d",
+                    minDate: "2025-01-01",
+                    maxDate: "2025-12-31",
+                    plugins: [
+                        new monthSelectPlugin({
+                            shorthand: true,
+                            dateFormat: "Y-m",
+                            theme: "dark"
+                        })
+                    ],
+                    onChange: (selectedDates) => {
+                        this.startDate = selectedDates[0].toISOString().split('T')[0];
+                        this.filterByDateRange();
+                    }
+                });
+
+                flatpickr(this.$refs.endDatePicker, {
+                    enableTime: false,
+                    dateFormat: "Y-m-d",
+                    minDate: "2025-01-01",
+                    maxDate: "2025-12-31",
+                    plugins: [
+                        new monthSelectPlugin({
+                            shorthand: true,
+                            dateFormat: "Y-m",
+                            theme: "dark"
+                        })
+                    ],
+                    onChange: (selectedDates) => {
+                        this.endDate = selectedDates[0].toISOString().split('T')[0];
+                        this.filterByDateRange();
+                    }
+                });
+            }
+        }));
+    });
+</script>
     @endpush
 @endsection
