@@ -159,7 +159,7 @@ class InvoiceDemoManager {
      */
     async restoreInvoice(id) {
         return await this.apiRequest(`${this.baseUrl}/${id}/restore`, {
-            method: "POST",
+            method: "PATCH",
         });
     }
 
@@ -241,10 +241,10 @@ class InvoiceDemoManager {
                 title: "Success",
                 text: message,
                 icon: "success",
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
+                confirmButtonText: "OK",
+                showConfirmButton: true,
+                timer: 5000,
+                timerProgressBar: true
             });
         } else {
             alert(message);
@@ -282,12 +282,7 @@ class InvoiceDemoManager {
         });
     }
 
-    /**
-     * Show success notification
-     */
-    showSuccess(message) {
-        this.showNotification(message, "success");
-    }
+
 
     /**
      * Show error notification
