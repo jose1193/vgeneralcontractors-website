@@ -136,10 +136,10 @@ class InvoiceDemoManager {
     /**
      * Update existing invoice
      */
-    async updateInvoice(id, formData) {
-        console.log("Updating invoice with ID:", id);
+    async updateInvoice(uuid, formData) {
+        console.log("Updating invoice with UUID:", uuid);
         console.log("Update data:", JSON.parse(JSON.stringify(formData)));
-        return await this.apiRequest(`${this.baseUrl}/${id}`, {
+        return await this.apiRequest(`${this.baseUrl}/${uuid}`, {
             method: "PUT",
             body: JSON.stringify(formData),
         });
@@ -823,9 +823,24 @@ function invoiceDemoData() {
 
         // Populate form with invoice data
         populateForm(invoice) {
+            // Función auxiliar para formatear fechas para inputs HTML5
+            const formatDateForInput = (dateString, includeTime = false) => {
+                if (!dateString) return "";
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return ""; // Fecha inválida
+                
+                // Para inputs de tipo date: YYYY-MM-DD
+                if (!includeTime) {
+                    return date.toISOString().split('T')[0];
+                }
+                
+                // Para inputs de tipo datetime-local: YYYY-MM-DDThh:mm
+                return date.toISOString().slice(0, 16);
+            };
+            
             this.form = {
                 invoice_number: invoice.invoice_number || "",
-                invoice_date: invoice.invoice_date || "",
+                invoice_date: formatDateForInput(invoice.invoice_date),
                 bill_to_name: invoice.bill_to_name || "",
                 bill_to_address: invoice.bill_to_address || "",
                 bill_to_phone: invoice.bill_to_phone_raw || "",
@@ -835,10 +850,10 @@ function invoiceDemoData() {
                 claim_number: invoice.claim_number || "",
                 policy_number: invoice.policy_number || "",
                 insurance_company: invoice.insurance_company || "",
-                date_of_loss: invoice.date_of_loss || "",
-                date_received: invoice.date_received || "",
-                date_inspected: invoice.date_inspected || "",
-                date_entered: invoice.date_entered || "",
+                date_of_loss: formatDateForInput(invoice.date_of_loss),
+                date_received: formatDateForInput(invoice.date_received, true),
+                date_inspected: formatDateForInput(invoice.date_inspected, true),
+                date_entered: formatDateForInput(invoice.date_entered, true),
                 price_list_code: invoice.price_list_code || "",
                 type_of_loss: invoice.type_of_loss || "",
                 notes: invoice.notes || "",
@@ -931,11 +946,11 @@ function invoiceDemoData() {
                 let response;
                 if (this.isEditing) {
                     console.log(
-                        "Calling updateInvoice with ID:",
-                        this.currentInvoice.id
+                        "Calling updateInvoice with UUID:",
+                        this.currentInvoice.uuid
                     );
                     response = await window.invoiceDemoManager.updateInvoice(
-                        this.currentInvoice.id,
+                        this.currentInvoice.uuid,
                         this.form
                     );
                     console.log("Update response:", response);
