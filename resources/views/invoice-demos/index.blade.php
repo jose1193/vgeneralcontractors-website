@@ -292,101 +292,105 @@
                 </div>
             </div>
 
-            <!-- Filters and Search Section -->
-            <div class="glass-container rounded-2xl mb-8 p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Search Input -->
-                    <div class="relative group lg:col-span-2">
-                        <label class="glass-label text-xs mb-2 block">Search</label>
-                        <input type="text" x-model="search" @input="searchInvoices()"
-                            placeholder="Search by invoice number, client name..."
-                            class="glass-input w-full pl-12 pr-4 py-4 rounded-xl">
-                        <svg class="absolute left-4 top-10 h-5 w-5 text-purple-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
+            <!-- Filters and Search Section - Improved UX/UI -->
+            <div class="glass-container rounded-2xl mb-8 p-6">
+                <!-- Primary Filters Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <!-- Search Input (takes more space) -->
+                    <div class="lg:col-span-2">
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Search</label>
+                        <div class="relative">
+                            <input type="text" x-model="search" @input="searchInvoices()"
+                                placeholder="Search by invoice number, client name..."
+                                class="glass-input w-full h-12 pl-10 pr-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
                     </div>
 
                     <!-- Status Filter -->
-                    <div class="relative">
-                        <label class="glass-label text-xs mb-2 block">Status</label>
+                    <div>
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Status</label>
                         <select x-model="statusFilter" @change="filterByStatus()"
-                            class="glass-input w-full px-4 py-4 rounded-xl appearance-none cursor-pointer">
-                            <option value="">All Statuses</option>
-                            <option value="draft">Draft</option>
-                            <option value="sent">Sent</option>
-                            <option value="paid">Paid</option>
-                            <option value="cancelled">Cancelled</option>
+                            class="glass-input w-full h-12 px-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15 cursor-pointer">
+                            <option value="" class="bg-gray-800 text-white">All Statuses</option>
+                            <option value="draft" class="bg-gray-800 text-white">Draft</option>
+                            <option value="sent" class="bg-gray-800 text-white">Sent</option>
+                            <option value="paid" class="bg-gray-800 text-white">Paid</option>
+                            <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
                         </select>
-                        <svg class="absolute right-3 top-10 h-5 w-5 text-purple-400 pointer-events-none" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
-
-                    <!-- Show Deleted Toggle -->
-                    <div class="flex flex-col justify-center items-center space-y-2">
-                        <label class="glass-label text-xs text-center">Show Deleted</label>
-                        <label class="flex items-center cursor-pointer group">
-                            <input type="checkbox" x-model="showDeleted" @change="loadInvoices()" class="sr-only">
-                            <div class="relative">
-                                <div class="glass-toggle w-12 h-6 rounded-full transition-all duration-300"
-                                    :class="showDeleted ? 'active' : ''">
-                                </div>
-                                <div class="glass-toggle-thumb absolute w-5 h-5 rounded-full top-0.5 left-0.5 transition-all duration-300"
-                                    :class="showDeleted ? 'transform translate-x-6' : ''"></div>
-                            </div>
-                        </label>
                     </div>
                 </div>
 
-                <!-- Date Range Filters with Flatpickr - Second Row -->
-                <div class="mt-6">
-                    <!-- Quick Date Range Buttons -->
-                    <div class="mb-4">
-                        <label class="glass-label text-xs mb-3 block">Quick Date Ranges</label>
+                <!-- Secondary Filters Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Quick Date Ranges -->
+                    <div class="lg:col-span-2">
+                        <label class="glass-label text-xs font-medium mb-3 block text-gray-200">Quick Date Ranges</label>
                         <div class="flex flex-wrap gap-2">
-                            <button @click="setDateRange('today')" 
-                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="setDateRange('today')"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Hoy
                             </button>
-                            <button @click="setDateRange('last7days')" 
-                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="setDateRange('last7days')"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Últimos 7 días
                             </button>
-                            <button @click="setDateRange('last30days')" 
-                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="setDateRange('last30days')"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Últimos 30 días
                             </button>
-                            <button @click="setDateRange('thisMonth')" 
-                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="setDateRange('thisMonth')"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Este mes
                             </button>
-                            <button @click="setDateRange('thisYear')" 
-                                class="modern-button px-4 py-2 text-sm text-purple-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="setDateRange('thisYear')"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
                                 Este año
                             </button>
-                            <button @click="clearDateRange()" 
-                                class="modern-button px-4 py-2 text-sm text-red-600 font-medium rounded-lg transition-all duration-200 hover:scale-105">
+                            <button @click="clearDateRange()"
+                                class="modern-button px-3 py-2 text-xs rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition-all duration-300 hover:scale-105">
                                 Limpiar
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Custom Date Range Picker -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Date Range Picker -->
-                        <div class="relative md:col-span-2">
-                            <label class="glass-label text-xs mb-2 block">Custom Date Range</label>
-                            <input type="text" id="dateRangePicker" x-model="dateRangeDisplay" 
-                                placeholder="Select date range..." readonly
-                                class="glass-input w-full px-4 py-4 rounded-xl cursor-pointer">
-                            <svg class="absolute right-4 top-10 h-5 w-5 text-purple-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
+                    <div>
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Custom Date Range</label>
+                        <input type="text" id="dateRangePicker" x-model="dateRangeDisplay"
+                            placeholder="Select date range..."
+                            class="glass-input w-full h-12 px-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 cursor-pointer hover:bg-white/15"
+                            readonly>
                     </div>
+
+                    <!-- Items Per Page Selector -->
+                    <div>
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Items Per Page</label>
+                        <select x-model="perPage" @change="changePerPage()"
+                            class="glass-input w-full h-12 px-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15 cursor-pointer">
+                            <option value="10" class="bg-gray-800 text-white">10</option>
+                            <option value="25" class="bg-gray-800 text-white">25</option>
+                            <option value="50" class="bg-gray-800 text-white">50</option>
+                            <option value="100" class="bg-gray-800 text-white">100</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Show Deleted Toggle - Separate Row -->
+                <div class="mt-4 flex items-center justify-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" x-model="showDeleted" @change="loadInvoices()"
+                            class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+                        </div>
+                        <span class="ml-3 text-sm font-medium text-gray-200"
+                            x-text="showDeleted ? 'Show Deleted: Yes' : 'Show Deleted: No'"></span>
+                    </label>
                 </div>
             </div>
 

@@ -93,7 +93,8 @@ class InvoiceDemoManager {
         sortBy = "created_at",
         sortOrder = "desc",
         startDate = "",
-        endDate = ""
+        endDate = "",
+        perPage = 10
     ) {
         const params = new URLSearchParams({
             page,
@@ -101,6 +102,7 @@ class InvoiceDemoManager {
             status,
             sort_by: sortBy,
             sort_order: sortOrder,
+            per_page: perPage,
         });
 
         if (startDate) {
@@ -542,7 +544,8 @@ function invoiceDemoData() {
                     this.sortBy,
                     this.sortOrder,
                     this.startDate,
-                    this.endDate
+                    this.endDate,
+                    this.perPage
                 );
 
                 this.invoices = response.data.data || [];
@@ -568,6 +571,12 @@ function invoiceDemoData() {
 
         // Filter by status
         filterByStatus() {
+            this.currentPage = 1;
+            this.loadInvoices();
+        },
+
+        // Change items per page
+        changePerPage() {
             this.currentPage = 1;
             this.loadInvoices();
         },
