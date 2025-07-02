@@ -588,11 +588,19 @@ function invoiceDemoData() {
                     this.showDeleted
                 );
 
-                this.invoices = response.data.data || [];
-                this.currentPage = response.data.current_page || 1;
-                this.totalPages = response.data.last_page || 1;
-                this.perPage = response.data.per_page || 10;
-                this.total = response.data.total || 0;
+                console.log('📊 Raw response:', response);
+                console.log('📊 Response data:', response.data);
+                
+                // Handle different response structures
+                const responseData = response.data || response;
+                this.invoices = responseData.data || responseData || [];
+                this.currentPage = responseData.current_page || 1;
+                this.totalPages = responseData.last_page || 1;
+                this.perPage = responseData.per_page || 10;
+                this.total = responseData.total || 0;
+                
+                console.log('📊 Processed invoices:', this.invoices);
+                console.log('📊 Total invoices:', this.total);
             } catch (error) {
                 console.error("Failed to load invoices:", error);
                 window.invoiceDemoManager.showError("Failed to load invoices");
@@ -1189,26 +1197,7 @@ function invoiceDemoData() {
 
         toggleDeleted() {
             this.currentPage = 1;
-            // Force refresh with cache-busting to ensure proper data loading
-            setTimeout(async () => {
-                const response = await window.invoiceDemoManager.loadInvoices(
-                    this.search,
-                    this.statusFilter,
-                    this.startDate,
-                    this.endDate,
-                    this.currentPage,
-                    this.perPage,
-                    this.showDeleted,
-                    true // forceRefresh
-                );
-                
-                // Update component state with fresh data
-                this.invoices = response.data;
-                this.currentPage = response.current_page;
-                this.totalPages = response.last_page;
-                this.perPage = response.per_page;
-                this.total = response.total;
-            }, 100);
+            this.loadInvoices();
         },
 
         clearAllFilters() {
