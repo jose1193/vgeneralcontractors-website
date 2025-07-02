@@ -166,8 +166,8 @@ class InvoiceDemoManager {
     /**
      * Generate PDF for invoice
      */
-    async generatePdf(id) {
-        return await this.apiRequest(`${this.baseUrl}/${id}/generate-pdf`, {
+    async generatePdf(uuid) {
+        return await this.apiRequest(`${this.baseUrl}/${uuid}/generate-pdf`, {
             method: "POST",
         });
     }
@@ -1041,8 +1041,10 @@ function invoiceDemoData() {
             }
 
             try {
+                // Usar uuid en lugar de id para la eliminación
+                console.log('Eliminando factura con UUID:', invoice.uuid);
                 const response = await window.invoiceDemoManager.deleteInvoice(
-                    invoice.id
+                    invoice.uuid
                 );
 
                 Swal.fire({
@@ -1055,6 +1057,7 @@ function invoiceDemoData() {
 
                 await this.loadInvoices();
             } catch (error) {
+                console.error('Error al eliminar factura:', error);
                 Swal.fire({
                     title: "Error",
                     text: error.message || "Error al eliminar la factura",
@@ -1064,10 +1067,11 @@ function invoiceDemoData() {
         },
 
         // Generate PDF for invoice
-        async generatePdf(invoiceId) {
+        async generatePdf(invoice) {
             this.pdfGenerating = true;
+            console.log('Generating PDF for invoice UUID:', invoice.uuid);
             try {
-                await window.invoiceDemoManager.generatePdf(invoiceId);
+                await window.invoiceDemoManager.generatePdf(invoice.uuid);
                 window.invoiceDemoManager.showSuccess(
                     "PDF generated successfully"
                 );
