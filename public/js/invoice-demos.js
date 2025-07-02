@@ -1435,6 +1435,19 @@ function invoiceDemoData() {
                 return;
             }
 
+            // ✅ SMART VALIDATION: In edit mode, if the number hasn't changed, skip validation
+            if (
+                this.isEditing &&
+                this.currentInvoice &&
+                this.form.invoice_number === this.currentInvoice.invoice_number
+            ) {
+                console.log(
+                    "✅ Invoice number unchanged in edit mode - skipping validation"
+                );
+                this.invoiceNumberExists = false;
+                return;
+            }
+
             try {
                 const excludeId =
                     this.isEditing && this.currentInvoice
@@ -1449,6 +1462,10 @@ function invoiceDemoData() {
                     current_invoice_exists: !!this.currentInvoice,
                     current_invoice_uuid: this.currentInvoice?.uuid,
                     current_invoice_number: this.currentInvoice?.invoice_number,
+                    number_changed: this.isEditing
+                        ? this.form.invoice_number !==
+                          this.currentInvoice?.invoice_number
+                        : "N/A",
                 });
 
                 const response =
@@ -1467,12 +1484,23 @@ function invoiceDemoData() {
                     status: response.exists ? "❌ DUPLICATE" : "✅ AVAILABLE",
                 });
 
-                // ✅ Show visual feedback
+                // ✅ Show visual feedback (only for creation mode or real duplicates in edit mode)
                 if (this.invoiceNumberExists) {
                     console.warn("❌ Invoice number already exists!");
-                    window.invoiceDemoManager.showError(
-                        `Invoice number "${this.form.invoice_number}" already exists. Please use a different number.`
-                    );
+                    // ✅ Only show error if we're creating
+                    if (!this.isEditing) {
+                        window.invoiceDemoManager.showError(
+                            `Invoice number "${this.form.invoice_number}" already exists. Please use a different number.`
+                        );
+                    } else {
+                        // ✅ In edit mode, this should not happen if our logic is correct
+                        console.log(
+                            "⚠️ Invoice number exists in edit mode - this indicates a real duplicate"
+                        );
+                        window.invoiceDemoManager.showError(
+                            `Invoice number "${this.form.invoice_number}" is already used by another invoice. Please choose a different number.`
+                        );
+                    }
                 }
             } catch (error) {
                 console.error("❌ Failed to check invoice number:", error);
