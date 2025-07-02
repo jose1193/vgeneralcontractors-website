@@ -83,16 +83,30 @@
             }
         }
 
-        /* Modern Glass Container */
+        /* Modern Glass Container with Animated Border */
         .glass-container {
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.1) 0%,
-                    rgba(255, 255, 255, 0.05) 100%);
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
-                0 8px 32px rgba(139, 92, 246, 0.1),
-                0 4px 16px rgba(99, 102, 241, 0.05);
+            border-radius: 1rem; 
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1), 0 4px 16px rgba(99, 102, 241, 0.05);
+            overflow: hidden; /* Important for pseudo-element */
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1rem;
+            border: 2px solid transparent;
+            background: linear-gradient(90deg, #f59e0b, #eab308, #8b5cf6, #d946ef, #f59e0b) border-box;
+            background-size: 200% auto;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            z-index: 0; 
+            animation: rotateGradient 3s linear infinite;
         }
 
         /* Modern Glass Input */
@@ -200,53 +214,33 @@
             background: rgba(255, 255, 255, 0.95);
         }
 
-        /* Animated Gradient Border for Radio Buttons */
-        .animated-gradient-label {
-            position: relative;
-            padding: 0.75rem 1.5rem;
+        /* Quick Date Range Label Styles */
+        .date-range-label {
+            padding: 0.5rem 1rem;
             border-radius: 0.75rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            overflow: hidden;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: rgb(209, 213, 219);
+            position: relative;
+            z-index: 1;
         }
 
-        .animated-gradient-label::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 0.75rem;
-            border: 2px solid transparent;
-            background: linear-gradient(45deg, #f59e0b, #eab308, #8b5cf6, #d946ef) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        input[type="radio"]:checked + .animated-gradient-label::before {
-            opacity: 1;
-            animation: rotateGradient 4s linear infinite;
-        }
-
-        input[type="radio"]:checked + .animated-gradient-label {
+        input[type="radio"]:checked + .date-range-label {
+            background: rgba(139, 92, 246, 0.3);
             color: white;
+            border-color: rgba(139, 92, 246, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
         }
 
         @keyframes rotateGradient {
             0% {
-                transform: rotate(0deg);
+                background-position: 0% 50%;
             }
             100% {
-                transform: rotate(360deg);
+                background-position: 200% 50%;
             }
         }
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -344,7 +338,7 @@
             </div>
 
             <!-- Filters and Search Section - Improved UX/UI -->
-            <div class="glass-container rounded-2xl mb-8 p-6">
+            <div class="glass-container mb-8">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-6 gap-y-4">
                     <!-- Search Input -->
                     <div class="lg:col-span-4">
@@ -384,8 +378,8 @@
                     </div>
 
                     <!-- Items Per Page Selector -->
-                    <div class="lg:col-span-2">
-                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Items Per Page</label>
+                    <div class="lg:col-span-1">
+                        <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Items</label>
                         <select x-model="perPage" @change="changePerPage()"
                             class="glass-input w-full h-12 px-4 py-3 text-sm rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 hover:bg-white/15 cursor-pointer">
                             <option value="10" class="bg-gray-800 text-white">10</option>
@@ -396,23 +390,23 @@
                     </div>
 
                     <!-- Quick Date Ranges -->
-                    <div class="lg:col-span-10">
+                    <div class="lg:col-span-8">
                         <label class="glass-label text-xs font-medium mb-2 block text-gray-200">Quick Date Ranges</label>
-                        <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
                             <input type="radio" id="q_today" name="quick_date_range" class="hidden" @click="setDateRange('today')">
-                            <label for="q_today" class="animated-gradient-label">Today</label>
+                            <label for="q_today" class="date-range-label">Today</label>
 
                             <input type="radio" id="q_7d" name="quick_date_range" class="hidden" @click="setDateRange('last7days')">
-                            <label for="q_7d" class="animated-gradient-label">7d</label>
+                            <label for="q_7d" class="date-range-label">7d</label>
 
                             <input type="radio" id="q_30d" name="quick_date_range" class="hidden" @click="setDateRange('last30days')">
-                            <label for="q_30d" class="animated-gradient-label">30d</label>
+                            <label for="q_30d" class="date-range-label">30d</label>
 
                             <input type="radio" id="q_month" name="quick_date_range" class="hidden" @click="setDateRange('thisMonth')">
-                            <label for="q_month" class="animated-gradient-label">Month</label>
+                            <label for="q_month" class="date-range-label">Month</label>
 
                             <input type="radio" id="q_year" name="quick_date_range" class="hidden" @click="setDateRange('thisYear')">
-                            <label for="q_year" class="animated-gradient-label">Year</label>
+                            <label for="q_year" class="date-range-label">Year</label>
 
                             <button type="button" @click="clearDateRange()" class="p-2 text-sm rounded-lg modern-button text-red-400 hover:text-red-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,18 +417,17 @@
                     </div>
 
                     <!-- Show Deleted Toggle -->
-                    <div class="lg:col-span-2 flex items-end justify-start lg:justify-end pb-1">
-                        <div class="flex items-center">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" x-model="showDeleted" @change="loadInvoices()"
-                                    class="sr-only peer">
-                                <div
-                                    class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
-                                </div>
-                                <span class="ml-3 text-sm font-medium text-gray-200">
-                                    Show Deleted
-                                </span>
-                            </label>
+                    <div class="lg:col-span-2 flex items-end justify-start">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="showDeleted" x-model="showDeleted" @change="toggleDeleted()"
+                                class="hidden">
+                            <button @click="showDeleted = !showDeleted; toggleDeleted()"
+                                :class="{ 'bg-purple-600': showDeleted, 'bg-gray-600': !showDeleted }"
+                                class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ease-in-out focus:outline-none">
+                                <span :class="{ 'translate-x-6': showDeleted, 'translate-x-1': !showDeleted }"
+                                    class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ease-in-out"></span>
+                            </button>
+                            <label for="showDeleted" class="glass-label text-xs font-medium text-gray-200">Show Deleted</label>
                         </div>
                     </div>
                 </div>
