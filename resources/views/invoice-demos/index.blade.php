@@ -579,19 +579,7 @@
                             </button>
                         </div>
 
-                        <!-- Show Deleted Toggle Switch -->
-                        <div class="lg:col-span-2 flex items-end justify-center">
-                            <div class="flex items-center space-x-3">
-                                <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
-                                        class="sr-only peer">
-                                    <div
-                                        class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
+
                     </div>
 
                     <!-- Advanced Filters - Collapsible -->
@@ -614,7 +602,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-5">
+                            <div class="lg:col-span-8">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
@@ -644,11 +632,13 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="mt-6 flex flex-wrap items-center justify-start gap-6">
                             <!-- Clear Filters Button -->
-                            <div class="lg:col-span-3 flex items-end">
+                            <div class="flex items-center">
                                 <button @click="clearAllFilters()"
-                                    class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-lg hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md"
+                                    class="h-11 px-4 glass-button-filter backdrop-blur-md bg-red-500/25 border border-red-400/40 text-red-200 rounded-lg hover:bg-red-500/40 hover:text-white hover:border-red-300/60 transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md"
                                     title="Clear all filters and reset"
                                     :class="{ 'animate-pulse': hasActiveFilters() }">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -657,6 +647,20 @@
                                     </svg>
                                     <span>Clear Filters</span>
                                 </button>
+                            </div>
+
+                            <!-- Show Deleted Toggle Switch -->
+                            <div class="flex items-center">
+                                <div class="flex items-center space-x-3">
+                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
+                                            class="sr-only peer">
+                                        <div
+                                            class="relative w-11 h-6 bg-white/20 backdrop-blur-md border border-white/30 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-blue-500">
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
