@@ -2,84 +2,6 @@
 
 @section('title', 'Invoice Management')
 
-@push('styles')
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Flatpickr Theme - Puedes elegir otro tema si prefieres -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-    <style>
-        /* Estilos personalizados para Flatpickr */
-        .flatpickr-calendar {
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .flatpickr-day.selected, 
-        .flatpickr-day.startRange, 
-        .flatpickr-day.endRange, 
-        .flatpickr-day.selected.inRange, 
-        .flatpickr-day.startRange.inRange, 
-        .flatpickr-day.endRange.inRange, 
-        .flatpickr-day.selected:focus, 
-        .flatpickr-day.startRange:focus, 
-        .flatpickr-day.endRange:focus, 
-        .flatpickr-day.selected:hover, 
-        .flatpickr-day.startRange:hover, 
-        .flatpickr-day.endRange:hover, 
-        .flatpickr-day.selected.prevMonthDay, 
-        .flatpickr-day.startRange.prevMonthDay, 
-        .flatpickr-day.endRange.prevMonthDay, 
-        .flatpickr-day.selected.nextMonthDay, 
-        .flatpickr-day.startRange.nextMonthDay, 
-        .flatpickr-day.endRange.nextMonthDay {
-            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
-            border-color: #8b5cf6;
-        }
-        
-        .flatpickr-day.inRange, 
-        .flatpickr-day.prevMonthDay.inRange, 
-        .flatpickr-day.nextMonthDay.inRange, 
-        .flatpickr-day.today.inRange, 
-        .flatpickr-day.prevMonthDay.today.inRange, 
-        .flatpickr-day.nextMonthDay.today.inRange, 
-        .flatpickr-day:hover, 
-        .flatpickr-day.prevMonthDay:hover, 
-        .flatpickr-day.nextMonthDay:hover, 
-        .flatpickr-day:focus, 
-        .flatpickr-day.prevMonthDay:focus, 
-        .flatpickr-day.nextMonthDay:focus {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-        
-        .flatpickr-current-month .flatpickr-monthDropdown-months,
-        .flatpickr-current-month input.cur-year {
-            font-weight: 600;
-            color: #4b5563;
-        }
-        
-        .flatpickr-time input:hover, 
-        .flatpickr-time .flatpickr-am-pm:hover, 
-        .flatpickr-time input:focus, 
-        .flatpickr-time .flatpickr-am-pm:focus {
-            background: rgba(139, 92, 246, 0.1);
-        }
-        
-        .flatpickr-months .flatpickr-prev-month:hover svg, 
-        .flatpickr-months .flatpickr-next-month:hover svg {
-            fill: #8b5cf6;
-        }
-        
-        /* Estilo para el input alternativo que muestra Flatpickr */
-        .flatpickr-input[readonly] {
-            background-color: transparent;
-        }
-    </style>
-@endpush
-
 @section('content')
     <style>
         /* Modern Animated Gradient Header with Particles */
@@ -351,29 +273,19 @@
                 </div>
 
                 <!-- Date Range Filters - Second Row -->
-                <div class="grid grid-cols-1 gap-6 mt-6">
-                    <!-- Flatpickr Date Range Filter -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Start Date Filter -->
                     <div class="relative">
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="glass-label text-xs block">Rango de Fechas</label>
-                            <button @click="clearDateFilter()" 
-                                class="text-xs text-purple-500 hover:text-purple-700 transition-colors duration-200 flex items-center">
-                                <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                                Limpiar
-                            </button>
-                        </div>
-                        <div class="relative">
-                            <input type="text" id="date-range-picker" placeholder="Seleccionar rango de fechas..."
-                                class="glass-input w-full px-4 py-4 rounded-xl pl-12">
-                            <svg class="absolute left-4 top-4 h-5 w-5 text-purple-400" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                        </div>
+                        <label class="glass-label text-xs mb-2 block">Start Date</label>
+                        <input type="date" x-model="startDate" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl">
+                    </div>
+
+                    <!-- End Date Filter -->
+                    <div class="relative">
+                        <label class="glass-label text-xs mb-2 block">End Date</label>
+                        <input type="date" x-model="endDate" @change="filterByDateRange()"
+                            class="glass-input w-full px-4 py-4 rounded-xl">
                     </div>
                 </div>
             </div>
@@ -702,118 +614,6 @@
     </div>
 
     @push('scripts')
-        <!-- Flatpickr JS -->
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <!-- Flatpickr Español -->
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
         <script src="{{ asset('js/invoice-demos.js') }}"></script>
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('invoiceDemoData', () => ({
-                    // Mantener el resto de la definición original
-                    init() {
-                        // Inicializar Flatpickr después de que Alpine.js haya cargado
-                        this.initFlatpickr();
-                        this.loadFormData();
-                        this.loadInvoices();
-                    },
-                    
-                    // Inicializar Flatpickr
-                    initFlatpickr() {
-                        const self = this;
-                        
-                        // Crear el contenedor para los rangos predefinidos
-                        const rangeButtonsContainer = document.createElement('div');
-                        rangeButtonsContainer.className = 'flatpickr-ranges flex flex-wrap gap-2 p-3 border-t border-gray-200';
-                        
-                        // Función para crear un botón de rango predefinido
-                        const createRangeButton = (label, days) => {
-                            const btn = document.createElement('button');
-                            btn.className = 'px-3 py-1 text-xs rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors';
-                            btn.textContent = label;
-                            btn.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                const today = new Date();
-                                let startDate = new Date();
-                                
-                                if (days === 0) { // Hoy
-                                    self.flatpickrInstance.setDate([today, today]);
-                                } else if (days === 'month') { // Este mes
-                                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-                                    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                                    self.flatpickrInstance.setDate([startDate, endDate]);
-                                } else if (days === 'year') { // Este año
-                                    startDate = new Date(today.getFullYear(), 0, 1);
-                                    const endDate = new Date(today.getFullYear(), 11, 31);
-                                    self.flatpickrInstance.setDate([startDate, endDate]);
-                                } else { // Días específicos hacia atrás
-                                    startDate.setDate(today.getDate() - days);
-                                    self.flatpickrInstance.setDate([startDate, today]);
-                                }
-                            });
-                            return btn;
-                        };
-                        
-                        // Añadir botones de rangos predefinidos
-                        rangeButtonsContainer.appendChild(createRangeButton('Hoy', 0));
-                        rangeButtonsContainer.appendChild(createRangeButton('Últimos 7 días', 7));
-                        rangeButtonsContainer.appendChild(createRangeButton('Últimos 30 días', 30));
-                        rangeButtonsContainer.appendChild(createRangeButton('Este mes', 'month'));
-                        rangeButtonsContainer.appendChild(createRangeButton('Este año', 'year'));
-                        
-                        // Inicializar Flatpickr
-                        this.flatpickrInstance = flatpickr('#date-range-picker', {
-                            mode: 'range',
-                            dateFormat: 'Y-m-d',
-                            locale: 'es',
-                            altInput: true,
-                            altFormat: 'j F, Y',
-                            showMonths: 2,
-                            static: true,
-                            disableMobile: true,
-                            animate: true,
-                            position: 'below',
-                            onChange: function(selectedDates, dateStr, instance) {
-                                if (selectedDates.length === 2) {
-                                    self.startDate = self.formatFlatpickrDate(selectedDates[0]);
-                                    self.endDate = self.formatFlatpickrDate(selectedDates[1]);
-                                    self.filterByDateRange();
-                                } else if (selectedDates.length === 0) {
-                                    self.startDate = '';
-                                    self.endDate = '';
-                                    self.filterByDateRange();
-                                }
-                            },
-                            onReady: function(selectedDates, dateStr, instance) {
-                                // Añadir los rangos predefinidos al calendario
-                                const calendar = instance.calendarContainer;
-                                calendar.appendChild(rangeButtonsContainer);
-                                
-                                // Si ya hay fechas seleccionadas, establecerlas en el picker
-                                if (self.startDate && self.endDate) {
-                                    this.setDate([self.startDate, self.endDate]);
-                                }
-                            }
-                        });
-                    },
-                    
-                    // Formatear fecha para Flatpickr
-                    formatFlatpickrDate(date) {
-                        const year = date.getFullYear();
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const day = String(date.getDate()).padStart(2, '0');
-                        return `${year}-${month}-${day}`;
-                    },
-                    
-                    // Limpiar filtro de fechas
-                    clearDateFilter() {
-                        this.startDate = '';
-                        this.endDate = '';
-                        this.flatpickrInstance.clear();
-                        this.filterByDateRange();
-                    }
-                }))
-            });
-        </script>
     @endpush
 @endsection
