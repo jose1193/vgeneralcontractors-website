@@ -369,8 +369,8 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                x-mask:dynamic="$money($input)"
-                                                @input="updateItemRate($event, index)"
+                                                @input="formatAndUpdateItemRate($event, index)"
+                                                @blur="formatDisplayValue($event)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="0.00">
                                         </div>
@@ -420,7 +420,7 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
-                                        x-mask:dynamic="$money($input)"
+                                        x-mask:dynamic="$money($input, '.', ',', 2)"
                                         @input="updateSubtotal($event)"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
@@ -437,7 +437,7 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
-                                        x-mask:dynamic="$money($input)"
+                                        x-mask:dynamic="$money($input, '.', ',', 2)"
                                         @input="updateTaxAmount($event)"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
