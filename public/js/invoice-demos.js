@@ -866,25 +866,34 @@ function invoiceDemoData() {
 
         // Calculate invoice totals
         calculateTotals() {
+            console.log('Calculating totals...');
             let subtotal = 0;
-            this.form.items.forEach((item) => {
+            this.form.items.forEach((item, index) => {
                 // Asegurar que quantity y rate sean números
                 const quantity = parseFloat(item.quantity || 0);
                 const rate = parseFloat(item.rate || 0);
+                
+                console.log(`Item ${index+1}: quantity=${quantity}, rate=${rate}`);
 
                 // Calcular el monto del ítem
                 const itemAmount = quantity * rate;
                 item.amount = itemAmount.toFixed(2); // Solo formateamos el amount para mostrar
+                
+                console.log(`Item ${index+1} amount: ${itemAmount}`);
 
                 subtotal += itemAmount;
             });
 
+            console.log(`Subtotal: ${subtotal}`);
+            
             // Actualizar el subtotal en el formulario
             this.form.subtotal = subtotal.toFixed(2);
 
             // Calcular balance_due
             const taxAmount = parseFloat(this.form.tax_amount || 0);
             this.form.balance_due = (subtotal + taxAmount).toFixed(2); // Solo formateamos el balance_due para mostrar
+            
+            console.log(`Tax: ${taxAmount}, Balance Due: ${this.form.balance_due}`);
         },
 
         // Submit form
@@ -1199,6 +1208,33 @@ const originalInvoiceDemoData = invoiceDemoData;
 invoiceDemoData = function() {
     const data = originalInvoiceDemoData();
     
+    // Format invoice number input (only numbers and starts with VG-)
+    data.formatInvoiceNumberInput = function(event) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+        
+        // Asegurar que comience con VG-
+        if (!value.startsWith('VG-')) {
+            value = 'VG-' + value.replace('VG-', '');
+        }
+        
+        // Después del prefijo VG-, solo permitir números
+        const prefix = 'VG-';
+        const numberPart = value.substring(prefix.length).replace(/[^0-9]/g, '');
+        const newValue = prefix + numberPart;
+        
+        // Solo actualizar si hay cambios para evitar loops
+        if (newValue !== value) {
+            input.value = newValue;
+            this.form.invoice_number = newValue;
+            // Restaurar la posición del cursor, ajustando si es necesario
+            const newCursorPos = Math.min(cursorPosition, newValue.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+    };
+    
+    
     // Add formatting functions
     data.formatPhoneInput = function(event) {
         const input = event.target;
@@ -1345,6 +1381,72 @@ invoiceDemoData = function() {
             // Restaurar la posición del cursor
             input.setSelectionRange(cursorPosition, cursorPosition);
         }
+     };
+     
+     // Format currency input for rate field
+     data.formatCurrencyInput = function(event, itemIndex) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+        
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, '');
+        
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split('.');
+        if (parts.length > 2) {
+            value = parts[0] + '.' + parts.slice(1).join('');
+        }
+        
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + '.' + parts[1].substring(0, 2);
+        }
+        
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form.items[itemIndex].rate = value;
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+        
+        // Calcular totales después de actualizar el valor
+        this.calculateTotals();
+     };
+     
+     // Format general currency input (for subtotal, tax_amount)
+     data.formatGeneralCurrencyInput = function(event, fieldName) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+        
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, '');
+        
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split('.');
+        if (parts.length > 2) {
+            value = parts[0] + '.' + parts.slice(1).join('');
+        }
+        
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + '.' + parts[1].substring(0, 2);
+        }
+        
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form[fieldName] = value;
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+        
+        // Calcular totales después de actualizar el valor
+        this.calculateTotals();
      };
      
      return data;
