@@ -614,7 +614,7 @@
                             </div>
 
                             <!-- Quick Date Filters -->
-                            <div class="lg:col-span-5">
+                            <div class="lg:col-span-6">
                                 <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
@@ -659,8 +659,8 @@
                                 </div>
                             </div>
 
-                            <!-- Show Deleted Toggle Switch & Collapse Indicator -->
-                            <div class="lg:col-span-3 flex items-end justify-between">
+                            <!-- Show Deleted Toggle Switch -->
+                            <div class="lg:col-span-2 flex items-end justify-start">
                                 <!-- Toggle Switch for Show Deleted -->
                                 <div class="flex items-center space-x-3">
                                     <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
@@ -672,8 +672,6 @@
                                         </div>
                                     </label>
                                 </div>
-
-                                <!-- Removed Collapse Indicator as it's redundant with the select dropdown -->
                             </div>
                         </div>
 
