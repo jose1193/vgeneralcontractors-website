@@ -1189,7 +1189,26 @@ function invoiceDemoData() {
 
         toggleDeleted() {
             this.currentPage = 1;
-            this.loadInvoices();
+            // Force refresh with cache-busting to ensure proper data loading
+            setTimeout(async () => {
+                const response = await window.invoiceDemoManager.loadInvoices(
+                    this.search,
+                    this.statusFilter,
+                    this.startDate,
+                    this.endDate,
+                    this.currentPage,
+                    this.perPage,
+                    this.showDeleted,
+                    true // forceRefresh
+                );
+                
+                // Update component state with fresh data
+                this.invoices = response.data;
+                this.currentPage = response.current_page;
+                this.totalPages = response.last_page;
+                this.perPage = response.per_page;
+                this.total = response.total;
+            }, 100);
         },
 
         clearAllFilters() {
