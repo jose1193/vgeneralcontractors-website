@@ -1110,9 +1110,11 @@ function invoiceDemoData() {
                     text: "La factura ha sido eliminada exitosamente",
                     icon: "success",
                     timer: 2000,
-                    showConfirmButton: false,
+                    showConfirmButton: true,
                 });
 
+                // ✅ FIXED: Automatically enable "Show Deleted" to see the deleted invoice
+                this.showDeleted = true;
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
@@ -1171,6 +1173,8 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
+                // ✅ FIXED: Automatically disable "Show Deleted" to see the restored invoice in normal view
+                this.showDeleted = false;
                 await this.loadInvoices();
             } catch (error) {
                 Swal.fire({
