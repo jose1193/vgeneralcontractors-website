@@ -162,69 +162,105 @@
             color: rgb(255, 255, 255);
         }
 
-        /* Flatpickr Custom Styles - Safe CSS Rules */
+        /* Flatpickr Custom Styles - Enhanced for Maximum Compatibility */
         .flatpickr-calendar {
-            background: rgba(30, 30, 30, 0.95) !important;
+            background: rgba(30, 30, 30, 0.98) !important;
             backdrop-filter: blur(20px) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px !important;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
-            z-index: 99999 !important;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+            z-index: 999999 !important;
             position: fixed !important;
             top: auto !important;
             max-height: 400px !important;
             overflow-y: auto !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            display: block !important;
+        }
+
+        /* Force calendar to be clickable and visible */
+        .flatpickr-calendar * {
+            pointer-events: auto !important;
+            user-select: auto !important;
+        }
+
+        .flatpickr-day {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            background: rgba(60, 60, 60, 0.8) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         .flatpickr-day.selected {
-            background: rgba(147, 51, 234, 0.8) !important;
+            background: rgba(147, 51, 234, 0.9) !important;
             border-color: rgba(147, 51, 234, 1) !important;
             color: white !important;
         }
 
         .flatpickr-day.inRange {
-            background: rgba(147, 51, 234, 0.3) !important;
-            border-color: rgba(147, 51, 234, 0.5) !important;
+            background: rgba(147, 51, 234, 0.4) !important;
+            border-color: rgba(147, 51, 234, 0.6) !important;
             color: white !important;
         }
 
         .flatpickr-day:hover {
-            background: rgba(147, 51, 234, 0.5) !important;
-            border-color: rgba(147, 51, 234, 0.7) !important;
+            background: rgba(147, 51, 234, 0.6) !important;
+            border-color: rgba(147, 51, 234, 0.8) !important;
+            color: white !important;
         }
 
         .flatpickr-months {
-            background: rgba(30, 30, 30, 0.9) !important;
+            background: rgba(30, 30, 30, 0.95) !important;
+            color: white !important;
         }
 
         .flatpickr-weekdays {
-            background: rgba(30, 30, 30, 0.8) !important;
+            background: rgba(30, 30, 30, 0.9) !important;
+            color: white !important;
         }
 
-        /* Fix for arrows and pagination after footer */
-        .flatpickr-calendar {
+        .flatpickr-month {
+            color: white !important;
+        }
+
+        .flatpickr-weekday {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Ensure maximum z-index and proper positioning */
+        body > .flatpickr-calendar,
+        .flatpickr-calendar.open,
+        .flatpickr-calendar.inline {
+            z-index: 999999 !important;
             position: fixed !important;
         }
 
-        /* Ensure proper stacking order */
-        body>.flatpickr-calendar {
-            z-index: 99999 !important;
+        /* Navigation arrows */
+        .flatpickr-prev-month,
+        .flatpickr-next-month {
+            color: white !important;
+            pointer-events: auto !important;
         }
 
-        /* Additional Flatpickr positioning fixes */
-        .flatpickr-calendar.open {
-            z-index: 99999 !important;
+        .flatpickr-prev-month:hover,
+        .flatpickr-next-month:hover {
+            color: rgba(147, 51, 234, 1) !important;
         }
 
-        .flatpickr-calendar.arrowTop:before,
-        .flatpickr-calendar.arrowTop:after {
-            border-bottom-color: rgba(30, 30, 30, 0.95) !important;
-        }
-
-        /* Prevent calendar from being cut off */
+        /* Input styling */
         .flatpickr-input[readonly] {
             cursor: pointer !important;
             background-color: rgba(255, 255, 255, 0.08) !important;
+            pointer-events: auto !important;
+        }
+
+        /* Prevent any overlay interference */
+        .flatpickr-calendar {
+            transform: none !important;
+            will-change: auto !important;
         }
 
         /* Improve flatpickr responsiveness */

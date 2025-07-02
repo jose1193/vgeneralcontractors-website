@@ -632,113 +632,119 @@ function invoiceDemoData() {
 
             // Check if flatpickr is available
             if (typeof flatpickr === 'undefined') {
-                console.error("❌ Flatpickr library not loaded. Retrying in 500ms...");
+                console.warn("⚠️ Flatpickr not available, retrying in 500ms...");
                 setTimeout(() => this.initializeDatePicker(), 500);
                 return;
             }
 
-            // Check if the element exists
-            const datePickerElement = document.getElementById('dateRangePicker');
-            if (!datePickerElement) {
-                console.error("❌ Date picker element not found. Retrying in 500ms...");
+            const dateInput = document.getElementById('dateRangePicker');
+            if (!dateInput) {
+                console.warn("⚠️ Date input element not found, retrying in 500ms...");
                 setTimeout(() => this.initializeDatePicker(), 500);
                 return;
             }
 
-            // Destroy existing instance if any
-            if (this.flatpickrInstance) {
-                try {
-                    this.flatpickrInstance.destroy();
-                } catch (e) {
-                    console.log("Previous instance cleanup:", e);
-                }
-            }
+            console.log("📅 Found date input element:", dateInput);
+            console.log("📅 Input styles:", window.getComputedStyle(dateInput));
 
             try {
-                console.log("🔧 Creating Flatpickr instance...");
-                
-                // Initialize flatpickr with simplified configuration
-                const picker = flatpickr(datePickerElement, {
+                // Destroy any existing instance
+                if (this.dateRangePicker && typeof this.dateRangePicker.destroy === 'function') {
+                    console.log("🗑️ Destroying existing Flatpickr instance...");
+                    this.dateRangePicker.destroy();
+                }
+
+                // Remove readonly temporarily to test
+                dateInput.removeAttribute('readonly');
+
+                // Initialize Flatpickr with enhanced config
+                this.dateRangePicker = flatpickr(dateInput, {
                     mode: "range",
                     dateFormat: "Y-m-d",
                     altInput: true,
                     altFormat: "M j, Y",
-                    showMonths: 1,
                     allowInput: false,
                     clickOpens: true,
+                    static: false,
                     appendTo: document.body,
-                    locale: {
-                        rangeSeparator: " to "
+                    positionElement: dateInput,
+                    ignoredFocusElements: [],
+                    onReady: function(selectedDates, dateStr, instance) {
+                        console.log("📅 Flatpickr ready!", instance);
+                        // Re-add readonly after initialization
+                        dateInput.setAttribute('readonly', 'readonly');
                     },
-
-                    onReady: () => {
-                        console.log("📅 Flatpickr is ready!");
-                    },
-
-                    onOpen: () => {
+                    onOpen: function(selectedDates, dateStr, instance) {
                         console.log("📅 Flatpickr opened!");
-                        // Ensure proper z-index when opened
-                        setTimeout(() => {
-                            const calendar = document.querySelector(".flatpickr-calendar");
-                            if (calendar) {
-                                calendar.style.zIndex = "99999";
-                                console.log("📅 Calendar z-index set to 99999");
-                            }
-                        }, 10);
-                    },
-
-                    onChange: (selectedDates) => {
-                        console.log("📅 Date changed:", selectedDates);
-                        if (selectedDates.length === 1) {
-                            const singleDate = selectedDates[0].toISOString().split("T")[0];
-                            this.dateRangeDisplay = `${singleDate} to ...`;
+                        // Force maximum z-index and positioning
+                        const calendar = instance.calendarContainer;
+                        if (calendar) {
+                            calendar.style.zIndex = "999999";
+                            calendar.style.position = "fixed";
+                            calendar.style.pointerEvents = "auto";
+                            console.log("📅 Calendar z-index set to 999999");
                         }
                     },
-
-                    onClose: (selectedDates) => {
+                    onClose: function(selectedDates, dateStr, instance) {
                         console.log("📅 Flatpickr closed with dates:", selectedDates);
-                        
                         if (selectedDates.length === 2) {
-                            const startDate = selectedDates[0].toISOString().split("T")[0];
-                            const endDate = selectedDates[1].toISOString().split("T")[0];
-
-                            this.startDate = startDate;
-                            this.endDate = endDate;
-                            this.dateRangeDisplay = `${startDate} to ${endDate}`;
-                            this.activeQuickFilter = null;
-
-                            console.log(`📅 Date range selected: ${startDate} to ${endDate}`);
-
-                            this.currentPage = 1;
-                            this.loadInvoices();
-                        } else if (selectedDates.length === 0) {
-                            // Handle clear case
-                            this.startDate = "";
-                            this.endDate = "";
-                            this.dateRangeDisplay = "";
-                            this.activeQuickFilter = null;
-                            this.currentPage = 1;
-                            this.loadInvoices();
+                            // Update the display and trigger filtering
+                            const startDate = selectedDates[0].toISOString().split('T')[0];
+                            const endDate = selectedDates[1].toISOString().split('T')[0];
+                            console.log("📅 Date range selected:", startDate, "to", endDate);
                         }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        console.log("📅 Date changed:", selectedDates, dateStr);
+                    },
+                    onClear: function() {
+                        console.log("📅 Date cleared");
                     }
                 });
 
-                // Store the picker instance
-                this.dateRangePicker = picker;
-                this.flatpickrInstance = picker;
-
-                // Test click functionality
-                datePickerElement.addEventListener('click', () => {
-                    console.log("📅 Input clicked! Flatpickr should open...");
-                });
+                // Store reference for later use
+                this.flatpickrInstance = this.dateRangePicker;
 
                 console.log("✅ Flatpickr initialized successfully");
-                console.log("📅 Picker instance:", picker);
-                
+                console.log("📅 Picker instance:", this.dateRangePicker);
+
+                // Add multiple event listeners for debugging and manual opening
+                dateInput.addEventListener('click', (e) => {
+                    console.log("🖱️ Input clicked!", e);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (this.dateRangePicker) {
+                        console.log("📅 Manually opening calendar...");
+                        this.dateRangePicker.open();
+                    }
+                });
+
+                dateInput.addEventListener('focus', (e) => {
+                    console.log("🎯 Input focused!", e);
+                    if (this.dateRangePicker) {
+                        this.dateRangePicker.open();
+                    }
+                });
+
+                // Test if calendar opens programmatically
+                setTimeout(() => {
+                    console.log("🧪 Testing calendar open...");
+                    if (this.dateRangePicker) {
+                        this.dateRangePicker.open();
+                        setTimeout(() => {
+                            this.dateRangePicker.close();
+                            console.log("🧪 Test complete - calendar should have opened and closed");
+                        }, 1000);
+                    }
+                }, 2000);
+
             } catch (error) {
                 console.error("❌ Error initializing Flatpickr:", error);
                 // Retry after a delay
-                setTimeout(() => this.initializeDatePicker(), 1000);
+                setTimeout(() => {
+                    console.log("🔄 Retrying Flatpickr initialization...");
+                    this.initializeDatePicker();
+                }, 1000);
             }
         },
 
