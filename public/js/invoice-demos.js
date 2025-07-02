@@ -157,8 +157,8 @@ class InvoiceDemoManager {
     /**
      * Restore deleted invoice
      */
-    async restoreInvoice(id) {
-        return await this.apiRequest(`${this.baseUrl}/${id}/restore`, {
+    async restoreInvoice(uuid) {
+        return await this.apiRequest(`${this.baseUrl}/${uuid}/restore`, {
             method: "PATCH",
         });
     }
@@ -1100,7 +1100,7 @@ function invoiceDemoData() {
 
             try {
                 const response = await window.invoiceDemoManager.restoreInvoice(
-                    invoice.id
+                    invoice.uuid
                 );
 
                 Swal.fire({
