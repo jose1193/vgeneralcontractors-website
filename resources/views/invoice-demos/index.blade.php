@@ -452,6 +452,7 @@
         /* ========== DELETED ITEMS STYLING ========== */
         .deleted-item {
             background: linear-gradient(135deg, rgba(185, 28, 28, 0.4) 0%, rgba(153, 27, 27, 0.3) 100%) !important;
+            border-left: 4px solid rgba(239, 68, 68, 0.6) !important;
             position: relative;
         }
 
@@ -460,17 +461,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 4px;
-            bottom: 0;
-            background: rgba(239, 68, 68, 0.6);
-            z-index: 1;
-        }
-
-        .deleted-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 4px;
             right: 0;
             bottom: 0;
             background: linear-gradient(90deg,
@@ -481,7 +471,7 @@
             z-index: 1;
         }
 
-        .deleted-item td {
+        .deleted-item>* {
             position: relative;
             z-index: 2;
         }
