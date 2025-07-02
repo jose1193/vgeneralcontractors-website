@@ -409,7 +409,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         /* Estilos para hacer visibles las flechas de los selectores */
         select.glass-input-filter {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -448,6 +448,41 @@
         .glass-button-filter:active {
             transform: translateY(-1px);
         }
+
+        /* ========== DELETED ITEMS STYLING ========== */
+        .deleted-item {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.4) 0%, rgba(153, 27, 27, 0.3) 100%) !important;
+            border-left: 4px solid rgba(239, 68, 68, 0.6) !important;
+            position: relative;
+        }
+
+        .deleted-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    rgba(185, 28, 28, 0.1) 0%,
+                    rgba(185, 28, 28, 0.05) 50%,
+                    rgba(185, 28, 28, 0.1) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .deleted-item>* {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========== IMPROVED GLASS INPUT STYLES ========== */
+        .glass-input-filter {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
     <div class="min-h-screen py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -456,7 +491,8 @@
                 <div class="animated-gradient-header px-8 py-6 relative">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
+                            <h1 class="text-3xl font-bold text-white mb-2"
+                                style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
                                 Invoice Management</h1>
                             <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
                         </div>
@@ -767,18 +803,30 @@
                                 <template x-for="(invoice, index) in invoices" :key="invoice.uuid">
                                     <tr class="transition-colors duration-200 hover:bg-slate-700"
                                         :class="[
-                                            invoice.deleted_at ? 'bg-red-900 bg-opacity-30' : '',
+                                            invoice.deleted_at ? 'deleted-item' : '',
                                             index % 2 === 0 ? 'bg-gray-800 bg-opacity-30' : 'bg-transparent'
                                         ]">
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="text-sm font-medium text-gray-100"
+                                            <div class="text-sm font-medium"
+                                                :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
                                                 x-text="((currentPage - 1) * perPage) + index + 1">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             <div class="flex items-center justify-center">
-                                                <div class="text-sm font-medium text-gray-100"
+                                                <div class="text-sm font-medium"
+                                                    :class="invoice.deleted_at ? 'text-red-200 line-through' : 'text-gray-100'"
                                                     x-text="invoice.invoice_number">
+                                                </div>
+                                                <div x-show="invoice.deleted_at" class="ml-2 text-red-400"
+                                                    title="Deleted">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                        </path>
+                                                    </svg>
                                                 </div>
                                                 <div x-show="invoice.pdf_url" class="ml-2 text-green-400"
                                                     title="PDF Available">
@@ -793,25 +841,36 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="text-sm font-medium text-gray-100" x-text="invoice.bill_to_name">
+                                            <div class="text-sm font-medium"
+                                                :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
+                                                x-text="invoice.bill_to_name">
                                             </div>
-                                            <div class="text-sm text-gray-400"
+                                            <div class="text-sm"
+                                                :class="invoice.deleted_at ? 'text-red-300' : 'text-gray-400'"
                                                 x-text="invoice.bill_to_phone_formatted || invoice.bill_to_phone"></div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="text-sm font-medium text-gray-100"
+                                            <div class="text-sm font-medium"
+                                                :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
                                                 x-text="formatCurrency(invoice.balance_due)"></div>
-                                            <div class="text-xs text-gray-400">Subtotal: <span
-                                                    x-text="formatCurrency(invoice.subtotal)"></span></div>
+                                            <div class="text-xs"
+                                                :class="invoice.deleted_at ? 'text-red-300' : 'text-gray-400'">Subtotal:
+                                                <span x-text="formatCurrency(invoice.subtotal)"></span>
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full"
-                                                :class="getStatusBadgeClass(invoice.status)"
-                                                x-text="invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
+                                                :class="[
+                                                    getStatusBadgeClass(invoice.status),
+                                                    invoice.deleted_at ? 'opacity-60' : ''
+                                                ]"
+                                                x-text="(invoice.deleted_at ? 'DELETED - ' : '') + invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-100"
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm"
+                                            :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
                                             x-text="formatDate(invoice.invoice_date)"></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-100"
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm"
+                                            :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"
                                             x-text="formatDate(invoice.date_of_loss)"></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div class="flex items-center justify-center space-x-2">

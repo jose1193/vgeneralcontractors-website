@@ -22,6 +22,10 @@ class InvoiceDemoManager {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": this.csrfToken,
                 "X-Requested-With": "XMLHttpRequest",
+                // ✅ FORCE cache bypass for all requests
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                Pragma: "no-cache",
+                Expires: "0",
             },
         };
 
@@ -104,6 +108,8 @@ class InvoiceDemoManager {
             sort_by: sortBy,
             sort_order: sortOrder,
             per_page: perPage,
+            // ✅ Add timestamp to force cache bypass
+            _t: Date.now(),
         });
 
         if (startDate) {
@@ -1145,8 +1151,14 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
-                // Si no estamos mostrando facturas eliminadas, mantener la vista actual
-                // Si estamos mostrando facturas activas, la factura eliminada desaparecerá
+                // ✅ FORCE complete state refresh after delete
+                this.invoices = []; // Clear current array to force refresh
+                this.loading = true; // Show loading state
+
+                // ✅ Wait a moment to ensure backend is updated
+                await new Promise((resolve) => setTimeout(resolve, 100));
+
+                // ✅ Force reload with cache bypass
                 await this.loadInvoices();
 
                 // Opcionalmente, mostrar un mensaje sugiriendo ver facturas eliminadas
@@ -1217,13 +1229,33 @@ function invoiceDemoData() {
                     showConfirmButton: false,
                 });
 
-                // Cambiar a mostrar facturas activas después de restaurar
+                // ✅ FORCE complete state refresh after restore
+                this.invoices = []; // Clear current array to force refresh
+                this.loading = true; // Show loading state
+
+                // ✅ Wait a moment to ensure backend is updated
+                await new Promise((resolve) => setTimeout(resolve, 100));
+
+                // ✅ Automatically switch to active view after restore
                 if (this.showDeleted) {
                     this.showDeleted = false;
                     this.currentPage = 1; // Reiniciar a la primera página
+                    window.invoiceDemoManager.showNotification(
+                        "Cambiando a vista de facturas activas",
+                        "info"
+                    );
                 }
 
+                // ✅ Force reload with cache bypass
                 await this.loadInvoices();
+
+                // ✅ Show additional confirmation
+                setTimeout(() => {
+                    window.invoiceDemoManager.showNotification(
+                        "La factura ha sido restaurada y está ahora visible en la lista activa",
+                        "success"
+                    );
+                }, 1000);
             } catch (error) {
                 Swal.fire({
                     title: "Error",
@@ -1236,6 +1268,10 @@ function invoiceDemoData() {
         // ============ ADDITIONAL METHODS ============
 
         toggleDeleted() {
+            // ✅ FORCE complete state refresh when toggling
+            this.invoices = []; // Clear current array to force refresh
+            this.loading = true; // Show loading state
+
             // Reiniciar a la primera página cuando se cambia el filtro
             this.currentPage = 1;
 
@@ -1252,8 +1288,11 @@ function invoiceDemoData() {
                 );
             }
 
-            // Recargar la lista de facturas con el nuevo filtro
-            this.loadInvoices();
+            // ✅ Add small delay to ensure UI updates before reload
+            setTimeout(() => {
+                // Recargar la lista de facturas con el nuevo filtro
+                this.loadInvoices();
+            }, 50);
         },
 
         clearAllFilters() {
@@ -1593,7 +1632,7 @@ invoiceDemoData = function () {
         }
     };
 
-    // Format service description (all uppercase)
+    // Format service description input (all uppercase)
     data.formatServiceDescriptionInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
