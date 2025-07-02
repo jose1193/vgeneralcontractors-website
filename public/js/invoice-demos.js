@@ -838,6 +838,14 @@ function invoiceDemoData() {
                 return date.toISOString().slice(0, 16);
             };
             
+            // Procesar los items para eliminar los UUIDs y evitar duplicidad
+            const processedItems = invoice.items ? invoice.items.map(item => {
+                // Crear una copia del item sin el UUID
+                const { uuid, ...itemWithoutUuid } = item;
+                console.log('Removed UUID from item:', uuid);
+                return itemWithoutUuid;
+            }) : [];
+            
             this.form = {
                 invoice_number: invoice.invoice_number || "",
                 invoice_date: formatDateForInput(invoice.invoice_date),
@@ -858,7 +866,7 @@ function invoiceDemoData() {
                 type_of_loss: invoice.type_of_loss || "",
                 notes: invoice.notes || "",
                 status: invoice.status || "draft",
-                items: invoice.items || [],
+                items: processedItems,
             };
         },
 
