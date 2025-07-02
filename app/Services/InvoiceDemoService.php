@@ -261,12 +261,18 @@ class InvoiceDemoService
     /**
      * Restore a deleted invoice demo
      */
-    public function restoreInvoice(InvoiceDemo $invoice, int $userId): bool
+    public function restoreInvoice(InvoiceDemo $invoice, int $userId): InvoiceDemo
     {
         try {
             DB::beginTransaction();
 
-            $result = $invoice->restore();
+            $invoice->restore();
+            
+            // Refresh the model to get the latest data
+            $invoice->refresh();
+            
+            // Load relationships for response
+            $invoice->load(['user', 'items']);
 
             DB::commit();
 
@@ -280,7 +286,7 @@ class InvoiceDemoService
                 'user_id' => $userId
             ]);
 
-            return $result;
+            return $invoice;
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Failed to restore invoice demo', [
