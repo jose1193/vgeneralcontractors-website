@@ -653,7 +653,10 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                     d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
-                                            <span class="hidden sm:inline text-xs">Clear  </span>
+                                            <span class="text-xs">
+                                                <span class="inline">Clear</span>
+                                                <span class="hidden lg:inline"> Filters</span>
+                                            </span>
                                         </div>
                                     </button>
                                 </div>
