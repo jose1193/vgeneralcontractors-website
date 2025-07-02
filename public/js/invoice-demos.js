@@ -1303,6 +1303,7 @@ function invoiceDemoData() {
             this.endDate = "";
             this.dateRangeDisplay = "";
             this.activeQuickFilter = null;
+            this.showDeleted = false; // ✅ Reset showDeleted toggle
             this.currentPage = 1;
 
             // Clear flatpickr instance if exists
