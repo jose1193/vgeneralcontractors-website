@@ -1110,7 +1110,7 @@ function invoiceDemoData() {
                     text: "La factura ha sido eliminada exitosamente",
                     icon: "success",
                     timer: 2000,
-                    showConfirmButton: true,
+                    showConfirmButton: false,
                 });
 
                 // ✅ FIXED: Automatically enable "Show Deleted" to see the deleted invoice
