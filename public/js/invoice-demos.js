@@ -25,9 +25,10 @@ class InvoiceDemoManager {
                 "X-CSRF-TOKEN": this.csrfToken,
                 "X-Requested-With": "XMLHttpRequest",
                 // ✅ AGGRESSIVE cache bypass headers
-                "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-                "Pragma": "no-cache",
-                "Expires": "0",
+                "Cache-Control":
+                    "no-cache, no-store, must-revalidate, max-age=0",
+                Pragma: "no-cache",
+                Expires: "0",
                 "If-Modified-Since": "0",
                 "If-None-Match": "no-match",
                 "X-Cache-Bust": timestamp.toString(),
@@ -147,15 +148,15 @@ class InvoiceDemoManager {
             method: "POST",
             body: JSON.stringify(formData),
         });
-        
+
         // ✅ Force immediate cache invalidation after create
         if (response.success) {
             // Clear any browser cache for this endpoint
-            if ('caches' in window) {
-                caches.delete('invoice-demos-cache');
+            if ("caches" in window) {
+                caches.delete("invoice-demos-cache");
             }
         }
-        
+
         return response;
     }
 
@@ -169,15 +170,15 @@ class InvoiceDemoManager {
             method: "PUT",
             body: JSON.stringify(formData),
         });
-        
+
         // ✅ Force immediate cache invalidation after update
         if (response.success) {
             // Clear any browser cache for this endpoint
-            if ('caches' in window) {
-                caches.delete('invoice-demos-cache');
+            if ("caches" in window) {
+                caches.delete("invoice-demos-cache");
             }
         }
-        
+
         return response;
     }
 
@@ -188,15 +189,15 @@ class InvoiceDemoManager {
         const response = await this.apiRequest(`${this.baseUrl}/${uuid}`, {
             method: "DELETE",
         });
-        
+
         // ✅ Force immediate cache invalidation after delete
         if (response.success) {
             // Clear any browser cache for this endpoint
-            if ('caches' in window) {
-                caches.delete('invoice-demos-cache');
+            if ("caches" in window) {
+                caches.delete("invoice-demos-cache");
             }
         }
-        
+
         return response;
     }
 
@@ -204,18 +205,21 @@ class InvoiceDemoManager {
      * Restore deleted invoice
      */
     async restoreInvoice(uuid) {
-        const response = await this.apiRequest(`${this.baseUrl}/${uuid}/restore`, {
-            method: "PATCH",
-        });
-        
+        const response = await this.apiRequest(
+            `${this.baseUrl}/${uuid}/restore`,
+            {
+                method: "PATCH",
+            }
+        );
+
         // ✅ Force immediate cache invalidation after restore
         if (response.success) {
             // Clear any browser cache for this endpoint
-            if ('caches' in window) {
-                caches.delete('invoice-demos-cache');
+            if ("caches" in window) {
+                caches.delete("invoice-demos-cache");
             }
         }
-        
+
         return response;
     }
 
@@ -832,6 +836,9 @@ function invoiceDemoData() {
             this.isEditing = false;
             this.currentInvoice = null;
             this.resetForm();
+            // ✅ RESET validation flags when opening create modal
+            this.invoiceNumberExists = false;
+            this.errors = {};
             this.showModal = true;
         },
 
@@ -840,6 +847,9 @@ function invoiceDemoData() {
             this.isEditing = true;
             this.currentInvoice = invoice;
             this.populateForm(invoice);
+            // ✅ RESET validation flags when opening edit modal
+            this.invoiceNumberExists = false;
+            this.errors = {};
             this.showModal = true;
         },
 
@@ -886,6 +896,10 @@ function invoiceDemoData() {
 
         // Populate form with invoice data
         populateForm(invoice) {
+            // ✅ RESET validation state when populating form
+            this.invoiceNumberExists = false;
+            this.errors = {};
+
             // Función auxiliar para formatear fechas para inputs HTML5
             const formatDateForInput = (dateString, includeTime = false) => {
                 if (!dateString) return "";
@@ -1007,8 +1021,8 @@ function invoiceDemoData() {
         async submitForm() {
             if (this.submitting) return;
 
-            // ✅ PREVENT submission if invoice number exists
-            if (this.invoiceNumberExists) {
+            // ✅ PREVENT submission if invoice number exists (only when creating)
+            if (!this.isEditing && this.invoiceNumberExists) {
                 window.invoiceDemoManager.showError(
                     "Cannot save: Invoice number already exists. Please use a different number."
                 );
@@ -1021,6 +1035,15 @@ function invoiceDemoData() {
                 if (this.invoiceNumberExists) {
                     window.invoiceDemoManager.showError(
                         "Cannot create: Invoice number already exists. Please generate a new number."
+                    );
+                    return;
+                }
+            } else {
+                // ✅ VALIDATE invoice number for editing (excluding current UUID)
+                await this.checkInvoiceNumberExists();
+                if (this.invoiceNumberExists) {
+                    window.invoiceDemoManager.showError(
+                        "Cannot update: Invoice number already exists. Please use a different number."
                     );
                     return;
                 }
