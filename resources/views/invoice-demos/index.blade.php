@@ -451,36 +451,28 @@
 
         /* ========== DELETED ITEMS STYLING ========== */
         .deleted-item {
-            background: rgba(185, 28, 28, 0.15) !important;
-            box-shadow: inset 3px 0 0 rgba(239, 68, 68, 0.7) !important;
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.4) 0%, rgba(153, 27, 27, 0.3) 100%) !important;
             position: relative;
-            opacity: 0.85;
         }
 
         .deleted-item::before {
-            content: '🗑️';
+            content: '';
             position: absolute;
-            top: 50%;
-            left: 8px;
-            transform: translateY(-50%);
-            font-size: 12px;
-            opacity: 0.6;
-            z-index: 1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    rgba(185, 28, 28, 0.1) 0%,
+                    rgba(185, 28, 28, 0.05) 50%,
+                    rgba(185, 28, 28, 0.1) 100%);
             pointer-events: none;
-        }
-
-        .deleted-item td:first-child {
-            padding-left: 2.5rem !important;
+            z-index: 1;
         }
 
         .deleted-item>* {
             position: relative;
             z-index: 2;
-        }
-
-        .deleted-item .text-red-200 {
-            text-decoration: line-through;
-            opacity: 0.8;
         }
 
         /* ========== IMPROVED GLASS INPUT STYLES ========== */
