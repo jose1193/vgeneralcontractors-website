@@ -29,7 +29,7 @@ class InvoiceDemoController extends BaseController
 {
     use CacheTraitCrud;
         
-    protected int $cacheTime = 60; // 1 mt
+    protected int $cacheTime = 300; // 5 mt
     protected InvoiceDemoService $invoiceService;
     protected InvoicePdfService $pdfService;
 
