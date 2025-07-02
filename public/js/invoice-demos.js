@@ -588,19 +588,11 @@ function invoiceDemoData() {
                     this.showDeleted
                 );
 
-                console.log('📊 Raw response:', response);
-                console.log('📊 Response data:', response.data);
-                
-                // Handle different response structures
-                const responseData = response.data || response;
-                this.invoices = responseData.data || responseData || [];
-                this.currentPage = responseData.current_page || 1;
-                this.totalPages = responseData.last_page || 1;
-                this.perPage = responseData.per_page || 10;
-                this.total = responseData.total || 0;
-                
-                console.log('📊 Processed invoices:', this.invoices);
-                console.log('📊 Total invoices:', this.total);
+                this.invoices = response.data.data || [];
+                this.currentPage = response.data.current_page || 1;
+                this.totalPages = response.data.last_page || 1;
+                this.perPage = response.data.per_page || 10;
+                this.total = response.data.total || 0;
             } catch (error) {
                 console.error("Failed to load invoices:", error);
                 window.invoiceDemoManager.showError("Failed to load invoices");
