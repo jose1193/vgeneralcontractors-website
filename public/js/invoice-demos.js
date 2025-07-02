@@ -106,10 +106,10 @@ class InvoiceDemoManager {
         });
 
         if (startDate) {
-            params.append('start_date', startDate);
+            params.append("start_date", startDate);
         }
         if (endDate) {
-            params.append('end_date', endDate);
+            params.append("end_date", endDate);
         }
 
         return await this.apiRequest(`${this.baseUrl}?${params}`);
@@ -426,6 +426,8 @@ function invoiceDemoData() {
         submitting: false,
         currentInvoice: null,
         pdfGenerating: false,
+        message: "",
+        messageType: "",
 
         // Pagination
         currentPage: 1,
@@ -444,6 +446,26 @@ function invoiceDemoData() {
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
+
+        // Filtros y paginación
+        search: "",
+        statusFilter: "",
+        currentPage: 1,
+        perPage: 10,
+        totalPages: 1,
+        total: 0,
+        sortBy: "created_at",
+        sortOrder: "desc",
+
+        // Filtros de fecha
+        startDate: "",
+        endDate: "",
+        dateRangeDisplay: "",
+        dateRangePicker: null,
+
+        // Nuevas variables para filtros optimizados
+        showAdvancedFilters: false,
+        activeQuickFilter: null,
 
         // Form data
         form: {
@@ -584,55 +606,64 @@ function invoiceDemoData() {
         // Initialize Flatpickr
         initializeFlatpickr() {
             const self = this;
-            
+
             // Wait for DOM to be ready
             setTimeout(() => {
-                const dateRangeInput = document.getElementById('dateRangePicker');
-                if (dateRangeInput && typeof flatpickr !== 'undefined') {
+                const dateRangeInput =
+                    document.getElementById("dateRangePicker");
+                if (dateRangeInput && typeof flatpickr !== "undefined") {
                     this.flatpickrInstance = flatpickr(dateRangeInput, {
-                        mode: 'range',
-                        dateFormat: 'Y-m-d',
+                        mode: "range",
+                        dateFormat: "Y-m-d",
                         allowInput: false,
                         clickOpens: true,
                         disableMobile: true,
                         static: true,
                         appendTo: document.body,
                         locale: {
-                            rangeSeparator: ' to '
+                            rangeSeparator: " to ",
                         },
-                        onChange: function(selectedDates, dateStr, instance) {
+                        onChange: function (selectedDates, dateStr, instance) {
                             if (selectedDates.length === 2) {
-                                self.startDate = selectedDates[0].toISOString().split('T')[0];
-                                self.endDate = selectedDates[1].toISOString().split('T')[0];
+                                self.startDate = selectedDates[0]
+                                    .toISOString()
+                                    .split("T")[0];
+                                self.endDate = selectedDates[1]
+                                    .toISOString()
+                                    .split("T")[0];
                                 self.dateRangeDisplay = `${self.startDate} to ${self.endDate}`;
                                 self.filterByDateRange();
                             } else if (selectedDates.length === 0) {
-                                self.startDate = '';
-                                self.endDate = '';
-                                self.dateRangeDisplay = '';
+                                self.startDate = "";
+                                self.endDate = "";
+                                self.dateRangeDisplay = "";
                                 self.filterByDateRange();
                             }
                         },
-                        onReady: function(selectedDates, dateStr, instance) {
-                            console.log('📅 Flatpickr initialized successfully');
+                        onReady: function (selectedDates, dateStr, instance) {
+                            console.log(
+                                "📅 Flatpickr initialized successfully"
+                            );
                             // Fix positioning issues
                             const calendar = instance.calendarContainer;
                             if (calendar) {
-                                calendar.style.position = 'fixed';
-                                calendar.style.zIndex = '10000';
+                                calendar.style.position = "fixed";
+                                calendar.style.zIndex = "10000";
                             }
                         },
-                        onOpen: function(selectedDates, dateStr, instance) {
+                        onOpen: function (selectedDates, dateStr, instance) {
                             // Ensure proper positioning when opened
                             const calendar = instance.calendarContainer;
                             if (calendar) {
-                                calendar.style.position = 'fixed';
-                                calendar.style.zIndex = '10000';
+                                calendar.style.position = "fixed";
+                                calendar.style.zIndex = "10000";
                             }
-                        }
+                        },
                     });
                 } else {
-                    console.warn('⚠️ Flatpickr not available or dateRangePicker element not found');
+                    console.warn(
+                        "⚠️ Flatpickr not available or dateRangePicker element not found"
+                    );
                 }
             }, 100);
         },
@@ -643,22 +674,34 @@ function invoiceDemoData() {
             let startDate, endDate;
 
             switch (range) {
-                case 'today':
+                case "today":
                     startDate = endDate = today;
                     break;
-                case 'last7days':
+                case "last7days":
                     endDate = today;
-                    startDate = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    startDate = new Date(
+                        today.getTime() - 7 * 24 * 60 * 60 * 1000
+                    );
                     break;
-                case 'last30days':
+                case "last30days":
                     endDate = today;
-                    startDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    startDate = new Date(
+                        today.getTime() - 30 * 24 * 60 * 60 * 1000
+                    );
                     break;
-                case 'thisMonth':
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                case "thisMonth":
+                    startDate = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        1
+                    );
+                    endDate = new Date(
+                        today.getFullYear(),
+                        today.getMonth() + 1,
+                        0
+                    );
                     break;
-                case 'thisYear':
+                case "thisYear":
                     startDate = new Date(today.getFullYear(), 0, 1);
                     endDate = new Date(today.getFullYear(), 11, 31);
                     break;
@@ -667,8 +710,8 @@ function invoiceDemoData() {
             }
 
             // Format dates
-            this.startDate = startDate.toISOString().split('T')[0];
-            this.endDate = endDate.toISOString().split('T')[0];
+            this.startDate = startDate.toISOString().split("T")[0];
+            this.endDate = endDate.toISOString().split("T")[0];
             this.dateRangeDisplay = `${this.startDate} to ${this.endDate}`;
 
             // Update Flatpickr
@@ -682,9 +725,9 @@ function invoiceDemoData() {
 
         // Clear date range
         clearDateRange() {
-            this.startDate = '';
-            this.endDate = '';
-            this.dateRangeDisplay = '';
+            this.startDate = "";
+            this.endDate = "";
+            this.dateRangeDisplay = "";
 
             // Clear Flatpickr
             if (this.flatpickrInstance) {
@@ -965,11 +1008,18 @@ function invoiceDemoData() {
 
         // Delete invoice
         async deleteInvoice(invoice) {
-            if (
-                !confirm(
-                    `Are you sure you want to delete invoice ${invoice.invoice_number}?`
-                )
-            ) {
+            const result = await Swal.fire({
+                title: "¿Estás seguro?",
+                html: `¿Deseas eliminar la factura: <strong>${invoice.invoice_number}</strong>?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+            });
+
+            if (!result.isConfirmed) {
                 return;
             }
 
@@ -977,12 +1027,22 @@ function invoiceDemoData() {
                 const response = await window.invoiceDemoManager.deleteInvoice(
                     invoice.id
                 );
-                window.invoiceDemoManager.showSuccess(response.message);
+
+                Swal.fire({
+                    title: "Eliminado",
+                    text: "La factura ha sido eliminada exitosamente",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+
                 await this.loadInvoices();
             } catch (error) {
-                window.invoiceDemoManager.showError(
-                    error.message || "Failed to delete invoice"
-                );
+                Swal.fire({
+                    title: "Error",
+                    text: error.message || "Error al eliminar la factura",
+                    icon: "error",
+                });
             }
         },
 
@@ -1006,16 +1066,41 @@ function invoiceDemoData() {
 
         // Restore invoice
         async restoreInvoice(invoice) {
+            const result = await Swal.fire({
+                title: "¿Restaurar factura?",
+                html: `¿Deseas restaurar la factura: <strong>${invoice.invoice_number}</strong>?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#28a745",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Sí, restaurar",
+                cancelButtonText: "Cancelar",
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
             try {
                 const response = await window.invoiceDemoManager.restoreInvoice(
                     invoice.id
                 );
-                window.invoiceDemoManager.showSuccess(response.message);
+
+                Swal.fire({
+                    title: "Restaurado",
+                    text: "La factura ha sido restaurada exitosamente",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+
                 await this.loadInvoices();
             } catch (error) {
-                window.invoiceDemoManager.showError(
-                    error.message || "Failed to restore invoice"
-                );
+                Swal.fire({
+                    title: "Error",
+                    text: error.message || "Error al restaurar la factura",
+                    icon: "error",
+                });
             }
         },
 
@@ -1517,6 +1602,112 @@ function invoiceDemoData() {
                     );
                 }, 0);
             }
+        },
+
+        toggleDeleted() {
+            this.currentPage = 1;
+            this.loadInvoices();
+        },
+
+        // ========== NUEVAS FUNCIONES PARA FILTROS OPTIMIZADOS ==========
+
+        // Toggle advanced filters
+        showAdvancedFilters: false,
+        activeQuickFilter: null,
+
+        // Clear all filters
+        clearAllFilters() {
+            this.search = "";
+            this.statusFilter = "";
+            this.dateRangeDisplay = "";
+            this.activeQuickFilter = null;
+            this.currentPage = 1;
+
+            // Clear flatpickr if exists
+            if (this.dateRangePicker) {
+                this.dateRangePicker.clear();
+            }
+
+            this.loadInvoices();
+        },
+
+        // Check if there are active filters
+        hasActiveFilters() {
+            return !!(
+                this.search ||
+                this.statusFilter ||
+                this.dateRangeDisplay ||
+                this.showDeleted
+            );
+        },
+
+        // Get count of active filters
+        getActiveFiltersCount() {
+            let count = 0;
+            if (this.search) count++;
+            if (this.statusFilter) count++;
+            if (this.dateRangeDisplay) count++;
+            if (this.showDeleted) count++;
+            return count;
+        },
+
+        // Enhanced setDateRange with active filter tracking
+        setDateRange(range) {
+            this.activeQuickFilter = range;
+            const today = new Date();
+            let startDate, endDate;
+
+            switch (range) {
+                case "today":
+                    startDate = endDate = today.toISOString().split("T")[0];
+                    break;
+                case "last7days":
+                    startDate = new Date(today.setDate(today.getDate() - 7))
+                        .toISOString()
+                        .split("T")[0];
+                    endDate = new Date().toISOString().split("T")[0];
+                    break;
+                case "last30days":
+                    startDate = new Date(today.setDate(today.getDate() - 30))
+                        .toISOString()
+                        .split("T")[0];
+                    endDate = new Date().toISOString().split("T")[0];
+                    break;
+                case "thisMonth":
+                    startDate = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        1
+                    )
+                        .toISOString()
+                        .split("T")[0];
+                    endDate = new Date(
+                        today.getFullYear(),
+                        today.getMonth() + 1,
+                        0
+                    )
+                        .toISOString()
+                        .split("T")[0];
+                    break;
+                case "thisYear":
+                    startDate = new Date(today.getFullYear(), 0, 1)
+                        .toISOString()
+                        .split("T")[0];
+                    endDate = new Date(today.getFullYear(), 11, 31)
+                        .toISOString()
+                        .split("T")[0];
+                    break;
+            }
+
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.dateRangeDisplay = `${startDate} to ${endDate}`;
+
+            if (this.dateRangePicker) {
+                this.dateRangePicker.setDate([startDate, endDate]);
+            }
+
+            this.filterByDateRange();
         },
     };
 }
