@@ -763,7 +763,7 @@
                                 <template x-for="(invoice, index) in invoices" :key="invoice.uuid">
                                     <tr class="transition-colors duration-200 hover:bg-slate-700"
                                         :class="[
-                                            invoice.deleted_at ? 'bg-red-900 bg-opacity-30' : '',
+                                            invoice.deleted_at ? 'bg-red-900 bg-opacity-70' : '',
                                             index % 2 === 0 ? 'bg-gray-800 bg-opacity-30' : 'bg-transparent'
                                         ]">
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
