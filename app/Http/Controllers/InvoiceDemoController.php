@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Throwable;
@@ -464,8 +465,22 @@ class InvoiceDemoController extends BaseController
     // Required abstract methods from BaseController
     protected function getValidationRules(?int $id = null): array
     {
-        $invoiceDemoRequest = new InvoiceDemoRequest();
-        return $invoiceDemoRequest->rules();
+        $rules = (new InvoiceDemoRequest())->rules();
+
+        if ($id) {
+            // Overwrite the 'invoice_number' rule to ignore the current record by its primary key.
+            // This is necessary because we are not using Form Request Injection,
+            // so the InvoiceDemoRequest doesn't have the route context to get the UUID.
+            $rules['invoice_number'] = [
+                'required',
+                'string',
+                'max:50',
+                'regex:/^[A-Z0-9\-]+$/',
+                Rule::unique('invoice_demos', 'invoice_number')->ignore($id)
+            ];
+        }
+
+        return $rules;
     }
 
     protected function getValidationMessages(): array

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Log;
@@ -50,8 +49,6 @@ class InvoiceDemoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $invoiceId = $this->route('invoice_demo') ? $this->route('invoice_demo') : null;
-        
         return [
             // Invoice header information
             'invoice_number' => [
@@ -59,7 +56,7 @@ class InvoiceDemoRequest extends FormRequest
                 'string',
                 'max:50',
                 'regex:/^[A-Z0-9\-]+$/',
-                Rule::unique('invoice_demos', 'invoice_number')->ignore($invoiceId)
+                'unique:invoice_demos,invoice_number' // Use the simpler string format for unique rule
             ],
             'invoice_date' => [
                 'required',
