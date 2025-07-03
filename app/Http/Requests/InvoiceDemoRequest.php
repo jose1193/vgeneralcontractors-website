@@ -50,7 +50,15 @@ class InvoiceDemoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $invoiceId = $this->route('invoice_demo') ? $this->route('invoice_demo') : null;
+        // ✅ FIXED: Get the UUID from the route parameter and convert to ID for validation
+        $invoiceUuid = $this->route('uuid');
+        $invoiceId = null;
+        
+        if ($invoiceUuid) {
+            // Find the invoice by UUID to get the ID for validation
+            $invoice = \App\Models\InvoiceDemo::where('uuid', $invoiceUuid)->first();
+            $invoiceId = $invoice ? $invoice->id : null;
+        }
         
         return [
             // Invoice header information
