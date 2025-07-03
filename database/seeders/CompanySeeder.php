@@ -24,7 +24,8 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         $this->createMainCompany();
-        $this->createSubsidiaryCompanies();
+        // Subsidiarias comentadas por solicitud
+        // $this->createSubsidiaryCompanies();
     }
 
     /**
