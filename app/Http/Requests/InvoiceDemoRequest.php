@@ -50,7 +50,21 @@ class InvoiceDemoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $invoiceId = $this->route('invoice_demo') ? $this->route('invoice_demo') : null;
+        // ✅ FIXED: Get UUID from correct route parameter and convert to ID
+        $invoiceUuid = $this->route('uuid');
+        $invoiceId = null;
+        
+        if ($invoiceUuid) {
+            // Get the numeric ID from UUID for Laravel's unique rule
+            $invoice = \App\Models\InvoiceDemo::where('uuid', $invoiceUuid)->first();
+            $invoiceId = $invoice ? $invoice->id : null;
+            
+            Log::info('InvoiceDemoRequest: UUID to ID conversion', [
+                'uuid' => $invoiceUuid,
+                'numeric_id' => $invoiceId,
+                'invoice_found' => !!$invoice
+            ]);
+        }
         
         return [
             // Invoice header information
