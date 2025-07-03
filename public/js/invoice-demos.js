@@ -952,13 +952,6 @@ function invoiceDemoData() {
                 status: invoice.status || "draft",
                 items: processedItems,
             };
-
-            // ✅ IMPROVED: Reset validation state when populating form for edit
-            this.invoiceNumberExists = false;
-            this.errors = {};
-            this.generalError = "";
-
-            console.log("✅ Form populated for edit - validation state reset");
         },
 
         // Add new item to invoice
@@ -1018,9 +1011,16 @@ function invoiceDemoData() {
         async submitForm() {
             if (this.submitting) return;
 
-            // ✅ IMPROVED: Only prevent submission for CREATE operations or when invoice number actually changed during EDIT
+            // ✅ PREVENT submission if invoice number exists
+            if (this.invoiceNumberExists) {
+                window.invoiceDemoManager.showError(
+                    "Cannot save: Invoice number already exists. Please use a different number."
+                );
+                return;
+            }
+
+            // ✅ VALIDATE invoice number before submission
             if (!this.isEditing) {
-                // For CREATE operations, always validate
                 await this.checkInvoiceNumberExists();
                 if (this.invoiceNumberExists) {
                     window.invoiceDemoManager.showError(
@@ -1028,23 +1028,6 @@ function invoiceDemoData() {
                     );
                     return;
                 }
-            } else {
-                // For EDIT operations, only validate if invoice number changed
-                const originalInvoiceNumber =
-                    this.currentInvoice?.invoice_number;
-                const currentInvoiceNumber = this.form.invoice_number;
-
-                if (originalInvoiceNumber !== currentInvoiceNumber) {
-                    // Invoice number changed during edit, validate it
-                    await this.checkInvoiceNumberExists();
-                    if (this.invoiceNumberExists) {
-                        window.invoiceDemoManager.showError(
-                            "Cannot save: Invoice number already exists. Please use a different number."
-                        );
-                        return;
-                    }
-                }
-                // If invoice number didn't change, allow submission (no validation needed)
             }
 
             this.submitting = true;
@@ -1439,25 +1422,6 @@ function invoiceDemoData() {
                         ? this.currentInvoice.uuid
                         : null;
 
-                // ✅ ENHANCED logic: For editing, if invoice number hasn't changed, don't mark as duplicate
-                if (this.isEditing && this.currentInvoice) {
-                    const originalNumber = this.currentInvoice.invoice_number;
-                    const currentNumber = this.form.invoice_number;
-
-                    if (originalNumber === currentNumber) {
-                        // Same number as original, not a duplicate
-                        this.invoiceNumberExists = false;
-                        console.log(
-                            "✅ Invoice number unchanged during edit - allowing:",
-                            {
-                                original: originalNumber,
-                                current: currentNumber,
-                            }
-                        );
-                        return;
-                    }
-                }
-
                 // ✅ ENHANCED logging for debugging validation issues
                 console.log("🔍 Starting invoice number validation:", {
                     invoice_number: this.form.invoice_number,
@@ -1484,8 +1448,8 @@ function invoiceDemoData() {
                     status: response.exists ? "❌ DUPLICATE" : "✅ AVAILABLE",
                 });
 
-                // ✅ IMPROVED: Only show error for real duplicates (not during normal editing)
-                if (this.invoiceNumberExists && !this.isEditing) {
+                // ✅ Show visual feedback
+                if (this.invoiceNumberExists) {
                     console.warn("❌ Invoice number already exists!");
                     window.invoiceDemoManager.showError(
                         `Invoice number "${this.form.invoice_number}" already exists. Please use a different number.`

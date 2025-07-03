@@ -115,7 +115,7 @@ class InvoiceDemoController extends BaseController
     /**
      * Store a new invoice demo
      */
-    public function store(InvoiceDemoRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         if (!$this->checkPermissionWithMessage("CREATE_{$this->entityName}", "You don't have permission to create invoice demos")) {
             return response()->json([
@@ -137,8 +137,18 @@ class InvoiceDemoController extends BaseController
             'is_ajax' => $request->ajax()
         ]);
 
-        // ✅ FIXED: Request validation is now handled automatically by InvoiceDemoRequest
-        // No need to manually validate as it's handled by Laravel automatically
+        try {
+            $this->validateRequest($request);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Invoice Demo validation failed:', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        }
 
         // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers
         $invoiceNumber = $request->input('invoice_number');
@@ -193,7 +203,7 @@ class InvoiceDemoController extends BaseController
     /**
      * Update an existing invoice demo
      */
-    public function update(InvoiceDemoRequest $request, string $uuid): JsonResponse
+    public function update(Request $request, string $uuid): JsonResponse
     {
         if (!$this->checkPermissionWithMessage("UPDATE_{$this->entityName}", "You don't have permission to update invoice demos")) {
             return response()->json([
@@ -219,8 +229,19 @@ class InvoiceDemoController extends BaseController
         try {
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
-            // ✅ FIXED: Request validation is now handled automatically by InvoiceDemoRequest
-            // The InvoiceDemoRequest will get the UUID from route and handle validation properly
+            try {
+                $this->validateRequest($request, $invoice->id);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                Log::error('Invoice Demo update validation failed:', [
+                    'errors' => $e->errors(),
+                    'request_data' => $request->all(),
+                    'invoice_id' => $invoice->id
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors()
+                ], 422);
+            }
 
             // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers on update
             $invoiceNumber = $request->input('invoice_number');
