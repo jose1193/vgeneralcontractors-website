@@ -3,6 +3,10 @@
 @section('title', __('privacy_policy_page_title', ['company' => 'V General Contractors']))
 @section('meta_description', __('privacy_policy_meta_description', ['company' => 'V General Contractors']))
 
+@php
+    use App\Helpers\PhoneHelper;
+@endphp
+
 @section('content')
     <!-- Hero Section -->
     <section class="relative py-24 bg-gray-900 text-white">
@@ -45,8 +49,8 @@
                     {!! __('privacy_contact_dpo') !!}<br>
                     {!! __('by_email') !!}: <a href="mailto:info@vgeneralcontractors.com"
                         class="text-yellow-600 hover:text-yellow-700 no-underline">info@vgeneralcontractors.com</a><br>
-                    {!! __('by_phone') !!}: <a href="tel:+13466920757"
-                        class="text-yellow-600 hover:text-yellow-700 no-underline">(346) 692-0757</a>
+                    {!! __('by_phone') !!}: <a href="tel:{{ $companyData->phone }}"
+                        class="text-yellow-600 hover:text-yellow-700 no-underline">{{ PhoneHelper::format($companyData->phone) }}</a>
                 </p>
 
                 <h2 class="text-2xl font-bold mb-6">{!! __('privacy_data_collected') !!}</h2>

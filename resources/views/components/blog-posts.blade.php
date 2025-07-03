@@ -62,7 +62,7 @@
 </div>
 
 <!-- Floating Call Button -->
-<a href="tel:+13466920757"
+<a href="tel:{{ $companyData->phone }}"
     class="fixed bottom-6 right-6 bg-yellow-500 text-white p-4 rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-300 z-50">
     <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -24,14 +24,14 @@ class EmailDataSeeder extends Seeder
             [
                 'description' => 'Correo para información general',
                 'email' => 'info@vgeneralcontractors.com',
-                'phone' => '+13466920757',
+                'phone' => '+17135876423',
                 'type' => 'Info',
                 'user_id' => 1,
             ],
             [
                 'description' => 'Correo para citas y agendamiento',
                 'email' => 'admin@vgeneralcontractors.com',
-                'phone' => '+13466920757',
+                'phone' => '+17135876423',
                 'type' => 'Admin',
                 'user_id' => 2,
             ]
@@ -42,4 +42,4 @@ class EmailDataSeeder extends Seeder
             EmailData::create($emailData);
         }
     }
-} 
+}

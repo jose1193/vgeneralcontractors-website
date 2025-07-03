@@ -62,7 +62,7 @@
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
             @php
                 use App\Helpers\PhoneHelper;
-                $phoneNumber = $companyData->phone ?? '3466920757';
+                $phoneNumber = $companyData->phone ?? '7135876423';
                 $formattedPhone = class_exists(PhoneHelper::class) ? PhoneHelper::format($phoneNumber) : $phoneNumber;
             @endphp
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">

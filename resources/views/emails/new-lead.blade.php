@@ -181,7 +181,7 @@
             <p>Contact them from:
                 <strong>📞
                     @php
-                        $phone = \App\Models\CompanyData::first()->phone ?? '(346) 692-0757';
+                        $phone = \App\Models\CompanyData::first()->phone ?? '(713) 587-6423';
                         // Remove any non-digit characters
                         $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
                         // Format the number based on length

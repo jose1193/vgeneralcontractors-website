@@ -40,7 +40,7 @@ class CompanySeeder extends Seeder
                 'company_name' => 'V General Contractors',
                 'signature_path' => '/signatures/victor_lara_signature.png',
                 'email' => 'info@vgeneralcontractors.com',
-                'phone' => '+13466920757',
+                'phone' => '+17135876423',
                 'address' => '1302 Waugh Dr # 810 Houston TX 77019',
                 'website' => 'https://vgeneralcontractors.com',
                 'latitude' => 29.75516,

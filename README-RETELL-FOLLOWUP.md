@@ -9,7 +9,7 @@ Este sistema implementa llamadas de seguimiento automáticas para leads con stat
 ### Variables de Entorno Requeridas
 
 ```env
-RETELL_PHONE_NUMBER=+13466920757  # Número de la empresa
+RETELL_PHONE_NUMBER=+17135876423  # Número de la empresa
 RETELL_AGENT_ID=your_agent_id     # ID del agente Anna en Retell AI
 RETELL_API_KEY=your_api_key       # API key de Retell AI
 ```

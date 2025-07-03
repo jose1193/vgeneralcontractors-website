@@ -51,7 +51,7 @@
         "description": "Leading commercial and residential roofing contractor in Texas. GAF certified experts providing professional installation, repair, and maintenance services for businesses and homes in Houston & Dallas.",
         "image": "{{ asset('assets/logo/logo3.webp') }}",
         "url": "{{ url()->current() }}",
-        "telephone": "+1 (346) 692-0757",
+        "telephone": "{{ $companyData->phone }}",
         "email": "info@vgeneralcontractors.com",
         "address": {
             "@type": "PostalAddress",

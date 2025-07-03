@@ -22,7 +22,7 @@
     <div class="container mx-auto px-4">
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
             <h3 class="text-2xl sm:text-3xl font-bold text-black">{{ __('call_us_now') }}</h3>
-            <a href="tel:+13466920757"
+            <a href="tel:{{ $companyData->phone }}"
                 class="inline-flex items-center bg-black text-white text-xl sm:text-2xl font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-gray-900 transition-colors duration-300">
                 <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">

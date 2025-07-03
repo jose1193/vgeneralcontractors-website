@@ -205,7 +205,7 @@
                             {{-- Assuming $companyData and PhoneHelper are available --}}
                             @php
                                 use App\Helpers\PhoneHelper;
-                                $phoneNumber = $companyData->phone ?? '3466920757'; // Use your fallback
+                                $phoneNumber = $companyData->phone ?? '7135876423'; // Use your fallback
                                 $formattedPhone = class_exists(PhoneHelper::class)
                                     ? PhoneHelper::format($phoneNumber)
                                     : $phoneNumber;

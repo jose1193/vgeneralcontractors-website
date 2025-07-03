@@ -759,7 +759,7 @@
                                         Swal.fire({
                                             title: '{{ __('swal_email_already_registered') }}',
                         html: '{{ __('swal_email_in_system') }}' +
-                                                'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                                'Please contact our support team or call us at <strong>(713) 587-6423</strong> to schedule your appointment.',
                                             icon: 'info',
                                             confirmButtonText: 'OK',
                                             confirmButtonColor: '#f59e0b'
@@ -926,7 +926,7 @@
                                 Swal.fire({
                                     title: '{{ __('swal_email_already_registered') }}',
                         html: '{{ __('swal_email_in_system') }}' +
-                                        'Please contact our support team or call us at <strong>(346) 692-0757</strong> to schedule your appointment.',
+                                        'Please contact our support team or call us at <strong>(713) 587-6423</strong> to schedule your appointment.',
                                     icon: 'info',
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#f59e0b'
