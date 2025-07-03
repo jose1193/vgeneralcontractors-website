@@ -137,8 +137,35 @@ class InvoiceDemoController extends BaseController
             'is_ajax' => $request->ajax()
         ]);
 
-        // ✅ FIXED: Use InvoiceDemoRequest for validation (handles unique invoice_number correctly)
-        $validatedData = $request->validate((new InvoiceDemoRequest())->rules());
+        try {
+            $this->validateRequest($request);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Invoice Demo validation failed:', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers
+        $invoiceNumber = $request->input('invoice_number');
+        if ($invoiceNumber && $this->invoiceService->checkInvoiceNumberExists($invoiceNumber)) {
+            Log::warning('Attempted to create invoice with duplicate number', [
+                'invoice_number' => $invoiceNumber,
+                'user_id' => auth()->id(),
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'invoice_number' => ['This invoice number already exists.']
+                ]
+            ], 422);
+        }
 
         try {
             $invoice = $this->invoiceService->createInvoice(
@@ -202,8 +229,37 @@ class InvoiceDemoController extends BaseController
         try {
             $invoice = InvoiceDemo::where('uuid', $uuid)->firstOrFail();
             
-            // ✅ FIXED: Use InvoiceDemoRequest for validation (handles unique invoice_number correctly)
-            $validatedData = $request->validate((new InvoiceDemoRequest())->rules());
+            try {
+                $this->validateRequest($request, $invoice->id);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                Log::error('Invoice Demo update validation failed:', [
+                    'errors' => $e->errors(),
+                    'request_data' => $request->all(),
+                    'invoice_id' => $invoice->id
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'errors' => $e->errors()
+                ], 422);
+            }
+
+            // ✅ ADDITIONAL VALIDATION: Prevent duplicate invoice numbers on update
+            $invoiceNumber = $request->input('invoice_number');
+            if ($invoiceNumber && $this->invoiceService->checkInvoiceNumberExists($invoiceNumber, $invoice->uuid)) {
+                Log::warning('Attempted to update invoice with duplicate number', [
+                    'invoice_number' => $invoiceNumber,
+                    'invoice_uuid' => $invoice->uuid,
+                    'user_id' => auth()->id(),
+                    'request_data' => $request->all()
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'invoice_number' => ['This invoice number already exists.']
+                    ]
+                ], 422);
+            }
             
             $updatedInvoice = $this->invoiceService->updateInvoice(
                 $invoice,
@@ -405,7 +461,18 @@ class InvoiceDemoController extends BaseController
         }
     }
 
+    // Required abstract methods from BaseController
+    protected function getValidationRules(?int $id = null): array
+    {
+        $invoiceDemoRequest = new InvoiceDemoRequest();
+        return $invoiceDemoRequest->rules();
+    }
 
+    protected function getValidationMessages(): array
+    {
+        $invoiceDemoRequest = new InvoiceDemoRequest();
+        return $invoiceDemoRequest->messages();
+    }
 
     // Override methods from BaseController for invoice-specific behavior
     protected function getSearchField(): string
@@ -795,27 +862,5 @@ class InvoiceDemoController extends BaseController
                 'message' => 'Failed to verify PDF status'
             ], 500);
         }
-    }
-
-    /**
-     * Abstract method implementation - Get validation rules
-     * Note: This is required by BaseController but not used since we use InvoiceDemoRequest
-     */
-    protected function getValidationRules(?int $id = null): array
-    {
-        // This method is required by BaseController but not used
-        // Validation is handled by InvoiceDemoRequest
-        return [];
-    }
-
-    /**
-     * Abstract method implementation - Get validation messages
-     * Note: This is required by BaseController but not used since we use InvoiceDemoRequest
-     */
-    protected function getValidationMessages(): array
-    {
-        // This method is required by BaseController but not used
-        // Validation messages are handled by InvoiceDemoRequest
-        return [];
     }
 }

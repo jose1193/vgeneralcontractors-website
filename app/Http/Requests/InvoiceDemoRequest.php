@@ -50,24 +50,7 @@ class InvoiceDemoRequest extends FormRequest
      */
     public function rules(): array
     {
-        // ✅ ENHANCED: Get the UUID from the route parameter with better error handling
-        $invoiceUuid = $this->route('uuid');
-        $invoiceId = null;
-        
-        if ($invoiceUuid) {
-            // Find the invoice by UUID to get the ID for validation
-            $invoice = \App\Models\InvoiceDemo::where('uuid', $invoiceUuid)->first();
-            $invoiceId = $invoice ? $invoice->id : null;
-            
-            // ✅ ADD: Debug logging to track validation issues
-            Log::info('InvoiceDemoRequest validation setup', [
-                'route_uuid' => $invoiceUuid,
-                'found_invoice' => !!$invoice,
-                'invoice_id' => $invoiceId,
-                'invoice_number' => $invoice ? $invoice->invoice_number : null,
-                'request_invoice_number' => $this->input('invoice_number')
-            ]);
-        }
+        $invoiceId = $this->route('invoice_demo') ? $this->route('invoice_demo') : null;
         
         return [
             // Invoice header information
@@ -76,23 +59,7 @@ class InvoiceDemoRequest extends FormRequest
                 'string',
                 'max:50',
                 'regex:/^[A-Z0-9\-]+$/',
-                // ✅ ENHANCED: Use closure for more robust unique validation
-                function ($attribute, $value, $fail) use ($invoiceUuid) {
-                    $query = \App\Models\InvoiceDemo::where('invoice_number', $value);
-                    
-                    if ($invoiceUuid) {
-                        $query->where('uuid', '!=', $invoiceUuid);
-                    }
-                    
-                    if ($query->exists()) {
-                        Log::warning('Invoice number uniqueness validation failed', [
-                            'invoice_number' => $value,
-                            'exclude_uuid' => $invoiceUuid,
-                            'existing_count' => $query->count()
-                        ]);
-                        $fail('This invoice number already exists.');
-                    }
-                }
+                Rule::unique('invoice_demos', 'invoice_number')->ignore($invoiceId)
             ],
             'invoice_date' => [
                 'required',
