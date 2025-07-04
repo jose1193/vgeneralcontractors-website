@@ -673,17 +673,7 @@
                                  x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
                                  x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
                                  @click.away="exportOpen = false"
-                                 class="fixed mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden"
-                                 x-init="$watch('exportOpen', value => {
-                                     if (value) {
-                                         const button = $el.previousElementSibling;
-                                         const rect = button.getBoundingClientRect();
-                                         const scrollY = window.scrollY || window.pageYOffset;
-                                         $el.style.top = `${rect.bottom + scrollY}px`;
-                                         $el.style.left = `${rect.left}px`;
-                                         $el.style.width = `${button.offsetWidth}px`;
-                                     }
-                                 })">
+                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden">
                                 <div class="py-2">
                                     <button @click="exportToExcel(); exportOpen = false" 
                                             data-export="excel"
@@ -990,17 +980,7 @@
                                                                 </svg>
                                                             </button>
                                                             <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                class="fixed mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600"
-                                x-init="$watch('showPdfMenu', value => {
-                                    if (value) {
-                                        const button = $el.previousElementSibling;
-                                        const rect = button.getBoundingClientRect();
-                                        const scrollY = window.scrollY || window.pageYOffset;
-                                        const scrollX = window.scrollX || window.pageXOffset;
-                                        $el.style.top = `${rect.bottom + scrollY}px`;
-                                        $el.style.left = `${rect.left + scrollX}px`;
-                                    }
-                                })">
+                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
                                                                 <div class="py-1">
                                                                     <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                         .uuid)"
