@@ -193,8 +193,8 @@ class InvoiceDemoController extends BaseController
             'empty_check' => empty($date)
         ]);
         
-        // Handle null, empty string, or other empty values
-        if (empty($date)) {
+        // Explicitly handle null and empty strings
+        if ($date === null || $date === '') {
             Log::debug('validateAndFormatDate - Empty date, returning empty string');
             return '';
         }

@@ -493,7 +493,7 @@ function invoiceDemoData() {
         message: "",
         messageType: "",
 
-        // Pagination
+        // Pagination & State
         currentPage: 1,
         totalPages: 1,
         perPage: 10,
@@ -502,30 +502,14 @@ function invoiceDemoData() {
         // Filters
         search: "",
         statusFilter: "",
-        dateFilter: "",
         startDate: "",
         endDate: "",
         dateRangeDisplay: "",
-        modernDatePicker: null,
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
-
-        // Filtros y paginación
-        search: "",
-        statusFilter: "",
-        currentPage: 1,
-        perPage: 10,
-        totalPages: 1,
-        total: 0,
-        sortBy: "created_at",
-        sortOrder: "desc",
-
-        // Filtros de fecha
-        startDate: "",
-        endDate: "",
-        dateRangeDisplay: "",
-        dateRangePicker: null,
+        modernDatePicker: null, // Replaces dateRangePicker
+        activeQuickFilter: null,
 
         // Nuevas variables para filtros optimizados
         showAdvancedFilters: false,
