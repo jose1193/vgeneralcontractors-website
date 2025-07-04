@@ -981,7 +981,8 @@
                                                                  if (value) {
                                                                      buttonRect = $el.querySelector('button').getBoundingClientRect();
                                                                  }
-                                                             })">
+                                                             })"
+                                                             @click.away="showPdfMenu = false">
                                                             <button @click="showPdfMenu = !showPdfMenu"
                                                                 class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                                 title="PDF Actions">
@@ -995,7 +996,7 @@
                                                             </button>
                                                             
                                                             <!-- Teleported Dropdown -->
-                                                            <template x-teleport="body" @click.away="showPdfMenu = false">
+                                                            <template x-teleport="body">
                                                                 <div x-show="showPdfMenu" 
                                                                      class="fixed w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600"
                                                                      x-bind:style="buttonRect ? `top: ${buttonRect.bottom + 8}px; left: ${buttonRect.right - 192}px;` : ''"
@@ -1004,7 +1005,8 @@
                                                                      x-transition:enter-end="transform opacity-100 scale-100"
                                                                      x-transition:leave="transition ease-in duration-75"
                                                                      x-transition:leave-start="transform opacity-100 scale-100"
-                                                                     x-transition:leave-end="transform opacity-0 scale-95">
+                                                                     x-transition:leave-end="transform opacity-0 scale-95"
+                                                                     @click.stop>
                                                                     <div class="py-1">
                                                                         <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                             .uuid)"
