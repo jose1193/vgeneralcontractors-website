@@ -3,45 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Alpine Mask</title>
+    <title>Alpine.js Mask Test - Dynamic Items</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .item { border: 1px solid #ddd; padding: 20px; margin: 15px 0; border-radius: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { padding: 10px; margin: 5px; border: 1px solid #ccc; border-radius: 5px; width: 200px; }
+        button { padding: 12px 20px; background: #007cba; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #005a87; }
+        .remove-btn { background: #dc3545; }
+        .remove-btn:hover { background: #c82333; }
+        .total-section { background: #e9ecef; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .field-group { margin: 10px 0; }
+        label { display: inline-block; width: 100px; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <div x-data="{
-        rate: '',
-        formatRateMask(input) {
-            let cleanValue = input.replace(/[^0-9.]/g, '');
-            const parts = cleanValue.split('.');
+    <div class="container" x-data="testData()">
+        <h1>🧪 Alpine.js Mask Test - Dynamic Rate Formatting</h1>
+        <p>Este test verifica que la máscara de formateo funcione en elementos agregados dinámicamente.</p>
+        
+        <button @click="addItem()">➕ Add New Item</button>
+        
+        <template x-for="(item, index) in items" :key="index">
+            <div class="item">
+                <h3 x-text="'📋 Item ' + (index + 1)"></h3>
+                
+                <div class="field-group">
+                    <label>Service:</label>
+                    <input type="text" x-model="item.service_name" placeholder="Enter service name">
+                </div>
+                
+                <div class="field-group">
+                    <label>Rate:</label>
+                    <input type="text" 
+                           x-model="item.rate"
+                           x-mask:dynamic="formatRateMask"
+                           @input="updateRateValue($event, index)"
+                           placeholder="0.00"
+                           style="background: #fff3cd;">
+                    <small style="color: #856404;">💡 Debe formatear como: 2,500.00</small>
+                </div>
+                
+                <div class="field-group">
+                    <label>Quantity:</label>
+                    <input type="text" x-model="item.quantity" placeholder="1" @input="item.quantity = item.quantity.replace(/[^0-9]/g, '')">
+                </div>
+                
+                <div class="field-group">
+                    <label>Amount:</label>
+                    <strong style="color: #28a745; font-size: 18px;">$<span x-text="calculateAmount(item.rate, item.quantity)"></span></strong>
+                </div>
+                
+                <button @click="removeItem(index)" class="remove-btn">🗑️ Remove Item</button>
+            </div>
+        </template>
+        
+        <div class="total-section">
+            <h3>📊 Summary</h3>
+            <p><strong>Total Items:</strong> <span x-text="items.length"></span></p>
+            <p><strong>Grand Total:</strong> $<span x-text="calculateGrandTotal()"></span></p>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background: #d1ecf1; border-radius: 5px;">
+            <h4>🔍 Debug Info</h4>
+            <pre x-text="JSON.stringify(items, null, 2)" style="background: white; padding: 10px; border-radius: 3px; font-size: 12px;"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Global function for rate mask formatting
+        window.formatRateMask = function(input) {
+            console.log('🎭 formatRateMask called with:', input);
+            
+            let cleanValue = input.replace(/[^0-9.]/g, "");
+            
+            const parts = cleanValue.split(".");
             if (parts.length > 2) {
-                cleanValue = parts[0] + '.' + parts.slice(1).join('');
+                cleanValue = parts[0] + "." + parts.slice(1).join("");
             }
+            
             if (parts.length > 1 && parts[1].length > 2) {
-                cleanValue = parts[0] + '.' + parts[1].substring(0, 2);
+                cleanValue = parts[0] + "." + parts[1].substring(0, 2);
             }
+            
             if (!cleanValue || cleanValue === '.') {
                 return '';
             }
+            
             const numValue = parseFloat(cleanValue);
             if (isNaN(numValue)) {
                 return '';
             }
+            
             const formatter = new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 2
             });
-            return formatter.format(numValue);
+            
+            const formatted = formatter.format(numValue);
+            console.log('✅ Formatted result:', formatted);
+            return formatted;
+        };
+        
+        // Global function for updating rate value
+        window.updateRateValue = function(event, itemIndex) {
+            console.log('🔄 updateRateValue called for item:', itemIndex);
+            const alpineComponent = Alpine.$data(event.target.closest('[x-data]'));
+            if (alpineComponent && alpineComponent.updateRateValue) {
+                alpineComponent.updateRateValue(event, itemIndex);
+            }
+        };
+        
+        function testData() {
+            return {
+                items: [
+                    {
+                        service_name: "Initial Test Service",
+                        rate: "2500.00",
+                        quantity: "2"
+                    }
+                ],
+                
+                addItem() {
+                    console.log('➕ Adding new item...');
+                    this.items.push({
+                        service_name: "",
+                        rate: "0.00",
+                        quantity: "1"
+                    });
+                    
+                    this.$nextTick(() => {
+                        console.log('✅ New item added, total items:', this.items.length);
+                        console.log('📋 Current items:', this.items);
+                    });
+                },
+                
+                removeItem(index) {
+                    console.log('🗑️ Removing item at index:', index);
+                    this.items.splice(index, 1);
+                },
+                
+                updateRateValue(event, itemIndex) {
+                    const input = event.target;
+                    let value = input.value;
+                    
+                    const numericValue = value.replace(/,/g, '');
+                    this.items[itemIndex].rate = numericValue;
+                    
+                    console.log('💰 Rate updated for item', itemIndex, ':', numericValue);
+                },
+                
+                calculateAmount(rate, quantity) {
+                    const numRate = parseFloat((rate || '0').replace(/,/g, ''));
+                    const numQty = parseFloat(quantity || '0');
+                    return (numRate * numQty).toFixed(2);
+                },
+                
+                calculateGrandTotal() {
+                    return this.items.reduce((total, item) => {
+                        const amount = parseFloat(this.calculateAmount(item.rate, item.quantity));
+                        return total + amount;
+                    }, 0).toFixed(2);
+                }
+            }
         }
-    }">
-        <h1>Test Rate Input Mask</h1>
-        <label>Rate:</label>
-        <input type="text" 
-               x-model="rate"
-               x-mask:dynamic="formatRateMask"
-               placeholder="Enter rate (e.g., 2500.00)"
-               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 200px;">
-        <p>Value: <span x-text="rate"></span></p>
-        <p>Formatted should show: 2,500.00 when you type 2500</p>
-    </div>
+    </script>
 </body>
 </html>
