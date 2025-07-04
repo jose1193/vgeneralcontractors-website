@@ -980,7 +980,7 @@
                                                                 </svg>
                                                             </button>
                                                             <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
+                                                                class="absolute right-0 bottom-full mb-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
                                                                 <div class="py-1">
                                                                     <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                         .uuid)"
