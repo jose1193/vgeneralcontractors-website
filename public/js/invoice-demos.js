@@ -1774,29 +1774,32 @@ invoiceDemoData = function () {
         }
     };
 
-    // Format currency input for rate field with mask
+    // Format currency input for rate field with mask (Alpine Mask compatible)
     data.formatRateMask = function (input) {
-        // Eliminar todo excepto números y punto decimal
-        let cleanValue = input.replace(/[^0-9.]/g, "");
+        // Eliminar todo excepto números, punto decimal y comas
+        let cleanValue = input.replace(/[^0-9.,]/g, "");
+        
+        // Remover comas para procesar el número
+        let numericValue = cleanValue.replace(/,/g, "");
         
         // Asegurar que solo haya un punto decimal
-        const parts = cleanValue.split(".");
+        const parts = numericValue.split(".");
         if (parts.length > 2) {
-            cleanValue = parts[0] + "." + parts.slice(1).join("");
+            numericValue = parts[0] + "." + parts.slice(1).join("");
         }
         
         // Limitar a dos decimales
         if (parts.length > 1 && parts[1].length > 2) {
-            cleanValue = parts[0] + "." + parts[1].substring(0, 2);
+            numericValue = parts[0] + "." + parts[1].substring(0, 2);
         }
         
-        // Si no hay valor, retornar vacío
-        if (!cleanValue || cleanValue === '.') {
+        // Si no hay valor o solo punto, retornar vacío
+        if (!numericValue || numericValue === '.' || numericValue === '') {
             return '';
         }
         
         // Convertir a número para formatear
-        const numValue = parseFloat(cleanValue);
+        const numValue = parseFloat(numericValue);
         if (isNaN(numValue)) {
             return '';
         }
@@ -1810,16 +1813,20 @@ invoiceDemoData = function () {
         return formatter.format(numValue);
     };
 
-    // Update rate value in model (for x-mask compatibility)
+    // Update rate value in model (for Alpine Mask compatibility)
     data.updateRateValue = function (event, itemIndex) {
         const input = event.target;
         let value = input.value;
         
-        // Extraer el valor numérico sin formato
-        const numericValue = value.replace(/,/g, '');
+        // Extraer el valor numérico sin formato (remover comas y símbolos)
+        const numericValue = value.replace(/[^0-9.]/g, '');
+        
+        // Validar que sea un número válido
+        const parsedValue = parseFloat(numericValue);
+        const finalValue = isNaN(parsedValue) ? '0' : numericValue;
         
         // Actualizar el modelo con el valor numérico
-        this.form.items[itemIndex].rate = numericValue;
+        this.form.items[itemIndex].rate = finalValue;
         
         // Calcular totales
         this.calculateTotals();
