@@ -646,7 +646,12 @@
                         </div>
 
                         <!-- Export Dropdown -->
-                        <div class="lg:col-span-1 relative" x-data="{ exportOpen: false }">
+                        <div class="lg:col-span-1 relative" x-data="{ exportOpen: false, buttonRect: null }"
+                             x-init="$watch('exportOpen', value => {
+                                 if (value) {
+                                     buttonRect = $el.querySelector('button').getBoundingClientRect();
+                                 }
+                             })">
                             <button @click="exportOpen = !exportOpen" 
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-orange-500/30 to-yellow-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-orange-600/40 hover:to-yellow-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
@@ -664,41 +669,43 @@
                                 </svg>
                             </button>
                             
-                            <!-- Export Dropdown Menu -->
-                            <div x-show="exportOpen" 
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 scale-95 transform -translate-y-2"
-                                 x-transition:enter-end="opacity-100 scale-100 transform translate-y-0"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
-                                 x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
-                                 @click.away="exportOpen = false"
-                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden">
-                                <div class="py-2">
-                                    <button @click="exportToExcel(); exportOpen = false" 
-                                            data-export="excel"
-                                            class="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors duration-200 flex items-center group">
-                                        <svg class="w-5 h-5 text-green-400 mr-3 group-hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                                        </svg>
-                                        <div>
-                                            <div class="font-medium">Export Excel</div>
-                                            <div class="text-xs text-gray-400">Download as .xlsx file</div>
-                                        </div>
-                                    </button>
-                                    <button @click="exportToPdf(); exportOpen = false" 
-                                            data-export="pdf"
-                                            class="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors duration-200 flex items-center group">
-                                        <svg class="w-5 h-5 text-red-400 mr-3 group-hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                                        </svg>
-                                        <div>
-                                            <div class="font-medium">Export PDF</div>
-                                            <div class="text-xs text-gray-400">Download as .pdf file</div>
-                                        </div>
-                                    </button>
+                            <!-- Teleported Export Dropdown Menu -->
+                            <template x-teleport="body" @click.away="exportOpen = false">
+                                <div x-show="exportOpen" 
+                                     class="fixed backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden"
+                                     x-bind:style="buttonRect ? `top: ${buttonRect.bottom + 8}px; left: ${buttonRect.left}px; width: ${buttonRect.width}px;` : ''"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 scale-95 transform -translate-y-2"
+                                     x-transition:enter-end="opacity-100 scale-100 transform translate-y-0"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
+                                     x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2">
+                                    <div class="py-2">
+                                        <button @click="exportToExcel(); exportOpen = false" 
+                                                data-export="excel"
+                                                class="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors duration-200 flex items-center group">
+                                            <svg class="w-5 h-5 text-green-400 mr-3 group-hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                                            </svg>
+                                            <div>
+                                                <div class="font-medium">Export Excel</div>
+                                                <div class="text-xs text-gray-400">Download as .xlsx file</div>
+                                            </div>
+                                        </button>
+                                        <button @click="exportToPdf(); exportOpen = false" 
+                                                data-export="pdf"
+                                                class="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors duration-200 flex items-center group">
+                                            <svg class="w-5 h-5 text-red-400 mr-3 group-hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                                            </svg>
+                                            <div>
+                                                <div class="font-medium">Export PDF</div>
+                                                <div class="text-xs text-gray-400">Download as .pdf file</div>
+                                            </div>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
 
                         <!-- Create Button -->
