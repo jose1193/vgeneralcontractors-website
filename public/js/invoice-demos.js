@@ -921,6 +921,12 @@ function invoiceDemoData() {
                       // Crear una copia del item sin el UUID
                       const { uuid, ...itemWithoutUuid } = item;
                       console.log("Removed UUID from item:", uuid);
+                      
+                      // Convertir rate a string para compatibilidad con Alpine Mask
+                      if (itemWithoutUuid.rate !== undefined && itemWithoutUuid.rate !== null) {
+                          itemWithoutUuid.rate = itemWithoutUuid.rate.toString();
+                      }
+                      
                       return itemWithoutUuid;
                   })
                 : [];
@@ -970,7 +976,7 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: 0,
+                rate: "",
                 sort_order: this.form.items.length,
             });
         },
@@ -1823,9 +1829,9 @@ invoiceDemoData = function () {
         
         // Validar que sea un número válido
         const parsedValue = parseFloat(numericValue);
-        const finalValue = isNaN(parsedValue) ? '0' : numericValue;
+        const finalValue = isNaN(parsedValue) ? 0 : parsedValue;
         
-        // Actualizar el modelo con el valor numérico
+        // Actualizar el modelo con el valor numérico para cálculos
         this.form.items[itemIndex].rate = finalValue;
         
         // Calcular totales
