@@ -369,9 +369,9 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="formatCurrencyInput($event, index)"
+                                                @input="formatDecimalItemInput($event, index)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
-                                                placeholder="0.00">
+                                                placeholder="2,500.00">
                                         </div>
 
                                         <!-- Amount & Remove Button -->
@@ -419,11 +419,11 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
-                                        @input="formatGeneralCurrencyInput($event, 'subtotal')"
+                                        @input="formatDecimalInput($event, 'subtotal')"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
-                                        placeholder="0.00">
+                                        placeholder="2,500.00">
                                 </div>
                                 <p x-show="errors.subtotal" class="mt-1 text-sm text-red-600"
                                     x-text="errors.subtotal"></p>
@@ -435,11 +435,11 @@
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
-                                        @input="formatGeneralCurrencyInput($event, 'tax_amount')"
+                                        @input="formatDecimalInput($event, 'tax_amount')"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
-                                        placeholder="0.00">
+                                        placeholder="250.00">
                                 </div>
                                 <p x-show="errors.tax_amount" class="mt-1 text-sm text-red-600"
                                     x-text="errors.tax_amount"></p>

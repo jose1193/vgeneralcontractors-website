@@ -286,6 +286,12 @@ class InvoiceDemoManager {
      * Format currency
      */
     formatCurrency(amount) {
+        // Handle string values that might contain commas
+        if (typeof amount === 'string') {
+            // Remove commas and convert to number
+            amount = parseFloat(amount.replace(/,/g, '')) || 0;
+        }
+        
         return new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
@@ -1838,6 +1844,116 @@ invoiceDemoData = function () {
 
         // Calcular totales después de actualizar el valor
         this.calculateTotals();
+    };
+
+    // ✅ NEW: Format decimal input with thousands separator (2,500.00 format)
+    data.formatDecimalInput = function (event, fieldName) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+
+        // Eliminar todo excepto números y punto decimal
+        const cleanValue = value.replace(/[^0-9.]/g, "");
+
+        // Asegurar que solo haya un punto decimal
+        const parts = cleanValue.split(".");
+        let integerPart = parts[0] || "";
+        let decimalPart = parts[1] || "";
+
+        // Limitar a dos decimales
+        if (decimalPart.length > 2) {
+            decimalPart = decimalPart.substring(0, 2);
+        }
+
+        // Agregar separadores de miles al entero
+        if (integerPart.length > 0) {
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Construir el valor formateado
+        let formattedValue = integerPart;
+        if (parts.length > 1 || value.includes(".")) {
+            formattedValue += "." + decimalPart;
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (formattedValue !== input.value) {
+            input.value = formattedValue;
+            // Guardar el valor sin formato en el modelo para cálculos
+            const numericValue = cleanValue;
+            this.form[fieldName] = numericValue;
+            
+            // Calcular nueva posición del cursor considerando las comas agregadas
+            const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
+            const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+            const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+            const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
+            
+            // Restaurar la posición del cursor
+            setTimeout(() => {
+                input.setSelectionRange(newCursorPos, newCursorPos);
+            }, 0);
+        }
+
+        // Calcular totales después de actualizar el valor
+        if (typeof this.calculateTotals === 'function') {
+            this.calculateTotals();
+        }
+    };
+
+    // ✅ NEW: Format decimal input for item rates with thousands separator
+    data.formatDecimalItemInput = function (event, itemIndex) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
+
+        // Eliminar todo excepto números y punto decimal
+        const cleanValue = value.replace(/[^0-9.]/g, "");
+
+        // Asegurar que solo haya un punto decimal
+        const parts = cleanValue.split(".");
+        let integerPart = parts[0] || "";
+        let decimalPart = parts[1] || "";
+
+        // Limitar a dos decimales
+        if (decimalPart.length > 2) {
+            decimalPart = decimalPart.substring(0, 2);
+        }
+
+        // Agregar separadores de miles al entero
+        if (integerPart.length > 0) {
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Construir el valor formateado
+        let formattedValue = integerPart;
+        if (parts.length > 1 || value.includes(".")) {
+            formattedValue += "." + decimalPart;
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (formattedValue !== input.value) {
+            input.value = formattedValue;
+            // Guardar el valor sin formato en el modelo para cálculos
+            const numericValue = cleanValue;
+            this.form.items[itemIndex].rate = numericValue;
+            
+            // Calcular nueva posición del cursor considerando las comas agregadas
+            const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
+            const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+            const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+            const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
+            
+            // Restaurar la posición del cursor
+            setTimeout(() => {
+                input.setSelectionRange(newCursorPos, newCursorPos);
+            }, 0);
+        }
+
+        // Calcular totales después de actualizar el valor
+        if (typeof this.calculateTotals === 'function') {
+            this.calculateTotals();
+        }
     };
 
     return data;
