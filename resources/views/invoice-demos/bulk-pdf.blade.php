@@ -2,29 +2,31 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Bulk Invoices Export</title>
+    <title>Invoices Report</title>
     <style>
+        @page {
+            margin: 15mm;
+            size: A4 landscape;
+        }
         body {
-            font-family: 'Roboto', Arial, sans-serif;
-            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.3;
             margin: 0;
             padding: 0;
         }
         .container {
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .page-break {
-            page-break-before: always;
+            margin: 0;
+            padding: 0;
         }
         .header {
             width: 100%;
             display: table;
             margin-bottom: 20px;
+            border-bottom: 2px solid #4F46E5;
+            padding-bottom: 15px;
         }
         .header-left {
             display: table-cell;
@@ -38,228 +40,214 @@
             vertical-align: top;
         }
         .logo {
-            max-width: 164px;
+            max-width: 120px;
             height: auto;
-            margin-top: 10px;
         }
         .company-info {
-            font-size: 10px;
+            font-size: 9px;
             line-height: 1.2;
             margin-top: 5px;
+            color: #666;
         }
-        .invoice-title {
-            color: #6c9bd0;
-            font-size: 18px;
+        .company-name {
+            font-size: 14px;
             font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 10px;
-        }
-        .invoice-details {
-            width: 100%;
-            display: table;
-            margin-bottom: 20px;
-        }
-        .bill-to {
-            display: table-cell;
-            width: 50%;
-            vertical-align: top;
-        }
-        .invoice-info {
-            display: table-cell;
-            width: 50%;
-            text-align: right;
-            vertical-align: top;
-        }
-        .section-title {
-            font-weight: bold;
+            color: #4F46E5;
             margin-bottom: 5px;
         }
-        table.items {
+        .report-title {
+            color: #4F46E5;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .report-info {
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        table.invoices-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-size: 8px;
         }
-        table.items th {
-            background-color: #e6f0fa;
-            color: #6c9bd0;
+        table.invoices-table th {
+            background-color: #4F46E5;
+            color: white;
             font-weight: bold;
             text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
+            padding: 6px 4px;
+            border: 1px solid #333;
+            font-size: 8px;
         }
-        table.items td {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            font-weight: 600;
+        table.invoices-table td {
+            padding: 4px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+            font-size: 8px;
         }
-        table.items .amount {
+        table.invoices-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        table.invoices-table tr:hover {
+            background-color: #e3f2fd;
+        }
+        .text-right {
             text-align: right;
         }
-        table.items .qty {
+        .text-center {
             text-align: center;
         }
-        table.items .rate {
-            text-align: right;
-        }
-        .totals-table {
-            width: 100%;
-            margin-top: 20px;
-        }
-        .totals-table td {
-            padding: 5px;
-        }
-        .totals-table .label {
-            text-align: right;
-            font-weight: normal;
-        }
-        .totals-table .value {
-            text-align: right;
-            width: 120px;
-        }
-        .balance-due {
+        .status {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 7px;
             font-weight: bold;
-            font-size: 14px;
-            color: #333;
+            text-transform: uppercase;
+        }
+        .status.paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status.overdue {
+            background-color: #f8d7da;
+            color: #721c24;
         }
         .footer {
-            margin-top: 30px;
-            font-size: 10px;
+            margin-top: 20px;
+            font-size: 8px;
             color: #666;
             text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
         }
-        .claim-info {
-            margin-top: 20px;
-            font-size: 10px;
+        .summary {
+            margin-top: 15px;
+            font-size: 9px;
         }
-        .claim-info .value {
-            font-weight: 600;
-        }
-        .invoice-separator {
-            margin-bottom: 40px;
-            border-bottom: 2px solid #6c9bd0;
-            padding-bottom: 20px;
+        .summary-item {
+            display: inline-block;
+            margin-right: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    @foreach($invoices as $index => $invoice)
-        @if($index > 0)
-            <div class="page-break"></div>
-        @endif
-        
-        <div class="container">
-            <!-- Header Section -->
-            <div class="header">
-                <div class="header-left">
-                    <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $company->company_name ?? 'V General Contractors' }}" class="logo">
-                </div>
-                <div class="header-right">
-                    <div class="company-name">{{ $company->company_name ?? 'V GENERAL CONTRACTORS' }}</div>
-                    <div class="company-info">
-                        {{ $company->address ?? '1522 Waugh Dr # 510, Houston, TX 77019' }}<br>
-                        @php
-                            $phone = $collectionsEmail->phone ?? '+17133646240';
-                            // Format phone number as (xxx) xxx-xxxx
-                            if (strlen($phone) >= 10) {
-                                $phone = preg_replace('/[^0-9]/', '', $phone);
-                                $phone = '(' . substr($phone, -10, 3) . ') ' . substr($phone, -7, 3) . '-' . substr($phone, -4);
-                            }
-                        @endphp
-                        {{ $phone }}<br>
-                        {{ $collectionsEmail->email ?? 'collection@vgeneralcontractors.com' }}<br>
-                        {{ $company->website ?? 'https://vgeneralcontractors.com/' }}
-                    </div>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-left">
+                <img src="{{ public_path('assets/logo/logo-png.png') }}" alt="{{ $company->company_name ?? 'V General Contractors' }}" class="logo">
+            </div>
+            <div class="header-right">
+                <div class="company-name">{{ $company->company_name ?? 'V GENERAL CONTRACTORS' }}</div>
+                <div class="company-info">
+                    {{ $company->address ?? '1522 Waugh Dr # 510, Houston, TX 77019' }}<br>
+                    @php
+                        $phone = $collectionsEmail->phone ?? '+17133646240';
+                        // Format phone number as (xxx) xxx-xxxx
+                        if (strlen($phone) >= 10) {
+                            $phone = preg_replace('/[^0-9]/', '', $phone);
+                            $phone = '(' . substr($phone, -10, 3) . ') ' . substr($phone, -7, 3) . '-' . substr($phone, -4);
+                        }
+                    @endphp
+                    {{ $phone }}<br>
+                    {{ $collectionsEmail->email ?? 'collection@vgeneralcontractors.com' }}<br>
+                    {{ $company->website ?? 'https://vgeneralcontractors.com/' }}
                 </div>
             </div>
-            
-            <!-- Invoice Title -->
-            <div class="invoice-title">INVOICE</div>
-            
-            <!-- Invoice Details -->
-            <div class="invoice-details">
-                <div class="bill-to">
-                    <div class="section-title">BILL TO</div>
-                    {{ $invoice->bill_to_name }}<br>
-                    {{ $invoice->bill_to_address }}<br>
-                    @if($invoice->bill_to_address_2)
-                    {{ $invoice->bill_to_address_2 }}<br>
-                    @endif
-                    {{ $invoice->bill_to_city }}{{ !empty($invoice->bill_to_state) ? ', '.$invoice->bill_to_state : '' }}{{ !empty($invoice->bill_to_zip) ? ' '.$invoice->bill_to_zip : '' }}
-                </div>
-                <div class="invoice-info">
-                    <table>
-                        <tr>
-                            <td class="section-title">INVOICE</td>
-                            <td>{{ $invoice->invoice_number }}</td>
-                        </tr>
-                        <tr>
-                            <td class="section-title">DATE</td>
-                            <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Invoice Items -->
-            <table class="items">
-                <thead>
-                    <tr>
-                        <th>SERVICE</th>
-                        <th>DESCRIPTION</th>
-                        <th class="qty">QTY</th>
-                        <th class="rate">RATE</th>
-                        <th class="amount">AMOUNT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($invoice->items as $item)
-                    <tr>
-                        <td>{{ $item->service_name }}</td>
-                        <td>{{ $item->description }}</td>
-                        <td class="qty">{{ number_format($item->quantity, 2) }}</td>
-                        <td class="rate">${{ number_format($item->rate, 2) }}</td>
-                        <td class="amount">${{ number_format($item->amount, 2) }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
-            <!-- Totals -->
-            <table class="totals-table">
-                <tr>
-                    <td></td>
-                    <td class="label">BALANCE DUE</td>
-                    <td class="value balance-due">${{ number_format($invoice->balance_due, 2) }}</td>
-                </tr>
-            </table>
-            
-            <!-- Claim Information -->
-            <div class="claim-info">
-                <table>
-                    <tr>
-                        <td>INVOICE #: <span class="value">{{ $invoice->invoice_number }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>CLAIM #: <span class="value">{{ $invoice->claim_number }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>INSURANCE COMPANY: <span class="value">{{ $invoice->insurance_company }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>POLICY NUMBER: <span class="value">{{ $invoice->policy_number }}</span></td>
-                    </tr>
-                </table>
-            </div>
-            
-            <!-- Footer -->
-            <div class="footer">
-                Thank you for your business. Please make payment within {{ $invoice->payment_terms ?? 30 }} days.
-            </div>
-            
-            @if(!$loop->last)
-                <div class="invoice-separator"></div>
-            @endif
         </div>
-    @endforeach
+        
+        <!-- Report Title -->
+        <div class="report-title">INVOICES REPORT</div>
+        
+        <!-- Report Info -->
+        <div class="report-info">
+            Generated on {{ now()->format('F j, Y \\a\\t g:i A') }} | Total Invoices: {{ count($invoices) }}
+        </div>
+        
+        <!-- Invoices Table -->
+        <table class="invoices-table">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Bill To</th>
+                    <th>Company</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th class="text-right">Subtotal</th>
+                    <th class="text-right">Tax</th>
+                    <th class="text-right">Total</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $totalSubtotal = 0;
+                    $totalTax = 0;
+                    $totalAmount = 0;
+                @endphp
+                @foreach($invoices as $invoice)
+                    @php
+                        $totalSubtotal += $invoice->subtotal;
+                        $totalTax += $invoice->tax_amount;
+                        $totalAmount += $invoice->total_amount;
+                    @endphp
+                    <tr>
+                        <td><strong>{{ $invoice->invoice_number }}</strong></td>
+                        <td>{{ $invoice->bill_to_name }}</td>
+                        <td>{{ $invoice->bill_to_company ?? '-' }}</td>
+                        <td>{{ $invoice->bill_to_email ?? '-' }}</td>
+                        <td>{{ $invoice->bill_to_phone ?? '-' }}</td>
+                        <td>
+                            <span class="status {{ strtolower($invoice->status) }}">
+                                {{ ucfirst($invoice->status) }}
+                            </span>
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->tax_amount, 2) }}</td>
+                        <td class="text-right"><strong>${{ number_format($invoice->total_amount, 2) }}</strong></td>
+                        <td class="text-center">{{ $invoice->created_at->format('m/d/Y') }}</td>
+                        <td class="text-center">{{ is_array($invoice->items) ? count($invoice->items) : 0 }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr style="background-color: #f0f0f0; font-weight: bold;">
+                    <td colspan="6" class="text-right"><strong>TOTALS:</strong></td>
+                    <td class="text-right"><strong>${{ number_format($totalSubtotal, 2) }}</strong></td>
+                    <td class="text-right"><strong>${{ number_format($totalTax, 2) }}</strong></td>
+                    <td class="text-right"><strong>${{ number_format($totalAmount, 2) }}</strong></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <!-- Summary -->
+        <div class="summary">
+            <div class="summary-item">Total Invoices: {{ count($invoices) }}</div>
+            <div class="summary-item">Total Amount: ${{ number_format($totalAmount, 2) }}</div>
+            @php
+                $statusCounts = $invoices->groupBy('status')->map->count();
+            @endphp
+            @foreach($statusCounts as $status => $count)
+                <div class="summary-item">{{ ucfirst($status) }}: {{ $count }}</div>
+            @endforeach
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            This report was generated automatically by {{ $company->company_name ?? 'V General Contractors' }} invoice management system.
+        </div>
+    </div>
 </body>
 </html>
