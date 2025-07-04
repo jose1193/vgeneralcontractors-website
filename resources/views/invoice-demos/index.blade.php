@@ -162,8 +162,8 @@
             color: rgb(255, 255, 255);
         }
 
-        /* Flatpickr Custom Styles - Safe CSS Rules */
-        .flatpickr-calendar {
+        /* Modern Date Picker Custom Styles - Litepicker Alternative */
+        .litepicker {
             background: rgba(30, 30, 30, 0.95) !important;
             backdrop-filter: blur(20px) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -171,69 +171,133 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
             z-index: 99999 !important;
             position: fixed !important;
-            top: auto !important;
-            max-height: 400px !important;
-            overflow-y: auto !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
         }
 
-        .flatpickr-day.selected {
+        .litepicker .container__main {
+            background: rgba(30, 30, 30, 0.95) !important;
+            border-radius: 12px !important;
+        }
+
+        .litepicker .container__months {
+            background: transparent !important;
+        }
+
+        .litepicker .month-item {
+            background: transparent !important;
+            color: rgb(243, 244, 246) !important;
+        }
+
+        .litepicker .month-item-header {
+            color: rgb(243, 244, 246) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            font-weight: 600 !important;
+        }
+
+        .litepicker .month-item-weekdays-row > div {
+            color: rgba(156, 163, 175, 0.8) !important;
+            font-weight: 600 !important;
+            font-size: 0.75rem !important;
+        }
+
+        .litepicker .day-item {
+            color: rgb(229, 231, 235) !important;
+            border-radius: 6px !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .litepicker .day-item:hover {
+            background: rgba(147, 51, 234, 0.5) !important;
+            color: white !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3) !important;
+        }
+
+        .litepicker .day-item.is-start-date,
+        .litepicker .day-item.is-end-date {
+            background: rgba(147, 51, 234, 0.8) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4) !important;
+        }
+
+        .litepicker .day-item.is-in-range {
+            background: rgba(147, 51, 234, 0.3) !important;
+            color: white !important;
+        }
+
+        .litepicker .day-item.is-today {
+            background: rgba(255, 255, 255, 0.1) !important;
+            font-weight: 700 !important;
+            border: 1px solid rgba(147, 51, 234, 0.5) !important;
+        }
+
+        .litepicker .container__footer {
+            background: rgba(30, 30, 30, 0.9) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 0 0 12px 12px !important;
+        }
+
+        .litepicker .container__footer .preview-date-range {
+            color: rgb(243, 244, 246) !important;
+            font-weight: 500 !important;
+        }
+
+        .litepicker .container__footer .button-cancel,
+        .litepicker .container__footer .button-apply {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: rgb(229, 231, 235) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 6px !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .litepicker .container__footer .button-apply {
             background: rgba(147, 51, 234, 0.8) !important;
             border-color: rgba(147, 51, 234, 1) !important;
             color: white !important;
         }
 
-        .flatpickr-day.inRange {
-            background: rgba(147, 51, 234, 0.3) !important;
-            border-color: rgba(147, 51, 234, 0.5) !important;
-            color: white !important;
+        .litepicker .container__footer .button-cancel:hover,
+        .litepicker .container__footer .button-apply:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
         }
 
-        .flatpickr-day:hover {
-            background: rgba(147, 51, 234, 0.5) !important;
-            border-color: rgba(147, 51, 234, 0.7) !important;
+        .litepicker .container__footer .button-apply:hover {
+            background: rgba(147, 51, 234, 1) !important;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4) !important;
         }
 
-        .flatpickr-months {
-            background: rgba(30, 30, 30, 0.9) !important;
+        /* Fallback native date input styles */
+        .modern-date-picker-fallback {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: rgb(243, 244, 246) !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+            backdrop-filter: blur(10px) !important;
         }
 
-        .flatpickr-weekdays {
-            background: rgba(30, 30, 30, 0.8) !important;
+        .modern-date-picker-fallback:focus {
+            border-color: rgba(147, 51, 234, 0.8) !important;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.25) !important;
+            outline: none !important;
         }
 
-        /* Fix for arrows and pagination after footer */
-        .flatpickr-calendar {
-            position: fixed !important;
-        }
-
-        /* Ensure proper stacking order */
-        body>.flatpickr-calendar {
-            z-index: 99999 !important;
-        }
-
-        /* Additional Flatpickr positioning fixes */
-        .flatpickr-calendar.open {
-            z-index: 99999 !important;
-        }
-
-        .flatpickr-calendar.arrowTop:before,
-        .flatpickr-calendar.arrowTop:after {
-            border-bottom-color: rgba(30, 30, 30, 0.95) !important;
-        }
-
-        /* Prevent calendar from being cut off */
-        .flatpickr-input[readonly] {
-            cursor: pointer !important;
-            background-color: rgba(255, 255, 255, 0.08) !important;
-        }
-
-        /* Improve flatpickr responsiveness */
+        /* Responsive adjustments for Modern Date Picker */
         @media (max-width: 768px) {
-            .flatpickr-calendar {
+            .litepicker {
                 width: 90vw !important;
                 max-width: 350px !important;
                 left: 50% !important;
                 transform: translateX(-50%) !important;
+            }
+            
+            .litepicker .container__months {
+                flex-direction: column !important;
             }
         }
 
@@ -1034,6 +1098,9 @@
         </div>
 
         @push('scripts')
+            <!-- Modern Date Range Picker -->
+            <script src="{{ asset('js/modern-date-picker.js') }}"></script>
+            <!-- Main Invoice Demo Script -->
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
         @endpush
     @endsection

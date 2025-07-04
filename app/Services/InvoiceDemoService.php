@@ -76,28 +76,41 @@ class InvoiceDemoService
                 $query->where('status', $status);
             }
 
-            // ✅ NEW: Apply date range filters
-            if (!empty($startDate)) {
+            // ✅ ENHANCED: Apply date range filters with improved validation
+            if (!empty($startDate) && !empty($endDate)) {
                 try {
-                    $startDateTime = Carbon::parse($startDate)->startOfDay();
-                    $query->where('invoice_date', '>=', $startDateTime);
+                    // Validate and format dates
+                    $startDateFormatted = Carbon::parse($startDate)->startOfDay();
+                    $endDateFormatted = Carbon::parse($endDate)->endOfDay();
+                    
+                    // Ensure start date is not after end date
+                    if ($startDateFormatted->lte($endDateFormatted)) {
+                        $query->whereBetween('invoice_date', [
+                            $startDateFormatted->format('Y-m-d H:i:s'),
+                            $endDateFormatted->format('Y-m-d H:i:s')
+                        ]);
+                    }
                 } catch (\Exception $e) {
-                    Log::warning('Invalid start date format', [
+                    // Log invalid date format but continue without date filter
+                    Log::warning('Invalid date range provided', [
                         'start_date' => $startDate,
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
-
-            if (!empty($endDate)) {
-                try {
-                    $endDateTime = Carbon::parse($endDate)->endOfDay();
-                    $query->where('invoice_date', '<=', $endDateTime);
-                } catch (\Exception $e) {
-                    Log::warning('Invalid end date format', [
                         'end_date' => $endDate,
                         'error' => $e->getMessage()
                     ]);
+                }
+            } elseif (!empty($startDate)) {
+                try {
+                    $startDateFormatted = Carbon::parse($startDate)->startOfDay();
+                    $query->where('invoice_date', '>=', $startDateFormatted->format('Y-m-d H:i:s'));
+                } catch (\Exception $e) {
+                    Log::warning('Invalid start date provided', ['start_date' => $startDate]);
+                }
+            } elseif (!empty($endDate)) {
+                try {
+                    $endDateFormatted = Carbon::parse($endDate)->endOfDay();
+                    $query->where('invoice_date', '<=', $endDateFormatted->format('Y-m-d H:i:s'));
+                } catch (\Exception $e) {
+                    Log::warning('Invalid end date provided', ['end_date' => $endDate]);
                 }
             }
 

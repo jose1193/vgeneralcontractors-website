@@ -52,6 +52,7 @@ class InvoiceDemoController extends BaseController
 
     /**
      * Override index method to use service and resource
+     * Enhanced with modern date range handling for Laravel 12 & PHP 8.4
      */
     public function index(Request $request): View|JsonResponse|RedirectResponse
     {
@@ -69,16 +70,35 @@ class InvoiceDemoController extends BaseController
             }
 
             if ($request->ajax() || $request->wantsJson()) {
+                // Enhanced parameter validation and sanitization
+                $page = max(1, (int) $request->get('page', 1));
+                $perPage = min(100, max(5, (int) $request->get('per_page', 10)));
+                $search = trim($request->get('search', ''));
+                $status = $request->get('status', '');
+                $sortBy = $request->get('sort_by', 'created_at');
+                $sortOrder = in_array($request->get('sort_order'), ['asc', 'desc']) ? $request->get('sort_order') : 'desc';
+                $includeDeleted = $request->boolean('include_deleted');
+                
+                // Enhanced date range handling with validation
+                $startDate = $this->validateAndFormatDate($request->get('start_date', ''));
+                $endDate = $this->validateAndFormatDate($request->get('end_date', ''));
+                
+                // Handle predefined date ranges
+                $dateRange = $request->get('date_range', '');
+                if ($dateRange && !$startDate && !$endDate) {
+                    [$startDate, $endDate] = $this->getPredefinedDateRange($dateRange);
+                }
+
                 $invoices = $this->invoiceService->getPaginatedInvoices(
-                    page: (int) $request->get('page', 1),
-                    perPage: (int) $request->get('per_page', 10),
-                    search: (string) $request->get('search', ''),
-                    status: (string) $request->get('status', ''),
-                    sortBy: (string) $request->get('sort_by', 'created_at'),
-                    sortOrder: (string) $request->get('sort_order', 'desc'),
-                    includeDeleted: $request->boolean('include_deleted'),
-                    startDate: (string) $request->get('start_date', ''),
-                    endDate: (string) $request->get('end_date', '')
+                    page: $page,
+                    perPage: $perPage,
+                    search: $search,
+                    status: $status,
+                    sortBy: $sortBy,
+                    sortOrder: $sortOrder,
+                    includeDeleted: $includeDeleted,
+                    startDate: $startDate,
+                    endDate: $endDate
                 );
 
                 return response()->json([
@@ -91,6 +111,13 @@ class InvoiceDemoController extends BaseController
                         'total' => $invoices->total(),
                         'from' => $invoices->firstItem(),
                         'to' => $invoices->lastItem()
+                    ],
+                    'filters' => [
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'search' => $search,
+                        'status' => $status,
+                        'date_range' => $dateRange
                     ]
                 ]);
             }
@@ -111,6 +138,43 @@ class InvoiceDemoController extends BaseController
 
             return back()->with('error', 'Failed to load invoice demos');
         }
+    }
+
+    /**
+     * Validate and format date string
+     */
+    private function validateAndFormatDate(string $date): string
+    {
+        if (empty($date)) {
+            return '';
+        }
+
+        try {
+            return Carbon::parse($date)->format('Y-m-d');
+        } catch (Throwable $e) {
+            Log::warning('Invalid date format provided', ['date' => $date]);
+            return '';
+        }
+    }
+
+    /**
+     * Get predefined date ranges
+     */
+    private function getPredefinedDateRange(string $range): array
+    {
+        $today = Carbon::today();
+        
+        return match ($range) {
+            'today' => [$today->format('Y-m-d'), $today->format('Y-m-d')],
+            'yesterday' => [$today->subDay()->format('Y-m-d'), $today->format('Y-m-d')],
+            'last_7_days' => [$today->subDays(6)->format('Y-m-d'), Carbon::today()->format('Y-m-d')],
+            'last_30_days' => [$today->subDays(29)->format('Y-m-d'), Carbon::today()->format('Y-m-d')],
+            'this_month' => [$today->startOfMonth()->format('Y-m-d'), Carbon::today()->endOfMonth()->format('Y-m-d')],
+            'last_month' => [$today->subMonth()->startOfMonth()->format('Y-m-d'), $today->endOfMonth()->format('Y-m-d')],
+            'this_year' => [$today->startOfYear()->format('Y-m-d'), Carbon::today()->endOfYear()->format('Y-m-d')],
+            'last_year' => [$today->subYear()->startOfYear()->format('Y-m-d'), $today->endOfYear()->format('Y-m-d')],
+            default => ['', '']
+        };
     }
 
     /**
