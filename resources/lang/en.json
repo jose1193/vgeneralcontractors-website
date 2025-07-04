@@ -1779,6 +1779,7 @@
     "invoices_demo_traduccion_export": "Export",
     "invoices_demo_traduccion_export_excel": "Export Excel",
     "invoices_demo_traduccion_export_excel_desc": "Download as .xlsx file",
+    "invoices_demo_traduccion_download_xlsx": "Download as .xlsx file",
     "invoices_demo_traduccion_export_pdf": "Export PDF",
     "invoices_demo_traduccion_bill_to_name": "Bill To Name",
     "invoices_demo_traduccion_bill_to_company": "Bill To Company",
