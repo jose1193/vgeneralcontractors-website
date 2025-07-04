@@ -1188,14 +1188,14 @@ function invoiceDemoData() {
         // Delete invoice
         async deleteInvoice(invoice) {
             const result = await Swal.fire({
-                title: "¿Estás seguro?",
-                html: `¿Deseas eliminar la factura: <strong>${invoice.invoice_number}</strong>?`,
+                title: window.translations?.invoices_demo_traduccion_are_you_sure || "¿Estás seguro?",
+                html: (window.translations?.invoices_demo_traduccion_delete_invoice_confirm || "¿Deseas eliminar la factura: <strong>{invoice_number}</strong>?").replace('{invoice_number}', invoice.invoice_number),
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar",
+                confirmButtonText: window.translations?.invoices_demo_traduccion_yes_delete || "Sí, eliminar",
+                cancelButtonText: window.translations?.invoices_demo_traduccion_cancel || "Cancelar",
             });
 
             if (!result.isConfirmed) {
@@ -1210,8 +1210,8 @@ function invoiceDemoData() {
                 );
 
                 Swal.fire({
-                    title: "Eliminado",
-                    text: "La factura ha sido eliminada exitosamente",
+                    title: window.translations?.invoices_demo_traduccion_deleted || "Eliminado",
+                    text: window.translations?.invoices_demo_traduccion_invoice_deleted_successfully || "La factura ha sido eliminada exitosamente",
                     icon: "success",
                     timer: 2000,
                     showConfirmButton: false,
@@ -1239,8 +1239,8 @@ function invoiceDemoData() {
             } catch (error) {
                 console.error("Error al eliminar factura:", error);
                 Swal.fire({
-                    title: "Error",
-                    text: error.message || "Error al eliminar la factura",
+                    title: window.translations?.invoices_demo_traduccion_error || "Error",
+                    text: error.message || window.translations?.invoices_demo_traduccion_error_deleting_invoice || "Error al eliminar la factura",
                     icon: "error",
                 });
             }
@@ -1268,14 +1268,14 @@ function invoiceDemoData() {
         // Restore invoice
         async restoreInvoice(invoice) {
             const result = await Swal.fire({
-                title: "¿Restaurar factura?",
-                html: `¿Deseas restaurar la factura: <strong>${invoice.invoice_number}</strong>?`,
+                title: window.translations?.invoices_demo_traduccion_restore_invoice_question || "¿Restaurar factura?",
+                html: (window.translations?.invoices_demo_traduccion_restore_invoice_confirm || "¿Deseas restaurar la factura: <strong>{invoice_number}</strong>?").replace('{invoice_number}', invoice.invoice_number),
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonColor: "#28a745",
                 cancelButtonColor: "#6c757d",
-                confirmButtonText: "Sí, restaurar",
-                cancelButtonText: "Cancelar",
+                confirmButtonText: window.translations?.invoices_demo_traduccion_yes_restore || "Sí, restaurar",
+                cancelButtonText: window.translations?.invoices_demo_traduccion_cancel || "Cancelar",
             });
 
             if (!result.isConfirmed) {
@@ -1288,8 +1288,8 @@ function invoiceDemoData() {
                 );
 
                 Swal.fire({
-                    title: "Restaurado",
-                    text: "La factura ha sido restaurada exitosamente",
+                    title: window.translations?.invoices_demo_traduccion_restored || "Restaurado",
+                    text: window.translations?.invoices_demo_traduccion_invoice_restored_successfully || "La factura ha sido restaurada exitosamente",
                     icon: "success",
                     timer: 2000,
                     showConfirmButton: false,
@@ -1324,8 +1324,8 @@ function invoiceDemoData() {
                 }, 1000);
             } catch (error) {
                 Swal.fire({
-                    title: "Error",
-                    text: error.message || "Error al restaurar la factura",
+                    title: window.translations?.invoices_demo_traduccion_error || "Error",
+                    text: error.message || window.translations?.invoices_demo_traduccion_error_restoring_invoice || "Error al restaurar la factura",
                     icon: "error",
                 });
             }

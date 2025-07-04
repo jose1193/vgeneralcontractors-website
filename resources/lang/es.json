@@ -1820,5 +1820,18 @@
     "invoices_demo_traduccion_delete": "Eliminar",
     "invoices_demo_traduccion_restore": "Restaurar",
     "invoices_demo_traduccion_generate_pdf": "Generar PDF",
-    "invoices_demo_traduccion_download_pdf": "Descargar PDF"
+    "invoices_demo_traduccion_download_pdf": "Descargar PDF",
+    "invoices_demo_traduccion_are_you_sure": "¿Estás seguro?",
+    "invoices_demo_traduccion_delete_invoice_confirm": "¿Deseas eliminar la factura: <strong>{invoice_number}</strong>?",
+    "invoices_demo_traduccion_yes_delete": "Sí, eliminar",
+    "invoices_demo_traduccion_cancel": "Cancelar",
+    "invoices_demo_traduccion_deleted": "Eliminado",
+    "invoices_demo_traduccion_invoice_deleted_successfully": "La factura ha sido eliminada exitosamente",
+    "invoices_demo_traduccion_restore_invoice_question": "¿Restaurar factura?",
+    "invoices_demo_traduccion_restore_invoice_confirm": "¿Deseas restaurar la factura: <strong>{invoice_number}</strong>?",
+    "invoices_demo_traduccion_yes_restore": "Sí, restaurar",
+    "invoices_demo_traduccion_restored": "Restaurado",
+    "invoices_demo_traduccion_invoice_restored_successfully": "La factura ha sido restaurada exitosamente",
+    "invoices_demo_traduccion_error_deleting_invoice": "Error al eliminar la factura",
+    "invoices_demo_traduccion_error_restoring_invoice": "Error al restaurar la factura"
 }

@@ -1189,7 +1189,20 @@
             <script>
                 window.translations = {
                     invoices_demo_traduccion_success: @json(__('invoices_demo_traduccion_success')),
-                    invoices_demo_traduccion_error: @json(__('invoices_demo_traduccion_error'))
+                    invoices_demo_traduccion_error: @json(__('invoices_demo_traduccion_error')),
+                    invoices_demo_traduccion_are_you_sure: @json(__('invoices_demo_traduccion_are_you_sure')),
+                    invoices_demo_traduccion_delete_invoice_confirm: @json(__('invoices_demo_traduccion_delete_invoice_confirm')),
+                    invoices_demo_traduccion_yes_delete: @json(__('invoices_demo_traduccion_yes_delete')),
+                    invoices_demo_traduccion_cancel: @json(__('invoices_demo_traduccion_cancel')),
+                    invoices_demo_traduccion_deleted: @json(__('invoices_demo_traduccion_deleted')),
+                    invoices_demo_traduccion_invoice_deleted_successfully: @json(__('invoices_demo_traduccion_invoice_deleted_successfully')),
+                    invoices_demo_traduccion_restore_invoice_question: @json(__('invoices_demo_traduccion_restore_invoice_question')),
+                    invoices_demo_traduccion_restore_invoice_confirm: @json(__('invoices_demo_traduccion_restore_invoice_confirm')),
+                    invoices_demo_traduccion_yes_restore: @json(__('invoices_demo_traduccion_yes_restore')),
+                    invoices_demo_traduccion_restored: @json(__('invoices_demo_traduccion_restored')),
+                    invoices_demo_traduccion_invoice_restored_successfully: @json(__('invoices_demo_traduccion_invoice_restored_successfully')),
+                    invoices_demo_traduccion_error_deleting_invoice: @json(__('invoices_demo_traduccion_error_deleting_invoice')),
+                    invoices_demo_traduccion_error_restoring_invoice: @json(__('invoices_demo_traduccion_error_restoring_invoice'))
                 };
             </script>
             <!-- Main Invoice Demo Script -->

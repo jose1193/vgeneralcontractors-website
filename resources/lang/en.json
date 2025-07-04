@@ -1816,5 +1816,18 @@
     "invoices_demo_traduccion_delete": "Delete",
     "invoices_demo_traduccion_restore": "Restore",
     "invoices_demo_traduccion_generate_pdf": "Generate PDF",
-    "invoices_demo_traduccion_download_pdf": "Download PDF"
+    "invoices_demo_traduccion_download_pdf": "Download PDF",
+    "invoices_demo_traduccion_are_you_sure": "Are you sure?",
+    "invoices_demo_traduccion_delete_invoice_confirm": "Do you want to delete the invoice: <strong>{invoice_number}</strong>?",
+    "invoices_demo_traduccion_yes_delete": "Yes, delete",
+    "invoices_demo_traduccion_cancel": "Cancel",
+    "invoices_demo_traduccion_deleted": "Deleted",
+    "invoices_demo_traduccion_invoice_deleted_successfully": "The invoice has been deleted successfully",
+    "invoices_demo_traduccion_restore_invoice_question": "Restore invoice?",
+    "invoices_demo_traduccion_restore_invoice_confirm": "Do you want to restore the invoice: <strong>{invoice_number}</strong>?",
+    "invoices_demo_traduccion_yes_restore": "Yes, restore",
+    "invoices_demo_traduccion_restored": "Restored",
+    "invoices_demo_traduccion_invoice_restored_successfully": "The invoice has been restored successfully",
+    "invoices_demo_traduccion_error_deleting_invoice": "Error deleting the invoice",
+    "invoices_demo_traduccion_error_restoring_invoice": "Error restoring the invoice"
 }
