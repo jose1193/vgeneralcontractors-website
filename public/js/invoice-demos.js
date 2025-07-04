@@ -740,113 +740,592 @@ function invoiceDemoData() {
 
         // Initialize Modern Date Picker (Litepicker alternative)
         initializeModernDatePicker() {
-            // Wait for DOM to be ready
-            this.$nextTick(() => {
-                // 🐛 DEBUG: Check if element exists
-                console.group('🔍 DEBUG: initializeModernDatePicker() called');
-                const datePickerElement = document.querySelector('#dateRangePicker');
-                console.log('📅 Date picker element found:', datePickerElement);
+            console.group('🚀 DEBUG: Starting initializeModernDatePicker()');
+            console.log('🔍 Document ready state:', document.readyState);
+            console.log('🔍 Alpine.js version:', Alpine?.version || 'Unknown');
+            console.log('🔍 ModernDateRangePicker availability:', typeof ModernDateRangePicker);
+            console.log('🔍 Litepicker availability:', typeof Litepicker);
+            
+            // Enhanced initialization with multiple strategies
+            const attemptInitialization = (attempt = 1, maxAttempts = 15) => {
+                console.group(`🔍 DEBUG: initializeModernDatePicker() attempt ${attempt}/${maxAttempts}`);
                 
-                if (!datePickerElement) {
-                    console.error('❌ #dateRangePicker element not found in DOM!');
+                // Strategy 1: Check if ModernDateRangePicker class is available
+                if (typeof ModernDateRangePicker === 'undefined') {
+                    console.warn('⚠️ ModernDateRangePicker class not found! Checking if script is loading...');
+                    
+                    // Check if the script tag exists
+                    const scriptTag = document.querySelector('script[src*="modern-date-picker"]');
+                    if (scriptTag) {
+                        console.log('📜 Script tag found, waiting for load...');
+                        if (attempt < maxAttempts) {
+                            console.log(`🔄 Retrying in 500ms...`);
+                            console.groupEnd();
+                            setTimeout(() => attemptInitialization(attempt + 1, maxAttempts), 500);
+                            return;
+                        }
+                    }
+                    
+                    console.error('❌ ModernDateRangePicker class not available after all attempts');
+                    this.initializeFallbackDatePicker();
                     console.groupEnd();
                     return;
                 }
                 
-                console.log('✅ Initializing ModernDateRangePicker...');
+                // Strategy 2: Check DOM element availability
+                const datePickerElement = document.querySelector('#dateRangePicker');
+                console.log('📅 Date picker element found:', !!datePickerElement);
                 
-                // Initialize ModernDateRangePicker with enhanced features
-                this.modernDatePicker = new ModernDateRangePicker({
-                    element: "#dateRangePicker",
-                    format: "YYYY-MM-DD",
-                    displayFormat: "MMM DD, YYYY",
-                    placeholder: "Select date range...",
-                    theme: "dark",
-                    numberOfMonths: window.innerWidth > 768 ? 2 : 1,
-                    numberOfColumns: window.innerWidth > 768 ? 2 : 1,
-                    singleMode: false,
-                    allowRepick: true,
-                    autoRefresh: true,
-                    showTooltip: true,
-                    showWeekNumbers: false,
-                    dropdowns: {
-                        minYear: 2020,
-                        maxYear: new Date().getFullYear() + 5,
-                        months: true,
-                        years: true
-                    },
-                    buttonText: {
-                        apply: "Apply",
-                        cancel: "Cancel",
-                        previousMonth: "‹",
-                        nextMonth: "›",
-                        reset: "Reset"
-                    }
-                })
-                .on('select', (startDate, endDate, dateObjects) => {
-                    console.group('🐛 DEBUG: Date picker select event');
-                    console.log('📅 Raw startDate:', startDate);
-                    console.log('📅 Raw endDate:', endDate);
-                    console.log('📅 dateObjects:', dateObjects);
+                if (datePickerElement) {
+                    console.log('📅 Element details:');
+                    console.log('  - ID:', datePickerElement.id);
+                    console.log('  - Classes:', datePickerElement.className);
+                    console.log('  - Value:', datePickerElement.value);
+                    console.log('  - Parent:', datePickerElement.parentElement?.tagName);
+                    console.log('  - Visible:', datePickerElement.offsetParent !== null);
+                    console.log('  - Display style:', getComputedStyle(datePickerElement).display);
+                } else {
+                    console.error(`❌ #dateRangePicker element not found in DOM! (Attempt ${attempt}/${maxAttempts})`);
                     
-                    if (startDate && endDate) {
-                        this.startDate = startDate;
-                        this.endDate = endDate;
-                        
-                        console.log('✅ Setting Alpine.js values:');
-                        console.log('  - this.startDate:', this.startDate);
-                        console.log('  - this.endDate:', this.endDate);
-                        
-                        this.updateDateRangeDisplay(startDate, endDate);
-                        this.activeQuickFilter = null; // Clear active quick filter
-                        this.currentPage = 1;
-                        
-                        console.log('🔄 Calling loadInvoices()...');
-                        this.loadInvoices();
-                        
-                        console.log('📅 Date range selected:', { startDate, endDate });
+                    // Log all input elements for debugging
+                    const allInputs = document.querySelectorAll('input');
+                    console.log('🔍 All input elements found:', allInputs.length);
+                    allInputs.forEach((input, index) => {
+                        console.log(`  ${index + 1}. ID: ${input.id || 'no-id'}, Type: ${input.type}, Classes: ${input.className}`);
+                    });
+                    
+                    if (attempt < maxAttempts) {
+                        console.log(`🔄 Retrying in 200ms...`);
+                        console.groupEnd();
+                        setTimeout(() => attemptInitialization(attempt + 1, maxAttempts), 200);
+                        return;
                     } else {
-                        console.warn('⚠️ startDate or endDate is missing!');
+                        console.error('❌ Failed to find #dateRangePicker after all attempts, using fallback');
+                        this.initializeFallbackDatePicker();
+                        console.groupEnd();
+                        return;
                     }
-                    console.groupEnd();
-                })
-                .on('clear', () => {
-                    console.group('🐛 DEBUG: Date picker clear event');
+                }
+                
+                console.log('✅ Element found, initializing ModernDateRangePicker...');
+                
+                try {
+                    // Strategy 3: Initialize with comprehensive error handling
+                    this.modernDatePicker = new ModernDateRangePicker({
+                        element: "#dateRangePicker",
+                        format: "YYYY-MM-DD",
+                        displayFormat: "MMM DD, YYYY",
+                        placeholder: "Select date range...",
+                        theme: "dark",
+                        numberOfMonths: window.innerWidth > 768 ? 2 : 1,
+                        numberOfColumns: window.innerWidth > 768 ? 2 : 1,
+                        singleMode: false,
+                        allowRepick: true,
+                        autoRefresh: true,
+                        showTooltip: true,
+                        showWeekNumbers: false,
+                        dropdowns: {
+                            minYear: 2020,
+                            maxYear: new Date().getFullYear() + 5,
+                            months: true,
+                            years: true
+                        },
+                        buttonText: {
+                            apply: "Apply",
+                            cancel: "Cancel",
+                            previousMonth: "‹",
+                            nextMonth: "›",
+                            reset: "Reset"
+                        }
+                    });
                     
+                    // Verify initialization before setting up events
+                    if (!this.modernDatePicker) {
+                        throw new Error('ModernDateRangePicker instance is null after initialization');
+                    }
+                    
+                    // Set up event handlers with enhanced error handling
+                    this.modernDatePicker
+                        .on('select', (startDate, endDate, dateObjects) => {
+                            console.group('🐛 DEBUG: Date picker select event');
+                            console.log('📅 Raw startDate:', startDate, '(type:', typeof startDate, ')');
+                            console.log('📅 Raw endDate:', endDate, '(type:', typeof endDate, ')');
+                            console.log('📅 dateObjects:', dateObjects);
+                            
+                            try {
+                                if (startDate && endDate) {
+                                    // Ensure dates are strings in YYYY-MM-DD format
+                                    this.startDate = String(startDate);
+                                    this.endDate = String(endDate);
+                                    
+                                    console.log('✅ Setting Alpine.js values:');
+                                    console.log('  - this.startDate:', this.startDate, '(type:', typeof this.startDate, ')');
+                                    console.log('  - this.endDate:', this.endDate, '(type:', typeof this.endDate, ')');
+                                    
+                                    this.updateDateRangeDisplay(this.startDate, this.endDate);
+                                    this.activeQuickFilter = null;
+                                    this.currentPage = 1;
+                                    
+                                    console.log('🔄 Calling loadInvoices()...');
+                                    this.loadInvoices();
+                                    
+                                    console.log('📅 Date range selected successfully:', { 
+                                        startDate: this.startDate, 
+                                        endDate: this.endDate 
+                                    });
+                                } else {
+                                    console.warn('⚠️ startDate or endDate is missing!', { startDate, endDate });
+                                }
+                            } catch (error) {
+                                console.error('❌ Error in select event handler:', error);
+                                this.showError('Error processing date selection: ' + error.message);
+                            }
+                            console.groupEnd();
+                        })
+                        .on('clear', () => {
+                            console.group('🐛 DEBUG: Date picker clear event');
+                            
+                            try {
+                                this.startDate = "";
+                                this.endDate = "";
+                                this.dateRangeDisplay = "";
+                                this.activeQuickFilter = null;
+                                this.currentPage = 1;
+                                
+                                console.log('✅ Cleared values:');
+                                console.log('  - this.startDate:', this.startDate);
+                                console.log('  - this.endDate:', this.endDate);
+                                
+                                console.log('🔄 Calling loadInvoices()...');
+                                this.loadInvoices();
+                                
+                                console.log('📅 Date range cleared');
+                            } catch (error) {
+                                console.error('❌ Error in clear event handler:', error);
+                            }
+                            console.groupEnd();
+                        })
+                        .on('show', () => {
+                            console.log('📅 Date picker opened');
+                        })
+                        .on('hide', () => {
+                            console.log('📅 Date picker closed');
+                        })
+                        .on('error', (error) => {
+                            console.error('📅 Date picker error:', error);
+                            this.showError('Error with date picker: ' + error.message);
+                            this.initializeFallbackDatePicker();
+                        });
+
+                    // Store reference for compatibility
+                    this.dateRangePicker = this.modernDatePicker;
+                    
+                    // Verify the picker functionality
+                    console.log('✅ ModernDateRangePicker instance created successfully');
+                    console.log('🔧 Testing picker methods...');
+                    console.log('  - on method available:', typeof this.modernDatePicker.on === 'function');
+                    console.log('  - setDateRange method available:', typeof this.modernDatePicker.setDateRange === 'function');
+                    console.log('  - clear method available:', typeof this.modernDatePicker.clear === 'function');
+                    console.log('  - getDateRange method available:', typeof this.modernDatePicker.getDateRange === 'function');
+                    
+                    // Test the date picker functionality after initialization
+                    setTimeout(() => {
+                        this.testDatePicker();
+                    }, 2000);
+                    
+                    console.log("📅 ModernDateRangePicker initialized successfully");
+                    
+                } catch (error) {
+                    console.error('❌ Failed to initialize ModernDateRangePicker:', error);
+                    console.error('❌ Error stack:', error.stack);
+                    console.log('🔄 Falling back to simple date inputs...');
+                    this.initializeFallbackDatePicker();
+                }
+                
+                console.groupEnd();
+            };
+            
+            // Strategy 4: Multiple initialization approaches
+            const startInitialization = () => {
+                console.log('🔄 Starting initialization process...');
+                
+                // Approach 1: Immediate initialization if DOM is ready
+                if (document.readyState === 'complete') {
+                    console.log('📄 Document is complete, starting immediately');
+                    attemptInitialization();
+                } else {
+                    // Approach 2: Wait for DOM content loaded
+                    console.log('📄 Document not ready, waiting for DOMContentLoaded');
+                    document.addEventListener('DOMContentLoaded', () => {
+                        console.log('📄 DOMContentLoaded fired, starting initialization');
+                        attemptInitialization();
+                    });
+                    
+                    // Approach 3: Fallback with window load
+                    window.addEventListener('load', () => {
+                        console.log('📄 Window load fired, ensuring initialization');
+                        if (!this.modernDatePicker && !this.fallbackInputs) {
+                            console.log('🔄 No date picker found, retrying initialization');
+                            attemptInitialization();
+                        }
+                    });
+                }
+            };
+            
+            // Start with Alpine.js nextTick for proper integration
+            this.$nextTick(() => {
+                console.log('🔄 Alpine.js $nextTick executed');
+                startInitialization();
+            });
+            
+            console.groupEnd();
+        },
+        
+        // Fallback date picker using native HTML5 inputs
+        initializeFallbackDatePicker() {
+            console.group('🔄 DEBUG: Initializing fallback date picker');
+            
+            let datePickerElement = document.querySelector('#dateRangePicker');
+            if (!datePickerElement) {
+                console.warn('⚠️ #dateRangePicker element not found, searching for alternative containers...');
+                
+                // Try to find alternative containers
+                const possibleContainers = [
+                    '.date-picker-container',
+                    '[x-data*="invoiceDemo"]',
+                    '.invoice-demo-container',
+                    '.filters-container',
+                    '.date-range-container'
+                ];
+                
+                let parentContainer = null;
+                for (const selector of possibleContainers) {
+                    parentContainer = document.querySelector(selector);
+                    if (parentContainer) {
+                        console.log('📦 Found parent container:', selector);
+                        break;
+                    }
+                }
+                
+                if (parentContainer) {
+                    // Create the missing element
+                    const fallbackElement = document.createElement('div');
+                    fallbackElement.id = 'dateRangePicker';
+                    fallbackElement.className = 'date-range-picker-placeholder';
+                    parentContainer.appendChild(fallbackElement);
+                    datePickerElement = fallbackElement;
+                    console.log('✅ Created placeholder element in parent container');
+                } else {
+                    console.error('❌ No suitable parent container found for fallback');
+                    console.groupEnd();
+                    return;
+                }
+            }
+            
+            // Create enhanced container for fallback inputs
+            const container = document.createElement('div');
+            container.className = 'fallback-date-picker-container flex flex-wrap gap-3 p-4 bg-gray-800/50 border border-gray-600 rounded-lg';
+            container.innerHTML = `
+                <div class="flex flex-col min-w-[140px]">
+                    <label class="text-xs text-gray-300 mb-1 font-medium uppercase tracking-wide">Start Date</label>
+                    <input type="date" id="fallbackStartDate" 
+                           class="px-3 py-2 bg-gray-700 border border-gray-500 rounded-md text-white text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition-all duration-200"
+                           title="Select start date">
+                </div>
+                <div class="flex flex-col min-w-[140px]">
+                    <label class="text-xs text-gray-300 mb-1 font-medium uppercase tracking-wide">End Date</label>
+                    <input type="date" id="fallbackEndDate" 
+                           class="px-3 py-2 bg-gray-700 border border-gray-500 rounded-md text-white text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition-all duration-200"
+                           title="Select end date">
+                </div>
+                <div class="flex items-end gap-2">
+                    <button type="button" id="fallbackApplyBtn" 
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                            disabled title="Apply date range">Apply</button>
+                    <button type="button" id="fallbackClearBtn" 
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                            title="Clear date range">Clear</button>
+                </div>
+                <div class="w-full flex items-center justify-between text-xs text-gray-400 mt-2 pt-2 border-t border-gray-600">
+                    <div class="flex items-center">
+                        <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                        Fallback Date Picker (Native HTML5)
+                    </div>
+                    <div id="fallbackStatus" class="text-gray-500">
+                        Ready
+                    </div>
+                </div>
+            `;
+            
+            // Replace the original element with the enhanced container
+            datePickerElement.parentNode.replaceChild(container, datePickerElement);
+            
+            // Get references to the new elements
+            const startInput = document.getElementById('fallbackStartDate');
+            const endInput = document.getElementById('fallbackEndDate');
+            const applyBtn = document.getElementById('fallbackApplyBtn');
+            const clearBtn = document.getElementById('fallbackClearBtn');
+            const statusDiv = document.getElementById('fallbackStatus');
+            
+            // Store references for compatibility and future use
+            this.fallbackInputs = {
+                start: startInput,
+                end: endInput,
+                apply: applyBtn,
+                clear: clearBtn,
+                status: statusDiv,
+                container: container
+            };
+            
+            // Validation and status update function
+            const updateStatus = (message, type = 'info') => {
+                if (statusDiv) {
+                    statusDiv.textContent = message;
+                    statusDiv.className = `text-xs ${
+                        type === 'error' ? 'text-red-400' :
+                        type === 'success' ? 'text-green-400' :
+                        type === 'warning' ? 'text-yellow-400' :
+                        'text-gray-400'
+                    }`;
+                }
+            };
+            
+            // Enhanced validation function
+            const validateDates = () => {
+                const startValue = startInput.value;
+                const endValue = endInput.value;
+                
+                // Clear previous validation states
+                startInput.setCustomValidity('');
+                endInput.setCustomValidity('');
+                
+                if (!startValue && !endValue) {
+                    applyBtn.disabled = true;
+                    updateStatus('Select dates', 'info');
+                    return { valid: false, reason: 'empty' };
+                }
+                
+                if (!startValue) {
+                    applyBtn.disabled = true;
+                    updateStatus('Start date required', 'warning');
+                    return { valid: false, reason: 'missing_start' };
+                }
+                
+                if (!endValue) {
+                    applyBtn.disabled = true;
+                    updateStatus('End date required', 'warning');
+                    return { valid: false, reason: 'missing_end' };
+                }
+                
+                const startDate = new Date(startValue);
+                const endDate = new Date(endValue);
+                
+                if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                    applyBtn.disabled = true;
+                    updateStatus('Invalid date format', 'error');
+                    return { valid: false, reason: 'invalid_format' };
+                }
+                
+                if (startDate > endDate) {
+                    startInput.setCustomValidity('Start date must be before end date');
+                    endInput.setCustomValidity('End date must be after start date');
+                    applyBtn.disabled = true;
+                    updateStatus('Invalid date range', 'error');
+                    return { valid: false, reason: 'invalid_range' };
+                }
+                
+                // Check if range is too large (more than 2 years)
+                const daysDiff = (endDate - startDate) / (1000 * 60 * 60 * 24);
+                if (daysDiff > 730) {
+                    updateStatus('Range too large (max 2 years)', 'warning');
+                    applyBtn.disabled = false; // Still allow, but warn
+                    return { valid: true, reason: 'large_range', days: daysDiff };
+                }
+                
+                applyBtn.disabled = false;
+                updateStatus(`${Math.ceil(daysDiff)} days selected`, 'success');
+                return { valid: true, reason: 'valid', days: daysDiff };
+            };
+            
+            // Apply dates function
+            const applyDates = () => {
+                const validation = validateDates();
+                if (!validation.valid) {
+                    console.warn('⚠️ Cannot apply dates:', validation.reason);
+                    return false;
+                }
+                
+                const startValue = startInput.value;
+                const endValue = endInput.value;
+                
+                console.group('🐛 DEBUG: Fallback applying dates');
+                console.log('📅 Start date value:', startValue, '(type:', typeof startValue, ')');
+                console.log('📅 End date value:', endValue, '(type:', typeof endValue, ')');
+                console.log('📅 Validation result:', validation);
+                
+                try {
+                    // Update Alpine.js data
+                    this.startDate = startValue;
+                    this.endDate = endValue;
+                    
+                    console.log('✅ Updated Alpine.js values:');
+                    console.log('  - this.startDate:', this.startDate, '(type:', typeof this.startDate, ')');
+                    console.log('  - this.endDate:', this.endDate, '(type:', typeof this.endDate, ')');
+                    
+                    // Update display and trigger reload
+                    this.updateDateRangeDisplay(this.startDate, this.endDate);
+                    this.activeQuickFilter = null;
+                    this.currentPage = 1;
+                    
+                    console.log('🔄 Calling loadInvoices()...');
+                    this.loadInvoices();
+                    
+                    updateStatus('Applied successfully', 'success');
+                    
+                    console.log('📅 Fallback date range applied successfully:', {
+                        startDate: this.startDate,
+                        endDate: this.endDate,
+                        days: validation.days
+                    });
+                    
+                    console.groupEnd();
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error applying dates:', error);
+                    updateStatus('Error applying dates', 'error');
+                    console.groupEnd();
+                    return false;
+                }
+            };
+            
+            // Clear dates function
+            const clearDates = () => {
+                console.group('🐛 DEBUG: Fallback clearing dates');
+                
+                try {
+                    // Clear inputs
+                    startInput.value = '';
+                    endInput.value = '';
+                    startInput.setCustomValidity('');
+                    endInput.setCustomValidity('');
+                    
+                    // Clear Alpine.js data
                     this.startDate = "";
                     this.endDate = "";
                     this.dateRangeDisplay = "";
                     this.activeQuickFilter = null;
                     this.currentPage = 1;
                     
-                    console.log('✅ Cleared values:');
-                    console.log('  - this.startDate:', this.startDate);
-                    console.log('  - this.endDate:', this.endDate);
-                    
+                    console.log('✅ Cleared all values');
                     console.log('🔄 Calling loadInvoices()...');
                     this.loadInvoices();
                     
-                    console.log('📅 Date range cleared');
+                    updateStatus('Cleared', 'info');
+                    validateDates(); // Update button state
+                    
+                    console.log('📅 Fallback date range cleared successfully');
                     console.groupEnd();
-                })
-                .on('show', () => {
-                    console.log('📅 Date picker opened');
-                })
-                .on('hide', () => {
-                    console.log('📅 Date picker closed');
-                })
-                .on('error', (error) => {
-                    console.error('📅 Date picker error:', error);
-                    this.showError('Error with date picker: ' + error.message);
-                });
-
-                // Store reference for compatibility
-                this.dateRangePicker = this.modernDatePicker;
-
-                // Debug log
-                console.log("📅 ModernDateRangePicker initialized successfully");
-                console.groupEnd();
+                } catch (error) {
+                    console.error('❌ Error clearing dates:', error);
+                    updateStatus('Error clearing dates', 'error');
+                    console.groupEnd();
+                }
+            };
+            
+            // Auto-apply function (when both dates are valid)
+            const autoApply = () => {
+                const validation = validateDates();
+                if (validation.valid && validation.reason === 'valid') {
+                    console.log('🔄 Auto-applying valid date range...');
+                    setTimeout(() => applyDates(), 300); // Small delay for better UX
+                }
+            };
+            
+            // Set up event handlers
+            startInput.addEventListener('change', () => {
+                console.log('📅 Start date changed:', startInput.value);
+                validateDates();
+                if (startInput.value && endInput.value) {
+                    autoApply();
+                }
             });
+            
+            endInput.addEventListener('change', () => {
+                console.log('📅 End date changed:', endInput.value);
+                validateDates();
+                if (startInput.value && endInput.value) {
+                    autoApply();
+                }
+            });
+            
+            // Real-time validation on input
+            [startInput, endInput].forEach(input => {
+                input.addEventListener('input', validateDates);
+                input.addEventListener('blur', validateDates);
+            });
+            
+            // Button event handlers
+            applyBtn.addEventListener('click', () => {
+                console.log('🔘 Apply button clicked');
+                applyDates();
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                console.log('🔘 Clear button clicked');
+                clearDates();
+            });
+            
+            // Set initial values if they exist in Alpine.js data
+            if (this.startDate && this.startDate !== '') {
+                startInput.value = this.startDate;
+                console.log('📅 Set initial start date:', this.startDate);
+            }
+            if (this.endDate && this.endDate !== '') {
+                endInput.value = this.endDate;
+                console.log('📅 Set initial end date:', this.endDate);
+            }
+            
+            // Initial validation and status update
+            validateDates();
+            
+            console.log('✅ Enhanced fallback date picker initialized successfully');
+            console.log('📦 Fallback inputs stored:', Object.keys(this.fallbackInputs));
+            console.groupEnd();
+        },
+
+        // Test date picker functionality
+        testDatePicker() {
+            console.group('🧪 Testing Date Picker Functionality');
+            
+            if (!this.modernDatePicker) {
+                console.error('❌ ModernDateRangePicker not initialized');
+                console.groupEnd();
+                return false;
+            }
+            
+            try {
+                // Test setting a date range
+                const testStartDate = '2024-01-01';
+                const testEndDate = '2024-01-31';
+                
+                console.log('🔧 Testing setDateRange with:', { testStartDate, testEndDate });
+                this.modernDatePicker.setDateRange(testStartDate, testEndDate);
+                
+                // Test getting current date range
+                const currentRange = this.modernDatePicker.getDateRange();
+                console.log('📅 Current date range after test:', currentRange);
+                
+                // Clear the test
+                this.modernDatePicker.clear();
+                console.log('✅ Date picker test completed successfully');
+                
+                console.groupEnd();
+                return true;
+            } catch (error) {
+                console.error('❌ Date picker test failed:', error);
+                console.groupEnd();
+                return false;
+            }
         },
 
         // Update date range display

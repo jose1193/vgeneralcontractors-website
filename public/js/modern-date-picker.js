@@ -72,14 +72,17 @@ class ModernDateRangePicker {
 
         // Check if Litepicker is available
         if (typeof Litepicker === 'undefined') {
-            console.error('ModernDateRangePicker: Litepicker library not found');
+            console.warn('⚠️ ModernDateRangePicker: Litepicker library not found, loading from CDN...');
             this.loadLitepicker().then(() => {
+                console.log('✅ Litepicker loaded successfully from CDN');
                 this.createPicker();
             }).catch(error => {
-                console.error('Failed to load Litepicker:', error);
+                console.error('❌ Failed to load Litepicker from CDN:', error);
+                console.log('🔄 Falling back to native date inputs...');
                 this.fallbackToNativePicker();
             });
         } else {
+            console.log('✅ Litepicker already available, initializing...');
             this.createPicker();
         }
     }
@@ -89,17 +92,36 @@ class ModernDateRangePicker {
      */
     async loadLitepicker() {
         return new Promise((resolve, reject) => {
+            console.log('📦 Loading Litepicker from CDN...');
+            
             // Load CSS
             const cssLink = document.createElement('link');
             cssLink.rel = 'stylesheet';
             cssLink.href = 'https://cdn.jsdelivr.net/npm/litepicker@2.0.12/dist/css/litepicker.css';
+            cssLink.onload = () => console.log('✅ Litepicker CSS loaded');
+            cssLink.onerror = () => console.error('❌ Failed to load Litepicker CSS');
             document.head.appendChild(cssLink);
 
             // Load JS
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/litepicker@2.0.12/dist/litepicker.js';
-            script.onload = resolve;
-            script.onerror = reject;
+            script.onload = () => {
+                console.log('✅ Litepicker JS loaded');
+                // Wait a bit for the library to be fully available
+                setTimeout(() => {
+                    if (typeof Litepicker !== 'undefined') {
+                        console.log('✅ Litepicker constructor available');
+                        resolve();
+                    } else {
+                        console.error('❌ Litepicker constructor not available after loading');
+                        reject(new Error('Litepicker constructor not available'));
+                    }
+                }, 100);
+            };
+            script.onerror = (error) => {
+                console.error('❌ Failed to load Litepicker script:', error);
+                reject(new Error('Failed to load Litepicker script'));
+            };
             document.head.appendChild(script);
         });
     }
@@ -199,10 +221,19 @@ class ModernDateRangePicker {
         };
 
         try {
+            console.log('🔧 Creating Litepicker instance with options:', pickerOptions);
             this.picker = new Litepicker(pickerOptions);
             console.log('✅ ModernDateRangePicker initialized successfully with Litepicker');
+            
+            // Test if picker is working
+            if (this.picker && typeof this.picker.show === 'function') {
+                console.log('✅ Litepicker instance is functional');
+            } else {
+                throw new Error('Litepicker instance is not functional');
+            }
         } catch (error) {
-            console.error('Failed to initialize Litepicker:', error);
+            console.error('❌ Failed to initialize Litepicker:', error);
+            console.log('🔄 Falling back to native date inputs...');
             this.fallbackToNativePicker();
         }
     }
