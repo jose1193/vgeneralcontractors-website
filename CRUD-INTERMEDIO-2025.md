@@ -26,6 +26,11 @@ app/
   Services/
     BaseService.php
     InsuranceCompanyService.php
+    BaseExportService.php              # 📊 Servicio base para exportaciones
+    InsuranceCompanyExportService.php  # 📊 Servicio específico de exportación
+  Exports/
+    BaseExport.php                     # 📊 Clase base para exportaciones Excel
+    InsuranceCompanyExport.php         # 📊 Exportación específica de Excel
   Providers/
     AppServiceProvider.php
 
@@ -33,6 +38,10 @@ resources/
   views/
     insurance-companies/
       index.blade.php
+      bulk-pdf.blade.php               # 📄 Plantilla PDF para reportes
+    exports/
+      base-pdf-template.blade.php      # 📄 Plantilla base para PDFs
+      table-pdf-template.blade.php     # 📄 Plantilla tabla para PDFs
 resources/js/
 ├── crud-system/
 │   ├── core/
@@ -87,15 +96,26 @@ database/
 -   **Services/**
     -   `BaseService.php`: Métodos y utilidades comunes para todos los servicios.
     -   `InsuranceCompanyService.php`: Lógica de negocio y orquestación para Insurance Company.
+    -   `BaseExportService.php`: Servicio base para manejar exportaciones PDF y Excel.
+    -   `InsuranceCompanyExportService.php`: Servicio específico para exportar datos de Insurance Company.
+-   **Exports/**
+    -   `BaseExport.php`: Clase base abstracta para exportaciones Excel con estilos y configuraciones comunes.
+    -   `InsuranceCompanyExport.php`: Implementación específica para exportar Insurance Company a Excel.
 -   **Providers/**
     -   `AppServiceProvider.php`: Registro de bindings y servicios en el contenedor de Laravel.
 -   **resources/views/**
     -   `insurance-companies/index.blade.php`: Vista principal del CRUD (tabla, modal, AJAX).
+    -   `insurance-companies/bulk-pdf.blade.php`: Plantilla específica para generar reportes PDF de Insurance Company.
+    -   `exports/base-pdf-template.blade.php`: Plantilla base reutilizable para todos los reportes PDF.
+    -   `exports/table-pdf-template.blade.php`: Plantilla específica para reportes PDF en formato tabla.
     -   `components/crud-manager-modal.blade.php`: Componente Blade para el modal CRUD reutilizable.
 -   **resources/js/**
     -   `crud-manager-modal.js`: Lógica JS para el modal CRUD (AJAX, validaciones, etc.).
 -   **routes/**
     -   `web.php`: Definición de rutas web y endpoints CRUD.
+        -   `GET /insurance-companies/export/excel`: Exportar datos a Excel.
+        -   `GET /insurance-companies/export/pdf`: Exportar datos a PDF.
+        -   `POST /insurance-companies/bulk-export`: Exportación masiva con filtros.
 -   **database/migrations/**
     -   `202x_xx_xx_xxxxxx_create_insurance_companies_table.php`: Migración de la tabla en la base de datos.
 -   **database/seeders/**
