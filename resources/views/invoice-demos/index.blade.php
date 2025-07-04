@@ -675,8 +675,55 @@
                         </div>
 
                         <!-- Export Dropdown -->
-                        <div class="lg:col-span-1 relative" x-data="{ exportOpen: false }">
-                            <button @click="exportOpen = !exportOpen" 
+                        <div class="lg:col-span-1 relative" x-data="{ 
+                            exportOpen: false,
+                            exportDropdownStyle: '',
+                            toggleExportMenu(event) {
+                                this.exportOpen = !this.exportOpen;
+                                if (this.exportOpen) {
+                                    this.$nextTick(() => {
+                                        this.positionExportDropdown(event.target);
+                                    });
+                                }
+                            },
+                            positionExportDropdown(button) {
+                                 const rect = button.getBoundingClientRect();
+                                 const dropdownWidth = 240; // approximate width
+                                 const dropdownHeight = 120; // approximate height
+                                 const viewportHeight = window.innerHeight;
+                                 
+                                 let left = rect.left;
+                                 let top = rect.bottom + 8;
+                                 
+                                 // Check available space above and below
+                                 const spaceBelow = viewportHeight - rect.bottom;
+                                 const spaceAbove = rect.top;
+                                 
+                                 // If not enough space below and more space above, open upward
+                                 if (spaceBelow < dropdownHeight + 16 && spaceAbove > dropdownHeight + 16) {
+                                     top = rect.top - dropdownHeight - 8;
+                                 }
+                                 
+                                 // Adjust if dropdown goes off-screen horizontally
+                                 if (left + dropdownWidth > window.innerWidth - 8) {
+                                     left = window.innerWidth - dropdownWidth - 8;
+                                 }
+                                 if (left < 8) {
+                                     left = 8;
+                                 }
+                                 
+                                 // Final vertical bounds check
+                                 if (top + dropdownHeight > viewportHeight - 8) {
+                                     top = viewportHeight - dropdownHeight - 8;
+                                 }
+                                 if (top < 8) {
+                                     top = 8;
+                                 }
+                                 
+                                 this.exportDropdownStyle = `left: ${left}px; top: ${top}px;`;
+                             }
+                        }">
+                            <button @click="toggleExportMenu($event)" 
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-orange-500/30 to-yellow-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-orange-600/40 hover:to-yellow-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
                                     class="absolute inset-0 bg-gradient-to-r from-orange-600/20 to-yellow-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -696,13 +743,14 @@
                             <!-- Export Dropdown Menu -->
                             <div x-show="exportOpen" 
                                  x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 scale-95 transform -translate-y-2"
-                                 x-transition:enter-end="opacity-100 scale-100 transform translate-y-0"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
                                  x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
-                                 x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
                                  @click.away="exportOpen = false"
-                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden">
+                                 class="fixed w-60 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden fixed-dropdown"
+                                 :style="exportDropdownStyle">
                                 <div class="py-2">
                                     <button @click="exportToExcel(); exportOpen = false" 
                                             data-export="excel"
@@ -1008,28 +1056,41 @@
                                                                 }
                                                             },
                                                             positionDropdown(button) {
-                                                                const rect = button.getBoundingClientRect();
-                                                                const dropdownWidth = 192; // w-48 = 12rem = 192px
-                                                                const dropdownHeight = 120; // approximate height
-                                                                
-                                                                let left = rect.right - dropdownWidth;
-                                                                let top = rect.bottom + 8;
-                                                                
-                                                                // Adjust if dropdown goes off-screen horizontally
-                                                                if (left < 8) {
-                                                                    left = rect.left;
-                                                                }
-                                                                if (left + dropdownWidth > window.innerWidth - 8) {
-                                                                    left = window.innerWidth - dropdownWidth - 8;
-                                                                }
-                                                                
-                                                                // Adjust if dropdown goes off-screen vertically
-                                                                if (top + dropdownHeight > window.innerHeight - 8) {
-                                                                    top = rect.top - dropdownHeight - 8;
-                                                                }
-                                                                
-                                                                this.dropdownStyle = `left: ${left}px; top: ${top}px;`;
-                                                            }
+                                                const rect = button.getBoundingClientRect();
+                                                const dropdownWidth = 192; // w-48 = 12rem = 192px
+                                                const dropdownHeight = 120; // approximate height
+                                                const viewportHeight = window.innerHeight;
+                                                
+                                                let left = rect.right - dropdownWidth;
+                                                let top = rect.bottom + 8;
+                                                
+                                                // Check available space above and below
+                                                const spaceBelow = viewportHeight - rect.bottom;
+                                                const spaceAbove = rect.top;
+                                                
+                                                // If not enough space below and more space above, open upward
+                                                if (spaceBelow < dropdownHeight + 16 && spaceAbove > dropdownHeight + 16) {
+                                                    top = rect.top - dropdownHeight - 8;
+                                                }
+                                                
+                                                // Adjust if dropdown goes off-screen horizontally
+                                                if (left < 8) {
+                                                    left = rect.left;
+                                                }
+                                                if (left + dropdownWidth > window.innerWidth - 8) {
+                                                    left = window.innerWidth - dropdownWidth - 8;
+                                                }
+                                                
+                                                // Final vertical bounds check
+                                                if (top + dropdownHeight > viewportHeight - 8) {
+                                                    top = viewportHeight - dropdownHeight - 8;
+                                                }
+                                                if (top < 8) {
+                                                    top = 8;
+                                                }
+                                                
+                                                this.dropdownStyle = `left: ${left}px; top: ${top}px;`;
+                                            }
                                                         }">
                                                             <button @click="togglePdfMenu($event)"
                                                                 class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
