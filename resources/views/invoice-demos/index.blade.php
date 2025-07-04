@@ -525,6 +525,35 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* ========== FIXED DROPDOWN STYLES ========== */
+        .fixed-dropdown {
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.3),
+                0 10px 10px -5px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .fixed-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 4px solid rgb(31, 41, 55);
+        }
+
+        /* Ensure dropdown items have proper hover states */
+        .fixed-dropdown a:hover,
+        .fixed-dropdown button:hover {
+            background-color: rgba(55, 65, 81, 0.8) !important;
+            transform: translateX(2px);
+        }
     </style>
     <div class="min-h-screen py-8" x-data="invoiceDemoData()" x-init="init()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -967,8 +996,42 @@
                                                 <template x-if="!invoice.deleted_at">
                                                     <div class="flex space-x-2">
                                                         <!-- PDF Actions -->
-                                                        <div class="relative" x-data="{ showPdfMenu: false }">
-                                                            <button @click="showPdfMenu = !showPdfMenu"
+                                                        <div class="relative" x-data="{ 
+                                                            showPdfMenu: false, 
+                                                            dropdownStyle: '',
+                                                            togglePdfMenu(event) {
+                                                                this.showPdfMenu = !this.showPdfMenu;
+                                                                if (this.showPdfMenu) {
+                                                                    this.$nextTick(() => {
+                                                                        this.positionDropdown(event.target);
+                                                                    });
+                                                                }
+                                                            },
+                                                            positionDropdown(button) {
+                                                                const rect = button.getBoundingClientRect();
+                                                                const dropdownWidth = 192; // w-48 = 12rem = 192px
+                                                                const dropdownHeight = 120; // approximate height
+                                                                
+                                                                let left = rect.right - dropdownWidth;
+                                                                let top = rect.bottom + 8;
+                                                                
+                                                                // Adjust if dropdown goes off-screen horizontally
+                                                                if (left < 8) {
+                                                                    left = rect.left;
+                                                                }
+                                                                if (left + dropdownWidth > window.innerWidth - 8) {
+                                                                    left = window.innerWidth - dropdownWidth - 8;
+                                                                }
+                                                                
+                                                                // Adjust if dropdown goes off-screen vertically
+                                                                if (top + dropdownHeight > window.innerHeight - 8) {
+                                                                    top = rect.top - dropdownHeight - 8;
+                                                                }
+                                                                
+                                                                this.dropdownStyle = `left: ${left}px; top: ${top}px;`;
+                                                            }
+                                                        }">
+                                                            <button @click="togglePdfMenu($event)"
                                                                 class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                                 title="PDF Actions">
                                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor"
@@ -979,13 +1042,21 @@
                                                                     </path>
                                                                 </svg>
                                                             </button>
-                                                            <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
+                                                            <div x-show="showPdfMenu" 
+                                                                @click.away="showPdfMenu = false"
+                                                                x-transition:enter="transition ease-out duration-200"
+                                                                x-transition:enter-start="opacity-0 scale-95"
+                                                                x-transition:enter-end="opacity-100 scale-100"
+                                                                x-transition:leave="transition ease-in duration-150"
+                                                                x-transition:leave-start="opacity-100 scale-100"
+                                                                x-transition:leave-end="opacity-0 scale-95"
+                                                                class="fixed w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600 fixed-dropdown"
+                                                                :style="dropdownStyle">
                                                                 <div class="py-1">
                                                                     <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                         .uuid)"
                                                                         target="_blank"
-                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
+                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors duration-200">
                                                                         <svg class="w-4 h-4 mr-2" fill="none"
                                                                             stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path stroke-linecap="round"
@@ -1000,7 +1071,7 @@
                                                                     </a>
                                                                     <a :href="window.invoiceDemoManager.getPdfDownloadUrl(invoice
                                                                         .uuid)"
-                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
+                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors duration-200">
                                                                         <svg class="w-4 h-4 mr-2" fill="none"
                                                                             stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path stroke-linecap="round"
@@ -1012,7 +1083,7 @@
                                                                     </a>
                                                                     <button
                                                                         @click="generatePdf(invoice.uuid); showPdfMenu = false"
-                                                                        class="flex w-full items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white"
+                                                                        class="flex w-full items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors duration-200"
                                                                         :class="{ 'opacity-50 cursor-not-allowed': pdfGenerating }"
                                                                         :disabled="pdfGenerating">
                                                                         <svg class="w-4 h-4 mr-2" fill="none"
