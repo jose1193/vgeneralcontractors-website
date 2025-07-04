@@ -16,9 +16,9 @@ use Exception;
 class InvoiceDemoService
 {
     /**
-     * Cache duration in seconds (1 minute - improved responsiveness)
+     * Cache duration in seconds (reduced to 5 seconds for immediate updates)
      */
-    protected int $cacheTime = 60;
+    protected int $cacheTime = 5;
 
     /**
      * Get paginated invoices with filters and search
@@ -34,6 +34,9 @@ class InvoiceDemoService
         string $startDate = '',
         string $endDate = ''
     ): LengthAwarePaginator {
+        // ✅ FIXED: Check for recent data changes to bypass cache
+        $hasRecentChanges = Cache::get('significant_data_change', false);
+        
         $cacheKey = $this->generateCacheKey('invoices', [
             'page' => $page,
             'per_page' => $perPage,
@@ -46,118 +49,149 @@ class InvoiceDemoService
             'end_date' => $endDate
         ]);
 
+        // ✅ If there are recent changes, skip cache and fetch fresh data
+        if ($hasRecentChanges) {
+            Log::info('Bypassing cache due to recent data changes');
+            Cache::forget($cacheKey);
+            $result = $this->fetchInvoicesFromDatabase(
+                $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted, $startDate, $endDate
+            );
+            // Clear the change flag after fetching fresh data
+            Cache::forget('significant_data_change');
+            return $result;
+        }
+
         return Cache::remember($cacheKey, $this->cacheTime, function () use (
             $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted, $startDate, $endDate
         ) {
-            $query = InvoiceDemo::with(['user', 'items']);
-
-            // Include soft deleted records if requested
-            if ($includeDeleted) {
-                $query->withTrashed();
-            }
-
-            // Apply search filters
-            if (!empty($search)) {
-                $query->where(function (Builder $q) use ($search) {
-                    $q->where('invoice_number', 'LIKE', "%{$search}%")
-                      ->orWhere('bill_to_name', 'LIKE', "%{$search}%")
-                      ->orWhere('bill_to_address', 'LIKE', "%{$search}%")
-                      ->orWhere('bill_to_phone', 'LIKE', "%{$search}%")
-                      ->orWhere('claim_number', 'LIKE', "%{$search}%")
-                      ->orWhere('policy_number', 'LIKE', "%{$search}%")
-                      ->orWhere('insurance_company', 'LIKE', "%{$search}%")
-                      ->orWhere('type_of_loss', 'LIKE', "%{$search}%")
-                      ->orWhere('notes', 'LIKE', "%{$search}%");
-                });
-            }
-
-            // Apply status filter
-            if (!empty($status)) {
-                $query->where('status', $status);
-            }
-
-            // Process date filters with enhanced logging
-            Log::debug('InvoiceDemoService - Processing date filters', [
-                'raw_startDate' => $startDate,
-                'raw_endDate' => $endDate,
-                'startDate_type' => gettype($startDate),
-                'endDate_type' => gettype($endDate),
-                'startDate_empty' => empty($startDate),
-                'endDate_empty' => empty($endDate),
-                'startDate_is_null' => is_null($startDate),
-                'endDate_is_null' => is_null($endDate),
-                'startDate_is_empty_string' => $startDate === '',
-                'endDate_is_empty_string' => $endDate === ''
-            ]);
-            
-            // Check if we have valid date strings
-            $hasStartDate = !empty($startDate) && is_string($startDate) && strlen(trim($startDate)) > 0;
-            $hasEndDate = !empty($endDate) && is_string($endDate) && strlen(trim($endDate)) > 0;
-            
-            Log::debug('InvoiceDemoService - Date validation results', [
-                'hasStartDate' => $hasStartDate,
-                'hasEndDate' => $hasEndDate,
-                'startDate' => $startDate,
-                'endDate' => $endDate
-            ]);
-            
-            if ($hasStartDate && $hasEndDate) {
-                // Parse dates for validation and logging
-                $parsedStartDate = Carbon::parse($startDate);
-                $parsedEndDate = Carbon::parse($endDate);
-                
-                Log::debug('InvoiceDemoService - Parsed dates for comparison', [
-                    'parsedStartDate' => $parsedStartDate->toDateTimeString(),
-                    'parsedEndDate' => $parsedEndDate->toDateTimeString(),
-                    'startDate_gt_endDate' => $parsedStartDate->gt($parsedEndDate)
-                ]);
-                
-                // Ensure startDate is not after endDate
-                if ($parsedStartDate->gt($parsedEndDate)) {
-                    Log::error('Invalid date range: startDate is after endDate', [
-                        'startDate' => $startDate,
-                        'endDate' => $endDate
-                    ]);
-                } else {
-                    Log::debug('InvoiceDemoService - Applying whereBetween filter', [
-                        'column' => 'invoice_date',
-                        'range' => [$startDate, $endDate]
-                    ]);
-                    $query->whereBetween('invoice_date', [$startDate, $endDate]);
-                }
-            } elseif ($hasStartDate) {
-                Log::debug('InvoiceDemoService - Applying start date filter only', [
-                    'column' => 'invoice_date',
-                    'operator' => '>=',
-                    'value' => $startDate
-                ]);
-                $query->whereDate('invoice_date', '>=', $startDate);
-            } elseif ($hasEndDate) {
-                Log::debug('InvoiceDemoService - Applying end date filter only', [
-                    'column' => 'invoice_date',
-                    'operator' => '<=',
-                    'value' => $endDate
-                ]);
-                $query->whereDate('invoice_date', '<=', $endDate);
-            } else {
-                Log::debug('InvoiceDemoService - No date filters applied');
-            }
-
-            // Apply sorting
-            $allowedSortFields = [
-                'invoice_number', 'bill_to_name', 'balance_due', 
-                'status', 'invoice_date', 'date_of_loss', 
-                'created_at', 'updated_at'
-            ];
-
-            if (in_array($sortBy, $allowedSortFields)) {
-                $query->orderBy($sortBy, $sortOrder === 'desc' ? 'desc' : 'asc');
-            } else {
-                $query->orderBy('created_at', 'desc');
-            }
-
-            return $query->paginate($perPage, ['*'], 'page', $page);
+            return $this->fetchInvoicesFromDatabase(
+                $page, $perPage, $search, $status, $sortBy, $sortOrder, $includeDeleted, $startDate, $endDate
+            );
         });
+    }
+
+    /**
+     * ✅ NEW: Extract database fetching logic to separate method
+     */
+    private function fetchInvoicesFromDatabase(
+        int $page,
+        int $perPage,
+        string $search,
+        string $status,
+        string $sortBy,
+        string $sortOrder,
+        bool $includeDeleted,
+        string $startDate,
+        string $endDate
+    ): LengthAwarePaginator {
+        $query = InvoiceDemo::with(['user', 'items']);
+
+        // Include soft deleted records if requested
+        if ($includeDeleted) {
+            $query->withTrashed();
+        }
+
+        // Apply search filters
+        if (!empty($search)) {
+            $query->where(function (Builder $q) use ($search) {
+                $q->where('invoice_number', 'LIKE', "%{$search}%")
+                  ->orWhere('bill_to_name', 'LIKE', "%{$search}%")
+                  ->orWhere('bill_to_address', 'LIKE', "%{$search}%")
+                  ->orWhere('bill_to_phone', 'LIKE', "%{$search}%")
+                  ->orWhere('claim_number', 'LIKE', "%{$search}%")
+                  ->orWhere('policy_number', 'LIKE', "%{$search}%")
+                  ->orWhere('insurance_company', 'LIKE', "%{$search}%")
+                  ->orWhere('type_of_loss', 'LIKE', "%{$search}%")
+                  ->orWhere('notes', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Apply status filter
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        // Process date filters with enhanced logging
+        Log::debug('InvoiceDemoService - Processing date filters', [
+            'raw_startDate' => $startDate,
+            'raw_endDate' => $endDate,
+            'startDate_type' => gettype($startDate),
+            'endDate_type' => gettype($endDate),
+            'startDate_empty' => empty($startDate),
+            'endDate_empty' => empty($endDate),
+            'startDate_is_null' => is_null($startDate),
+            'endDate_is_null' => is_null($endDate),
+            'startDate_is_empty_string' => $startDate === '',
+            'endDate_is_empty_string' => $endDate === ''
+        ]);
+        
+        // Check if we have valid date strings
+        $hasStartDate = !empty($startDate) && is_string($startDate) && strlen(trim($startDate)) > 0;
+        $hasEndDate = !empty($endDate) && is_string($endDate) && strlen(trim($endDate)) > 0;
+        
+        Log::debug('InvoiceDemoService - Date validation results', [
+            'hasStartDate' => $hasStartDate,
+            'hasEndDate' => $hasEndDate,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+        
+        if ($hasStartDate && $hasEndDate) {
+            // Parse dates for validation and logging
+            $parsedStartDate = Carbon::parse($startDate);
+            $parsedEndDate = Carbon::parse($endDate);
+            
+            Log::debug('InvoiceDemoService - Parsed dates for comparison', [
+                'parsedStartDate' => $parsedStartDate->toDateTimeString(),
+                'parsedEndDate' => $parsedEndDate->toDateTimeString(),
+                'startDate_gt_endDate' => $parsedStartDate->gt($parsedEndDate)
+            ]);
+            
+            // Ensure startDate is not after endDate
+            if ($parsedStartDate->gt($parsedEndDate)) {
+                Log::error('Invalid date range: startDate is after endDate', [
+                    'startDate' => $startDate,
+                    'endDate' => $endDate
+                ]);
+            } else {
+                Log::debug('InvoiceDemoService - Applying whereBetween filter', [
+                    'column' => 'invoice_date',
+                    'range' => [$startDate, $endDate]
+                ]);
+                $query->whereBetween('invoice_date', [$startDate, $endDate]);
+            }
+        } elseif ($hasStartDate) {
+            Log::debug('InvoiceDemoService - Applying start date filter only', [
+                'column' => 'invoice_date',
+                'operator' => '>=',
+                'value' => $startDate
+            ]);
+            $query->whereDate('invoice_date', '>=', $startDate);
+        } elseif ($hasEndDate) {
+            Log::debug('InvoiceDemoService - Applying end date filter only', [
+                'column' => 'invoice_date',
+                'operator' => '<=',
+                'value' => $endDate
+            ]);
+            $query->whereDate('invoice_date', '<=', $endDate);
+        } else {
+            Log::debug('InvoiceDemoService - No date filters applied');
+        }
+
+        // Apply sorting
+        $allowedSortFields = [
+            'invoice_number', 'bill_to_name', 'balance_due', 
+            'status', 'invoice_date', 'date_of_loss', 
+            'created_at', 'updated_at'
+        ];
+
+        if (in_array($sortBy, $allowedSortFields)) {
+            $query->orderBy($sortBy, $sortOrder === 'desc' ? 'desc' : 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        return $query->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
@@ -584,41 +618,40 @@ class InvoiceDemoService
     }
 
     /**
-     * ✅ IMPROVED: Clear invoice-related caches more effectively
+     * ✅ FIXED: Clear invoice-related caches more effectively
      */
     protected function clearInvoiceCaches(): void
     {
-        // Clear specific cache keys
-        $patterns = [
-            'invoice_demo_invoices_*',
-            'invoice_demo_form_data',
-            'invoice_demo_statistics'
-        ];
-        
-        foreach ($patterns as $pattern) {
-            Cache::forget($pattern);
+        try {
+            // ✅ AGGRESSIVE CACHE CLEARING: Use cache flush for immediate effect
+            Cache::flush();
+            
+            // ✅ Also clear specific known cache keys
+            $specificKeys = [
+                'invoice_demo_form_data',
+                'invoice_demo_statistics',
+                'invoice_demo_cache_keys',
+                'significant_data_change'
+            ];
+            
+            foreach ($specificKeys as $key) {
+                Cache::forget($key);
+            }
+            
+            // ✅ Clear any stored cache key registry
+            $cacheKeys = Cache::get('invoice_demo_cache_keys', []);
+            foreach ($cacheKeys as $key) {
+                Cache::forget($key);
+            }
+            
+            Log::info('Invoice demo caches cleared aggressively with Cache::flush()');
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to clear invoice caches', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
-        
-        // Clear paginated results cache
-        $cacheKeys = Cache::get('invoice_demo_cache_keys', []);
-        foreach ($cacheKeys as $key) {
-            Cache::forget($key);
-        }
-        Cache::forget('invoice_demo_cache_keys');
-        
-        // ✅ NEW: Also clear controller-level CRUD caches
-        // This ensures compatibility with the modern cache system
-        $crudCachePatterns = [
-            'invoice_demos_*',
-            'crud_cache_invoice_demos_*',
-            'significant_data_change'
-        ];
-        
-        foreach ($crudCachePatterns as $pattern) {
-            Cache::forget($pattern);
-        }
-        
-        Log::info('Invoice demo caches cleared comprehensively');
     }
 
     /**
