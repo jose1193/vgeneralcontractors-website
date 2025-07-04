@@ -740,20 +740,6 @@ function invoiceDemoData() {
 
         // Initialize Modern Date Picker (Litepicker alternative)
         initializeModernDatePicker() {
-            console.log('DEBUG: Checking ModernDateRangePicker availability before init call...');
-            if (typeof ModernDateRangePicker === 'undefined') {
-                console.error('ERROR: ModernDateRangePicker is not defined BEFORE init call. Script might not be loaded.');
-            } else {
-                console.log('DEBUG: ModernDateRangePicker is defined BEFORE init call.');
-            }
-
-            console.log('DEBUG: Checking #dateRangePicker element presence BEFORE init call...');
-            const dateRangeElementBefore = document.querySelector('#dateRangePicker');
-            if (!dateRangeElementBefore) {
-                console.error('ERROR: #dateRangePicker element not found in DOM BEFORE init call.');
-            } else {
-                console.log('DEBUG: #dateRangePicker element found BEFORE init call:', dateRangeElementBefore);
-            }
             console.group('🚀 DEBUG: Starting initializeModernDatePicker()');
             console.log('🔍 Document ready state:', document.readyState);
             console.log('🔍 Alpine.js version:', Alpine?.version || 'Unknown');
@@ -860,21 +846,76 @@ function invoiceDemoData() {
                     
                     // Set up event handlers with enhanced error handling
                     this.modernDatePicker
+                        .on('select', (startDate, endDate, dateObjects) => {
+                            console.group('🐛 DEBUG: Date picker select event');
+                            console.log('📅 Raw startDate:', startDate, '(type:', typeof startDate, ')');
+                            console.log('📅 Raw endDate:', endDate, '(type:', typeof endDate, ')');
+                            console.log('📅 dateObjects:', dateObjects);
+                            
+                            try {
+                                if (startDate && endDate) {
+                                    // Ensure dates are strings in YYYY-MM-DD format
+                                    this.startDate = String(startDate);
+                                    this.endDate = String(endDate);
+                                    
+                                    console.log('✅ Setting Alpine.js values:');
+                                    console.log('  - this.startDate:', this.startDate, '(type:', typeof this.startDate, ')');
+                                    console.log('  - this.endDate:', this.endDate, '(type:', typeof this.endDate, ')');
+                                    
+                                    this.updateDateRangeDisplay(this.startDate, this.endDate);
+                                    this.activeQuickFilter = null;
+                                    this.currentPage = 1;
+                                    
+                                    console.log('🔄 Calling loadInvoices()...');
+                                    this.loadInvoices();
+                                    
+                                    console.log('📅 Date range selected successfully:', { 
+                                        startDate: this.startDate, 
+                                        endDate: this.endDate 
+                                    });
+                                } else {
+                                    console.warn('⚠️ startDate or endDate is missing!', { startDate, endDate });
+                                }
+                            } catch (error) {
+                                console.error('❌ Error in select event handler:', error);
+                                this.showError('Error processing date selection: ' + error.message);
+                            }
+                            console.groupEnd();
+                        })
+                        .on('clear', () => {
+                            console.group('🐛 DEBUG: Date picker clear event');
+                            
+                            try {
+                                this.startDate = "";
+                                this.endDate = "";
+                                this.dateRangeDisplay = "";
+                                this.activeQuickFilter = null;
+                                this.currentPage = 1;
+                                
+                                console.log('✅ Cleared values:');
+                                console.log('  - this.startDate:', this.startDate);
+                                console.log('  - this.endDate:', this.endDate);
+                                
+                                console.log('🔄 Calling loadInvoices()...');
+                                this.loadInvoices();
+                                
+                                console.log('📅 Date range cleared');
+                            } catch (error) {
+                                console.error('❌ Error in clear event handler:', error);
+                            }
+                            console.groupEnd();
+                        })
                         .on('show', () => {
-                            console.log('🐛 DEBUG: Date picker SHOW event fired.');
+                            console.log('📅 Date picker opened');
                         })
                         .on('hide', () => {
-                            console.log('🐛 DEBUG: Date picker HIDE event fired.');
+                            console.log('📅 Date picker closed');
                         })
                         .on('error', (error) => {
-                            console.error('❌ DEBUG: Date picker ERROR event fired:', error);
-                        })
-
-
-
-
-
-
+                            console.error('📅 Date picker error:', error);
+                            this.showError('Error with date picker: ' + error.message);
+                            this.initializeFallbackDatePicker();
+                        });
 
                     // Store reference for compatibility
                     this.dateRangePicker = this.modernDatePicker;
