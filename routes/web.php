@@ -25,6 +25,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Test route for Alpine.js mask functionality
+Route::get('/test-mask', function () {
+    return response()->file(base_path('test-mask.html'));
+})->name('test-mask');
+
 Route::get('/about', function () {
     return view('about');
 })->name('about');
