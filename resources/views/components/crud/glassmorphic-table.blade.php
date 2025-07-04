@@ -23,10 +23,28 @@
                 <thead>
                     <tr class="border-b border-white/5 relative">
                         @foreach ($columns as $index => $column)
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0.5px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
                                 @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][($index % 5)]}}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}"></div>
-                                <span class="relative z-10">{{ $column['label'] }}</span>
+                                <span class="relative z-10 flex items-center justify-center space-x-1">
+                                    <!-- Iconos UX/UI según el tipo de columna -->
+                                    @if ($column['field'] === 'id')
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path></svg>
+                                    @elseif ($column['field'] === 'name' || $column['field'] === 'nombre')
+                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    @elseif ($column['field'] === 'email')
+                                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    @elseif ($column['field'] === 'status' || $column['field'] === 'estado')
+                                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                                    @elseif (str_contains($column['field'], 'date') || str_contains($column['field'], 'fecha') || $column['field'] === 'created_at')
+                                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    @elseif ($column['field'] === 'actions' || $column['field'] === 'acciones')
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                                    @else
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                    @endif
+                                    <span>{{ $column['label'] }}</span>
+                                </span>
                                 @if ($sortable && ($column['sortable'] ?? true))
                                     <span class="sort-icon relative z-10"></span>
                                 @endif
@@ -57,28 +75,38 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/glassmorphic-table.css') }}">
     <style>
-        /* Sort icons */
+        /* Sort icons with improved visibility */
         .sort-header .sort-icon::after {
             content: '↕️';
-            font-size: 0.75rem;
-            margin-left: 0.25rem;
-            opacity: 0.5;
+            font-size: 0.85rem;
+            margin-left: 0.35rem;
+            opacity: 0.7;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            vertical-align: middle;
         }
 
         .sort-header.sort-asc .sort-icon::after {
             content: '↑';
             opacity: 1;
-            color: #3B82F6;
+            color: #60A5FA; /* Azul más brillante */
+            text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
         }
 
         .sort-header.sort-desc .sort-icon::after {
             content: '↓';
             opacity: 1;
-            color: #3B82F6;
+            color: #60A5FA; /* Azul más brillante */
+            text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+            transform: translateY(1px);
+            transition: all 0.2s ease;
         }
 
         .sort-header:hover .sort-icon::after {
-            opacity: 0.8;
+            opacity: 1;
+            transform: scale(1.1);
         }
     </style>
 @endpush

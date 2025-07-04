@@ -45,13 +45,13 @@
             @endif
 
             <!-- Filter and action bar (outside the main container) -->
-            <div class="mb-6">
+            <div class="mb-10"> <!-- Aumentado de mb-6 a mb-10 para dar más espacio -->
                 <x-crud.filter-bar :search-id="$searchId" :search-placeholder="$searchPlaceholder" :show-deleted-id="$showDeletedId" :show-deleted-label="$showDeletedLabel"
                     :per-page-id="$perPageId" :create-button-id="$createButtonId" :add-new-label="$addNewLabel" :manager-name="$managerName" />
             </div>
 
             <!-- Table with enhanced border -->
-            <div class="mb-6">
+            <div class="mb-6 mt-8"> <!-- Añadido mt-8 para dar más espacio desde arriba -->
                 <x-crud.glassmorphic-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
             </div>
 

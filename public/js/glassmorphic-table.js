@@ -127,14 +127,16 @@ function handleRowMouseOver(event) {
             row.appendChild(indicator);
         }
         
-        // Apply black crystal effect
+        // Apply black crystal effect with improved text visibility
         row.style.transform = 'scale(1.005)';
         row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
         row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.3px)';
+        row.style.filter = 'blur(0px)';
+        row.style.fontWeight = '600';
+        row.style.textShadow = '0 0 8px rgba(255, 255, 255, 0.2)';
     }
 }
 
@@ -145,14 +147,17 @@ function handleRowMouseOver(event) {
 function handleRowMouseOut(event) {
     const row = event.target.closest('tr');
     if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
-        // Reset styles when mouse leaves
+        // Reset styles when mouse leaves with improved text visibility
         row.style.transform = '';
         row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
         row.style.boxShadow = '';
         row.style.zIndex = '';
         row.style.position = '';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.5px)';
+        row.style.filter = 'blur(0px)';
+        row.style.fontWeight = '500';
+        row.style.textShadow = '0 0 5px rgba(255, 255, 255, 0.1)';
+        row.style.letterSpacing = '0.02em';
     }
 }
 
