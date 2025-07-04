@@ -855,8 +855,8 @@ function invoiceDemoData() {
                             try {
                                 if (startDate && endDate) {
                                     // Ensure dates are strings in YYYY-MM-DD format
-                                    this.startDate = String(startDate);
-                                    this.endDate = String(endDate);
+                                    this.startDate = startDate ? String(startDate) : '';
+                                    this.endDate = endDate ? String(endDate) : '';
                                     
                                     console.log('✅ Setting Alpine.js values:');
                                     console.log('  - this.startDate:', this.startDate, '(type:', typeof this.startDate, ')');
@@ -886,8 +886,8 @@ function invoiceDemoData() {
                             console.group('🐛 DEBUG: Date picker clear event');
                             
                             try {
-                                this.startDate = "";
-                                this.endDate = "";
+                                this.startDate = '';
+                                this.endDate = '';
                                 this.dateRangeDisplay = "";
                                 this.activeQuickFilter = null;
                                 this.currentPage = 1;
