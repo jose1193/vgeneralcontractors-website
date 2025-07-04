@@ -1215,7 +1215,10 @@
                     invoices_demo_traduccion_failed_export_pdf: @json(__('invoices_demo_traduccion_failed_export_pdf')),
                     invoices_demo_traduccion_pdf_generated_successfully: @json(__('invoices_demo_traduccion_pdf_generated_successfully')),
                     invoices_demo_traduccion_failed_generate_pdf: @json(__('invoices_demo_traduccion_failed_generate_pdf')),
-                    invoices_demo_traduccion_filters_cleared_successfully: @json(__('invoices_demo_traduccion_filters_cleared_successfully'))
+                    invoices_demo_traduccion_filters_cleared_successfully: @json(__('invoices_demo_traduccion_filters_cleared_successfully')),
+                    invoices_demo_traduccion_select_date_range: @json(__('invoices_demo_traduccion_select_date_range')),
+                    invoices_demo_traduccion_export_excel: @json(__('invoices_demo_traduccion_export_excel')),
+                    invoices_demo_traduccion_export_pdf: @json(__('invoices_demo_traduccion_export_pdf'))
                 };
             </script>
             <!-- Main Invoice Demo Script -->

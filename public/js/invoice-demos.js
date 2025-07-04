@@ -672,7 +672,7 @@ function invoiceDemoData() {
                     dateFormat: "Y-m-d",
                     altInput: true,
                     altFormat: "M j, Y",
-                    placeholder: "Select date range...",
+                    placeholder: window.translations?.invoices_demo_traduccion_select_date_range || "Select date range...",
                     allowInput: true,
                     clickOpens: true,
                     theme: "dark",
@@ -1885,7 +1885,7 @@ invoiceDemoData = function () {
             const exportButton = document.querySelector('[data-export="excel"]');
             if (exportButton) {
                 exportButton.disabled = false;
-                exportButton.innerHTML = '<i class="fas fa-file-excel"></i> Export Excel';
+                exportButton.innerHTML = `<i class="fas fa-file-excel"></i> ${window.translations?.invoices_demo_traduccion_export_excel || 'Export Excel'}`;
             }
         }
     };
@@ -1933,7 +1933,7 @@ invoiceDemoData = function () {
             const exportButton = document.querySelector('[data-export="pdf"]');
             if (exportButton) {
                 exportButton.disabled = false;
-                exportButton.innerHTML = '<i class="fas fa-file-pdf"></i> Export PDF';
+                exportButton.innerHTML = `<i class="fas fa-file-pdf"></i> ${window.translations?.invoices_demo_traduccion_export_pdf || 'Export PDF'}`;
             }
         }
     };
