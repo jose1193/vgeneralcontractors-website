@@ -1054,17 +1054,39 @@ class InvoiceDemoController extends BaseController
                 'include_deleted' => $includeDeleted
             ];
 
-            // Generate filename with timestamp and filters
-            $filename = 'invoices_' . now()->format('Y-m-d_H-i-s');
+            // Get invoices to determine range for filename
+            $invoices = $this->invoiceService->getPaginatedInvoices(
+                page: 1,
+                perPage: 10000, // Large number to get all results
+                search: $search,
+                status: $status,
+                sortBy: 'created_at',
+                sortOrder: 'desc',
+                includeDeleted: $includeDeleted,
+                startDate: $startDate,
+                endDate: $endDate
+            );
+
+            // Generate descriptive filename with date and invoice range
+            $currentDate = now()->format('Y-m-d');
+            $filename = "facturas_{$currentDate}";
+            
+            if ($invoices->count() > 0) {
+                $firstInvoice = $invoices->items()[0];
+                $lastInvoice = $invoices->items()[$invoices->count() - 1];
+                $filename .= "_desde_{$lastInvoice->invoice_number}_hasta_{$firstInvoice->invoice_number}";
+            }
+            
             if ($search) {
-                $filename .= '_search-' . Str::slug($search);
+                $filename .= '_busqueda-' . Str::slug($search);
             }
             if ($status) {
-                $filename .= '_status-' . $status;
+                $filename .= '_estado-' . $status;
             }
             if ($startDate || $endDate) {
-                $filename .= '_dates-' . ($startDate ?: 'all') . '_to_' . ($endDate ?: 'all');
+                $filename .= '_fechas-' . ($startDate ?: 'todas') . '_a_' . ($endDate ?: 'todas');
             }
+            
             $filename .= '.xlsx';
 
             Log::info('Exporting invoices to Excel', [

@@ -76,20 +76,20 @@ class InvoiceDemoExport implements FromCollection, WithHeadings, WithMapping, Sh
     public function headings(): array
     {
         return [
-            'Invoice Number',
-            'Bill To Name',
-            'Bill To Company',
-            'Bill To Email',
-            'Bill To Phone',
-            'Bill To Address',
-            'Status',
-            'Subtotal',
-            'Tax Amount',
-            'Total Amount',
-            'Notes',
-            'Created Date',
-            'Updated Date',
-            'Items Count'
+            __('invoices_demo_traduccion_invoice_number'),
+            __('invoices_demo_traduccion_bill_to_name'),
+            __('invoices_demo_traduccion_bill_to_company'),
+            __('invoices_demo_traduccion_bill_to_email'),
+            __('invoices_demo_traduccion_bill_to_phone'),
+            __('invoices_demo_traduccion_bill_to_address'),
+            __('invoices_demo_traduccion_status'),
+            __('invoices_demo_traduccion_subtotal'),
+            __('invoices_demo_traduccion_tax_amount'),
+            __('invoices_demo_traduccion_total_amount'),
+            __('notes'),
+            __('invoices_demo_traduccion_created_date'),
+            __('invoices_demo_traduccion_updated_date'),
+            __('invoices_demo_traduccion_items_count')
         ];
     }
 
