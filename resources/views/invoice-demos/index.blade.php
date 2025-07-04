@@ -651,7 +651,8 @@
                                  if (value) {
                                      buttonRect = $el.querySelector('button').getBoundingClientRect();
                                  }
-                             })">
+                             })"
+                             @click.away="exportOpen = false">
                             <button @click="exportOpen = !exportOpen" 
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-orange-500/30 to-yellow-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-orange-600/40 hover:to-yellow-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
@@ -670,7 +671,7 @@
                             </button>
                             
                             <!-- Teleported Export Dropdown Menu -->
-                            <template x-teleport="body" @click.away="exportOpen = false">
+                            <template x-teleport="body">
                                 <div x-show="exportOpen" 
                                      class="fixed backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden"
                                      x-bind:style="buttonRect ? `top: ${buttonRect.bottom + 8}px; left: ${buttonRect.left}px; width: ${buttonRect.width}px;` : ''"
@@ -679,7 +680,8 @@
                                      x-transition:enter-end="opacity-100 scale-100 transform translate-y-0"
                                      x-transition:leave="transition ease-in duration-150"
                                      x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
-                                     x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2">
+                                     x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
+                                     @click.stop>
                                     <div class="py-2">
                                         <button @click="exportToExcel(); exportOpen = false" 
                                                 data-export="excel"
