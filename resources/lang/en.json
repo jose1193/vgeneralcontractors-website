@@ -1828,6 +1828,19 @@
     "invoices_demo_traduccion_yes_restore": "Yes, restore",
     "invoices_demo_traduccion_restored": "Restored",
     "invoices_demo_traduccion_invoice_restored_successfully": "The invoice has been restored successfully",
-    "invoices_demo_traduccion_error_deleting_invoice": "Error deleting the invoice",
-    "invoices_demo_traduccion_error_restoring_invoice": "Error restoring the invoice"
+    "invoices_demo_traduccion_error_deleting_invoice": "Error deleting invoice",
+    "invoices_demo_traduccion_error_restoring_invoice": "Error restoring invoice",
+    "invoices_demo_traduccion_view_deleted_invoices": "You can view deleted invoices by activating the 'Show Deleted' filter",
+    "invoices_demo_traduccion_showing_deleted_invoices": "Showing deleted invoices",
+    "invoices_demo_traduccion_showing_active_invoices": "Showing active invoices",
+    "invoices_demo_traduccion_switching_to_active_view": "Switching to active invoices view",
+    "invoices_demo_traduccion_invoice_restored_active_list": "The invoice has been restored and is now visible in the active list",
+    "invoices_demo_traduccion_exporting": "Exporting...",
+    "invoices_demo_traduccion_excel_export_started": "Excel export started. Download will begin shortly.",
+    "invoices_demo_traduccion_pdf_export_started": "PDF export started. Download will begin shortly.",
+    "invoices_demo_traduccion_failed_export_excel": "Failed to export Excel file",
+    "invoices_demo_traduccion_failed_export_pdf": "Failed to export PDF file",
+    "invoices_demo_traduccion_pdf_generated_successfully": "PDF generated successfully",
+    "invoices_demo_traduccion_failed_generate_pdf": "Failed to generate PDF",
+    "invoices_demo_traduccion_filters_cleared_successfully": "Filters cleared successfully"
 }

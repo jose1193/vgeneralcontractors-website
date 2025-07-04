@@ -1833,5 +1833,18 @@
     "invoices_demo_traduccion_restored": "Restaurado",
     "invoices_demo_traduccion_invoice_restored_successfully": "La factura ha sido restaurada exitosamente",
     "invoices_demo_traduccion_error_deleting_invoice": "Error al eliminar la factura",
-    "invoices_demo_traduccion_error_restoring_invoice": "Error al restaurar la factura"
+    "invoices_demo_traduccion_error_restoring_invoice": "Error al restaurar la factura",
+    "invoices_demo_traduccion_view_deleted_invoices": "Puedes ver las facturas eliminadas activando el filtro 'Mostrar eliminadas'",
+    "invoices_demo_traduccion_showing_deleted_invoices": "Mostrando facturas eliminadas",
+    "invoices_demo_traduccion_showing_active_invoices": "Mostrando facturas activas",
+    "invoices_demo_traduccion_switching_to_active_view": "Cambiando a vista de facturas activas",
+    "invoices_demo_traduccion_invoice_restored_active_list": "La factura ha sido restaurada y está ahora visible en la lista activa",
+    "invoices_demo_traduccion_exporting": "Exportando...",
+    "invoices_demo_traduccion_excel_export_started": "Exportación de Excel iniciada. La descarga comenzará en breve.",
+    "invoices_demo_traduccion_pdf_export_started": "Exportación de PDF iniciada. La descarga comenzará en breve.",
+    "invoices_demo_traduccion_failed_export_excel": "Error al exportar archivo Excel",
+    "invoices_demo_traduccion_failed_export_pdf": "Error al exportar archivo PDF",
+    "invoices_demo_traduccion_pdf_generated_successfully": "PDF generado exitosamente",
+    "invoices_demo_traduccion_failed_generate_pdf": "Error al generar PDF",
+    "invoices_demo_traduccion_filters_cleared_successfully": "Filtros limpiados exitosamente"
 }

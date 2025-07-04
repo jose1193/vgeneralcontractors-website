@@ -1231,7 +1231,7 @@ function invoiceDemoData() {
                 if (!this.showDeleted) {
                     setTimeout(() => {
                         window.invoiceDemoManager.showNotification(
-                            "Puedes ver las facturas eliminadas activando el filtro 'Mostrar eliminadas'",
+                            window.translations?.invoices_demo_traduccion_view_deleted_invoices || "Puedes ver las facturas eliminadas activando el filtro 'Mostrar eliminadas'",
                             "info"
                         );
                     }, 2500); // Mostrar después de que se cierre el mensaje de éxito
@@ -1253,13 +1253,13 @@ function invoiceDemoData() {
             try {
                 await window.invoiceDemoManager.generatePdf(invoice.uuid);
                 window.invoiceDemoManager.showSuccess(
-                    "PDF generated successfully"
+                    window.translations?.invoices_demo_traduccion_pdf_generated_successfully || "PDF generated successfully"
                 );
                 // Refresh the invoice list to get updated pdf_url
                 await this.loadInvoices();
             } catch (error) {
                 console.error("Failed to generate PDF:", error);
-                window.invoiceDemoManager.showError("Failed to generate PDF");
+                window.invoiceDemoManager.showError(window.translations?.invoices_demo_traduccion_failed_generate_pdf || "Failed to generate PDF");
             } finally {
                 this.pdfGenerating = false;
             }
@@ -1307,7 +1307,7 @@ function invoiceDemoData() {
                     this.showDeleted = false;
                     this.currentPage = 1; // Reiniciar a la primera página
                     window.invoiceDemoManager.showNotification(
-                        "Cambiando a vista de facturas activas",
+                        window.translations?.invoices_demo_traduccion_switching_to_active_view || "Cambiando a vista de facturas activas",
                         "info"
                     );
                 }
@@ -1318,7 +1318,7 @@ function invoiceDemoData() {
                 // ✅ Show additional confirmation
                 setTimeout(() => {
                     window.invoiceDemoManager.showNotification(
-                        "La factura ha sido restaurada y está ahora visible en la lista activa",
+                        window.translations?.invoices_demo_traduccion_invoice_restored_active_list || "La factura ha sido restaurada y está ahora visible en la lista activa",
                         "success"
                     );
                 }, 1000);
@@ -1344,12 +1344,12 @@ function invoiceDemoData() {
             // Mostrar mensaje informativo según el estado del toggle
             if (this.showDeleted) {
                 window.invoiceDemoManager.showNotification(
-                    "Mostrando facturas eliminadas",
+                    window.translations?.invoices_demo_traduccion_showing_deleted_invoices || "Mostrando facturas eliminadas",
                     "info"
                 );
             } else {
                 window.invoiceDemoManager.showNotification(
-                    "Mostrando facturas activas",
+                    window.translations?.invoices_demo_traduccion_showing_active_invoices || "Mostrando facturas activas",
                     "info"
                 );
             }
@@ -1388,7 +1388,7 @@ function invoiceDemoData() {
 
             // Show confirmation message
             window.invoiceDemoManager.showSuccess(
-                "Filters cleared successfully"
+                window.translations?.invoices_demo_traduccion_filters_cleared_successfully || "Filters cleared successfully"
             );
         },
 
@@ -1849,7 +1849,7 @@ invoiceDemoData = function () {
             const exportButton = document.querySelector('[data-export="excel"]');
             if (exportButton) {
                 exportButton.disabled = true;
-                exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                exportButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${window.translations?.invoices_demo_traduccion_exporting || 'Exporting...'}`;
             }
 
             // Get current filters
@@ -1875,11 +1875,11 @@ invoiceDemoData = function () {
             // Trigger download
             window.location.href = exportUrl;
             
-            window.invoiceDemoManager.showSuccess('Excel export started. Download will begin shortly.');
+            window.invoiceDemoManager.showSuccess(window.translations?.invoices_demo_traduccion_excel_export_started || 'Excel export started. Download will begin shortly.');
             
         } catch (error) {
             console.error('Excel export failed:', error);
-            window.invoiceDemoManager.showError('Failed to export Excel file');
+            window.invoiceDemoManager.showError(window.translations?.invoices_demo_traduccion_failed_export_excel || 'Failed to export Excel file');
         } finally {
             // Reset button state
             const exportButton = document.querySelector('[data-export="excel"]');
@@ -1897,7 +1897,7 @@ invoiceDemoData = function () {
             const exportButton = document.querySelector('[data-export="pdf"]');
             if (exportButton) {
                 exportButton.disabled = true;
-                exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                exportButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${window.translations?.invoices_demo_traduccion_exporting || 'Exporting...'}`;
             }
 
             // Get current filters
@@ -1923,11 +1923,11 @@ invoiceDemoData = function () {
             // Trigger download
             window.location.href = exportUrl;
             
-            window.invoiceDemoManager.showSuccess('PDF export started. Download will begin shortly.');
+            window.invoiceDemoManager.showSuccess(window.translations?.invoices_demo_traduccion_pdf_export_started || 'PDF export started. Download will begin shortly.');
             
         } catch (error) {
             console.error('PDF export failed:', error);
-            window.invoiceDemoManager.showError('Failed to export PDF file');
+            window.invoiceDemoManager.showError(window.translations?.invoices_demo_traduccion_failed_export_pdf || 'Failed to export PDF file');
         } finally {
             // Reset button state
             const exportButton = document.querySelector('[data-export="pdf"]');

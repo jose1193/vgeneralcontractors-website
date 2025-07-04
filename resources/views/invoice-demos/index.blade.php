@@ -1202,7 +1202,20 @@
                     invoices_demo_traduccion_restored: @json(__('invoices_demo_traduccion_restored')),
                     invoices_demo_traduccion_invoice_restored_successfully: @json(__('invoices_demo_traduccion_invoice_restored_successfully')),
                     invoices_demo_traduccion_error_deleting_invoice: @json(__('invoices_demo_traduccion_error_deleting_invoice')),
-                    invoices_demo_traduccion_error_restoring_invoice: @json(__('invoices_demo_traduccion_error_restoring_invoice'))
+                    invoices_demo_traduccion_error_restoring_invoice: @json(__('invoices_demo_traduccion_error_restoring_invoice')),
+                    invoices_demo_traduccion_view_deleted_invoices: @json(__('invoices_demo_traduccion_view_deleted_invoices')),
+                    invoices_demo_traduccion_showing_deleted_invoices: @json(__('invoices_demo_traduccion_showing_deleted_invoices')),
+                    invoices_demo_traduccion_showing_active_invoices: @json(__('invoices_demo_traduccion_showing_active_invoices')),
+                    invoices_demo_traduccion_switching_to_active_view: @json(__('invoices_demo_traduccion_switching_to_active_view')),
+                    invoices_demo_traduccion_invoice_restored_active_list: @json(__('invoices_demo_traduccion_invoice_restored_active_list')),
+                    invoices_demo_traduccion_exporting: @json(__('invoices_demo_traduccion_exporting')),
+                    invoices_demo_traduccion_excel_export_started: @json(__('invoices_demo_traduccion_excel_export_started')),
+                    invoices_demo_traduccion_pdf_export_started: @json(__('invoices_demo_traduccion_pdf_export_started')),
+                    invoices_demo_traduccion_failed_export_excel: @json(__('invoices_demo_traduccion_failed_export_excel')),
+                    invoices_demo_traduccion_failed_export_pdf: @json(__('invoices_demo_traduccion_failed_export_pdf')),
+                    invoices_demo_traduccion_pdf_generated_successfully: @json(__('invoices_demo_traduccion_pdf_generated_successfully')),
+                    invoices_demo_traduccion_failed_generate_pdf: @json(__('invoices_demo_traduccion_failed_generate_pdf')),
+                    invoices_demo_traduccion_filters_cleared_successfully: @json(__('invoices_demo_traduccion_filters_cleared_successfully'))
                 };
             </script>
             <!-- Main Invoice Demo Script -->
