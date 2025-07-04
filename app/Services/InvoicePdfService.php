@@ -194,7 +194,9 @@ class InvoicePdfService
         $clientName = Str::limit($clientName, 30, ''); // Limit to 30 characters max
         
         // Format datetime - more readable format (YYYYMMDD-HHMMSS)
-        $datetime = Carbon::parse($invoice->invoice_date)->format('Ymd-His');
+        $datetime = $invoice->invoice_date instanceof Carbon 
+            ? $invoice->invoice_date->format('Ymd-His')
+            : Carbon::now()->format('Ymd-His');
         
         // ✅ NEW FORMAT: {invoice_number}-{client_name}-{datetime}
         $baseFilename = $invoiceNumber . '-' . $clientName . '-' . $datetime;

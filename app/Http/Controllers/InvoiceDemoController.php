@@ -540,7 +540,10 @@ class InvoiceDemoController extends BaseController
             }
             
             // Set filename
-            $filename = Str::slug("invoice-{$invoice->invoice_number}-{$invoice->invoice_date->format('Y-m-d')}") . '.pdf';
+            $dateFormatted = $invoice->invoice_date instanceof Carbon 
+                ? $invoice->invoice_date->format('Y-m-d') 
+                : date('Y-m-d');
+            $filename = Str::slug("invoice-{$invoice->invoice_number}-{$dateFormatted}") . '.pdf';
             
             // Return PDF for download
             return $pdf->download($filename);
