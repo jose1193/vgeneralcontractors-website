@@ -535,8 +535,8 @@
                         <div>
                             <h1 class="text-3xl font-bold text-white mb-2"
                                 style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);">
-                                Invoice Management</h1>
-                            <p class="text-purple-100 opacity-90 glass-text">Manage and track invoices for clients</p>
+                                {{ __('invoices_demo_traduccion_title') }}</h1>
+                            <p class="text-purple-100 opacity-90 glass-text">{{ __('invoices_demo_traduccion_subtitle') }}</p>
                         </div>
                         <!-- Motivational Quote Section with Icon -->
                         <div class="mt-4 sm:mt-0">
@@ -559,8 +559,8 @@
                                     <div class="marquee-container overflow-hidden w-64">
                                         <div
                                             class="marquee-text animate-marquee whitespace-nowrap text-white/90 text-sm font-medium">
-                                            ✨ Create professional invoices effortlessly • 🚀 Boost your business success •
-                                            💼 Stay organized and efficient • 📊 Track your financial progress •
+                                            ✨ {{ __('invoices_demo_traduccion_create_professional') }} • 🚀 {{ __('invoices_demo_traduccion_boost_business') }} •
+                            💼 {{ __('invoices_demo_traduccion_stay_organized') }} • 📊 {{ __('invoices_demo_traduccion_track_progress') }} •
                                         </div>
                                     </div>
                                 </div>
@@ -579,7 +579,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-end mb-4">
                         <!-- Search - Takes more space -->
                         <div class="lg:col-span-5">
-                            <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">🔍 {{ __('invoices_demo_traduccion_search') }}</label>
                             <div class="relative">
                                 <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -587,14 +587,14 @@
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                                 <input type="text" x-model="search" @input.debounce.500ms="searchInvoices()"
-                                    placeholder="Search invoices..."
+                                    placeholder="{{ __('invoices_demo_traduccion_search') }} invoices..."
                                     class="glass-input-filter w-full h-11 pl-10 pr-4 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
                             </div>
                         </div>
 
                         <!-- Items Per Page -->
                         <div class="lg:col-span-2">
-                            <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">📄 {{ __('invoices_demo_traduccion_show') }}</label>
                             <select x-model="perPage" @change="changePerPage()"
                                 class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
                                 <option value="10" class="bg-gray-800 text-white">10</option>
@@ -609,14 +609,14 @@
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
                         <!-- Status Filter -->
                         <div class="lg:col-span-1">
-                            <label class="block text-sm font-medium text-white/90 mb-2">📋 Status</label>
+                            <label class="block text-sm font-medium text-white/90 mb-2">📋 {{ __('invoices_demo_traduccion_status') }}</label>
                             <select x-model="statusFilter" @change="filterByStatus()"
                                 class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
-                                <option value="" class="bg-gray-800 text-white">All Statuses</option>
-                                <option value="draft" class="bg-gray-800 text-white">Draft</option>
-                                <option value="sent" class="bg-gray-800 text-white">Sent</option>
-                                <option value="paid" class="bg-gray-800 text-white">Paid</option>
-                                <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
+                                <option value="" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_all_statuses') }}</option>
+                                <option value="draft" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_draft') }}</option>
+                                <option value="sent" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_sent') }}</option>
+                                <option value="paid" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_paid') }}</option>
+                                <option value="cancelled" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_cancelled') }}</option>
                             </select>
                         </div>
 
@@ -634,7 +634,7 @@
                                         d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4">
                                     </path>
                                 </svg>
-                                <span x-text="showAdvancedFilters ? 'Hide Filters' : 'More Filters'"
+                                <span x-text="showAdvancedFilters ? '{{ __('invoices_demo_traduccion_hide_filters') }}' : '{{ __('invoices_demo_traduccion_more_filters') }}'"
                                     class="relative z-10"></span>
                                 <svg class="w-4 h-4 ml-2 transition-transform duration-200 relative z-10"
                                     :class="{ 'rotate-180': showAdvancedFilters }" fill="none" stroke="currentColor"
@@ -661,7 +661,7 @@
                                 <svg class="w-4 h-4 mr-2 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                <span class="relative z-10">Export</span>
+                                <span class="relative z-10">{{ __('invoices_demo_traduccion_export') }}</span>
                                 <svg class="w-4 h-4 ml-2 transition-transform duration-200 relative z-10"
                                     :class="{ 'rotate-180': exportOpen }" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -690,8 +690,8 @@
                                                 <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
                                             </svg>
                                             <div>
-                                                <div class="font-medium">Export Excel</div>
-                                                <div class="text-xs text-gray-400">Download as .xlsx file</div>
+                                                <div class="font-medium">{{ __('invoices_demo_traduccion_export_excel') }}</div>
+                                                <div class="text-xs text-gray-400">{{ __('invoices_demo_traduccion_download_xlsx') }}</div>
                                             </div>
                                         </button>
                                         <button @click="exportToPdf(); exportOpen = false" 
@@ -701,8 +701,8 @@
                                                 <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
                                             </svg>
                                             <div>
-                                                <div class="font-medium">Export PDF</div>
-                                                <div class="text-xs text-gray-400">Download as .pdf file</div>
+                                                <div class="font-medium">{{ __('invoices_demo_traduccion_export_pdf') }}</div>
+                                                <div class="text-xs text-gray-400">{{ __('invoices_demo_traduccion_download_pdf') }}</div>
                                             </div>
                                         </button>
                                     </div>
@@ -722,7 +722,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                <span class="relative z-10">New Invoice</span>
+                                <span class="relative z-10">{{ __('invoices_demo_traduccion_new_invoice') }}</span>
                             </button>
                         </div>
                     </div>
@@ -739,41 +739,41 @@
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
                             <!-- Date Range -->
                             <div class="lg:col-span-5">
-                                <label class="block text-sm font-medium text-white/90 mb-2">📅 Date Range</label>
+                                <label class="block text-sm font-medium text-white/90 mb-2">📅 {{ __('invoices_demo_traduccion_date_range') }}</label>
                                 <input type="text" id="dateRangePicker" x-model="dateRangeDisplay"
-                                    placeholder="Select date range..."
+                                    placeholder="{{ __('invoices_demo_traduccion_select_date_range') }}..."
                                     class="glass-input-filter w-full h-11 px-4 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200 cursor-pointer"
                                     readonly>
                             </div>
 
                             <!-- Quick Date Filters -->
                             <div class="lg:col-span-5">
-                                <label class="block text-sm font-medium text-white/90 mb-2">⚡ Quick Filters</label>
+                                <label class="block text-sm font-medium text-white/90 mb-2">⚡ {{ __('invoices_demo_traduccion_quick_filters') }}</label>
                                 <div class="flex flex-wrap gap-2">
                                     <button @click="setDateRange('today')"
                                         class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'today' }">
-                                        Today
+                                        {{ __('invoices_demo_traduccion_today') }}
                                     </button>
                                     <button @click="setDateRange('last7days')"
                                         class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'last7days' }">
-                                        7 Days
+                                        {{ __('invoices_demo_traduccion_7_days') }}
                                     </button>
                                     <button @click="setDateRange('last30days')"
                                         class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'last30days' }">
-                                        30 Days
+                                        {{ __('invoices_demo_traduccion_30_days') }}
                                     </button>
                                     <button @click="setDateRange('thisMonth')"
                                         class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisMonth' }">
-                                        This Month
+                                        {{ __('invoices_demo_traduccion_this_month') }}
                                     </button>
                                     <button @click="setDateRange('thisYear')"
                                         class="px-3 py-2 text-xs backdrop-blur-md bg-white/10 border border-white/20 text-white/80 rounded-md hover:bg-purple-500/30 hover:text-white transition-colors duration-200"
                                         :class="{ 'bg-purple-500/40 text-white border-purple-400/50': activeQuickFilter === 'thisYear' }">
-                                        This Year
+                                        {{ __('invoices_demo_traduccion_this_year') }}
                                     </button>
                                     <!-- Clear Filters Button -->
                                     <button @click="clearAllFilters()"
@@ -786,7 +786,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                     d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
-                                            <span class="hidden sm:inline text-xs">Clear </span>
+                                            <span class="hidden sm:inline text-xs">{{ __('invoices_demo_traduccion_clear') }} </span>
                                         </div>
                                     </button>
                                 </div>
@@ -796,7 +796,7 @@
                             <div class="lg:col-span-2 flex items-end justify-start">
                                 <!-- Toggle Switch for Show Deleted -->
                                 <div class="flex items-center space-x-3">
-                                    <label class="text-sm text-white/90 font-medium">🗑️ Show Deleted</label>
+                                    <label class="text-sm text-white/90 font-medium">🗑️ {{ __('invoices_demo_traduccion_show_deleted') }}</label>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" x-model="showDeleted" @change="toggleDeleted()"
                                             class="sr-only peer">
@@ -1185,6 +1185,13 @@
         </div>
 
         @push('scripts')
+            <!-- Translations for JavaScript -->
+            <script>
+                window.translations = {
+                    invoices_demo_traduccion_success: @json(__('invoices_demo_traduccion_success')),
+                    invoices_demo_traduccion_error: @json(__('invoices_demo_traduccion_error'))
+                };
+            </script>
             <!-- Main Invoice Demo Script -->
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
         @endpush

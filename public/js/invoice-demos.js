@@ -296,9 +296,10 @@ class InvoiceDemoManager {
      * Show success message
      */
     showSuccess(message) {
+        const successTitle = window.translations?.invoices_demo_traduccion_success || "Success";
         if (typeof Swal !== "undefined") {
             Swal.fire({
-                title: "Success",
+                title: successTitle,
                 text: message,
                 icon: "success",
                 toast: true,
@@ -315,9 +316,10 @@ class InvoiceDemoManager {
      * Show error message
      */
     showError(message) {
+        const errorTitle = window.translations?.invoices_demo_traduccion_error || "Error";
         if (typeof Swal !== "undefined") {
             Swal.fire({
-                title: "Error",
+                title: errorTitle,
                 text: message,
                 icon: "error",
                 toast: true,
@@ -326,7 +328,7 @@ class InvoiceDemoManager {
                 timer: 3000,
             });
         } else {
-            alert("Error: " + message);
+            alert(errorTitle + ": " + message);
         }
     }
 
