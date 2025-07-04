@@ -66,15 +66,11 @@
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
     text-align: center;
     background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0px); /* Eliminado el efecto de blur para mejor legibilidad */
-    font-weight: 500; /* Texto semi-bold para mejor legibilidad */
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1); /* Sombra sutil para mejorar contraste */
-    letter-spacing: 0.02em; /* Ligero espaciado entre letras */
-    padding: 0.75rem 0.5rem; /* Padding aumentado para dar más espacio */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
 .glassmorphic-table-row:hover {
@@ -84,9 +80,7 @@
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
-    filter: blur(0px); /* Sin blur para perfecta legibilidad */
-    font-weight: 600; /* Texto más bold al hover */
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2); /* Sombra más pronunciada */
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
 .glassmorphic-table-row.active {
