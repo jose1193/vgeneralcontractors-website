@@ -1098,8 +1098,6 @@
         </div>
 
         @push('scripts')
-            <!-- Decimal Formatter for enhanced input formatting -->
-            <script src="{{ asset('js/decimal-formatter.js') }}"></script>
             <!-- Main Invoice Demo Script -->
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
         @endpush

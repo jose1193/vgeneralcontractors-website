@@ -1774,153 +1774,70 @@ invoiceDemoData = function () {
         }
     };
 
-    // Format currency input for rate field - Enhanced with thousands separator
+    // Format currency input for rate field
     data.formatCurrencyInput = function (event, itemIndex) {
-        // Usar el nuevo formateador decimal con separadores de miles
-        if (window.CurrencyFormatter) {
-            // Crear un objeto temporal para el campo rate del item
-            const tempForm = {
-                rate: this.form.items[itemIndex].rate
-            };
-            
-            window.CurrencyFormatter.formatDecimalInput(
-                event, 
-                'rate', 
-                tempForm, 
-                () => {
-                    // Actualizar el valor en el item y recalcular totales
-                    this.form.items[itemIndex].rate = tempForm.rate;
-                    this.calculateTotals();
-                }
-            );
-        } else {
-            // Fallback al método anterior si el formateador no está disponible
-            console.warn('CurrencyFormatter not available, using fallback method');
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
 
-            // Eliminar todo excepto números y punto decimal
-            value = value.replace(/[^0-9.]/g, "");
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, "");
 
-            // Asegurar que solo haya un punto decimal
-            const parts = value.split(".");
-            if (parts.length > 2) {
-                value = parts[0] + "." + parts.slice(1).join("");
-            }
-
-            // Limitar a dos decimales
-            if (parts.length > 1 && parts[1].length > 2) {
-                value = parts[0] + "." + parts[1].substring(0, 2);
-            }
-
-            // Actualizar el valor en el input y en el modelo
-            if (value !== input.value) {
-                input.value = value;
-                this.form.items[itemIndex].rate = value;
-                // Restaurar la posición del cursor
-                const newCursorPos = Math.min(cursorPosition, value.length);
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }
-
-            // Calcular totales después de actualizar el valor
-            this.calculateTotals();
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
         }
+
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form.items[itemIndex].rate = value;
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+
+        // Calcular totales después de actualizar el valor
+        this.calculateTotals();
     };
 
-    // Format decimal display with thousands separator (for display purposes)
-    data.formatDecimalDisplay = function (value) {
-        if (window.CurrencyFormatter) {
-            return window.CurrencyFormatter.formatForDisplay(value);
-        } else {
-            // Fallback simple formatting
-            const num = parseFloat(value);
-            return isNaN(num) ? '0.00' : num.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-        }
-    };
+    // Format general currency input (for subtotal, tax_amount)
+    data.formatGeneralCurrencyInput = function (event, fieldName) {
+        const input = event.target;
+        const cursorPosition = input.selectionStart;
+        let value = input.value;
 
-    // Format percentage input
-    data.formatPercentageInput = function (event, fieldName) {
-        if (window.PercentageFormatter) {
-            window.PercentageFormatter.formatDecimalInput(
-                event, 
-                fieldName, 
-                this.form, 
-                () => this.calculateTotals()
-            );
-        } else {
-            // Fallback para porcentajes
-            console.warn('PercentageFormatter not available, using fallback method');
-            const input = event.target;
-            let value = input.value.replace(/[^0-9.]/g, "");
-            
-            const parts = value.split(".");
-            if (parts.length > 2) {
-                value = parts[0] + "." + parts.slice(1).join("");
-            }
-            
-            if (parts.length > 1 && parts[1].length > 2) {
-                value = parts[0] + "." + parts[1].substring(0, 2);
-            }
-            
-            // Limitar a 100%
-            const numValue = parseFloat(value);
-            if (numValue > 100) {
-                value = "100.00";
-            }
-            
+        // Eliminar todo excepto números y punto decimal
+        value = value.replace(/[^0-9.]/g, "");
+
+        // Asegurar que solo haya un punto decimal
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
+
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
+        }
+
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
             input.value = value;
             this.form[fieldName] = value;
-            this.calculateTotals();
+            // Restaurar la posición del cursor
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
         }
-    };
 
-    // Format general currency input (for subtotal, tax_amount) - Enhanced with thousands separator
-    data.formatGeneralCurrencyInput = function (event, fieldName) {
-        // Usar el nuevo formateador decimal con separadores de miles
-        if (window.CurrencyFormatter) {
-            window.CurrencyFormatter.formatDecimalInput(
-                event, 
-                fieldName, 
-                this.form, 
-                () => this.calculateTotals()
-            );
-        } else {
-            // Fallback al método anterior si el formateador no está disponible
-            console.warn('CurrencyFormatter not available, using fallback method');
-            const input = event.target;
-            const cursorPosition = input.selectionStart;
-            let value = input.value;
-
-            // Eliminar todo excepto números y punto decimal
-            value = value.replace(/[^0-9.]/g, "");
-
-            // Asegurar que solo haya un punto decimal
-            const parts = value.split(".");
-            if (parts.length > 2) {
-                value = parts[0] + "." + parts.slice(1).join("");
-            }
-
-            // Limitar a dos decimales
-            if (parts.length > 1 && parts[1].length > 2) {
-                value = parts[0] + "." + parts[1].substring(0, 2);
-            }
-
-            // Actualizar el valor en el input y en el modelo
-            if (value !== input.value) {
-                input.value = value;
-                this.form[fieldName] = value;
-                // Restaurar la posición del cursor
-                const newCursorPos = Math.min(cursorPosition, value.length);
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }
-
-            // Calcular totales después de actualizar el valor
-            this.calculateTotals();
-        }
+        // Calcular totales después de actualizar el valor
+        this.calculateTotals();
     };
 
     return data;
