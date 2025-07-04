@@ -45,8 +45,8 @@
             @endif
 
             <!-- Main container -->
-            <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg">
-                <div class="p-6">
+            <div class="backdrop-blur-lg bg-white/10 dark:bg-gray-800/20 shadow-2xl rounded-xl border border-white/20 dark:border-gray-600/30 animate-container-glow">
+                <div class="p-6 bg-gradient-to-br from-white/5 to-transparent rounded-xl">
                     <!-- Filter and action bar -->
                     <x-crud.filter-bar :search-id="$searchId" :search-placeholder="$searchPlaceholder" :show-deleted-id="$showDeletedId" :show-deleted-label="$showDeletedLabel"
                         :per-page-id="$perPageId" :create-button-id="$createButtonId" :add-new-label="$addNewLabel" :manager-name="$managerName" />
@@ -63,3 +63,41 @@
         {{ $slot }}
     </div>
 </x-app-layout>
+
+@push('styles')
+    <style>
+        /* Glassmorphic Container Animations */
+        @keyframes container-glow {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                           0 0 0 1px rgba(255, 255, 255, 0.1),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            50% {
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+                           0 0 0 1px rgba(255, 255, 255, 0.2),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* Animation Classes */
+        .animate-container-glow {
+            animation: container-glow 4s ease-in-out infinite;
+        }
+
+        /* Enhanced backdrop blur for better glassmorphic effect */
+        .backdrop-blur-lg {
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+        }
+
+        /* Dark mode adjustments */
+        @media (prefers-color-scheme: dark) {
+            .animate-container-glow {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                           0 0 0 1px rgba(255, 255, 255, 0.1),
+                           inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+        }
+    </style>
+@endpush
