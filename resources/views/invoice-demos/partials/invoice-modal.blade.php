@@ -366,7 +366,7 @@
                                         </div>
 
                                         <!-- Rate -->
-                                        <div>
+                                        <div x-data>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
