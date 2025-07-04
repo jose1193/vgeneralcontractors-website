@@ -793,28 +793,32 @@ function invoiceDemoData() {
                 })
                 .on('select', (startDate, endDate, dateObjects) => {
                     console.group('🐛 DEBUG: Date picker select event');
-                    console.log('📅 Raw startDate:', startDate);
-                    console.log('📅 Raw endDate:', endDate);
+                    console.log('📅 Raw startDate from picker:', startDate);
+                    console.log('📅 Raw endDate from picker:', endDate);
                     console.log('📅 dateObjects:', dateObjects);
-                    
+
                     if (startDate && endDate) {
-                        this.startDate = startDate;
-                        this.endDate = endDate;
-                        
-                        console.log('✅ Setting Alpine.js values:');
+                        // ✅ Robust date formatting to ensure YYYY-MM-DD
+                        const formattedStartDate = new Date(startDate).toISOString().split('T')[0];
+                        const formattedEndDate = new Date(endDate).toISOString().split('T')[0];
+
+                        this.startDate = formattedStartDate;
+                        this.endDate = formattedEndDate;
+
+                        console.log('✅ Setting Alpine.js values with robust formatting:');
                         console.log('  - this.startDate:', this.startDate);
                         console.log('  - this.endDate:', this.endDate);
-                        
-                        this.updateDateRangeDisplay(startDate, endDate);
+
+                        this.updateDateRangeDisplay(this.startDate, this.endDate);
                         this.activeQuickFilter = null; // Clear active quick filter
                         this.currentPage = 1;
-                        
+
                         console.log('🔄 Calling loadInvoices()...');
                         this.loadInvoices();
-                        
-                        console.log('📅 Date range selected:', { startDate, endDate });
+
+                        console.log('📅 Date range selected:', { startDate: this.startDate, endDate: this.endDate });
                     } else {
-                        console.warn('⚠️ startDate or endDate is missing!');
+                        console.warn('⚠️ startDate or endDate is missing from picker!');
                     }
                     console.groupEnd();
                 })
