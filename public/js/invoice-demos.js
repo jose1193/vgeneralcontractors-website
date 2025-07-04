@@ -670,16 +670,8 @@ function invoiceDemoData() {
 
         // Initialize Modern Date Picker (Litepicker alternative)
         initializeModernDatePicker() {
-            // Wait for DOM to be ready and element to exist
-            setTimeout(() => {
-                const element = document.querySelector('#dateRangePicker');
-                if (!element) {
-                    console.error('📅 Date picker element not found');
-                    return;
-                }
-                
-                console.log('📅 Initializing ModernDateRangePicker...');
-                
+            // Wait for DOM to be ready
+            this.$nextTick(() => {
                 // Initialize ModernDateRangePicker with enhanced features
                 this.modernDatePicker = new ModernDateRangePicker({
                     element: "#dateRangePicker",
@@ -746,7 +738,7 @@ function invoiceDemoData() {
 
                 // Debug log
                 console.log("📅 ModernDateRangePicker initialized successfully");
-            }, 100); // Small delay to ensure DOM is ready
+            });
         },
 
         // Update date range display
