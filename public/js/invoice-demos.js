@@ -730,23 +730,38 @@ function invoiceDemoData() {
 
         // Initialize Modern Date Picker (Litepicker alternative)
         initializeModernDatePicker() {
-            // Wait for DOM to be ready
+            // Wait for DOM to be ready and Alpine.js to be fully initialized
             this.$nextTick(() => {
-                // 🐛 DEBUG: Check if element exists
-                console.group('🔍 DEBUG: initializeModernDatePicker() called');
-                const datePickerElement = document.querySelector('#dateRangePicker');
-                console.log('📅 Date picker element found:', datePickerElement);
-                
-                if (!datePickerElement) {
-                    console.error('❌ #dateRangePicker element not found in DOM!');
-                    console.groupEnd();
-                    return;
-                }
-                
-                console.log('✅ Initializing ModernDateRangePicker...');
-                
-                // Initialize ModernDateRangePicker with enhanced features
-                this.modernDatePicker = new ModernDateRangePicker({
+                // Add a small delay to ensure everything is ready
+                setTimeout(() => {
+                    // 🐛 DEBUG: Check if element exists
+                    console.group('🔍 DEBUG: initializeModernDatePicker() called');
+                    const datePickerElement = document.querySelector('#dateRangePicker');
+                    console.log('📅 Date picker element found:', datePickerElement);
+                    console.log('📅 Element properties:', {
+                        id: datePickerElement?.id,
+                        className: datePickerElement?.className,
+                        offsetParent: datePickerElement?.offsetParent,
+                        style: datePickerElement?.style.cssText
+                    });
+                    
+                    if (!datePickerElement) {
+                        console.error('❌ #dateRangePicker element not found in DOM!');
+                        console.groupEnd();
+                        return;
+                    }
+                    
+                    // Destroy existing picker if it exists
+                    if (this.modernDatePicker) {
+                        console.log('🔄 Destroying existing date picker...');
+                        this.modernDatePicker.destroy();
+                        this.modernDatePicker = null;
+                    }
+                    
+                    console.log('✅ Initializing ModernDateRangePicker...');
+                    
+                    // Initialize ModernDateRangePicker with enhanced features
+                    this.modernDatePicker = new ModernDateRangePicker({
                     element: "#dateRangePicker",
                     format: "YYYY-MM-DD",
                     displayFormat: "MMM DD, YYYY",
@@ -880,13 +895,14 @@ function invoiceDemoData() {
                     this.showError('Error with date picker: ' + error.message);
                 });
 
-                // Store reference for compatibility
-                this.dateRangePicker = this.modernDatePicker;
+                    // Store reference for compatibility
+                    this.dateRangePicker = this.modernDatePicker;
 
-                // Debug log
-                console.log("📅 ModernDateRangePicker initialized successfully");
-                console.groupEnd();
-            });
+                    // Debug log
+                    console.log("📅 ModernDateRangePicker initialized successfully");
+                    console.groupEnd();
+                }, 100); // Close setTimeout
+            }); // Close $nextTick
         },
 
         // Update date range display
