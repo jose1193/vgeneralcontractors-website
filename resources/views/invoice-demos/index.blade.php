@@ -818,7 +818,7 @@
             </div>
 
             <!-- Data Table Section -->
-            <div class="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+            <div class="bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-visible">
                 <!-- Loading State -->
                 <div x-show="loading" class="flex items-center justify-center py-12 bg-gray-900">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
@@ -826,8 +826,8 @@
                 </div>
 
                 <!-- Table -->
-                <div x-show="!loading" class="table-container">
-                    <div class="overflow-x-auto rounded-lg">
+                <div x-show="!loading" class="table-container overflow-visible">
+                    <div class="overflow-x-auto rounded-lg overflow-y-visible">
                         <table class="min-w-full text-sm text-left text-gray-300 bg-gray-800/50 divide-y divide-gray-700">
                             <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                                 <tr>
