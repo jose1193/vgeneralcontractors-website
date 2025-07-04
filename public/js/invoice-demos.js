@@ -1840,6 +1840,102 @@ invoiceDemoData = function () {
         this.calculateTotals();
     };
 
+    // Export to Excel
+    data.exportToExcel = async function() {
+        try {
+            // Show loading state
+            const exportButton = document.querySelector('[data-export="excel"]');
+            if (exportButton) {
+                exportButton.disabled = true;
+                exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+            }
+
+            // Get current filters
+            const filters = {
+                search: this.search || '',
+                status: this.statusFilter || '',
+                start_date: this.startDate || '',
+                end_date: this.endDate || '',
+                include_deleted: this.showDeleted || false
+            };
+            
+            // Build query string
+            const queryParams = new URLSearchParams();
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    queryParams.append(key, value);
+                }
+            });
+
+            // Create download URL
+            const exportUrl = `/invoices/export/excel?${queryParams.toString()}`;
+            
+            // Trigger download
+            window.location.href = exportUrl;
+            
+            window.invoiceDemoManager.showSuccess('Excel export started. Download will begin shortly.');
+            
+        } catch (error) {
+            console.error('Excel export failed:', error);
+            window.invoiceDemoManager.showError('Failed to export Excel file');
+        } finally {
+            // Reset button state
+            const exportButton = document.querySelector('[data-export="excel"]');
+            if (exportButton) {
+                exportButton.disabled = false;
+                exportButton.innerHTML = '<i class="fas fa-file-excel"></i> Export Excel';
+            }
+        }
+    };
+
+    // Export to PDF
+    data.exportToPdf = async function() {
+        try {
+            // Show loading state
+            const exportButton = document.querySelector('[data-export="pdf"]');
+            if (exportButton) {
+                exportButton.disabled = true;
+                exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+            }
+
+            // Get current filters
+            const filters = {
+                search: this.search || '',
+                status: this.statusFilter || '',
+                start_date: this.startDate || '',
+                end_date: this.endDate || '',
+                include_deleted: this.showDeleted || false
+            };
+            
+            // Build query string
+            const queryParams = new URLSearchParams();
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    queryParams.append(key, value);
+                }
+            });
+
+            // Create download URL
+            const exportUrl = `/invoices/export/pdf?${queryParams.toString()}`;
+            
+            // Trigger download
+            window.location.href = exportUrl;
+            
+            window.invoiceDemoManager.showSuccess('PDF export started. Download will begin shortly.');
+            
+        } catch (error) {
+            console.error('PDF export failed:', error);
+            window.invoiceDemoManager.showError('Failed to export PDF file');
+        } finally {
+            // Reset button state
+            const exportButton = document.querySelector('[data-export="pdf"]');
+            if (exportButton) {
+                exportButton.disabled = false;
+                exportButton.innerHTML = '<i class="fas fa-file-pdf"></i> Export PDF';
+            }
+        }
+    };
+
     return data;
 };
 

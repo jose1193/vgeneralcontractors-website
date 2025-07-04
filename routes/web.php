@@ -134,6 +134,10 @@ Route::middleware([
         Route::get('/{uuid}/download-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'downloadPdf'])->name('download-pdf');
         Route::post('/{uuid}/generate-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'generatePdf'])->name('generate-pdf');
         Route::get('/{uuid}/verify-pdf-status', [App\Http\Controllers\InvoiceDemoController::class, 'verifyPdfStatus'])->name('verify-pdf-status');
+        
+        // Export Routes
+        Route::get('/export/excel', [App\Http\Controllers\InvoiceDemoController::class, 'exportExcel'])->name('export-excel');
+        Route::get('/export/pdf', [App\Http\Controllers\InvoiceDemoController::class, 'exportPdf'])->name('export-pdf');
     });
 
 

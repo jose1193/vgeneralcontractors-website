@@ -12,6 +12,7 @@ use App\Services\InvoiceDemoService;
 use App\Services\InvoicePdfService;
 use App\Services\TransactionService;
 use App\Traits\CacheTraitCrud;
+use App\Exports\InvoiceDemoExport;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
 class InvoiceDemoController extends BaseController
@@ -1013,6 +1015,144 @@ class InvoiceDemoController extends BaseController
                 'success' => false,
                 'message' => 'Failed to verify PDF status'
             ], 500);
+        }
+    }
+
+    /**
+     * Export invoices to Excel with applied filters
+     */
+    public function exportExcel(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to export invoice demos")) {
+            abort(403, "You don't have permission to export invoice demos");
+        }
+
+        try {
+            // Get the same filters used in the index method
+            $search = trim($request->get('search', ''));
+            $status = (string) ($request->get('status') ?? '');
+            $includeDeleted = $request->boolean('include_deleted');
+            
+            // Enhanced date range handling
+            $rawStartDate = $request->get('start_date', '');
+            $rawEndDate = $request->get('end_date', '');
+            
+            $startDate = $this->validateAndFormatDate($rawStartDate);
+            $endDate = $this->validateAndFormatDate($rawEndDate);
+            
+            // Handle predefined date ranges
+            $dateRange = $request->get('date_range', '');
+            if ($dateRange && !$startDate && !$endDate) {
+                [$startDate, $endDate] = $this->getPredefinedDateRange($dateRange);
+            }
+
+            $filters = [
+                'search' => $search,
+                'status' => $status,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'include_deleted' => $includeDeleted
+            ];
+
+            // Generate filename with timestamp and filters
+            $filename = 'invoices_' . now()->format('Y-m-d_H-i-s');
+            if ($search) {
+                $filename .= '_search-' . Str::slug($search);
+            }
+            if ($status) {
+                $filename .= '_status-' . $status;
+            }
+            if ($startDate || $endDate) {
+                $filename .= '_dates-' . ($startDate ?: 'all') . '_to_' . ($endDate ?: 'all');
+            }
+            $filename .= '.xlsx';
+
+            Log::info('Exporting invoices to Excel', [
+                'filters' => $filters,
+                'filename' => $filename,
+                'user_id' => auth()->id()
+            ]);
+
+            return Excel::download(new InvoiceDemoExport($filters), $filename);
+
+        } catch (Throwable $e) {
+            Log::error('Failed to export invoices to Excel', [
+                'error' => $e->getMessage(),
+                'filters' => $request->all(),
+                'user_id' => auth()->id()
+            ]);
+
+            abort(500, 'Failed to export invoices to Excel');
+        }
+    }
+
+    /**
+     * Export invoices to PDF (bulk export)
+     */
+    public function exportPdf(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to export invoice demos")) {
+            abort(403, "You don't have permission to export invoice demos");
+        }
+
+        try {
+            // Get the same filters used in the index method
+            $search = trim($request->get('search', ''));
+            $status = (string) ($request->get('status') ?? '');
+            $includeDeleted = $request->boolean('include_deleted');
+            
+            // Enhanced date range handling
+            $rawStartDate = $request->get('start_date', '');
+            $rawEndDate = $request->get('end_date', '');
+            
+            $startDate = $this->validateAndFormatDate($rawStartDate);
+            $endDate = $this->validateAndFormatDate($rawEndDate);
+            
+            // Handle predefined date ranges
+            $dateRange = $request->get('date_range', '');
+            if ($dateRange && !$startDate && !$endDate) {
+                [$startDate, $endDate] = $this->getPredefinedDateRange($dateRange);
+            }
+
+            // Get invoices with applied filters
+            $invoices = $this->invoiceService->getPaginatedInvoices(
+                page: 1,
+                perPage: 1000, // Large number to get all results
+                search: $search,
+                status: $status,
+                sortBy: 'created_at',
+                sortOrder: 'desc',
+                includeDeleted: $includeDeleted,
+                startDate: $startDate,
+                endDate: $endDate
+            );
+
+            // Generate bulk PDF using the PDF service
+            $pdfPath = $this->pdfService->generateBulkInvoicesPdf($invoices->items());
+            
+            if (!$pdfPath || !file_exists($pdfPath)) {
+                throw new \Exception('Failed to generate bulk PDF');
+            }
+
+            // Generate filename
+            $filename = 'invoices_bulk_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+
+            Log::info('Exporting invoices to PDF (bulk)', [
+                'count' => $invoices->count(),
+                'filename' => $filename,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->download($pdfPath, $filename)->deleteFileAfterSend();
+
+        } catch (Throwable $e) {
+            Log::error('Failed to export invoices to PDF', [
+                'error' => $e->getMessage(),
+                'filters' => $request->all(),
+                'user_id' => auth()->id()
+            ]);
+
+            abort(500, 'Failed to export invoices to PDF');
         }
     }
 }
