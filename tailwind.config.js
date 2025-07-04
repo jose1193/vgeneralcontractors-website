@@ -16,6 +16,20 @@ export default {
             fontFamily: {
                 sans: ["Roboto", ...defaultTheme.fontFamily.sans],
             },
+            animation: {
+                "gradient-border": "gradient-border 4s ease-in-out infinite",
+                "border-glow": "border-glow 3s ease-in-out infinite",
+                "table-shadow": "table-shadow 4s ease-in-out infinite",
+                "shimmer": "shimmer 3s ease-in-out infinite",
+                "shimmer-delay-1": "shimmer 3s ease-in-out infinite 0.5s",
+                "shimmer-delay-2": "shimmer 3s ease-in-out infinite 1s",
+                "shimmer-delay-3": "shimmer 3s ease-in-out infinite 1.5s",
+                "shimmer-delay-4": "shimmer 3s ease-in-out infinite 2s",
+                "shimmer-delay-5": "shimmer 3s ease-in-out infinite 2.5s"
+            },
+            backgroundSize: {
+                "300": "300% 300%"
+            }
         },
     },
 
