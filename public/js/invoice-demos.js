@@ -1851,9 +1851,16 @@ invoiceDemoData = function () {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
+        const isBlurEvent = event.type === 'blur';
 
         // Eliminar todo excepto números y punto decimal
         const cleanValue = value.replace(/[^0-9.]/g, "");
+
+        // Si el valor está vacío, no hacer nada
+        if (cleanValue === "") {
+            this.form[fieldName] = "";
+            return;
+        }
 
         // Asegurar que solo haya un punto decimal
         const parts = cleanValue.split(".");
@@ -1865,6 +1872,17 @@ invoiceDemoData = function () {
             decimalPart = decimalPart.substring(0, 2);
         }
 
+        // En blur o si no hay parte decimal, completar con .00
+        if (isBlurEvent || (parts.length === 1 && !value.includes("."))) {
+            if (parts.length === 1) {
+                decimalPart = "00";
+            } else if (decimalPart.length === 1) {
+                decimalPart = decimalPart + "0";
+            } else if (decimalPart.length === 0) {
+                decimalPart = "00";
+            }
+        }
+
         // Agregar separadores de miles al entero
         if (integerPart.length > 0) {
             integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1872,8 +1890,8 @@ invoiceDemoData = function () {
 
         // Construir el valor formateado
         let formattedValue = integerPart;
-        if (parts.length > 1 || value.includes(".")) {
-            formattedValue += "." + decimalPart;
+        if (decimalPart !== "" || parts.length > 1 || isBlurEvent) {
+            formattedValue += "." + decimalPart.padEnd(2, "0");
         }
 
         // Actualizar el valor en el input y en el modelo
@@ -1883,16 +1901,19 @@ invoiceDemoData = function () {
             const numericValue = cleanValue;
             this.form[fieldName] = numericValue;
             
-            // Calcular nueva posición del cursor considerando las comas agregadas
-            const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
-            const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
-            const cursorAdjustment = commasInFormatted - commasBeforeCursor;
-            const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
-            
-            // Restaurar la posición del cursor
-            setTimeout(() => {
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }, 0);
+            // Solo ajustar cursor en eventos de input, no en blur
+            if (!isBlurEvent) {
+                // Calcular nueva posición del cursor considerando las comas agregadas
+                const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
+                const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+                const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+                const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
+                
+                // Restaurar la posición del cursor
+                setTimeout(() => {
+                    input.setSelectionRange(newCursorPos, newCursorPos);
+                }, 0);
+            }
         }
 
         // Calcular totales después de actualizar el valor
@@ -1906,9 +1927,16 @@ invoiceDemoData = function () {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
+        const isBlurEvent = event.type === 'blur';
 
         // Eliminar todo excepto números y punto decimal
         const cleanValue = value.replace(/[^0-9.]/g, "");
+
+        // Si el valor está vacío, no hacer nada
+        if (cleanValue === "") {
+            this.form.items[itemIndex].rate = "";
+            return;
+        }
 
         // Asegurar que solo haya un punto decimal
         const parts = cleanValue.split(".");
@@ -1920,6 +1948,17 @@ invoiceDemoData = function () {
             decimalPart = decimalPart.substring(0, 2);
         }
 
+        // En blur o si no hay parte decimal, completar con .00
+        if (isBlurEvent || (parts.length === 1 && !value.includes("."))) {
+            if (parts.length === 1) {
+                decimalPart = "00";
+            } else if (decimalPart.length === 1) {
+                decimalPart = decimalPart + "0";
+            } else if (decimalPart.length === 0) {
+                decimalPart = "00";
+            }
+        }
+
         // Agregar separadores de miles al entero
         if (integerPart.length > 0) {
             integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1927,8 +1966,8 @@ invoiceDemoData = function () {
 
         // Construir el valor formateado
         let formattedValue = integerPart;
-        if (parts.length > 1 || value.includes(".")) {
-            formattedValue += "." + decimalPart;
+        if (decimalPart !== "" || parts.length > 1 || isBlurEvent) {
+            formattedValue += "." + decimalPart.padEnd(2, "0");
         }
 
         // Actualizar el valor en el input y en el modelo
@@ -1938,16 +1977,19 @@ invoiceDemoData = function () {
             const numericValue = cleanValue;
             this.form.items[itemIndex].rate = numericValue;
             
-            // Calcular nueva posición del cursor considerando las comas agregadas
-            const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
-            const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
-            const cursorAdjustment = commasInFormatted - commasBeforeCursor;
-            const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
-            
-            // Restaurar la posición del cursor
-            setTimeout(() => {
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }, 0);
+            // Solo ajustar cursor en eventos de input, no en blur
+            if (!isBlurEvent) {
+                // Calcular nueva posición del cursor considerando las comas agregadas
+                const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
+                const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+                const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+                const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
+                
+                // Restaurar la posición del cursor
+                setTimeout(() => {
+                    input.setSelectionRange(newCursorPos, newCursorPos);
+                }, 0);
+            }
         }
 
         // Calcular totales después de actualizar el valor

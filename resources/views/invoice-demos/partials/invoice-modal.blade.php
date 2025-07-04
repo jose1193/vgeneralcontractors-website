@@ -370,6 +370,7 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
                                                 @input="formatDecimalItemInput($event, index)"
+                                                @blur="formatDecimalItemInput($event, index)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
                                                 placeholder="2,500.00">
                                         </div>
@@ -420,6 +421,7 @@
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.subtotal"
                                         @input="formatDecimalInput($event, 'subtotal')"
+                                        @blur="formatDecimalInput($event, 'subtotal')"
                                         :class="errors.subtotal ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
@@ -436,6 +438,7 @@
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
                                     <input type="text" x-model="form.tax_amount"
                                         @input="formatDecimalInput($event, 'tax_amount')"
+                                        @blur="formatDecimalInput($event, 'tax_amount')"
                                         :class="errors.tax_amount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
                                             'border-gray-300 focus:ring-purple-500 focus:border-purple-500'"
                                         class="w-full pl-8 rounded-xl shadow-sm transition-all duration-200"
