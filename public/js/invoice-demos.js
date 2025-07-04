@@ -164,18 +164,10 @@ class InvoiceDemoManager {
 
         // ✅ Log date parameters for debugging
         console.log('✅ Date parameters added to URL:');
-        console.log('  - start_date:', params.get("start_date"), 'Type:', typeof params.get("start_date"));
-        console.log('  - end_date:', params.get("end_date"), 'Type:', typeof params.get("end_date"));
-        console.log('  - startDate original value:', startDate, 'Type:', typeof startDate);
-        console.log('  - endDate original value:', endDate, 'Type:', typeof endDate);
-        console.log('  - this.startDate:', this.startDate, 'Type:', typeof this.startDate);
-        console.log('  - this.endDate:', this.endDate, 'Type:', typeof this.endDate);
-        
-        // Verificar si las fechas son válidas antes de enviar
-        const isStartDateValid = startDate && startDate !== '' && startDate !== 'undefined' && startDate !== 'null';
-        const isEndDateValid = endDate && endDate !== '' && endDate !== 'undefined' && endDate !== 'null';
-        console.log('  - isStartDateValid:', isStartDateValid);
-        console.log('  - isEndDateValid:', isEndDateValid);
+        console.log('  - start_date:', params.get("start_date"));
+        console.log('  - end_date:', params.get("end_date"));
+        console.log('  - startDate original value:', startDate);
+        console.log('  - endDate original value:', endDate);
         
         if (includeDeleted) {
             params.append("include_deleted", "1");
@@ -577,6 +569,24 @@ function invoiceDemoData() {
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
+
+        // Filtros y paginación
+        search: "",
+        statusFilter: "",
+        currentPage: 1,
+        perPage: 10,
+        totalPages: 1,
+        total: 0,
+        sortBy: "created_at",
+        sortOrder: "desc",
+
+        // Filtros de fecha
+        startDate: "",
+        endDate: "",
+        dateRangeDisplay: "",
+        dateRangePicker: null,
+
+        // Nuevas variables para filtros optimizados
         showAdvancedFilters: false,
         activeQuickFilter: null,
 
@@ -730,38 +740,23 @@ function invoiceDemoData() {
 
         // Initialize Modern Date Picker (Litepicker alternative)
         initializeModernDatePicker() {
-            // Wait for DOM to be ready and Alpine.js to be fully initialized
+            // Wait for DOM to be ready
             this.$nextTick(() => {
-                // Add a small delay to ensure everything is ready
-                setTimeout(() => {
-                    // 🐛 DEBUG: Check if element exists
-                    console.group('🔍 DEBUG: initializeModernDatePicker() called');
-                    const datePickerElement = document.querySelector('#dateRangePicker');
-                    console.log('📅 Date picker element found:', datePickerElement);
-                    console.log('📅 Element properties:', {
-                        id: datePickerElement?.id,
-                        className: datePickerElement?.className,
-                        offsetParent: datePickerElement?.offsetParent,
-                        style: datePickerElement?.style.cssText
-                    });
-                    
-                    if (!datePickerElement) {
-                        console.error('❌ #dateRangePicker element not found in DOM!');
-                        console.groupEnd();
-                        return;
-                    }
-                    
-                    // Destroy existing picker if it exists
-                    if (this.modernDatePicker) {
-                        console.log('🔄 Destroying existing date picker...');
-                        this.modernDatePicker.destroy();
-                        this.modernDatePicker = null;
-                    }
-                    
-                    console.log('✅ Initializing ModernDateRangePicker...');
-                    
-                    // Initialize ModernDateRangePicker with enhanced features
-                    this.modernDatePicker = new ModernDateRangePicker({
+                // 🐛 DEBUG: Check if element exists
+                console.group('🔍 DEBUG: initializeModernDatePicker() called');
+                const datePickerElement = document.querySelector('#dateRangePicker');
+                console.log('📅 Date picker element found:', datePickerElement);
+                
+                if (!datePickerElement) {
+                    console.error('❌ #dateRangePicker element not found in DOM!');
+                    console.groupEnd();
+                    return;
+                }
+                
+                console.log('✅ Initializing ModernDateRangePicker...');
+                
+                // Initialize ModernDateRangePicker with enhanced features
+                this.modernDatePicker = new ModernDateRangePicker({
                     element: "#dateRangePicker",
                     format: "YYYY-MM-DD",
                     displayFormat: "MMM DD, YYYY",
@@ -790,82 +785,34 @@ function invoiceDemoData() {
                 })
                 .on('select', (startDate, endDate, dateObjects) => {
                     console.group('🐛 DEBUG: Date picker select event');
-                    console.log('📅 Raw startDate:', startDate, 'Type:', typeof startDate);
-                    console.log('📅 Raw endDate:', endDate, 'Type:', typeof endDate);
+                    console.log('📅 Raw startDate:', startDate);
+                    console.log('📅 Raw endDate:', endDate);
                     console.log('📅 dateObjects:', dateObjects);
                     
-                    // Función para formatear fecha a YYYY-MM-DD
-                    const formatDateToISO = (date) => {
-                        if (!date) return '';
+                    if (startDate && endDate) {
+                        this.startDate = startDate;
+                        this.endDate = endDate;
                         
-                        // Si ya es una cadena en formato correcto, devolverla
-                        if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-                            return date;
-                        }
+                        console.log('✅ Setting Alpine.js values:');
+                        console.log('  - this.startDate:', this.startDate);
+                        console.log('  - this.endDate:', this.endDate);
                         
-                        // Si es un objeto Date, convertirlo
-                        if (date instanceof Date) {
-                            return date.toISOString().split('T')[0];
-                        }
-                        
-                        // Intentar parsear como fecha
-                        try {
-                            const parsedDate = new Date(date);
-                            if (!isNaN(parsedDate.getTime())) {
-                                return parsedDate.toISOString().split('T')[0];
-                            }
-                        } catch (e) {
-                            console.warn('Error parsing date:', date, e);
-                        }
-                        
-                        return '';
-                    };
-                    
-                    // Formatear las fechas
-                    const formattedStartDate = formatDateToISO(startDate);
-                    const formattedEndDate = formatDateToISO(endDate);
-                    
-                    console.log('📅 Formatted dates:');
-                    console.log('  - formattedStartDate:', formattedStartDate);
-                    console.log('  - formattedEndDate:', formattedEndDate);
-                    
-                    // Asignar las fechas formateadas (siempre asignar, incluso si están vacías)
-                    this.startDate = formattedStartDate;
-                    this.endDate = formattedEndDate;
-                    
-                    console.log('✅ Setting Alpine.js values:');
-                    console.log('  - this.startDate:', this.startDate);
-                    console.log('  - this.endDate:', this.endDate);
-                    
-                    // Solo actualizar display y cargar si tenemos fechas válidas
-                    if (formattedStartDate && formattedEndDate) {
-                        this.updateDateRangeDisplay(formattedStartDate, formattedEndDate);
+                        this.updateDateRangeDisplay(startDate, endDate);
                         this.activeQuickFilter = null; // Clear active quick filter
                         this.currentPage = 1;
                         
-                        console.log('🔄 Calling loadInvoices() with valid dates...');
+                        console.log('🔄 Calling loadInvoices()...');
                         this.loadInvoices();
                         
-                        console.log('📅 Date range selected:', { 
-                            startDate: formattedStartDate, 
-                            endDate: formattedEndDate 
-                        });
+                        console.log('📅 Date range selected:', { startDate, endDate });
                     } else {
-                        console.warn('⚠️ One or both dates are invalid after formatting!');
-                        console.log('  - Original startDate:', startDate);
-                        console.log('  - Original endDate:', endDate);
-                        console.log('  - Formatted startDate:', formattedStartDate);
-                        console.log('  - Formatted endDate:', formattedEndDate);
-                        
-                        // Aún así llamar a loadInvoices para limpiar filtros
-                        this.loadInvoices();
+                        console.warn('⚠️ startDate or endDate is missing!');
                     }
                     console.groupEnd();
                 })
                 .on('clear', () => {
                     console.group('🐛 DEBUG: Date picker clear event');
                     
-                    // Limpiar todas las variables de fecha
                     this.startDate = "";
                     this.endDate = "";
                     this.dateRangeDisplay = "";
@@ -873,15 +820,13 @@ function invoiceDemoData() {
                     this.currentPage = 1;
                     
                     console.log('✅ Cleared values:');
-                    console.log('  - this.startDate:', this.startDate, 'Type:', typeof this.startDate);
-                    console.log('  - this.endDate:', this.endDate, 'Type:', typeof this.endDate);
-                    console.log('  - this.dateRangeDisplay:', this.dateRangeDisplay);
-                    console.log('  - this.activeQuickFilter:', this.activeQuickFilter);
+                    console.log('  - this.startDate:', this.startDate);
+                    console.log('  - this.endDate:', this.endDate);
                     
-                    console.log('🔄 Calling loadInvoices() to clear filters...');
+                    console.log('🔄 Calling loadInvoices()...');
                     this.loadInvoices();
                     
-                    console.log('📅 Date range cleared successfully');
+                    console.log('📅 Date range cleared');
                     console.groupEnd();
                 })
                 .on('show', () => {
@@ -895,14 +840,13 @@ function invoiceDemoData() {
                     this.showError('Error with date picker: ' + error.message);
                 });
 
-                    // Store reference for compatibility
-                    this.dateRangePicker = this.modernDatePicker;
+                // Store reference for compatibility
+                this.dateRangePicker = this.modernDatePicker;
 
-                    // Debug log
-                    console.log("📅 ModernDateRangePicker initialized successfully");
-                    console.groupEnd();
-                }, 100); // Close setTimeout
-            }); // Close $nextTick
+                // Debug log
+                console.log("📅 ModernDateRangePicker initialized successfully");
+                console.groupEnd();
+            });
         },
 
         // Update date range display
