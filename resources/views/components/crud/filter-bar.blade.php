@@ -16,7 +16,7 @@
     'managerName' => 'crudManager',
 ])
 
-<div class="mb-5 flex flex-col sm:flex-row justify-between items-center">
+<div class="mb-5 flex flex-col sm:flex-row justify-between items-center backdrop-blur-sm bg-black/30 p-4 rounded-lg border border-white/10 shadow-lg shadow-purple-500/10">
     @if ($showSearchBar)
         <!-- Search Input -->
         <div class="relative w-full sm:w-1/3 mb-3 sm:mb-0">
@@ -27,7 +27,7 @@
                 </svg>
             </span>
             <input type="text" id="{{ $searchId }}" placeholder="{{ $searchPlaceholder }}"
-                class="pl-10 pr-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                class="pl-10 pr-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full text-sm text-white bg-black/50 border-white/10 backdrop-blur-sm">
         </div>
     @endif
 
@@ -42,7 +42,7 @@
             <!-- Per Page Selector -->
             <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto">
                 <select id="{{ $perPageId }}"
-                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-auto text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm">
                     @foreach ($perPageOptions as $option)
                         <option value="{{ $option }}" {{ $option == $defaultPerPage ? 'selected' : '' }}>
                             {{ $option }} {{ __('per_page') }}</option>

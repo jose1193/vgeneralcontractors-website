@@ -44,20 +44,19 @@
                 <x-crud.alert type="error" :message="session('error')" />
             @endif
 
-            <!-- Main container -->
-            <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg">
-                <div class="p-6">
-                    <!-- Filter and action bar -->
-                    <x-crud.filter-bar :search-id="$searchId" :search-placeholder="$searchPlaceholder" :show-deleted-id="$showDeletedId" :show-deleted-label="$showDeletedLabel"
-                        :per-page-id="$perPageId" :create-button-id="$createButtonId" :add-new-label="$addNewLabel" :manager-name="$managerName" />
-
-                    <!-- Table -->
-                    <x-crud.glassmorphic-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
-
-                    <!-- Pagination -->
-                    <div id="{{ $paginationId }}" class="mt-4 flex justify-between items-center"></div>
-                </div>
+            <!-- Filter and action bar (outside the main container) -->
+            <div class="mb-6">
+                <x-crud.filter-bar :search-id="$searchId" :search-placeholder="$searchPlaceholder" :show-deleted-id="$showDeletedId" :show-deleted-label="$showDeletedLabel"
+                    :per-page-id="$perPageId" :create-button-id="$createButtonId" :add-new-label="$addNewLabel" :manager-name="$managerName" />
             </div>
+
+            <!-- Table with enhanced border -->
+            <div class="mb-6">
+                <x-crud.glassmorphic-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
+            </div>
+
+            <!-- Pagination -->
+            <div id="{{ $paginationId }}" class="mt-4 flex justify-between items-center text-white/80"></div>
         </div>
 
         {{ $slot }}

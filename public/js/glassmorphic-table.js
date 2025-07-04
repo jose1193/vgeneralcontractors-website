@@ -14,6 +14,9 @@ function initGlassmorphicTable(tableId) {
     const tableBody = document.getElementById(`${tableId}-body`);
     if (!tableBody) return;
 
+    // Add enhanced table appearance for dark background
+    enhanceTableAppearance(table);
+
     // Initialize sort functionality if it exists
     initSortFunctionality(table);
     
@@ -92,7 +95,7 @@ function initRowEffects(tableBody) {
 function setupExistingRows(tableBody) {
     const rows = tableBody.querySelectorAll('tr:not(#loadingRow)');
     
-    rows.forEach(row => {
+    rows.forEach((row, index) => {
         // Add glassmorphic class
         row.classList.add('glassmorphic-table-row');
         
@@ -101,6 +104,9 @@ function setupExistingRows(tableBody) {
         indicator.className = 'glassmorphic-table-row-indicator';
         row.style.position = 'relative';
         row.appendChild(indicator);
+        
+        // Add subtle animation delay based on row index for staggered effect
+        row.style.transitionDelay = `${index * 0.03}s`;
     });
 }
 
@@ -190,6 +196,30 @@ function formatStatusBadges(tableId) {
         
         cell.appendChild(badge);
     });
+}
+
+/**
+ * Enhance table appearance for dark background
+ * @param {HTMLElement} table - The table element
+ */
+function enhanceTableAppearance(table) {
+    // Add enhanced styles for headers
+    const headers = table.querySelectorAll('th');
+    headers.forEach(header => {
+        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+        header.style.color = 'rgba(255, 255, 255, 0.9)';
+        header.style.fontWeight = '600';
+        header.style.letterSpacing = '0.05em';
+    });
+    
+    // Add padding to table cells for better spacing
+    const cells = table.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.style.padding = '0.75rem 1rem';
+    });
+    
+    // Add subtle text glow to the table
+    table.style.textShadow = '0 0 1px rgba(255, 255, 255, 0.2)';
 }
 
 // Export functions for global use

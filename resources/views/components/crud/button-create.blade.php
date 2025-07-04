@@ -10,7 +10,7 @@
 
 @php
     $baseClasses =
-        'create-btn inline-flex items-center justify-center border border-transparent rounded-md font-semibold uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition-all duration-200';
+        'create-btn inline-flex items-center justify-center border border-white/10 rounded-md font-semibold uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition-all duration-200 backdrop-blur-sm shadow-lg';
 
     $sizeClasses = [
         'sm' => 'px-3 py-1.5 text-xs',
@@ -20,11 +20,11 @@
 
     $variantClasses = [
         'primary' =>
-            'bg-green-600 text-white hover:bg-green-700 active:bg-green-800 focus:border-green-800 focus:ring-green-200',
+            'bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 active:from-purple-800 active:to-purple-950 focus:border-purple-800 focus:ring-purple-300/30 shadow-purple-500/30',
         'secondary' =>
-            'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:border-blue-800 focus:ring-blue-200',
+            'bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-700 hover:to-blue-900 active:from-blue-800 active:to-blue-950 focus:border-blue-800 focus:ring-blue-300/30 shadow-blue-500/30',
         'success' =>
-            'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 focus:border-emerald-800 focus:ring-emerald-200',
+            'bg-gradient-to-r from-emerald-600 to-emerald-800 text-white hover:from-emerald-700 hover:to-emerald-900 active:from-emerald-800 active:to-emerald-950 focus:border-emerald-800 focus:ring-emerald-300/30 shadow-emerald-500/30',
     ];
 
     $iconPaths = [

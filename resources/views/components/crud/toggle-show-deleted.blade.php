@@ -6,14 +6,14 @@
 ])
 
 <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto {{ $class }}">
-    <label for="{{ $id }}" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+    <label for="{{ $id }}" class="mr-2 text-sm font-medium text-white/90 capitalize">
         {{ $label }}
     </label>
     <label for="{{ $id }}" class="flex items-center cursor-pointer">
         <div class="relative">
             <input type="checkbox" id="{{ $id }}" class="sr-only">
-            <div class="block bg-gray-600 w-10 h-6 rounded-full transition-colors duration-200"></div>
-            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200">
+            <div class="block bg-black/50 border border-white/10 w-10 h-6 rounded-full transition-colors duration-200"></div>
+            <div class="dot absolute left-1 top-1 bg-white/90 w-4 h-4 rounded-full transition-transform duration-200 shadow-sm shadow-purple-500/20">
             </div>
         </div>
     </label>
@@ -24,28 +24,34 @@
         /* Toggle CSS for {{ $id }} */
         #{{ $id }}:checked~.dot {
             transform: translateX(100%);
-            background-color: #48bb78;
-            /* Tailwind green-500 */
+            background-color: #8B5CF6;
+            /* Tailwind purple-500 */
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
         }
 
         #{{ $id }}:checked~.block {
-            background-color: #a0aec0;
-            /* Tailwind gray-500 */
+            background-color: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
         }
 
         /* Hover effects */
         label[for="{{ $id }}"] .block {
-            transition: background-color 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         label[for="{{ $id }}"]:hover .block {
-            background-color: #4a5568;
-            /* Slightly lighter gray on hover */
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         #{{ $id }}:checked+label[for="{{ $id }}"]:hover .block {
-            background-color: #cbd5e0;
-            /* Lighter gray when checked and hovered */
+            background-color: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+        
+        /* Add glow effect when active */
+        #{{ $id }}:checked~.dot {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
         }
     </style>
 @endpush

@@ -9,15 +9,15 @@
     'darkMode' => true,
 ])
 
-<div class="relative overflow-hidden rounded-[5px]">
-    {{-- Animated gradient border --}}
-    <div class="absolute inset-0 rounded-[5px] p-[3px] animate-border-glow">
-        <div class="absolute inset-0 rounded-[5px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-80"></div>
-        <div class="relative w-full h-full bg-black/90 backdrop-blur-xl rounded-[2px] border border-white/5"></div>
+<div class="relative overflow-hidden rounded-[8px]">
+    {{-- Animated gradient border with enhanced glow --}}
+    <div class="absolute inset-0 rounded-[8px] p-[4px] animate-border-glow">
+        <div class="absolute inset-0 rounded-[8px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-90"></div>
+        <div class="relative w-full h-full bg-black/90 backdrop-blur-xl rounded-[4px] border border-white/10"></div>
     </div>
 
-    {{-- Table container with animated shadows --}}
-    <div class="relative backdrop-blur-xl bg-black/40 border-0 rounded-[2px] overflow-hidden m-[3px] animate-table-shadow">
+    {{-- Table container with enhanced animated shadows --}}
+    <div class="relative backdrop-blur-xl bg-black/50 border-0 rounded-[4px] overflow-hidden m-[4px] animate-table-shadow shadow-lg shadow-purple-500/20">
         <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
             <table id="{{ $id }}" class="w-full">
                 <thead>
