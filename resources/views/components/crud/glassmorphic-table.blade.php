@@ -34,10 +34,10 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody id="{{ $id }}-body" class="divide-y divide-white/5">
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
                     {{-- Loading row --}}
                     <tr id="loadingRow">
-                        <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white/80">
+                        <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
                             <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                     stroke-width="4"></circle>

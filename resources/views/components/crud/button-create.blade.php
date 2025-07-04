@@ -10,7 +10,7 @@
 
 @php
     $baseClasses =
-        'create-btn inline-flex items-center justify-center border border-white/5 rounded-md font-semibold uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition-all duration-300 backdrop-blur-md shadow-lg relative overflow-hidden';
+        'create-btn inline-flex items-center justify-center border border-white/5 rounded-md font-semibold uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition-all duration-300 filter blur-[0.5px] shadow-lg relative overflow-hidden';
 
     $sizeClasses = [
         'sm' => 'px-3 py-1.5 text-xs',
@@ -20,11 +20,11 @@
 
     $variantClasses = [
         'primary' =>
-            'bg-gradient-to-r from-purple-600/80 to-purple-800/80 text-white hover:from-purple-600/90 hover:to-purple-800/90 active:from-purple-700 active:to-purple-900 focus:border-purple-600 focus:ring-purple-300/20 shadow-purple-500/20 after:bg-purple-400/10',
+            'bg-gradient-to-r from-green-500/80 to-emerald-600/80 text-white hover:from-green-500/90 hover:to-emerald-600/90 active:from-green-600 active:to-emerald-700 focus:border-green-500 focus:ring-green-300/20 shadow-green-500/30 after:bg-green-300/10',
         'secondary' =>
-            'bg-gradient-to-r from-blue-600/80 to-blue-800/80 text-white hover:from-blue-600/90 hover:to-blue-800/90 active:from-blue-700 active:to-blue-900 focus:border-blue-600 focus:ring-blue-300/20 shadow-blue-500/20 after:bg-blue-400/10',
+            'bg-gradient-to-r from-green-400/80 to-teal-500/80 text-white hover:from-green-400/90 hover:to-teal-500/90 active:from-green-500 active:to-teal-600 focus:border-teal-500 focus:ring-teal-300/20 shadow-teal-500/30 after:bg-teal-300/10',
         'success' =>
-            'bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-600/80 text-white hover:from-emerald-400/90 hover:via-green-500/90 hover:to-teal-600/90 active:from-emerald-500 active:via-green-600 active:to-teal-700 focus:border-green-500 focus:ring-green-300/20 shadow-green-500/30 after:bg-green-300/10',
+            'bg-gradient-to-br from-green-300/80 via-emerald-400/80 to-green-600/80 text-white hover:from-green-300/90 hover:via-emerald-400/90 hover:to-green-600/90 active:from-green-400 active:via-emerald-500 active:to-green-700 focus:border-green-500 focus:ring-green-300/20 shadow-green-500/30 after:bg-green-300/10',
     ];
 
     $iconPaths = [

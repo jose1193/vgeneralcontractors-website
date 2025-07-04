@@ -126,6 +126,15 @@ function handleRowMouseOver(event) {
             row.style.position = 'relative';
             row.appendChild(indicator);
         }
+        
+        // Apply black crystal effect
+        row.style.transform = 'scale(1.005)';
+        row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+        row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
+        row.style.zIndex = '10';
+        row.style.position = 'relative';
+        row.style.color = 'rgba(255, 255, 255, 1)';
+        row.style.filter = 'blur(0.3px)';
     }
 }
 
@@ -136,8 +145,14 @@ function handleRowMouseOver(event) {
 function handleRowMouseOut(event) {
     const row = event.target.closest('tr');
     if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
-        // Keep the glassmorphic-table-row class but remove hover effects
-        // This is handled by CSS :hover
+        // Reset styles when mouse leaves
+        row.style.transform = '';
+        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        row.style.boxShadow = '';
+        row.style.zIndex = '';
+        row.style.position = '';
+        row.style.color = 'rgba(255, 255, 255, 1)';
+        row.style.filter = 'blur(0.5px)';
     }
 }
 
@@ -203,59 +218,40 @@ function formatStatusBadges(tableId) {
  * @param {HTMLElement} table - The table element
  */
 function enhanceTableAppearance(table) {
-    // Add enhanced styles for headers
+    // Add styles to the table headers
     const headers = table.querySelectorAll('th');
     headers.forEach(header => {
         header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
-        header.style.color = 'rgba(220, 220, 220, 0.9)';
+        header.style.color = 'rgba(255, 255, 255, 0.9)';
         header.style.fontWeight = '500';
+        header.style.textTransform = 'uppercase';
         header.style.letterSpacing = '0.05em';
+        header.style.padding = '12px 16px';
+        header.style.fontSize = '0.75rem';
         header.style.filter = 'blur(0.5px)';
-        header.style.transition = 'all 0.3s ease';
         header.style.textAlign = 'center';
+        header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
-    
-    // Add padding and modern styling to table cells
+
+    // Add styles to the table cells
     const cells = table.querySelectorAll('td');
     cells.forEach(cell => {
-        cell.style.padding = '0.75rem 1rem';
-        cell.style.color = 'rgba(240, 240, 240, 0.85)';
-        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+        cell.style.padding = '12px 16px';
+        cell.style.color = 'rgba(255, 255, 255, 1)';
+        cell.style.fontSize = '0.875rem';
         cell.style.textAlign = 'center';
+        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
+
+    // Add a subtle text shadow to the entire table
+    table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
     
-    // Add subtle text styling to the table
-    table.style.textShadow = '0 0 1px rgba(255, 255, 255, 0.1)';
-    
-    // Add crystal effect to the table
-    const rows = table.querySelectorAll('tr:not(#loadingRow)');
-    rows.forEach(row => {
-        row.addEventListener('mouseenter', () => {
-            // Add subtle crystal effect on hover
-            row.style.filter = 'blur(0.5px)';
-            row.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-            row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
-            
-            // Brighten text on hover
-            const rowCells = row.querySelectorAll('td');
-            rowCells.forEach(cell => {
-                cell.style.color = 'rgba(255, 255, 255, 0.95)';
-            });
-        });
-        
-        row.addEventListener('mouseleave', () => {
-            // Remove crystal effect on mouse leave
-            row.style.filter = 'none';
-            row.style.backgroundColor = '';
-            row.style.boxShadow = '';
-            
-            // Return text to normal
-            const rowCells = row.querySelectorAll('td');
-            rowCells.forEach(cell => {
-                cell.style.color = 'rgba(240, 240, 240, 0.85)';
-            });
-        });
-    });
+    // Apply black crystal effect to the table body
+    const tbody = table.querySelector('tbody');
+    if (tbody) {
+        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        tbody.style.filter = 'blur(0.5px)';
+    }
 }
 
 // Export functions for global use
