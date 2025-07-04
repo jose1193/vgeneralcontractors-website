@@ -210,8 +210,9 @@ function enhanceTableAppearance(table) {
         header.style.color = 'rgba(220, 220, 220, 0.9)';
         header.style.fontWeight = '500';
         header.style.letterSpacing = '0.05em';
-        header.style.backdropFilter = 'blur(8px)';
+        header.style.filter = 'blur(0.5px)';
         header.style.transition = 'all 0.3s ease';
+        header.style.textAlign = 'center';
     });
     
     // Add padding and modern styling to table cells
@@ -220,6 +221,7 @@ function enhanceTableAppearance(table) {
         cell.style.padding = '0.75rem 1rem';
         cell.style.color = 'rgba(240, 240, 240, 0.85)';
         cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+        cell.style.textAlign = 'center';
     });
     
     // Add subtle text styling to the table
@@ -230,9 +232,9 @@ function enhanceTableAppearance(table) {
     rows.forEach(row => {
         row.addEventListener('mouseenter', () => {
             // Add subtle crystal effect on hover
-            row.style.backdropFilter = 'blur(12px)';
+            row.style.filter = 'blur(0.5px)';
             row.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-            row.style.boxShadow = '0 0 15px rgba(138, 43, 226, 0.2)';
+            row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
             
             // Brighten text on hover
             const rowCells = row.querySelectorAll('td');
@@ -243,7 +245,7 @@ function enhanceTableAppearance(table) {
         
         row.addEventListener('mouseleave', () => {
             // Remove crystal effect on mouse leave
-            row.style.backdropFilter = 'blur(8px)';
+            row.style.filter = 'none';
             row.style.backgroundColor = '';
             row.style.boxShadow = '';
             
