@@ -575,7 +575,7 @@
                 class="glass-container-filter backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="p-6">
                     <!-- Main Filter Row -->
-                    <!-- First Row: Search and Status Filter -->
+                    <!-- First Row: Search and Show Per Page -->
                     <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-end mb-4">
                         <!-- Search - Takes more space -->
                         <div class="lg:col-span-5">
@@ -592,8 +592,23 @@
                             </div>
                         </div>
 
-                        <!-- Status Filter -->
+                        <!-- Items Per Page -->
                         <div class="lg:col-span-2">
+                            <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
+                            <select x-model="perPage" @change="changePerPage()"
+                                class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
+                                <option value="10" class="bg-gray-800 text-white">10</option>
+                                <option value="25" class="bg-gray-800 text-white">25</option>
+                                <option value="50" class="bg-gray-800 text-white">50</option>
+                                <option value="100" class="bg-gray-800 text-white">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Second Row: All other controls -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
+                        <!-- Status Filter -->
+                        <div class="lg:col-span-1">
                             <label class="block text-sm font-medium text-white/90 mb-2">📋 Status</label>
                             <select x-model="statusFilter" @change="filterByStatus()"
                                 class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
@@ -602,21 +617,6 @@
                                 <option value="sent" class="bg-gray-800 text-white">Sent</option>
                                 <option value="paid" class="bg-gray-800 text-white">Paid</option>
                                 <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Second Row: All other controls -->
-                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
-                        <!-- Items Per Page -->
-                        <div class="lg:col-span-1">
-                            <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
-                            <select x-model="perPage" @change="changePerPage()"
-                                class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
-                                <option value="10" class="bg-gray-800 text-white">10</option>
-                                <option value="25" class="bg-gray-800 text-white">25</option>
-                                <option value="50" class="bg-gray-800 text-white">50</option>
-                                <option value="100" class="bg-gray-800 text-white">100</option>
                             </select>
                         </div>
 
@@ -673,7 +673,7 @@
                                  x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
                                  x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
                                  @click.away="exportOpen = false"
-                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-50 overflow-hidden">
+                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden">
                                 <div class="py-2">
                                     <button @click="exportToExcel(); exportOpen = false" 
                                             data-export="excel"
@@ -980,7 +980,7 @@
                                                                 </svg>
                                                             </button>
                                                             <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-600">
+                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
                                                                 <div class="py-1">
                                                                     <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                         .uuid)"
