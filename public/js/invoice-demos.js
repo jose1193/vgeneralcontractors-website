@@ -970,13 +970,8 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: "0.00",
+                rate: 0,
                 sort_order: this.form.items.length,
-            });
-            
-            // Force Alpine.js to process new elements
-            this.$nextTick(() => {
-                console.log('New item added, total items:', this.form.items.length);
             });
         },
 
@@ -1814,9 +1809,6 @@ invoiceDemoData = function () {
         
         return formatter.format(numValue);
     };
-    
-    // Make formatRateMask available globally for Alpine.js
-    window.formatRateMask = data.formatRateMask;
 
     // Update rate value in model (for x-mask compatibility)
     data.updateRateValue = function (event, itemIndex) {
@@ -1831,15 +1823,6 @@ invoiceDemoData = function () {
         
         // Calcular totales
         this.calculateTotals();
-    };
-    
-    // Make updateRateValue available globally for Alpine.js
-    window.updateRateValue = function(event, itemIndex) {
-        // Get the Alpine.js component instance
-        const alpineComponent = Alpine.$data(event.target.closest('[x-data]'));
-        if (alpineComponent && alpineComponent.updateRateValue) {
-            alpineComponent.updateRateValue(event, itemIndex);
-        }
     };
 
     // Legacy function for compatibility (kept for other uses)
