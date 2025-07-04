@@ -410,4 +410,77 @@ class InvoicePdfService
             return false;
         }
     }
+
+    /**
+     * Generate bulk PDF for multiple invoices
+     *
+     * @param \Illuminate\Support\Collection|array $invoices
+     * @return string|null Path to the generated PDF file
+     */
+    public function generateBulkInvoicesPdf($invoices): ?string
+    {
+        try {
+            Log::info('Starting bulk PDF generation', [
+                'invoice_count' => is_countable($invoices) ? count($invoices) : 0
+            ]);
+
+            // Convert to collection if it's an array
+            if (is_array($invoices)) {
+                $invoices = collect($invoices);
+            }
+
+            if ($invoices->isEmpty()) {
+                Log::warning('No invoices provided for bulk PDF generation');
+                return null;
+            }
+
+            // Load invoice items for all invoices
+            $invoices->each(function ($invoice) {
+                $invoice->load(['items']);
+            });
+
+            // Get company data
+            $company = \App\Models\CompanyData::first();
+            
+            // Get collections email
+            $collectionsEmail = \App\Models\EmailData::where('type', 'Collections')->first();
+
+            // Generate PDF using Laravel DomPDF with bulk template
+            $pdf = PDF::loadView('invoice-demos.bulk-pdf', [
+                'invoices' => $invoices,
+                'company' => $company,
+                'collectionsEmail' => $collectionsEmail
+            ]);
+
+            // Set paper size and orientation
+            $pdf->setPaper('a4', 'portrait');
+
+            // Generate temporary file path
+            $tempPath = storage_path('app/temp/bulk_invoices_' . uniqid() . '.pdf');
+            
+            // Ensure temp directory exists
+            $tempDir = dirname($tempPath);
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            // Save PDF to temporary file
+            file_put_contents($tempPath, $pdf->output());
+
+            Log::info('Bulk PDF generation completed', [
+                'invoice_count' => $invoices->count(),
+                'file_path' => $tempPath,
+                'file_size' => file_exists($tempPath) ? filesize($tempPath) : 0
+            ]);
+
+            return $tempPath;
+
+        } catch (Throwable $e) {
+            Log::error('Error generating bulk invoices PDF', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
+        }
+    }
 }
