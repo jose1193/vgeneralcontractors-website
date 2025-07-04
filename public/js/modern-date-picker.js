@@ -163,17 +163,31 @@ class ModernDateRangePicker {
             },
             
             onSelect: (start, end) => {
+                // 🐛 DEBUG: Log raw Litepicker values
+                console.group('🗓️ DEBUG: ModernDateRangePicker.onSelect() called');
+                console.log('📅 Raw start object:', start);
+                console.log('📅 Raw end object:', end);
+                
                 const startDate = start ? start.format(this.options.format) : null;
                 const endDate = end ? end.format(this.options.format) : null;
                 
+                console.log('📅 Formatted startDate:', startDate, '(type:', typeof startDate, ')');
+                console.log('📅 Formatted endDate:', endDate, '(type:', typeof endDate, ')');
+                console.log('⚙️ Format used:', this.options.format);
+                
                 if (this.callbacks.onSelect) {
+                    console.log('🔄 Calling registered onSelect callback with:', { startDate, endDate });
                     this.callbacks.onSelect(startDate, endDate, { start, end });
+                } else {
+                    console.log('⚠️ No onSelect callback registered');
                 }
                 
                 // Trigger custom event
+                console.log('📡 Dispatching dateRangeSelected event');
                 element.dispatchEvent(new CustomEvent('dateRangeSelected', {
                     detail: { startDate, endDate, start, end }
                 }));
+                console.groupEnd();
             },
             
             onError: (error) => {
@@ -365,9 +379,25 @@ class ModernDateRangePicker {
      * Set callback functions
      */
     on(event, callback) {
-        if (this.callbacks.hasOwnProperty(`on${event.charAt(0).toUpperCase() + event.slice(1)}`)) {
-            this.callbacks[`on${event.charAt(0).toUpperCase() + event.slice(1)}`] = callback;
+        const callbackName = `on${event.charAt(0).toUpperCase() + event.slice(1)}`;
+        
+        // 🐛 DEBUG: Log callback registration
+        console.group('🔗 DEBUG: ModernDateRangePicker.on() called');
+        console.log('📝 Event:', event);
+        console.log('📝 Callback name:', callbackName);
+        console.log('📝 Callback function:', callback);
+        console.log('📝 Available callbacks:', Object.keys(this.callbacks));
+        
+        if (this.callbacks.hasOwnProperty(callbackName)) {
+            this.callbacks[callbackName] = callback;
+            console.log('✅ Callback registered successfully');
+        } else {
+            console.warn('⚠️ Unknown callback:', callbackName);
         }
+        
+        console.log('📝 Current callbacks state:', this.callbacks);
+        console.groupEnd();
+        
         return this;
     }
 

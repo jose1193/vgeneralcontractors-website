@@ -335,9 +335,7 @@ Route::get('/services', function () {
     return view('services');
 })->name('services');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+Route::get('/contact', [App\Http\Controllers\ContactSupportController::class, 'showForm'])->name('contact');
 
 // Standalone Facebook Lead Form Routes
 Route::get('/facebook-lead-form', [FacebookLeadFormController::class, 'showForm'])->name('facebook.lead.form');

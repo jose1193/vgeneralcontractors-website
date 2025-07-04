@@ -107,6 +107,16 @@ class InvoiceDemoManager {
         perPage = 10,
         includeDeleted = false
     ) {
+        // 🐛 DEBUG: Log all parameters received by loadInvoices
+        console.group('🔍 DEBUG: InvoiceDemoManager.loadInvoices() parameters');
+        console.log('📄 page:', page);
+        console.log('🔍 search:', search);
+        console.log('📊 status:', status);
+        console.log('📅 startDate:', startDate, '(type:', typeof startDate, ')');
+        console.log('📅 endDate:', endDate, '(type:', typeof endDate, ')');
+        console.log('📄 perPage:', perPage);
+        console.log('🗑️ includeDeleted:', includeDeleted);
+        
         // ✅ AGGRESSIVE cache busting parameters
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(7);
@@ -125,15 +135,28 @@ class InvoiceDemoManager {
 
         if (startDate) {
             params.append("start_date", startDate);
+            console.log('✅ Added start_date to params:', startDate);
+        } else {
+            console.log('⚠️ startDate is empty, not adding to params');
         }
+        
         if (endDate) {
             params.append("end_date", endDate);
+            console.log('✅ Added end_date to params:', endDate);
+        } else {
+            console.log('⚠️ endDate is empty, not adding to params');
         }
+        
         if (includeDeleted) {
             params.append("include_deleted", "1");
         }
 
-        return await this.apiRequest(`${this.baseUrl}?${params}`);
+        const finalUrl = `${this.baseUrl}?${params}`;
+        console.log('🌐 Final URL:', finalUrl);
+        console.log('📋 All URL params:', Object.fromEntries(params));
+        console.groupEnd();
+
+        return await this.apiRequest(finalUrl);
     }
 
     /**
@@ -622,6 +645,17 @@ function invoiceDemoData() {
         // Load invoices
         async loadInvoices() {
             this.loading = true;
+            
+            // 🐛 DEBUG: Log all filter values before sending request
+            console.group('🔍 DEBUG: loadInvoices() called');
+            console.log('📅 startDate:', this.startDate);
+            console.log('📅 endDate:', this.endDate);
+            console.log('🔍 search:', this.search);
+            console.log('📊 statusFilter:', this.statusFilter);
+            console.log('📄 currentPage:', this.currentPage);
+            console.log('🗑️ showDeleted:', this.showDeleted);
+            console.groupEnd();
+            
             try {
                 const response = await window.invoiceDemoManager.loadInvoices(
                     this.currentPage,
@@ -672,6 +706,19 @@ function invoiceDemoData() {
         initializeModernDatePicker() {
             // Wait for DOM to be ready
             this.$nextTick(() => {
+                // 🐛 DEBUG: Check if element exists
+                console.group('🔍 DEBUG: initializeModernDatePicker() called');
+                const datePickerElement = document.querySelector('#dateRangePicker');
+                console.log('📅 Date picker element found:', datePickerElement);
+                
+                if (!datePickerElement) {
+                    console.error('❌ #dateRangePicker element not found in DOM!');
+                    console.groupEnd();
+                    return;
+                }
+                
+                console.log('✅ Initializing ModernDateRangePicker...');
+                
                 // Initialize ModernDateRangePicker with enhanced features
                 this.modernDatePicker = new ModernDateRangePicker({
                     element: "#dateRangePicker",
@@ -701,26 +748,50 @@ function invoiceDemoData() {
                     }
                 })
                 .on('select', (startDate, endDate, dateObjects) => {
+                    console.group('🐛 DEBUG: Date picker select event');
+                    console.log('📅 Raw startDate:', startDate);
+                    console.log('📅 Raw endDate:', endDate);
+                    console.log('📅 dateObjects:', dateObjects);
+                    
                     if (startDate && endDate) {
                         this.startDate = startDate;
                         this.endDate = endDate;
+                        
+                        console.log('✅ Setting Alpine.js values:');
+                        console.log('  - this.startDate:', this.startDate);
+                        console.log('  - this.endDate:', this.endDate);
+                        
                         this.updateDateRangeDisplay(startDate, endDate);
                         this.activeQuickFilter = null; // Clear active quick filter
                         this.currentPage = 1;
+                        
+                        console.log('🔄 Calling loadInvoices()...');
                         this.loadInvoices();
                         
                         console.log('📅 Date range selected:', { startDate, endDate });
+                    } else {
+                        console.warn('⚠️ startDate or endDate is missing!');
                     }
+                    console.groupEnd();
                 })
                 .on('clear', () => {
+                    console.group('🐛 DEBUG: Date picker clear event');
+                    
                     this.startDate = "";
                     this.endDate = "";
                     this.dateRangeDisplay = "";
                     this.activeQuickFilter = null;
                     this.currentPage = 1;
+                    
+                    console.log('✅ Cleared values:');
+                    console.log('  - this.startDate:', this.startDate);
+                    console.log('  - this.endDate:', this.endDate);
+                    
+                    console.log('🔄 Calling loadInvoices()...');
                     this.loadInvoices();
                     
                     console.log('📅 Date range cleared');
+                    console.groupEnd();
                 })
                 .on('show', () => {
                     console.log('📅 Date picker opened');
@@ -738,6 +809,7 @@ function invoiceDemoData() {
 
                 // Debug log
                 console.log("📅 ModernDateRangePicker initialized successfully");
+                console.groupEnd();
             });
         },
 
@@ -755,6 +827,9 @@ function invoiceDemoData() {
 
         // Set predefined date ranges
         setDateRange(period) {
+            console.group('🐛 DEBUG: setDateRange() called');
+            console.log('📅 Period:', period);
+            
             const today = new Date();
             let startDate, endDate;
 
@@ -791,6 +866,8 @@ function invoiceDemoData() {
                     endDate = new Date(today.getFullYear(), 11, 31);
                     break;
                 default:
+                    console.warn('⚠️ Unknown period:', period);
+                    console.groupEnd();
                     return;
             }
 
@@ -799,15 +876,24 @@ function invoiceDemoData() {
             this.activeQuickFilter = period;
             this.currentPage = 1;
 
+            console.log('✅ Calculated dates:');
+            console.log('  - this.startDate:', this.startDate);
+            console.log('  - this.endDate:', this.endDate);
+
             // Update modern date picker display
             if (this.modernDatePicker) {
+                console.log('🔄 Updating ModernDateRangePicker...');
                 this.modernDatePicker.setDateRange(this.startDate, this.endDate);
+            } else {
+                console.warn('⚠️ modernDatePicker not available');
             }
             
             // Update display
             this.updateDateRangeDisplay(this.startDate, this.endDate);
 
+            console.log('🔄 Calling loadInvoices()...');
             this.loadInvoices();
+            console.groupEnd();
         },
 
         // Clear date range
