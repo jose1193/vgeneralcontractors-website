@@ -967,7 +967,12 @@
                                                 <template x-if="!invoice.deleted_at">
                                                     <div class="flex space-x-2">
                                                         <!-- PDF Actions -->
-                                                        <div class="relative" x-data="{ showPdfMenu: false }">
+                                                        <div class="relative" x-data="{ showPdfMenu: false, buttonRect: null }" 
+                                                             x-init="$watch('showPdfMenu', value => {
+                                                                 if (value) {
+                                                                     buttonRect = $el.querySelector('button').getBoundingClientRect();
+                                                                 }
+                                                             })">
                                                             <button @click="showPdfMenu = !showPdfMenu"
                                                                 class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                                                 title="PDF Actions">
@@ -979,54 +984,65 @@
                                                                     </path>
                                                                 </svg>
                                                             </button>
-                                                            <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
-                                                                <div class="py-1">
-                                                                    <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
-                                                                        .uuid)"
-                                                                        target="_blank"
-                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
-                                                                        <svg class="w-4 h-4 mr-2" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round" stroke-width="2"
-                                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round" stroke-width="2"
-                                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                                            </path>
-                                                                        </svg>
-                                                                        View PDF
-                                                                    </a>
-                                                                    <a :href="window.invoiceDemoManager.getPdfDownloadUrl(invoice
-                                                                        .uuid)"
-                                                                        class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
-                                                                        <svg class="w-4 h-4 mr-2" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round" stroke-width="2"
-                                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
-                                                                            </path>
-                                                                        </svg>
-                                                                        Download PDF
-                                                                    </a>
-                                                                    <button
-                                                                        @click="generatePdf(invoice.uuid); showPdfMenu = false"
-                                                                        class="flex w-full items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white"
-                                                                        :class="{ 'opacity-50 cursor-not-allowed': pdfGenerating }"
-                                                                        :disabled="pdfGenerating">
-                                                                        <svg class="w-4 h-4 mr-2" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round" stroke-width="2"
-                                                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                                                                            </path>
-                                                                        </svg>
-                                                                        <span
-                                                                            x-text="pdfGenerating ? 'Generating...' : 'Regenerate PDF'"></span>
-                                                                    </button>
+                                                            
+                                                            <!-- Teleported Dropdown -->
+                                                            <template x-teleport="body" @click.away="showPdfMenu = false">
+                                                                <div x-show="showPdfMenu" 
+                                                                     class="fixed w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600"
+                                                                     x-bind:style="buttonRect ? `top: ${buttonRect.bottom + 8}px; left: ${buttonRect.right - 192}px;` : ''"
+                                                                     x-transition:enter="transition ease-out duration-100"
+                                                                     x-transition:enter-start="transform opacity-0 scale-95"
+                                                                     x-transition:enter-end="transform opacity-100 scale-100"
+                                                                     x-transition:leave="transition ease-in duration-75"
+                                                                     x-transition:leave-start="transform opacity-100 scale-100"
+                                                                     x-transition:leave-end="transform opacity-0 scale-95">
+                                                                    <div class="py-1">
+                                                                        <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
+                                                                            .uuid)"
+                                                                            target="_blank"
+                                                                            class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
+                                                                            <svg class="w-4 h-4 mr-2" fill="none"
+                                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                                                </path>
+                                                                            </svg>
+                                                                            View PDF
+                                                                        </a>
+                                                                        <a :href="window.invoiceDemoManager.getPdfDownloadUrl(invoice
+                                                                            .uuid)"
+                                                                            class="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white">
+                                                                            <svg class="w-4 h-4 mr-2" fill="none"
+                                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4">
+                                                                                </path>
+                                                                            </svg>
+                                                                            Download PDF
+                                                                        </a>
+                                                                        <button
+                                                                            @click="generatePdf(invoice.uuid); showPdfMenu = false"
+                                                                            class="flex w-full items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white"
+                                                                            :class="{ 'opacity-50 cursor-not-allowed': pdfGenerating }"
+                                                                            :disabled="pdfGenerating">
+                                                                            <svg class="w-4 h-4 mr-2" fill="none"
+                                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round"
+                                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                                                                </path>
+                                                                            </svg>
+                                                                            <span
+                                                                                x-text="pdfGenerating ? 'Generating...' : 'Regenerate PDF'"></span>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
+                                                            </template>
                                                         </div>
                                                         <button @click="openEditModal(invoice)"
                                                             class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
