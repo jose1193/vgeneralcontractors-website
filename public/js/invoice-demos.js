@@ -921,12 +921,6 @@ function invoiceDemoData() {
                       // Crear una copia del item sin el UUID
                       const { uuid, ...itemWithoutUuid } = item;
                       console.log("Removed UUID from item:", uuid);
-                      
-                      // Convertir rate a string para compatibilidad con Alpine Mask
-                      if (itemWithoutUuid.rate !== undefined && itemWithoutUuid.rate !== null) {
-                          itemWithoutUuid.rate = itemWithoutUuid.rate.toString();
-                      }
-                      
                       return itemWithoutUuid;
                   })
                 : [];
@@ -976,7 +970,7 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: "",
+                rate: 0,
                 sort_order: this.form.items.length,
             });
         },
@@ -1780,65 +1774,7 @@ invoiceDemoData = function () {
         }
     };
 
-    // Format currency input for rate field with mask (Alpine Mask compatible)
-    data.formatRateMask = function (input) {
-        // Eliminar todo excepto números, punto decimal y comas
-        let cleanValue = input.replace(/[^0-9.,]/g, "");
-        
-        // Remover comas para procesar el número
-        let numericValue = cleanValue.replace(/,/g, "");
-        
-        // Asegurar que solo haya un punto decimal
-        const parts = numericValue.split(".");
-        if (parts.length > 2) {
-            numericValue = parts[0] + "." + parts.slice(1).join("");
-        }
-        
-        // Limitar a dos decimales
-        if (parts.length > 1 && parts[1].length > 2) {
-            numericValue = parts[0] + "." + parts[1].substring(0, 2);
-        }
-        
-        // Si no hay valor o solo punto, retornar vacío
-        if (!numericValue || numericValue === '.' || numericValue === '') {
-            return '';
-        }
-        
-        // Convertir a número para formatear
-        const numValue = parseFloat(numericValue);
-        if (isNaN(numValue)) {
-            return '';
-        }
-        
-        // Formatear con comas para miles
-        const formatter = new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2
-        });
-        
-        return formatter.format(numValue);
-    };
-
-    // Update rate value in model (for Alpine Mask compatibility)
-    data.updateRateValue = function (event, itemIndex) {
-        const input = event.target;
-        let value = input.value;
-        
-        // Extraer el valor numérico sin formato (remover comas y símbolos)
-        const numericValue = value.replace(/[^0-9.]/g, '');
-        
-        // Validar que sea un número válido
-        const parsedValue = parseFloat(numericValue);
-        const finalValue = isNaN(parsedValue) ? 0 : parsedValue;
-        
-        // Actualizar el modelo con el valor numérico para cálculos
-        this.form.items[itemIndex].rate = finalValue;
-        
-        // Calcular totales
-        this.calculateTotals();
-    };
-
-    // Legacy function for compatibility (kept for other uses)
+    // Format currency input for rate field
     data.formatCurrencyInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
