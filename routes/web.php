@@ -121,23 +121,27 @@ Route::middleware([
     Route::prefix('invoices')->name('invoices.')->group(function () {
         Route::get('/', [App\Http\Controllers\InvoiceDemoController::class, 'index'])->name('index');
         Route::post('/', [App\Http\Controllers\InvoiceDemoController::class, 'store'])->name('store');
-        Route::get('/{uuid}/edit', [App\Http\Controllers\InvoiceDemoController::class, 'edit'])->name('edit');
-        Route::put('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'update'])->name('update');
-        Route::delete('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'destroy'])->name('destroy');
-        Route::patch('/{uuid}/restore', [App\Http\Controllers\InvoiceDemoController::class, 'restore'])->name('restore');
+        
+        // Export Routes (MUST come before UUID routes to avoid conflicts)
+        Route::get('/export/excel', [App\Http\Controllers\InvoiceDemoController::class, 'exportExcel'])->name('export-excel');
+        Route::get('/export/pdf', [App\Http\Controllers\InvoiceDemoController::class, 'exportPdf'])->name('export-pdf');
+        
+        // Utility Routes (non-UUID)
         Route::get('/check-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'checkInvoiceNumberExists'])->name('check-invoice-number');
         Route::get('/generate-invoice-number', [App\Http\Controllers\InvoiceDemoController::class, 'generateInvoiceNumber'])->name('generate-invoice-number');
         Route::get('/form-data', [App\Http\Controllers\InvoiceDemoController::class, 'getFormData'])->name('form-data');
         
-        // PDF Routes
+        // UUID-based Routes (MUST come after specific routes)
+        Route::get('/{uuid}/edit', [App\Http\Controllers\InvoiceDemoController::class, 'edit'])->name('edit');
+        Route::put('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'update'])->name('update');
+        Route::delete('/{uuid}', [App\Http\Controllers\InvoiceDemoController::class, 'destroy'])->name('destroy');
+        Route::patch('/{uuid}/restore', [App\Http\Controllers\InvoiceDemoController::class, 'restore'])->name('restore');
+        
+        // PDF Routes (UUID-based)
         Route::get('/{uuid}/pdf', [App\Http\Controllers\InvoiceDemoController::class, 'viewPdf'])->name('view-pdf');
         Route::get('/{uuid}/download-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'downloadPdf'])->name('download-pdf');
         Route::post('/{uuid}/generate-pdf', [App\Http\Controllers\InvoiceDemoController::class, 'generatePdf'])->name('generate-pdf');
         Route::get('/{uuid}/verify-pdf-status', [App\Http\Controllers\InvoiceDemoController::class, 'verifyPdfStatus'])->name('verify-pdf-status');
-        
-        // Export Routes
-        Route::get('/export/excel', [App\Http\Controllers\InvoiceDemoController::class, 'exportExcel'])->name('export-excel');
-        Route::get('/export/pdf', [App\Http\Controllers\InvoiceDemoController::class, 'exportPdf'])->name('export-pdf');
     });
 
 
