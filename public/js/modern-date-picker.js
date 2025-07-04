@@ -70,16 +70,34 @@ class ModernDateRangePicker {
             return;
         }
 
+        // Verify element exists
+        const element = typeof this.options.element === 'string' 
+            ? document.querySelector(this.options.element)
+            : this.options.element;
+            
+        if (!element) {
+            console.error('ModernDateRangePicker: Element not found:', this.options.element);
+            return;
+        }
+
+        console.log('📅 ModernDateRangePicker initializing for element:', this.options.element);
+
         // Check if Litepicker is available
         if (typeof Litepicker === 'undefined') {
-            console.error('ModernDateRangePicker: Litepicker library not found');
+            console.log('📅 Litepicker not found, loading from CDN...');
             this.loadLitepicker().then(() => {
-                this.createPicker();
+                if (typeof Litepicker !== 'undefined') {
+                    this.createPicker();
+                } else {
+                    console.error('Litepicker still not available after loading');
+                    this.fallbackToNativePicker();
+                }
             }).catch(error => {
                 console.error('Failed to load Litepicker:', error);
                 this.fallbackToNativePicker();
             });
         } else {
+            console.log('📅 Litepicker already available, creating picker...');
             this.createPicker();
         }
     }
@@ -89,17 +107,37 @@ class ModernDateRangePicker {
      */
     async loadLitepicker() {
         return new Promise((resolve, reject) => {
-            // Load CSS
+            console.log('📅 Loading Litepicker from CDN...');
+            
+            // Load CSS first
             const cssLink = document.createElement('link');
             cssLink.rel = 'stylesheet';
             cssLink.href = 'https://cdn.jsdelivr.net/npm/litepicker@2.0.12/dist/css/litepicker.css';
+            cssLink.onerror = () => console.warn('Failed to load Litepicker CSS');
             document.head.appendChild(cssLink);
 
-            // Load JS
+            // Load JS with timeout
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/litepicker@2.0.12/dist/litepicker.js';
-            script.onload = resolve;
-            script.onerror = reject;
+            
+            let timeoutId = setTimeout(() => {
+                console.error('Litepicker loading timeout');
+                reject(new Error('Litepicker loading timeout'));
+            }, 10000); // 10 second timeout
+            
+            script.onload = () => {
+                clearTimeout(timeoutId);
+                console.log('✅ Litepicker loaded successfully');
+                // Wait a bit for the library to be fully available
+                setTimeout(resolve, 100);
+            };
+            
+            script.onerror = (error) => {
+                clearTimeout(timeoutId);
+                console.error('Failed to load Litepicker script:', error);
+                reject(error);
+            };
+            
             document.head.appendChild(script);
         });
     }
@@ -108,14 +146,23 @@ class ModernDateRangePicker {
      * Create the Litepicker instance
      */
     createPicker() {
+        // Double-check Litepicker availability
+        if (typeof Litepicker === 'undefined') {
+            console.error('Litepicker is not available when trying to create picker');
+            this.fallbackToNativePicker();
+            return;
+        }
+        
         const element = typeof this.options.element === 'string' 
             ? document.querySelector(this.options.element)
             : this.options.element;
 
         if (!element) {
-            console.error('ModernDateRangePicker: Element not found');
+            console.error('ModernDateRangePicker: Element not found when creating picker');
             return;
         }
+        
+        console.log('📅 Creating Litepicker instance for element:', element);
 
         // Configure Litepicker options
         const pickerOptions = {
@@ -318,47 +365,83 @@ class ModernDateRangePicker {
      * Fallback to native HTML5 date inputs
      */
     fallbackToNativePicker() {
-        console.warn('Using native date picker fallback');
+        console.warn('📅 Using native date picker fallback');
         
         const element = typeof this.options.element === 'string' 
             ? document.querySelector(this.options.element)
             : this.options.element;
             
-        if (!element) return;
+        if (!element) {
+            console.error('Element not found for fallback');
+            return;
+        }
+        
+        // Hide the original element and create native inputs
+        element.style.display = 'none';
         
         // Create native date range inputs
         const container = document.createElement('div');
-        container.className = 'native-date-range-container flex gap-2';
+        container.className = 'native-date-range-container';
+        container.style.cssText = `
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        `;
         
         const startInput = document.createElement('input');
         startInput.type = 'date';
-        startInput.className = 'native-date-input flex-1 px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white';
-        startInput.placeholder = 'Start date';
+        startInput.className = 'native-date-input';
+        startInput.style.cssText = `
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+        `;
+        
+        const separator = document.createElement('span');
+        separator.textContent = 'to';
+        separator.style.cssText = `
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            padding: 0 4px;
+        `;
         
         const endInput = document.createElement('input');
         endInput.type = 'date';
-        endInput.className = 'native-date-input flex-1 px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white';
-        endInput.placeholder = 'End date';
+        endInput.className = 'native-date-input';
+        endInput.style.cssText = startInput.style.cssText;
         
         container.appendChild(startInput);
+        container.appendChild(separator);
         container.appendChild(endInput);
         
-        element.parentNode.replaceChild(container, element);
+        element.parentNode.insertBefore(container, element.nextSibling);
         
         // Add event listeners
         const handleDateChange = () => {
             const startDate = startInput.value;
             const endDate = endInput.value;
             
-            if (this.callbacks.onSelect && startDate && endDate) {
-                this.callbacks.onSelect(startDate, endDate);
+            if (startDate && endDate) {
+                // Update original element value for compatibility
+                element.value = `${startDate} - ${endDate}`;
+                
+                if (this.callbacks.onSelect) {
+                    this.callbacks.onSelect(startDate, endDate, { start: startDate, end: endDate });
+                }
             }
         };
         
         startInput.addEventListener('change', handleDateChange);
         endInput.addEventListener('change', handleDateChange);
         
-        this.nativeInputs = { start: startInput, end: endInput };
+        this.nativeInputs = { start: startInput, end: endInput, container };
+        this.isNativeFallback = true;
+        
+        console.log('📅 Native date picker fallback initialized');
     }
 
     /**
@@ -375,11 +458,21 @@ class ModernDateRangePicker {
      * Set date range programmatically
      */
     setDateRange(startDate, endDate) {
+        console.log('📅 Setting date range:', { startDate, endDate });
+        
         if (this.picker) {
             this.picker.setDateRange(startDate, endDate);
         } else if (this.nativeInputs) {
             this.nativeInputs.start.value = startDate || '';
             this.nativeInputs.end.value = endDate || '';
+            
+            // Update original element for compatibility
+            const element = typeof this.options.element === 'string' 
+                ? document.querySelector(this.options.element)
+                : this.options.element;
+            if (element && startDate && endDate) {
+                element.value = `${startDate} - ${endDate}`;
+            }
         }
         return this;
     }
@@ -388,11 +481,21 @@ class ModernDateRangePicker {
      * Clear the date range
      */
     clear() {
+        console.log('📅 Clearing date range');
+        
         if (this.picker) {
             this.picker.clearSelection();
         } else if (this.nativeInputs) {
             this.nativeInputs.start.value = '';
             this.nativeInputs.end.value = '';
+            
+            // Clear original element for compatibility
+            const element = typeof this.options.element === 'string' 
+                ? document.querySelector(this.options.element)
+                : this.options.element;
+            if (element) {
+                element.value = '';
+            }
         }
         
         if (this.callbacks.onClear) {
