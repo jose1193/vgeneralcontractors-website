@@ -52,7 +52,7 @@
                         :per-page-id="$perPageId" :create-button-id="$createButtonId" :add-new-label="$addNewLabel" :manager-name="$managerName" />
 
                     <!-- Table -->
-                    <x-crud.advanced-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
+                    <x-crud.glassmorphic-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
 
                     <!-- Pagination -->
                     <div id="{{ $paginationId }}" class="mt-4 flex justify-between items-center"></div>
