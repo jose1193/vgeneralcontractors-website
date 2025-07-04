@@ -1856,8 +1856,9 @@ invoiceDemoData = function () {
         // Eliminar todo excepto números y punto decimal
         const cleanValue = value.replace(/[^0-9.]/g, "");
 
-        // Si el valor está vacío, no hacer nada
+        // Si el valor está vacío, limpiar y salir
         if (cleanValue === "") {
+            input.value = "";
             this.form[fieldName] = "";
             return;
         }
@@ -1872,8 +1873,10 @@ invoiceDemoData = function () {
             decimalPart = decimalPart.substring(0, 2);
         }
 
-        // En blur o si no hay parte decimal, completar con .00
-        if (isBlurEvent || (parts.length === 1 && !value.includes("."))) {
+        let formattedValue;
+        
+        if (isBlurEvent) {
+            // En blur: formateo completo con .00 automático
             if (parts.length === 1) {
                 decimalPart = "00";
             } else if (decimalPart.length === 1) {
@@ -1881,32 +1884,38 @@ invoiceDemoData = function () {
             } else if (decimalPart.length === 0) {
                 decimalPart = "00";
             }
-        }
-
-        // Agregar separadores de miles al entero
-        if (integerPart.length > 0) {
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Construir el valor formateado
-        let formattedValue = integerPart;
-        if (decimalPart !== "" || parts.length > 1 || isBlurEvent) {
-            formattedValue += "." + decimalPart.padEnd(2, "0");
+            
+            // Agregar separadores de miles
+            if (integerPart.length > 0) {
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            formattedValue = integerPart + "." + decimalPart;
+        } else {
+            // En input: formateo mínimo, permitir edición libre
+            // Solo agregar separadores de miles a la parte entera
+            if (integerPart.length > 0) {
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            formattedValue = integerPart;
+            if (parts.length > 1) {
+                formattedValue += "." + decimalPart;
+            }
         }
 
         // Actualizar el valor en el input y en el modelo
         if (formattedValue !== input.value) {
             input.value = formattedValue;
             // Guardar el valor sin formato en el modelo para cálculos
-            const numericValue = cleanValue;
-            this.form[fieldName] = numericValue;
+            this.form[fieldName] = cleanValue;
             
             // Solo ajustar cursor en eventos de input, no en blur
             if (!isBlurEvent) {
                 // Calcular nueva posición del cursor considerando las comas agregadas
-                const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
-                const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
-                const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+                const originalCommas = (value.substring(0, cursorPosition).match(/,/g) || []).length;
+                const newCommas = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+                const cursorAdjustment = newCommas - originalCommas;
                 const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
                 
                 // Restaurar la posición del cursor
@@ -1932,8 +1941,9 @@ invoiceDemoData = function () {
         // Eliminar todo excepto números y punto decimal
         const cleanValue = value.replace(/[^0-9.]/g, "");
 
-        // Si el valor está vacío, no hacer nada
+        // Si el valor está vacío, limpiar y salir
         if (cleanValue === "") {
+            input.value = "";
             this.form.items[itemIndex].rate = "";
             return;
         }
@@ -1948,8 +1958,10 @@ invoiceDemoData = function () {
             decimalPart = decimalPart.substring(0, 2);
         }
 
-        // En blur o si no hay parte decimal, completar con .00
-        if (isBlurEvent || (parts.length === 1 && !value.includes("."))) {
+        let formattedValue;
+        
+        if (isBlurEvent) {
+            // En blur: formateo completo con .00 automático
             if (parts.length === 1) {
                 decimalPart = "00";
             } else if (decimalPart.length === 1) {
@@ -1957,32 +1969,38 @@ invoiceDemoData = function () {
             } else if (decimalPart.length === 0) {
                 decimalPart = "00";
             }
-        }
-
-        // Agregar separadores de miles al entero
-        if (integerPart.length > 0) {
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Construir el valor formateado
-        let formattedValue = integerPart;
-        if (decimalPart !== "" || parts.length > 1 || isBlurEvent) {
-            formattedValue += "." + decimalPart.padEnd(2, "0");
+            
+            // Agregar separadores de miles
+            if (integerPart.length > 0) {
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            formattedValue = integerPart + "." + decimalPart;
+        } else {
+            // En input: formateo mínimo, permitir edición libre
+            // Solo agregar separadores de miles a la parte entera
+            if (integerPart.length > 0) {
+                integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            formattedValue = integerPart;
+            if (parts.length > 1) {
+                formattedValue += "." + decimalPart;
+            }
         }
 
         // Actualizar el valor en el input y en el modelo
         if (formattedValue !== input.value) {
             input.value = formattedValue;
             // Guardar el valor sin formato en el modelo para cálculos
-            const numericValue = cleanValue;
-            this.form.items[itemIndex].rate = numericValue;
+            this.form.items[itemIndex].rate = cleanValue;
             
             // Solo ajustar cursor en eventos de input, no en blur
             if (!isBlurEvent) {
                 // Calcular nueva posición del cursor considerando las comas agregadas
-                const commasBeforeCursor = (input.value.substring(0, cursorPosition).match(/,/g) || []).length;
-                const commasInFormatted = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
-                const cursorAdjustment = commasInFormatted - commasBeforeCursor;
+                const originalCommas = (value.substring(0, cursorPosition).match(/,/g) || []).length;
+                const newCommas = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
+                const cursorAdjustment = newCommas - originalCommas;
                 const newCursorPos = Math.min(cursorPosition + cursorAdjustment, formattedValue.length);
                 
                 // Restaurar la posición del cursor
