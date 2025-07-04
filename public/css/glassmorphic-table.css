@@ -13,24 +13,24 @@
 
 /* Border Glow Animation */
 @keyframes border-glow {
-    0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), 0 0 40px rgba(138, 43, 226, 0.3); }
-    100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(138, 43, 226, 0.1); }
+    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
+    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
 }
 
 .animate-border-glow {
-    animation: border-glow 4s ease-in-out infinite;
+    animation: border-glow 5s ease-in-out infinite;
 }
 
 /* Table Shadow Animation */
 @keyframes table-shadow {
-    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 70px rgba(138, 43, 226, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    0% { box-shadow: 0 0 15px rgba(138, 43, 226, 0.1), 0 0 30px rgba(138, 43, 226, 0.05); }
+    50% { box-shadow: 0 0 25px rgba(138, 43, 226, 0.15), 0 0 50px rgba(138, 43, 226, 0.1); }
+    100% { box-shadow: 0 0 15px rgba(138, 43, 226, 0.1), 0 0 30px rgba(138, 43, 226, 0.05); }
 }
 
 .animate-table-shadow {
-    animation: table-shadow 6s ease-in-out infinite;
+    animation: table-shadow 7s ease-in-out infinite;
 }
 
 /* Shimmer Animation for Headers */
@@ -66,15 +66,17 @@
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .glassmorphic-table-row:hover {
-    transform: scale(1.01);
-    background-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    transform: scale(1.005);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
     z-index: 10;
     position: relative;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .glassmorphic-table-row.active {

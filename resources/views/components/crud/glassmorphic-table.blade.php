@@ -9,21 +9,21 @@
     'darkMode' => true,
 ])
 
-<div class="relative overflow-hidden rounded-[8px]">
+<div class="relative overflow-hidden rounded-[6px]">
     {{-- Animated gradient border with enhanced glow --}}
-    <div class="absolute inset-0 rounded-[8px] p-[4px] animate-border-glow">
-        <div class="absolute inset-0 rounded-[8px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-90"></div>
-        <div class="relative w-full h-full bg-black/90 backdrop-blur-xl rounded-[4px] border border-white/10"></div>
+    <div class="absolute inset-0 rounded-[6px] p-[2px] animate-border-glow">
+        <div class="absolute inset-0 rounded-[6px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-70"></div>
+        <div class="relative w-full h-full bg-black/80 backdrop-blur-xl rounded-[4px] border border-white/5"></div>
     </div>
 
     {{-- Table container with enhanced animated shadows --}}
-    <div class="relative backdrop-blur-xl bg-black/50 border-0 rounded-[4px] overflow-hidden m-[4px] animate-table-shadow shadow-lg shadow-purple-500/20">
+    <div class="relative backdrop-blur-xl bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-md shadow-purple-500/15">
         <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
             <table id="{{ $id }}" class="w-full">
                 <thead>
-                    <tr class="border-b border-white/10 relative">
+                    <tr class="border-b border-white/5 relative">
                         @foreach ($columns as $index => $column)
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-white/90 backdrop-blur-sm relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-300 backdrop-blur-sm relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
                                 @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][($index % 5)]}}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}"></div>
                                 <span class="relative z-10">{{ $column['label'] }}</span>

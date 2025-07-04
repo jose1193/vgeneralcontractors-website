@@ -199,27 +199,61 @@ function formatStatusBadges(tableId) {
 }
 
 /**
- * Enhance table appearance for dark background
+ * Enhance table appearance for dark background with modern 2025 glassmorphic style
  * @param {HTMLElement} table - The table element
  */
 function enhanceTableAppearance(table) {
     // Add enhanced styles for headers
     const headers = table.querySelectorAll('th');
     headers.forEach(header => {
-        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
-        header.style.color = 'rgba(255, 255, 255, 0.9)';
-        header.style.fontWeight = '600';
+        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
+        header.style.color = 'rgba(220, 220, 220, 0.9)';
+        header.style.fontWeight = '500';
         header.style.letterSpacing = '0.05em';
+        header.style.backdropFilter = 'blur(8px)';
+        header.style.transition = 'all 0.3s ease';
     });
     
-    // Add padding to table cells for better spacing
+    // Add padding and modern styling to table cells
     const cells = table.querySelectorAll('td');
     cells.forEach(cell => {
         cell.style.padding = '0.75rem 1rem';
+        cell.style.color = 'rgba(240, 240, 240, 0.85)';
+        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
     
-    // Add subtle text glow to the table
-    table.style.textShadow = '0 0 1px rgba(255, 255, 255, 0.2)';
+    // Add subtle text styling to the table
+    table.style.textShadow = '0 0 1px rgba(255, 255, 255, 0.1)';
+    
+    // Add crystal effect to the table
+    const rows = table.querySelectorAll('tr:not(#loadingRow)');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            // Add subtle crystal effect on hover
+            row.style.backdropFilter = 'blur(12px)';
+            row.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+            row.style.boxShadow = '0 0 15px rgba(138, 43, 226, 0.2)';
+            
+            // Brighten text on hover
+            const rowCells = row.querySelectorAll('td');
+            rowCells.forEach(cell => {
+                cell.style.color = 'rgba(255, 255, 255, 0.95)';
+            });
+        });
+        
+        row.addEventListener('mouseleave', () => {
+            // Remove crystal effect on mouse leave
+            row.style.backdropFilter = 'blur(8px)';
+            row.style.backgroundColor = '';
+            row.style.boxShadow = '';
+            
+            // Return text to normal
+            const rowCells = row.querySelectorAll('td');
+            rowCells.forEach(cell => {
+                cell.style.color = 'rgba(240, 240, 240, 0.85)';
+            });
+        });
+    });
 }
 
 // Export functions for global use
