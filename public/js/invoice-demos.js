@@ -1774,7 +1774,58 @@ invoiceDemoData = function () {
         }
     };
 
-    // Format currency input for rate field
+    // Format currency input for rate field with mask
+    data.formatRateMask = function (input) {
+        // Eliminar todo excepto números y punto decimal
+        let cleanValue = input.replace(/[^0-9.]/g, "");
+        
+        // Asegurar que solo haya un punto decimal
+        const parts = cleanValue.split(".");
+        if (parts.length > 2) {
+            cleanValue = parts[0] + "." + parts.slice(1).join("");
+        }
+        
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            cleanValue = parts[0] + "." + parts[1].substring(0, 2);
+        }
+        
+        // Si no hay valor, retornar vacío
+        if (!cleanValue || cleanValue === '.') {
+            return '';
+        }
+        
+        // Convertir a número para formatear
+        const numValue = parseFloat(cleanValue);
+        if (isNaN(numValue)) {
+            return '';
+        }
+        
+        // Formatear con comas para miles
+        const formatter = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+        
+        return formatter.format(numValue);
+    };
+
+    // Update rate value in model (for x-mask compatibility)
+    data.updateRateValue = function (event, itemIndex) {
+        const input = event.target;
+        let value = input.value;
+        
+        // Extraer el valor numérico sin formato
+        const numericValue = value.replace(/,/g, '');
+        
+        // Actualizar el modelo con el valor numérico
+        this.form.items[itemIndex].rate = numericValue;
+        
+        // Calcular totales
+        this.calculateTotals();
+    };
+
+    // Legacy function for compatibility (kept for other uses)
     data.formatCurrencyInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;

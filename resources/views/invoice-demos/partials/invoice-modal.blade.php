@@ -369,9 +369,10 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Rate</label>
                                             <input type="text" x-model="item.rate"
-                                                @input="formatCurrencyInput($event, index)"
                                                 class="w-full rounded-lg border-gray-300 shadow-sm text-sm"
-                                                placeholder="0.00">
+                                                placeholder="0.00"
+                                                x-mask:dynamic="formatRateMask"
+                                                @input="updateRateValue($event, index)">
                                         </div>
 
                                         <!-- Amount & Remove Button -->

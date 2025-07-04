@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Alpine Mask</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    <div x-data="{
+        rate: '',
+        formatRateMask(input) {
+            let cleanValue = input.replace(/[^0-9.]/g, '');
+            const parts = cleanValue.split('.');
+            if (parts.length > 2) {
+                cleanValue = parts[0] + '.' + parts.slice(1).join('');
+            }
+            if (parts.length > 1 && parts[1].length > 2) {
+                cleanValue = parts[0] + '.' + parts[1].substring(0, 2);
+            }
+            if (!cleanValue || cleanValue === '.') {
+                return '';
+            }
+            const numValue = parseFloat(cleanValue);
+            if (isNaN(numValue)) {
+                return '';
+            }
+            const formatter = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+            return formatter.format(numValue);
+        }
+    }">
+        <h1>Test Rate Input Mask</h1>
+        <label>Rate:</label>
+        <input type="text" 
+               x-model="rate"
+               x-mask:dynamic="formatRateMask"
+               placeholder="Enter rate (e.g., 2500.00)"
+               style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 200px;">
+        <p>Value: <span x-text="rate"></span></p>
+        <p>Formatted should show: 2,500.00 when you type 2500</p>
+    </div>
+</body>
+</html>
