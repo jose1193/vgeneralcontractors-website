@@ -74,7 +74,7 @@ class InvoiceDemoController extends BaseController
                 $page = max(1, (int) $request->get('page', 1));
                 $perPage = min(100, max(5, (int) $request->get('per_page', 10)));
                 $search = trim($request->get('search', ''));
-                $status = $request->get('status', '');
+                $status = (string) ($request->get('status') ?? '');
                 $sortBy = $request->get('sort_by', 'created_at');
                 $sortOrder = in_array($request->get('sort_order'), ['asc', 'desc']) ? $request->get('sort_order') : 'desc';
                 $includeDeleted = $request->boolean('include_deleted');
