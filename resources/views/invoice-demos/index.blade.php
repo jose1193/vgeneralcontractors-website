@@ -575,7 +575,8 @@
                 class="glass-container-filter backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="p-6">
                     <!-- Main Filter Row -->
-                    <div class="grid grid-cols-1 lg:grid-cols-14 gap-4 items-end">
+                    <!-- First Row: Search and Status Filter -->
+                    <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-end mb-4">
                         <!-- Search - Takes more space -->
                         <div class="lg:col-span-5">
                             <label class="block text-sm font-medium text-white/90 mb-2">🔍 Search</label>
@@ -603,7 +604,10 @@
                                 <option value="cancelled" class="bg-gray-800 text-white">Cancelled</option>
                             </select>
                         </div>
+                    </div>
 
+                    <!-- Second Row: All other controls -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
                         <!-- Items Per Page -->
                         <div class="lg:col-span-1">
                             <label class="block text-sm font-medium text-white/90 mb-2">📄 Show</label>
@@ -617,7 +621,7 @@
                         </div>
 
                         <!-- Advanced Filters Toggle -->
-                        <div class="lg:col-span-2">
+                        <div class="lg:col-span-1">
                             <button @click="showAdvancedFilters = !showAdvancedFilters"
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-purple-500/30 to-blue-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-purple-600/40 hover:to-blue-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group"
                                 :class="{ 'ring-2 ring-purple-400/50': showAdvancedFilters }">
@@ -642,7 +646,7 @@
                         </div>
 
                         <!-- Export Dropdown -->
-                        <div class="lg:col-span-2 relative" x-data="{ exportOpen: false }">
+                        <div class="lg:col-span-1 relative" x-data="{ exportOpen: false }">
                             <button @click="exportOpen = !exportOpen" 
                                 class="w-full h-11 px-4 glass-button-filter backdrop-blur-md bg-gradient-to-r from-orange-500/30 to-yellow-500/30 border border-white/30 text-white text-sm font-medium rounded-lg hover:from-orange-600/40 hover:to-yellow-600/40 transition-all duration-200 flex items-center justify-center relative overflow-hidden group">
                                 <div
