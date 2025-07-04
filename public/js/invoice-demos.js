@@ -922,17 +922,23 @@ function invoiceDemoData() {
                       const { uuid, ...itemWithoutUuid } = item;
                       console.log("Removed UUID from item:", uuid);
                       
-                      // Formatear el rate para mostrar con comas si tiene valor
-                      if (itemWithoutUuid.rate) {
+                      // Formatear el rate para mostrar con comas y decimales
+                      if (itemWithoutUuid.rate !== undefined && itemWithoutUuid.rate !== null) {
                           const rateValue = parseFloat(itemWithoutUuid.rate);
-                          if (!isNaN(rateValue) && rateValue > 0) {
-                              // Formatear con comas y 2 decimales
+                          if (!isNaN(rateValue)) {
+                              // Formatear con comas y 2 decimales (incluyendo 0.00)
                               const formattedRate = rateValue.toLocaleString('en-US', {
                                   minimumFractionDigits: 2,
                                   maximumFractionDigits: 2
                               });
                               itemWithoutUuid.rate = formattedRate;
+                          } else {
+                              // Si no es un número válido, establecer como 0.00
+                              itemWithoutUuid.rate = "0.00";
                           }
+                      } else {
+                          // Si rate es undefined o null, establecer como 0.00
+                          itemWithoutUuid.rate = "0.00";
                       }
                       
                       return itemWithoutUuid;
@@ -1000,12 +1006,13 @@ function invoiceDemoData() {
             console.log("Calculating totals...");
             let subtotal = 0;
             this.form.items.forEach((item, index) => {
-                // Asegurar que quantity y rate sean números
+                // Asegurar que quantity y rate sean números, removiendo comas si existen
                 const quantity = parseFloat(item.quantity || 0);
-                const rate = parseFloat(item.rate || 0);
+                const rateString = (item.rate || "0").toString().replace(/,/g, "");
+                const rate = parseFloat(rateString || 0);
 
                 console.log(
-                    `Item ${index + 1}: quantity=${quantity}, rate=${rate}`
+                    `Item ${index + 1}: quantity=${quantity}, rate=${rate} (original: ${item.rate})`
                 );
 
                 // Calcular el monto del ítem
