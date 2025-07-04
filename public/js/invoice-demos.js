@@ -114,6 +114,32 @@ class InvoiceDemoManager {
         console.log('📊 status:', status);
         console.log('📅 startDate:', startDate, '(type:', typeof startDate, ')');
         console.log('📅 endDate:', endDate, '(type:', typeof endDate, ')');
+        
+        // Inspección detallada de las fechas
+        if (startDate) {
+            try {
+                const parsedStartDate = new Date(startDate);
+                console.log('🔍 Parsed startDate:', parsedStartDate);
+                console.log('🔍 startDate valid?', !isNaN(parsedStartDate.getTime()));
+                console.log('🔍 startDate ISO string:', parsedStartDate.toISOString());
+                console.log('🔍 startDate formatted:', parsedStartDate.toLocaleDateString());
+            } catch (e) {
+                console.error('❌ Error parsing startDate:', e);
+            }
+        }
+        
+        if (endDate) {
+            try {
+                const parsedEndDate = new Date(endDate);
+                console.log('🔍 Parsed endDate:', parsedEndDate);
+                console.log('🔍 endDate valid?', !isNaN(parsedEndDate.getTime()));
+                console.log('🔍 endDate ISO string:', parsedEndDate.toISOString());
+                console.log('🔍 endDate formatted:', parsedEndDate.toLocaleDateString());
+            } catch (e) {
+                console.error('❌ Error parsing endDate:', e);
+            }
+        }
+        
         console.log('📄 perPage:', perPage);
         console.log('🗑️ includeDeleted:', includeDeleted);
         
@@ -136,6 +162,8 @@ class InvoiceDemoManager {
         if (startDate) {
             params.append("start_date", startDate);
             console.log('✅ Added start_date to params:', startDate);
+            // Verificar el valor exacto que se está enviando
+            console.log('🔍 start_date param value:', params.get("start_date"));
         } else {
             console.log('⚠️ startDate is empty, not adding to params');
         }
@@ -143,6 +171,8 @@ class InvoiceDemoManager {
         if (endDate) {
             params.append("end_date", endDate);
             console.log('✅ Added end_date to params:', endDate);
+            // Verificar el valor exacto que se está enviando
+            console.log('🔍 end_date param value:', params.get("end_date"));
         } else {
             console.log('⚠️ endDate is empty, not adding to params');
         }
@@ -154,7 +184,21 @@ class InvoiceDemoManager {
         const finalUrl = `${this.baseUrl}?${params}`;
         console.log('🌐 Final URL:', finalUrl);
         console.log('📋 All URL params:', Object.fromEntries(params));
+        
+        // Verificación detallada de los parámetros de fecha en la URL
+        console.group('🔍 Verificación final de parámetros de fecha en URL');
+        console.log('URL completa:', finalUrl);
+        console.log('Parámetro start_date en URL:', params.get('start_date'));
+        console.log('Parámetro end_date en URL:', params.get('end_date'));
+        
+        // Verificar si los parámetros están correctamente codificados
+        const urlObj = new URL(finalUrl, window.location.origin);
+        console.log('Parámetros decodificados de la URL:');
+        console.log('- start_date:', urlObj.searchParams.get('start_date'));
+        console.log('- end_date:', urlObj.searchParams.get('end_date'));
         console.groupEnd();
+        
+        console.groupEnd(); // Cierre del grupo principal
 
         return await this.apiRequest(finalUrl);
     }
@@ -831,23 +875,27 @@ function invoiceDemoData() {
             console.log('📅 Period:', period);
             
             const today = new Date();
+            console.log('📅 Today raw date object:', today);
             let startDate, endDate;
 
             switch (period) {
                 case "today":
                     startDate = endDate = today;
+                    console.log('📅 Today period - using same date for start and end:', today);
                     break;
                 case "last7days":
                     startDate = new Date(
                         today.getTime() - 7 * 24 * 60 * 60 * 1000
                     );
                     endDate = today;
+                    console.log('📅 Last 7 days period - startDate:', startDate, 'endDate:', endDate);
                     break;
                 case "last30days":
                     startDate = new Date(
                         today.getTime() - 30 * 24 * 60 * 60 * 1000
                     );
                     endDate = today;
+                    console.log('📅 Last 30 days period - startDate:', startDate, 'endDate:', endDate);
                     break;
                 case "thisMonth":
                     startDate = new Date(
@@ -860,29 +908,47 @@ function invoiceDemoData() {
                         today.getMonth() + 1,
                         0
                     );
+                    console.log('📅 This month period - startDate:', startDate, 'endDate:', endDate);
                     break;
                 case "thisYear":
                     startDate = new Date(today.getFullYear(), 0, 1);
                     endDate = new Date(today.getFullYear(), 11, 31);
+                    console.log('📅 This year period - startDate:', startDate, 'endDate:', endDate);
                     break;
+
                 default:
                     console.warn('⚠️ Unknown period:', period);
                     console.groupEnd();
                     return;
             }
 
-            this.startDate = startDate.toISOString().split("T")[0];
-            this.endDate = endDate.toISOString().split("T")[0];
+            // Verificar que las fechas son válidas antes de formatearlas
+            console.log('🔍 Verificando validez de fechas:');
+            console.log('  - startDate válida:', !isNaN(startDate.getTime()));
+            console.log('  - endDate válida:', !isNaN(endDate.getTime()));
+            
+            // Formatear fechas para ISO
+            const startISO = startDate.toISOString();
+            const endISO = endDate.toISOString();
+            console.log('📅 Fechas en formato ISO:');
+            console.log('  - startISO:', startISO);
+            console.log('  - endISO:', endISO);
+            
+            // Extraer solo la parte de la fecha (YYYY-MM-DD)
+            this.startDate = startISO.split("T")[0];
+            this.endDate = endISO.split("T")[0];
             this.activeQuickFilter = period;
             this.currentPage = 1;
 
-            console.log('✅ Calculated dates:');
-            console.log('  - this.startDate:', this.startDate);
-            console.log('  - this.endDate:', this.endDate);
+            console.log('✅ Fechas calculadas y formateadas:');
+            console.log('  - this.startDate:', this.startDate, '(type:', typeof this.startDate, ')');
+            console.log('  - this.endDate:', this.endDate, '(type:', typeof this.endDate, ')');
 
             // Update modern date picker display
             if (this.modernDatePicker) {
-                console.log('🔄 Updating ModernDateRangePicker...');
+                console.log('🔄 Actualizando ModernDateRangePicker...');
+                console.log('  - Enviando startDate:', this.startDate);
+                console.log('  - Enviando endDate:', this.endDate);
                 this.modernDatePicker.setDateRange(this.startDate, this.endDate);
             } else {
                 console.warn('⚠️ modernDatePicker not available');
@@ -891,7 +957,9 @@ function invoiceDemoData() {
             // Update display
             this.updateDateRangeDisplay(this.startDate, this.endDate);
 
-            console.log('🔄 Calling loadInvoices()...');
+            console.log('🔄 Llamando a loadInvoices()...');
+            console.log('  - this.startDate antes de loadInvoices:', this.startDate);
+            console.log('  - this.endDate antes de loadInvoices:', this.endDate);
             this.loadInvoices();
             console.groupEnd();
         },

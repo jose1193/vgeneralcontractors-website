@@ -79,14 +79,36 @@ class InvoiceDemoController extends BaseController
                 $sortOrder = in_array($request->get('sort_order'), ['asc', 'desc']) ? $request->get('sort_order') : 'desc';
                 $includeDeleted = $request->boolean('include_deleted');
                 
+                // Log raw request parameters for debugging
+                Log::debug('InvoiceDemoController - Raw request parameters', [
+                    'all_params' => $request->all(),
+                    'raw_start_date' => $request->get('start_date'),
+                    'raw_end_date' => $request->get('end_date'),
+                    'raw_date_range' => $request->get('date_range'),
+                    'content_type' => $request->header('Content-Type'),
+                    'accept' => $request->header('Accept'),
+                    'user_agent' => $request->header('User-Agent')
+                ]);
+                
                 // Enhanced date range handling with validation
                 $startDate = $this->validateAndFormatDate($request->get('start_date', ''));
                 $endDate = $this->validateAndFormatDate($request->get('end_date', ''));
                 
+                // Log validated dates
+                Log::debug('InvoiceDemoController - Validated dates', [
+                    'validated_start_date' => $startDate,
+                    'validated_end_date' => $endDate
+                ]);
+                
                 // Handle predefined date ranges
                 $dateRange = $request->get('date_range', '');
                 if ($dateRange && !$startDate && !$endDate) {
+                    Log::debug('InvoiceDemoController - Using predefined date range', ['date_range' => $dateRange]);
                     [$startDate, $endDate] = $this->getPredefinedDateRange($dateRange);
+                    Log::debug('InvoiceDemoController - Predefined date range result', [
+                        'calculated_start_date' => $startDate,
+                        'calculated_end_date' => $endDate
+                    ]);
                 }
 
                 $invoices = $this->invoiceService->getPaginatedInvoices(
@@ -145,14 +167,32 @@ class InvoiceDemoController extends BaseController
      */
     private function validateAndFormatDate(string $date): string
     {
+        // Log the raw date input
+        Log::debug('validateAndFormatDate - Raw date input', ['date' => $date, 'type' => gettype($date)]);
+        
         if (empty($date)) {
+            Log::debug('validateAndFormatDate - Empty date, returning empty string');
             return '';
         }
 
         try {
-            return Carbon::parse($date)->format('Y-m-d');
+            $parsedDate = Carbon::parse($date);
+            $formattedDate = $parsedDate->format('Y-m-d');
+            
+            // Log the parsed and formatted date
+            Log::debug('validateAndFormatDate - Date successfully parsed', [
+                'raw_date' => $date,
+                'parsed_date' => $parsedDate->toDateTimeString(),
+                'formatted_date' => $formattedDate
+            ]);
+            
+            return $formattedDate;
         } catch (Throwable $e) {
-            Log::warning('Invalid date format provided', ['date' => $date]);
+            Log::warning('Invalid date format provided', [
+                'date' => $date,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return '';
         }
     }

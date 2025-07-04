@@ -76,42 +76,56 @@ class InvoiceDemoService
                 $query->where('status', $status);
             }
 
-            // ✅ ENHANCED: Apply date range filters with improved validation
+            // Apply date filters if provided
+            Log::debug('InvoiceDemoService - Processing date filters', [
+                'raw_startDate' => $startDate,
+                'raw_endDate' => $endDate,
+                'startDate_type' => gettype($startDate),
+                'endDate_type' => gettype($endDate),
+                'startDate_empty' => empty($startDate),
+                'endDate_empty' => empty($endDate)
+            ]);
+            
             if (!empty($startDate) && !empty($endDate)) {
-                try {
-                    // Validate and format dates
-                    $startDateFormatted = Carbon::parse($startDate)->startOfDay();
-                    $endDateFormatted = Carbon::parse($endDate)->endOfDay();
-                    
-                    // Ensure start date is not after end date
-                    if ($startDateFormatted->lte($endDateFormatted)) {
-                        $query->whereBetween('invoice_date', [
-                            $startDateFormatted->format('Y-m-d H:i:s'),
-                            $endDateFormatted->format('Y-m-d H:i:s')
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                    // Log invalid date format but continue without date filter
-                    Log::warning('Invalid date range provided', [
-                        'start_date' => $startDate,
-                        'end_date' => $endDate,
-                        'error' => $e->getMessage()
+                // Parse dates for validation and logging
+                $parsedStartDate = Carbon::parse($startDate);
+                $parsedEndDate = Carbon::parse($endDate);
+                
+                Log::debug('InvoiceDemoService - Parsed dates for comparison', [
+                    'parsedStartDate' => $parsedStartDate->toDateTimeString(),
+                    'parsedEndDate' => $parsedEndDate->toDateTimeString(),
+                    'startDate_gt_endDate' => $parsedStartDate->gt($parsedEndDate)
+                ]);
+                
+                // Ensure startDate is not after endDate
+                if ($parsedStartDate->gt($parsedEndDate)) {
+                    Log::error('Invalid date range: startDate is after endDate', [
+                        'startDate' => $startDate,
+                        'endDate' => $endDate
                     ]);
+                } else {
+                    Log::debug('InvoiceDemoService - Applying whereBetween filter', [
+                        'column' => 'invoice_date',
+                        'range' => [$startDate, $endDate]
+                    ]);
+                    $query->whereBetween('invoice_date', [$startDate, $endDate]);
                 }
             } elseif (!empty($startDate)) {
-                try {
-                    $startDateFormatted = Carbon::parse($startDate)->startOfDay();
-                    $query->where('invoice_date', '>=', $startDateFormatted->format('Y-m-d H:i:s'));
-                } catch (\Exception $e) {
-                    Log::warning('Invalid start date provided', ['start_date' => $startDate]);
-                }
+                Log::debug('InvoiceDemoService - Applying start date filter only', [
+                    'column' => 'invoice_date',
+                    'operator' => '>=',
+                    'value' => $startDate
+                ]);
+                $query->where('invoice_date', '>=', $startDate);
             } elseif (!empty($endDate)) {
-                try {
-                    $endDateFormatted = Carbon::parse($endDate)->endOfDay();
-                    $query->where('invoice_date', '<=', $endDateFormatted->format('Y-m-d H:i:s'));
-                } catch (\Exception $e) {
-                    Log::warning('Invalid end date provided', ['end_date' => $endDate]);
-                }
+                Log::debug('InvoiceDemoService - Applying end date filter only', [
+                    'column' => 'invoice_date',
+                    'operator' => '<=',
+                    'value' => $endDate
+                ]);
+                $query->where('invoice_date', '<=', $endDate);
+            } else {
+                Log::debug('InvoiceDemoService - No date filters applied');
             }
 
             // Apply sorting

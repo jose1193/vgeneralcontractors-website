@@ -405,12 +405,25 @@ class ModernDateRangePicker {
      * Set date range programmatically
      */
     setDateRange(startDate, endDate) {
+        // 🐛 DEBUG: Log date range values being set
+        console.group('🗓️ DEBUG: ModernDateRangePicker.setDateRange() called');
+        console.log('📅 startDate:', startDate, '(type:', typeof startDate, ')');
+        console.log('📅 endDate:', endDate, '(type:', typeof endDate, ')');
+        console.log('⚙️ Current picker instance:', this.picker ? 'Litepicker' : (this.nativeInputs ? 'Native Inputs' : 'None'));
+        
         if (this.picker) {
+            console.log('🔄 Setting date range on Litepicker instance');
             this.picker.setDateRange(startDate, endDate);
         } else if (this.nativeInputs) {
+            console.log('🔄 Setting date range on native inputs');
             this.nativeInputs.start.value = startDate || '';
             this.nativeInputs.end.value = endDate || '';
+        } else {
+            console.warn('⚠️ No picker instance available to set date range');
         }
+        
+        console.log('✅ Date range set operation completed');
+        console.groupEnd();
         return this;
     }
 
