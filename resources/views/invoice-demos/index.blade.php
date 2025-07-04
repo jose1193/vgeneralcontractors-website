@@ -673,8 +673,7 @@
                                  x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
                                  x-transition:leave-end="opacity-0 scale-95 transform -translate-y-2"
                                  @click.away="exportOpen = false"
-                                 class="absolute top-full left-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden min-w-max"
-                                 style="position: absolute; width: max-content;">
+                                 class="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-gray-800/90 border border-white/20 rounded-lg shadow-xl z-[9999] overflow-hidden">
                                 <div class="py-2">
                                     <button @click="exportToExcel(); exportOpen = false" 
                                             data-export="excel"
@@ -827,8 +826,8 @@
                 </div>
 
                 <!-- Table -->
-                <div x-show="!loading" class="table-container" style="overflow: visible;">
-                    <div class="overflow-x-auto rounded-lg" style="overflow-y: visible;">
+                <div x-show="!loading" class="table-container overflow-visible">
+                    <div class="overflow-x-auto rounded-lg overflow-y-visible">
                         <table class="min-w-full text-sm text-left text-gray-300 bg-gray-800/50 divide-y divide-gray-700">
                             <thead class="bg-gradient-to-r from-gray-800 to-gray-700">
                                 <tr>
@@ -981,8 +980,7 @@
                                                                 </svg>
                                                             </button>
                                                             <div x-show="showPdfMenu" @click.away="showPdfMenu = false"
-                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600"
-                                                                style="position: absolute; transform: translateX(-100%);">
+                                                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[9999] border border-gray-600">
                                                                 <div class="py-1">
                                                                     <a :href="window.invoiceDemoManager.getPdfViewUrl(invoice
                                                                         .uuid)"
