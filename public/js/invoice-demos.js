@@ -586,7 +586,7 @@ function invoiceDemoData() {
             console.log("🚀 Initializing Invoice Demo Manager...");
             await this.loadFormData();
             await this.loadInvoices();
-            this.initializeModernDatePicker();
+            this.initializeFlatpickr();
         },
 
         // Load form data
@@ -652,8 +652,8 @@ function invoiceDemoData() {
             this.loadInvoices();
         },
 
-        // Initialize Modern Date Picker (Litepicker alternative)
-        initializeModernDatePicker() {
+        // Initialize Flatpickr Date Range Picker
+        initializeFlatpickr() {
             // Wait for DOM to be ready and element to exist
             setTimeout(() => {
                 const element = document.querySelector('#dateRangePicker');
@@ -662,75 +662,74 @@ function invoiceDemoData() {
                     return;
                 }
                 
-                console.log('📅 Initializing ModernDateRangePicker...');
+                console.log('📅 Initializing Flatpickr...');
                 
-                // Initialize ModernDateRangePicker with enhanced features
-                this.modernDatePicker = new ModernDateRangePicker({
-                    element: "#dateRangePicker",
-                    format: "YYYY-MM-DD",
-                    displayFormat: "MMM DD, YYYY",
+                // Initialize Flatpickr with range mode
+                this.flatpickrInstance = flatpickr(element, {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "M j, Y",
                     placeholder: "Select date range...",
+                    allowInput: true,
+                    clickOpens: true,
                     theme: "dark",
-                    numberOfMonths: window.innerWidth > 768 ? 2 : 1,
-                    numberOfColumns: window.innerWidth > 768 ? 2 : 1,
-                    singleMode: false,
-                    allowRepick: true,
-                    autoRefresh: true,
-                    showTooltip: true,
-                    showWeekNumbers: false,
-                    dropdowns: {
-                        minYear: 2020,
-                        maxYear: new Date().getFullYear() + 5,
-                        months: true,
-                        years: true
+                    showMonths: window.innerWidth > 768 ? 2 : 1,
+                    locale: {
+                        rangeSeparator: " to "
                     },
-                    buttonText: {
-                        apply: "Apply",
-                        cancel: "Cancel",
-                        previousMonth: "‹",
-                        nextMonth: "›",
-                        reset: "Reset"
-                    }
-                })
-                .on('select', (startDate, endDate, dateObjects) => {
-                    if (startDate && endDate) {
-                        this.startDate = startDate;
-                        this.endDate = endDate;
-                        this.updateDateRangeDisplay(startDate, endDate);
-                        this.activeQuickFilter = null; // Clear active quick filter
+                    onChange: (selectedDates, dateStr, instance) => {
+                        if (selectedDates.length === 2) {
+                            const startDate = selectedDates[0];
+                            const endDate = selectedDates[1];
+                            
+                            this.startDate = this.formatDateForBackend(startDate);
+                            this.endDate = this.formatDateForBackend(endDate);
+                            this.updateDateRangeDisplay(this.startDate, this.endDate);
+                            this.activeQuickFilter = null;
+                            this.currentPage = 1;
+                            this.loadInvoices();
+                            
+                            console.log('📅 Date range selected:', { 
+                                startDate: this.startDate, 
+                                endDate: this.endDate 
+                            });
+                        }
+                    },
+                    onClear: () => {
+                        this.startDate = "";
+                        this.endDate = "";
+                        this.dateRangeDisplay = "";
+                        this.activeQuickFilter = null;
                         this.currentPage = 1;
                         this.loadInvoices();
                         
-                        console.log('📅 Date range selected:', { startDate, endDate });
+                        console.log('📅 Date range cleared');
+                    },
+                    onOpen: () => {
+                        console.log('📅 Date picker opened');
+                    },
+                    onClose: () => {
+                        console.log('📅 Date picker closed');
                     }
-                })
-                .on('clear', () => {
-                    this.startDate = "";
-                    this.endDate = "";
-                    this.dateRangeDisplay = "";
-                    this.activeQuickFilter = null;
-                    this.currentPage = 1;
-                    this.loadInvoices();
-                    
-                    console.log('📅 Date range cleared');
-                })
-                .on('show', () => {
-                    console.log('📅 Date picker opened');
-                })
-                .on('hide', () => {
-                    console.log('📅 Date picker closed');
-                })
-                .on('error', (error) => {
-                    console.error('📅 Date picker error:', error);
-                    this.showError('Error with date picker: ' + error.message);
                 });
 
                 // Store reference for compatibility
-                this.dateRangePicker = this.modernDatePicker;
+                this.dateRangePicker = this.flatpickrInstance;
 
                 // Debug log
-                console.log("📅 ModernDateRangePicker initialized successfully");
+                console.log("📅 Flatpickr initialized successfully");
             }, 100); // Small delay to ensure DOM is ready
+        },
+
+        // Format date for backend (YYYY-MM-DD)
+        formatDateForBackend(date) {
+            if (!date) return "";
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         },
 
         // Update date range display
@@ -791,9 +790,9 @@ function invoiceDemoData() {
             this.activeQuickFilter = period;
             this.currentPage = 1;
 
-            // Update modern date picker display
-            if (this.modernDatePicker) {
-                this.modernDatePicker.setDateRange(this.startDate, this.endDate);
+            // Update Flatpickr display
+            if (this.flatpickrInstance) {
+                this.flatpickrInstance.setDate([this.startDate, this.endDate], false);
             }
             
             // Update display
@@ -808,9 +807,9 @@ function invoiceDemoData() {
             this.endDate = "";
             this.dateRangeDisplay = "";
 
-            // Clear Modern Date Picker
-            if (this.modernDatePicker) {
-                this.modernDatePicker.clear();
+            // Clear Flatpickr
+            if (this.flatpickrInstance) {
+                this.flatpickrInstance.clear();
             }
 
             // Apply filter (show all)

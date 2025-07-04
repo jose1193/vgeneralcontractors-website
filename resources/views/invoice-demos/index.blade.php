@@ -1098,8 +1098,10 @@
         </div>
 
         @push('scripts')
-            <!-- Modern Date Range Picker -->
-            <script src="{{ asset('js/modern-date-picker.js') }}"></script>
+            <!-- Flatpickr CSS and JS -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             <!-- Main Invoice Demo Script -->
             <script src="{{ asset('js/invoice-demos.js') }}"></script>
         @endpush
