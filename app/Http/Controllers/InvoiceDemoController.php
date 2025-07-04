@@ -91,8 +91,21 @@ class InvoiceDemoController extends BaseController
                 ]);
                 
                 // Enhanced date range handling with validation
-                $startDate = $this->validateAndFormatDate($request->get('start_date', ''));
-                $endDate = $this->validateAndFormatDate($request->get('end_date', ''));
+                $rawStartDate = $request->get('start_date', '');
+                $rawEndDate = $request->get('end_date', '');
+                
+                // Additional logging for debugging
+                Log::debug('InvoiceDemoController - Raw date parameters before validation', [
+                    'raw_start_date_value' => $rawStartDate,
+                    'raw_end_date_value' => $rawEndDate,
+                    'start_date_type' => gettype($rawStartDate),
+                    'end_date_type' => gettype($rawEndDate),
+                    'start_date_empty' => empty($rawStartDate),
+                    'end_date_empty' => empty($rawEndDate)
+                ]);
+                
+                $startDate = $this->validateAndFormatDate($rawStartDate);
+                $endDate = $this->validateAndFormatDate($rawEndDate);
                 
                 // Log validated dates
                 Log::debug('InvoiceDemoController - Validated dates', [
@@ -164,18 +177,35 @@ class InvoiceDemoController extends BaseController
 
     /**
      * Validate and format date string
+     * @param mixed $date The date input to validate and format
+     * @return string Formatted date or empty string if invalid
      */
-    private function validateAndFormatDate(string $date): string
+    private function validateAndFormatDate($date): string
     {
-        // Log the raw date input
-        Log::debug('validateAndFormatDate - Raw date input', ['date' => $date, 'type' => gettype($date)]);
+        // Log the raw date input with detailed type information
+        Log::debug('validateAndFormatDate - Raw date input', [
+            'date' => $date, 
+            'type' => gettype($date),
+            'is_null' => is_null($date),
+            'is_empty_string' => $date === '',
+            'is_false' => $date === false,
+            'is_zero' => $date === 0,
+            'empty_check' => empty($date)
+        ]);
         
+        // Handle null, empty string, or other empty values
         if (empty($date)) {
             Log::debug('validateAndFormatDate - Empty date, returning empty string');
             return '';
         }
 
         try {
+            // Convert to string if not already
+            if (!is_string($date)) {
+                $date = (string) $date;
+                Log::debug('validateAndFormatDate - Converted non-string to string', ['converted_value' => $date]);
+            }
+            
             $parsedDate = Carbon::parse($date);
             $formattedDate = $parsedDate->format('Y-m-d');
             

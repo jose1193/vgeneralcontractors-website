@@ -153,29 +153,21 @@ class InvoiceDemoManager {
             sort_by: sortBy,
             sort_order: sortOrder,
             per_page: perPage,
+            // ✅ Always include date parameters, even if empty
+            start_date: startDate || '',
+            end_date: endDate || '',
             // ✅ Multiple cache busting parameters
             _t: timestamp,
             _r: random,
             _cb: `${timestamp}-${random}`,
         });
 
-        if (startDate) {
-            params.append("start_date", startDate);
-            console.log('✅ Added start_date to params:', startDate);
-            // Verificar el valor exacto que se está enviando
-            console.log('🔍 start_date param value:', params.get("start_date"));
-        } else {
-            console.log('⚠️ startDate is empty, not adding to params');
-        }
-        
-        if (endDate) {
-            params.append("end_date", endDate);
-            console.log('✅ Added end_date to params:', endDate);
-            // Verificar el valor exacto que se está enviando
-            console.log('🔍 end_date param value:', params.get("end_date"));
-        } else {
-            console.log('⚠️ endDate is empty, not adding to params');
-        }
+        // ✅ Log date parameters for debugging
+        console.log('✅ Date parameters added to URL:');
+        console.log('  - start_date:', params.get("start_date"));
+        console.log('  - end_date:', params.get("end_date"));
+        console.log('  - startDate original value:', startDate);
+        console.log('  - endDate original value:', endDate);
         
         if (includeDeleted) {
             params.append("include_deleted", "1");

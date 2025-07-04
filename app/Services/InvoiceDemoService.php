@@ -76,17 +76,32 @@ class InvoiceDemoService
                 $query->where('status', $status);
             }
 
-            // Apply date filters if provided
+            // Process date filters with enhanced logging
             Log::debug('InvoiceDemoService - Processing date filters', [
                 'raw_startDate' => $startDate,
                 'raw_endDate' => $endDate,
                 'startDate_type' => gettype($startDate),
                 'endDate_type' => gettype($endDate),
                 'startDate_empty' => empty($startDate),
-                'endDate_empty' => empty($endDate)
+                'endDate_empty' => empty($endDate),
+                'startDate_is_null' => is_null($startDate),
+                'endDate_is_null' => is_null($endDate),
+                'startDate_is_empty_string' => $startDate === '',
+                'endDate_is_empty_string' => $endDate === ''
             ]);
             
-            if (!empty($startDate) && !empty($endDate)) {
+            // Check if we have valid date strings
+            $hasStartDate = !empty($startDate) && is_string($startDate) && strlen(trim($startDate)) > 0;
+            $hasEndDate = !empty($endDate) && is_string($endDate) && strlen(trim($endDate)) > 0;
+            
+            Log::debug('InvoiceDemoService - Date validation results', [
+                'hasStartDate' => $hasStartDate,
+                'hasEndDate' => $hasEndDate,
+                'startDate' => $startDate,
+                'endDate' => $endDate
+            ]);
+            
+            if ($hasStartDate && $hasEndDate) {
                 // Parse dates for validation and logging
                 $parsedStartDate = Carbon::parse($startDate);
                 $parsedEndDate = Carbon::parse($endDate);
@@ -110,20 +125,20 @@ class InvoiceDemoService
                     ]);
                     $query->whereBetween('invoice_date', [$startDate, $endDate]);
                 }
-            } elseif (!empty($startDate)) {
+            } elseif ($hasStartDate) {
                 Log::debug('InvoiceDemoService - Applying start date filter only', [
                     'column' => 'invoice_date',
                     'operator' => '>=',
                     'value' => $startDate
                 ]);
-                $query->where('invoice_date', '>=', $startDate);
-            } elseif (!empty($endDate)) {
+                $query->whereDate('invoice_date', '>=', $startDate);
+            } elseif ($hasEndDate) {
                 Log::debug('InvoiceDemoService - Applying end date filter only', [
                     'column' => 'invoice_date',
                     'operator' => '<=',
                     'value' => $endDate
                 ]);
-                $query->where('invoice_date', '<=', $endDate);
+                $query->whereDate('invoice_date', '<=', $endDate);
             } else {
                 Log::debug('InvoiceDemoService - No date filters applied');
             }
