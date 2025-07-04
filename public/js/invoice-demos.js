@@ -164,10 +164,18 @@ class InvoiceDemoManager {
 
         // ✅ Log date parameters for debugging
         console.log('✅ Date parameters added to URL:');
-        console.log('  - start_date:', params.get("start_date"));
-        console.log('  - end_date:', params.get("end_date"));
-        console.log('  - startDate original value:', startDate);
-        console.log('  - endDate original value:', endDate);
+        console.log('  - start_date:', params.get("start_date"), 'Type:', typeof params.get("start_date"));
+        console.log('  - end_date:', params.get("end_date"), 'Type:', typeof params.get("end_date"));
+        console.log('  - startDate original value:', startDate, 'Type:', typeof startDate);
+        console.log('  - endDate original value:', endDate, 'Type:', typeof endDate);
+        console.log('  - this.startDate:', this.startDate, 'Type:', typeof this.startDate);
+        console.log('  - this.endDate:', this.endDate, 'Type:', typeof this.endDate);
+        
+        // Verificar si las fechas son válidas antes de enviar
+        const isStartDateValid = startDate && startDate !== '' && startDate !== 'undefined' && startDate !== 'null';
+        const isEndDateValid = endDate && endDate !== '' && endDate !== 'undefined' && endDate !== 'null';
+        console.log('  - isStartDateValid:', isStartDateValid);
+        console.log('  - isEndDateValid:', isEndDateValid);
         
         if (includeDeleted) {
             params.append("include_deleted", "1");
@@ -569,24 +577,6 @@ function invoiceDemoData() {
         sortBy: "created_at",
         sortOrder: "desc",
         showDeleted: false,
-
-        // Filtros y paginación
-        search: "",
-        statusFilter: "",
-        currentPage: 1,
-        perPage: 10,
-        totalPages: 1,
-        total: 0,
-        sortBy: "created_at",
-        sortOrder: "desc",
-
-        // Filtros de fecha
-        startDate: "",
-        endDate: "",
-        dateRangeDisplay: "",
-        dateRangePicker: null,
-
-        // Nuevas variables para filtros optimizados
         showAdvancedFilters: false,
         activeQuickFilter: null,
 
@@ -785,34 +775,82 @@ function invoiceDemoData() {
                 })
                 .on('select', (startDate, endDate, dateObjects) => {
                     console.group('🐛 DEBUG: Date picker select event');
-                    console.log('📅 Raw startDate:', startDate);
-                    console.log('📅 Raw endDate:', endDate);
+                    console.log('📅 Raw startDate:', startDate, 'Type:', typeof startDate);
+                    console.log('📅 Raw endDate:', endDate, 'Type:', typeof endDate);
                     console.log('📅 dateObjects:', dateObjects);
                     
-                    if (startDate && endDate) {
-                        this.startDate = startDate;
-                        this.endDate = endDate;
+                    // Función para formatear fecha a YYYY-MM-DD
+                    const formatDateToISO = (date) => {
+                        if (!date) return '';
                         
-                        console.log('✅ Setting Alpine.js values:');
-                        console.log('  - this.startDate:', this.startDate);
-                        console.log('  - this.endDate:', this.endDate);
+                        // Si ya es una cadena en formato correcto, devolverla
+                        if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                            return date;
+                        }
                         
-                        this.updateDateRangeDisplay(startDate, endDate);
+                        // Si es un objeto Date, convertirlo
+                        if (date instanceof Date) {
+                            return date.toISOString().split('T')[0];
+                        }
+                        
+                        // Intentar parsear como fecha
+                        try {
+                            const parsedDate = new Date(date);
+                            if (!isNaN(parsedDate.getTime())) {
+                                return parsedDate.toISOString().split('T')[0];
+                            }
+                        } catch (e) {
+                            console.warn('Error parsing date:', date, e);
+                        }
+                        
+                        return '';
+                    };
+                    
+                    // Formatear las fechas
+                    const formattedStartDate = formatDateToISO(startDate);
+                    const formattedEndDate = formatDateToISO(endDate);
+                    
+                    console.log('📅 Formatted dates:');
+                    console.log('  - formattedStartDate:', formattedStartDate);
+                    console.log('  - formattedEndDate:', formattedEndDate);
+                    
+                    // Asignar las fechas formateadas (siempre asignar, incluso si están vacías)
+                    this.startDate = formattedStartDate;
+                    this.endDate = formattedEndDate;
+                    
+                    console.log('✅ Setting Alpine.js values:');
+                    console.log('  - this.startDate:', this.startDate);
+                    console.log('  - this.endDate:', this.endDate);
+                    
+                    // Solo actualizar display y cargar si tenemos fechas válidas
+                    if (formattedStartDate && formattedEndDate) {
+                        this.updateDateRangeDisplay(formattedStartDate, formattedEndDate);
                         this.activeQuickFilter = null; // Clear active quick filter
                         this.currentPage = 1;
                         
-                        console.log('🔄 Calling loadInvoices()...');
+                        console.log('🔄 Calling loadInvoices() with valid dates...');
                         this.loadInvoices();
                         
-                        console.log('📅 Date range selected:', { startDate, endDate });
+                        console.log('📅 Date range selected:', { 
+                            startDate: formattedStartDate, 
+                            endDate: formattedEndDate 
+                        });
                     } else {
-                        console.warn('⚠️ startDate or endDate is missing!');
+                        console.warn('⚠️ One or both dates are invalid after formatting!');
+                        console.log('  - Original startDate:', startDate);
+                        console.log('  - Original endDate:', endDate);
+                        console.log('  - Formatted startDate:', formattedStartDate);
+                        console.log('  - Formatted endDate:', formattedEndDate);
+                        
+                        // Aún así llamar a loadInvoices para limpiar filtros
+                        this.loadInvoices();
                     }
                     console.groupEnd();
                 })
                 .on('clear', () => {
                     console.group('🐛 DEBUG: Date picker clear event');
                     
+                    // Limpiar todas las variables de fecha
                     this.startDate = "";
                     this.endDate = "";
                     this.dateRangeDisplay = "";
@@ -820,13 +858,15 @@ function invoiceDemoData() {
                     this.currentPage = 1;
                     
                     console.log('✅ Cleared values:');
-                    console.log('  - this.startDate:', this.startDate);
-                    console.log('  - this.endDate:', this.endDate);
+                    console.log('  - this.startDate:', this.startDate, 'Type:', typeof this.startDate);
+                    console.log('  - this.endDate:', this.endDate, 'Type:', typeof this.endDate);
+                    console.log('  - this.dateRangeDisplay:', this.dateRangeDisplay);
+                    console.log('  - this.activeQuickFilter:', this.activeQuickFilter);
                     
-                    console.log('🔄 Calling loadInvoices()...');
+                    console.log('🔄 Calling loadInvoices() to clear filters...');
                     this.loadInvoices();
                     
-                    console.log('📅 Date range cleared');
+                    console.log('📅 Date range cleared successfully');
                     console.groupEnd();
                 })
                 .on('show', () => {
