@@ -78,7 +78,7 @@
             background-color: #4F46E5;
             color: white;
             font-weight: bold;
-            text-align: left;
+            text-align: center;
             padding: 6px 4px;
             border: 1px solid #333;
             font-size: 8px;
@@ -86,7 +86,8 @@
         table.invoices-table td {
             padding: 4px;
             border: 1px solid #ddd;
-            vertical-align: top;
+            vertical-align: middle;
+            text-align: center;
             font-size: 8px;
         }
         table.invoices-table tr:nth-child(even) {
@@ -96,10 +97,13 @@
             background-color: #e3f2fd;
         }
         .text-right {
-            text-align: right;
+            text-align: right !important;
         }
         .text-center {
-            text-align: center;
+            text-align: center !important;
+        }
+        .text-left {
+            text-align: left !important;
         }
         .status {
             padding: 2px 6px;
@@ -198,26 +202,26 @@
                 @endphp
                 @foreach($invoices as $invoice)
                     @php
-                        $totalSubtotal += $invoice->subtotal;
-                        $totalTax += $invoice->tax_amount;
-                        $totalAmount += $invoice->total_amount;
+                        $totalSubtotal += $invoice->subtotal ?? 0;
+                        $totalTax += $invoice->tax_amount ?? 0;
+                        $totalAmount += $invoice->balance_due ?? 0;
                     @endphp
                     <tr>
-                        <td><strong>{{ $invoice->invoice_number }}</strong></td>
-                        <td>{{ $invoice->bill_to_name }}</td>
-                        <td>{{ $invoice->bill_to_company ?? '-' }}</td>
-                        <td>{{ $invoice->bill_to_email ?? '-' }}</td>
-                        <td>{{ $invoice->bill_to_phone ?? '-' }}</td>
-                        <td>
+                        <td class="text-left"><strong>{{ $invoice->invoice_number }}</strong></td>
+                        <td class="text-left">{{ $invoice->bill_to_name }}</td>
+                        <td class="text-left">{{ $invoice->bill_to_company ?? '-' }}</td>
+                        <td class="text-left">{{ $invoice->bill_to_email ?? '-' }}</td>
+                        <td class="text-center">{{ $invoice->bill_to_phone ?? '-' }}</td>
+                        <td class="text-center">
                             <span class="status {{ strtolower($invoice->status) }}">
                                 {{ ucfirst($invoice->status) }}
                             </span>
                         </td>
-                        <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
-                        <td class="text-right">${{ number_format($invoice->tax_amount, 2) }}</td>
-                        <td class="text-right"><strong>${{ number_format($invoice->total_amount, 2) }}</strong></td>
+                        <td class="text-right">${{ number_format($invoice->subtotal ?? 0, 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->tax_amount ?? 0, 2) }}</td>
+                        <td class="text-right"><strong>${{ number_format($invoice->balance_due ?? 0, 2) }}</strong></td>
                         <td class="text-center">{{ $invoice->created_at->format('m/d/Y') }}</td>
-                        <td class="text-center">{{ is_array($invoice->items) ? count($invoice->items) : 0 }}</td>
+                        <td class="text-center">{{ $invoice->items ? $invoice->items->count() : 0 }}</td>
                     </tr>
                 @endforeach
             </tbody>
