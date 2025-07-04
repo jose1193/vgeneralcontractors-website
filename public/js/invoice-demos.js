@@ -921,26 +921,6 @@ function invoiceDemoData() {
                       // Crear una copia del item sin el UUID
                       const { uuid, ...itemWithoutUuid } = item;
                       console.log("Removed UUID from item:", uuid);
-                      
-                      // Formatear el rate para mostrar con comas y decimales
-                      if (itemWithoutUuid.rate !== undefined && itemWithoutUuid.rate !== null) {
-                          const rateValue = parseFloat(itemWithoutUuid.rate);
-                          if (!isNaN(rateValue)) {
-                              // Formatear con comas y 2 decimales (incluyendo 0.00)
-                              const formattedRate = rateValue.toLocaleString('en-US', {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2
-                              });
-                              itemWithoutUuid.rate = formattedRate;
-                          } else {
-                              // Si no es un número válido, establecer como 0.00
-                              itemWithoutUuid.rate = "0.00";
-                          }
-                      } else {
-                          // Si rate es undefined o null, establecer como 0.00
-                          itemWithoutUuid.rate = "0.00";
-                      }
-                      
                       return itemWithoutUuid;
                   })
                 : [];
@@ -990,7 +970,7 @@ function invoiceDemoData() {
                 service_name: "",
                 description: "",
                 quantity: 1,
-                rate: "0.00", // Inicializar con formato decimal
+                rate: 0,
                 sort_order: this.form.items.length,
             });
         },
@@ -1006,13 +986,12 @@ function invoiceDemoData() {
             console.log("Calculating totals...");
             let subtotal = 0;
             this.form.items.forEach((item, index) => {
-                // Asegurar que quantity y rate sean números, removiendo comas si existen
+                // Asegurar que quantity y rate sean números
                 const quantity = parseFloat(item.quantity || 0);
-                const rateString = (item.rate || "0").toString().replace(/,/g, "");
-                const rate = parseFloat(rateString || 0);
+                const rate = parseFloat(item.rate || 0);
 
                 console.log(
-                    `Item ${index + 1}: quantity=${quantity}, rate=${rate} (original: ${item.rate})`
+                    `Item ${index + 1}: quantity=${quantity}, rate=${rate}`
                 );
 
                 // Calcular el monto del ítem
@@ -1102,18 +1081,6 @@ function invoiceDemoData() {
                         original: originalPhone,
                         formatted: formDataToSubmit.bill_to_phone,
                     });
-                }
-
-                // ✅ Clean rate values for submission (remove commas)
-                if (formDataToSubmit.items && formDataToSubmit.items.length > 0) {
-                    formDataToSubmit.items = formDataToSubmit.items.map(item => ({
-                        ...item,
-                        rate: parseFloat(item.rate.toString().replace(/,/g, '')) || 0,
-                        quantity: parseFloat(item.quantity) || 0,
-                        amount: parseFloat(item.amount) || 0
-                    }));
-                    
-                    console.log("Items cleaned for submission:", formDataToSubmit.items);
                 }
 
                 let response;
@@ -1807,90 +1774,34 @@ invoiceDemoData = function () {
         }
     };
 
-    // Helper function to format decimal numbers with commas
-    data.formatDecimalWithCommas = function (value) {
-        if (!value || value === "" || value === "0") return "0.00";
-        
-        const numericValue = parseFloat(value.toString().replace(/[^0-9.]/g, ""));
-        if (isNaN(numericValue)) return "0.00";
-        
-        return numericValue.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    };
-
-    // Format currency input for rate field with decimal mask
+    // Format currency input for rate field
     data.formatCurrencyInput = function (event, itemIndex) {
         const input = event.target;
         const cursorPosition = input.selectionStart;
         let value = input.value;
 
-        // Si el campo está vacío, establecer valor por defecto
-        if (!value || value.trim() === "") {
-            input.value = "0.00";
-            this.form.items[itemIndex].rate = "0";
-            this.calculateTotals();
-            return;
-        }
-
         // Eliminar todo excepto números y punto decimal
-        const cleanValue = value.replace(/[^0-9.]/g, "");
-
-        // Si después de limpiar no queda nada, usar 0
-        if (!cleanValue) {
-            input.value = "0.00";
-            this.form.items[itemIndex].rate = "0";
-            this.calculateTotals();
-            return;
-        }
+        value = value.replace(/[^0-9.]/g, "");
 
         // Asegurar que solo haya un punto decimal
-        const parts = cleanValue.split(".");
-        let numericValue = parts[0] || "0";
-        let decimalPart = parts[1] || "";
-
-        // Limitar decimales a 2 dígitos
-        if (decimalPart.length > 2) {
-            decimalPart = decimalPart.substring(0, 2);
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
         }
 
-        // Crear el valor numérico limpio para cálculos
-        const cleanNumericValue = decimalPart ? `${numericValue}.${decimalPart}` : numericValue;
-
-        // Formatear el valor para mostrar con comas
-        let formattedValue = "";
-        if (numericValue && numericValue !== "0") {
-            // Agregar comas a la parte entera
-            const formattedInteger = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
-            // Si hay decimales o el usuario está escribiendo decimales
-            if (decimalPart || value.includes(".")) {
-                formattedValue = `${formattedInteger}.${decimalPart.padEnd(2, "0")}`;
-            } else {
-                formattedValue = formattedInteger + ".00";
-            }
-        } else {
-            // Si es 0, mostrar como 0.00
-            formattedValue = "0.00";
+        // Limitar a dos decimales
+        if (parts.length > 1 && parts[1].length > 2) {
+            value = parts[0] + "." + parts[1].substring(0, 2);
         }
 
-        // Actualizar el valor mostrado en el input
-        if (formattedValue !== input.value) {
-            input.value = formattedValue;
-            
-            // Calcular nueva posición del cursor considerando las comas agregadas
-            const commasBeforeCursor = (formattedValue.substring(0, cursorPosition).match(/,/g) || []).length;
-            const newCursorPos = Math.min(cursorPosition + commasBeforeCursor, formattedValue.length);
-            
+        // Actualizar el valor en el input y en el modelo
+        if (value !== input.value) {
+            input.value = value;
+            this.form.items[itemIndex].rate = value;
             // Restaurar la posición del cursor
-            setTimeout(() => {
-                input.setSelectionRange(newCursorPos, newCursorPos);
-            }, 0);
+            const newCursorPos = Math.min(cursorPosition, value.length);
+            input.setSelectionRange(newCursorPos, newCursorPos);
         }
-
-        // Guardar el valor numérico limpio en el modelo para cálculos
-        this.form.items[itemIndex].rate = cleanNumericValue || "0";
 
         // Calcular totales después de actualizar el valor
         this.calculateTotals();
