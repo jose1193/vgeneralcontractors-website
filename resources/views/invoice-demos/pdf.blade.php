@@ -31,7 +31,8 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 60px;
+            padding-left: 68px;
+            padding-top: 10px;
         }
         .logo {
             max-width: 164px;
