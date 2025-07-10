@@ -259,8 +259,8 @@
                                     x-text="errors.date_of_loss"></p>
                             </div>
 
-                            <!-- Date Received -->
-                            <div>
+                            <!-- Date Received - Removed from invoice -->
+                            {{-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date Received</label>
                                 <input type="datetime-local" x-model="form.date_received"
                                     :class="errors.date_received ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -268,10 +268,10 @@
                                     class="w-full rounded-xl shadow-sm transition-all duration-200">
                                 <p x-show="errors.date_received" class="mt-1 text-sm text-red-600"
                                     x-text="errors.date_received"></p>
-                            </div>
+                            </div> --}}
 
-                            <!-- Date Inspected -->
-                            <div>
+                            <!-- Date Inspected - Removed from invoice -->
+                            {{-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date Inspected</label>
                                 <input type="datetime-local" x-model="form.date_inspected"
                                     :class="errors.date_inspected ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -279,10 +279,10 @@
                                     class="w-full rounded-xl shadow-sm transition-all duration-200">
                                 <p x-show="errors.date_inspected" class="mt-1 text-sm text-red-600"
                                     x-text="errors.date_inspected"></p>
-                            </div>
+                            </div> --}}
 
-                            <!-- Date Entered -->
-                            <div>
+                            <!-- Date Entered - Removed from invoice -->
+                            {{-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Date Entered</label>
                                 <input type="datetime-local" x-model="form.date_entered"
                                     :class="errors.date_entered ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -290,10 +290,10 @@
                                     class="w-full rounded-xl shadow-sm transition-all duration-200">
                                 <p x-show="errors.date_entered" class="mt-1 text-sm text-red-600"
                                     x-text="errors.date_entered"></p>
-                            </div>
+                            </div> --}}
 
-                            <!-- Price List Code -->
-                            <div>
+                            <!-- Price List Code - Removed from invoice -->
+                            {{-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Price List Code</label>
                                 <input type="text" x-model="form.price_list_code"
                                     :class="errors.price_list_code ? 'border-red-300 focus:ring-red-500 focus:border-red-500' :
@@ -302,7 +302,7 @@
                                     placeholder="PLC-001">
                                 <p x-show="errors.price_list_code" class="mt-1 text-sm text-red-600"
                                     x-text="errors.price_list_code"></p>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
