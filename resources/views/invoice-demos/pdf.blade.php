@@ -181,7 +181,7 @@
                 {{ $invoice->bill_to_city }}{{ !empty($invoice->bill_to_state) ? ', '.$invoice->bill_to_state : '' }}{{ !empty($invoice->bill_to_zip) ? ' '.$invoice->bill_to_zip : '' }}
             </div>
             <div class="invoice-info">
-                <table style="width: auto; margin-left: 50px;">
+                <table style="width: auto; margin-left: 150px;">
                     <tr>
                         <td class="section-title" style="padding-right: 50px;">INVOICE</td>
                         <td style="font-weight: bold;">{{ $invoice->invoice_number }}</td>
