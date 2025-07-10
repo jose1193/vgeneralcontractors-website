@@ -22,13 +22,13 @@
         }
         .header-left {
             display: table-cell;
-            width: 50%;
+            width: 70%;
             vertical-align: top;
             text-align: left;
         }
         .header-right {
             display: table-cell;
-            width: 50%;
+            width: 30%;
             text-align: left;
             vertical-align: top;
             padding-left: 20px;
@@ -63,18 +63,19 @@
         }
         .bill-to {
             display: table-cell;
-            width: 50%;
+            width: 70%;
             vertical-align: top;
         }
         .invoice-info {
             display: table-cell;
-            width: 50%;
-            text-align: right;
+            width: 30%;
+            text-align: left;
             vertical-align: top;
         }
         .section-title {
-            font-weight: bold;
+            font-weight: normal;
             margin-bottom: 5px;
+            color: #888;
         }
         table.items {
             width: 100%;
