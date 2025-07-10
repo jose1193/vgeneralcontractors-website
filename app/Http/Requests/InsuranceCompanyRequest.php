@@ -46,7 +46,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'max:255',
                 'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
             ],
-            'user_id' => 'required|exists:users,id'
+
         ];
         
         $method = RequestMethod::from($this->method());
@@ -84,7 +84,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
                     'max:255',
                     'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
                 ],
-                'user_id' => 'required|exists:users,id'
+
             ],
             default => $baseRules
         };
@@ -145,6 +145,10 @@ class InsuranceCompanyRequest extends BaseFormRequest
         Log::debug('InsuranceCompanyRequest@prepareForValidation method entered.');
         
         $data = $this->all();
+        
+        // Set user_id from authenticated user
+        $data['user_id'] = auth()->id();
+        Log::debug('User ID set from auth.', ['user_id' => $data['user_id']]);
         
         // Clean and format phone number
         if (isset($data['phone']) && !empty($data['phone'])) {
