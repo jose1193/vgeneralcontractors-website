@@ -73,24 +73,8 @@
             vertical-align: top;
         }
         .section-title {
-            font-weight: normal;
+            font-weight: bold;
             margin-bottom: 5px;
-            color: #888;
-        }
-        .invoice-info table {
-            display: inline-block;
-        }
-        .invoice-info table td {
-            padding: 1px 0;
-            border: none;
-        }
-        .invoice-info table .section-title {
-            text-align: right;
-            padding-right: 1em;
-            color: #888;
-        }
-        .invoice-info table .value {
-            text-align: left;
         }
         table.items {
             width: 100%;
@@ -187,8 +171,8 @@
         <div class="invoice-details">
             <div class="bill-to">
                 <div class="section-title">BILL TO</div>
-                {{ $invoice->bill_to_name }}<br>
-                {{ $invoice->bill_to_address }}<br>
+                <strong>{{ $invoice->bill_to_name }}</strong><br>
+                <strong>{{ $invoice->bill_to_address }}</strong><br>
                 @if($invoice->bill_to_address_2)
                 {{ $invoice->bill_to_address_2 }}<br>
                 @endif
@@ -197,12 +181,12 @@
             <div class="invoice-info">
                 <table>
                     <tr>
-                        <td class="section-title">INVOICE</td>
-                        <td class="value">{{ $invoice->invoice_number }}</td>
+                        <td class="section-title">INVOICE #</td>
+                        <td>{{ $invoice->invoice_number }}</td>
                     </tr>
                     <tr>
                         <td class="section-title">DATE</td>
-                        <td class="value">{{ $invoice->invoice_date->format('m/d/Y') }}</td>
+                        <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
                 </table>
             </div>
