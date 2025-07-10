@@ -171,8 +171,8 @@
         <div class="invoice-details">
             <div class="bill-to">
                 <div class="section-title">BILL TO</div>
-                {{ $invoice->bill_to_name }}<br>
-                {{ $invoice->bill_to_address }}<br>
+                <strong>{{ $invoice->bill_to_name }}</strong><br>
+                <strong>{{ $invoice->bill_to_address }}</strong><br>
                 @if($invoice->bill_to_address_2)
                 {{ $invoice->bill_to_address_2 }}<br>
                 @endif
@@ -188,12 +188,6 @@
                         <td class="section-title">DATE</td>
                         <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
-                    @if($invoice->date_of_loss)
-                    <tr>
-                        <td class="section-title">DATE OF LOSS</td>
-                        <td>{{ $invoice->date_of_loss->format('m/d/Y') }}</td>
-                    </tr>
-                    @endif
                 </table>
             </div>
         </div>
@@ -248,7 +242,7 @@
                 </tr>
                 @if($invoice->date_of_loss)
                 <tr>
-                    <td>DATE OF LOSS: <span class="value">{{ $invoice->date_of_loss->format('m/d/Y') }}</span></td>
+                    <td>DOL: <span class="value">{{ $invoice->date_of_loss->format('m/d/Y') }}</span></td>
                 </tr>
                 @endif
             </table>
