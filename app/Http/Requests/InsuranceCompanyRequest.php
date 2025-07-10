@@ -53,7 +53,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
         
         $rules = match($method) {
             RequestMethod::POST => $baseRules,
-            RequestMethod::PUT, RequestMethod::PATCH => array_merge($baseRules, [
+            RequestMethod::PUT, RequestMethod::PATCH => [
                 'insurance_company_name' => [
                     'sometimes',
                     'required',
@@ -62,8 +62,30 @@ class InsuranceCompanyRequest extends BaseFormRequest
                     Rule::unique('insurance_companies', 'insurance_company_name')
                         ->ignore($this->route('insurance_company'), 'uuid')
                         ->whereNull('deleted_at')
-                ]
-            ]),
+                ],
+                'address' => 'nullable|string|max:500',
+                'phone' => [
+                    'nullable',
+                    'string',
+                    'regex:/^\+?[1-9]\d{1,14}$/',
+                    'max:20'
+                ],
+                'email' => [
+                    'nullable',
+                    'email',
+                    'max:255',
+                    Rule::unique('insurance_companies', 'email')
+                        ->ignore($this->route('insurance_company'), 'uuid')
+                        ->whereNull('deleted_at')
+                ],
+                'website' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                    'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
+                ],
+                'user_id' => 'required|exists:users,id'
+            ],
             default => $baseRules
         };
         
