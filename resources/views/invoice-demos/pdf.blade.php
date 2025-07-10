@@ -22,13 +22,13 @@
         }
         .header-left {
             display: table-cell;
-            width: 70%;
+            width: 50%;
             vertical-align: top;
             text-align: left;
         }
         .header-right {
             display: table-cell;
-            width: 30%;
+            width: 50%;
             text-align: left;
             vertical-align: top;
             padding-left: 20px;
@@ -63,12 +63,12 @@
         }
         .bill-to {
             display: table-cell;
-            width: 70%;
+            width: 50%;
             vertical-align: top;
         }
         .invoice-info {
             display: table-cell;
-            width: 30%;
+            width: 50%;
             text-align: left;
             vertical-align: top;
         }
@@ -76,6 +76,15 @@
             font-weight: normal;
             margin-bottom: 5px;
             color: #888;
+        }
+        .invoice-info table td {
+            padding: 1px 0;
+            border: none;
+            text-align: left;
+        }
+        .invoice-info table .section-title {
+            text-align: right;
+            padding-right: 1em;
         }
         table.items {
             width: 100%;
@@ -172,8 +181,8 @@
         <div class="invoice-details">
             <div class="bill-to">
                 <div class="section-title">BILL TO</div>
-                <strong>{{ $invoice->bill_to_name }}</strong><br>
-                <strong>{{ $invoice->bill_to_address }}</strong><br>
+                {{ $invoice->bill_to_name }}<br>
+                {{ $invoice->bill_to_address }}<br>
                 @if($invoice->bill_to_address_2)
                 {{ $invoice->bill_to_address_2 }}<br>
                 @endif
