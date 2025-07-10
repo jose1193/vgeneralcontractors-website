@@ -31,7 +31,7 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 117px;
+            padding-left: 120px;
             padding-top: 23px;
         }
         .logo {
