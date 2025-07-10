@@ -31,7 +31,7 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 20px;
+            padding-left: 40px;
         }
         .logo {
             max-width: 164px;
@@ -182,12 +182,12 @@
             <div class="invoice-info">
                 <table style="width: auto;">
                     <tr>
-                        <td class="section-title" style="padding-right: 15px;">INVOICE</td>
-                        <td>{{ $invoice->invoice_number }}</td>
+                        <td class="section-title" style="padding-right: 30px;">INVOICE</td>
+                        <td style="font-weight: bold;">{{ $invoice->invoice_number }}</td>
                     </tr>
                     <tr>
-                        <td class="section-title" style="padding-right: 15px;">DATE</td>
-                        <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
+                        <td class="section-title" style="padding-right: 30px;">DATE</td>
+                        <td style="font-weight: bold;">{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
                 </table>
             </div>
