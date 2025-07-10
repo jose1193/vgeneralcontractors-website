@@ -44,7 +44,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'nullable',
                 'string',
                 'max:255',
-                'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
+                'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/'
             ],
 
         ];
@@ -79,11 +79,11 @@ class InsuranceCompanyRequest extends BaseFormRequest
                         ->whereNull('deleted_at')
                 ],
                 'website' => [
-                    'nullable',
-                    'string',
-                    'max:255',
-                    'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
-                ],
+                     'nullable',
+                     'string',
+                     'max:255',
+                     'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/'
+                 ],
 
             ],
             default => $baseRules
