@@ -31,7 +31,7 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 40px;
+            padding-left: 60px;
         }
         .logo {
             max-width: 164px;
@@ -180,13 +180,13 @@
                 {{ $invoice->bill_to_city }}{{ !empty($invoice->bill_to_state) ? ', '.$invoice->bill_to_state : '' }}{{ !empty($invoice->bill_to_zip) ? ' '.$invoice->bill_to_zip : '' }}
             </div>
             <div class="invoice-info">
-                <table style="width: auto;">
+                <table style="width: auto; margin-left: 20px;">
                     <tr>
-                        <td class="section-title" style="padding-right: 30px;">INVOICE</td>
+                        <td class="section-title" style="padding-right: 50px;">INVOICE</td>
                         <td style="font-weight: bold;">{{ $invoice->invoice_number }}</td>
                     </tr>
                     <tr>
-                        <td class="section-title" style="padding-right: 30px;">DATE</td>
+                        <td class="section-title" style="padding-right: 50px;">DATE</td>
                         <td style="font-weight: bold;">{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
                 </table>
