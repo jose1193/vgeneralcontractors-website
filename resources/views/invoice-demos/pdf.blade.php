@@ -69,7 +69,7 @@
         .invoice-info {
             display: table-cell;
             width: 50%;
-            text-align: left;
+            text-align: right;
             vertical-align: top;
         }
         .section-title {
@@ -77,14 +77,20 @@
             margin-bottom: 5px;
             color: #888;
         }
+        .invoice-info table {
+            display: inline-block;
+        }
         .invoice-info table td {
             padding: 1px 0;
             border: none;
-            text-align: left;
         }
         .invoice-info table .section-title {
             text-align: right;
             padding-right: 1em;
+            color: #888;
+        }
+        .invoice-info table .value {
+            text-align: left;
         }
         table.items {
             width: 100%;
@@ -191,12 +197,12 @@
             <div class="invoice-info">
                 <table>
                     <tr>
-                        <td class="section-title">INVOICE #</td>
-                        <td>{{ $invoice->invoice_number }}</td>
+                        <td class="section-title">INVOICE</td>
+                        <td class="value">{{ $invoice->invoice_number }}</td>
                     </tr>
                     <tr>
                         <td class="section-title">DATE</td>
-                        <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
+                        <td class="value">{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
                 </table>
             </div>
