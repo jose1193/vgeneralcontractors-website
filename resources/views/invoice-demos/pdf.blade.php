@@ -24,22 +24,30 @@
             display: table-cell;
             width: 50%;
             vertical-align: top;
+            text-align: left;
         }
         .header-right {
             display: table-cell;
             width: 50%;
-            text-align: right;
+            text-align: left;
             vertical-align: top;
+            padding-left: 20px;
         }
         .logo {
             max-width: 164px;
             height: auto;
             margin-top: 10px;
+            vertical-align: top;
         }
         .company-info {
             font-size: 10px;
             line-height: 1.2;
             margin-top: 5px;
+        }
+        .company-name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
         }
         .invoice-title {
             color: #6c9bd0;
@@ -173,13 +181,19 @@
             <div class="invoice-info">
                 <table>
                     <tr>
-                        <td class="section-title">INVOICE</td>
+                        <td class="section-title">INVOICE #</td>
                         <td>{{ $invoice->invoice_number }}</td>
                     </tr>
                     <tr>
                         <td class="section-title">DATE</td>
                         <td>{{ $invoice->invoice_date->format('m/d/Y') }}</td>
                     </tr>
+                    @if($invoice->date_of_loss)
+                    <tr>
+                        <td class="section-title">DATE OF LOSS</td>
+                        <td>{{ $invoice->date_of_loss->format('m/d/Y') }}</td>
+                    </tr>
+                    @endif
                 </table>
             </div>
         </div>
@@ -232,12 +246,17 @@
                 <tr>
                     <td>POLICY NUMBER: <span class="value">{{ $invoice->policy_number }}</span></td>
                 </tr>
+                @if($invoice->date_of_loss)
+                <tr>
+                    <td>DATE OF LOSS: <span class="value">{{ $invoice->date_of_loss->format('m/d/Y') }}</span></td>
+                </tr>
+                @endif
             </table>
         </div>
         
         <!-- Footer -->
         <div class="footer">
-            Thank you for your business. Please make payment within {{ $invoice->payment_terms ?? 30 }} days.
+            Payment is due within {{ $invoice->payment_terms ?? 30 }} days of the invoice date. Thank you for your business!
         </div>
     </div>
 </body>

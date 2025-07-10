@@ -1961,5 +1961,20 @@
     "bill_to": "Facturar A",
     "balance_due": "Saldo Pendiente",
     "invoice_date": "Fecha de Factura",
-    "date_of_loss": "Fecha de Pérdida"
+    "date_of_loss": "Fecha de Pérdida",
+    "invoices_demo_traduccion_date_of_loss_header": "Fecha de Pérdida",
+    "invoices_demo_traduccion_invoice_header": "FACTURA",
+    "invoices_demo_traduccion_bill_to_header": "FACTURAR A",
+    "invoices_demo_traduccion_invoice_number_header": "FACTURA",
+    "invoices_demo_traduccion_invoice_date_header": "FECHA",
+    "invoices_demo_traduccion_service_header": "SERVICIO",
+    "invoices_demo_traduccion_description_header": "DESCRIPCIÓN",
+    "invoices_demo_traduccion_qty_header": "CANT",
+    "invoices_demo_traduccion_rate_header": "TARIFA",
+    "invoices_demo_traduccion_amount_header": "MONTO",
+    "invoices_demo_traduccion_balance_due_header": "SALDO PENDIENTE",
+    "invoices_demo_traduccion_claim_number_header": "RECLAMO #",
+    "invoices_demo_traduccion_insurance_company_header": "COMPAÑÍA DE SEGUROS",
+    "invoices_demo_traduccion_policy_number_header": "NÚMERO DE PÓLIZA",
+    "invoices_demo_traduccion_footer_text": "Gracias por su negocio. Por favor realice el pago dentro de {days} días."
 }

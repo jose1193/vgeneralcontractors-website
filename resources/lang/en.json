@@ -1863,5 +1863,15 @@
     "invoices_demo_traduccion_invoice_date_header": "Invoice Date",
     "invoices_demo_traduccion_date_of_loss_header": "Date of Loss",
     "invoices_demo_traduccion_nro_header": "Nro",
+    "invoices_demo_traduccion_invoice_header": "INVOICE",
+    "invoices_demo_traduccion_service_header": "SERVICE",
+    "invoices_demo_traduccion_description_header": "DESCRIPTION",
+    "invoices_demo_traduccion_qty_header": "QTY",
+    "invoices_demo_traduccion_rate_header": "RATE",
+    "invoices_demo_traduccion_amount_header": "AMOUNT",
+    "invoices_demo_traduccion_claim_number_header": "CLAIM #",
+    "invoices_demo_traduccion_insurance_company_header": "INSURANCE COMPANY",
+    "invoices_demo_traduccion_policy_number_header": "POLICY NUMBER",
+    "invoices_demo_traduccion_footer_text": "Thank you for your business. Please make payment within {days} days.",
     "no_appointments_found_matching_criteria": "No appointments found matching your search criteria."
 }
