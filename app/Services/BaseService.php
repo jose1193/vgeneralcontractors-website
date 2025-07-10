@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use App\Services\TransactionService;
 use App\Services\LoggerService;
+use App\Enums\CacheTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -34,8 +35,14 @@ abstract class BaseService
                 $preparedData = $this->prepareCreateData($data);
                 $entity = $this->repository->create($preparedData);
                 
+                $logMessage = match(true) {
+                    isset($entity->uuid) => 'Entity created successfully with UUID: '.$entity->uuid,
+                    default => 'Entity created successfully with ID: '.$entity->id
+                };
+                
                 $this->logger->logCrudOperation('CREATE', $entity, [
-                    'data_summary' => $this->getDataSummary($preparedData)
+                    'data_summary' => $this->getDataSummary($preparedData),
+                    'message' => $logMessage
                 ]);
 
                 return $entity;
@@ -57,8 +64,16 @@ abstract class BaseService
                 $preparedData = $this->prepareUpdateData($data);
                 $updatedEntity = $this->repository->update($entity, $preparedData);
                 
+                $changes = $updatedEntity->getChanges();
+                $logMessage = match(true) {
+                    empty($changes) => 'No changes detected during update',
+                    count($changes) === 1 => 'Updated 1 field: '.array_keys($changes)[0],
+                    default => 'Updated '.count($changes).' fields: '.implode(', ', array_keys($changes))
+                };
+                
                 $this->logger->logCrudOperation('UPDATE', $updatedEntity, [
-                    'changes' => $updatedEntity->getChanges()
+                    'changes' => $changes,
+                    'message' => $logMessage
                 ]);
 
                 return $updatedEntity;
@@ -264,4 +279,4 @@ abstract class BaseService
         
         return $summary;
     }
-} 
+}

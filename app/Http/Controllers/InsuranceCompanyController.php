@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Http\Requests\InsuranceCompanyRequest;
 use App\Services\TransactionService;
 use App\Services\InsuranceCompanyService;
+use App\Enums\RequestMethod;
+use App\Enums\CacheTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
@@ -47,45 +49,54 @@ class InsuranceCompanyController extends BaseController
      */
     public function index(Request $request): View|JsonResponse|RedirectResponse
     {
-        if ($request->ajax() || $request->wantsJson()) {
-            // For AJAX requests, use the parent implementation but with user relationship
-            $query = InsuranceCompany::with('user');
-            
-            // Apply search filter if provided
-            if ($request->has('search') && !empty($request->search)) {
-                $searchTerm = '%' . $request->search . '%';
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('insurance_company_name', 'like', $searchTerm)
-                      ->orWhere('address', 'like', $searchTerm)
-                      ->orWhere('email', 'like', $searchTerm)
-                      ->orWhere('phone', 'like', $searchTerm)
-                      ->orWhere('website', 'like', $searchTerm);
-                });
-            }
-            
-            // Apply sorting
-            $sortField = $request->input('sort_field', 'insurance_company_name');
-            $sortDirection = $request->input('sort_direction', 'asc');
-            $query->orderBy($sortField, $sortDirection);
-            
-            // Show deleted items if requested
-            if ($request->has('show_deleted') && $request->show_deleted === 'true') {
-                $query->withTrashed();
-            }
-            
-            // Paginate results
-            $perPage = (int) $request->input('per_page', 10);
-            $entities = $query->paginate($perPage);
-            
-            // Transform the collection to include user_name
-            $entities->getCollection()->transform(function ($entity) {
-                $entity->user_name = $entity->user ? $entity->user->name . ' ' . $entity->user->last_name : null;
-                return $entity;
+        return match(true) {
+            $request->ajax() || $request->wantsJson() => $this->handleAjaxIndexRequest($request),
+            default => $this->handleViewIndexRequest()
+        };
+    }
+
+    protected function handleAjaxIndexRequest(Request $request): JsonResponse
+    {
+        // For AJAX requests, use the parent implementation but with user relationship
+        $query = InsuranceCompany::with('user');
+        
+        // Apply search filter if provided
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('insurance_company_name', 'like', $searchTerm)
+                  ->orWhere('address', 'like', $searchTerm)
+                  ->orWhere('email', 'like', $searchTerm)
+                  ->orWhere('phone', 'like', $searchTerm)
+                  ->orWhere('website', 'like', $searchTerm);
             });
-            
-            return response()->json($entities);
         }
         
+        // Apply sorting
+        $sortField = $request->input('sort_field', 'insurance_company_name');
+        $sortDirection = $request->input('sort_direction', 'asc');
+        $query->orderBy($sortField, $sortDirection);
+        
+        // Show deleted items if requested
+        if ($request->has('show_deleted') && $request->show_deleted === 'true') {
+            $query->withTrashed();
+        }
+        
+        // Paginate results
+        $perPage = (int) $request->input('per_page', 10);
+        $entities = $query->paginate($perPage);
+        
+        // Transform the collection to include user_name using nullsafe operator
+        $entities->getCollection()->transform(function ($entity) {
+            $entity->user_name = $entity->user ? $entity->user->name . ' ' . $entity->user->last_name : null;
+            return $entity;
+        });
+        
+        return response()->json($entities);
+    }
+
+    protected function handleViewIndexRequest(): View
+    {
         // For view requests, get users for the modal
         $users = User::orderBy('name')->get();
         
@@ -111,7 +122,10 @@ class InsuranceCompanyController extends BaseController
         return response()->json([
             'exists' => $exists,
             'valid' => !$exists,
-            'message' => $exists ? 'This company name is already registered' : 'Company name is available'
+            'message' => match($exists) {
+                true => 'This company name is already registered',
+                false => 'Company name is available'
+            }
         ]);
     }
 
@@ -440,7 +454,10 @@ class InsuranceCompanyController extends BaseController
         return response()->json([
             'exists' => $exists,
             'valid' => !$exists,
-            'message' => $exists ? 'This email is already registered' : 'Email is available'
+            'message' => match($exists) {
+                true => 'This email is already registered',
+                false => 'Email is available'
+            }
         ]);
     }
 

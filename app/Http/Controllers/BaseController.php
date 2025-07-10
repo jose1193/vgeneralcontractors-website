@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Services\TransactionService;
 use App\Traits\ChecksPermissions;
+use App\Enums\RequestMethod;
+use App\Enums\CacheTime;
 use Throwable;
 
 abstract class BaseController extends Controller
@@ -37,69 +39,76 @@ abstract class BaseController extends Controller
         Log::debug($this->entityName.'Controller@index method entered.');
         
         if (!$this->checkPermissionWithMessage("READ_{$this->entityName}", "You don't have permission to view {$this->entityName}")) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json(['error' => "Permission denied"], 403);
-            }
-            return redirect()->back()->with('error', "Permission denied");
+            return match(true) {
+                $request->ajax() || $request->wantsJson() => response()->json(['error' => "Permission denied"], 403),
+                default => redirect()->back()->with('error', "Permission denied")
+            };
         }
         
         try {
-            if ($request->ajax() || $request->wantsJson()) {
-                Log::debug('AJAX request detected in '.$this->entityName.'Controller@index.', $request->all());
-                $query = $this->modelClass::query();
-                
-                // Apply search filter if provided
-                if ($request->has('search') && !empty($request->search)) {
-                    $searchTerm = '%' . $request->search . '%';
-                    $query->where($this->getSearchField(), 'like', $searchTerm);
-                    Log::debug('Applying search filter.', ['term' => $request->search]);
-                }
-                
-                // Apply sorting
-                $sortField = $request->input('sort_field', 'created_at');
-                $sortDirection = $request->input('sort_direction', 'desc');
-                $query->orderBy($sortField, $sortDirection);
-                Log::debug('Applying sorting.', ['field' => $sortField, 'direction' => $sortDirection]);
-                
-                // Show deleted items if requested
-                if ($request->has('show_deleted') && $request->show_deleted === 'true') {
-                    $query->withTrashed();
-                    Log::debug('Including soft-deleted entities.');
-                }
-                
-                // Paginate results
-                $perPage = (int) $request->input('per_page', 10);
-                $entities = $query->paginate($perPage);
-                
-                Log::debug('Entities fetched successfully for AJAX request.', [
-                    'count' => $entities->count(),
-                    'total' => $entities->total(),
-                    'currentPage' => $entities->currentPage(),
-                    'perPage' => $entities->perPage(),
-                ]);
-                
-                return response()->json($entities);
-            }
-            
-            Log::debug('Non-AJAX request detected, returning view.');
-            // Return the view for non-AJAX requests
-            return view($this->viewPrefix . '.index');
+            return match(true) {
+                $request->ajax() || $request->wantsJson() => $this->handleAjaxRequest($request),
+                default => $this->handleViewRequest($request)
+            };
         } catch (Throwable $e) {
             Log::error('Error fetching entities in '.$this->entityName.'Controller@index', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
+            return match(true) {
+                $request->ajax() || $request->wantsJson() => response()->json([
                     'success' => false,
                     'message' => 'Error fetching entities: ' . $e->getMessage(),
                     'error_details' => $e->getTraceAsString()
-                ], 500);
-            }
-            
-            return view($this->viewPrefix . '.index')->with('error', 'Error loading entities. Please try again.');
+                ], 500),
+                default => view($this->viewPrefix . '.index')->with('error', 'Error loading entities. Please try again.')
+            };
         }
+    }
+
+    protected function handleAjaxRequest(Request $request): JsonResponse
+    {
+        Log::debug('AJAX request detected in '.$this->entityName.'Controller@index.', $request->all());
+        $query = $this->modelClass::query();
+        
+        // Apply search filter if provided
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where($this->getSearchField(), 'like', $searchTerm);
+            Log::debug('Applying search filter.', ['term' => $request->search]);
+        }
+        
+        // Apply sorting
+        $sortField = $request->input('sort_field', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+        $query->orderBy($sortField, $sortDirection);
+        Log::debug('Applying sorting.', ['field' => $sortField, 'direction' => $sortDirection]);
+        
+        // Show deleted items if requested
+        if ($request->has('show_deleted') && $request->show_deleted === 'true') {
+            $query->withTrashed();
+            Log::debug('Including soft-deleted entities.');
+        }
+        
+        // Paginate results
+        $perPage = (int) $request->input('per_page', 10);
+        $entities = $query->paginate($perPage);
+        
+        Log::debug('Entities fetched successfully for AJAX request.', [
+            'count' => $entities->count(),
+            'total' => $entities->total(),
+            'currentPage' => $entities->currentPage(),
+            'perPage' => $entities->perPage(),
+        ]);
+        
+        return response()->json($entities);
+    }
+
+    protected function handleViewRequest(Request $request): View
+    {
+        Log::debug('Non-AJAX request detected, returning view.');
+        return view($this->viewPrefix . '.index');
     }
 
     /**
@@ -460,4 +469,4 @@ abstract class BaseController extends Controller
     {
         // Default implementation does nothing
     }
-} 
+}

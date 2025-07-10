@@ -2,6 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\BaseFormRequest;
+use App\Enums\RequestMethod;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+
 class InsuranceCompanyRequest extends BaseFormRequest
 {
     /**
@@ -9,52 +14,60 @@ class InsuranceCompanyRequest extends BaseFormRequest
      */
     public function rules(): array
     {
-        $isUpdate = $this->route('uuid') !== null;
-        $uuid = $isUpdate ? $this->route('uuid') : null;
-
-        $rules = array_merge($this->getCommonRules(), [
+        Log::debug('InsuranceCompanyRequest@rules method entered.');
+        
+        $baseRules = [
             'insurance_company_name' => [
                 'required',
                 'string',
-                'min:2',
                 'max:255',
-                $isUpdate 
-                    ? "unique:insurance_companies,insurance_company_name,{$uuid},uuid"
-                    : 'unique:insurance_companies,insurance_company_name',
-                'not_regex:/test|example|fake|asdf/i'
+                Rule::unique('insurance_companies', 'insurance_company_name')
+                    ->ignore($this->route('insurance_company'), 'uuid')
+                    ->whereNull('deleted_at')
             ],
-            'address' => [
+            'address' => 'nullable|string|max:500',
+            'phone' => [
                 'nullable',
                 'string',
-                'max:500'
+                'regex:/^\+?[1-9]\d{1,14}$/',
+                'max:20'
             ],
-            'phone' => [
-                 'nullable',
-                 'string',
-                 'max:20',
-                 'regex:/^\(\d{3}\)\s\d{3}-\d{4}$/'
-             ],
             'email' => [
                 'nullable',
                 'email',
                 'max:255',
-                $isUpdate 
-                    ? "unique:insurance_companies,email,{$uuid},uuid"
-                    : 'unique:insurance_companies,email'
+                Rule::unique('insurance_companies', 'email')
+                    ->ignore($this->route('insurance_company'), 'uuid')
+                    ->whereNull('deleted_at')
             ],
             'website' => [
                 'nullable',
-                'url',
+                'string',
                 'max:255',
-                'regex:/^https?:\/\//',
-                'not_regex:/test|example|fake|localhost/i'
+                'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
             ],
-            'user_id' => [
-                'nullable',
-                'exists:users,id'
-            ]
-        ]);
-
+            'user_id' => 'required|exists:users,id'
+        ];
+        
+        $method = RequestMethod::from($this->method());
+        
+        $rules = match($method) {
+            RequestMethod::POST => $baseRules,
+            RequestMethod::PUT, RequestMethod::PATCH => array_merge($baseRules, [
+                'insurance_company_name' => [
+                    'sometimes',
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('insurance_companies', 'insurance_company_name')
+                        ->ignore($this->route('insurance_company'), 'uuid')
+                        ->whereNull('deleted_at')
+                ]
+            ]),
+            default => $baseRules
+        };
+        
+        Log::debug('Validation rules generated.', $rules);
         return $rules;
     }
 
@@ -107,40 +120,35 @@ class InsuranceCompanyRequest extends BaseFormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Clean and format phone number to (xxx) xxx-xxxx
-        if ($this->has('phone') && !empty($this->phone)) {
-            $phone = preg_replace('/\D/', '', $this->phone);
-            if (strlen($phone) === 10) {
-                $formatted = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4);
-                $this->merge([
-                    'phone' => $formatted
-                ]);
-            }
+        Log::debug('InsuranceCompanyRequest@prepareForValidation method entered.');
+        
+        $data = $this->all();
+        
+        // Clean and format phone number
+        if (isset($data['phone']) && !empty($data['phone'])) {
+            $data['phone'] = $this->cleanPhoneNumber($data['phone']);
+            Log::debug('Phone number cleaned.', ['original' => $this->input('phone'), 'cleaned' => $data['phone']]);
         }
-
+        
         // Clean and format email
-        if ($this->has('email')) {
-            $this->merge([
-                'email' => strtolower(trim($this->email))
-            ]);
+        if (isset($data['email']) && !empty($data['email'])) {
+            $data['email'] = strtolower(trim($data['email']));
+            Log::debug('Email cleaned.', ['original' => $this->input('email'), 'cleaned' => $data['email']]);
         }
-
-        // Clean website URL
-        if ($this->has('website') && !empty($this->website)) {
-            $website = trim($this->website);
-            if (!preg_match('/^https?:\/\//', $website)) {
-                $website = 'https://' . $website;
-            }
-            $this->merge([
-                'website' => $website
-            ]);
+        
+        // Clean and format website
+        if (isset($data['website']) && !empty($data['website'])) {
+            $data['website'] = $this->formatWebsite($data['website']);
+            Log::debug('Website formatted.', ['original' => $this->input('website'), 'formatted' => $data['website']]);
         }
-
-        // Trim insurance company name
-        if ($this->has('insurance_company_name')) {
-            $this->merge([
-                'insurance_company_name' => trim($this->insurance_company_name)
-            ]);
+        
+        // Clean insurance company name
+        if (isset($data['insurance_company_name']) && !empty($data['insurance_company_name'])) {
+            $data['insurance_company_name'] = trim($data['insurance_company_name']);
+            Log::debug('Insurance company name cleaned.', ['cleaned' => $data['insurance_company_name']]);
         }
+        
+        $this->merge($data);
+        Log::debug('Data preparation completed.');
     }
 }

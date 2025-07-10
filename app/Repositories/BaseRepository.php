@@ -4,11 +4,14 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use App\Traits\CacheTraitCrud;
+use App\Enums\CacheTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Throwable;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -161,10 +164,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         foreach ($filters as $field => $value) {
             if (in_array($field, $this->filterableFields) && !empty($value)) {
-                if (is_array($value)) {
-                    $query->whereIn($field, $value);
-                } elseif ($field === 'search' && !empty($this->searchableFields)) {
-                    $query->where(function ($q) use ($value) {
+                match(true) {
+                    is_array($value) => $query->whereIn($field, $value),
+                    $field === 'search' && !empty($this->searchableFields) => $query->where(function ($q) use ($value) {
                         foreach ($this->searchableFields as $index => $searchField) {
                             if ($index === 0) {
                                 $q->where($searchField, 'LIKE', "%{$value}%");
@@ -172,12 +174,10 @@ abstract class BaseRepository implements BaseRepositoryInterface
                                 $q->orWhere($searchField, 'LIKE', "%{$value}%");
                             }
                         }
-                    });
-                } elseif ($field === 'show_deleted' && $value === 'true') {
-                    $query->withTrashed();
-                } else {
-                    $query->where($field, $value);
-                }
+                    }),
+                    $field === 'show_deleted' && $value === 'true' => $query->withTrashed(),
+                    default => $query->where($field, $value)
+                };
             }
         }
 
@@ -188,4 +188,4 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->model->getTable() . "_{$method}_" . md5(serialize($filters) . $perPage);
     }
-} 
+}
