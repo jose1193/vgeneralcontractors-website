@@ -1954,5 +1954,12 @@
     "invoices_demo_traduccion_failed_export_pdf": "Error al exportar archivo PDF",
     "invoices_demo_traduccion_pdf_generated_successfully": "PDF generado exitosamente",
     "invoices_demo_traduccion_failed_generate_pdf": "Error al generar PDF",
-    "invoices_demo_traduccion_filters_cleared_successfully": "Filtros limpiados exitosamente"
+    "invoices_demo_traduccion_filters_cleared_successfully": "Filtros limpiados exitosamente",
+    
+    "_comment_invoice_table_headers": "=== ENCABEZADOS DE TABLA DE FACTURAS ===",
+    "invoice_number": "Número de Factura",
+    "bill_to": "Facturar A",
+    "balance_due": "Saldo Pendiente",
+    "invoice_date": "Fecha de Factura",
+    "date_of_loss": "Fecha de Pérdida"
 }

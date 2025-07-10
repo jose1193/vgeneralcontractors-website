@@ -842,12 +842,12 @@
                                 <tr>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Nro
+                                        {{ __('nro') }}
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('invoice_number')"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Invoice Number
+                                        {{ __('invoice_number') }}
                                         <svg x-show="sortBy === 'invoice_number'"
                                             class="inline w-4 h-4 ml-1 text-gray-300"
                                             :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
@@ -859,7 +859,7 @@
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('bill_to_name')"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Bill To
+                                        {{ __('bill_to') }}
                                         <svg x-show="sortBy === 'bill_to_name'" class="inline w-4 h-4 ml-1 text-gray-300"
                                             :class="sortOrder === 'asc' ? 'transform rotate-180' : ''" fill="none"
                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -870,7 +870,7 @@
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('balance_due')"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Balance Due
+                                        {{ __('balance_due') }}
                                         <svg x-show="sortBy === 'balance_due'" class="inline w-4 h-4 ml-1 text-gray-300"
                                             :class="sortOrder === 'asc' ? 'transform rotate-180' : ''"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -880,11 +880,11 @@
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Status</th>
+                                        {{ __('Status') }}</th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('invoice_date')"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Invoice Date
+                                        {{ __('invoice_date') }}
                                         <svg x-show="sortBy === 'invoice_date'" class="inline w-4 h-4 ml-1 text-gray-300"
                                             :class="sortOrder === 'asc' ? 'transform rotate-180' : ''"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -895,7 +895,7 @@
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors duration-200"
                                         @click="sortInvoices('date_of_loss')"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Date of Loss
+                                        {{ __('date_of_loss') }}
                                         <svg x-show="sortBy === 'date_of_loss'" class="inline w-4 h-4 ml-1 text-gray-300"
                                             :class="sortOrder === 'asc' ? 'transform rotate-180' : ''"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -905,7 +905,7 @@
                                     </th>
                                     <th class="px-6 py-4 text-center text-xs font-semibold text-gray-200 uppercase tracking-wider"
                                         style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">
-                                        Actions</th>
+                                        {{ __('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-700">

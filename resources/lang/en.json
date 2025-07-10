@@ -1857,5 +1857,11 @@
     "invoices_demo_traduccion_pdf_generated_successfully": "PDF generated successfully",
     "invoices_demo_traduccion_failed_generate_pdf": "Failed to generate PDF",
     "invoices_demo_traduccion_filters_cleared_successfully": "Filters cleared successfully",
+    "invoices_demo_traduccion_invoice_number_header": "Invoice Number",
+    "invoices_demo_traduccion_bill_to_header": "Bill To",
+    "invoices_demo_traduccion_balance_due_header": "Balance Due",
+    "invoices_demo_traduccion_invoice_date_header": "Invoice Date",
+    "invoices_demo_traduccion_date_of_loss_header": "Date of Loss",
+    "invoices_demo_traduccion_nro_header": "Nro",
     "no_appointments_found_matching_criteria": "No appointments found matching your search criteria."
 }
