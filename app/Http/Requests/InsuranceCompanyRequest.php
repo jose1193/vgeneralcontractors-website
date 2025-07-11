@@ -16,14 +16,20 @@ class InsuranceCompanyRequest extends BaseFormRequest
     {
         Log::debug('InsuranceCompanyRequest@rules method entered.');
         
+        // Get the route parameter for updates, null for creation
+        $routeParam = $this->route('insurance_company');
+        
         $baseRules = [
             'insurance_company_name' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('insurance_companies', 'insurance_company_name')
-                    ->ignore($this->route('insurance_company'), 'uuid')
-                    ->whereNull('deleted_at')
+                $routeParam 
+                    ? Rule::unique('insurance_companies', 'insurance_company_name')
+                        ->ignore($routeParam, 'uuid')
+                        ->whereNull('deleted_at')
+                    : Rule::unique('insurance_companies', 'insurance_company_name')
+                        ->whereNull('deleted_at')
             ],
             'address' => 'nullable|string|max:500',
             'phone' => [
@@ -36,9 +42,12 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'nullable',
                 'email',
                 'max:255',
-                Rule::unique('insurance_companies', 'email')
-                    ->ignore($this->route('insurance_company'), 'uuid')
-                    ->whereNull('deleted_at')
+                $routeParam 
+                    ? Rule::unique('insurance_companies', 'email')
+                        ->ignore($routeParam, 'uuid')
+                        ->whereNull('deleted_at')
+                    : Rule::unique('insurance_companies', 'email')
+                        ->whereNull('deleted_at')
             ],
             'website' => [
                 'nullable',
@@ -63,9 +72,12 @@ class InsuranceCompanyRequest extends BaseFormRequest
                     'required',
                     'string',
                     'max:255',
-                    Rule::unique('insurance_companies', 'insurance_company_name')
-                        ->ignore($this->route('insurance_company'), 'uuid')
-                        ->whereNull('deleted_at')
+                    $routeParam 
+                        ? Rule::unique('insurance_companies', 'insurance_company_name')
+                            ->ignore($routeParam, 'uuid')
+                            ->whereNull('deleted_at')
+                        : Rule::unique('insurance_companies', 'insurance_company_name')
+                            ->whereNull('deleted_at')
                 ],
                 'address' => 'nullable|string|max:500',
                 'phone' => [
@@ -78,9 +90,12 @@ class InsuranceCompanyRequest extends BaseFormRequest
                     'nullable',
                     'email',
                     'max:255',
-                    Rule::unique('insurance_companies', 'email')
-                        ->ignore($this->route('insurance_company'), 'uuid')
-                        ->whereNull('deleted_at')
+                    $routeParam 
+                        ? Rule::unique('insurance_companies', 'email')
+                            ->ignore($routeParam, 'uuid')
+                            ->whereNull('deleted_at')
+                        : Rule::unique('insurance_companies', 'email')
+                            ->whereNull('deleted_at')
                 ],
                 'website' => [
                      'nullable',
