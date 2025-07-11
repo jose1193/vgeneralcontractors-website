@@ -29,7 +29,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
             'phone' => [
                 'nullable',
                 'string',
-                'regex:/^(\(\d{3}\)\s\d{3}-\d{4}|\+?[1-9]\d{1,14})$/',
+                'regex:/^\+?[1-9]\d{1,14}$/',
                 'max:20'
             ],
             'email' => [
@@ -71,7 +71,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'phone' => [
                     'nullable',
                     'string',
-                    'regex:/^(\(\d{3}\)\s\d{3}-\d{4}|\+?[1-9]\d{1,14})$/',
+                    'regex:/^\+?[1-9]\d{1,14}$/',
                     'max:20'
                 ],
                 'email' => [
