@@ -87,6 +87,11 @@ class InsuranceCompanyService extends BaseService
             'uuid' => (string) Str::uuid(),
             'created_by' => auth()->id(),
         ]);
+        
+        // Ensure user_id is set if not provided
+        if (!isset($prepared['user_id']) || $prepared['user_id'] === null) {
+            $prepared['user_id'] = auth()->id();
+        }
 
         // Format phone number
         if (isset($prepared['phone'])) {

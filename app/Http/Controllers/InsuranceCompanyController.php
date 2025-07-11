@@ -345,10 +345,11 @@ class InsuranceCompanyController extends BaseController
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
         $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
+        $formRequest->prepareForValidation();
         
         // Manually validate the request
         $validator = app('validator')->make(
-            $request->all(),
+            $formRequest->all(),
             $formRequest->rules(),
             $formRequest->messages(),
             $formRequest->attributes()
@@ -378,10 +379,11 @@ class InsuranceCompanyController extends BaseController
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
         $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
+        $formRequest->prepareForValidation();
         
         // Manually validate the request
         $validator = app('validator')->make(
-            $request->all(),
+            $formRequest->all(),
             $formRequest->rules(),
             $formRequest->messages(),
             $formRequest->attributes()

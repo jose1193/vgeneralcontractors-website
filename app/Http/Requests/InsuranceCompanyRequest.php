@@ -44,9 +44,13 @@ class InsuranceCompanyRequest extends BaseFormRequest
                 'nullable',
                 'string',
                 'max:255',
-                'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/'
+                'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
             ],
-
+            'user_id' => [
+                'required',
+                'integer',
+                'exists:users,id'
+            ],
         ];
         
         $method = RequestMethod::from($this->method());
@@ -82,9 +86,14 @@ class InsuranceCompanyRequest extends BaseFormRequest
                      'nullable',
                      'string',
                      'max:255',
-                     'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/'
+                     'regex:/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?\/$/'
                  ],
-
+                'user_id' => [
+                    'sometimes',
+                    'required',
+                    'integer',
+                    'exists:users,id'
+                ],
             ],
             default => $baseRules
         };

@@ -26,7 +26,7 @@ class InsuranceCompanyDTO extends BaseDTO
             'phone' => null,
             'email' => null,
             'website' => null,
-            'user_id' => null,
+            'user_id' => auth()->id(), // Set authenticated user ID as default
             'is_active' => true,
             'created_at' => null,
             'updated_at' => null,
