@@ -20,8 +20,17 @@ class InsuranceCompanyDTO extends BaseDTO
     {
         // Set defaults for required fields
         $data = array_merge([
+            'uuid' => null,
             'insurance_company_name' => '',
+            'address' => null,
+            'phone' => null,
+            'email' => null,
+            'website' => null,
+            'user_id' => null,
             'is_active' => true,
+            'created_at' => null,
+            'updated_at' => null,
+            'deleted_at' => null,
         ], $data);
         
         parent::__construct($data);

@@ -12,9 +12,27 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
      */
     public function __construct(array $data = [])
     {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
+        $reflection = new \ReflectionClass($this);
+        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+        
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            
+            if (array_key_exists($propertyName, $data)) {
+                $this->$propertyName = $data[$propertyName];
+            } elseif ($property->hasType() && !$property->getType()->allowsNull() && $property->isReadOnly()) {
+                // For required readonly properties, we need to set a default value
+                $type = $property->getType();
+                if ($type instanceof \ReflectionNamedType) {
+                    $this->$propertyName = match($type->getName()) {
+                        'string' => '',
+                        'int' => 0,
+                        'float' => 0.0,
+                        'bool' => false,
+                        'array' => [],
+                        default => null
+                    };
+                }
             }
         }
     }
@@ -46,7 +64,14 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
         
         $array = [];
         foreach ($properties as $property) {
-            $array[$property->getName()] = $property->getValue($this);
+            $propertyName = $property->getName();
+            
+            // Check if property is initialized before accessing
+            if ($property->isInitialized($this)) {
+                $array[$propertyName] = $property->getValue($this);
+            } else {
+                $array[$propertyName] = null;
+            }
         }
         
         return $array;
