@@ -379,6 +379,14 @@ class InsuranceCompanyController extends BaseController
         $formRequest = InsuranceCompanyRequest::createFrom($request);
         $formRequest->setContainer(app());
         $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
+        
+        // Set route parameters for unique validation to work properly
+        $formRequest->setRouteResolver(function () use ($uuid) {
+            $route = app('router')->current();
+            $route->setParameter('insurance_company', $uuid);
+            return $route;
+        });
+        
         $formRequest->prepareForValidation();
         
         // Manually validate the request
