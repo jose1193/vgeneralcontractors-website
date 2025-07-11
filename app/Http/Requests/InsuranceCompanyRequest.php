@@ -177,4 +177,50 @@ class InsuranceCompanyRequest extends BaseFormRequest
         $this->merge($data);
         Log::debug('Data preparation completed.');
     }
+
+    /**
+     * Clean and format phone number
+     */
+    private function cleanPhoneNumber(string $phone): string
+    {
+        // If phone is already in (xxx) xxx-xxxx format, keep it as is
+        if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $phone)) {
+            return $phone;
+        }
+        
+        // Remove all non-digits
+        $cleaned = preg_replace('/\D/', '', $phone);
+        
+        // If it's 10 digits, format to (xxx) xxx-xxxx
+        if (strlen($cleaned) === 10) {
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
+        }
+        
+        // If it's 11 digits and starts with 1, remove the 1 and format
+        if (strlen($cleaned) === 11 && str_starts_with($cleaned, '1')) {
+            $cleaned = substr($cleaned, 1);
+            return '(' . substr($cleaned, 0, 3) . ') ' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
+        }
+        
+        return $cleaned;
+    }
+
+    /**
+     * Format website URL
+     */
+    private function formatWebsite(?string $website): ?string
+    {
+        if (empty($website)) {
+            return null;
+        }
+        
+        $website = trim($website);
+        
+        // Add https:// if no protocol specified
+        if (!preg_match('/^https?:\/\//', $website)) {
+            $website = 'https://' . $website;
+        }
+        
+        return $website;
+    }
 }

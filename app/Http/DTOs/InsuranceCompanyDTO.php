@@ -42,6 +42,26 @@ class InsuranceCompanyDTO extends BaseDTO
         $this->deleted_at = $deleted_at;
     }
 
+    /**
+     * Create DTO from array data (override parent method)
+     */
+    public static function fromArray(array $data): static
+    {
+        return new static(
+            uuid: $data['uuid'] ?? null,
+            insurance_company_name: $data['insurance_company_name'] ?? '',
+            address: $data['address'] ?? null,
+            phone: $data['phone'] ?? null,
+            email: $data['email'] ?? null,
+            website: $data['website'] ?? null,
+            user_id: $data['user_id'] ?? null,
+            is_active: $data['is_active'] ?? true,
+            created_at: $data['created_at'] ?? null,
+            updated_at: $data['updated_at'] ?? null,
+            deleted_at: $data['deleted_at'] ?? null
+        );
+    }
+
     public static function fromModel($model): self
     {
         return new self(
