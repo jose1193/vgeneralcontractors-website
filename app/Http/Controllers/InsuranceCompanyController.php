@@ -232,11 +232,19 @@ class InsuranceCompanyController extends BaseController
         $formattedPhone = $this->formatPhoneForStorage($request->phone);
         $formattedWebsite = $this->formatWebsite($request->website);
         
+        // Ensure user_id is always set
+        $userId = $request->user_id ?? auth()->id();
+        
+        if (!$userId) {
+            throw new \Exception('User not authenticated');
+        }
+        
         Log::info('InsuranceCompanyController::prepareStoreData', [
             'original_phone' => $request->phone,
             'formatted_phone' => $formattedPhone,
             'original_website' => $request->website,
-            'formatted_website' => $formattedWebsite
+            'formatted_website' => $formattedWebsite,
+            'user_id' => $userId
         ]);
 
         return [
@@ -246,7 +254,7 @@ class InsuranceCompanyController extends BaseController
             'phone' => $formattedPhone,
             'email' => strtolower(trim($request->email)),
             'website' => $formattedWebsite,
-            'user_id' => $request->user_id,
+            'user_id' => $userId,
         ];
     }
 
@@ -258,11 +266,19 @@ class InsuranceCompanyController extends BaseController
         $formattedPhone = $this->formatPhoneForStorage($request->phone);
         $formattedWebsite = $this->formatWebsite($request->website);
         
+        // Ensure user_id is always set
+        $userId = $request->user_id ?? auth()->id();
+        
+        if (!$userId) {
+            throw new \Exception('User not authenticated');
+        }
+        
         Log::info('InsuranceCompanyController::prepareUpdateData', [
             'original_phone' => $request->phone,
             'formatted_phone' => $formattedPhone,
             'original_website' => $request->website,
-            'formatted_website' => $formattedWebsite
+            'formatted_website' => $formattedWebsite,
+            'user_id' => $userId
         ]);
 
         return array_filter([
@@ -271,7 +287,7 @@ class InsuranceCompanyController extends BaseController
             'phone' => $formattedPhone,
             'email' => strtolower(trim($request->email)),
             'website' => $formattedWebsite,
-            'user_id' => $request->user_id,
+            'user_id' => $userId,
         ], fn ($value) => !is_null($value));
     }
 

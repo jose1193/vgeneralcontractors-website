@@ -16,67 +16,35 @@ class InsuranceCompanyDTO extends BaseDTO
     public readonly ?string $updated_at;
     public readonly ?string $deleted_at;
 
-    public function __construct(
-        ?string $uuid = null,
-        string $insurance_company_name = '',
-        ?string $address = null,
-        ?string $phone = null,
-        ?string $email = null,
-        ?string $website = null,
-        ?int $user_id = null,
-        bool $is_active = true,
-        ?string $created_at = null,
-        ?string $updated_at = null,
-        ?string $deleted_at = null
-    ) {
-        $this->uuid = $uuid;
-        $this->insurance_company_name = $insurance_company_name;
-        $this->address = $address;
-        $this->phone = $phone;
-        $this->email = $email;
-        $this->website = $website;
-        $this->user_id = $user_id;
-        $this->is_active = $is_active;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
-        $this->deleted_at = $deleted_at;
+    public function __construct(array $data = [])
+    {
+        // Set defaults for required fields
+        $data = array_merge([
+            'insurance_company_name' => '',
+            'is_active' => true,
+        ], $data);
+        
+        parent::__construct($data);
     }
 
     /**
-     * Create DTO from array data (override parent method)
+     * Create DTO from Eloquent model
      */
-    public static function fromArray(array $data): static
+    public static function fromModel($model): static
     {
-        return new static(
-            uuid: $data['uuid'] ?? null,
-            insurance_company_name: $data['insurance_company_name'] ?? '',
-            address: $data['address'] ?? null,
-            phone: $data['phone'] ?? null,
-            email: $data['email'] ?? null,
-            website: $data['website'] ?? null,
-            user_id: $data['user_id'] ?? null,
-            is_active: $data['is_active'] ?? true,
-            created_at: $data['created_at'] ?? null,
-            updated_at: $data['updated_at'] ?? null,
-            deleted_at: $data['deleted_at'] ?? null
-        );
-    }
-
-    public static function fromModel($model): self
-    {
-        return new self(
-            uuid: $model->uuid,
-            insurance_company_name: $model->insurance_company_name,
-            address: $model->address,
-            phone: $model->phone,
-            email: $model->email,
-            website: $model->website,
-            user_id: $model->user_id,
-            is_active: $model->isActive(),
-            created_at: $model->created_at?->toISOString(),
-            updated_at: $model->updated_at?->toISOString(),
-            deleted_at: $model->deleted_at?->toISOString()
-        );
+        return static::fromArray([
+            'uuid' => $model->uuid,
+            'insurance_company_name' => $model->insurance_company_name,
+            'address' => $model->address,
+            'phone' => $model->phone,
+            'email' => $model->email,
+            'website' => $model->website,
+            'user_id' => $model->user_id,
+            'is_active' => $model->is_active,
+            'created_at' => $model->created_at?->toISOString(),
+            'updated_at' => $model->updated_at?->toISOString(),
+            'deleted_at' => $model->deleted_at?->toISOString(),
+        ]);
     }
 
     public function isActive(): bool
