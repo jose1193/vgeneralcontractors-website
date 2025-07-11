@@ -29,34 +29,17 @@ class InsuranceCompanyDTO extends BaseDTO
         ?string $updated_at = null,
         ?string $deleted_at = null
     ) {
-        // If first parameter is an array, handle it as BaseDTO constructor
-        if (is_array($uuid)) {
-            $data = $uuid;
-            $this->uuid = $data['uuid'] ?? null;
-            $this->insurance_company_name = $data['insurance_company_name'] ?? '';
-            $this->address = $data['address'] ?? null;
-            $this->phone = $data['phone'] ?? null;
-            $this->email = $data['email'] ?? null;
-            $this->website = $data['website'] ?? null;
-            $this->user_id = $data['user_id'] ?? null;
-            $this->is_active = $data['is_active'] ?? ($data['deleted_at'] === null);
-            $this->created_at = $data['created_at'] ?? null;
-            $this->updated_at = $data['updated_at'] ?? null;
-            $this->deleted_at = $data['deleted_at'] ?? null;
-        } else {
-            // Handle named parameters
-            $this->uuid = $uuid;
-            $this->insurance_company_name = $insurance_company_name;
-            $this->address = $address;
-            $this->phone = $phone;
-            $this->email = $email;
-            $this->website = $website;
-            $this->user_id = $user_id;
-            $this->is_active = $is_active;
-            $this->created_at = $created_at;
-            $this->updated_at = $updated_at;
-            $this->deleted_at = $deleted_at;
-        }
+        $this->uuid = $uuid;
+        $this->insurance_company_name = $insurance_company_name;
+        $this->address = $address;
+        $this->phone = $phone;
+        $this->email = $email;
+        $this->website = $website;
+        $this->user_id = $user_id;
+        $this->is_active = $is_active;
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
+        $this->deleted_at = $deleted_at;
     }
 
     public static function fromModel($model): self
