@@ -149,7 +149,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
     /**
      * Prepare the data for validation.
      */
-    protected function prepareForValidation(): void
+    public function prepareForValidation(): void
     {
         Log::debug('InsuranceCompanyRequest@prepareForValidation method entered.');
         
