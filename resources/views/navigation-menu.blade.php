@@ -792,19 +792,19 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         @endcan
                        
                         @can('READ_ALLIANCE_COMPANY')
-                            <a href="{{ route('alliance-companies.index') }}"
+                            <a href=""
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('alliance_companies') }}
                             </a>
                         @endcan
                         @can('READ_ZONE')
-                            <a href="{{ route('zones.index') }}"
+                            <a href=""
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('zones.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('zones') }}
                             </a>
                         @endcan
                         @can('READ_PROPERTIES')
-                            <a href="{{ route('properties.index') }}"
+                            <a href=""
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('properties.*') ? 'bg-gray-700 text-white' : '' }}">
                                 {{ __('properties') }}
                             </a>
