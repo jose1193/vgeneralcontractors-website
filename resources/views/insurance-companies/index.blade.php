@@ -1,285 +1,338 @@
-<x-crud.index-layout title="{{ __('insurance_companies_title') }}" subtitle="{{ __('insurance_companies_subtitle') }}"
-    entity-name="{{ __('insurance_company_singular') }}" entity-name-plural="{{ __('insurance_company_plural') }}"
-    search-placeholder="{{ __('search_insurance_companies_placeholder') }}" show-deleted-label="{{ __('show_inactive_records') }}"
-    add-new-label="{{ __('add_insurance_company') }}" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
-    create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
-    per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[
-              ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
-        ['field' => 'address', 'label' => __('address'), 'sortable' => false],
-        ['field' => 'email', 'label' => __('email'), 'sortable' => true],
-        ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
-        ['field' => 'website', 'label' => __('website'), 'sortable' => false],
-        ['field' => 'user_name', 'label' => __('created_by'), 'sortable' => true],
-        ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
-        ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
-    ]">
+{{-- Ejemplo de uso de la tabla glassmorphic refactorizada --}}
+@extends('layouts.app')
 
-    @push('scripts')
-        <!-- SweetAlert2 -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section('content')
+<div class="min-h-screen bg-gray-900" style="background-color: #141414;">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        
+        {{-- Header --}}
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">
+                Gestión de Usuarios
+            </h1>
+            <p class="text-gray-400">
+                Administra los usuarios del sistema con la nueva tabla glassmorphic
+            </p>
+        </div>
 
-        <script>
-            $(document).ready(function() {
-                // Recuperar estado del toggle de localStorage antes de inicializar el manager
-                const showDeletedState = localStorage.getItem('showDeleted') === 'true';
-                console.log('Estado inicial de showDeleted:', showDeletedState);
+        {{-- Filter Bar (opcional) --}}
+        <div class="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="flex gap-4">
+                <input type="text" 
+                       id="searchInput" 
+                       placeholder="Buscar usuarios..." 
+                       class="px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500">
+                
+                <select id="statusFilter" 
+                        class="px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-purple-500">
+                    <option value="">Todos los estados</option>
+                    <option value="active">Activos</option>
+                    <option value="inactive">Inactivos</option>
+                </select>
+            </div>
+            
+            <button id="addUserBtn" 
+                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                Agregar Usuario
+            </button>
+        </div>
 
-                // Make the manager globally accessible
-                window.insuranceCompanyManager = new CrudManagerModal({
-                    entityName: '{{ __('insurance_company_singular') }}',
-                    entityNamePlural: '{{ __('insurance_company_plural') }}',
-                    routes: {
-                        index: "{{ secure_url(route('insurance-companies.index', [], false)) }}",
-                        store: "{{ secure_url(route('insurance-companies.store', [], false)) }}",
-                        edit: "{{ secure_url(route('insurance-companies.edit', ':id', false)) }}",
-                        update: "{{ secure_url(route('insurance-companies.update', ':id', false)) }}",
-                        destroy: "{{ secure_url(route('insurance-companies.destroy', ':id', false)) }}",
-                        restore: "{{ secure_url(route('insurance-companies.restore', ':id', false)) }}",
-                        checkEmail: "{{ secure_url(route('insurance-companies.check-email', [], false)) }}",
-                        checkPhone: "{{ secure_url(route('insurance-companies.check-phone', [], false)) }}",
-                        checkName: "{{ secure_url(route('insurance-companies.check-name', [], false)) }}"
-                    },
-                    tableSelector: '#insuranceCompanyTable-body',
-                    searchSelector: '#searchInput',
-                    perPageSelector: '#perPage',
-                    showDeletedSelector: '#showDeleted',
-                    paginationSelector: '#pagination',
-                    alertSelector: '#alertContainer',
-                    createButtonSelector: '#createInsuranceCompanyBtn',
-                    idField: 'uuid',
-                    searchFields: ['insurance_company_name', 'address', 'email', 'phone', 'website'],
-                    // Establecer el valor inicial basado en localStorage
-                    showDeleted: showDeletedState,
-                    entityConfig: {
-                        identifierField: 'insurance_company_name',
-                        displayName: '{{ __('insurance_company_singular') }}',
-                        fallbackFields: ['email', 'address'],
-                        detailFormat: (entity) => entity.insurance_company_name
-                    },
-                    formFields: [{
-                            name: 'insurance_company_name',
-                            type: 'text',
-                            label: '{{ __('company_name') }}',
-                            placeholder: '{{ __('enter_insurance_company_name_placeholder') }}',
-                            required: true,
-                            validation: {
-                                required: true,
-                                minLength: 2,
-                                maxLength: 255,
-                                unique: {
-                                    url: "{{ route('insurance-companies.check-name') }}",
-                                    errorMessage: '{{ __('company_name_already_registered') }}',
-                                    successMessage: '{{ __('company_name_available') }}'
-                                }
-                            },
-                            capitalize: true
-                        },
-                        {
-                            name: 'address',
-                            type: 'textarea',
-                            label: '{{ __('address') }}',
-                            placeholder: '{{ __('enter_company_address_placeholder') }}',
-                            required: false,
-                            rows: 3,
-                            validation: {
-                                required: false,
-                                minLength: 10,
-                                maxLength: 500
-                            },
-                            capitalize: true
-                        },
-                        {
-                            name: 'email',
-                            type: 'email',
-                            label: '{{ __('email') }}',
-                            placeholder: '{{ __('enter_email_address_placeholder') }}',
-                            required: false,
-                            validation: {
-                                required: false,
-                                email: true,
-                                unique: {
-                                    url: "{{ route('insurance-companies.check-email') }}",
-                                    errorMessage: '{{ __('email_already_registered') }}',
-                                    successMessage: '{{ __('email_available') }}'
-                                }
-                            }
-                        },
-                        {
-                            name: 'phone',
-                            type: 'tel',
-                            label: '{{ __('phone') }}',
-                            placeholder: '{{ __('enter_phone_number_placeholder') }}',
-                            required: false,
-                            validation: {
-                                required: false,
-                                unique: {
-                                    url: "{{ route('insurance-companies.check-phone') }}",
-                                    message: '{{ __('phone_already_taken') }}'
-                                }
-                            }
-                        },
-                        {
-                            name: 'website',
-                            type: 'url',
-                            label: '{{ __('website') }}',
-                            placeholder: '{{ __('enter_website_url_placeholder') }}',
-                            required: false,
-                            validation: {
-                                required: false,
-                                url: true
-                            }
-                        },
-                        {
-                            name: 'user_id',
-                            type: 'hidden',
-                            value: '{{ auth()->id() }}'
-                        }
-                    ],
-                    tableHeaders: [{
-                            field: 'insurance_company_name',
-                            name: '{{ __('company_name') }}',
-                            sortable: true
-                        },
-                        {
-                            field: 'address',
-                            name: '{{ __('address') }}',
-                            sortable: false,
-                            getter: (entity) => {
-                                if (!entity.address) return '{{ __('not_applicable') }}';
-                                // Truncate long addresses
-                                return entity.address.length > 50 ?
-                                    entity.address.substring(0, 50) + '...' :
-                                    entity.address;
-                            }
-                        },
-                        {
-                            field: 'email',
-                            name: '{{ __('email') }}',
-                            sortable: true,
-                            getter: (entity) => {
-                                return entity.email || '{{ __('not_applicable') }}';
-                            }
-                        },
-                        {
-                            field: 'phone',
-                            name: '{{ __('phone') }}',
-                            sortable: false,
-                            getter: (entity) => {
-                                if (!entity.phone) return '{{ __('not_applicable') }}';
+        {{-- Tabla Glassmorphic --}}
+        <x-crud.glassmorphic-table 
+            id="users-table"
+            :columns="[
+                ['field' => 'id', 'label' => 'ID', 'sortable' => true],
+                ['field' => 'name', 'label' => 'Nombre', 'sortable' => true],
+                ['field' => 'email', 'label' => 'Email', 'sortable' => true],
+                ['field' => 'phone', 'label' => 'Teléfono', 'sortable' => false],
+                ['field' => 'type', 'label' => 'Tipo', 'sortable' => true],
+                ['field' => 'created_at', 'label' => 'Creado', 'sortable' => true],
+                ['field' => 'actions', 'label' => 'Acciones', 'sortable' => false]
+            ]"
+            manager-name="userManager"
+            loading-text="Cargando usuarios..."
+            no-data-text="No hay usuarios registrados"
+            :sortable="true"
+            :responsive="true"
+        />
 
-                                // Extraer solo los dígitos
-                                const cleaned = entity.phone.replace(/\D/g, '');
+        {{-- Paginación --}}
+        <div id="pagination" class="mt-6 flex justify-between items-center">
+            <div class="text-gray-400 text-sm">
+                Mostrando <span id="showing-from">1</span> a <span id="showing-to">10</span> de <span id="total-records">50</span> registros
+            </div>
+            
+            <div class="flex gap-2">
+                <button id="prevBtn" class="px-3 py-1 bg-black/50 border border-white/10 rounded text-white hover:bg-black/70 disabled:opacity-50">
+                    Anterior
+                </button>
+                <div id="pageNumbers" class="flex gap-1">
+                    <!-- Page numbers will be inserted here -->
+                </div>
+                <button id="nextBtn" class="px-3 py-1 bg-black/50 border border-white/10 rounded text-white hover:bg-black/70 disabled:opacity-50">
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                // Si tiene 11 dígitos y empieza con 1 (formato +1XXXXXXXXXX)
-                                if (cleaned.length === 11 && cleaned.startsWith('1')) {
-                                    const phoneDigits = cleaned.substring(1); // Remover el 1
-                                    return `(${phoneDigits.substring(0, 3)}) ${phoneDigits.substring(3, 6)}-${phoneDigits.substring(6, 10)}`;
-                                }
-                                // Si tiene 10 dígitos (formato XXXXXXXXXX)
-                                else if (cleaned.length === 10) {
-                                    return `(${cleaned.substring(0, 3)}) ${cleaned.substring(3, 6)}-${cleaned.substring(6, 10)}`;
-                                }
+{{-- Scripts para manejo de datos --}}
+@push('scripts')
+<script>
+// Simulación de datos de usuarios
+const sampleUsers = [
+    {
+        id: 1,
+        name: 'Juan Pérez',
+        email: 'juan@ejemplo.com',
+        phone: '+34 600 123 456',
+        type: 'administrador',
+        created_at: '2024-01-15',
+        actions: `
+            <button class="action-btn edit" data-action="edit" data-id="1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+            </button>
+            <button class="action-btn delete" data-action="delete" data-id="1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar
+            </button>
+        `
+    },
+    {
+        id: 2,
+        name: 'María García',
+        email: 'maria@ejemplo.com',
+        phone: '+34 600 234 567',
+        type: 'cobranzas',
+        created_at: '2024-01-16',
+        actions: `
+            <button class="action-btn edit" data-action="edit" data-id="2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+            </button>
+            <button class="action-btn delete" data-action="delete" data-id="2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar
+            </button>
+        `
+    },
+    {
+        id: 3,
+        name: 'Carlos López',
+        email: 'carlos@ejemplo.com',
+        phone: '+34 600 345 678',
+        type: 'informacion',
+        created_at: '2024-01-17',
+        actions: `
+            <button class="action-btn edit" data-action="edit" data-id="3">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+            </button>
+            <button class="action-btn delete" data-action="delete" data-id="3">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar
+            </button>
+        `
+    }
+];
 
-                                // Para otros formatos, devolver tal como está
-                                return entity.phone;
-                            }
-                        },
-                        {
-                            field: 'website',
-                            name: '{{ __('website') }}',
-                            sortable: false,
-                            getter: (entity) => {
-                                if (!entity.website) return '{{ __('not_applicable') }}';
-
-                                // Create clickable link
-                                const displayUrl = entity.website.replace(/^https?:\/\//, '');
-                                return `<a href="${entity.website}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${displayUrl}</a>`;
-                            }
-                        },
-                        {
-                            field: 'user_name',
-                            name: '{{ __('created_by') }}',
-                            sortable: true,
-                            getter: (entity) => {
-                                return entity.user_name || '{{ __('no_user_assigned') }}';
-                            }
-                        },
-                        {
-                            field: 'created_at',
-                            name: '{{ __('created') }}',
-                            sortable: true,
-                            getter: (entity) => {
-                                return entity.created_at ? new Date(entity.created_at)
-                                    .toLocaleDateString() : '{{ __('not_applicable') }}';
-                            }
-                        },
-                        {
-                            field: 'actions',
-                            name: '{{ __('actions') }}',
-                            sortable: false,
-                            getter: (entity) => {
-                                const isDeleted = entity.deleted_at !== null;
-                                let buttons = '';
-
-                                // Edit button (always available)
-                                buttons += `<button data-id="${entity.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" title="{{ __('edit_insurance_company') }}">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
-                                            </button>`;
-
-                                if (isDeleted) {
-                                    // Restore button
-                                    buttons += `<button data-id="${entity.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg" title="{{ __('restore_insurance_company') }}">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                                    </svg>
-                                                </button>`;
-                                } else {
-                                    // Delete button
-                                    buttons += `<button data-id="${entity.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg" title="{{ __('delete_insurance_company') }}">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                    </svg>
-                                                </button>`;
-                                }
-
-                                return buttons;
-                            }
-                        }
-                    ],
-                    translations: {
-                        confirmDelete: '{{ __('confirm_delete') }}',
-                        deleteMessage: '{{ __('delete_insurance_company_message') }}',
-                        confirmRestore: '{{ __('confirm_restore_record') }}',
-                        restoreMessage: '{{ __('restore_insurance_company_message') }}',
-                        yesDelete: '{{ __('yes_delete') }}',
-                        yesRestore: '{{ __('yes_restore') }}',
-                        cancel: '{{ __('cancel') }}',
-                        deletedSuccessfully: '{{ __('deleted_successfully') }}',
-                        restoredSuccessfully: '{{ __('restored_successfully') }}',
-                        errorDeleting: '{{ __('error_deleting_record') }}',
-                        errorRestoring: '{{ __('error_restoring_record') }}',
-                        emailAlreadyInUse: '{{ __('email_already_in_use') }}',
-                        phoneAlreadyInUse: '{{ __('phone_already_in_use') }}',
-                        nameAlreadyInUse: '{{ __('company_name_already_in_use') }}',
-                        emailAvailable: '{{ __('email_available') }}',
-                        phoneAvailable: '{{ __('phone_available') }}',
-                        nameAvailable: '{{ __('name_available') }}',
-                        invalidEmail: '{{ __('invalid_email_format') }}',
-                        minimumCharacters: '{{ __('minimum_characters') }}',
-                        mustContainNumbers: '{{ __('must_contain_numbers') }}',
-                        usernameAlreadyInUse: '{{ __('username_already_in_use') }}',
-                        usernameAvailable: '{{ __('username_available') }}',
-                        pleaseCorrectErrors: '{{ __('please_correct_errors') }}',
-                        noRecordsFound: '{{ __('no_records_found') }}'
-                    }
-                });
-
-                // Load initial data
-                window.insuranceCompanyManager.loadEntities();
+// Manager de usuarios personalizado
+class UserManager {
+    constructor() {
+        this.data = [...sampleUsers];
+        this.filteredData = [...sampleUsers];
+        this.currentPage = 1;
+        this.perPage = 10;
+        this.currentSort = { field: null, direction: null };
+        this.filters = { search: '', status: '' };
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.loadData();
+    }
+    
+    setupEventListeners() {
+        // Búsqueda
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            this.filters.search = e.target.value;
+            this.applyFilters();
+        });
+        
+        // Filtro de estado
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            this.filters.status = e.target.value;
+            this.applyFilters();
+        });
+        
+        // Botón agregar
+        document.getElementById('addUserBtn').addEventListener('click', () => {
+            this.addUser();
+        });
+        
+        // Escuchar eventos de la tabla
+        document.addEventListener('rowSelected', (e) => {
+            console.log('Fila seleccionada:', e.detail);
+        });
+    }
+    
+    loadData() {
+        const tableManager = window['users-tableManager'];
+        if (tableManager) {
+            tableManager.showLoading();
+            
+            // Simular carga asíncrona
+            setTimeout(() => {
+                this.populateTable();
+                tableManager.hideLoading();
+            }, 1000);
+        }
+    }
+    
+    populateTable() {
+        const tbody = document.getElementById('users-table-body');
+        
+        // Limpiar filas existentes (excepto loading y no-data)
+        const existingRows = tbody.querySelectorAll('tr:not(.loading-row):not(.no-data-row)');
+        existingRows.forEach(row => row.remove());
+        
+        if (this.filteredData.length === 0) {
+            const tableManager = window['users-tableManager'];
+            if (tableManager) {
+                tableManager.showNoData();
+            }
+            return;
+        }
+        
+        // Crear filas
+        this.filteredData.forEach(user => {
+            const row = this.createUserRow(user);
+            tbody.appendChild(row);
+        });
+        
+        // Procesar badges y botones
+        this.processBadgesAndButtons();
+    }
+    
+    createUserRow(user) {
+        const row = document.createElement('tr');
+        row.className = 'glassmorphic-tr';
+        
+        row.innerHTML = `
+            <td class="glassmorphic-td">${user.id}</td>
+            <td class="glassmorphic-td">${user.name}</td>
+            <td class="glassmorphic-td">${user.email}</td>
+            <td class="glassmorphic-td">${user.phone}</td>
+            <td class="glassmorphic-td status-cell" data-status="${user.type}">${user.type}</td>
+            <td class="glassmorphic-td">${user.created_at}</td>
+            <td class="glassmorphic-td actions-cell">${user.actions}</td>
+        `;
+        
+        return row;
+    }
+    
+    processBadgesAndButtons() {
+        const tableManager = window['users-tableManager'];
+        if (tableManager) {
+            const rows = document.querySelectorAll('#users-table-body tr:not(.loading-row):not(.no-data-row)');
+            rows.forEach(row => {
+                tableManager.processStatusBadges(row);
+                tableManager.processActionButtons(row);
             });
-        </script>
-    @endpush
+        }
+    }
+    
+    applyFilters() {
+        this.filteredData = this.data.filter(user => {
+            const matchesSearch = !this.filters.search || 
+                user.name.toLowerCase().includes(this.filters.search.toLowerCase()) ||
+                user.email.toLowerCase().includes(this.filters.search.toLowerCase());
+            
+            const matchesStatus = !this.filters.status || user.type === this.filters.status;
+            
+            return matchesSearch && matchesStatus;
+        });
+        
+        this.applySorting();
+        this.populateTable();
+    }
+    
+    sortBy(field, direction) {
+        this.currentSort = { field, direction };
+        this.applySorting();
+        this.populateTable();
+    }
+    
+    applySorting() {
+        if (!this.currentSort.field || !this.currentSort.direction) {
+            return;
+        }
+        
+        this.filteredData.sort((a, b) => {
+            let aVal = a[this.currentSort.field];
+            let bVal = b[this.currentSort.field];
+            
+            // Convertir a string para comparación
+            aVal = String(aVal).toLowerCase();
+            bVal = String(bVal).toLowerCase();
+            
+            if (this.currentSort.direction === 'asc') {
+                return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+            } else {
+                return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+            }
+        });
+    }
+    
+    refresh() {
+        this.loadData();
+    }
+    
+    addUser() {
+        alert('Función de agregar usuario - implementar modal aquí');
+    }
+}
 
-</x-crud.index-layout>
+// Inicializar el manager cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Crear instancia del manager
+    window.userManager = new UserManager();
+    
+    // Esperar a que la tabla esté inicializada
+    setTimeout(() => {
+        // Configurar eventos de botones de acción
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.action-btn')) {
+                const btn = e.target.closest('.action-btn');
+                const action = btn.dataset.action;
+                const id = btn.dataset.id;
+                
+                if (action === 'edit') {
+                    alert(`Editar usuario ID: ${id}`);
+                } else if (action === 'delete') {
+                    if (confirm('¿Está seguro de eliminar este usuario?')) {
+                        alert(`Eliminar usuario ID: ${id}`);
+                    }
+                }
+            }
+        });
+    }, 100);
+});
+</script>
+@endpush
