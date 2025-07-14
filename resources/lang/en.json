@@ -399,6 +399,34 @@
     "financing_description_p2": "Getting an affordable monthly payment is easier than you may think.",
     "call_us_now": "Call Us Now",
 
+    "_comment_insurance_companies": "=== INSURANCE COMPANIES ===",
+    "insurance_companies_title": "Insurance Companies Management",
+    "insurance_companies_subtitle": "Manage insurance companies, view details, and handle records.",
+    "insurance_company_singular": "Insurance Company",
+    "insurance_company_plural": "Insurance Companies",
+    "search_insurance_companies_placeholder": "Search by name, address, email...",
+    "add_insurance_company": "Add Insurance Company",
+    
+    "created_by": "Created By",
+ 
+   
+   
+   
+    
+   
+
+    "not_applicable": "N/A",
+    
+    "edit_insurance_company": "Edit Insurance Company",
+    "restore_insurance_company": "Restore Insurance Company",
+    "delete_insurance_company": "Delete Insurance Company",
+    "enter_insurance_company_name_placeholder": "Enter insurance company name",
+    "company_name_available": "Company name is available",
+    "enter_company_address_placeholder": "Enter company address (optional)",
+    "enter_email_address_placeholder": "Enter email address (optional)",
+    "enter_phone_number_placeholder": "Enter phone number (optional)",
+    "enter_website_url_placeholder": "Enter website URL (optional)",
+
     "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
     "latest_from_our_blog": "Latest From Our Blog",
     "blog_section_description": "Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.",

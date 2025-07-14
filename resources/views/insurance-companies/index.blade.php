@@ -4,14 +4,14 @@
     add-new-label="{{ __('add_insurance_company') }}" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
     create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
     per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[
-        ['field' => 'insurance_company_name', 'label' => 'Company Name', 'sortable' => true],
-        ['field' => 'address', 'label' => 'Address', 'sortable' => false],
-        ['field' => 'email', 'label' => 'Email', 'sortable' => true],
-        ['field' => 'phone', 'label' => 'Phone', 'sortable' => false],
-        ['field' => 'website', 'label' => 'Website', 'sortable' => false],
-        ['field' => 'user_name', 'label' => 'Created By', 'sortable' => true],
-        ['field' => 'created_at', 'label' => 'Created', 'sortable' => true],
-        ['field' => 'actions', 'label' => 'Actions', 'sortable' => false],
+           ['field' => 'insurance_company_name', 'label' => '{{ __('company_name') }}', 'sortable' => true],
+        ['field' => 'address', 'label' => '{{ __('address') }}', 'sortable' => false],
+        ['field' => 'email', 'label' => '{{ __('email') }}', 'sortable' => true],
+        ['field' => 'phone', 'label' => '{{ __('phone') }}', 'sortable' => false],
+        ['field' => 'website', 'label' => '{{ __('website') }}', 'sortable' => false],
+        ['field' => 'user_name', 'label' => '{{ __('created_by') }}', 'sortable' => true],
+        ['field' => 'created_at', 'label' => '{{ __('created') }}', 'sortable' => true],
+        ['field' => 'actions', 'label' => '{{ __('actions') }}', 'sortable' => false],
     ]">
 
     @push('scripts')
@@ -26,8 +26,8 @@
 
                 // Make the manager globally accessible
                 window.insuranceCompanyManager = new CrudManagerModal({
-                    entityName: 'Insurance Company',
-                    entityNamePlural: 'Insurance Companies',
+                    entityName: '{{ __('insurance_company_singular') }}',
+                    entityNamePlural: '{{ __('insurance_company_plural') }}',
                     routes: {
                         index: "{{ secure_url(route('insurance-companies.index', [], false)) }}",
                         store: "{{ secure_url(route('insurance-companies.store', [], false)) }}",
@@ -52,15 +52,15 @@
                     showDeleted: showDeletedState,
                     entityConfig: {
                         identifierField: 'insurance_company_name',
-                        displayName: 'insurance company',
+                        displayName: '{{ __('insurance_company_singular') }}',
                         fallbackFields: ['email', 'address'],
                         detailFormat: (entity) => entity.insurance_company_name
                     },
                     formFields: [{
                             name: 'insurance_company_name',
                             type: 'text',
-                            label: 'Company Name',
-                            placeholder: 'Enter insurance company name',
+                            label: '{{ __('company_name') }}',
+                            placeholder: '{{ __('enter_insurance_company_name_placeholder') }}',
                             required: true,
                             validation: {
                                 required: true,
@@ -69,7 +69,7 @@
                                 unique: {
                                     url: "{{ route('insurance-companies.check-name') }}",
                                     errorMessage: '{{ __('company_name_already_registered') }}',
-                                    successMessage: 'Company name is available'
+                                    successMessage: '{{ __('company_name_available') }}'
                                 }
                             },
                             capitalize: true
@@ -77,8 +77,8 @@
                         {
                             name: 'address',
                             type: 'textarea',
-                            label: 'Address',
-                            placeholder: 'Enter company address (optional)',
+                            label: '{{ __('address') }}',
+                            placeholder: '{{ __('enter_company_address_placeholder') }}',
                             required: false,
                             rows: 3,
                             validation: {
@@ -91,8 +91,8 @@
                         {
                             name: 'email',
                             type: 'email',
-                            label: 'Email',
-                            placeholder: 'Enter email address (optional)',
+                            label: '{{ __('email') }}',
+                            placeholder: '{{ __('enter_email_address_placeholder') }}',
                             required: false,
                             validation: {
                                 required: false,
@@ -100,15 +100,15 @@
                                 unique: {
                                     url: "{{ route('insurance-companies.check-email') }}",
                                     errorMessage: '{{ __('email_already_registered') }}',
-                                    successMessage: 'Email is available'
+                                    successMessage: '{{ __('email_available') }}'
                                 }
                             }
                         },
                         {
                             name: 'phone',
                             type: 'tel',
-                            label: 'Phone',
-                            placeholder: 'Enter phone number (optional)',
+                            label: '{{ __('phone') }}',
+                            placeholder: '{{ __('enter_phone_number_placeholder') }}',
                             required: false,
                             validation: {
                                 required: false,
@@ -121,8 +121,8 @@
                         {
                             name: 'website',
                             type: 'url',
-                            label: 'Website',
-                            placeholder: 'Enter website URL (optional)',
+                            label: '{{ __('website') }}',
+                            placeholder: '{{ __('enter_website_url_placeholder') }}',
                             required: false,
                             validation: {
                                 required: false,
@@ -137,15 +137,15 @@
                     ],
                     tableHeaders: [{
                             field: 'insurance_company_name',
-                            name: 'Company Name',
+                            name: '{{ __('company_name') }}',
                             sortable: true
                         },
                         {
                             field: 'address',
-                            name: 'Address',
+                            name: '{{ __('address') }}',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.address) return 'N/A';
+                                if (!entity.address) return '{{ __('not_applicable') }}';
                                 // Truncate long addresses
                                 return entity.address.length > 50 ?
                                     entity.address.substring(0, 50) + '...' :
@@ -154,18 +154,18 @@
                         },
                         {
                             field: 'email',
-                            name: 'Email',
+                            name: '{{ __('email') }}',
                             sortable: true,
                             getter: (entity) => {
-                                return entity.email || 'N/A';
+                                return entity.email || '{{ __('not_applicable') }}';
                             }
                         },
                         {
                             field: 'phone',
-                            name: 'Phone',
+                            name: '{{ __('phone') }}',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.phone) return 'N/A';
+                                if (!entity.phone) return '{{ __('not_applicable') }}';
 
                                 // Extraer solo los dígitos
                                 const cleaned = entity.phone.replace(/\D/g, '');
@@ -186,10 +186,10 @@
                         },
                         {
                             field: 'website',
-                            name: 'Website',
+                            name: '{{ __('website') }}',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.website) return 'N/A';
+                                if (!entity.website) return '{{ __('not_applicable') }}';
 
                                 // Create clickable link
                                 const displayUrl = entity.website.replace(/^https?:\/\//, '');
@@ -198,31 +198,31 @@
                         },
                         {
                             field: 'user_name',
-                            name: 'Created By',
+                            name: '{{ __('created_by') }}',
                             sortable: true,
                             getter: (entity) => {
-                                return entity.user_name || 'No user assigned';
+                                return entity.user_name || '{{ __('no_user_assigned') }}';
                             }
                         },
                         {
                             field: 'created_at',
-                            name: 'Created',
+                            name: '{{ __('created') }}',
                             sortable: true,
                             getter: (entity) => {
                                 return entity.created_at ? new Date(entity.created_at)
-                                    .toLocaleDateString() : 'N/A';
+                                    .toLocaleDateString() : '{{ __('not_applicable') }}';
                             }
                         },
                         {
                             field: 'actions',
-                            name: 'Actions',
+                            name: '{{ __('actions') }}',
                             sortable: false,
                             getter: (entity) => {
                                 const isDeleted = entity.deleted_at !== null;
                                 let buttons = '';
 
                                 // Edit button (always available)
-                                buttons += `<button data-id="${entity.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" title="Edit Insurance Company">
+                                buttons += `<button data-id="${entity.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg mr-2" title="{{ __('edit_insurance_company') }}">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
@@ -230,14 +230,14 @@
 
                                 if (isDeleted) {
                                     // Restore button
-                                    buttons += `<button data-id="${entity.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg" title="Restore Insurance Company">
+                                    buttons += `<button data-id="${entity.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg" title="{{ __('restore_insurance_company') }}">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                                     </svg>
                                                 </button>`;
                                 } else {
                                     // Delete button
-                                    buttons += `<button data-id="${entity.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg" title="Delete Insurance Company">
+                                    buttons += `<button data-id="${entity.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg" title="{{ __('delete_insurance_company') }}">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                     </svg>
