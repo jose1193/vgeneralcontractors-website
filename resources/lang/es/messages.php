@@ -164,7 +164,7 @@ return [
     'last_name_regex' => 'El apellido contiene caracteres inválidos',
     'email_required' => 'El correo electrónico es requerido',
     'email_invalid' => 'Por favor ingrese un correo electrónico válido',
-    'phone_required' => 'El número de teléfono es requerido',
+   
     'phone_max' => 'Por favor ingrese un número de teléfono válido de 10 dígitos',
     'address_required' => 'La dirección es requerida',
     'city_required' => 'La ciudad es requerida',

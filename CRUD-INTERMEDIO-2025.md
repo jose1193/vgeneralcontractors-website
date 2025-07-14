@@ -26,11 +26,13 @@ app/
   Services/
     BaseService.php
     InsuranceCompanyService.php
-    BaseExportService.php              # 📊 Servicio base para exportaciones
-    InsuranceCompanyExportService.php  # 📊 Servicio específico de exportación
   Exports/
-    BaseExport.php                     # 📊 Clase base para exportaciones Excel
-    InsuranceCompanyExport.php         # 📊 Exportación específica de Excel
+    Excel/
+      BaseExportExcel.php    # 📊 Clase base para exportaciones Excel
+      InsuranceCompanyExport.php         # 📊 Exportación específica de Excel
+    PDF
+      BaseExportPDF.php # 📊 Clase base para exportaciones PDF
+      InsuranceCompanyExportPDF.php  # 📊 Exportación específica de PDF
   Providers/
     AppServiceProvider.php
 
