@@ -83,31 +83,31 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                     <x-dropdown-link href="{{ route('insurance-companies.index') }}" :active="request()->routeIs('insurance-companies.index')">
                                         {{ __('insurance_company_plural') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="" :active="request()->routeIs('public-companies.index')">
+                                    <x-dropdown-link href="" :active="request()->routeIs('public-companies.index')">
                                         {{ __('public_companies') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="" :active="request()->routeIs('public-adjusters.index')">
+                                    <x-dropdown-link href="" :active="request()->routeIs('public-adjusters.index')">
                                         {{ __('public_adjusters') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('roles.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('roles.index')">
                                         {{ __('roles') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('permissions.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('permissions.index')">
                                         {{ __('permissions') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('scope-sheets.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('scope-sheets.index')">
                                         {{ __('scope_sheets') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('types-of-damage.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('types-of-damage.index')">
                                         {{ __('types_of_damage') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('causes-of-loss.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('causes-of-loss.index')">
                                         {{ __('causes_of_loss') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('products.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('products.index')">
                                         {{ __('products') }}
                                     </x-dropdown-link>
-                                     <x-dropdown-link :href="" :active="request()->routeIs('mortgage-companies.index')">
+                                     <x-dropdown-link href="" :active="request()->routeIs('mortgage-companies.index')">
                                         {{ __('mortgage_companies') }}
                                     </x-dropdown-link>
                                 </x-slot>
