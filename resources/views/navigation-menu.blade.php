@@ -63,8 +63,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Search Bar - Desktop -->
-                    <div class="relative hidden md:block flex-1 max-w-md">
-                        <!-- Management Dropdown -->
+                    <!-- Management Dropdown -->
+                    @if (auth()->check() && auth()->user()->can('READ_INSURANCE_COMPANY'))
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
                             <x-dropdown align="left" width="48">
                                 <x-slot name="trigger">
@@ -113,6 +113,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 </x-slot>
                             </x-dropdown>
                         </div>
+                    @endif
+
+                    <div class="relative hidden md:block flex-1 max-w-md">
                         <input type="text" placeholder="{{ __('search') }}"
                             class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
                             style="background-color: #2C2E36;">
