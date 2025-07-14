@@ -95,12 +95,12 @@ class CrudManagerModal {
             yesRestore: __("yes_restore", "Yes, restore"),
             cancel: __("cancel", "Cancel"),
             deletedSuccessfully: __(
-                "deleted_successfully",
-                "deleted successfully"
+                "deleted_successfully2",
+                "deleted successfully2"
             ),
             restoredSuccessfully: __(
-                "restored_successfully",
-                "restored successfully"
+                "restored_successfully2",
+                "restored successfully2"
             ),
             errorDeleting: __("error_deleting", "Error deleting record"),
             errorRestoring: __("error_restoring", "Error restoring record"),
@@ -1683,7 +1683,7 @@ class CrudManagerModal {
             });
 
             Swal.close();
-            this.showAlert("success", `${this.entityName} ${__("created_successfully", "creado exitosamente")}`);
+            this.showAlert("success", `${this.entityName} ${__("created_successfully2", "creado exitosamente")}`);
             this.loadEntities();
         } catch (error) {
             Swal.close();
@@ -1729,7 +1729,7 @@ class CrudManagerModal {
             Swal.close();
             this.showAlert(
                 "success",
-                `${this.entityName} ${__("updated_successfully", "actualizado exitosamente")}`
+                `${this.entityName} ${__("updated_successfully2", "actualizado exitosamente")}`
             );
             this.loadEntities();
         } catch (error) {
