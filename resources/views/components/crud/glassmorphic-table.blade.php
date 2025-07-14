@@ -34,7 +34,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[1px]">
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 ">
                     {{-- Loading row --}}
                     <tr id="loadingRow">
                         <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
