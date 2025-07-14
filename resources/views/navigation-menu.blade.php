@@ -474,7 +474,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     @if (!request()->routeIs('invoices.*'))
                         <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
-                            {{ __('Invoice Management') }}
+                            {{ __('invoices_demo_traduccion_title') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
                                 style="background-color: #2C2E36;"></div>
                         </div>
@@ -759,7 +759,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span class="font-medium">{{ __('Invoice Management') }}</span>
+                    <span class="font-medium">{{ __('invoices_demo_traduccion_title') }}</span>
                 </a>
             @endif
 
