@@ -1,214 +1,140 @@
-/*
- * =================================================================
- *  DARK GLASSMORPHIC TABLE - REFINED UX/UI
- * =================================================================
- *  Author: Cascade
- *  Version: 2.0
- *  Description: A clean, elegant glassmorphic table style for dark themes.
- * =================================================================
- */
+/* Glassmorphic Table Styles */
 
-/* Main container: Establishes the glass effect */
-.glass-container {
-    background: rgba(20, 20, 30, 0.6); /* Deeper, cooler dark background */
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    backdrop-filter: blur(12px) saturate(150%);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    padding: 2px; /* Small padding to contain the table */
-    overflow: hidden;
+/* Gradient Border Animation */
+@keyframes gradient-border {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-/* Table wrapper for consistent styling */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto; /* Ensures responsiveness */
+.animate-gradient-border {
+    animation: gradient-border 6s ease infinite;
 }
 
-/* Core table styles */
-.glass-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: #E0E0E0; /* Softer white for text */
-    background-color: transparent;
+/* Border Glow Animation */
+@keyframes border-glow {
+    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
+    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
 }
 
-/* Table Header */
-.glass-table thead th {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 16px 20px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 13px;
-    color: #FFFFFF;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+.animate-border-glow {
+    animation: border-glow 5s ease-in-out infinite;
 }
 
-/* Header sorting styles */
-.sort-header {
-    cursor: pointer;
-    transition: color 0.3s ease;
+/* Table Shadow Animation */
+@keyframes table-shadow {
+    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
 }
 
-.sort-header:hover {
-    color: #a78bfa; /* Light purple on hover */
+.animate-table-shadow {
+    animation: table-shadow 7s ease-in-out infinite;
 }
 
-.sort-header .sort-icon::after {
-    content: '↕️';
-    font-size: 0.75rem;
-    margin-left: 0.5rem;
-    opacity: 0.5;
-    display: inline-block;
-    transition: opacity 0.3s ease;
+/* Shimmer Animation for Headers */
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
-.sort-header.sort-asc .sort-icon::after,
-.sort-header.sort-desc .sort-icon::after {
-    opacity: 1;
-    color: #818cf8; /* Indigo color for active sort */
+.animate-shimmer {
+    animation: shimmer 3s infinite;
 }
 
-.sort-header.sort-asc .sort-icon::after { content: '↑'; }
-.sort-header.sort-desc .sort-icon::after { content: '↓'; }
-
-
-/* Table Body */
-.glass-table tbody {
-    background-color: rgba(0, 0, 0, 0.2);
+.animate-shimmer-delay-1 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.2s;
 }
 
-.glass-table tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.animate-shimmer-delay-2 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.4s;
 }
 
-.glass-table tbody tr:last-child {
-    border-bottom: none;
+.animate-shimmer-delay-3 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.6s;
 }
 
-.glass-table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.04);
-    transform: scale(1.01); /* Subtle lift effect */
-    position: relative;
-    z-index: 10;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+.animate-shimmer-delay-4 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.8s;
 }
 
-.glass-table td {
-    padding: 14px 20px;
-    vertical-align: middle;
-    font-size: 14px;
-}
-
-/* Loading and No Data states */
-.table-state-row td {
+/* Row Hover Effects */
+.glassmorphic-table-row {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
     text-align: center;
-    padding: 30px;
-    color: #9CA3AF; /* Gray text for states */
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
-.table-state-row .spinner {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(167, 139, 250, 0.3); /* Light purple border */
-    border-radius: 50%;
-    border-top-color: #a78bfa; /* Solid purple for spinning part */
-    animation: spin 1s ease-in-out infinite;
-    margin-right: 10px;
-    vertical-align: middle;
+.glassmorphic-table-row:hover {
+    transform: scale(1.005);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    z-index: 10;
+    position: relative;
+    color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.glassmorphic-table-row.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
-/* Action Buttons */
-.action-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.08);
-    color: #E0E0E0;
-    margin: 0 2px;
-    transition: all 0.2s ease-in-out;
+/* Row Indicator */
+.glassmorphic-table-row-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
+    opacity: 0;
+    transition: opacity 0.3s ease, width 0.3s ease;
 }
 
-.action-btn:hover {
-    transform: translateY(-2px);
-    color: #FFFFFF;
+.glassmorphic-table-row:hover .glassmorphic-table-row-indicator,
+.glassmorphic-table-row.active .glassmorphic-table-row-indicator {
+    opacity: 1;
+    width: 5px;
 }
-
-.action-btn.view:hover { background-color: #3B82F6; border-color: #60A5FA; }
-.action-btn.edit:hover { background-color: #F59E0B; border-color: #FBBF24; }
-.action-btn.delete:hover { background-color: #EF4444; border-color: #F87171; }
 
 /* Status Badge Styles */
 .status-badge {
     display: inline-flex;
     align-items: center;
-    padding: 4px 12px;
+    padding: 0.25rem 0.75rem;
     border-radius: 9999px;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .status-badge.active {
-    color: #34D399; /* Emerald Green */
-    background-color: rgba(16, 185, 129, 0.15);
-    border-color: rgba(16, 185, 129, 0.3);
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .status-badge.inactive {
-    color: #F87171; /* Red */
-    background-color: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.3);
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
-    .glass-table thead {
-        display: none; /* Hide header on small screens */
-    }
-    .glass-table, .glass-table tbody, .glass-table tr, .glass-table td {
-        display: block;
-        width: 100%;
-    }
-    .glass-table tr {
-        margin-bottom: 15px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-    }
-    .glass-table td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .glass-table td:before {
-        content: attr(data-label); /* Use data-label for headers */
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        text-align: left;
-        font-weight: 600;
-        color: #A78BFA;
-    }
-    .glass-table tbody tr:hover {
-        transform: none; /* Disable hover transform on mobile */
+@media (max-width: 640px) {
+    .glassmorphic-table-row:hover {
+        transform: none; /* Disable scaling on mobile */
     }
 }
