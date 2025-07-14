@@ -104,7 +104,8 @@
     "alliance_companies": "Empresas Aliadas",
     "zones": "Zonas",
     "properties": "Propiedades",
-    
+    "type_damage": "Tipo de Daño",
+    "cause_of_loss": "Causas de Pérdida",
     "users_created_successfully": "Usuario creado exitosamente. Las credenciales serán enviadas por correo electrónico.",
     "users_updated_successfully": "Usuario actualizado exitosamente.",
     "users_deleted_successfully": "Usuario eliminado exitosamente",

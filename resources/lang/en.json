@@ -131,7 +131,8 @@
     "no_role": "No Role",
     "country": "Country",
     "date_of_birth": "Date of Birth",
-
+    "type_damage": "Type Damage",
+    "cause_of_loss": "Cause of Loss",
     "company_name": "Company Name",
     "ceo": "CEO",
     "company_data_management_title": "Company Information",
