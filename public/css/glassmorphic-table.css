@@ -67,20 +67,20 @@
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 1);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
 .glassmorphic-table-row:hover {
     transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
     box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
 .glassmorphic-table-row.active {
