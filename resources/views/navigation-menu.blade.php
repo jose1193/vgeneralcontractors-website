@@ -359,6 +359,86 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                     {{ __('insurance_companies') }}
                                 </a>
                             @endcan
+                            @can('READ_PUBLIC_COMPANY')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('public_companies') }}
+                                </a>
+                            @endcan
+                            @can('READ_ROLE')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('roles.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('roles') }}
+                                </a>
+                            @endcan
+                            @can('READ_PERMISSION')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('permissions.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('permissions') }}
+                                </a>
+                            @endcan
+                            @can('READ_CUSTOMER')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('customers.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('customers') }}
+                                </a>
+                            @endcan
+                            
+                            @can('READ_PUBLIC_ADJUSTER')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-adjusters.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('public_adjusters') }}
+                                </a>
+                            @endcan
+                            @can('READ_SCOPE_SHEET')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('scope-sheets.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('scope_sheets') }}
+                                </a>
+                            @endcan
+                            @can('READ_MORTGAGE_COMPANY')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('mortgage-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('mortgage_companies') }}
+                                </a>
+                            @endcan
+                            
+                            @can('READ_ALLIANCE_COMPANY')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('alliance_companies') }}
+                                </a>
+                            @endcan
+                            @can('READ_ZONE')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('zones.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('zones') }}
+                                </a>
+                            @endcan
+                            @can('READ_PROPERTIES')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('properties.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('properties') }}
+                                </a>
+                            @endcan
+                            @can('READ_TYPE_DAMAGE')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('damage-types.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('type_damage') }}
+                                </a>
+                            @endcan
+                            @can('READ_CAUSE_OF_LOSS')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('cause-of-losses.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('cause_of_loss') }}
+                                </a>
+                            @endcan
+                            @can('READ_PRODUCT')
+                                <a href=""
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('products.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('products') }}
+                                </a>
+                            @endcan
                         </div>
                         <div class="absolute left-0 top-4 transform -translate-x-1 w-2 h-2 rotate-45"
                             style="background-color: #2C2E36;"></div>
@@ -667,6 +747,87 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 {{ __('insurance_companies') }}
                             </a>
                         @endcan
+                        @can('READ_PUBLIC_COMPANY')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('public-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('public_companies') }}
+                            </a>
+                        @endcan
+                        @can('READ_ROLE')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('roles.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('roles') }}
+                            </a>
+                        @endcan
+                        @can('READ_PERMISSION')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('permissions.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('permissions') }}
+                            </a>
+                        @endcan
+                        @can('READ_CUSTOMER')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('customers.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('customers') }}
+                            </a>
+                        @endcan
+                       
+                        @can('READ_PUBLIC_ADJUSTER')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('public-adjusters.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('public_adjusters') }}
+                            </a>
+                        @endcan
+                        @can('READ_SCOPE_SHEET')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('scope-sheets.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('scope_sheets') }}
+                            </a>
+                        @endcan
+                        @can('READ_MORTGAGE_COMPANY')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('mortgage-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('mortgage_companies') }}
+                            </a>
+                        @endcan
+                       
+                        @can('READ_ALLIANCE_COMPANY')
+                            <a href="{{ route('alliance-companies.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('alliance_companies') }}
+                            </a>
+                        @endcan
+                        @can('READ_ZONE')
+                            <a href="{{ route('zones.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('zones.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('zones') }}
+                            </a>
+                        @endcan
+                        @can('READ_PROPERTIES')
+                            <a href="{{ route('properties.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('properties.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('properties') }}
+                            </a>
+                        @endcan
+                        @can('READ_TYPE_DAMAGE')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('type-damage.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('type_damage') }}
+                            </a>
+                        @endcan
+                        @can('READ_CAUSE_OF_LOSS')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('cause-of-losses.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('cause_of_loss') }}
+                            </a>
+                        @endcan
+                        @can('READ_PRODUCT')
+                            <a href=""
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('products.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('products') }}
+                            </a>
+                        @endcan
+                        
                     </div>
                 </div>
             @endif
