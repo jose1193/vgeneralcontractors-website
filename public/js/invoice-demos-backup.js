@@ -850,6 +850,7 @@ function invoiceDemoData() {
                 sent: "bg-blue-100 text-blue-800",
                 paid: "bg-green-100 text-green-800",
                 cancelled: "bg-red-100 text-red-800",
+                print_pdf: "bg-purple-100 text-purple-800",
             };
             return classes[status] || "bg-gray-100 text-gray-800";
         },

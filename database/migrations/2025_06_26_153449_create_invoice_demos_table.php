@@ -46,7 +46,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             
             // Status
-            $table->enum('status', ['draft', 'sent', 'paid', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'sent', 'paid', 'cancelled','print_pdf'])->default('print_pdf');
             
             // pdf
             $table->string('pdf_url')->nullable();

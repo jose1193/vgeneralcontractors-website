@@ -612,11 +612,13 @@
                             <label class="block text-sm font-medium text-white/90 mb-2">📋 {{ __('invoices_demo_traduccion_status') }}</label>
                             <select x-model="statusFilter" @change="filterByStatus()"
                                 class="glass-input-filter w-full h-11 px-3 text-sm rounded-lg backdrop-blur-md bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-transparent transition-all duration-200">
+                                 <option value="print_pdf" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_print_pdf') }}</option>
                                 <option value="" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_all_statuses') }}</option>
-                                <option value="draft" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_draft') }}</option>
-                                <option value="sent" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_sent') }}</option>
-                                <option value="paid" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_paid') }}</option>
-                                <option value="cancelled" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_cancelled') }}</option>
+                    <option value="draft" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_draft') }}</option>
+                    <option value="sent" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_sent') }}</option>
+                    <option value="paid" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_paid') }}</option>
+                    <option value="cancelled" class="bg-gray-800 text-white">{{ __('invoices_demo_traduccion_cancelled') }}</option>
+                   
                             </select>
                         </div>
 

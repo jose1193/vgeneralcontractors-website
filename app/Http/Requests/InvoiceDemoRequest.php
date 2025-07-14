@@ -160,7 +160,7 @@ class InvoiceDemoRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::in(['draft', 'sent', 'paid', 'cancelled'])
+                Rule::in(['draft', 'sent', 'paid', 'cancelled', 'print_pdf'])
             ],
             
             // Invoice items (mandatory section)

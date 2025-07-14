@@ -532,7 +532,8 @@ class InvoiceDemoService
             ['value' => 'draft', 'label' => 'Draft'],
             ['value' => 'sent', 'label' => 'Sent'],
             ['value' => 'paid', 'label' => 'Paid'],
-            ['value' => 'cancelled', 'label' => 'Cancelled']
+            ['value' => 'cancelled', 'label' => 'Cancelled'],
+            ['value' => 'print_pdf', 'label' => 'Print PDF']
         ];
     }
 

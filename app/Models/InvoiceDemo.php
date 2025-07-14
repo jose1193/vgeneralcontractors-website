@@ -161,6 +161,7 @@ class InvoiceDemo extends Model
             'sent' => 'blue',
             'paid' => 'green',
             'cancelled' => 'red',
+            'print_pdf' => 'purple',
             default => 'gray'
         };
     }

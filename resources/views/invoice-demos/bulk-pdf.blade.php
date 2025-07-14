@@ -124,6 +124,10 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        .status.print_pdf {
+            background-color: #e1d4f7;
+            color: #6b46c1;
+        }
         .footer {
             margin-top: 20px;
             font-size: 8px;
