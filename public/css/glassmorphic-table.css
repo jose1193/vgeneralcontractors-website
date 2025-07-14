@@ -1,5 +1,13 @@
 /* Glassmorphic Table Styles */
 
+:root {
+    --accent-primary: #00d2ff; /* Cyan */
+    --accent-secondary: #3a47d5; /* Indigo */
+    --accent-tertiary: #0077ff; /* Electric Blue */
+    --glass-bg: rgba(255, 255, 255, 0.05); /* Subtle glass background */
+    --glass-bg-hover: rgba(255, 255, 255, 0.08); /* Hover background */
+}
+
 /* Gradient Border Animation */
 @keyframes gradient-border {
     0% { background-position: 0% 50%; }
@@ -13,9 +21,9 @@
 
 /* Border Glow Animation */
 @keyframes border-glow {
-    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
-    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
-    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    0% { box-shadow: 0 0 8px rgba(0, 210, 255, 0.12), 0 0 15px rgba(58, 71, 213, 0.1); }
+    50% { box-shadow: 0 0 18px rgba(0, 210, 255, 0.22), 0 0 30px rgba(58, 71, 213, 0.18); }
+    100% { box-shadow: 0 0 8px rgba(0, 210, 255, 0.12), 0 0 15px rgba(58, 71, 213, 0.1); }
 }
 
 .animate-border-glow {
@@ -24,9 +32,9 @@
 
 /* Table Shadow Animation */
 @keyframes table-shadow {
-    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    0% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.25), 0 0 40px rgba(58, 71, 213, 0.12); }
+    50% { box-shadow: 0 0 35px rgba(0, 210, 255, 0.35), 0 0 60px rgba(58, 71, 213, 0.25); }
+    100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.25), 0 0 40px rgba(58, 71, 213, 0.12); }
 }
 
 .animate-table-shadow {
@@ -66,21 +74,21 @@
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.95);
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0.5px); /* Efecto cristal */
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(6px);
 }
 
 .glassmorphic-table-row:hover {
-    transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    transform: scale(1.01);
+    background-color: var(--glass-bg-hover);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.35);
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
-    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
+    backdrop-filter: blur(4px);
 }
 
 .glassmorphic-table-row.active {
@@ -95,7 +103,7 @@
     top: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
+    background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
     opacity: 0;
     transition: opacity 0.3s ease, width 0.3s ease;
 }
