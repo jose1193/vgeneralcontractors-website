@@ -102,6 +102,9 @@
     "scope_sheets": "Planillas de Alcance",
     "mortgage_company": "Empresa Hipotecaria",
     "alliance_companies": "Empresas Aliadas",
+    "zones": "Zonas",
+    "properties": "Propiedades",
+    
     "users_created_successfully": "Usuario creado exitosamente. Las credenciales serán enviadas por correo electrónico.",
     "users_updated_successfully": "Usuario actualizado exitosamente.",
     "users_deleted_successfully": "Usuario eliminado exitosamente",
