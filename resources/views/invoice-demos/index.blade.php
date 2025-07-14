@@ -833,7 +833,7 @@
                 <!-- Loading State -->
                 <div x-show="loading" class="flex items-center justify-center py-12 bg-gray-900">
                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
-                    <span class="ml-3 text-gray-300">Loading invoices...</span>
+                    <span class="ml-3 text-gray-300">{{ __('invoices_demo_traduccion_loading_invoices') }}</span>
                 </div>
 
                 <!-- Table -->
@@ -965,7 +965,7 @@
                                                     getStatusBadgeClass(invoice.status),
                                                     invoice.deleted_at ? 'opacity-60' : ''
                                                 ]"
-                                                x-text="(invoice.deleted_at ? 'DELETED - ' : '') + invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)"></span>
+                                                x-text="(invoice.deleted_at ? 'DELETED - ' : '') + (invoice.status === 'print_pdf' ? 'Print PDF' : (invoice.status.replace('_', ' ').charAt(0).toUpperCase() + invoice.status.replace('_', ' ').slice(1)))"></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm"
                                             :class="invoice.deleted_at ? 'text-red-200' : 'text-gray-100'"

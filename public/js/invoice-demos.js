@@ -544,11 +544,12 @@ function invoiceDemoData() {
         // Form data options
         formData: {
             statuses: [
+                { value: "print_pdf", label: "Print PDF" },
                 { value: "draft", label: "Draft" },
                 { value: "sent", label: "Sent" },
                 { value: "paid", label: "Paid" },
                 { value: "cancelled", label: "Cancelled" },
-                { value: "print_pdf", label: "Print PDF" },
+                
             ],
             common_insurance_companies: [
                 "State Farm",

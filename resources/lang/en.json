@@ -1793,6 +1793,7 @@
     "invoices_demo_traduccion_paid": "Paid",
     "invoices_demo_traduccion_cancelled": "Cancelled",
     "invoices_demo_traduccion_print_pdf": "Print PDF",
+    "invoices_demo_traduccion_loading_invoices": "Loading invoices...",
     "invoices_demo_traduccion_hide_filters": "Hide Filters",
     "invoices_demo_traduccion_more_filters": "More Filters",
     "invoices_demo_traduccion_export": "Export",

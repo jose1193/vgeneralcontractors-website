@@ -1891,6 +1891,7 @@
     "invoices_demo_traduccion_paid": "Pagado",
     "invoices_demo_traduccion_cancelled": "Cancelado",
     "invoices_demo_traduccion_print_pdf": "Imprimir PDF",
+    "invoices_demo_traduccion_loading_invoices": "Cargando facturas...",
     "invoices_demo_traduccion_hide_filters": "Ocultar Filtros",
     "invoices_demo_traduccion_more_filters": "Más Filtros",
     "invoices_demo_traduccion_export": "Exportar",
