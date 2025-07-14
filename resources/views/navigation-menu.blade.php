@@ -63,58 +63,6 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Search Bar - Desktop -->
-                    <!-- Management Dropdown -->
-                    @if (auth()->check() && auth()->user()->can('READ_INSURANCE_COMPANY'))
-                        <div class="hidden sm:flex sm:items-center sm:ms-6">
-                            <x-dropdown align="left" width="48">
-                                <x-slot name="trigger">
-                                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
-                                        <div>{{ __('management') }}</div>
-
-                                        <div class="ms-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
-
-                                <x-slot name="content">
-                                    <x-dropdown-link href="{{ route('insurance-companies.index') }}" :active="request()->routeIs('insurance-companies.index')">
-                                        {{ __('insurance_company_plural') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link href="" :active="request()->routeIs('public-companies.index')">
-                                        {{ __('public_companies') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link href="" :active="request()->routeIs('public-adjusters.index')">
-                                        {{ __('public_adjusters') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('roles.index')">
-                                        {{ __('roles') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('permissions.index')">
-                                        {{ __('permissions') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('scope-sheets.index')">
-                                        {{ __('scope_sheets') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('types-of-damage.index')">
-                                        {{ __('types_of_damage') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('causes-of-loss.index')">
-                                        {{ __('causes_of_loss') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('products.index')">
-                                        {{ __('products') }}
-                                    </x-dropdown-link>
-                                     <x-dropdown-link href="" :active="request()->routeIs('mortgage-companies.index')">
-                                        {{ __('mortgage_companies') }}
-                                    </x-dropdown-link>
-                                </x-slot>
-                            </x-dropdown>
-                        </div>
-                    @endif
-
                     <div class="relative hidden md:block flex-1 max-w-md">
                         <input type="text" placeholder="{{ __('search') }}"
                             class="text-gray-300 placeholder-gray-500 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-yellow-500 border-0"
@@ -664,7 +612,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             </div>
 
             <!-- Dashboard -->
-            <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+            <a href="{{ route('dashboard') }}"
+                class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
                 <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
@@ -674,36 +623,6 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                 </svg>
                 <span class="font-medium">{{ __('dashboard') }}</span>
             </a>
-
-            <!-- Management Group -->
-            <div x-data="{ managementOpen: false }">
-                <!-- Trigger -->
-                <button @click="managementOpen = !managementOpen"
-                    class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h6m-6 4h6m-6 4h6M9 3v4h6V3"></path></svg>
-                        <span class="font-medium">{{ __('management') }}</span>
-                    </div>
-                    <svg class="w-5 h-5 transform transition-transform duration-200"
-                        :class="{ 'rotate-180': managementOpen }" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-                <!-- Links -->
-                <div x-show="managementOpen" x-transition class="pl-6 pt-2 space-y-1">
-                    <a href="{{ route('insurance-companies.index') }}" class="block p-2 rounded-lg text-sm {{ request()->routeIs('insurance-companies.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('insurance_company_plural') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('public-companies.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('public_companies') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('public-adjusters.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('public_adjusters') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('roles.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('roles') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('permissions.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('permissions') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('scope-sheets.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('scope_sheets') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('types-of-damage.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('types_of_damage') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('causes-of-loss.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('causes_of_loss') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('products.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('products') }}</a>
-                    <a href="" class="block p-2 rounded-lg text-sm {{ request()->routeIs('mortgage-companies.index') ? 'text-yellow-400' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">{{ __('mortgage_companies') }}</a>
-                </div>
-            </div>
 
             <!-- Administration Group -->
             @if (auth()->check() &&

@@ -414,6 +414,7 @@
     "insurance_companies_title": "Insurance Companies Management",
     "insurance_companies_subtitle": "Manage insurance companies, view details, and handle records.",
     "insurance_company_singular": "Insurance Company",
+    "insurance_companies": "Insurance Companies",
     "insurance_company_plural": "Insurance Companies",
     "search_insurance_companies_placeholder": "Search by name, address, email...",
     "add_insurance_company": "Add Insurance Company",
