@@ -1288,6 +1288,7 @@
     "restore_email_data_message": "¿Está seguro de que desea restaurar estos datos de correo?",
   
     "phone_already_taken": "Este número de teléfono ya está en uso",
+    "company_name_already_registered": "Este nombre de compañía ya está en uso",
     "add_user": "Agregar Usuario",
     "show_inactive_users": "Mostrar Usuarios Inactivos",
     "search_users": "Buscar usuarios...",

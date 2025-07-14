@@ -68,7 +68,7 @@
                                 maxLength: 255,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-name') }}",
-                                    errorMessage: 'This company name is already registered',
+                                    errorMessage: '{{ __('company_name_already_registered') }}',
                                     successMessage: 'Company name is available'
                                 }
                             },
@@ -99,7 +99,7 @@
                                 email: true,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-email') }}",
-                                    errorMessage: 'This email is already registered',
+                                    errorMessage: '{{ __('email_already_registered') }}',
                                     successMessage: 'Email is available'
                                 }
                             }
@@ -114,7 +114,7 @@
                                 required: false,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-phone') }}",
-                                    message: 'This phone number is already taken'
+                                    message: '{{ __('phone_already_taken') }}'
                                 }
                             }
                         },

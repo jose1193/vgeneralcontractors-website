@@ -1183,6 +1183,7 @@
     "restore_email_data_message_2": "Are you sure you want to restore this email data?",
     "email_already_taken": "This email address is already taken",
     "phone_already_taken": "This phone number is already taken",
+    "company_name_already_registered": "This company name is already registered",
     "add_user": "Add User",
     "show_inactive_users": "Show Inactive Users",
     "search_users": "Search users...",
