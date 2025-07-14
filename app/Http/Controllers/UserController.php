@@ -444,13 +444,13 @@ class UserController extends BaseCrudController
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => __('users_created_successfully'),
+                    'message' => "{$this->entityName} created successfully. Credentials will be sent by email.",
                     'user' => $user,
                 ]);
             }
 
             return redirect()->route("{$this->routePrefix}.index")
-                ->with('message', __('users_created_successfully'));
+                ->with('message', "{$this->entityName} created successfully. Credentials will be sent by email.");
         } catch (Throwable $e) {
             Log::error("Error creating {$this->entityName}: {$e->getMessage()}", [
                 'exception' => $e,
@@ -633,13 +633,13 @@ class UserController extends BaseCrudController
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => __('users_updated_successfully'),
+                    'message' => "{$this->entityName} updated successfully.",
                     'user' => $user,
                 ]);
             }
 
             return redirect()->route("{$this->routePrefix}.index")
-                ->with('message', __('users_updated_successfully'));
+                ->with('message', "{$this->entityName} updated successfully.");
         } catch (Throwable $e) {
             Log::error("Error updating {$this->entityName}: {$e->getMessage()}", [
                 'uuid' => $uuid,
@@ -697,12 +697,12 @@ class UserController extends BaseCrudController
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => __('users_deleted_successfully'),
+                    'message' => "{$this->entityName} deleted successfully",
                 ]);
             }
 
             return redirect()->route("{$this->routePrefix}.index")
-                ->with('message', __('users_deleted_successfully'));
+                ->with('message', "{$this->entityName} deleted successfully");
         } catch (Throwable $e) {
             Log::error("Error deleting {$this->entityName}: {$e->getMessage()}", [
                 'uuid' => $uuid,
@@ -754,12 +754,12 @@ class UserController extends BaseCrudController
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => __('users_restored_successfully'),
+                    'message' => "{$this->entityName} restored successfully",
                 ]);
             }
 
             return redirect()->route("{$this->routePrefix}.index")
-                ->with('message', __('users_restored_successfully'));
+                ->with('message', "{$this->entityName} restored successfully");
         } catch (Throwable $e) {
             Log::error("Error restoring {$this->entityName}: {$e->getMessage()}", [
                 'uuid' => $uuid,
@@ -1014,4 +1014,4 @@ class UserController extends BaseCrudController
     {
         Log::info("User restored: {$user->name} {$user->last_name} ({$user->email})");
     }
-}
+} 

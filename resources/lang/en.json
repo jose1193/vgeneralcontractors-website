@@ -101,6 +101,8 @@
     "users_updated_successfully": "User updated successfully.",
     "users_deleted_successfully": "User deleted successfully",
     "users_restored_successfully": "User restored successfully",
+    "confirm_delete_entity": "Do you want to delete",
+    "confirm_restore_entity": "Do you want to restore",
     "user": "user",
     "name": "Name",
     "username": "Username",

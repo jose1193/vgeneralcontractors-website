@@ -1683,7 +1683,7 @@ class CrudManagerModal {
             });
 
             Swal.close();
-            this.showAlert("success", `${this.entityName} creado exitosamente`);
+            this.showAlert("success", `${this.entityName} ${__("created_successfully", "creado exitosamente")}`);
             this.loadEntities();
         } catch (error) {
             Swal.close();
@@ -1729,7 +1729,7 @@ class CrudManagerModal {
             Swal.close();
             this.showAlert(
                 "success",
-                `${this.entityName} actualizado exitosamente`
+                `${this.entityName} ${__("updated_successfully", "actualizado exitosamente")}`
             );
             this.loadEntities();
         } catch (error) {
@@ -1881,7 +1881,7 @@ class CrudManagerModal {
             entityIdentifier &&
             entityIdentifier !== __("this_element", "this element")
         ) {
-            customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            customMessage = `${__('confirm_delete_entity', '¿Deseas eliminar')} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
@@ -1973,7 +1973,7 @@ class CrudManagerModal {
             entityIdentifier &&
             entityIdentifier !== __("this_element", "this element")
         ) {
-            customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            customMessage = `${__('confirm_restore_entity', '¿Deseas restaurar')} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
