@@ -32,7 +32,7 @@
     "roof_repair": "Reparación de Techo",
     "storm_damage_service": "Daños por Tormenta",
     "hail_damage_service": "Daños por Granizo",
-    "products": "Productos",
+
 
     "virtual_remodeler": "Remodelador Virtual",
     "insurance_claims": "Reclamos de Seguros",
@@ -421,6 +421,21 @@
     "enter_email_address_placeholder": "Ingresa el correo electrónico (opcional)",
     "enter_phone_number_placeholder": "Ingresa el número de teléfono (opcional)",
     "enter_website_url_placeholder": "Ingresa la URL del sitio web (opcional)",
+
+    "_comment_pagination": "=== PAGINACIÓN ===",
+    "Showing :first to :last of :total results": "Mostrando de :first a :last de :total resultados",
+
+    "_comment_navigation_menu": "=== MENÚ DE NAVEGACIÓN ===",
+    "management": "Gestión",
+    "public_companies": "Compañías Públicas",
+    "public_adjusters": "Ajustadores Públicos",
+    "roles": "Roles",
+    "permissions": "Permisos",
+    "scope_sheets": "Hojas de Alcance",
+    "types_of_damage": "Tipos de Daño",
+    "causes_of_loss": "Causas de Pérdida",
+    
+    "mortgage_companies": "Compañías Hipotecarias",
     "new_roof_hero_subtitle": "Soluciones de Techado en Houston, Dallas y Áreas Circundantes",
     "expert_new_roof_installation": "Instalación Experta de Techos Nuevos",
     "new_roof_description": "En <strong>V General Contractors</strong>, nos enorgullece ser la opción de confianza de Houston y Dallas para instalaciones de techos nuevos. <strong>Trabajamos con ajustadores públicos CERTIFICADOS para MAXIMIZAR su reclamo de seguro</strong> si su reemplazo de techo se debe a daños por tormenta o granizo. Nuestro enfoque en la artesanía de calidad y la satisfacción del cliente significa que su techo nuevo se instala con los más altos estándares y está cubierto por nuestra garantía integral.",
