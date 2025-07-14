@@ -17,7 +17,7 @@
     </div>
 
     {{-- Table container with enhanced animated shadows --}}
-    <div class="relative filter blur-[0.5px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
+    <div class="relative filter blur-[1px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
         <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
             <table id="{{ $id }}" class="w-full">
                 <thead>
@@ -34,7 +34,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[1px]">
                     {{-- Loading row --}}
                     <tr id="loadingRow">
                         <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
