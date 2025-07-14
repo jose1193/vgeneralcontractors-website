@@ -14,7 +14,7 @@ function initGlassmorphicTable(tableId) {
     const tableBody = document.getElementById(`${tableId}-body`);
     if (!tableBody) return;
 
-    // Add enhanced table appearance
+    // Add enhanced table appearance for dark background
     enhanceTableAppearance(table);
 
     // Initialize sort functionality if it exists
@@ -124,127 +124,37 @@ function handleRowMouseOver(event) {
         
         row.style.transform = 'scale(1.005)';
         row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-        row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
-        row.style.zIndex = '10';
-        row.style.position = 'relative';
-        row.style.color = 'var(--text-color)';
-    }
-}
+        row.style.boxShadow = '0 0 20px rgba(138, 43,
 
-/**
- * Handle mouseout event for table rows
- * @param {Event} event - The mouseout event
- */
-function handleRowMouseOut(event) {
-    const row = event.target.closest('tr');
-    if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
-        // Reset styles when mouse leaves
-        row.style.transform = '';
-        row.style.backgroundColor = 'var(--row-bg)';
-        row.style.boxShadow = '';
-        row.style.zIndex = '';
-        row.style.position = '';
-        row.style.color = 'var(--text-color)';
-    }
-}
-
-/**
- * Handle click event for table rows
- * @param {Event} event - The click event
- */
-function handleRowClick(event) {
-    const row = event.target.closest('tr');
-    if (row && !row.id.includes('loadingRow')) {
-        // Remove active class from all rows
-        const allRows = row.parentElement.querySelectorAll('tr');
-        allRows.forEach(r => r.classList.remove('active'));
+        function enhanceTableAppearance(table) {
+            const headers = table.querySelectorAll('th');
+            headers.forEach(header => {
+                header.style.borderBottom = '1px solid var(--border-color)';
+                header.style.color = 'var(--header-text)';
+                header.style.fontWeight = '500';
+                header.style.textTransform = 'uppercase';
+                header.style.letterSpacing = '0.05em';
+                header.style.padding = '12px 16px';
+                header.style.fontSize = '0.75rem';
+                header.style.textAlign = 'center';
+                header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+                // Removed: header.style.filter = 'blur(0.5px)';
+            });
         
-        // Add active class to clicked row
-        row.classList.add('active');
-    }
-}
-
-/**
- * Observe changes to the table body and reinitialize effects when content changes
- * @param {HTMLElement} tableBody - The table body element
- */
-function observeTableChanges(tableBody) {
-    // Create a MutationObserver to watch for changes to the table
-    const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            if (mutation.type === 'childList') {
-                // Table content has changed, reinitialize row effects
-                setupExistingRows(tableBody);
+            const cells = table.querySelectorAll('td');
+            cells.forEach(cell => {
+                cell.style.padding = '12px 16px';
+                cell.style.color = 'var(--text-color)';
+                cell.style.fontSize = '0.875rem';
+                cell.style.textAlign = 'center';
+                cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+                cell.style.overflowWrap = 'break-word'; // Added for long text
+            });
+        
+            table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
+            const tbody = table.querySelector('tbody');
+            if (tbody) {
+                tbody.style.backgroundColor = 'var(--row-bg)';
+                // Removed: tbody.style.filter = 'blur(0.5px)';
             }
-        });
-    });
-    
-    // Start observing the table body for changes
-    observer.observe(tableBody, { childList: true });
-}
-
-/**
- * Format status badges in the table
- * @param {string} tableId - The ID of the table element
- */
-function formatStatusBadges(tableId) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    
-    const statusCells = table.querySelectorAll('.status-cell');
-    
-    statusCells.forEach(cell => {
-        const status = cell.textContent.trim().toLowerCase();
-        cell.innerHTML = ''; // Clear the cell
-        
-        const badge = document.createElement('span');
-        badge.className = `status-badge ${status}`;
-        badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        
-        cell.appendChild(badge);
-    });
-}
-
-/**
- * Enhance table appearance for dark background with modern 2025 glassmorphic style
- * @param {HTMLElement} table - The table element
- */
-function enhanceTableAppearance(table) {
-    // Add styles to the table headers
-    const headers = table.querySelectorAll('th');
-    headers.forEach(header => {
-        header.style.borderBottom = '1px solid var(--border-color)';
-        header.style.color = 'var(--header-text)';
-        header.style.fontWeight = '500';
-        header.style.textTransform = 'uppercase';
-        header.style.letterSpacing = '0.05em';
-        header.style.padding = '12px 16px';
-        header.style.fontSize = '0.75rem';
-        header.style.textAlign = 'center';
-        header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
-    });
-
-    // Add styles to the table cells
-    const cells = table.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.style.padding = '12px 16px';
-        cell.style.color = 'var(--text-color)';
-        cell.style.fontSize = '0.875rem';
-        cell.style.textAlign = 'center';
-        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
-        cell.style.overflowWrap = 'break-word';
-    });
-
-    // Add a subtle text shadow to the entire table
-    table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
-    
-    // Apply background to the table body
-    const tbody = table.querySelector('tbody');
-    if (tbody) {
-        tbody.style.backgroundColor = 'var(--row-bg)';
-    }
-}
-
-// Export functions for global use
-window.initGlassmorphicTable = initGlassmorphicTable;
-window.formatStatusBadges = formatStatusBadges;
+        }

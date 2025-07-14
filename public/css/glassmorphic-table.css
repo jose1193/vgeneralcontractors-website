@@ -61,18 +61,14 @@
     animation-delay: 0.8s;
 }
 
-/* Table-specific styles */
-.glassmorphic-table td {
-    overflow-wrap: break-word;
-}
-
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     color: var(--text-color);
     text-align: center;
     background-color: var(--row-bg);
+    overflow-wrap: break-word;
 }
 
 .glassmorphic-table-row:hover {
@@ -117,7 +113,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--badge-text);
+    color: white;
 }
 
 .status-badge.active {
