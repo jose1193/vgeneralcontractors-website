@@ -1,7 +1,7 @@
-<x-crud.index-layout title="Insurance Companies Management" subtitle="Manage insurance companies and their information"
-    entity-name="Insurance Company" entity-name-plural="Insurance Companies"
-    search-placeholder="Search insurance companies..." show-deleted-label="{{ __('show_inactive_records') }}"
-    add-new-label="Add Insurance Company" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
+<x-crud.index-layout title="{{ __('insurance_companies_title') }}" subtitle="{{ __('insurance_companies_subtitle') }}"
+    entity-name="{{ __('insurance_company_singular') }}" entity-name-plural="{{ __('insurance_company_plural') }}"
+    search-placeholder="{{ __('search_insurance_companies_placeholder') }}" show-deleted-label="{{ __('show_inactive_records') }}"
+    add-new-label="{{ __('add_insurance_company') }}" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
     create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
     per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[
         ['field' => 'insurance_company_name', 'label' => 'Company Name', 'sortable' => true],
