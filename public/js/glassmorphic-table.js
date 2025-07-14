@@ -228,7 +228,6 @@ function enhanceTableAppearance(table) {
         header.style.letterSpacing = '0.05em';
         header.style.padding = '12px 16px';
         header.style.fontSize = '0.75rem';
-        header.style.filter = 'blur(0.5px)';
         header.style.textAlign = 'center';
         header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
@@ -246,11 +245,19 @@ function enhanceTableAppearance(table) {
     // Add a subtle text shadow to the entire table
     table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
     
-    // Apply black crystal effect to the table body
+    // Apply glass effect to the table body
     const tbody = table.querySelector('tbody');
     if (tbody) {
-        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        tbody.style.filter = 'blur(0.5px)';
+        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        tbody.style.backdropFilter = 'blur(10px)';
+        tbody.style.webkitBackdropFilter = 'blur(10px)'; // For Safari
+    }
+    
+    // Add glass effect to the table container
+    const tableContainer = table.closest('.relative');
+    if (tableContainer) {
+        tableContainer.style.backdropFilter = 'blur(10px)';
+        tableContainer.style.webkitBackdropFilter = 'blur(10px)'; // For Safari
     }
 }
 
