@@ -134,7 +134,7 @@ function handleRowMouseOver(event) {
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.3px)';
+        row.style.filter = 'blur(0.5px)';
     }
 }
 
