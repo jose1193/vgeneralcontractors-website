@@ -1,5 +1,3 @@
-/* Glassmorphic Table Styles */
-
 /* Gradient Border Animation */
 @keyframes gradient-border {
     0% { background-position: 0% 50%; }
@@ -63,24 +61,27 @@
     animation-delay: 0.8s;
 }
 
+/* Table-specific styles */
+.glassmorphic-table td {
+    overflow-wrap: break-word;
+}
+
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0.5px); /* Efecto cristal */
+    background-color: var(--row-bg);
 }
 
 .glassmorphic-table-row:hover {
     transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    background-color: rgba(0, 0, 0, 0.95);
     box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     z-index: 10;
     position: relative;
-    color: rgba(255, 255, 255, 1);
-    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
+    color: var(--text-color);
 }
 
 .glassmorphic-table-row.active {
@@ -116,18 +117,17 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: var(--badge-text);
 }
 
 .status-badge.active {
-    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-    color: #10B981;
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.5), rgba(5, 150, 105, 0.5));
     border: 1px solid rgba(16, 185, 129, 0.3);
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .status-badge.inactive {
-    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
-    color: #EF4444;
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.5), rgba(185, 28, 28, 0.5));
     border: 1px solid rgba(239, 68, 68, 0.3);
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
 }

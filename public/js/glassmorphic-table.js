@@ -14,7 +14,7 @@ function initGlassmorphicTable(tableId) {
     const tableBody = document.getElementById(`${tableId}-body`);
     if (!tableBody) return;
 
-    // Add enhanced table appearance for dark background
+    // Add enhanced table appearance
     enhanceTableAppearance(table);
 
     // Initialize sort functionality if it exists
@@ -71,7 +71,6 @@ function initRowEffects(tableBody) {
     // Remove existing event listeners (if any)
     const existingRows = tableBody.querySelectorAll('tr:not(#loadingRow)');
     existingRows.forEach(row => {
-        // Remove existing classes and indicators
         row.classList.remove('glassmorphic-table-row');
         const existingIndicator = row.querySelector('.glassmorphic-table-row-indicator');
         if (existingIndicator) {
@@ -96,16 +95,13 @@ function setupExistingRows(tableBody) {
     const rows = tableBody.querySelectorAll('tr:not(#loadingRow)');
     
     rows.forEach((row, index) => {
-        // Add glassmorphic class
         row.classList.add('glassmorphic-table-row');
         
-        // Add indicator element
         const indicator = document.createElement('div');
         indicator.className = 'glassmorphic-table-row-indicator';
         row.style.position = 'relative';
         row.appendChild(indicator);
         
-        // Add subtle animation delay based on row index for staggered effect
         row.style.transitionDelay = `${index * 0.03}s`;
     });
 }
@@ -119,7 +115,6 @@ function handleRowMouseOver(event) {
     if (row && !row.id.includes('loadingRow')) {
         row.classList.add('glassmorphic-table-row');
         
-        // Add indicator if it doesn't exist
         if (!row.querySelector('.glassmorphic-table-row-indicator')) {
             const indicator = document.createElement('div');
             indicator.className = 'glassmorphic-table-row-indicator';
@@ -127,14 +122,12 @@ function handleRowMouseOver(event) {
             row.appendChild(indicator);
         }
         
-        // Apply black crystal effect
         row.style.transform = 'scale(1.005)';
         row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
         row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
         row.style.zIndex = '10';
         row.style.position = 'relative';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.3px)';
+        row.style.color = 'var(--text-color)';
     }
 }
 
@@ -147,12 +140,11 @@ function handleRowMouseOut(event) {
     if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
         // Reset styles when mouse leaves
         row.style.transform = '';
-        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        row.style.backgroundColor = 'var(--row-bg)';
         row.style.boxShadow = '';
         row.style.zIndex = '';
         row.style.position = '';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.5px)';
+        row.style.color = 'var(--text-color)';
     }
 }
 
@@ -221,14 +213,13 @@ function enhanceTableAppearance(table) {
     // Add styles to the table headers
     const headers = table.querySelectorAll('th');
     headers.forEach(header => {
-        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
-        header.style.color = 'rgba(255, 255, 255, 0.9)';
+        header.style.borderBottom = '1px solid var(--border-color)';
+        header.style.color = 'var(--header-text)';
         header.style.fontWeight = '500';
         header.style.textTransform = 'uppercase';
         header.style.letterSpacing = '0.05em';
         header.style.padding = '12px 16px';
         header.style.fontSize = '0.75rem';
-        header.style.filter = 'blur(0.5px)';
         header.style.textAlign = 'center';
         header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
@@ -237,20 +228,20 @@ function enhanceTableAppearance(table) {
     const cells = table.querySelectorAll('td');
     cells.forEach(cell => {
         cell.style.padding = '12px 16px';
-        cell.style.color = 'rgba(255, 255, 255, 1)';
+        cell.style.color = 'var(--text-color)';
         cell.style.fontSize = '0.875rem';
         cell.style.textAlign = 'center';
         cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+        cell.style.overflowWrap = 'break-word';
     });
 
     // Add a subtle text shadow to the entire table
     table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
     
-    // Apply black crystal effect to the table body
+    // Apply background to the table body
     const tbody = table.querySelector('tbody');
     if (tbody) {
-        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        tbody.style.filter = 'blur(0.5px)';
+        tbody.style.backgroundColor = 'var(--row-bg)';
     }
 }
 
