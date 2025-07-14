@@ -127,14 +127,14 @@ function handleRowMouseOver(event) {
             row.appendChild(indicator);
         }
         
-        // Apply black crystal effect
-        row.style.transform = 'scale(1.005)';
-        row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-        row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
+        // Apply glassmorphic hover effect with new palette
+        row.style.transform = 'scale(1.01)';
+        row.style.backgroundColor = 'var(--glass-bg-hover)';
+        row.style.boxShadow = '0 0 20px rgba(0,210,255,0.35)';
         row.style.zIndex = '10';
         row.style.position = 'relative';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.3px)';
+        row.style.color = 'rgba(255,255,255,1)';
+        row.style.backdropFilter = 'blur(4px)';
     }
 }
 
@@ -147,12 +147,12 @@ function handleRowMouseOut(event) {
     if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
         // Reset styles when mouse leaves
         row.style.transform = '';
-        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        row.style.backgroundColor = 'var(--glass-bg)';
         row.style.boxShadow = '';
         row.style.zIndex = '';
         row.style.position = '';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(0.5px)';
+        row.style.color = 'rgba(255,255,255,0.95)';
+        row.style.backdropFilter = 'blur(6px)';
     }
 }
 
@@ -246,11 +246,11 @@ function enhanceTableAppearance(table) {
     // Add a subtle text shadow to the entire table
     table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
     
-    // Apply black crystal effect to the table body
+    // Apply glassmorphic effect to the table body
     const tbody = table.querySelector('tbody');
     if (tbody) {
-        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        tbody.style.filter = 'blur(0.5px)';
+        tbody.style.backgroundColor = 'var(--glass-bg)';
+        tbody.style.backdropFilter = 'blur(6px)';
     }
 }
 

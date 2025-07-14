@@ -12,7 +12,7 @@
 <div class="relative overflow-hidden rounded-[6px]">
     {{-- Animated gradient border with enhanced glow --}}
     <div class="absolute inset-0 rounded-[6px] p-[2px] animate-border-glow">
-        <div class="absolute inset-0 rounded-[6px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-70"></div>
+        <div class="absolute inset-0 rounded-[6px] bg-gradient-to-r from-cyan-400 via-indigo-500 to-cyan-400 bg-[length:300%_300%] animate-gradient-border opacity-70"></div>
         <div class="relative w-full h-full bg-black/80 filter blur-[1px] rounded-[4px] border border-white/5"></div>
     </div>
 
