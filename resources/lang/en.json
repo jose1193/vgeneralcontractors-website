@@ -195,7 +195,8 @@
     "error_updating_record": "Error updating record",
 
     "confirm_restoration": "Confirm Restoration",
-
+    "types_of_damage": "Type Damages",
+    "causes_of_loss": "Causes of Loss",
     "next": "Next",
     "previous": "Previous",
 
@@ -438,6 +439,15 @@
     "enter_email_address_placeholder": "Enter email address (optional)",
     "enter_phone_number_placeholder": "Enter phone number (optional)",
     "enter_website_url_placeholder": "Enter website URL (optional)",
+
+    "_comment_navigation_menu": "=== NAVIGATION MENU ===",
+    
+    "public_adjusters": "Public Adjusters",
+   
+    
+    "scope_sheets": "Scope Sheets",
+    "mortgage_company": "Mortgage Company",
+    "alliance_companies": "Alliance Companies",
 
     "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
     "latest_from_our_blog": "Latest From Our Blog",

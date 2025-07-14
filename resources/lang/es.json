@@ -97,6 +97,11 @@
     "company_data_subtitle": "Gestione el perfil de su empresa y la configuración de información comercial",
     "users_title": "Gestión de Usuarios",
     "users_subtitle": "Gestione cuentas de usuario, roles y permisos de acceso",
+    
+    
+    "scope_sheets": "Planillas de Alcance",
+    "mortgage_company": "Empresa Hipotecaria",
+    "alliance_companies": "Empresas Aliadas",
     "users_created_successfully": "Usuario creado exitosamente. Las credenciales serán enviadas por correo electrónico.",
     "users_updated_successfully": "Usuario actualizado exitosamente.",
     "users_deleted_successfully": "Usuario eliminado exitosamente",
@@ -432,7 +437,7 @@
     "public_adjusters": "Ajustadores Públicos",
     "roles": "Roles",
     "permissions": "Permisos",
-    "scope_sheets": "Hojas de Alcance",
+    
     "types_of_damage": "Tipos de Daño",
     "causes_of_loss": "Causas de Pérdida",
     
