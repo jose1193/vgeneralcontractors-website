@@ -1,4 +1,4 @@
-/* Modern Dark Glassmorphic Table Styles */
+/* Glassmorphic Table Styles */
 
 /* Gradient Border Animation */
 @keyframes gradient-border {
@@ -8,101 +8,133 @@
 }
 
 .animate-gradient-border {
-    animation: gradient-border 8s ease infinite;
-    background: linear-gradient(45deg, #3b82f6/10, #8b5cf6/10, #ec4899/10, #f43f5e/10);
-    background-size: 400% 400%;
+    animation: gradient-border 6s ease infinite;
 }
 
 /* Border Glow Animation */
 @keyframes border-glow {
-    0% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.15), 0 0 30px rgba(59, 130, 246, 0.1); }
-    50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2), 0 0 50px rgba(139, 92, 246, 0.15); }
-    100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.15), 0 0 30px rgba(59, 130, 246, 0.1); }
+    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
+    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
 }
 
 .animate-border-glow {
-    animation: border-glow 6s ease-in-out infinite;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15), 0 0 30px rgba(59, 130, 246, 0.1);
+    animation: border-glow 5s ease-in-out infinite;
 }
 
-/* Table Container */
-.crud-glassmorphic-table {
-    background: linear-gradient(135deg, rgba(13, 14, 15, 0.95), rgba(13, 14, 15, 0.9));
-    backdrop-filter: blur(10px);
-    border-radius: 1.5rem;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
+/* Table Shadow Animation */
+@keyframes table-shadow {
+    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
 }
 
-.crud-glassmorphic-table:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+.animate-table-shadow {
+    animation: table-shadow 7s ease-in-out infinite;
 }
 
-/* Table Header */
-.crud-glassmorphic-table thead {
-    background: linear-gradient(135deg, rgba(13, 14, 15, 0.9), rgba(13, 14, 15, 0.85));
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+/* Shimmer Animation for Headers */
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
-.crud-glassmorphic-table th {
-    background: linear-gradient(45deg, rgba(13, 14, 15, 0.95), rgba(13, 14, 15, 0.9));
-    color: #e5e7eb;
-    font-weight: 600;
-    padding: 1rem;
-    transition: all 0.3s ease;
+.animate-shimmer {
+    animation: shimmer 3s infinite;
 }
 
-.crud-glassmorphic-table th:hover {
-    background: linear-gradient(45deg, rgba(13, 14, 15, 0.9), rgba(13, 14, 15, 0.85));
-    color: #8b5cf6;
+.animate-shimmer-delay-1 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.2s;
 }
 
-/* Table Body */
-.crud-glassmorphic-table tbody {
-    background: linear-gradient(135deg, rgba(13, 14, 15, 0.95), rgba(13, 14, 15, 0.9));
-    backdrop-filter: blur(6px);
+.animate-shimmer-delay-2 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.4s;
 }
 
-.crud-glassmorphic-table td {
-    background: linear-gradient(45deg, rgba(13, 14, 15, 0.98), rgba(13, 14, 15, 0.95));
-    color: #e5e7eb;
-    padding: 0.75rem;
-    border-bottom: 1px solid rgba(59, 130, 246, 0.05);
-    transition: all 0.3s ease;
+.animate-shimmer-delay-3 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.6s;
 }
 
-.crud-glassmorphic-table td:hover {
-    background: linear-gradient(45deg, rgba(13, 14, 15, 0.95), rgba(13, 14, 15, 0.9));
-    color: #8b5cf6;
+.animate-shimmer-delay-4 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.8s;
 }
 
-/* Loading State */
-.crud-glassmorphic-table #loadingRow {
-    background: linear-gradient(135deg, rgba(13, 14, 15, 0.98), rgba(13, 14, 15, 0.95));
-    color: #e5e7eb;
-    padding: 1.5rem;
+/* Row Hover Effects */
+.glassmorphic-table-row {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
-.crud-glassmorphic-table #loadingRow svg {
-    animation: spin 1s linear infinite;
+.glassmorphic-table-row:hover {
+    transform: scale(1.005);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    z-index: 10;
+    position: relative;
+    color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.glassmorphic-table-row.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Row Indicator */
+.glassmorphic-table-row-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
+    opacity: 0;
+    transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.glassmorphic-table-row:hover .glassmorphic-table-row-indicator,
+.glassmorphic-table-row.active .glassmorphic-table-row-indicator {
+    opacity: 1;
+    width: 5px;
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge.active {
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.inactive {
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
-    .crud-glassmorphic-table {
-        border-radius: 1rem;
-    }
-    
-    .crud-glassmorphic-table th,
-    .crud-glassmorphic-table td {
-        padding: 0.5rem;
+@media (max-width: 640px) {
+    .glassmorphic-table-row:hover {
+        transform: none; /* Disable scaling on mobile */
     }
 }
