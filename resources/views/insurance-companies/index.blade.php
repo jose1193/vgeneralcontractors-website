@@ -4,14 +4,14 @@
     add-new-label="{{ __('add_insurance_company') }}" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
     create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
     per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[
-           ['field' => 'insurance_company_name', 'label' => '{{ __('company_name') }}', 'sortable' => true],
-        ['field' => 'address', 'label' => '{{ __('address') }}', 'sortable' => false],
-        ['field' => 'email', 'label' => '{{ __('email') }}', 'sortable' => true],
-        ['field' => 'phone', 'label' => '{{ __('phone') }}', 'sortable' => false],
-        ['field' => 'website', 'label' => '{{ __('website') }}', 'sortable' => false],
-        ['field' => 'user_name', 'label' => '{{ __('created_by') }}', 'sortable' => true],
-        ['field' => 'created_at', 'label' => '{{ __('created') }}', 'sortable' => true],
-        ['field' => 'actions', 'label' => '{{ __('actions') }}', 'sortable' => false],
+              ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
+        ['field' => 'address', 'label' => __('address'), 'sortable' => false],
+        ['field' => 'email', 'label' => __('email'), 'sortable' => true],
+        ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
+        ['field' => 'website', 'label' => __('website'), 'sortable' => false],
+        ['field' => 'user_name', 'label' => __('created_by'), 'sortable' => true],
+        ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
+        ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
 
     @push('scripts')
