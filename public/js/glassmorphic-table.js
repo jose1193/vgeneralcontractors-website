@@ -4,62 +4,99 @@
  */
 
 /**
- * Initialize the glassmorphic table effects
- * @param {string} tableId - The ID of the table element
+ * Initializes the glassmorphic table, setting up sorting functionality.
+ * @param {string} tableId - The ID of the table element.
+ * @param {Array} columns - The configuration array for the table columns.
  */
-function initGlassmorphicTable(tableId) {
+function initGlassmorphicTable(tableId, columns) {
     const table = document.getElementById(tableId);
-    if (!table) return;
-    
-    const tableBody = document.getElementById(`${tableId}-body`);
-    if (!tableBody) return;
+    if (!table) {
+        console.error(`Table with id ${tableId} not found.`);
+        return;
+    }
 
-    // Add enhanced table appearance for dark background
-    enhanceTableAppearance(table);
+    // Store columns in a way that's easily accessible by the populate function
+    table.dataset.columns = JSON.stringify(columns);
 
-    // Initialize sort functionality if it exists
-    initSortFunctionality(table);
-    
-    // Initialize row effects
-    initRowEffects(tableBody);
+    const headers = table.querySelectorAll('.sort-header');
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const field = header.dataset.field;
+            const currentSort = header.classList.contains('sort-asc') ? 'asc' : (header.classList.contains('sort-desc') ? 'desc' : 'none');
+            let newSort;
 
-    // Re-initialize when table content changes (for CRUD operations)
-    observeTableChanges(tableBody);
+            if (currentSort === 'asc') {
+                newSort = 'desc';
+            } else if (currentSort === 'desc') {
+                newSort = 'asc';
+            } else {
+                newSort = 'asc';
+            }
+
+            // Remove sorting classes from all headers
+            headers.forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            // Add new sort class to the clicked header
+            header.classList.add(`sort-${newSort}`);
+
+            // Dispatch a custom event to notify that sorting has changed
+            // The parent component (e.g., Livewire) can listen for this event
+            table.dispatchEvent(new CustomEvent('sort-changed', {
+                bubbles: true,
+                detail: { field, direction: newSort }
+            }));
+        });
+    });
 }
 
 /**
- * Initialize sort functionality for table headers
- * @param {HTMLElement} table - The table element
+ * Populates the table with data from an API or other source.
+ * @param {string} tableId - The ID of the table to populate.
+ * @param {Array} data - An array of objects representing the row data.
  */
-function initSortFunctionality(table) {
-    const sortHeaders = table.querySelectorAll('.sort-header');
-    
-    sortHeaders.forEach(header => {
-        header.addEventListener('click', function() {
-            const field = this.getAttribute('data-field');
-            let currentSort = this.classList.contains('sort-asc') ? 'asc' : 
-                             this.classList.contains('sort-desc') ? 'desc' : '';
-            
-            // Reset all headers
-            sortHeaders.forEach(h => {
-                h.classList.remove('sort-asc', 'sort-desc');
-            });
-            
-            // Set new sort direction
-            let newSort = '';
-            if (currentSort === '') {
-                newSort = 'asc';
-                this.classList.add('sort-asc');
-            } else if (currentSort === 'asc') {
-                newSort = 'desc';
-                this.classList.add('sort-desc');
+function populateTable(tableId, data) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+
+    const tbody = table.querySelector('tbody');
+    const loadingRow = document.getElementById(`loadingRow-${tableId}`);
+    const noDataRow = document.getElementById(`noDataRow-${tableId}`);
+    const columns = JSON.parse(table.dataset.columns || '[]');
+
+    // Clear existing data rows (but not loading/no-data rows)
+    tbody.querySelectorAll('tr:not(.table-state-row)').forEach(row => row.remove());
+
+    if (loadingRow) loadingRow.style.display = 'none';
+
+    if (!data || data.length === 0) {
+        if (noDataRow) noDataRow.style.display = 'table-row';
+        return;
+    }
+
+    if (noDataRow) noDataRow.style.display = 'none';
+
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        
+        columns.forEach(column => {
+            const cell = document.createElement('td');
+            const cellValue = item[column.field] || 'N/A';
+
+            // Set data-label for responsive view. This is crucial.
+            cell.setAttribute('data-label', column.label);
+
+            // Use a renderer if provided, otherwise just set text content
+            if (column.render) {
+                cell.innerHTML = column.render(cellValue, item);
+            } else {
+                cell.textContent = cellValue;
             }
-            
-            // Trigger sort in CRUD manager if it exists
-            if (typeof window.crudManager !== 'undefined' && window.crudManager.sortBy) {
-                window.crudManager.sortBy(field, newSort);
-            }
+            row.appendChild(cell);
         });
+
+        tbody.appendChild(row);
     });
 }
 
