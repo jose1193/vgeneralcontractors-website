@@ -228,7 +228,7 @@ function enhanceTableAppearance(table) {
         header.style.letterSpacing = '0.05em';
         header.style.padding = '12px 16px';
         header.style.fontSize = '0.75rem';
-        header.style.filter = 'blur(0.5px)';
+        //header.style.filter = 'blur(0.5px)';
         header.style.textAlign = 'center';
         header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
