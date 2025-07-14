@@ -130,11 +130,10 @@ function handleRowMouseOver(event) {
         // Apply glassmorphic hover effect with new palette
         row.style.transform = 'scale(1.01)';
         row.style.backgroundColor = 'var(--glass-bg-hover)';
-        row.style.boxShadow = '0 0 20px rgba(0,210,255,0.35)';
+        row.style.boxShadow = '0 0 22px rgba(139,92,246,0.4)';
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255,255,255,1)';
-        row.style.backdropFilter = 'blur(4px)';
     }
 }
 
@@ -152,7 +151,6 @@ function handleRowMouseOut(event) {
         row.style.zIndex = '';
         row.style.position = '';
         row.style.color = 'rgba(255,255,255,0.95)';
-        row.style.backdropFilter = 'blur(6px)';
     }
 }
 
@@ -250,7 +248,6 @@ function enhanceTableAppearance(table) {
     const tbody = table.querySelector('tbody');
     if (tbody) {
         tbody.style.backgroundColor = 'var(--glass-bg)';
-        tbody.style.backdropFilter = 'blur(6px)';
     }
 }
 

@@ -78,17 +78,16 @@
     color: rgba(255, 255, 255, 0.95);
     text-align: center;
     background-color: var(--glass-bg);
-    backdrop-filter: blur(6px);
+    /* Removed backdrop-filter / blur to keep text sharp */
 }
 
 .glassmorphic-table-row:hover {
     transform: scale(1.01);
     background-color: var(--glass-bg-hover);
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.35);
+    box-shadow: 0 0 22px rgba(139, 92, 246, 0.4); /* purple hover shadow */
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
-    backdrop-filter: blur(4px);
 }
 
 .glassmorphic-table-row.active {
