@@ -54,34 +54,7 @@
     </div>
 </div>
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/glassmorphic-table.css') }}">
-    <style>
-        /* Sort icons */
-        .sort-header .sort-icon::after {
-            content: '↕️';
-            font-size: 0.75rem;
-            margin-left: 0.25rem;
-            opacity: 0.5;
-        }
 
-        .sort-header.sort-asc .sort-icon::after {
-            content: '↑';
-            opacity: 1;
-            color: #3B82F6;
-        }
-
-        .sort-header.sort-desc .sort-icon::after {
-            content: '↓';
-            opacity: 1;
-            color: #3B82F6;
-        }
-
-        .sort-header:hover .sort-icon::after {
-            opacity: 0.8;
-        }
-    </style>
-@endpush
 
 @push('scripts')
     <script src="{{ asset('js/glassmorphic-table.js') }}"></script>
