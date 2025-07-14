@@ -1,102 +1,140 @@
 /* Glassmorphic Table Styles */
-.glassmorphic-table {
-    width: 100%;
-    border-radius: 0.75rem;
-    background: rgba(30, 30, 30, 0.85);
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    backdrop-filter: blur(2px);
+
+/* Gradient Border Animation */
+@keyframes gradient-border {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.glassmorphic-table thead th {
-    background: rgba(40, 40, 40, 0.95);
-    color: #fff;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    text-align: center;
-    transition: color 0.3s, background 0.3s;
+.animate-gradient-border {
+    animation: gradient-border 6s ease infinite;
 }
 
-.glassmorphic-table tbody tr {
-    background: rgba(20, 20, 20, 0.85);
-    color: #fff;
-    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+/* Border Glow Animation */
+@keyframes border-glow {
+    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
+    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
 }
 
-.glassmorphic-table tbody tr.is-hovered {
-    background: rgba(40, 40, 40, 0.98);
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.15);
-    color: #fff;
+.animate-border-glow {
+    animation: border-glow 5s ease-in-out infinite;
 }
 
-.glassmorphic-table tbody tr.is-active {
-    background: rgba(60, 60, 60, 0.98);
-    box-shadow: 0 0 24px rgba(59, 130, 246, 0.18);
-    color: #fff;
+/* Table Shadow Animation */
+@keyframes table-shadow {
+    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
 }
 
-.glassmorphic-table td {
-    padding: 12px 16px;
-    text-align: center;
-    font-size: 0.95rem;
+.animate-table-shadow {
+    animation: table-shadow 7s ease-in-out infinite;
+}
+
+/* Shimmer Animation for Headers */
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+    animation: shimmer 3s infinite;
+}
+
+.animate-shimmer-delay-1 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.2s;
+}
+
+.animate-shimmer-delay-2 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.4s;
+}
+
+.animate-shimmer-delay-3 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.6s;
+}
+
+.animate-shimmer-delay-4 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.8s;
+}
+
+/* Row Hover Effects */
+.glassmorphic-table-row {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
-.sort-header {
-    cursor: pointer;
+.glassmorphic-table-row:hover {
+    transform: scale(1.005);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    z-index: 10;
     position: relative;
+    color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
-.sort-header .sort-icon::after {
-    content: "↕️";
-    font-size: 0.75rem;
-    margin-left: 0.25rem;
-    opacity: 0.5;
+.glassmorphic-table-row.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
-.sort-header.sort-asc .sort-icon::after {
-    content: "↑";
-    opacity: 1;
-    color: #3b82f6;
-}
-
-.sort-header.sort-desc .sort-icon::after {
-    content: "↓";
-    opacity: 1;
-    color: #3b82f6;
-}
-
-.sort-header:hover .sort-icon::after {
-    opacity: 0.8;
-}
-
-/* Row indicator (optional, for effect) */
+/* Row Indicator */
 .glassmorphic-table-row-indicator {
     position: absolute;
     left: 0;
     top: 0;
+    bottom: 0;
     width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #8a2be2 0%, #3b82f6 100%);
-    border-radius: 2px;
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 1;
-    display: none;
+    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
+    opacity: 0;
+    transition: opacity 0.3s ease, width 0.3s ease;
 }
 
-.glassmorphic-table tbody tr.is-hovered .glassmorphic-table-row-indicator,
-.glassmorphic-table tbody tr.is-active .glassmorphic-table-row-indicator {
-    display: block;
+.glassmorphic-table-row:hover .glassmorphic-table-row-indicator,
+.glassmorphic-table-row.active .glassmorphic-table-row-indicator {
+    opacity: 1;
+    width: 5px;
 }
 
-/* Remove blur from tbody and text for clarity */
-.glassmorphic-table tbody,
-.glassmorphic-table th,
-.glassmorphic-table td {
-    filter: none !important;
+/* Status Badge Styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge.active {
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.inactive {
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .glassmorphic-table-row:hover {
+        transform: none; /* Disable scaling on mobile */
+    }
 }
