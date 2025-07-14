@@ -2,7 +2,23 @@
  * Glassmorphic Table JavaScript
  * Handles interactive effects for the glassmorphic table component
  */
+/**
+ * Enhance paginator appearance with glassmorphic crystal colors
+ * @param {string} paginatorId - The ID of the paginator element
+ */
+function enhancePaginatorAppearance(paginatorId) {
+    const paginator = document.getElementById(paginatorId);
+    if (!paginator) return;
 
+    paginator.style.backdropFilter = 'blur(10px)';
+    paginator.style.webkitBackdropFilter = 'blur(10px)';
+    paginator.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'; // Color cristalino translúcido
+    paginator.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    paginator.style.borderRadius = '8px';
+    paginator.style.padding = '8px 16px';
+    paginator.style.color = 'rgba(255, 255, 255, 0.9)';
+    paginator.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.1)';
+}
 /**
  * Initialize the glassmorphic table effects
  * @param {string} tableId - The ID of the table element
@@ -25,6 +41,9 @@ function initGlassmorphicTable(tableId) {
 
     // Re-initialize when table content changes (for CRUD operations)
     observeTableChanges(tableBody);
+
+    // Asume que el ID del paginador es 'paginator'
+    enhancePaginatorAppearance('paginator');
 }
 
 /**
@@ -134,7 +153,7 @@ function handleRowMouseOver(event) {
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(7px)';
+        row.style.filter = 'blur(0.3px)';
     }
 }
 
@@ -152,7 +171,7 @@ function handleRowMouseOut(event) {
         row.style.zIndex = '';
         row.style.position = '';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.filter = 'blur(10px)';
+        row.style.filter = 'blur(0.5px)';
     }
 }
 
@@ -250,7 +269,7 @@ function enhanceTableAppearance(table) {
     const tbody = table.querySelector('tbody');
     if (tbody) {
         tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        tbody.style.filter = 'blur(10px)';
+        tbody.style.filter = 'blur(0.5px)';
     }
 }
 
