@@ -9,44 +9,47 @@
     'darkMode' => true,
 ])
 
-<div id="{{ $id }}-container" class="glassmorphic-table-container">
-    <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
-        <table id="{{ $id }}" class="glassmorphic-table">
-            <thead>
-                <tr>
-                    @foreach ($columns as $index => $column)
-                        <th class="{{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
-                            @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
-                            {{ $column['label'] }}
-                            @if ($sortable && ($column['sortable'] ?? true))
-                                <span class="sort-icon"></span>
-                            @endif
-                            <div class="shimmer-effect" style="animation-delay: {{ $index * 0.2 }}s"></div>
-                        </th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody id="{{ $id }}-body">
-                {{-- This will be populated by JavaScript --}}
-                {{-- Example of a row structure for reference --}}
-                {{--
-                <tr class="glassmorphic-table-row">
-                    <td data-label="Column 1">Data 1</td>
-                    <td data-label="Column 2">Data 2</td>
-                </tr>
-                --}}
-            </tbody>
-        </table>
+<div class="relative overflow-hidden rounded-[6px]">
+    {{-- Animated gradient border with enhanced glow --}}
+    <div class="absolute inset-0 rounded-[6px] p-[2px] animate-border-glow">
+        <div class="absolute inset-0 rounded-[6px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-70"></div>
+        <div class="relative w-full h-full bg-black/80 filter blur-[1px] rounded-[4px] border border-white/5"></div>
     </div>
-    
-    {{-- Loading/No Data Overlay --}}
-    <div id="{{ $id }}-overlay" class="absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-        <div class="text-center text-white">
-            <svg id="{{ $id }}-loader" class="animate-spin h-6 w-6 mx-auto mb-3 text-purple-400" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p id="{{ $id }}-overlay-text" class="font-semibold">{{ $loadingText }}</p>
+
+    {{-- Table container with enhanced animated shadows --}}
+    <div class="relative filter blur-[0.5px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
+        <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
+            <table id="{{ $id }}" class="w-full">
+                <thead>
+                    <tr class="border-b border-white/5 relative">
+                        @foreach ($columns as $index => $column)
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0.5px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                                @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][($index % 5)]}}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}"></div>
+                                <span class="relative z-10">{{ $column['label'] }}</span>
+                                @if ($sortable && ($column['sortable'] ?? true))
+                                    <span class="sort-icon relative z-10"></span>
+                                @endif
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
+                    {{-- Loading row --}}
+                    <tr id="loadingRow">
+                        <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
+                            <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            {{ $loadingText }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
