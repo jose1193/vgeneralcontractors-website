@@ -51,8 +51,9 @@
     </div>
 </div>
 
+
 <style>
-    /* Modern Glassmorphism Table 2025 - Box Shadow Mejorado */
+    /* Modern Glassmorphism Table 2025 */
     .glassmorphism-container {
         position: relative;
         margin: 1rem 0;
@@ -62,27 +63,17 @@
     .glassmorphism-table-wrapper {
         background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-        /* Box shadow inspirado en glassmorphic-table.blade.php: glow y profundidad */
-        box-shadow:
-            0 0 0 2px #a78bfa33,
-            0 2px 24px 0 #a78bfa44,
-            0 1.5px 12px 0 #fbbf2444,
-            0 0 0 1px rgba(255, 255, 255, 0.05),
-            0 8px 32px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 32px 0 rgba(128, 0, 255, 0.10), 0 0 0 4px rgba(128, 0, 255, 0.08);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: none;
         overflow: hidden;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .glassmorphism-table-wrapper:hover {
-        /* Hover shadow mejorado */
-        box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.3),
-            0 4px 16px rgba(0, 0, 0, 0.2),
-            0 0 0 1px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
     }
 
@@ -95,7 +86,7 @@
         height: 1px;
         background: linear-gradient(90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.2) 50%,
                 transparent 100%);
         animation: shimmer 2s infinite;
     }
@@ -109,9 +100,9 @@
 
     .glassmorphism-header {
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 100%);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
     }
 
@@ -133,7 +124,7 @@
     }
 
     .glassmorphism-th:hover {
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.08);
         color: rgba(255, 255, 255, 0.95);
     }
 
@@ -150,7 +141,7 @@
     }
 
     .sortable-header:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.12);
     }
 
     .sort-indicator {
@@ -164,7 +155,7 @@
         width: 16px;
         height: 16px;
         fill: currentColor;
-        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
     }
 
     .sortable-header:hover .sort-indicator {
@@ -195,10 +186,9 @@
     }
 
     .glassmorphism-body tr:hover {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(255, 255, 255, 0.05);
         transform: translateY(-1px);
-        /* Shadow sutil para hover de filas */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .glassmorphism-body td {
@@ -273,21 +263,21 @@
     }
 
     .responsive-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 4px;
     }
 
     .responsive-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 4px;
         transition: background 0.3s ease;
     }
 
     .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.5);
     }
 
-    /* Modern Glassmorphism Pagination - Shadow mejorado */
+    /* Modern Glassmorphism Pagination */
     .pagination-wrapper {
         display: flex;
         justify-content: center;
@@ -303,14 +293,10 @@
         background: rgba(0, 0, 0, 0.76);
         border-radius: 12px;
         padding: 0.5rem;
-        /* Shadow mejorado para paginación */
-        box-shadow:
-            0 4px 16px rgba(0, 0, 0, 0.2),
-            0 2px 8px rgba(0, 0, 0, 0.1),
-            0 0 0 1px rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.3);
     }
 
     .pagination .page-item {
@@ -344,8 +330,8 @@
         right: 0;
         bottom: 0;
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 100%);
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -353,8 +339,7 @@
     .pagination .page-link:hover {
         color: rgba(255, 255, 255, 0.95);
         transform: translateY(-2px);
-        /* Shadow sutil para hover de páginas */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     .pagination .page-link:hover::before {
@@ -364,8 +349,7 @@
     .pagination .page-item.active .page-link {
         background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
         color: white;
-        /* Shadow para página activa */
-        box-shadow: 0 4px 16px rgba(96, 165, 250, 0.2);
+        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
         transform: translateY(-1px);
     }
 
@@ -473,20 +457,12 @@
     @media (prefers-color-scheme: dark) {
         .glassmorphism-table-wrapper {
             background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow:
-                0 4px 24px rgba(0, 0, 0, 0.3),
-                0 2px 12px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pagination {
             background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow:
-                0 4px 20px rgba(0, 0, 0, 0.25),
-                0 2px 10px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     }
 </style>
