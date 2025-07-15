@@ -140,6 +140,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
+        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
         overflow: hidden;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -181,6 +182,8 @@
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
+        width: 100%;
+        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
     }
 
     @media (max-width: 768px) {
