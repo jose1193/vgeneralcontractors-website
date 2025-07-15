@@ -10,7 +10,7 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper">
+    <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -145,31 +145,59 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glassmorphism-table-wrapper:hover {
+    .glassmorphism-table-wrapper {
+        /* Enhanced Crystal Glass Background */
+        background: rgba(0, 0, 0, 0.82);
+        border-radius: 16px;
+
+        /* Premium Purple Box Shadow System */
         box-shadow:
-            0 10px 40px 0 rgba(138, 43, 226, 0.3),
-            0 20px 64px 0 rgba(128, 0, 255, 0.2),
-            0 4px 20px 0 rgba(75, 0, 130, 0.35),
-            0 2px 10px 0 rgba(147, 51, 234, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-        transform: translateY(-2px);
+
+            /* Enhanced Blur Effects */
+            backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Permitir scrollbars */
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glassmorphism-table-wrapper::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.3) 25%,
-                rgba(138, 43, 226, 0.4) 50%,
-                rgba(255, 255, 255, 0.3) 75%,
-                transparent 100%);
-        animation: shimmer 3s infinite;
+    /* Forzar scroll horizontal en responsive */
+    .responsive-container {
+        overflow-x: auto !important;
+        overflow-y: visible;
+        width: 100%;
+    }
+
+    /* Extra: Si quieres scroll vertical en mobile también */
+    .glassmorphism-scroll-wrapper {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+    }
+
+    @media (max-width: 768px) {
+
+        .glassmorphism-table-wrapper,
+        .glassmorphism-scroll-wrapper {
+            max-height: 50vh;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+    }
+
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(138, 43, 226, 0.4) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%);
+    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
