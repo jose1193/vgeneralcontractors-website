@@ -20,13 +20,13 @@
 
     {{-- Table container with enhanced animated shadows --}}
     <div
-        class="relative filter blur-[0.5px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
+        class="relative  bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
         <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
             <table id="{{ $id }}" class="w-full">
                 <thead>
                     <tr class="border-b border-white/5 relative">
                         @foreach ($columns as $index => $column)
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0.5px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
                                 @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][$index % 5] }}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}">
@@ -39,7 +39,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 ">
                     {{-- Loading row --}}
                     <tr id="loadingRow">
                         <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
