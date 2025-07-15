@@ -99,25 +99,8 @@
                 rgba(138, 43, 226, 0.08) 75%,
                 rgba(128, 0, 255, 0.12) 100%);
         pointer-events: none;
-        z-index: 1;
-        /* Shimmer effect overlay */
-        background-repeat: no-repeat;
-        overflow: hidden;
-    }
-
-    .glassmorphism-container::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 20px;
-        background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.13) 40%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0.13) 60%, transparent 100%);
-        opacity: 0.7;
-        pointer-events: none;
-        z-index: 2;
-        animation: shimmer-bg 2.8s linear infinite;
+        opacity: 0;
+        transition: opacity 0.4s ease;
     }
 
     .glassmorphism-container:hover {
@@ -133,16 +116,6 @@
 
     .glassmorphism-container:hover::before {
         opacity: 1;
-    }
-
-    @keyframes shimmer-bg {
-        0% {
-            background-position: -400px 0;
-        }
-
-        100% {
-            background-position: 400px 0;
-        }
     }
 
     .glassmorphism-table-wrapper {
