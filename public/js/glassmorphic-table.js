@@ -134,7 +134,7 @@ function handleRowMouseOver(event) {
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        
+        row.style.filter = 'blur(0.3px)';
     }
 }
 
@@ -147,11 +147,12 @@ function handleRowMouseOut(event) {
     if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
         // Reset styles when mouse leaves
         row.style.transform = '';
-        row.style.backgroundColor = '';
+        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
         row.style.boxShadow = '';
         row.style.zIndex = '';
         row.style.position = '';
-        row.style.color = '';
+        row.style.color = 'rgba(255, 255, 255, 1)';
+        row.style.filter = 'blur(0.5px)';
     }
 }
 
@@ -227,6 +228,7 @@ function enhanceTableAppearance(table) {
         header.style.letterSpacing = '0.05em';
         header.style.padding = '12px 16px';
         header.style.fontSize = '0.75rem';
+        header.style.filter = 'blur(0.5px)';
         header.style.textAlign = 'center';
         header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
@@ -247,7 +249,8 @@ function enhanceTableAppearance(table) {
     // Apply black crystal effect to the table body
     const tbody = table.querySelector('tbody');
     if (tbody) {
-        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        tbody.style.filter = 'blur(0.5px)';
     }
 }
 

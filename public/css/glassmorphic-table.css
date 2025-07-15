@@ -66,20 +66,21 @@
 /* Row Hover Effects */
 .glassmorphic-table-row {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Borde sutil para separar filas */
-    color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.75); /* Fondo negro cristal sin blur */
-    backdrop-filter: saturate(120%) brightness(50%); /* Efecto cristalino alternativo */
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
 .glassmorphic-table-row:hover {
     transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.85); /* Negro más intenso al hover */
-    box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     z-index: 10;
     position: relative;
-    color: white;
+    color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
 .glassmorphic-table-row.active {
