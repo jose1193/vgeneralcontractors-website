@@ -1,7 +1,7 @@
 @php
     $routes = [
         'index' => secure_url(route('insurance-companies.index', [], false)),
-        'fetch' => secure_url(route('insurance-companies.fetch', [], false)),
+
         'store' => secure_url(route('insurance-companies.store', [], false)),
         'edit' => secure_url(route('insurance-companies.edit', ':id', false)),
         'update' => secure_url(route('insurance-companies.update', ':id', false)),
