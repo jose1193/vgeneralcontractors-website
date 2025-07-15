@@ -61,19 +61,19 @@
     }
 
     .glassmorphism-table-wrapper {
-        background: rgba(0, 0, 0, 0.76);
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 16px;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(1.5px);
-        -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 40px rgba(147, 51, 234, 0.3), 0 4px 20px rgba(147, 51, 234, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         overflow: hidden;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .glassmorphism-table-wrapper:hover {
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 60px rgba(147, 51, 234, 0.4), 0 8px 30px rgba(147, 51, 234, 0.3);
         transform: translateY(-2px);
     }
 
@@ -83,10 +83,10 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 1px;
+        height: 2px;
         background: linear-gradient(90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 215, 0, 0.8) 50%,
                 transparent 100%);
         animation: shimmer 2s infinite;
     }
@@ -100,9 +100,9 @@
 
     .glassmorphism-header {
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 100%);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.08) 100%);
+        border-bottom: none;
         position: relative;
     }
 
@@ -113,18 +113,15 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: rgba(255, 255, 255, 0.8);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        border-right: none;
         position: relative;
         transition: all 0.3s ease;
-    }
-
-    .glassmorphism-th:last-child {
-        border-right: none;
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .glassmorphism-th:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.12);
         color: rgba(255, 255, 255, 0.95);
     }
 
@@ -176,19 +173,20 @@
     }
 
     .glassmorphism-body {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.02);
     }
 
     .glassmorphism-body tr {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: none;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out;
+        background: rgba(255, 255, 255, 0.03);
     }
 
     .glassmorphism-body tr:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.08);
         transform: translateY(-1px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px rgba(147, 51, 234, 0.2);
     }
 
     .glassmorphism-body td {
@@ -196,11 +194,8 @@
         text-align: center;
         color: rgba(255, 255, 255, 0.9);
         font-size: 0.875rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .glassmorphism-body td:last-child {
         border-right: none;
+        border-bottom: none;
     }
 
     .loading-row {
@@ -290,13 +285,13 @@
         display: flex;
         align-items: center;
         gap: 0.25rem;
-        background: rgba(0, 0, 0, 0.76);
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 12px;
         padding: 0.5rem;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(1.5px);
-        -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 40px rgba(147, 51, 234, 0.3), 0 4px 20px rgba(147, 51, 234, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .pagination .page-item {
@@ -456,13 +451,15 @@
     /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
         .glassmorphism-table-wrapper {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 40px rgba(147, 51, 234, 0.35), 0 4px 20px rgba(147, 51, 234, 0.25);
         }
 
         .pagination {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 40px rgba(147, 51, 234, 0.35), 0 4px 20px rgba(147, 51, 234, 0.25);
         }
     }
 </style>
