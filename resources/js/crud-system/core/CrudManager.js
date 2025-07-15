@@ -627,46 +627,53 @@ export class CrudManager {
         let paginationHtml = "";
 
         if (data.last_page > 1) {
-            paginationHtml += '<div class="flex items-center justify-between">';
-            paginationHtml += `<div class="text-sm text-gray-700">Showing ${data.from} to ${data.to} of ${data.total} results</div>`;
-            paginationHtml += '<div class="flex space-x-1">';
+            paginationHtml += '<div class="pagination-wrapper">';
+            paginationHtml +=
+                '<nav class="pagination" aria-label="Pagination">';
 
             // Botón anterior
             if (data.current_page > 1) {
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
+                paginationHtml += `<button class="pagination-btn page-link" data-page="${
                     data.current_page - 1
-                }">Previous</button>`;
+                }"><span>&laquo;</span></button>`;
+            } else {
+                paginationHtml += `<button class="pagination-btn page-link" disabled style="opacity:0.4;cursor:not-allowed;"><span>&laquo;</span></button>`;
             }
 
-            // Números de página
-            for (
-                let i = Math.max(1, data.current_page - 2);
-                i <= Math.min(data.last_page, data.current_page + 2);
-                i++
-            ) {
-                const activeClass =
-                    i === data.current_page
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-50";
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border border-gray-300 rounded-md ${activeClass}" data-page="${i}">${i}</button>`;
+            // Números de página (máximo 5 visibles)
+            let start = Math.max(1, data.current_page - 2);
+            let end = Math.min(data.last_page, data.current_page + 2);
+            if (data.current_page <= 2) end = Math.min(5, data.last_page);
+            if (data.current_page >= data.last_page - 1)
+                start = Math.max(1, data.last_page - 4);
+            for (let i = start; i <= end; i++) {
+                const active = i === data.current_page ? "active" : "";
+                paginationHtml += `<button class="pagination-btn page-link${
+                    active ? " " + active : ""
+                }" data-page="${i}"><span>${i}</span></button>`;
             }
 
             // Botón siguiente
             if (data.current_page < data.last_page) {
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
+                paginationHtml += `<button class="pagination-btn page-link" data-page="${
                     data.current_page + 1
-                }">Next</button>`;
+                }"><span>&raquo;</span></button>`;
+            } else {
+                paginationHtml += `<button class="pagination-btn page-link" disabled style="opacity:0.4;cursor:not-allowed;"><span>&raquo;</span></button>`;
             }
 
-            paginationHtml += "</div></div>";
+            paginationHtml += "</nav>";
+            paginationHtml += "</div>";
         }
 
         $(this.paginationSelector).html(paginationHtml);
 
         // Event listener para paginación
         $(".pagination-btn").on("click", (e) => {
-            const page = $(e.target).data("page");
-            this.loadEntities(page);
+            const page = $(e.currentTarget).data("page");
+            if (page && !$(e.currentTarget).is(":disabled")) {
+                this.loadEntities(page);
+            }
         });
     }
 
