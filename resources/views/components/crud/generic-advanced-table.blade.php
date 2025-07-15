@@ -9,8 +9,8 @@
     'darkMode' => true,
 ])
 
-<div class="glassmorphism-container shimmer-border {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper">
+<div class="glassmorphism-container  {{ $responsive ? 'responsive-container' : '' }}">
+    <div class="glassmorphism-table-wrapper shimmer-border">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
