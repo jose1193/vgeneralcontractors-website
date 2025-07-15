@@ -70,7 +70,8 @@
     color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
     text-align: center;
     background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0.5px); /* Efecto cristal */
+    backdrop-filter: blur(6px); /* Cristal effect without blurring text */
+    -webkit-backdrop-filter: blur(6px);
 }
 
 .glassmorphic-table-row:hover {
@@ -80,7 +81,8 @@
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
-    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
+    backdrop-filter: blur(4px); /* Maintain effect without text blur */
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .glassmorphic-table-row.active {

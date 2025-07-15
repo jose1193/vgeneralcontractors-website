@@ -23,7 +23,7 @@
                 <thead>
                     <tr class="border-b border-white/5 relative">
                         @foreach ($columns as $index => $column)
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0.5px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-white relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
                                 @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][($index % 5)]}}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}"></div>
                                 <span class="relative z-10">{{ $column['label'] }}</span>
@@ -34,7 +34,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 backdrop-blur-sm">
                     {{-- Loading row --}}
                     <tr id="loadingRow">
                         <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
