@@ -57,40 +57,42 @@
     /* ================================================= */
     .shimmer-border {
         position: relative;
-        /* Necesario para posicionar el pseudo-elemento */
-        overflow: hidden;
-        /* Oculta el brillo cuando está fuera del borde */
+        overflow: visible;
+        z-index: 1;
     }
 
     .shimmer-border::after {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(transparent,
-                transparent,
-                transparent,
-                rgba(168, 85, 247, 0.8),
-                /* Color del shimmer (puedes ajustarlo) */
-                transparent,
-                transparent,
-                transparent,
-                rgba(255, 255, 255, 0.6),
-                /* Segundo color del shimmer (opcional) */
-                transparent);
-        animation: rotate-shimmer 4s linear infinite;
+        inset: -3px;
+        border-radius: 22px;
+        padding: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(270deg,
+                rgba(168, 85, 247, 0.0) 0%,
+                rgba(168, 85, 247, 0.7) 20%,
+                #fff 50%,
+                rgba(168, 85, 247, 0.7) 80%,
+                rgba(168, 85, 247, 0.0) 100%);
+        background-size: 400% 100%;
+        border: 2.5px solid transparent;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        animation: shimmer-border-move 2.5s linear infinite;
     }
 
-    /* Definición de la nueva animación para el borde */
-    @keyframes rotate-shimmer {
+    @keyframes shimmer-border-move {
         0% {
-            transform: rotate(0deg);
+            background-position: 100% 0;
         }
 
         100% {
-            transform: rotate(360deg);
+            background-position: 0 0;
         }
     }
 
