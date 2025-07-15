@@ -156,6 +156,7 @@
         transform: translateY(-2px);
     }
 
+    /* FIXED: Removed duplicate ::after, kept only ::before with shimmer animation */
     .glassmorphism-table-wrapper::before {
         content: '';
         position: absolute;
@@ -170,29 +171,6 @@
                 rgba(255, 255, 255, 0.3) 75%,
                 transparent 100%);
         animation: shimmer 3s infinite;
-    }
-
-    .glassmorphism-table-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 16px;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.06) 75%,
-                rgba(128, 0, 255, 0.1) 100%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .glassmorphism-table-wrapper:hover::after {
-        opacity: 1;
     }
 
     .glassmorphism-table {
@@ -223,6 +201,7 @@
         transition: all 0.3s ease;
     }
 
+    /* FIXED: Simplified header pseudo-element, removed duplicate */
     .glassmorphism-header::before {
         content: '';
         position: absolute;
