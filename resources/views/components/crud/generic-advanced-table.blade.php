@@ -62,11 +62,13 @@
     .glassmorphism-table-wrapper {
         background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-        /* Box shadow mejorado - más sutil y elegante */
+        /* Box shadow inspirado en glassmorphic-table.blade.php: glow y profundidad */
         box-shadow:
-            0 4px 20px rgba(0, 0, 0, 0.25),
-            0 2px 8px rgba(0, 0, 0, 0.15),
-            0 0 0 1px rgba(255, 255, 255, 0.05);
+            0 0 0 2px #a78bfa33,
+            0 2px 24px 0 #a78bfa44,
+            0 1.5px 12px 0 #fbbf2444,
+            0 0 0 1px rgba(255, 255, 255, 0.05),
+            0 8px 32px rgba(0, 0, 0, 0.25);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
         border: 1px solid rgba(255, 255, 255, 0.08);
