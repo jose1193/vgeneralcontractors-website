@@ -1,729 +1,259 @@
 /**
- * GLASSMORPHIC TABLE 2025 - MODERN JAVASCRIPT
- * Enhanced interactive effects with improved performance and UX
+ * Glassmorphic Table JavaScript
+ * Handles interactive effects for the glassmorphic table component
  */
 
-class GlassmorphicTable {
-    constructor(tableId, options = {}) {
-        this.tableId = tableId;
-        this.options = {
-            managerName: "crudManager",
-            sortable: true,
-            responsive: true,
-            loadingText: "Loading...",
-            noDataText: "No records found",
-            animationDuration: 300,
-            hoverDelay: 50,
-            ...options,
-        };
-
-        this.table = null;
-        this.tableBody = null;
-        this.headers = null;
-        this.currentSort = { field: null, direction: null };
-        this.isLoading = false;
-        this.observers = [];
-        this.eventListeners = [];
-
-        this.init();
-    }
-
-    /**
-     * Initialize the table
-     */
-    init() {
-        this.table = document.getElementById(this.tableId);
-        if (!this.table) {
-            console.error(`Table with ID "${this.tableId}" not found`);
-            return;
-        }
-
-        this.tableBody = document.getElementById(`${this.tableId}-body`);
-        if (!this.tableBody) {
-            console.error(
-                `Table body with ID "${this.tableId}-body" not found`
-            );
-            return;
-        }
-
-        this.headers = this.table.querySelectorAll(".glassmorphic-sortable");
-
-        this.setupEventListeners();
-        this.setupObservers();
-        this.enhanceExistingRows();
-        this.setupAccessibility();
-
-        // Initialize intersection observer for performance
-        this.setupIntersectionObserver();
-
-        console.log(`GlassmorphicTable initialized for ${this.tableId}`);
-    }
-
-    /**
-     * Setup event listeners with proper cleanup
-     */
-    setupEventListeners() {
-        // Sort functionality
-        if (this.options.sortable) {
-            this.headers.forEach((header) => {
-                const clickHandler = (e) => this.handleSort(e);
-                const keyHandler = (e) => this.handleSortKeyboard(e);
-
-                header.addEventListener("click", clickHandler);
-                header.addEventListener("keydown", keyHandler);
-
-                this.eventListeners.push({
-                    element: header,
-                    event: "click",
-                    handler: clickHandler,
-                });
-
-                this.eventListeners.push({
-                    element: header,
-                    event: "keydown",
-                    handler: keyHandler,
-                });
-            });
-        }
-
-        // Row interactions using event delegation
-        const mouseoverHandler = (e) => this.handleRowMouseover(e);
-        const mouseoutHandler = (e) => this.handleRowMouseout(e);
-        const clickHandler = (e) => this.handleRowClick(e);
-        const keyHandler = (e) => this.handleRowKeyboard(e);
-
-        this.tableBody.addEventListener("mouseover", mouseoverHandler);
-        this.tableBody.addEventListener("mouseout", mouseoutHandler);
-        this.tableBody.addEventListener("click", clickHandler);
-        this.tableBody.addEventListener("keydown", keyHandler);
-
-        this.eventListeners.push(
-            {
-                element: this.tableBody,
-                event: "mouseover",
-                handler: mouseoverHandler,
-            },
-            {
-                element: this.tableBody,
-                event: "mouseout",
-                handler: mouseoutHandler,
-            },
-            { element: this.tableBody, event: "click", handler: clickHandler },
-            { element: this.tableBody, event: "keydown", handler: keyHandler }
-        );
-
-        // Window resize handler for responsive behavior
-        const resizeHandler = () => this.handleResize();
-        window.addEventListener("resize", resizeHandler);
-        this.eventListeners.push({
-            element: window,
-            event: "resize",
-            handler: resizeHandler,
-        });
-    }
-
-    /**
-     * Setup mutation observer for dynamic content
-     */
-    setupObservers() {
-        const mutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === "childList") {
-                    this.handleContentChange();
-                }
-            });
-        });
-
-        mutationObserver.observe(this.tableBody, {
-            childList: true,
-            subtree: true,
-        });
-
-        this.observers.push(mutationObserver);
-    }
-
-    /**
-     * Setup intersection observer for performance optimization
-     */
-    setupIntersectionObserver() {
-        if (!("IntersectionObserver" in window)) return;
-
-        const intersectionObserver = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        this.enableRowInteractions(entry.target);
-                    } else {
-                        this.disableRowInteractions(entry.target);
-                    }
-                });
-            },
-            {
-                root: null,
-                rootMargin: "50px",
-                threshold: 0.1,
-            }
-        );
-
-        this.observers.push(intersectionObserver);
-    }
-
-    /**
-     * Setup accessibility attributes
-     */
-    setupAccessibility() {
-        // Add ARIA attributes to sortable headers
-        this.headers.forEach((header) => {
-            header.setAttribute("role", "button");
-            header.setAttribute("tabindex", "0");
-            header.setAttribute("aria-sort", "none");
-        });
-
-        // Add ARIA attributes to table
-        this.table.setAttribute("role", "table");
-        this.table.setAttribute(
-            "aria-label",
-            "Data table with sorting capabilities"
-        );
-
-        // Add row accessibility
-        this.enhanceRowAccessibility();
-    }
-
-    /**
-     * Enhance row accessibility
-     */
-    enhanceRowAccessibility() {
-        const rows = this.tableBody.querySelectorAll(
-            "tr:not(#loadingRow):not(#noDataRow)"
-        );
-        rows.forEach((row, index) => {
-            row.setAttribute("role", "row");
-            row.setAttribute("tabindex", "0");
-            row.setAttribute("aria-rowindex", index + 2); // +2 because header is row 1
-
-            const cells = row.querySelectorAll("td");
-            cells.forEach((cell, cellIndex) => {
-                cell.setAttribute("role", "gridcell");
-                cell.setAttribute("aria-colindex", cellIndex + 1);
-            });
-        });
-    }
-
-    /**
-     * Handle sort functionality
-     */
-    handleSort(event) {
-        const header = event.currentTarget;
-        const field = header.getAttribute("data-field");
-
-        if (!field) return;
-
-        // Determine new sort direction
-        let newDirection = "asc";
-        if (this.currentSort.field === field) {
-            if (this.currentSort.direction === "asc") {
-                newDirection = "desc";
-            } else if (this.currentSort.direction === "desc") {
-                newDirection = null; // Reset to no sort
-            }
-        }
-
-        // Update sort state
-        this.updateSortState(field, newDirection);
-
-        // Trigger sort in CRUD manager
-        this.triggerExternalSort(field, newDirection);
-    }
-
-    /**
-     * Handle keyboard navigation for sorting
-     */
-    handleSortKeyboard(event) {
-        if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            this.handleSort(event);
-        }
-    }
-
-    /**
-     * Update visual sort state
-     */
-    updateSortState(field, direction) {
-        // Reset all headers
-        this.headers.forEach((header) => {
-            header.classList.remove("sort-asc", "sort-desc");
-            header.setAttribute("aria-sort", "none");
-        });
-
-        // Update current sort
-        this.currentSort = { field, direction };
-
-        // Apply new sort state
-        if (direction) {
-            const currentHeader = this.table.querySelector(
-                `[data-field="${field}"]`
-            );
-            if (currentHeader) {
-                currentHeader.classList.add(`sort-${direction}`);
-                currentHeader.setAttribute(
-                    "aria-sort",
-                    direction === "asc" ? "ascending" : "descending"
-                );
-            }
-        }
-    }
-
-    /**
-     * Trigger external sort manager
-     */
-    triggerExternalSort(field, direction) {
-        const manager = window[this.options.managerName];
-        if (manager && typeof manager.sortBy === "function") {
-            manager.sortBy(field, direction || "");
-        }
-    }
-
-    /**
-     * Handle row mouseover with throttling
-     */
-    handleRowMouseover(event) {
-        const row = event.target.closest("tr");
-        if (!row || this.isSpecialRow(row)) return;
-
-        // Throttle mouseover events
-        if (row.hoverTimeout) {
-            clearTimeout(row.hoverTimeout);
-        }
-
-        row.hoverTimeout = setTimeout(() => {
-            this.applyRowHoverEffect(row);
-        }, this.options.hoverDelay);
-    }
-
-    /**
-     * Handle row mouseout
-     */
-    handleRowMouseout(event) {
-        const row = event.target.closest("tr");
-        if (!row || this.isSpecialRow(row)) return;
-
-        // Clear hover timeout
-        if (row.hoverTimeout) {
-            clearTimeout(row.hoverTimeout);
-            row.hoverTimeout = null;
-        }
-
-        // Only remove hover effect if row is not active
-        if (!row.classList.contains("glassmorphic-active")) {
-            this.removeRowHoverEffect(row);
-        }
-    }
-
-    /**
-     * Handle row click
-     */
-    handleRowClick(event) {
-        const row = event.target.closest("tr");
-        if (!row || this.isSpecialRow(row)) return;
-
-        // Remove active state from all rows
-        const allRows = this.tableBody.querySelectorAll("tr");
-        allRows.forEach((r) => r.classList.remove("glassmorphic-active"));
-
-        // Add active state to clicked row
-        row.classList.add("glassmorphic-active");
-
-        // Trigger custom event
-        this.dispatchRowEvent("rowSelect", row);
-    }
-
-    /**
-     * Handle keyboard navigation for rows
-     */
-    handleRowKeyboard(event) {
-        const row = event.target.closest("tr");
-        if (!row || this.isSpecialRow(row)) return;
-
-        switch (event.key) {
-            case "Enter":
-            case " ":
-                event.preventDefault();
-                this.handleRowClick(event);
-                break;
-            case "ArrowUp":
-                event.preventDefault();
-                this.navigateRow(row, -1);
-                break;
-            case "ArrowDown":
-                event.preventDefault();
-                this.navigateRow(row, 1);
-                break;
-        }
-    }
-
-    /**
-     * Navigate between rows with keyboard
-     */
-    navigateRow(currentRow, direction) {
-        const rows = Array.from(
-            this.tableBody.querySelectorAll(
-                "tr:not(#loadingRow):not(#noDataRow)"
-            )
-        );
-        const currentIndex = rows.indexOf(currentRow);
-        const newIndex = currentIndex + direction;
-
-        if (newIndex >= 0 && newIndex < rows.length) {
-            rows[newIndex].focus();
-        }
-    }
-
-    /**
-     * Apply hover effect to row
-     */
-    applyRowHoverEffect(row) {
-        if (!row || row.classList.contains("glassmorphic-hover")) return;
-
-        row.classList.add("glassmorphic-hover");
-
-        // Add visual feedback
-        row.style.transform = "translateY(-2px)";
-        row.style.zIndex = "10";
-
-        // Dispatch hover event
-        this.dispatchRowEvent("rowHover", row);
-    }
-
-    /**
-     * Remove hover effect from row
-     */
-    removeRowHoverEffect(row) {
-        if (!row) return;
-
-        row.classList.remove("glassmorphic-hover");
-
-        // Reset styles
-        row.style.transform = "";
-        row.style.zIndex = "";
-
-        // Dispatch hover out event
-        this.dispatchRowEvent("rowHoverOut", row);
-    }
-
-    /**
-     * Check if row is special (loading, no data, etc.)
-     */
-    isSpecialRow(row) {
-        return (
-            row.id === "loadingRow" ||
-            row.id === "noDataRow" ||
-            row.classList.contains("glassmorphic-loading-row") ||
-            row.classList.contains("glassmorphic-no-data-row")
-        );
-    }
-
-    /**
-     * Enhance existing rows
-     */
-    enhanceExistingRows() {
-        const rows = this.tableBody.querySelectorAll(
-            "tr:not(#loadingRow):not(#noDataRow)"
-        );
-        rows.forEach((row, index) => {
-            this.enhanceRow(row, index);
-        });
-    }
-
-    /**
-     * Enhance individual row
-     */
-    enhanceRow(row, index = 0) {
-        if (!row || this.isSpecialRow(row)) return;
-
-        // Add glassmorphic class
-        row.classList.add("glassmorphic-row");
-
-        // Add staggered animation delay
-        row.style.animationDelay = `${index * 0.05}s`;
-
-        // Setup accessibility
-        row.setAttribute("role", "row");
-        row.setAttribute("tabindex", "0");
-        row.setAttribute("aria-rowindex", index + 2);
-
-        // Process cells
-        const cells = row.querySelectorAll("td");
-        cells.forEach((cell, cellIndex) => {
-            this.enhanceCell(cell, cellIndex);
-        });
-    }
-
-    /**
-     * Enhance individual cell
-     */
-    enhanceCell(cell, index) {
-        if (!cell) return;
-
-        // Add accessibility
-        cell.setAttribute("role", "gridcell");
-        cell.setAttribute("aria-colindex", index + 1);
-
-        // Process status badges
-        this.processStatusBadges(cell);
-    }
-
-    /**
-     * Process status badges in cells
-     */
-    processStatusBadges(cell) {
-        const statusText = cell.textContent.trim().toLowerCase();
-        const statusKeywords = [
-            "active",
-            "inactive",
-            "pending",
-            "completed",
-            "cancelled",
-            "approved",
-            "rejected",
-        ];
-
-        if (statusKeywords.some((keyword) => statusText.includes(keyword))) {
-            this.createStatusBadge(cell, statusText);
-        }
-    }
-
-    /**
-     * Create status badge
-     */
-    createStatusBadge(cell, status) {
-        const badge = document.createElement("span");
-        badge.className = `glassmorphic-status-badge ${status}`;
-        badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-
-        cell.innerHTML = "";
-        cell.appendChild(badge);
-    }
-
-    /**
-     * Handle content changes
-     */
-    handleContentChange() {
-        // Re-enhance rows after content changes
-        setTimeout(() => {
-            this.enhanceExistingRows();
-            this.enhanceRowAccessibility();
-        }, 100);
-    }
-
-    /**
-     * Handle window resize
-     */
-    handleResize() {
-        // Debounce resize handler
-        if (this.resizeTimeout) {
-            clearTimeout(this.resizeTimeout);
-        }
-
-        this.resizeTimeout = setTimeout(() => {
-            this.updateResponsiveLayout();
-        }, 250);
-    }
-
-    /**
-     * Update responsive layout
-     */
-    updateResponsiveLayout() {
-        const container = this.table.closest(".glassmorphic-table-container");
-        if (!container) return;
-
-        const containerWidth = container.offsetWidth;
-
-        // Apply responsive classes based on width
-        if (containerWidth < 640) {
-            container.classList.add("glassmorphic-mobile");
-        } else {
-            container.classList.remove("glassmorphic-mobile");
-        }
-    }
-
-    /**
-     * Enable row interactions
-     */
-    enableRowInteractions(row) {
-        if (!row || this.isSpecialRow(row)) return;
-        row.style.pointerEvents = "auto";
-    }
-
-    /**
-     * Disable row interactions
-     */
-    disableRowInteractions(row) {
-        if (!row || this.isSpecialRow(row)) return;
-        row.style.pointerEvents = "none";
-    }
-
-    /**
-     * Dispatch custom row event
-     */
-    dispatchRowEvent(eventName, row) {
-        const event = new CustomEvent(eventName, {
-            detail: { row, tableId: this.tableId },
-            bubbles: true,
-            cancelable: true,
-        });
-
-        row.dispatchEvent(event);
-    }
-
-    /**
-     * Show loading state
-     */
-    showLoading() {
-        this.isLoading = true;
-        const loadingRow = document.getElementById("loadingRow");
-        const noDataRow = document.getElementById("noDataRow");
-
-        if (loadingRow) loadingRow.style.display = "table-row";
-        if (noDataRow) noDataRow.style.display = "none";
-
-        // Hide other rows
-        const dataRows = this.tableBody.querySelectorAll(
-            "tr:not(#loadingRow):not(#noDataRow)"
-        );
-        dataRows.forEach((row) => (row.style.display = "none"));
-    }
-
-    /**
-     * Hide loading state
-     */
-    hideLoading() {
-        this.isLoading = false;
-        const loadingRow = document.getElementById("loadingRow");
-
-        if (loadingRow) loadingRow.style.display = "none";
-
-        // Show data rows
-        const dataRows = this.tableBody.querySelectorAll(
-            "tr:not(#loadingRow):not(#noDataRow)"
-        );
-        dataRows.forEach((row) => (row.style.display = "table-row"));
-    }
-
-    /**
-     * Show no data state
-     */
-    showNoData() {
-        const loadingRow = document.getElementById("loadingRow");
-        const noDataRow = document.getElementById("noDataRow");
-
-        if (loadingRow) loadingRow.style.display = "none";
-        if (noDataRow) noDataRow.style.display = "table-row";
-
-        // Hide other rows
-        const dataRows = this.tableBody.querySelectorAll(
-            "tr:not(#loadingRow):not(#noDataRow)"
-        );
-        dataRows.forEach((row) => (row.style.display = "none"));
-    }
-
-    /**
-     * Refresh table data
-     */
-    refresh() {
-        this.showLoading();
-
-        // Trigger refresh in external manager
-        const manager = window[this.options.managerName];
-        if (manager && typeof manager.refresh === "function") {
-            manager.refresh();
-        }
-    }
-
-    /**
-     * Destroy table instance
-     */
-    destroy() {
-        // Remove all event listeners
-        this.eventListeners.forEach(({ element, event, handler }) => {
-            element.removeEventListener(event, handler);
-        });
-
-        // Disconnect all observers
-        this.observers.forEach((observer) => {
-            observer.disconnect();
-        });
-
-        // Clear timeouts
-        if (this.resizeTimeout) {
-            clearTimeout(this.resizeTimeout);
-        }
-
-        // Clear references
-        this.table = null;
-        this.tableBody = null;
-        this.headers = null;
-        this.eventListeners = [];
-        this.observers = [];
-
-        console.log(`GlassmorphicTable destroyed for ${this.tableId}`);
-    }
-
-    /**
-     * Get current sort state
-     */
-    getSortState() {
-        return { ...this.currentSort };
-    }
-
-    /**
-     * Set sort state programmatically
-     */
-    setSortState(field, direction) {
-        this.updateSortState(field, direction);
-    }
-
-    /**
-     * Get selected rows
-     */
-    getSelectedRows() {
-        return Array.from(
-            this.tableBody.querySelectorAll("tr.glassmorphic-active")
-        );
-    }
-
-    /**
-     * Clear selection
-     */
-    clearSelection() {
-        const activeRows = this.tableBody.querySelectorAll(
-            "tr.glassmorphic-active"
-        );
-        activeRows.forEach((row) =>
-            row.classList.remove("glassmorphic-active")
-        );
-    }
-}
-
-// Legacy support functions
-function initGlassmorphicTable(tableId, options = {}) {
-    return new GlassmorphicTable(tableId, options);
-}
-
-function formatStatusBadges(tableId) {
+/**
+ * Initialize the glassmorphic table effects
+ * @param {string} tableId - The ID of the table element
+ */
+function initGlassmorphicTable(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
+    
+    const tableBody = document.getElementById(`${tableId}-body`);
+    if (!tableBody) return;
 
-    const statusCells = table.querySelectorAll(".status-cell");
-    statusCells.forEach((cell) => {
-        const glassmorphicTable = window.glassmorphicTable;
-        if (glassmorphicTable) {
-            glassmorphicTable.processStatusBadges(cell);
-        }
+    // Add enhanced table appearance for dark background
+    enhanceTableAppearance(table);
+
+    // Initialize sort functionality if it exists
+    initSortFunctionality(table);
+    
+    // Initialize row effects
+    initRowEffects(tableBody);
+
+    // Re-initialize when table content changes (for CRUD operations)
+    observeTableChanges(tableBody);
+}
+
+/**
+ * Initialize sort functionality for table headers
+ * @param {HTMLElement} table - The table element
+ */
+function initSortFunctionality(table) {
+    const sortHeaders = table.querySelectorAll('.sort-header');
+    
+    sortHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const field = this.getAttribute('data-field');
+            let currentSort = this.classList.contains('sort-asc') ? 'asc' : 
+                             this.classList.contains('sort-desc') ? 'desc' : '';
+            
+            // Reset all headers
+            sortHeaders.forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // Set new sort direction
+            let newSort = '';
+            if (currentSort === '') {
+                newSort = 'asc';
+                this.classList.add('sort-asc');
+            } else if (currentSort === 'asc') {
+                newSort = 'desc';
+                this.classList.add('sort-desc');
+            }
+            
+            // Trigger sort in CRUD manager if it exists
+            if (typeof window.crudManager !== 'undefined' && window.crudManager.sortBy) {
+                window.crudManager.sortBy(field, newSort);
+            }
+        });
     });
 }
 
-// Export for global use
-window.GlassmorphicTable = GlassmorphicTable;
+/**
+ * Initialize hover and active effects for table rows
+ * @param {HTMLElement} tableBody - The table body element
+ */
+function initRowEffects(tableBody) {
+    // Remove existing event listeners (if any)
+    const existingRows = tableBody.querySelectorAll('tr:not(#loadingRow)');
+    existingRows.forEach(row => {
+        // Remove existing classes and indicators
+        row.classList.remove('glassmorphic-table-row');
+        const existingIndicator = row.querySelector('.glassmorphic-table-row-indicator');
+        if (existingIndicator) {
+            existingIndicator.remove();
+        }
+    });
+
+    // Add event delegation for current and future rows
+    tableBody.addEventListener('mouseover', handleRowMouseOver);
+    tableBody.addEventListener('mouseout', handleRowMouseOut);
+    tableBody.addEventListener('click', handleRowClick);
+
+    // Initialize existing rows
+    setupExistingRows(tableBody);
+}
+
+/**
+ * Setup existing rows with glassmorphic effects
+ * @param {HTMLElement} tableBody - The table body element
+ */
+function setupExistingRows(tableBody) {
+    const rows = tableBody.querySelectorAll('tr:not(#loadingRow)');
+    
+    rows.forEach((row, index) => {
+        // Add glassmorphic class
+        row.classList.add('glassmorphic-table-row');
+        
+        // Add indicator element
+        const indicator = document.createElement('div');
+        indicator.className = 'glassmorphic-table-row-indicator';
+        row.style.position = 'relative';
+        row.appendChild(indicator);
+        
+        // Add subtle animation delay based on row index for staggered effect
+        row.style.transitionDelay = `${index * 0.03}s`;
+    });
+}
+
+/**
+ * Handle mouseover event for table rows
+ * @param {Event} event - The mouseover event
+ */
+function handleRowMouseOver(event) {
+    const row = event.target.closest('tr');
+    if (row && !row.id.includes('loadingRow')) {
+        row.classList.add('glassmorphic-table-row');
+        
+        // Add indicator if it doesn't exist
+        if (!row.querySelector('.glassmorphic-table-row-indicator')) {
+            const indicator = document.createElement('div');
+            indicator.className = 'glassmorphic-table-row-indicator';
+            row.style.position = 'relative';
+            row.appendChild(indicator);
+        }
+        
+        // Apply black crystal effect
+        row.style.transform = 'scale(1.005)';
+        row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+        row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
+        row.style.zIndex = '10';
+        row.style.position = 'relative';
+        row.style.color = 'rgba(255, 255, 255, 1)';
+        row.style.filter = 'blur(0.3px)';
+    }
+}
+
+/**
+ * Handle mouseout event for table rows
+ * @param {Event} event - The mouseout event
+ */
+function handleRowMouseOut(event) {
+    const row = event.target.closest('tr');
+    if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
+        // Reset styles when mouse leaves
+        row.style.transform = '';
+        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        row.style.boxShadow = '';
+        row.style.zIndex = '';
+        row.style.position = '';
+        row.style.color = 'rgba(255, 255, 255, 1)';
+        row.style.filter = 'blur(0.5px)';
+    }
+}
+
+/**
+ * Handle click event for table rows
+ * @param {Event} event - The click event
+ */
+function handleRowClick(event) {
+    const row = event.target.closest('tr');
+    if (row && !row.id.includes('loadingRow')) {
+        // Remove active class from all rows
+        const allRows = row.parentElement.querySelectorAll('tr');
+        allRows.forEach(r => r.classList.remove('active'));
+        
+        // Add active class to clicked row
+        row.classList.add('active');
+    }
+}
+
+/**
+ * Observe changes to the table body and reinitialize effects when content changes
+ * @param {HTMLElement} tableBody - The table body element
+ */
+function observeTableChanges(tableBody) {
+    // Create a MutationObserver to watch for changes to the table
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList') {
+                // Table content has changed, reinitialize row effects
+                setupExistingRows(tableBody);
+            }
+        });
+    });
+    
+    // Start observing the table body for changes
+    observer.observe(tableBody, { childList: true });
+}
+
+/**
+ * Format status badges in the table
+ * @param {string} tableId - The ID of the table element
+ */
+function formatStatusBadges(tableId) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    
+    const statusCells = table.querySelectorAll('.status-cell');
+    
+    statusCells.forEach(cell => {
+        const status = cell.textContent.trim().toLowerCase();
+        cell.innerHTML = ''; // Clear the cell
+        
+        const badge = document.createElement('span');
+        badge.className = `status-badge ${status}`;
+        badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        
+        cell.appendChild(badge);
+    });
+}
+
+/**
+ * Enhance table appearance for dark background with modern 2025 glassmorphic style
+ * @param {HTMLElement} table - The table element
+ */
+function enhanceTableAppearance(table) {
+    // Add styles to the table headers
+    const headers = table.querySelectorAll('th');
+    headers.forEach(header => {
+        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
+        header.style.color = 'rgba(255, 255, 255, 0.9)';
+        header.style.fontWeight = '500';
+        header.style.textTransform = 'uppercase';
+        header.style.letterSpacing = '0.05em';
+        header.style.padding = '12px 16px';
+        header.style.fontSize = '0.75rem';
+        header.style.filter = 'blur(0.5px)';
+        header.style.textAlign = 'center';
+        header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+    });
+
+    // Add styles to the table cells
+    const cells = table.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.style.padding = '12px 16px';
+        cell.style.color = 'rgba(255, 255, 255, 1)';
+        cell.style.fontSize = '0.875rem';
+        cell.style.textAlign = 'center';
+        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
+    });
+
+    // Add a subtle text shadow to the entire table
+    table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
+    
+    // Apply black crystal effect to the table body
+    const tbody = table.querySelector('tbody');
+    if (tbody) {
+        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        tbody.style.filter = 'blur(0.5px)';
+    }
+}
+
+// Export functions for global use
 window.initGlassmorphicTable = initGlassmorphicTable;
 window.formatStatusBadges = formatStatusBadges;

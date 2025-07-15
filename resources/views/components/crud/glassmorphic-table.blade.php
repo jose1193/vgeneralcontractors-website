@@ -9,91 +9,85 @@
     'darkMode' => true,
 ])
 
-<div class="glassmorphic-table-container">
-    {{-- Outer glow container --}}
-    <div class="glassmorphic-outer-glow">
-        {{-- Main table wrapper with glassmorphic effect --}}
-        <div class="glassmorphic-table-wrapper">
-            {{-- Table container --}}
-            <div class="{{ $responsive ? 'glassmorphic-table-responsive' : 'glassmorphic-table-fixed' }}">
-                <table id="{{ $id }}" class="glassmorphic-table">
-                    {{-- Table Header --}}
-                    <thead class="glassmorphic-table-header">
-                        <tr class="glassmorphic-header-row">
-                            @foreach ($columns as $index => $column)
-                                <th class="glassmorphic-header-cell {{ $sortable && ($column['sortable'] ?? true) ? 'glassmorphic-sortable' : '' }}"
-                                    @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" 
-                                        role="button" 
-                                        tabindex="0"
-                                        aria-sort="none" @endif>
-                                    {{-- Header content with shimmer effect --}}
-                                    <div class="glassmorphic-header-content">
-                                        <div class="glassmorphic-shimmer glassmorphic-shimmer-{{ $index % 5 }}">
-                                        </div>
-                                        <span class="glassmorphic-header-text">{{ $column['label'] }}</span>
-                                        @if ($sortable && ($column['sortable'] ?? true))
-                                            <span class="glassmorphic-sort-icon" aria-hidden="true"></span>
-                                        @endif
-                                    </div>
-                                </th>
-                            @endforeach
-                        </tr>
-                    </thead>
+<div class="relative overflow-hidden rounded-[6px]">
+    {{-- Animated gradient border with enhanced glow --}}
+    <div class="absolute inset-0 rounded-[6px] p-[2px] animate-border-glow">
+        <div class="absolute inset-0 rounded-[6px] bg-gradient-to-r from-yellow-400 via-purple-500 via-orange-500 to-yellow-400 bg-[length:300%_300%] animate-gradient-border opacity-70"></div>
+        <div class="relative w-full h-full bg-black/80 filter blur-[1px] rounded-[4px] border border-white/5"></div>
+    </div>
 
-                    {{-- Table Body --}}
-                    <tbody id="{{ $id }}-body" class="glassmorphic-table-body">
-                        {{-- Loading row --}}
-                        <tr id="loadingRow" class="glassmorphic-loading-row">
-                            <td colspan="{{ count($columns) }}" class="glassmorphic-loading-cell">
-                                <div class="glassmorphic-loading-content">
-                                    <div class="glassmorphic-spinner">
-                                        <div class="glassmorphic-spinner-inner"></div>
-                                    </div>
-                                    <span class="glassmorphic-loading-text">{{ $loadingText }}</span>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- No data row (hidden by default) --}}
-                        <tr id="noDataRow" class="glassmorphic-no-data-row" style="display: none;">
-                            <td colspan="{{ count($columns) }}" class="glassmorphic-no-data-cell">
-                                <div class="glassmorphic-no-data-content">
-                                    <svg class="glassmorphic-no-data-icon" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                        </path>
-                                    </svg>
-                                    <span class="glassmorphic-no-data-text">{{ $noDataText }}</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    {{-- Table container with enhanced animated shadows --}}
+    <div class="relative filter blur-[0.5px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
+        <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
+            <table id="{{ $id }}" class="w-full">
+                <thead>
+                    <tr class="border-b border-white/5 relative">
+                        @foreach ($columns as $index => $column)
+                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-300 filter blur-[0.5px] relative {{ $sortable && ($column['sortable'] ?? true) ? 'cursor-pointer sort-header' : '' }}"
+                                @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-{{ ['yellow', 'purple', 'orange', 'yellow', 'purple'][($index % 5)]}}-500/5 to-transparent animate-shimmer{{ $index > 0 ? '-delay-' . $index : '' }}"></div>
+                                <span class="relative z-10">{{ $column['label'] }}</span>
+                                @if ($sortable && ($column['sortable'] ?? true))
+                                    <span class="sort-icon relative z-10"></span>
+                                @endif
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody id="{{ $id }}-body" class="divide-y divide-white/5 bg-black/90 filter blur-[0.5px]">
+                    {{-- Loading row --}}
+                    <tr id="loadingRow">
+                        <td colspan="{{ count($columns) }}" class="px-6 py-4 text-center text-white">
+                            <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            {{ $loadingText }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/glassmorphic-table.css') }}">
+    <style>
+        /* Sort icons */
+        .sort-header .sort-icon::after {
+            content: '↕️';
+            font-size: 0.75rem;
+            margin-left: 0.25rem;
+            opacity: 0.5;
+        }
+
+        .sort-header.sort-asc .sort-icon::after {
+            content: '↑';
+            opacity: 1;
+            color: #3B82F6;
+        }
+
+        .sort-header.sort-desc .sort-icon::after {
+            content: '↓';
+            opacity: 1;
+            color: #3B82F6;
+        }
+
+        .sort-header:hover .sort-icon::after {
+            opacity: 0.8;
+        }
+    </style>
 @endpush
 
 @push('scripts')
     <script src="{{ asset('js/glassmorphic-table.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the glassmorphic table
-            const tableManager = new GlassmorphicTable('{{ $id }}', {
-                managerName: '{{ $managerName }}',
-                sortable: {{ $sortable ? 'true' : 'false' }},
-                responsive: {{ $responsive ? 'true' : 'false' }},
-                loadingText: '{{ $loadingText }}',
-                noDataText: '{{ $noDataText }}'
-            });
-
-            // Make it globally accessible
-            window.glassmorphicTable = tableManager;
+            initGlassmorphicTable('{{ $id }}');
         });
     </script>
 @endpush
