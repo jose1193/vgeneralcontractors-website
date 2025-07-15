@@ -52,7 +52,7 @@
 
             <!-- Table with enhanced border -->
             <div class="mb-6">
-                <x-crud.glass-advanced-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
+                <x-crud.advanced-table :id="$tableId" :columns="$tableColumns" :manager-name="$managerName" />
             </div>
 
             <!-- Pagination -->
