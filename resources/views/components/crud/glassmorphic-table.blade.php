@@ -19,8 +19,7 @@
     </div>
 
     {{-- Table container with enhanced animated shadows --}}
-    <div
-        class="relative filter blur-[0.5px] bg-black/40 border-0 rounded-[4px] overflow-hidden m-[2px] animate-table-shadow shadow-lg shadow-purple-500/30">
+    <div class="relative ">
         <div class="{{ $responsive ? 'overflow-x-auto' : '' }}">
             <table id="{{ $id }}" class="w-full">
                 <thead>
