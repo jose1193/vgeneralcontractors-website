@@ -9,7 +9,7 @@
     'darkMode' => true,
 ])
 
-<div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
+<div class="glassmorphism-container shimmer-border {{ $responsive ? 'responsive-container' : '' }}">
     <div class="glassmorphism-table-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
@@ -52,6 +52,48 @@
 </div>
 
 <style>
+    /* ================================================= */
+    /* == NUEVO: EFECTO SHIMMER EN EL BORDE PRINCIPAL == */
+    /* ================================================= */
+    .shimmer-border {
+        position: relative;
+        /* Necesario para posicionar el pseudo-elemento */
+        overflow: hidden;
+        /* Oculta el brillo cuando está fuera del borde */
+    }
+
+    .shimmer-border::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(transparent,
+                transparent,
+                transparent,
+                rgba(168, 85, 247, 0.8),
+                /* Color del shimmer (puedes ajustarlo) */
+                transparent,
+                transparent,
+                transparent,
+                rgba(255, 255, 255, 0.6),
+                /* Segundo color del shimmer (opcional) */
+                transparent);
+        animation: rotate-shimmer 4s linear infinite;
+    }
+
+    /* Definición de la nueva animación para el borde */
+    @keyframes rotate-shimmer {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
     /* Premium Glassmorphism Table 2025 with Purple Shadows */
     .glassmorphism-container {
         position: relative;
