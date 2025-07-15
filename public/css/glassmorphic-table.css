@@ -96,32 +96,35 @@
     transition: transform 0.3s ease, background-color 0.3s ease,
         box-shadow 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(
-        255,
-        255,
-        255,
-        1
-    ); /* Texto completamente blanco para mejor visibilidad */
+    color: #fff;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0.5px); /* Efecto cristal */
+    background: rgba(20, 20, 20, 0.85); /* Fondo oscuro cristal */
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12),
+        0 1.5px 6px 0 rgba(59, 130, 246, 0.1);
+    /* Sin blur en el texto para máxima legibilidad */
 }
 
 .glassmorphic-table-row.hovered {
-    transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    transform: scale(1.01);
+    background: rgba(30, 30, 30, 0.97);
+    box-shadow: 0 0 32px 0 rgba(59, 130, 246, 0.18),
+        0 0 16px 0 rgba(138, 43, 226, 0.18);
     z-index: 10;
     position: relative;
-    color: rgba(255, 255, 255, 1);
-    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
+    color: #fff;
 }
 
 .glassmorphic-table-row.active {
-    background-color: rgba(59, 130, 246, 0.1);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(
+        90deg,
+        rgba(59, 130, 246, 0.12) 0%,
+        rgba(138, 43, 226, 0.1) 100%
+    );
+    box-shadow: 0 0 36px 0 rgba(59, 130, 246, 0.22),
+        0 0 18px 0 rgba(138, 43, 226, 0.15);
     z-index: 11;
     position: relative;
+    color: #fff;
 }
 
 .glassmorphic-table-row:hover {
@@ -192,8 +195,28 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 640px) {
-    .glassmorphic-table-row:hover {
-        transform: none; /* Disable scaling on mobile */
+/* Light mode support */
+@media (prefers-color-scheme: light) {
+    .glassmorphic-table-row {
+        background: rgba(255, 255, 255, 0.85);
+        color: #222;
+        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1),
+            0 1.5px 6px 0 rgba(59, 130, 246, 0.08);
+    }
+    .glassmorphic-table-row.hovered {
+        background: rgba(245, 245, 255, 0.97);
+        color: #111;
+        box-shadow: 0 0 32px 0 rgba(59, 130, 246, 0.12),
+            0 0 16px 0 rgba(138, 43, 226, 0.1);
+    }
+    .glassmorphic-table-row.active {
+        background: linear-gradient(
+            90deg,
+            rgba(59, 130, 246, 0.08) 0%,
+            rgba(138, 43, 226, 0.08) 100%
+        );
+        color: #111;
+        box-shadow: 0 0 36px 0 rgba(59, 130, 246, 0.13),
+            0 0 18px 0 rgba(138, 43, 226, 0.1);
     }
 }
