@@ -10,45 +10,45 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-
-    <table id="{{ $id }}" class="glassmorphism-table">
-        <thead class="glassmorphism-header">
-            <tr>
-                @foreach ($columns as $column)
-                    <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
-                        @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
-                        <div class="th-content">
-                            <span class="column-text">{{ $column['label'] }}</span>
-                            @if ($sortable && ($column['sortable'] ?? true))
-                                <span class="sort-indicator">
-                                    <svg class="sort-icon" viewBox="0 0 24 24">
-                                        <path d="M7 14l5-5 5 5z" />
-                                        <path d="M7 10l5 5 5-5z" />
-                                    </svg>
-                                </span>
-                            @endif
+    <div class="glassmorphism-table-wrapper">
+        <table id="{{ $id }}" class="glassmorphism-table">
+            <thead class="glassmorphism-header">
+                <tr>
+                    @foreach ($columns as $column)
+                        <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
+                            @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                            <div class="th-content">
+                                <span class="column-text">{{ $column['label'] }}</span>
+                                @if ($sortable && ($column['sortable'] ?? true))
+                                    <span class="sort-indicator">
+                                        <svg class="sort-icon" viewBox="0 0 24 24">
+                                            <path d="M7 14l5-5 5 5z" />
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                @endif
+                            </div>
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody id="{{ $id }}-body" class="glassmorphism-body">
+                <!-- Loading row -->
+                <tr id="loadingRow" class="loading-row">
+                    <td colspan="{{ count($columns) }}" class="loading-cell">
+                        <div class="loading-content">
+                            <div class="loading-spinner">
+                                <div class="spinner-ring"></div>
+                                <div class="spinner-ring"></div>
+                                <div class="spinner-ring"></div>
+                            </div>
+                            <span class="loading-text">{{ $loadingText }}</span>
                         </div>
-                    </th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody id="{{ $id }}-body" class="glassmorphism-body">
-            <!-- Loading row -->
-            <tr id="loadingRow" class="loading-row">
-                <td colspan="{{ count($columns) }}" class="loading-cell">
-                    <div class="loading-content">
-                        <div class="loading-spinner">
-                            <div class="spinner-ring"></div>
-                            <div class="spinner-ring"></div>
-                            <div class="spinner-ring"></div>
-                        </div>
-                        <span class="loading-text">{{ $loadingText }}</span>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <style>
