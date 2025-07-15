@@ -61,12 +61,12 @@
     }
 
     .glassmorphism-table-wrapper {
-        background: linear-gradient(135deg, rgba(40, 0, 80, 0.65) 0%, rgba(0, 0, 0, 0.82) 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.88) 100%);
         border-radius: 22px;
-        box-shadow: 0 8px 40px 0 rgba(128, 0, 255, 0.18), 0 0 0 6px rgba(128, 0, 255, 0.10), 0 1.5px 24px 0 rgba(0, 255, 255, 0.08);
-        backdrop-filter: blur(8px) saturate(1.2);
-        -webkit-backdrop-filter: blur(8px) saturate(1.2);
-        border: 1.5px solid rgba(255, 255, 255, 0.13);
+        box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.32), 0 0 0 6px rgba(128, 0, 255, 0.08), 0 1.5px 24px 0 rgba(0, 255, 255, 0.05);
+        backdrop-filter: blur(10px) saturate(1.1);
+        -webkit-backdrop-filter: blur(10px) saturate(1.1);
+        border: 1.5px solid rgba(255, 255, 255, 0.10);
         overflow: hidden;
         position: relative;
         transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -99,8 +99,8 @@
     }
 
     .glassmorphism-header {
-        background: linear-gradient(120deg, rgba(128, 0, 255, 0.13) 0%, rgba(0, 255, 255, 0.10) 100%);
-        border-bottom: 1.5px solid rgba(255, 255, 255, 0.13);
+        background: linear-gradient(120deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.22) 100%);
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.10);
         position: relative;
     }
 
@@ -111,11 +111,11 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.07em;
-        color: rgba(255, 255, 255, 0.88);
+        color: rgba(255, 255, 255, 0.82);
         border-right: none;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 0 rgba(128, 0, 255, 0.07);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.10);
     }
 
     .glassmorphism-th:last-child {
@@ -123,9 +123,9 @@
     }
 
     .glassmorphism-th:hover {
-        background: linear-gradient(90deg, rgba(128, 0, 255, 0.13) 0%, rgba(0, 255, 255, 0.10) 100%);
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.18) 100%);
         color: #fff;
-        box-shadow: 0 2px 8px rgba(128, 0, 255, 0.10);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
     }
 
     .th-content {
@@ -180,7 +180,7 @@
     }
 
     .glassmorphism-body {
-        background: linear-gradient(120deg, rgba(0, 0, 0, 0.32) 0%, rgba(128, 0, 255, 0.07) 100%);
+        background: linear-gradient(120deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.22) 100%);
     }
 
     .glassmorphism-body tr {
@@ -190,18 +190,18 @@
     }
 
     .glassmorphism-body tr:hover {
-        background: linear-gradient(90deg, rgba(128, 0, 255, 0.10) 0%, rgba(0, 255, 255, 0.10) 100%);
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.18) 100%);
         transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 4px 24px rgba(128, 0, 255, 0.10);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.13);
     }
 
     .glassmorphism-body td {
         padding: 1.1rem 1.7rem;
         text-align: center;
-        color: rgba(255, 255, 255, 0.93);
+        color: rgba(255, 255, 255, 0.85);
         font-size: 0.93rem;
         border-right: none;
-        border-bottom: 1px solid rgba(128, 0, 255, 0.04);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.10);
     }
 
     .glassmorphism-body td:last-child {
@@ -261,7 +261,7 @@
     .responsive-container {
         overflow-x: auto;
         scrollbar-width: thin;
-        scrollbar-color: rgba(128, 0, 255, 0.18) transparent;
+        scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
     }
 
     .responsive-container::-webkit-scrollbar {
@@ -269,18 +269,18 @@
     }
 
     .responsive-container::-webkit-scrollbar-track {
-        background: rgba(128, 0, 255, 0.07);
+        background: rgba(0, 0, 0, 0.10);
         border-radius: 4px;
     }
 
     .responsive-container::-webkit-scrollbar-thumb {
-        background: rgba(128, 0, 255, 0.22);
+        background: rgba(0, 0, 0, 0.22);
         border-radius: 4px;
         transition: background 0.3s ease;
     }
 
     .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(128, 0, 255, 0.35);
+        background: rgba(0, 0, 0, 0.35);
     }
 
     /* Modern Glassmorphism Pagination */
@@ -296,13 +296,13 @@
         display: flex;
         align-items: center;
         gap: 0.3rem;
-        background: linear-gradient(120deg, rgba(128, 0, 255, 0.13) 0%, rgba(0, 255, 255, 0.10) 100%);
+        background: linear-gradient(120deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.22) 100%);
         border-radius: 14px;
         padding: 0.7rem;
-        box-shadow: 0 4px 30px rgba(128, 0, 255, 0.10);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.13);
         backdrop-filter: blur(2.5px);
         -webkit-backdrop-filter: blur(2.5px);
-        border: 1.5px solid rgba(128, 0, 255, 0.13);
+        border: 1.5px solid rgba(255, 255, 255, 0.10);
     }
 
     .pagination .page-item {
@@ -326,7 +326,7 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 1px 0 rgba(128, 0, 255, 0.07);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.10);
     }
 
     .pagination .page-link::before {
@@ -336,7 +336,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(128, 0, 255, 0.13) 0%, rgba(0, 255, 255, 0.10) 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.18) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -344,7 +344,7 @@
     .pagination .page-link:hover {
         color: #fff;
         transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 4px 20px rgba(128, 0, 255, 0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     }
 
     .pagination .page-link:hover::before {
@@ -352,9 +352,9 @@
     }
 
     .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #80f8ff 0%, #8000ff 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.88) 100%);
         color: white;
-        box-shadow: 0 4px 20px rgba(128, 0, 255, 0.22);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
         transform: translateY(-1px) scale(1.03);
     }
 
@@ -461,13 +461,13 @@
     /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
         .glassmorphism-table-wrapper {
-            background: linear-gradient(135deg, rgba(40, 0, 80, 0.85) 0%, rgba(0, 0, 0, 0.92) 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.13);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.97) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.10);
         }
 
         .pagination {
-            background: linear-gradient(120deg, rgba(128, 0, 255, 0.18) 0%, rgba(0, 255, 255, 0.13) 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.13);
+            background: linear-gradient(120deg, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.22) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.10);
         }
     }
 </style>
