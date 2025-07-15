@@ -63,7 +63,7 @@
     .glassmorphism-table-wrapper {
         background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-        box-shadow: 0 0 32px 0 rgba(128, 0, 255, 0.35), 0 2px 24px 0 rgba(128, 0, 255, 0.15);
+        box-shadow: 0 4px 32px 0 rgba(128, 0, 255, 0.10), 0 0 0 4px rgba(128, 0, 255, 0.08);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
         border: none;
