@@ -101,6 +101,22 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+
+    /* Shimmer animated border effect for glassmorphism-container */
+    .glassmorphism-container::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 22px;
+        background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.25), rgba(128, 0, 255, 0.18), transparent);
+        pointer-events: none;
+        z-index: 2;
+        animation: shimmer-border 2.5s infinite;
     }
 
     .glassmorphism-container:hover {
@@ -551,6 +567,16 @@
     }
 
     /* Enhanced Animations */
+    @keyframes shimmer-border {
+        0% {
+            left: -40%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
