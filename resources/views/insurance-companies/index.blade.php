@@ -1,4 +1,5 @@
 @php
+    $idField = 'uuid';
     $routes = [
         'index' => secure_url(route('insurance-companies.index', [], false)),
 
@@ -152,4 +153,4 @@
 
 <x-crud.generic-index :title="__('insurance_companies_management')" :subtitle="__('manage_insurance_companies_subtitle')" :entity-name="__('insurance_company')" :entity-name-plural="__('insurance_companies')" :search-placeholder="__('search_insurance_companies')"
     :show-deleted-label="__('show_inactive_records')" :add-new-label="__('add_insurance_company')" :table-columns="$tableColumns" :routes="$routes" :form-fields="$formFields" :search-fields="$searchFields"
-    :entity-config="$entityConfig" :table-headers="$tableHeaders" :translations="$translations" />
+    :entity-config="$entityConfig" :table-headers="$tableHeaders" :translations="$translations" :id-field="$idField" />
