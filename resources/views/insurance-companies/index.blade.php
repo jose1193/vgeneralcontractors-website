@@ -1,17 +1,18 @@
-<x-crud.index-layout title="Insurance Companies Management" subtitle="Manage insurance companies and their information"
-    entity-name="Insurance Company" entity-name-plural="Insurance Companies"
-    search-placeholder="Search insurance companies..." show-deleted-label="{{ __('show_inactive_records') }}"
-    add-new-label="Add Insurance Company" manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable"
-    create-button-id="createInsuranceCompanyBtn" search-id="searchInput" show-deleted-id="showDeleted"
-    per-page-id="perPage" pagination-id="pagination" alert-id="alertContainer" :table-columns="[
-        ['field' => 'insurance_company_name', 'label' => 'Company Name', 'sortable' => true],
-        ['field' => 'address', 'label' => 'Address', 'sortable' => false],
-        ['field' => 'email', 'label' => 'Email', 'sortable' => true],
-        ['field' => 'phone', 'label' => 'Phone', 'sortable' => false],
-        ['field' => 'website', 'label' => 'Website', 'sortable' => false],
-        ['field' => 'user_name', 'label' => 'Created By', 'sortable' => true],
-        ['field' => 'created_at', 'label' => 'Created', 'sortable' => true],
-        ['field' => 'actions', 'label' => 'Actions', 'sortable' => false],
+<x-crud.index-layout title="{{ __('insurance_companies_management') }}"
+    subtitle="{{ __('manage_insurance_companies_subtitle') }}" entity-name="{{ __('insurance_company') }}"
+    entity-name-plural="{{ __('insurance_companies') }}" search-placeholder="{{ __('search_insurance_companies') }}"
+    show-deleted-label="{{ __('show_inactive_records') }}" add-new-label="{{ __('add_insurance_company') }}"
+    manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable" create-button-id="createInsuranceCompanyBtn"
+    search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"
+    alert-id="alertContainer" :table-columns="[
+        ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
+        ['field' => 'address', 'label' => __('address'), 'sortable' => false],
+        ['field' => 'email', 'label' => __('email'), 'sortable' => true],
+        ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
+        ['field' => 'website', 'label' => __('website'), 'sortable' => false],
+        ['field' => 'user_name', 'label' => __('created_by'), 'sortable' => true],
+        ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
+        ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
 
     @push('scripts')
