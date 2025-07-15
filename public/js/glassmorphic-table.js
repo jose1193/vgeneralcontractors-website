@@ -134,7 +134,7 @@ function handleRowMouseOver(event) {
         row.style.zIndex = '10';
         row.style.position = 'relative';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.backdropFilter = 'blur(4px)';
+        row.style.backdropFilter = '';
     }
 }
 
@@ -152,7 +152,7 @@ function handleRowMouseOut(event) {
         row.style.zIndex = '';
         row.style.position = '';
         row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.backdropFilter = 'blur(4px)';
+        row.style.backdropFilter = '';
     }
 }
 
@@ -228,7 +228,7 @@ function enhanceTableAppearance(table) {
         header.style.letterSpacing = '0.05em';
         header.style.padding = '12px 16px';
         header.style.fontSize = '0.75rem';
-        header.style.backdropFilter = 'blur(4px)';
+        
         header.style.textAlign = 'center';
         header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
     });
@@ -250,7 +250,7 @@ function enhanceTableAppearance(table) {
     const tbody = table.querySelector('tbody');
     if (tbody) {
         tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        tbody.style.backdropFilter = 'blur(4px)';
+        
     }
 }
 
