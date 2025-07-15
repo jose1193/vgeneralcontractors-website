@@ -84,7 +84,6 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Existing glassmorphism-container::before remains for glass overlay */
     .glassmorphism-container::before {
         content: '';
         position: absolute;
@@ -102,56 +101,6 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
-        z-index: 1;
-    }
-
-    /* NEW: Perimeter border shimmer effect */
-    .glassmorphism-container::after {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        border-radius: 22px;
-        pointer-events: none;
-        z-index: 2;
-        background: none;
-        /* The border shimmer is drawn with a border-image and animated gradient */
-        border: 2px solid transparent;
-        border-image: linear-gradient(0deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%) 1;
-        /* Animate the border-image gradient around the perimeter */
-        animation: borderShimmer 2.5s linear infinite;
-        /* Use a mask to only show the border */
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            /* inner */
-            linear-gradient(#fff 0 0) border-box;
-        /* border */
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-    }
-
-    @keyframes borderShimmer {
-        0% {
-            border-image-source: linear-gradient(0deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
-        }
-
-        25% {
-            border-image-source: linear-gradient(90deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
-        }
-
-        50% {
-            border-image-source: linear-gradient(180deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
-        }
-
-        75% {
-            border-image-source: linear-gradient(270deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
-        }
-
-        100% {
-            border-image-source: linear-gradient(360deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
-        }
     }
 
     .glassmorphism-container:hover {
@@ -499,51 +448,70 @@
         background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
     }
 
-    /* Enhanced Glassmorphism Pagination */
+
+    /* Enhanced Glassmorphism Pagination - FORCED OVERRIDE */
     .pagination-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 2rem 0;
-        gap: 0.5rem;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 2rem 0 !important;
+        gap: 0.5rem !important;
+        width: 100%;
     }
 
     .pagination {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        background: rgba(0, 0, 0, 0.8);
-        border-radius: 12px;
-        padding: 0.5rem;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.25rem !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+        border-radius: 12px !important;
+        padding: 0.5rem !important;
         box-shadow:
             0 4px 24px rgba(138, 43, 226, 0.2),
-            0 8px 40px rgba(128, 0, 255, 0.1);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+            0 8px 40px rgba(128, 0, 255, 0.1) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        width: auto;
+        margin: 0 auto;
     }
 
     .pagination .page-item {
-        margin: 0;
+        margin: 0 !important;
     }
 
     .pagination .page-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        text-decoration: none !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        box-shadow: none !important;
+    }
+
+    /* Remove any Tailwind/Laravel default backgrounds and colors */
+    .pagination .page-link.bg-white,
+    .pagination .page-link.text-blue-600,
+    .pagination .page-link.text-blue-800,
+    .pagination .page-link.bg-blue-600,
+    .pagination .page-link.bg-blue-800,
+    .pagination .page-link.text-gray-700,
+    .pagination .page-link.bg-gray-100 {
+        background: transparent !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        box-shadow: none !important;
     }
 
     .pagination .page-link::before {
@@ -561,11 +529,11 @@
     }
 
     .pagination .page-link:hover {
-        color: rgba(255, 255, 255, 0.95);
-        transform: translateY(-2px);
+        color: #fff !important;
+        transform: translateY(-2px) !important;
         box-shadow:
             0 4px 16px rgba(138, 43, 226, 0.3),
-            0 8px 24px rgba(128, 0, 255, 0.2);
+            0 8px 24px rgba(128, 0, 255, 0.2) !important;
     }
 
     .pagination .page-link:hover::before {
@@ -573,12 +541,12 @@
     }
 
     .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
-        color: white;
+        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%) !important;
+        color: #fff !important;
         box-shadow:
             0 4px 20px rgba(168, 85, 247, 0.4),
-            0 8px 32px rgba(139, 92, 246, 0.3);
-        transform: translateY(-1px);
+            0 8px 32px rgba(139, 92, 246, 0.3) !important;
+        transform: translateY(-1px) !important;
     }
 
     .pagination .page-item.active .page-link::before {
@@ -586,14 +554,15 @@
     }
 
     .pagination .page-item.disabled .page-link {
-        color: rgba(255, 255, 255, 0.3);
-        cursor: not-allowed;
-        transform: none;
+        color: rgba(255, 255, 255, 0.3) !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+        background: transparent !important;
     }
 
     .pagination .page-item.disabled .page-link:hover {
-        transform: none;
-        box-shadow: none;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
     .pagination .page-link span {
@@ -661,14 +630,6 @@
         .glassmorphism-container {
             padding: 1rem;
             margin: 0.5rem 0;
-        }
-
-        .glassmorphism-container::after {
-            border-radius: 14px;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            bottom: -1px;
         }
 
         .glassmorphism-th,

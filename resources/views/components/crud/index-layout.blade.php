@@ -56,7 +56,7 @@
             </div>
 
             <!-- Pagination -->
-            <div id="{{ $paginationId }}" class="mt-4 flex justify-between items-center text-white/80"></div>
+            <div id="{{ $paginationId }}" class="mt-4 "></div>
         </div>
 
         {{ $slot }}
