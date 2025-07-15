@@ -9,8 +9,8 @@
     'darkMode' => true,
 ])
 
-<div class="glassmorphism-container  {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper shimmer-border">
+<div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
+    <div class="glassmorphism-table-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -52,50 +52,6 @@
 </div>
 
 <style>
-    /* ================================================= */
-    /* == NUEVO: EFECTO SHIMMER EN EL BORDE PRINCIPAL == */
-    /* ================================================= */
-    .shimmer-border {
-        position: relative;
-        overflow: visible;
-        z-index: 1;
-    }
-
-    .shimmer-border::after {
-        content: '';
-        position: absolute;
-        inset: -3px;
-        border-radius: 22px;
-        padding: 0;
-        z-index: 2;
-        pointer-events: none;
-        background: linear-gradient(270deg,
-                rgba(168, 85, 247, 0.0) 0%,
-                rgba(168, 85, 247, 0.7) 20%,
-                #fff 50%,
-                rgba(168, 85, 247, 0.7) 80%,
-                rgba(168, 85, 247, 0.0) 100%);
-        background-size: 400% 100%;
-        border: 2.5px solid transparent;
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-        animation: shimmer-border-move 2.5s linear infinite;
-    }
-
-    @keyframes shimmer-border-move {
-        0% {
-            background-position: 100% 0;
-        }
-
-        100% {
-            background-position: 0 0;
-        }
-    }
-
     /* Premium Glassmorphism Table 2025 with Purple Shadows */
     .glassmorphism-container {
         position: relative;
