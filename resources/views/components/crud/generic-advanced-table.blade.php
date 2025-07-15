@@ -84,6 +84,7 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Existing glassmorphism-container::before remains for glass overlay */
     .glassmorphism-container::before {
         content: '';
         position: absolute;
@@ -101,6 +102,56 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+
+    /* NEW: Perimeter border shimmer effect */
+    .glassmorphism-container::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 22px;
+        pointer-events: none;
+        z-index: 2;
+        background: none;
+        /* The border shimmer is drawn with a border-image and animated gradient */
+        border: 2px solid transparent;
+        border-image: linear-gradient(0deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%) 1;
+        /* Animate the border-image gradient around the perimeter */
+        animation: borderShimmer 2.5s linear infinite;
+        /* Use a mask to only show the border */
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            /* inner */
+            linear-gradient(#fff 0 0) border-box;
+        /* border */
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+    @keyframes borderShimmer {
+        0% {
+            border-image-source: linear-gradient(0deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
+        }
+
+        25% {
+            border-image-source: linear-gradient(90deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
+        }
+
+        50% {
+            border-image-source: linear-gradient(180deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
+        }
+
+        75% {
+            border-image-source: linear-gradient(270deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
+        }
+
+        100% {
+            border-image-source: linear-gradient(360deg, rgba(168, 85, 247, 0.0) 0%, rgba(168, 85, 247, 0.7) 20%, rgba(168, 85, 247, 1) 50%, rgba(168, 85, 247, 0.7) 80%, rgba(168, 85, 247, 0.0) 100%);
+        }
     }
 
     .glassmorphism-container:hover {
@@ -610,6 +661,14 @@
         .glassmorphism-container {
             padding: 1rem;
             margin: 0.5rem 0;
+        }
+
+        .glassmorphism-container::after {
+            border-radius: 14px;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
         }
 
         .glassmorphism-th,
