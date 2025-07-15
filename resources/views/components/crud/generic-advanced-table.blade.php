@@ -51,9 +51,8 @@
     </div>
 </div>
 
-
 <style>
-    /* Modern Glassmorphism Table 2025 */
+    /* Modern Glassmorphism Table 2025 - Box Shadow Mejorado */
     .glassmorphism-container {
         position: relative;
         margin: 1rem 0;
@@ -63,17 +62,25 @@
     .glassmorphism-table-wrapper {
         background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-        box-shadow: 0 4px 32px 0 rgba(128, 0, 255, 0.10), 0 0 0 4px rgba(128, 0, 255, 0.08);
+        /* Box shadow mejorado - más sutil y elegante */
+        box-shadow:
+            0 4px 20px rgba(0, 0, 0, 0.25),
+            0 2px 8px rgba(0, 0, 0, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.08);
         overflow: hidden;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .glassmorphism-table-wrapper:hover {
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        /* Hover shadow mejorado */
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 4px 16px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
         transform: translateY(-2px);
     }
 
@@ -86,7 +93,7 @@
         height: 1px;
         background: linear-gradient(90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.15) 50%,
                 transparent 100%);
         animation: shimmer 2s infinite;
     }
@@ -100,9 +107,9 @@
 
     .glassmorphism-header {
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 100%);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.03) 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         position: relative;
     }
 
@@ -124,7 +131,7 @@
     }
 
     .glassmorphism-th:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.06);
         color: rgba(255, 255, 255, 0.95);
     }
 
@@ -141,7 +148,7 @@
     }
 
     .sortable-header:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
     }
 
     .sort-indicator {
@@ -155,7 +162,7 @@
         width: 16px;
         height: 16px;
         fill: currentColor;
-        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
     }
 
     .sortable-header:hover .sort-indicator {
@@ -186,9 +193,10 @@
     }
 
     .glassmorphism-body tr:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.04);
         transform: translateY(-1px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        /* Shadow sutil para hover de filas */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .glassmorphism-body td {
@@ -263,21 +271,21 @@
     }
 
     .responsive-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 4px;
     }
 
     .responsive-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
         transition: background 0.3s ease;
     }
 
     .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.3);
     }
 
-    /* Modern Glassmorphism Pagination */
+    /* Modern Glassmorphism Pagination - Shadow mejorado */
     .pagination-wrapper {
         display: flex;
         justify-content: center;
@@ -293,10 +301,14 @@
         background: rgba(0, 0, 0, 0.76);
         border-radius: 12px;
         padding: 0.5rem;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        /* Shadow mejorado para paginación */
+        box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.2),
+            0 2px 8px rgba(0, 0, 0, 0.1),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .pagination .page-item {
@@ -330,8 +342,8 @@
         right: 0;
         bottom: 0;
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 100%);
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.03) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -339,7 +351,8 @@
     .pagination .page-link:hover {
         color: rgba(255, 255, 255, 0.95);
         transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        /* Shadow sutil para hover de páginas */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .pagination .page-link:hover::before {
@@ -349,7 +362,8 @@
     .pagination .page-item.active .page-link {
         background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
         color: white;
-        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+        /* Shadow para página activa */
+        box-shadow: 0 4px 16px rgba(96, 165, 250, 0.2);
         transform: translateY(-1px);
     }
 
@@ -457,12 +471,20 @@
     @media (prefers-color-scheme: dark) {
         .glassmorphism-table-wrapper {
             background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow:
+                0 4px 24px rgba(0, 0, 0, 0.3),
+                0 2px 12px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.03);
         }
 
         .pagination {
             background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.25),
+                0 2px 10px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.03);
         }
     }
 </style>
