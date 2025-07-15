@@ -53,7 +53,7 @@
 
 
 <style>
-    /* Modern Glassmorphism Table 2025 - Improved Transparency */
+    /* Modern Glassmorphism Table 2025 */
     .glassmorphism-container {
         position: relative;
         margin: 1rem 0;
@@ -61,12 +61,11 @@
     }
 
     .glassmorphism-table-wrapper {
-        /* Adjusted background for more transparency */
-        background: rgba(0, 0, 0, 0.65);
+        background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
         box-shadow: 0 4px 32px 0 rgba(128, 0, 255, 0.10), 0 0 0 4px rgba(128, 0, 255, 0.08);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
         border: none;
         overflow: hidden;
         position: relative;
@@ -177,8 +176,7 @@
     }
 
     .glassmorphism-body {
-        /* Adjusted background for more transparency */
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.3);
     }
 
     .glassmorphism-body tr {
@@ -292,13 +290,12 @@
         display: flex;
         align-items: center;
         gap: 0.25rem;
-        /* Adjusted background for more transparency */
-        background: rgba(0, 0, 0, 0.65);
+        background: rgba(0, 0, 0, 0.76);
         border-radius: 12px;
         padding: 0.5rem;
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
         border: 1px solid rgba(0, 0, 0, 0.3);
     }
 
@@ -459,14 +456,12 @@
     /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
         .glassmorphism-table-wrapper {
-            /* Adjusted background for more transparency */
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pagination {
-            /* Adjusted background for more transparency */
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
     }
