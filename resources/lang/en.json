@@ -33,7 +33,6 @@
     "storm_damage_service": "Storm Damage",
     "hail_damage_service": "Hail Damage",
 
-
     "virtual_remodeler": "Virtual Remodeler",
     "insurance_claims": "Insurance Claims",
     "construction": "Construction",
@@ -93,7 +92,7 @@
     "dashboard": "Dashboard",
     "administration": "Administration",
     "management": "Management",
-    
+
     "public_companies": "Public Companies",
     "roles": "Roles",
     "permissions": "Permissions",
@@ -420,17 +419,11 @@
     "insurance_company_plural": "Insurance Companies",
     "search_insurance_companies_placeholder": "Search by name, address, email...",
     "add_insurance_company": "Add Insurance Company",
-    
+
     "created_by": "Created By",
- 
-   
-   
-   
-    
-   
 
     "not_applicable": "N/A",
-    
+
     "edit_insurance_company": "Edit Insurance Company",
     "restore_insurance_company": "Restore Insurance Company",
     "delete_insurance_company": "Delete Insurance Company",
@@ -442,16 +435,14 @@
     "enter_website_url_placeholder": "Enter website URL (optional)",
 
     "_comment_navigation_menu": "=== NAVIGATION MENU ===",
-    
+
     "public_adjusters": "Public Adjusters",
-   
-    
+
     "scope_sheets": "Scope Sheets",
     "mortgage_company": "Mortgage Company",
     "alliance_companies": "Alliance Companies",
     "zones": "Zones",
     "properties": "Properties",
-    
 
     "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
     "latest_from_our_blog": "Latest From Our Blog",
@@ -1947,5 +1938,13 @@
     "invoices_demo_traduccion_insurance_company_header": "INSURANCE COMPANY",
     "invoices_demo_traduccion_policy_number_header": "POLICY NUMBER",
     "invoices_demo_traduccion_footer_text": "Thank you for your business. Please make payment within {days} days.",
-    "no_appointments_found_matching_criteria": "No appointments found matching your search criteria."
+    "no_appointments_found_matching_criteria": "No appointments found matching your search criteria.",
+    "insurance_companies_management": "Insurance Companies Management",
+    "manage_insurance_companies_subtitle": "Manage insurance companies and their information",
+    "insurance_company": "Insurance Company",
+
+    "search_insurance_companies": "Search insurance companies...",
+
+    "errorDeleting": "Error deleting record",
+    "errorRestoring": "Error restoring record"
 }

@@ -33,7 +33,6 @@
     "storm_damage_service": "Daños por Tormenta",
     "hail_damage_service": "Daños por Granizo",
 
-
     "virtual_remodeler": "Remodelador Virtual",
     "insurance_claims": "Reclamos de Seguros",
     "construction": "Construcción",
@@ -97,8 +96,7 @@
     "company_data_subtitle": "Gestione el perfil de su empresa y la configuración de información comercial",
     "users_title": "Gestión de Usuarios",
     "users_subtitle": "Gestione cuentas de usuario, roles y permisos de acceso",
-    
-    
+
     "scope_sheets": "Planillas de Alcance",
     "mortgage_company": "Empresa Hipotecaria",
     "alliance_companies": "Empresas Aliadas",
@@ -285,10 +283,9 @@
     "_comment_inline_form": "=== FORMULARIO INLINE ===",
     "get_your_free_inspection": "Obtenga su Inspección Gratuita",
     "fill_form_below": "Complete el formulario a continuación y nuestro equipo se comunicará con usted en breve para programar su inspección gratuita.",
-    
+
     "comment_or_message": "Comentario o Mensaje",
-   
-    
+
     "privacy_policy": "Política de Privacidad",
     "terms_of_service": "Términos de Servicio",
     "and": "y",
@@ -416,12 +413,11 @@
     "insurance_companies": "Compañías de Seguros",
     "search_insurance_companies_placeholder": "Buscar por nombre, dirección, correo...",
     "add_insurance_company": "Agregar Compañía de Seguros",
-    
+
     "created_by": "Creado Por",
-    
-    
+
     "not_applicable": "N/A",
-    
+
     "edit_insurance_company": "Editar Compañía de Seguros",
     "restore_insurance_company": "Restaurar Compañía de Seguros",
     "delete_insurance_company": "Eliminar Compañía de Seguros",
@@ -441,10 +437,10 @@
     "public_adjusters": "Ajustadores Públicos",
     "roles": "Roles",
     "permissions": "Permisos",
-    
+
     "types_of_damage": "Tipos de Daño",
     "causes_of_loss": "Causas de Pérdida",
-    
+
     "mortgage_companies": "Compañías Hipotecarias",
     "new_roof_hero_subtitle": "Soluciones de Techado en Houston, Dallas y Áreas Circundantes",
     "expert_new_roof_installation": "Instalación Experta de Techos Nuevos",
@@ -611,18 +607,16 @@
     "appointment_calendar_title": "Calendario de Citas",
     "appointment_calendar_subtitle": "Visualice y gestione todas las citas de clientes en un calendario interactivo",
 
-   
     "notes": "Notas",
     "lead_source": "Fuente de Prospecto",
     "owner": "Propietario",
-  
+
     "additional_note": "Nota Adicional",
     "property_insurance": "Seguro de Propiedad",
     "sms_consent": "Consentimiento SMS",
-  
 
     "create_new_appointment": "Crear Nueva Cita",
-  
+
     "address_2": "Dirección 2",
 
     "create_lead": "Crear Lead",
@@ -642,7 +636,7 @@
     "confirm_appointment_title": "Confirmar Cita",
     "confirm_appointment_text": "¿Estás seguro de que quieres confirmar esta cita? Se enviará un correo de confirmación al cliente.",
     "yes_confirm": "Sí, confirmar",
- 
+
     "could_not_confirm_appointment": "No se pudo confirmar la cita.",
     "decline_appointment_title": "Rechazar Cita",
     "decline_appointment_text": "¿Estás seguro de que quieres rechazar esta cita? Se enviará un correo de notificación al cliente.",
@@ -1118,7 +1112,7 @@
     "duration": "Duración",
 
     "sentiment": "Sentimiento",
- 
+
     "call_details": "Detalles de Llamada",
 
     "to_lowercase": "a",
@@ -1146,7 +1140,7 @@
     "confirm_restoration": "Confirmar Restauración",
     "restore": "Restaurar",
     "restoring": "Restaurando...",
-    
+
     "next": "Siguiente",
     "previous": "Anterior",
     "showing": "Mostrando",
@@ -1162,11 +1156,10 @@
     "search_appointments": "Buscar citas...",
     "show_inactive_appointments": "Mostrar Citas Inactivas",
     "add_appointment": "Agregar Cita",
-   
-  
+
     "inspection_date": "Fecha de Inspección",
     "inspection_time": "Hora de Inspección",
-   
+
     "loading_appointments": "Cargando citas...",
     "create_appointment_btn": "CREAR CITA",
 
@@ -1181,14 +1174,13 @@
     "rejection_notifications_sent": "Notificaciones de rechazo enviadas exitosamente",
     "rejection_error": "Ocurrió un error al enviar las notificaciones de rechazo",
 
-
     "edit_appointment": "Editar Cita",
     "update_appointment_btn": "ACTUALIZAR CITA",
-   
+
     "no_coordinates_edit_appointment": "No hay coordenadas disponibles para esta cita. Edite la cita para agregar una dirección con coordenadas.",
-   
+
     "Appointment Details": "Detalles de la Cita",
-    
+
     "Phone": "Teléfono",
     "Address": "Dirección",
     "Address 2": "Dirección 2",
@@ -1240,9 +1232,9 @@
     "decline_appointment": "Rechazar Cita",
     "processing": "Procesando",
     "create_new_lead": "Crear Nuevo Lead",
-   
+
     "select_time_from_calendar": "Selecciona la hora del calendario",
-   
+
     "first_name_placeholder": "Ingresa el nombre",
     "last_name_placeholder": "Ingresa el apellido",
     "phone_placeholder": "(XXX) XXX-XXXX",
@@ -1260,11 +1252,11 @@
     "sms_consent_modal_lead": "Acepto recibir mensajes de texto relacionados con mi cita y servicios.",
     "creating": "Creando",
     "validation_error": "Error de Validación!",
-  
+
     "location_map_label": "Mapa de Ubicación",
- 
-     "open_maps": "Abrir en Maps",
-     "copy_link": "Copiar Enlace",
+
+    "open_maps": "Abrir en Maps",
+    "copy_link": "Copiar Enlace",
     "copied": "¡Copiado!",
     "scheduling_conflict": "Conflicto de Programación",
 
@@ -1340,7 +1332,7 @@
     "confirm_restore_email_data": "Confirmar Restaurar Datos de Correo",
     "delete_email_data_message": "¿Está seguro de que desea eliminar estos datos de correo?",
     "restore_email_data_message": "¿Está seguro de que desea restaurar estos datos de correo?",
-  
+
     "phone_already_taken": "Este número de teléfono ya está en uso",
     "company_name_already_registered": "Este nombre de compañía ya está en uso",
     "add_user": "Agregar Usuario",
@@ -1442,7 +1434,7 @@
     "scheduled": "Programado",
     "schedule_date": "Fecha de Programación",
     "update_post": "Actualizar Publicación",
-    
+
     "category": "Categoría",
     "select_category": "Seleccione Categoría",
     "choose_category": "Elija una categoría",
@@ -1703,7 +1695,7 @@
     "username_already_in_use": "Este username ya está en uso",
     "must_contain_numbers": "Debe contener al menos 2 números",
     "phone_available": "Teléfono disponible",
-   
+
     "username_available": "Username disponible",
     "correct_validation_errors": "Corrija los errores de validación antes de continuar",
     "is_required": "es requerido",
@@ -1896,24 +1888,24 @@
     "appointments_exported_excel": "Sus citas han sido exportadas a Excel",
     "export_failed": "Exportación Fallida",
     "error_exporting_excel": "Hubo un error al exportar a Excel. Por favor intente de nuevo.",
-    
+
     "no_location_title": "Sin Ubicación",
     "no_coordinates_address": "No hay coordenadas disponibles para esta dirección",
     "error_title": "Error",
     "share_location_title": "Compartir Ubicación",
-    
+
     "location_for_inspection": "Ubicación para inspección:",
-  
+
     "view_google_maps": "Ver en Google Maps",
     "no_appointments_found_matching_criteria": "No se encontraron citas que coincidan con sus criterios de búsqueda.",
-    
+
     "invalid_email": "Correo electrónico inválido",
-  
+
     "address_placeholder": "Dirección",
     "notes_placeholder": "Notas adicionales",
     "loading": "Cargando...",
     "saving": "Guardando...",
-   
+
     "updating": "Actualizando...",
     "deleting": "Eliminando...",
     "calendar_refresh": "Calendario actualizado",
@@ -2023,7 +2015,7 @@
     "invoices_demo_traduccion_pdf_generated_successfully": "PDF generado exitosamente",
     "invoices_demo_traduccion_failed_generate_pdf": "Error al generar PDF",
     "invoices_demo_traduccion_filters_cleared_successfully": "Filtros limpiados exitosamente",
-    
+
     "_comment_invoice_table_headers": "=== ENCABEZADOS DE TABLA DE FACTURAS ===",
     "invoice_number": "Número de Factura",
     "bill_to": "Facturar A",
@@ -2044,5 +2036,13 @@
     "invoices_demo_traduccion_claim_number_header": "RECLAMO #",
     "invoices_demo_traduccion_insurance_company_header": "COMPAÑÍA DE SEGUROS",
     "invoices_demo_traduccion_policy_number_header": "NÚMERO DE PÓLIZA",
-    "invoices_demo_traduccion_footer_text": "Gracias por su negocio. Por favor realice el pago dentro de {days} días."
+    "invoices_demo_traduccion_footer_text": "Gracias por su negocio. Por favor realice el pago dentro de {days} días.",
+    "insurance_companies_management": "Gestión de Compañías de Seguros",
+    "manage_insurance_companies_subtitle": "Administra compañías de seguros y su información",
+    "insurance_company": "Compañía de Seguros",
+
+    "search_insurance_companies": "Buscar compañías de seguros...",
+
+    "errorDeleting": "Error al eliminar el registro",
+    "errorRestoring": "Error al restaurar el registro"
 }
