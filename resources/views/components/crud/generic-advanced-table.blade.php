@@ -51,419 +51,418 @@
     </div>
 </div>
 
-@push('styles')
-    <style>
-        /* Modern Glassmorphism Table 2025 */
-        .glassmorphism-container {
-            position: relative;
-            margin: 1rem 0;
-            animation: fadeInUp 0.6s ease-out;
+
+<style>
+    /* Modern Glassmorphism Table 2025 */
+    .glassmorphism-container {
+        position: relative;
+        margin: 1rem 0;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .glassmorphism-table-wrapper {
+        background: rgba(0, 0, 0, 0.76);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glassmorphism-table-wrapper:hover {
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .glassmorphism-table-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 100%);
+        animation: shimmer 2s infinite;
+    }
+
+    .glassmorphism-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: rgba(255, 255, 255, 0.95);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .glassmorphism-header {
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+    }
+
+    .glassmorphism-th {
+        padding: 1rem 1.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.8);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .glassmorphism-th:last-child {
+        border-right: none;
+    }
+
+    .glassmorphism-th:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .th-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .sortable-header {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .sortable-header:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .sort-indicator {
+        display: flex;
+        align-items: center;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+    }
+
+    .sort-icon {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+    }
+
+    .sortable-header:hover .sort-indicator {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .sortable-header.sort-asc .sort-indicator {
+        opacity: 1;
+        color: #60A5FA;
+        transform: rotate(0deg);
+    }
+
+    .sortable-header.sort-desc .sort-indicator {
+        opacity: 1;
+        color: #60A5FA;
+        transform: rotate(180deg);
+    }
+
+    .glassmorphism-body {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .glassmorphism-body tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .glassmorphism-body tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .glassmorphism-body td {
+        padding: 1rem 1.5rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.875rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .glassmorphism-body td:last-child {
+        border-right: none;
+    }
+
+    .loading-row {
+        animation: pulse 2s infinite;
+    }
+
+    .loading-cell {
+        padding: 3rem 1.5rem !important;
+    }
+
+    .loading-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .loading-spinner {
+        position: relative;
+        width: 60px;
+        height: 60px;
+    }
+
+    .spinner-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 3px solid transparent;
+        border-top: 3px solid #60A5FA;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    .spinner-ring:nth-child(2) {
+        animation-delay: -0.15s;
+        border-top-color: #34D399;
+    }
+
+    .spinner-ring:nth-child(3) {
+        animation-delay: -0.3s;
+        border-top-color: #F59E0B;
+    }
+
+    .loading-text {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+    }
+
+    .responsive-container {
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    .responsive-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .responsive-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .responsive-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .responsive-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Modern Glassmorphism Pagination */
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        gap: 0.5rem;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: rgba(0, 0, 0, 0.76);
+        border-radius: 12px;
+        padding: 0.5rem;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .pagination .page-item {
+        margin: 0;
+    }
+
+    .pagination .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pagination .page-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .pagination .page-link:hover {
+        color: rgba(255, 255, 255, 0.95);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .pagination .page-link:hover::before {
+        opacity: 1;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+        color: white;
+        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .pagination .page-item.active .page-link::before {
+        opacity: 0;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: rgba(255, 255, 255, 0.3);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .pagination .page-item.disabled .page-link:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .pagination .page-link span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
 
-        .glassmorphism-table-wrapper {
-            background: rgba(0, 0, 0, 0.76);
-            border-radius: 16px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glassmorphism-table-wrapper:hover {
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .glassmorphism-table-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg,
-                    transparent 0%,
-                    rgba(255, 255, 255, 0.2) 50%,
-                    transparent 100%);
-            animation: shimmer 2s infinite;
-        }
-
-        .glassmorphism-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: rgba(255, 255, 255, 0.95);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .glassmorphism-header {
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.1) 0%,
-                    rgba(255, 255, 255, 0.05) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .glassmorphism-th {
-            padding: 1rem 1.5rem;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.8);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .glassmorphism-th:last-child {
-            border-right: none;
-        }
-
-        .glassmorphism-th:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .th-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .sortable-header {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .sortable-header:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .sort-indicator {
-            display: flex;
-            align-items: center;
-            opacity: 0.5;
-            transition: all 0.3s ease;
-        }
-
-        .sort-icon {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
-        }
-
-        .sortable-header:hover .sort-indicator {
+        to {
             opacity: 1;
-            transform: scale(1.1);
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
         }
 
-        .sortable-header.sort-asc .sort-indicator {
+        to {
             opacity: 1;
-            color: #60A5FA;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    @keyframes spin {
+        0% {
             transform: rotate(0deg);
         }
 
-        .sortable-header.sort-desc .sort-indicator {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
             opacity: 1;
-            color: #60A5FA;
-            transform: rotate(180deg);
         }
 
-        .glassmorphism-body {
-            background: rgba(0, 0, 0, 0.3);
+        50% {
+            opacity: 0.7;
         }
+    }
 
-        .glassmorphism-body tr {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            animation: fadeIn 0.5s ease-out;
-        }
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
 
-        .glassmorphism-body tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
+        .glassmorphism-th,
         .glassmorphism-body td {
-            padding: 1rem 1.5rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.875rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .glassmorphism-body td:last-child {
-            border-right: none;
-        }
-
-        .loading-row {
-            animation: pulse 2s infinite;
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
         }
 
         .loading-cell {
-            padding: 3rem 1.5rem !important;
-        }
-
-        .loading-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+            padding: 2rem 1rem !important;
         }
 
         .loading-spinner {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-
-        .spinner-ring {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 3px solid transparent;
-            border-top: 3px solid #60A5FA;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .spinner-ring:nth-child(2) {
-            animation-delay: -0.15s;
-            border-top-color: #34D399;
-        }
-
-        .spinner-ring:nth-child(3) {
-            animation-delay: -0.3s;
-            border-top-color: #F59E0B;
-        }
-
-        .loading-text {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-
-        .responsive-container {
-            overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-
-        .responsive-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .responsive-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .responsive-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .responsive-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Modern Glassmorphism Pagination */
-        .pagination-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 2rem 0;
-            gap: 0.5rem;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            background: rgba(0, 0, 0, 0.76);
-            border-radius: 12px;
-            padding: 0.5rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            border: 1px solid rgba(0, 0, 0, 0.3);
-        }
-
-        .pagination .page-item {
-            margin: 0;
+            width: 40px;
+            height: 40px;
         }
 
         .pagination .page-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            width: 36px;
+            height: 36px;
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Dark mode enhancements */
+    @media (prefers-color-scheme: dark) {
+        .glassmorphism-table-wrapper {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .pagination .page-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.1) 0%,
-                    rgba(255, 255, 255, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .pagination {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .pagination .page-link:hover {
-            color: rgba(255, 255, 255, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .pagination .page-link:hover::before {
-            opacity: 1;
-        }
-
-        .pagination .page-item.active .page-link {
-            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .pagination .page-item.active .page-link::before {
-            opacity: 0;
-        }
-
-        .pagination .page-item.disabled .page-link {
-            color: rgba(255, 255, 255, 0.3);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .pagination .page-item.disabled .page-link:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .pagination .page-link span {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-
-            .glassmorphism-th,
-            .glassmorphism-body td {
-                padding: 0.75rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .loading-cell {
-                padding: 2rem 1rem !important;
-            }
-
-            .loading-spinner {
-                width: 40px;
-                height: 40px;
-            }
-
-            .pagination .page-link {
-                width: 36px;
-                height: 36px;
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Dark mode enhancements */
-        @media (prefers-color-scheme: dark) {
-            .glassmorphism-table-wrapper {
-                background: rgba(0, 0, 0, 0.85);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .pagination {
-                background: rgba(0, 0, 0, 0.85);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-        }
-    </style>
-@endpush
+    }
+</style>
