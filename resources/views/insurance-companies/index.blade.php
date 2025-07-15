@@ -60,8 +60,8 @@
                     formFields: [{
                             name: 'insurance_company_name',
                             type: 'text',
-                            label: 'Company Name',
-                            placeholder: 'Enter insurance company name',
+                            label: "{{ __('company_name') }}",
+                            placeholder: "{{ __('enter_company_name') }}",
                             required: true,
                             validation: {
                                 required: true,
@@ -69,8 +69,8 @@
                                 maxLength: 255,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-name') }}",
-                                    errorMessage: 'This company name is already registered',
-                                    successMessage: 'Company name is available'
+                                    errorMessage: "{{ __('name_already_in_use') }}",
+                                    successMessage: "{{ __('name_available') }}"
                                 }
                             },
                             capitalize: true
@@ -78,8 +78,8 @@
                         {
                             name: 'address',
                             type: 'textarea',
-                            label: 'Address',
-                            placeholder: 'Enter company address (optional)',
+                            label: "{{ __('address') }}",
+                            placeholder: "{{ __('enter_address') }}",
                             required: false,
                             rows: 3,
                             validation: {
@@ -92,38 +92,38 @@
                         {
                             name: 'email',
                             type: 'email',
-                            label: 'Email',
-                            placeholder: 'Enter email address (optional)',
+                            label: "{{ __('email') }}",
+                            placeholder: "{{ __('email') }}",
                             required: false,
                             validation: {
                                 required: false,
                                 email: true,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-email') }}",
-                                    errorMessage: 'This email is already registered',
-                                    successMessage: 'Email is available'
+                                    errorMessage: "{{ __('email_already_in_use') }}",
+                                    successMessage: "{{ __('email_available') }}"
                                 }
                             }
                         },
                         {
                             name: 'phone',
                             type: 'tel',
-                            label: 'Phone',
-                            placeholder: 'Enter phone number (optional)',
+                            label: "{{ __('phone') }}",
+                            placeholder: "{{ __('enter_phone_number') }}",
                             required: false,
                             validation: {
                                 required: false,
                                 unique: {
                                     url: "{{ route('insurance-companies.check-phone') }}",
-                                    message: 'This phone number is already taken'
+                                    message: "{{ __('phone_already_in_use') }}"
                                 }
                             }
                         },
                         {
                             name: 'website',
                             type: 'url',
-                            label: 'Website',
-                            placeholder: 'Enter website URL (optional)',
+                            label: "{{ __('website') }}",
+                            placeholder: "{{ __('website_placeholder') }}",
                             required: false,
                             validation: {
                                 required: false,
