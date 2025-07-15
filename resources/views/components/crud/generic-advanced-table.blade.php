@@ -63,10 +63,10 @@
     .glassmorphism-table-wrapper {
         background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 32px 0 rgba(128, 0, 255, 0.35), 0 2px 24px 0 rgba(128, 0, 255, 0.15);
         backdrop-filter: blur(1.5px);
         -webkit-backdrop-filter: blur(1.5px);
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        border: none;
         overflow: hidden;
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -114,7 +114,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         color: rgba(255, 255, 255, 0.8);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: none;
         position: relative;
         transition: all 0.3s ease;
     }
@@ -180,7 +180,7 @@
     }
 
     .glassmorphism-body tr {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: none;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out;
     }
@@ -196,7 +196,7 @@
         text-align: center;
         color: rgba(255, 255, 255, 0.9);
         font-size: 0.875rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.03);
+        border-right: none;
     }
 
     .glassmorphism-body td:last-child {
