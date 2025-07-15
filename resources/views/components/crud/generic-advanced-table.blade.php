@@ -448,70 +448,51 @@
         background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
     }
 
-
-    /* Enhanced Glassmorphism Pagination - FORCED OVERRIDE */
+    /* Enhanced Glassmorphism Pagination */
     .pagination-wrapper {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 2rem 0 !important;
-        gap: 0.5rem !important;
-        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        gap: 0.5rem;
     }
 
     .pagination {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 0.25rem !important;
-        background: rgba(0, 0, 0, 0.8) !important;
-        border-radius: 12px !important;
-        padding: 0.5rem !important;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 12px;
+        padding: 0.5rem;
         box-shadow:
             0 4px 24px rgba(138, 43, 226, 0.2),
-            0 8px 40px rgba(128, 0, 255, 0.1) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        width: auto;
-        margin: 0 auto;
+            0 8px 40px rgba(128, 0, 255, 0.1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .pagination .page-item {
-        margin: 0 !important;
+        margin: 0;
     }
 
     .pagination .page-link {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 40px !important;
-        height: 40px !important;
-        padding: 0 !important;
-        border: none !important;
-        background: transparent !important;
-        color: rgba(255, 255, 255, 0.85) !important;
-        text-decoration: none !important;
-        border-radius: 8px !important;
-        font-size: 0.95rem !important;
-        font-weight: 500 !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        position: relative !important;
-        overflow: hidden !important;
-        box-shadow: none !important;
-    }
-
-    /* Remove any Tailwind/Laravel default backgrounds and colors */
-    .pagination .page-link.bg-white,
-    .pagination .page-link.text-blue-600,
-    .pagination .page-link.text-blue-800,
-    .pagination .page-link.bg-blue-600,
-    .pagination .page-link.bg-blue-800,
-    .pagination .page-link.text-gray-700,
-    .pagination .page-link.bg-gray-100 {
-        background: transparent !important;
-        color: rgba(255, 255, 255, 0.85) !important;
-        box-shadow: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
 
     .pagination .page-link::before {
@@ -529,11 +510,11 @@
     }
 
     .pagination .page-link:hover {
-        color: #fff !important;
-        transform: translateY(-2px) !important;
+        color: rgba(255, 255, 255, 0.95);
+        transform: translateY(-2px);
         box-shadow:
             0 4px 16px rgba(138, 43, 226, 0.3),
-            0 8px 24px rgba(128, 0, 255, 0.2) !important;
+            0 8px 24px rgba(128, 0, 255, 0.2);
     }
 
     .pagination .page-link:hover::before {
@@ -541,12 +522,12 @@
     }
 
     .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%) !important;
-        color: #fff !important;
+        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
+        color: white;
         box-shadow:
             0 4px 20px rgba(168, 85, 247, 0.4),
-            0 8px 32px rgba(139, 92, 246, 0.3) !important;
-        transform: translateY(-1px) !important;
+            0 8px 32px rgba(139, 92, 246, 0.3);
+        transform: translateY(-1px);
     }
 
     .pagination .page-item.active .page-link::before {
@@ -554,15 +535,14 @@
     }
 
     .pagination .page-item.disabled .page-link {
-        color: rgba(255, 255, 255, 0.3) !important;
-        cursor: not-allowed !important;
-        transform: none !important;
-        background: transparent !important;
+        color: rgba(255, 255, 255, 0.3);
+        cursor: not-allowed;
+        transform: none;
     }
 
     .pagination .page-item.disabled .page-link:hover {
-        transform: none !important;
-        box-shadow: none !important;
+        transform: none;
+        box-shadow: none;
     }
 
     .pagination .page-link span {
