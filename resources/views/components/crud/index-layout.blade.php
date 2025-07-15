@@ -21,7 +21,7 @@
 
 <x-app-layout>
     {{-- Dark background container with consistent styling --}}
-    <div class="min-h-screen bg-gray-900">
+    <div class="min-h-screen " style="background-color: #141414;">
         {{-- Header section with title and subtitle --}}
         <div class="p-4 sm:p-6">
             <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
