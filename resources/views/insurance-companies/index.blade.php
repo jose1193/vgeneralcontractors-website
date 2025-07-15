@@ -28,17 +28,6 @@
                 window.insuranceCompanyManager = new CrudManagerModal({
                     entityName: 'Insurance Company',
                     entityNamePlural: 'Insurance Companies',
-                    routes: {
-                        index: "{{ secure_url(route('insurance-companies.index', [], false)) }}",
-                        store: "{{ secure_url(route('insurance-companies.store', [], false)) }}",
-                        edit: "{{ secure_url(route('insurance-companies.edit', ':id', false)) }}",
-                        update: "{{ secure_url(route('insurance-companies.update', ':id', false)) }}",
-                        destroy: "{{ secure_url(route('insurance-companies.destroy', ':id', false)) }}",
-                        restore: "{{ secure_url(route('insurance-companies.restore', ':id', false)) }}",
-                        checkEmail: "{{ secure_url(route('insurance-companies.check-email', [], false)) }}",
-                        checkPhone: "{{ secure_url(route('insurance-companies.check-phone', [], false)) }}",
-                        checkName: "{{ secure_url(route('insurance-companies.check-name', [], false)) }}"
-                    },
                     tableSelector: '#insuranceCompanyTable-body',
                     searchSelector: '#searchInput',
                     perPageSelector: '#perPage',
@@ -48,8 +37,6 @@
                     createButtonSelector: '#createInsuranceCompanyBtn',
                     idField: 'uuid',
                     searchFields: ['insurance_company_name', 'address', 'email', 'phone', 'website'],
-                    // Establecer el valor inicial basado en localStorage
-                    showDeleted: showDeletedState,
                     entityConfig: {
                         identifierField: 'insurance_company_name',
                         displayName: 'insurance company',

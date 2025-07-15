@@ -2,9 +2,15 @@
 
 /* Gradient Border Animation */
 @keyframes gradient-border {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .animate-gradient-border {
@@ -13,9 +19,18 @@
 
 /* Border Glow Animation */
 @keyframes border-glow {
-    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
-    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
-    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    0% {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
+            0 0 15px rgba(138, 43, 226, 0.08);
+    }
+    50% {
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(138, 43, 226, 0.15);
+    }
+    100% {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.1),
+            0 0 15px rgba(138, 43, 226, 0.08);
+    }
 }
 
 .animate-border-glow {
@@ -24,9 +39,18 @@
 
 /* Table Shadow Animation */
 @keyframes table-shadow {
-    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    0% {
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.2),
+            0 0 40px rgba(138, 43, 226, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(138, 43, 226, 0.3),
+            0 0 60px rgba(138, 43, 226, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.2),
+            0 0 40px rgba(138, 43, 226, 0.1);
+    }
 }
 
 .animate-table-shadow {
@@ -35,8 +59,12 @@
 
 /* Shimmer Animation for Headers */
 @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .animate-shimmer {
@@ -65,9 +93,11 @@
 
 /* Row Hover Effects */
 .glassmorphic-table-row {
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease,
+        box-shadow 0.3s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Sombra cristal */
     text-align: center;
     background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
     filter: blur(0.5px); /* Efecto cristal */
@@ -80,6 +110,7 @@
     z-index: 10;
     position: relative;
     color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Sombra más intensa al hover */
     filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
@@ -95,7 +126,7 @@
     top: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
+    background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #d946ef);
     opacity: 0;
     transition: opacity 0.3s ease, width 0.3s ease;
 }
@@ -119,15 +150,23 @@
 }
 
 .status-badge.active {
-    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-    color: #10B981;
+    background: linear-gradient(
+        to right,
+        rgba(16, 185, 129, 0.2),
+        rgba(5, 150, 105, 0.2)
+    );
+    color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.3);
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .status-badge.inactive {
-    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
-    color: #EF4444;
+    background: linear-gradient(
+        to right,
+        rgba(239, 68, 68, 0.2),
+        rgba(185, 28, 28, 0.2)
+    );
+    color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.3);
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
 }
