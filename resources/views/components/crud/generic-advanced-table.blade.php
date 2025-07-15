@@ -221,6 +221,21 @@
         border-radius: 16px 16px 0 0;
         position: relative;
         transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    /* Shimmer animated effect for table header */
+    .glassmorphism-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -40%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+        animation: shimmer-header 2.2s infinite;
+        pointer-events: none;
+        z-index: 2;
     }
 
     .glassmorphism-header::before {
@@ -558,19 +573,13 @@
         }
     }
 
-    @keyframes shimmer {
+    @keyframes shimmer-header {
         0% {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-
-        50% {
-            opacity: 1;
+            left: -40%;
         }
 
         100% {
-            transform: translateX(100%);
-            opacity: 0;
+            left: 100%;
         }
     }
 
