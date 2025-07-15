@@ -1,117 +1,140 @@
-/*
- * Glassmorphic Black Crystal Table Stylesheet
- * 2025 Modern Design
- */
+/* Glassmorphic Table Styles */
 
-/* ========= ANIMACIONES (KEYFRAMES) ========= */
-
-/**
- * Animación 1: Borde con gradiente que fluye.
- * Anima la posición del fondo de un gradiente grande.
- */
- @keyframes gradient-border {
+/* Gradient Border Animation */
+@keyframes gradient-border {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
 .animate-gradient-border {
-    animation: gradient-border 8s ease infinite;
+    animation: gradient-border 6s ease infinite;
 }
 
-/**
- * Animación 2: Brillo pulsante en el borde.
- * Anima la sombra para crear un efecto de "respiración".
- */
+/* Border Glow Animation */
 @keyframes border-glow {
-    0% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.1), 0 0 20px rgba(251, 191, 36, 0.1); }
-    50% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.25), 0 0 50px rgba(251, 191, 36, 0.2); }
-    100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.1), 0 0 20px rgba(251, 191, 36, 0.1); }
+    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
+    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
 }
 
 .animate-border-glow {
-    animation: border-glow 6s ease-in-out infinite;
+    animation: border-glow 5s ease-in-out infinite;
 }
 
-/**
- * Animación 3: Sombra de la tabla que cambia sutilmente.
- */
+/* Table Shadow Animation */
 @keyframes table-shadow {
-    0% { box-shadow: 0 10px 30px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 15px 45px rgba(138, 43, 226, 0.2); }
-    100% { box-shadow: 0 10px 30px rgba(138, 43, 226, 0.1); }
+    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
 }
 
 .animate-table-shadow {
     animation: table-shadow 7s ease-in-out infinite;
 }
 
-/**
- * Animación 4: Brillo que recorre las cabeceras (shimmer).
- * Mueve un gradiente de izquierda a derecha.
- */
+/* Shimmer Animation for Headers */
 @keyframes shimmer {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
 
 .animate-shimmer {
-    /* El delay se aplica inline en el blade */
-    animation: shimmer 2.5s infinite linear;
+    animation: shimmer 3s infinite;
 }
 
+.animate-shimmer-delay-1 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.2s;
+}
 
-/* ========= ESTILOS DE FILA (TR) ========= */
+.animate-shimmer-delay-2 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.4s;
+}
 
+.animate-shimmer-delay-3 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.6s;
+}
+
+.animate-shimmer-delay-4 {
+    animation: shimmer 3s infinite;
+    animation-delay: 0.8s;
+}
+
+/* Row Hover Effects */
 .glassmorphic-table-row {
-    position: relative; /* Necesario para el indicador */
-    background-color: rgba(0, 0, 0, 0.3);
-    color: rgba(255, 255, 255, 0.85);
-    text-align: center;
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
+    filter: blur(0.5px); /* Efecto cristal */
 }
 
 .glassmorphic-table-row:hover {
-    transform: scale(1.01);
-    background-color: rgba(12, 5, 24, 0.7); /* Fondo morado oscuro al pasar el ratón */
-    box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+    transform: scale(1.005);
+    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     z-index: 10;
-    color: white;
+    position: relative;
+    color: rgba(255, 255, 255, 1);
+    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
 }
 
-/* Indicador visual en el borde izquierdo de la fila al pasar el ratón */
+.glassmorphic-table-row.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Row Indicator */
 .glassmorphic-table-row-indicator {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 3px;
-    background: linear-gradient(to bottom, #facc15, #a855f7, #f97316);
+    width: 4px;
+    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
     opacity: 0;
     transition: opacity 0.3s ease, width 0.3s ease;
-    border-radius: 0 3px 3px 0;
 }
 
-.glassmorphic-table-row:hover .glassmorphic-table-row-indicator {
+.glassmorphic-table-row:hover .glassmorphic-table-row-indicator,
+.glassmorphic-table-row.active .glassmorphic-table-row-indicator {
     opacity: 1;
-    width: 4px;
+    width: 5px;
 }
 
-
-/* ========= ESTILOS DE CELDA (TD) ========= */
-.glassmorphic-table-row td {
-    padding: 1rem 1.5rem;
-    font-size: 0.875rem;
-    transition: color 0.3s ease;
+/* Status Badge Styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* ========= AJUSTES RESPONSIVOS ========= */
-@media (max-width: 768px) {
+.status-badge.active {
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.inactive {
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
     .glassmorphic-table-row:hover {
-        transform: none; /* Desactiva el escalado en móviles */
-    }
-    
-    th, td {
-        padding: 0.75rem 1rem; /* Menos padding en pantallas pequeñas */
+        transform: none; /* Disable scaling on mobile */
     }
 }
