@@ -1,259 +1,163 @@
 /**
- * Glassmorphic Table JavaScript
- * Handles interactive effects for the glassmorphic table component
+ * Modern Glassmorphic Table Manager
+ * Handles data rendering, sorting, and UI state for the refactored table.
  */
 
-/**
- * Initialize the glassmorphic table effects
- * @param {string} tableId - The ID of the table element
- */
-function initGlassmorphicTable(tableId) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    
-    const tableBody = document.getElementById(`${tableId}-body`);
-    if (!tableBody) return;
-
-    // Add enhanced table appearance for dark background
-    enhanceTableAppearance(table);
-
-    // Initialize sort functionality if it exists
-    initSortFunctionality(table);
-    
-    // Initialize row effects
-    initRowEffects(tableBody);
-
-    // Re-initialize when table content changes (for CRUD operations)
-    observeTableChanges(tableBody);
+// Main initialization function
+function initGlassmorphicTable(tableId, columns, managerName) {
+    const tableManager = new GlassmorphicTableManager(tableId, columns, managerName);
+    // Make the manager instance globally accessible if needed
+    window[managerName] = tableManager;
+    return tableManager;
 }
 
-/**
- * Initialize sort functionality for table headers
- * @param {HTMLElement} table - The table element
- */
-function initSortFunctionality(table) {
-    const sortHeaders = table.querySelectorAll('.sort-header');
-    
-    sortHeaders.forEach(header => {
-        header.addEventListener('click', function() {
-            const field = this.getAttribute('data-field');
-            let currentSort = this.classList.contains('sort-asc') ? 'asc' : 
-                             this.classList.contains('sort-desc') ? 'desc' : '';
-            
-            // Reset all headers
-            sortHeaders.forEach(h => {
-                h.classList.remove('sort-asc', 'sort-desc');
-            });
-            
-            // Set new sort direction
-            let newSort = '';
-            if (currentSort === '') {
-                newSort = 'asc';
-                this.classList.add('sort-asc');
-            } else if (currentSort === 'asc') {
-                newSort = 'desc';
-                this.classList.add('sort-desc');
-            }
-            
-            // Trigger sort in CRUD manager if it exists
-            if (typeof window.crudManager !== 'undefined' && window.crudManager.sortBy) {
-                window.crudManager.sortBy(field, newSort);
-            }
-        });
-    });
-}
+class GlassmorphicTableManager {
+    constructor(tableId, columns, managerName) {
+        this.tableId = tableId;
+        this.columns = columns;
+        this.managerName = managerName;
+        this.sortState = { field: null, direction: 'none' };
 
-/**
- * Initialize hover and active effects for table rows
- * @param {HTMLElement} tableBody - The table body element
- */
-function initRowEffects(tableBody) {
-    // Remove existing event listeners (if any)
-    const existingRows = tableBody.querySelectorAll('tr:not(#loadingRow)');
-    existingRows.forEach(row => {
-        // Remove existing classes and indicators
-        row.classList.remove('glassmorphic-table-row');
-        const existingIndicator = row.querySelector('.glassmorphic-table-row-indicator');
-        if (existingIndicator) {
-            existingIndicator.remove();
+        // DOM Elements
+        this.container = document.getElementById(`${tableId}-container`);
+        this.table = document.getElementById(tableId);
+        this.tableBody = document.getElementById(`${tableId}-body`);
+        this.overlay = document.getElementById(`${tableId}-overlay`);
+        this.loader = document.getElementById(`${tableId}-loader`);
+        this.overlayText = document.getElementById(`${tableId}-overlay-text`);
+
+        if (!this.table || !this.tableBody || !this.overlay) {
+            console.error(`[${this.managerName}] Critical elements not found for table:`, tableId);
+            return;
         }
-    });
 
-    // Add event delegation for current and future rows
-    tableBody.addEventListener('mouseover', handleRowMouseOver);
-    tableBody.addEventListener('mouseout', handleRowMouseOut);
-    tableBody.addEventListener('click', handleRowClick);
+        this.initSortHeaders();
+        this.showLoading('Initializing...');
+    }
 
-    // Initialize existing rows
-    setupExistingRows(tableBody);
-}
+    // --- State Management ---
+    showLoading(message = 'Loading...') {
+        this.overlay.style.display = 'flex';
+        this.loader.style.display = 'block';
+        this.overlayText.textContent = message;
+        this.tableBody.innerHTML = ''; // Clear previous data
+    }
 
-/**
- * Setup existing rows with glassmorphic effects
- * @param {HTMLElement} tableBody - The table body element
- */
-function setupExistingRows(tableBody) {
-    const rows = tableBody.querySelectorAll('tr:not(#loadingRow)');
-    
-    rows.forEach((row, index) => {
-        // Add glassmorphic class
-        row.classList.add('glassmorphic-table-row');
-        
-        // Add indicator element
+    showNoData(message = 'No records found') {
+        this.overlay.style.display = 'flex';
+        this.loader.style.display = 'none';
+        this.overlayText.textContent = message;
+        this.tableBody.innerHTML = '';
+    }
+
+    showError(message = 'An error occurred') {
+        this.showNoData(message); // Reuse no-data style for errors
+        // Optionally add error-specific styling
+    }
+
+    hideOverlay() {
+        this.overlay.style.display = 'none';
+    }
+
+    // --- Data Rendering ---
+    renderRows(data) {
+        if (!data || data.length === 0) {
+            this.showNoData();
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        data.forEach(item => {
+            const row = this.createRowElement(item);
+            fragment.appendChild(row);
+        });
+
+        this.tableBody.innerHTML = ''; // Clear for fresh render
+        this.tableBody.appendChild(fragment);
+        this.hideOverlay();
+    }
+
+    createRowElement(item) {
+        const row = document.createElement('tr');
+        row.className = 'glassmorphic-table-row';
+        row.dataset.id = item.id; // Assuming each item has a unique ID
+
         const indicator = document.createElement('div');
         indicator.className = 'glassmorphic-table-row-indicator';
-        row.style.position = 'relative';
         row.appendChild(indicator);
-        
-        // Add subtle animation delay based on row index for staggered effect
-        row.style.transitionDelay = `${index * 0.03}s`;
-    });
-}
 
-/**
- * Handle mouseover event for table rows
- * @param {Event} event - The mouseover event
- */
-function handleRowMouseOver(event) {
-    const row = event.target.closest('tr');
-    if (row && !row.id.includes('loadingRow')) {
-        row.classList.add('glassmorphic-table-row');
-        
-        // Add indicator if it doesn't exist
-        if (!row.querySelector('.glassmorphic-table-row-indicator')) {
-            const indicator = document.createElement('div');
-            indicator.className = 'glassmorphic-table-row-indicator';
-            row.style.position = 'relative';
-            row.appendChild(indicator);
-        }
-        
-        // Apply black crystal effect
-        row.style.transform = 'scale(1.005)';
-        row.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-        row.style.boxShadow = '0 0 20px rgba(138, 43, 226, 0.3)';
-        row.style.zIndex = '10';
-        row.style.position = 'relative';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.backdropFilter = '';
+        this.columns.forEach(column => {
+            const cell = document.createElement('td');
+            cell.dataset.label = column.label;
+            
+            let cellContent = this.getNestedValue(item, column.field);
+
+            // Custom cell rendering logic
+            if (column.render) {
+                cell.innerHTML = column.render(cellContent, item);
+            } else if (column.type === 'status') {
+                cell.innerHTML = this.renderStatusBadge(cellContent);
+            } else {
+                cell.textContent = cellContent;
+            }
+            
+            row.appendChild(cell);
+        });
+
+        return row;
     }
-}
 
-/**
- * Handle mouseout event for table rows
- * @param {Event} event - The mouseout event
- */
-function handleRowMouseOut(event) {
-    const row = event.target.closest('tr');
-    if (row && !row.classList.contains('active') && !row.id.includes('loadingRow')) {
-        // Reset styles when mouse leaves
-        row.style.transform = '';
-        row.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        row.style.boxShadow = '';
-        row.style.zIndex = '';
-        row.style.position = '';
-        row.style.color = 'rgba(255, 255, 255, 1)';
-        row.style.backdropFilter = '';
+    renderStatusBadge(status) {
+        if (!status) return '';
+        const statusClass = String(status).toLowerCase() === 'active' ? 'active' : 'inactive';
+        return `<span class="status-badge ${statusClass}">${status}</span>`;
     }
-}
 
-/**
- * Handle click event for table rows
- * @param {Event} event - The click event
- */
-function handleRowClick(event) {
-    const row = event.target.closest('tr');
-    if (row && !row.id.includes('loadingRow')) {
-        // Remove active class from all rows
-        const allRows = row.parentElement.querySelectorAll('tr');
-        allRows.forEach(r => r.classList.remove('active'));
-        
-        // Add active class to clicked row
-        row.classList.add('active');
+    // --- Sorting --- 
+    initSortHeaders() {
+        const headers = this.table.querySelectorAll('.sort-header');
+        headers.forEach(header => {
+            header.addEventListener('click', () => this.handleSortClick(header));
+        });
     }
-}
 
-/**
- * Observe changes to the table body and reinitialize effects when content changes
- * @param {HTMLElement} tableBody - The table body element
- */
-function observeTableChanges(tableBody) {
-    // Create a MutationObserver to watch for changes to the table
-    const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            if (mutation.type === 'childList') {
-                // Table content has changed, reinitialize row effects
-                setupExistingRows(tableBody);
+    handleSortClick(header) {
+        const field = header.dataset.field;
+        let direction = 'asc';
+
+        if (this.sortState.field === field && this.sortState.direction === 'asc') {
+            direction = 'desc';
+        } else if (this.sortState.field === field && this.sortState.direction === 'desc') {
+            direction = 'none'; // Optional: cycle back to no sort
+        } 
+
+        this.sortState = { field, direction };
+        this.updateSortIcons();
+
+        // Announce sort event for external listeners (e.g., Livewire)
+        const event = new CustomEvent('table-sort', { 
+            bubbles: true,
+            detail: { ...this.sortState, manager: this.managerName }
+        });
+        this.container.dispatchEvent(event);
+    }
+
+    updateSortIcons() {
+        this.table.querySelectorAll('.sort-header').forEach(h => {
+            h.classList.remove('sort-asc', 'sort-desc');
+            if (h.dataset.field === this.sortState.field) {
+                if (this.sortState.direction === 'asc') h.classList.add('sort-asc');
+                if (this.sortState.direction === 'desc') h.classList.add('sort-desc');
             }
         });
-    });
-    
-    // Start observing the table body for changes
-    observer.observe(tableBody, { childList: true });
-}
+    }
 
-/**
- * Format status badges in the table
- * @param {string} tableId - The ID of the table element
- */
-function formatStatusBadges(tableId) {
-    const table = document.getElementById(tableId);
-    if (!table) return;
-    
-    const statusCells = table.querySelectorAll('.status-cell');
-    
-    statusCells.forEach(cell => {
-        const status = cell.textContent.trim().toLowerCase();
-        cell.innerHTML = ''; // Clear the cell
-        
-        const badge = document.createElement('span');
-        badge.className = `status-badge ${status}`;
-        badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        
-        cell.appendChild(badge);
-    });
-}
-
-/**
- * Enhance table appearance for dark background with modern 2025 glassmorphic style
- * @param {HTMLElement} table - The table element
- */
-function enhanceTableAppearance(table) {
-    // Add styles to the table headers
-    const headers = table.querySelectorAll('th');
-    headers.forEach(header => {
-        header.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
-        header.style.color = 'rgba(255, 255, 255, 0.9)';
-        header.style.fontWeight = '500';
-        header.style.textTransform = 'uppercase';
-        header.style.letterSpacing = '0.05em';
-        header.style.padding = '12px 16px';
-        header.style.fontSize = '0.75rem';
-        
-        header.style.textAlign = 'center';
-        header.style.transition = 'color 0.3s ease, background-color 0.3s ease';
-    });
-
-    // Add styles to the table cells
-    const cells = table.querySelectorAll('td');
-    cells.forEach(cell => {
-        cell.style.padding = '12px 16px';
-        cell.style.color = 'rgba(255, 255, 255, 1)';
-        cell.style.fontSize = '0.875rem';
-        cell.style.textAlign = 'center';
-        cell.style.transition = 'color 0.3s ease, background-color 0.3s ease';
-    });
-
-    // Add a subtle text shadow to the entire table
-    table.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.2)';
-    
-    // Apply black crystal effect to the table body
-    const tbody = table.querySelector('tbody');
-    if (tbody) {
-        tbody.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-        
+    // --- Utility ---
+    getNestedValue(obj, path) {
+        if (!path) return '';
+        return path.split('.').reduce((acc, part) => acc && acc[part], obj);
     }
 }
 
-// Export functions for global use
+// Make the init function globally available
 window.initGlassmorphicTable = initGlassmorphicTable;
-window.formatStatusBadges = formatStatusBadges;
