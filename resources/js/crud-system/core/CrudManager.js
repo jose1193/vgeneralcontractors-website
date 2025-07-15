@@ -615,7 +615,7 @@ export class CrudManager {
     }
 
     /**
-     * Renderizar paginación
+     * Renderizar paginación con estilos glassmorphism
      */
     renderPagination(data) {
         // En modo de registro único, no renderizamos paginación
@@ -627,17 +627,28 @@ export class CrudManager {
         let paginationHtml = "";
 
         if (data.last_page > 1) {
+            // Contenedor principal con clases glassmorphism
             paginationHtml += '<div class="pagination-wrapper">';
             paginationHtml +=
                 '<nav class="pagination" aria-label="Pagination">';
 
             // Botón anterior
             if (data.current_page > 1) {
-                paginationHtml += `<button class="pagination-btn page-link" data-page="${
-                    data.current_page - 1
-                }"><span>&laquo;</span></button>`;
+                paginationHtml += `
+                <div class="page-item">
+                    <button class="page-link" data-page="${
+                        data.current_page - 1
+                    }">
+                        <span>&laquo;</span>
+                    </button>
+                </div>`;
             } else {
-                paginationHtml += `<button class="pagination-btn page-link" disabled style="opacity:0.4;cursor:not-allowed;"><span>&laquo;</span></button>`;
+                paginationHtml += `
+                <div class="page-item disabled">
+                    <button class="page-link" disabled>
+                        <span>&laquo;</span>
+                    </button>
+                </div>`;
             }
 
             // Números de página (máximo 5 visibles)
@@ -646,20 +657,36 @@ export class CrudManager {
             if (data.current_page <= 2) end = Math.min(5, data.last_page);
             if (data.current_page >= data.last_page - 1)
                 start = Math.max(1, data.last_page - 4);
+
             for (let i = start; i <= end; i++) {
-                const active = i === data.current_page ? "active" : "";
-                paginationHtml += `<button class="pagination-btn page-link${
-                    active ? " " + active : ""
-                }" data-page="${i}"><span>${i}</span></button>`;
+                const isActive = i === data.current_page;
+                const activeClass = isActive ? " active" : "";
+
+                paginationHtml += `
+                <div class="page-item${activeClass}">
+                    <button class="page-link" data-page="${i}">
+                        <span>${i}</span>
+                    </button>
+                </div>`;
             }
 
             // Botón siguiente
             if (data.current_page < data.last_page) {
-                paginationHtml += `<button class="pagination-btn page-link" data-page="${
-                    data.current_page + 1
-                }"><span>&raquo;</span></button>`;
+                paginationHtml += `
+                <div class="page-item">
+                    <button class="page-link" data-page="${
+                        data.current_page + 1
+                    }">
+                        <span>&raquo;</span>
+                    </button>
+                </div>`;
             } else {
-                paginationHtml += `<button class="pagination-btn page-link" disabled style="opacity:0.4;cursor:not-allowed;"><span>&raquo;</span></button>`;
+                paginationHtml += `
+                <div class="page-item disabled">
+                    <button class="page-link" disabled>
+                        <span>&raquo;</span>
+                    </button>
+                </div>`;
             }
 
             paginationHtml += "</nav>";
@@ -669,9 +696,17 @@ export class CrudManager {
         $(this.paginationSelector).html(paginationHtml);
 
         // Event listener para paginación
-        $(".pagination-btn").on("click", (e) => {
-            const page = $(e.currentTarget).data("page");
-            if (page && !$(e.currentTarget).is(":disabled")) {
+        $(".pagination .page-link").on("click", (e) => {
+            e.preventDefault();
+            const $button = $(e.currentTarget);
+            const page = $button.data("page");
+
+            // Verificar que no esté deshabilitado y que tenga un número de página válido
+            if (
+                !$button.closest(".page-item").hasClass("disabled") &&
+                page &&
+                page !== data.current_page
+            ) {
                 this.loadEntities(page);
             }
         });

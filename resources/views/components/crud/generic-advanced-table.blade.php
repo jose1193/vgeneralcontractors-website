@@ -493,6 +493,7 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .pagination .page-link::before {
@@ -509,7 +510,7 @@
         transition: opacity 0.3s ease;
     }
 
-    .pagination .page-link:hover {
+    .pagination .page-link:hover:not(:disabled) {
         color: rgba(255, 255, 255, 0.95);
         transform: translateY(-2px);
         box-shadow:
@@ -517,13 +518,14 @@
             0 8px 24px rgba(128, 0, 255, 0.2);
     }
 
-    .pagination .page-link:hover::before {
+    .pagination .page-link:hover:not(:disabled)::before {
         opacity: 1;
     }
 
+    /* Estilo para página activa */
     .pagination .page-item.active .page-link {
         background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
-        color: white;
+        color: white !important;
         box-shadow:
             0 4px 20px rgba(168, 85, 247, 0.4),
             0 8px 32px rgba(139, 92, 246, 0.3);
@@ -534,15 +536,28 @@
         opacity: 0;
     }
 
+    .pagination .page-item.active .page-link:hover {
+        transform: translateY(-1px);
+        box-shadow:
+            0 6px 24px rgba(168, 85, 247, 0.5),
+            0 12px 40px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Estilo para páginas deshabilitadas */
     .pagination .page-item.disabled .page-link {
-        color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.3) !important;
         cursor: not-allowed;
         transform: none;
+        background: transparent !important;
     }
 
     .pagination .page-item.disabled .page-link:hover {
         transform: none;
         box-shadow: none;
+    }
+
+    .pagination .page-item.disabled .page-link::before {
+        opacity: 0;
     }
 
     .pagination .page-link span {
@@ -631,6 +646,10 @@
             width: 36px;
             height: 36px;
             font-size: 0.8rem;
+        }
+
+        .pagination-wrapper {
+            margin: 1rem 0;
         }
     }
 
