@@ -1,140 +1,578 @@
-/* Glassmorphic Table Styles */
+/* ================================
+   GLASSMORPHIC TABLE 2025 - MODERN UI/UX
+   ================================ */
 
-/* Gradient Border Animation */
-@keyframes gradient-border {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Root Variables */
+:root {
+    --glassmorphic-primary: #8b5cf6;
+    --glassmorphic-secondary: #06b6d4;
+    --glassmorphic-accent: #f59e0b;
+    --glassmorphic-success: #10b981;
+    --glassmorphic-error: #ef4444;
+    --glassmorphic-warning: #f59e0b;
+
+    --glassmorphic-bg-primary: rgba(15, 15, 15, 0.95);
+    --glassmorphic-bg-secondary: rgba(25, 25, 25, 0.9);
+    --glassmorphic-bg-hover: rgba(35, 35, 35, 0.95);
+    --glassmorphic-bg-active: rgba(45, 45, 45, 0.95);
+
+    --glassmorphic-border: rgba(255, 255, 255, 0.08);
+    --glassmorphic-border-hover: rgba(255, 255, 255, 0.15);
+
+    --glassmorphic-text-primary: rgba(255, 255, 255, 0.95);
+    --glassmorphic-text-secondary: rgba(255, 255, 255, 0.8);
+    --glassmorphic-text-muted: rgba(255, 255, 255, 0.65);
+
+    --glassmorphic-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --glassmorphic-shadow-hover: 0 12px 48px rgba(139, 92, 246, 0.3);
+    --glassmorphic-shadow-active: 0 16px 64px rgba(139, 92, 246, 0.4);
+
+    --glassmorphic-blur: 12px;
+    --glassmorphic-blur-strong: 16px;
+
+    --glassmorphic-radius: 16px;
+    --glassmorphic-radius-sm: 8px;
+    --glassmorphic-radius-lg: 24px;
+
+    --glassmorphic-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --glassmorphic-transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.animate-gradient-border {
-    animation: gradient-border 6s ease infinite;
+/* ================================
+   MAIN CONTAINER
+   ================================ */
+
+.glassmorphic-table-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
-/* Border Glow Animation */
-@keyframes border-glow {
-    0% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
-    50% { box-shadow: 0 0 18px rgba(255, 255, 255, 0.2), 0 0 30px rgba(138, 43, 226, 0.15); }
-    100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.1), 0 0 15px rgba(138, 43, 226, 0.08); }
+.glassmorphic-outer-glow {
+    position: relative;
+    padding: 3px;
+    border-radius: var(--glassmorphic-radius);
+    background: linear-gradient(
+        135deg,
+        rgba(139, 92, 246, 0.3) 0%,
+        rgba(6, 182, 212, 0.3) 25%,
+        rgba(245, 158, 11, 0.3) 50%,
+        rgba(236, 72, 153, 0.3) 75%,
+        rgba(139, 92, 246, 0.3) 100%
+    );
+    background-size: 300% 300%;
+    animation: glassmorphic-gradient-flow 8s ease infinite;
 }
 
-.animate-border-glow {
-    animation: border-glow 5s ease-in-out infinite;
+.glassmorphic-table-wrapper {
+    position: relative;
+    background: var(--glassmorphic-bg-primary);
+    border-radius: calc(var(--glassmorphic-radius) - 3px);
+    border: 1px solid var(--glassmorphic-border);
+    backdrop-filter: blur(var(--glassmorphic-blur));
+    -webkit-backdrop-filter: blur(var(--glassmorphic-blur));
+    overflow: hidden;
+    box-shadow: var(--glassmorphic-shadow);
+    transition: var(--glassmorphic-transition);
 }
 
-/* Table Shadow Animation */
-@keyframes table-shadow {
-    0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
-    50% { box-shadow: 0 0 35px rgba(138, 43, 226, 0.3), 0 0 60px rgba(138, 43, 226, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), 0 0 40px rgba(138, 43, 226, 0.1); }
+.glassmorphic-table-wrapper:hover {
+    border-color: var(--glassmorphic-border-hover);
+    box-shadow: var(--glassmorphic-shadow-hover);
 }
 
-.animate-table-shadow {
-    animation: table-shadow 7s ease-in-out infinite;
+/* ================================
+   RESPONSIVE CONTAINERS
+   ================================ */
+
+.glassmorphic-table-responsive {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--glassmorphic-primary) transparent;
 }
 
-/* Shimmer Animation for Headers */
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+.glassmorphic-table-responsive::-webkit-scrollbar {
+    height: 8px;
 }
 
-.animate-shimmer {
-    animation: shimmer 3s infinite;
+.glassmorphic-table-responsive::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
 }
 
-.animate-shimmer-delay-1 {
-    animation: shimmer 3s infinite;
+.glassmorphic-table-responsive::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        90deg,
+        var(--glassmorphic-primary),
+        var(--glassmorphic-secondary)
+    );
+    border-radius: 4px;
+}
+
+.glassmorphic-table-responsive::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        90deg,
+        var(--glassmorphic-secondary),
+        var(--glassmorphic-primary)
+    );
+}
+
+/* ================================
+   TABLE STRUCTURE
+   ================================ */
+
+.glassmorphic-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    position: relative;
+}
+
+/* ================================
+   TABLE HEADER
+   ================================ */
+
+.glassmorphic-table-header {
+    position: relative;
+    background: var(--glassmorphic-bg-secondary);
+    border-bottom: 2px solid var(--glassmorphic-border);
+}
+
+.glassmorphic-header-row {
+    position: relative;
+}
+
+.glassmorphic-header-cell {
+    position: relative;
+    padding: 20px 24px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--glassmorphic-text-primary);
+    border-right: 1px solid var(--glassmorphic-border);
+    transition: var(--glassmorphic-transition);
+    user-select: none;
+    overflow: hidden;
+}
+
+.glassmorphic-header-cell:last-child {
+    border-right: none;
+}
+
+.glassmorphic-header-cell.glassmorphic-sortable {
+    cursor: pointer;
+}
+
+.glassmorphic-header-cell.glassmorphic-sortable:hover {
+    background: var(--glassmorphic-bg-hover);
+    color: var(--glassmorphic-primary);
+}
+
+.glassmorphic-header-cell.glassmorphic-sortable:active {
+    background: var(--glassmorphic-bg-active);
+    transform: translateY(1px);
+}
+
+.glassmorphic-header-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 2;
+}
+
+.glassmorphic-header-text {
+    position: relative;
+    z-index: 3;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ================================
+   SHIMMER EFFECT
+   ================================ */
+
+.glassmorphic-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: glassmorphic-shimmer 3s infinite;
+    z-index: 1;
+}
+
+.glassmorphic-shimmer-1 {
     animation-delay: 0.2s;
 }
-
-.animate-shimmer-delay-2 {
-    animation: shimmer 3s infinite;
+.glassmorphic-shimmer-2 {
     animation-delay: 0.4s;
 }
-
-.animate-shimmer-delay-3 {
-    animation: shimmer 3s infinite;
+.glassmorphic-shimmer-3 {
     animation-delay: 0.6s;
 }
-
-.animate-shimmer-delay-4 {
-    animation: shimmer 3s infinite;
+.glassmorphic-shimmer-4 {
     animation-delay: 0.8s;
 }
-
-/* Row Hover Effects */
-.glassmorphic-table-row {
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 1); /* Texto completamente blanco para mejor visibilidad */
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro cristal */
-    filter: blur(0.5px); /* Efecto cristal */
+.glassmorphic-shimmer-0 {
+    animation-delay: 1s;
 }
 
-.glassmorphic-table-row:hover {
-    transform: scale(1.005);
-    background-color: rgba(0, 0, 0, 0.95); /* Negro más intenso al hover */
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
-    z-index: 10;
+/* ================================
+   SORT ICONS
+   ================================ */
+
+.glassmorphic-sort-icon {
     position: relative;
-    color: rgba(255, 255, 255, 1);
-    filter: blur(0.3px); /* Menos blur al hover para mejor legibilidad */
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--glassmorphic-transition-fast);
 }
 
-.glassmorphic-table-row.active {
-    background-color: rgba(59, 130, 246, 0.1);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+.glassmorphic-sort-icon::after {
+    content: "⇅";
+    font-size: 14px;
+    color: var(--glassmorphic-text-muted);
+    transition: var(--glassmorphic-transition-fast);
 }
 
-/* Row Indicator */
-.glassmorphic-table-row-indicator {
+.glassmorphic-sortable:hover .glassmorphic-sort-icon::after {
+    color: var(--glassmorphic-primary);
+    transform: scale(1.1);
+}
+
+.glassmorphic-sortable.sort-asc .glassmorphic-sort-icon::after {
+    content: "↑";
+    color: var(--glassmorphic-primary);
+    text-shadow: 0 0 8px var(--glassmorphic-primary);
+}
+
+.glassmorphic-sortable.sort-desc .glassmorphic-sort-icon::after {
+    content: "↓";
+    color: var(--glassmorphic-primary);
+    text-shadow: 0 0 8px var(--glassmorphic-primary);
+}
+
+/* ================================
+   TABLE BODY
+   ================================ */
+
+.glassmorphic-table-body {
+    position: relative;
+    background: var(--glassmorphic-bg-primary);
+}
+
+.glassmorphic-table-body tr {
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: var(--glassmorphic-transition);
+}
+
+.glassmorphic-table-body tr:last-child {
+    border-bottom: none;
+}
+
+.glassmorphic-table-body td {
+    position: relative;
+    padding: 18px 24px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--glassmorphic-text-primary);
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    transition: var(--glassmorphic-transition);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    line-height: 1.5;
+}
+
+.glassmorphic-table-body td:last-child {
+    border-right: none;
+}
+
+/* ================================
+   ROW HOVER EFFECTS
+   ================================ */
+
+.glassmorphic-table-body tr:hover {
+    background: var(--glassmorphic-bg-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+    z-index: 10;
+}
+
+.glassmorphic-table-body tr:hover td {
+    color: var(--glassmorphic-text-primary);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.glassmorphic-table-body tr.glassmorphic-active {
+    background: var(--glassmorphic-bg-active);
+    box-shadow: var(--glassmorphic-shadow-active);
+    border-color: var(--glassmorphic-primary);
+}
+
+.glassmorphic-table-body tr.glassmorphic-active::before {
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: 4px;
-    background: linear-gradient(to bottom, #3B82F6, #8B5CF6, #D946EF);
-    opacity: 0;
-    transition: opacity 0.3s ease, width 0.3s ease;
+    background: linear-gradient(
+        to bottom,
+        var(--glassmorphic-primary),
+        var(--glassmorphic-secondary)
+    );
+    border-radius: 0 2px 2px 0;
 }
 
-.glassmorphic-table-row:hover .glassmorphic-table-row-indicator,
-.glassmorphic-table-row.active .glassmorphic-table-row-indicator {
-    opacity: 1;
-    width: 5px;
+/* ================================
+   LOADING STATE
+   ================================ */
+
+.glassmorphic-loading-row {
+    background: var(--glassmorphic-bg-secondary);
 }
 
-/* Status Badge Styles */
-.status-badge {
+.glassmorphic-loading-cell {
+    padding: 40px 24px !important;
+    text-align: center;
+    color: var(--glassmorphic-text-secondary);
+}
+
+.glassmorphic-loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.glassmorphic-spinner {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+.glassmorphic-spinner-inner {
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(139, 92, 246, 0.3);
+    border-top: 3px solid var(--glassmorphic-primary);
+    border-radius: 50%;
+    animation: glassmorphic-spin 1s linear infinite;
+}
+
+.glassmorphic-loading-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--glassmorphic-text-secondary);
+}
+
+/* ================================
+   NO DATA STATE
+   ================================ */
+
+.glassmorphic-no-data-row {
+    background: var(--glassmorphic-bg-secondary);
+}
+
+.glassmorphic-no-data-cell {
+    padding: 60px 24px !important;
+    text-align: center;
+    color: var(--glassmorphic-text-muted);
+}
+
+.glassmorphic-no-data-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.glassmorphic-no-data-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--glassmorphic-text-muted);
+    opacity: 0.7;
+}
+
+.glassmorphic-no-data-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--glassmorphic-text-muted);
+}
+
+/* ================================
+   STATUS BADGES
+   ================================ */
+
+.glassmorphic-status-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: var(--glassmorphic-transition);
+    text-shadow: none;
+    min-width: 80px;
 }
 
-.status-badge.active {
-    background: linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-    color: #10B981;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+.glassmorphic-status-badge.active {
+    background: linear-gradient(
+        135deg,
+        rgba(16, 185, 129, 0.2),
+        rgba(5, 150, 105, 0.3)
+    );
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
 }
 
-.status-badge.inactive {
-    background: linear-gradient(to right, rgba(239, 68, 68, 0.2), rgba(185, 28, 28, 0.2));
-    color: #EF4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+.glassmorphic-status-badge.inactive {
+    background: linear-gradient(
+        135deg,
+        rgba(239, 68, 68, 0.2),
+        rgba(185, 28, 28, 0.3)
+    );
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
 }
 
-/* Responsive Adjustments */
+.glassmorphic-status-badge.pending {
+    background: linear-gradient(
+        135deg,
+        rgba(245, 158, 11, 0.2),
+        rgba(217, 119, 6, 0.3)
+    );
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+}
+
+/* ================================
+   ANIMATIONS
+   ================================ */
+
+@keyframes glassmorphic-gradient-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glassmorphic-shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes glassmorphic-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes glassmorphic-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+@media (max-width: 1024px) {
+    .glassmorphic-header-cell,
+    .glassmorphic-table-body td {
+        padding: 16px 20px;
+        font-size: 0.85rem;
+    }
+
+    .glassmorphic-header-cell {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .glassmorphic-header-cell,
+    .glassmorphic-table-body td {
+        padding: 12px 16px;
+        font-size: 0.8rem;
+    }
+
+    .glassmorphic-header-cell {
+        font-size: 0.75rem;
+    }
+
+    .glassmorphic-table-body tr:hover {
+        transform: none;
+        box-shadow: 0 4px 16px rgba(139, 92, 246, 0.15);
+    }
+
+    .glassmorphic-status-badge {
+        min-width: 70px;
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
 @media (max-width: 640px) {
-    .glassmorphic-table-row:hover {
-        transform: none; /* Disable scaling on mobile */
+    .glassmorphic-outer-glow {
+        padding: 2px;
+    }
+
+    .glassmorphic-header-cell,
+    .glassmorphic-table-body td {
+        padding: 10px 12px;
+        font-size: 0.75rem;
+    }
+
+    .glassmorphic-table-body tr:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .glassmorphic-loading-cell,
+    .glassmorphic-no-data-cell {
+        padding: 40px 16px !important;
     }
 }
