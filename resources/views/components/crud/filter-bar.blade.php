@@ -162,6 +162,36 @@
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
                                 </select>
+                                <style>
+                                    .premium-select option {
+                                        background: rgba(20, 20, 20, 0.97) !important;
+                                        color: #fff !important;
+                                        padding: 10px 16px !important;
+                                        border: 1px solid #888 !important;
+                                        border-radius: 8px !important;
+                                        margin: 4px 0 !important;
+                                        font-size: 0.95em !important;
+                                        transition: background 0.2s, color 0.2s;
+                                    }
+
+                                    .premium-select option:hover {
+                                        background: rgba(147, 51, 234, 0.25) !important;
+                                        color: #fff !important;
+                                    }
+
+                                    .premium-select option:checked,
+                                    .premium-select option:selected {
+                                        background: rgba(147, 51, 234, 0.6) !important;
+                                        color: #fff !important;
+                                        font-weight: 500 !important;
+                                    }
+
+                                    .premium-select option:disabled {
+                                        background: rgba(40, 40, 40, 0.7) !important;
+                                        color: rgba(255, 255, 255, 0.4) !important;
+                                        cursor: not-allowed !important;
+                                    }
+                                </style>
                                 <!-- Dropdown Arrow -->
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                     <svg fill="none" stroke="currentColor" stroke-linecap="round"
