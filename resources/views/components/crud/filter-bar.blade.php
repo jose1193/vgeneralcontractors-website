@@ -67,8 +67,7 @@
 
     <!-- Collapsible Advanced Filters Section -->
     @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
-        <div id="advancedFilters" x-data="{ open: false }" x-init="open = false"
-            :class="open ? 'border-t border-white/10' : ''" class="hidden bg-black/20 backdrop-blur-sm">
+        <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div class="p-4 pb-6">
                 <!-- Responsive Grid Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
@@ -197,11 +196,10 @@
                     @endif
                 </div>
 
-
-                <!-- Clear Filters Button - Fixed -->
+                <!-- Clear Filters Button -->
                 <div class="pt-4 border-t border-white/10 flex justify-end">
                     <button id="clearFilters" type="button"
-                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50">
+                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
@@ -442,7 +440,6 @@
         const filterText = document.getElementById('filterText');
 
         if (toggleButton && advancedFilters) {
-            let isOpen = false;
             toggleButton.addEventListener('click', function() {
                 const isHidden = advancedFilters.classList.contains('hidden');
 
@@ -463,10 +460,6 @@
                     chevronIcon.style.transform = 'rotate(180deg)';
                     filterText.textContent = 'Hide Filters';
                     toggleButton.classList.add('bg-purple-600/20', 'border-purple-500/30');
-                    // Activar borde superior
-                    advancedFilters.__x = advancedFilters.__x || {};
-                    advancedFilters.__x.open = true;
-                    advancedFilters.setAttribute('x-data', "{ open: true }");
                 } else {
                     // Hide filters
                     advancedFilters.style.maxHeight = '0px';
@@ -476,10 +469,6 @@
                         advancedFilters.style.removeProperty('max-height');
                         advancedFilters.style.removeProperty('overflow');
                         advancedFilters.style.removeProperty('transition');
-                        // Desactivar borde superior
-                        advancedFilters.__x = advancedFilters.__x || {};
-                        advancedFilters.__x.open = false;
-                        advancedFilters.setAttribute('x-data', "{ open: false }");
                     }, 300);
 
                     // Update button appearance
