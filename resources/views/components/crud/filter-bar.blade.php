@@ -125,7 +125,15 @@
                                                 placeholder="{{ __('end_date') }}" readonly
                                                 class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
                                             <!-- Calendar Icon -->
-                                            📅
+                                            <span
+                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                            </span>
                                             <!-- Clear Button -->
                                             <button type="button" id="{{ $dateRangeEndId }}_clear"
                                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
@@ -176,8 +184,8 @@
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
                         <div class="flex flex-col">
-                            <label for="{{ $perPageId }}"
-                                class="text-sm font-medium text-gray-300 mb-2">📄{{ __('items_per_page') }}</label>
+                            <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
+                                {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
                                 class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
                                 @foreach ($perPageOptions as $option)
