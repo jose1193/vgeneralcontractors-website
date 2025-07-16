@@ -40,7 +40,7 @@
         @endif
 
         <!-- Right Side: Create Button & Filter Toggle -->
-        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <!-- Create Button -->
             <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
 
