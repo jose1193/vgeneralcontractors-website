@@ -22,7 +22,7 @@
     'managerName' => 'crudManager',
 ])
 
-<div class="mb-6 backdrop-blur-sm bg-black/30 rounded-lg border border-white/10 shadow-lg shadow-purple-500/10">
+<div class="glassmorphism-filter-container">
     <!-- Main Filter Bar - Always Visible -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
         <!-- Left Side: Search Input -->
@@ -67,7 +67,7 @@
 
     <!-- Collapsible Advanced Filters Section -->
     @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
-        <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
+        <div id="advancedFilters" class="hidden glassmorphism-filter-advanced">
             <div class="p-4">
                 <!-- Responsive Grid Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
@@ -144,7 +144,6 @@
                         </div>
                     @endif
 
-
                     <!-- Export Options (moved up) -->
                     @if ($showExport)
                         <div class="flex flex-col items-start justify-center h-full">
@@ -212,9 +211,128 @@
     @endif
 </div>
 
-<!-- Enhanced Flatpickr Styles -->
 <style>
-    /* Glassmorphic Flatpickr Theme */
+    /* Premium Glassmorphism Filter Bar - Matching Table Design */
+    .glassmorphism-filter-container {
+        position: relative;
+        margin: 1rem 0;
+        border-radius: 20px;
+
+        /* Crystal Glass Background with Premium Transparency - Same as table */
+        background: rgba(0, 0, 0, 0.78);
+
+        /* Premium Purple Box Shadow System - Exactly same as table */
+        box-shadow:
+            0 8px 32px 0 rgba(138, 43, 226, 0.25),
+            0 16px 64px 0 rgba(128, 0, 255, 0.18),
+            0 4px 16px 0 rgba(75, 0, 130, 0.3),
+            0 2px 8px 0 rgba(147, 51, 234, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+
+        /* Advanced Blur Effects - Same as table */
+        backdrop-filter: blur(20px) saturate(1.3);
+        -webkit-backdrop-filter: blur(20px) saturate(1.3);
+
+        /* Refined Border for Glass Effect - Same as table */
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+        /* Enhanced Animation - Same as table */
+        animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Shimmer effect overlay - Same as table */
+    .glassmorphism-filter-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 20px;
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 25%,
+                transparent 50%,
+                rgba(138, 43, 226, 0.08) 75%,
+                rgba(128, 0, 255, 0.12) 100%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    /* Hover effects - Same as table */
+    .glassmorphism-filter-container:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 12px 48px 0 rgba(138, 43, 226, 0.35),
+            0 24px 80px 0 rgba(128, 0, 255, 0.25),
+            0 6px 24px 0 rgba(75, 0, 130, 0.4),
+            0 3px 12px 0 rgba(147, 51, 234, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .glassmorphism-filter-container:hover::before {
+        opacity: 1;
+    }
+
+    /* Advanced Filters Section - Enhanced styling */
+    .glassmorphism-filter-advanced {
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(0, 0, 0, 0.82);
+
+        /* Enhanced Purple Box Shadow for Advanced Section */
+        box-shadow:
+            0 6px 24px 0 rgba(138, 43, 226, 0.22),
+            0 12px 48px 0 rgba(128, 0, 255, 0.15),
+            0 2px 12px 0 rgba(75, 0, 130, 0.25),
+            0 1px 6px 0 rgba(147, 51, 234, 0.18),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+
+        /* Enhanced Blur Effects */
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Shimmer effect for advanced filters */
+    .glassmorphism-filter-advanced::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 0 0 20px 20px;
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.03) 25%,
+                transparent 50%,
+                rgba(138, 43, 226, 0.06) 75%,
+                rgba(128, 0, 255, 0.1) 100%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .glassmorphism-filter-advanced:hover::after {
+        opacity: 1;
+    }
+
+    /* Enhanced Flatpickr Styles */
     .flatpickr-calendar {
         background: rgba(0, 0, 0, 0.8) !important;
         backdrop-filter: blur(20px) !important;
@@ -325,6 +443,53 @@
     .date-input-active .opacity-0 {
         opacity: 1 !important;
         pointer-events: auto !important;
+    }
+
+    /* Enhanced Animations - Same as table */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile Responsive - Same as table */
+    @media (max-width: 768px) {
+        .glassmorphism-filter-container {
+            margin: 0.5rem 0;
+            border-radius: 16px;
+        }
+
+        .glassmorphism-filter-container::before {
+            border-radius: 16px;
+        }
+
+        .glassmorphism-filter-advanced {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .glassmorphism-filter-advanced::after {
+            border-radius: 0 0 16px 16px;
+        }
+    }
+
+    /* Dark mode enhancements - Same as table */
+    @media (prefers-color-scheme: dark) {
+        .glassmorphism-filter-container {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .glassmorphism-filter-advanced {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
     }
 </style>
 
