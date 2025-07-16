@@ -37,14 +37,14 @@
         @endif
 
         <!-- Right Side: Create Button & Filter Toggle -->
-        <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <!-- Create Button -->
-            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="flex-1 sm:flex-none" />
+            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
 
             <!-- Advanced Filters Toggle Button -->
             @if ($showInactiveToggle || $showPerPage || $showExport)
                 <button id="toggleFilters" type="button"
-                    class="inline-flex items-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm">
+                    class="inline-flex items-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm w-full sm:w-auto">
                     <svg id="filterIcon" class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
