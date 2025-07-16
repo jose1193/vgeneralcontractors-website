@@ -175,6 +175,8 @@
         overflow-x: auto !important;
         overflow-y: visible;
         width: 100%;
+        position: relative;
+        /* Asegura que los scrollbars no sean afectados */
     }
 
     /* Extra: Si quieres scroll vertical en mobile también */
@@ -183,7 +185,8 @@
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
+        position: relative;
+        /* Mantiene el contexto de posicionamiento */
     }
 
     @media (max-width: 768px) {
@@ -266,7 +269,8 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 2;
+        z-index: 1;
+        /* Asegura que el shimmer esté detrás de los scrollbars */
     }
 
     .glassmorphism-header::before {
