@@ -118,7 +118,6 @@
         opacity: 1;
     }
 
-    /* FIXED: Isolation layer for scroll functionality */
     .glassmorphism-table-wrapper {
         /* Enhanced Crystal Glass Background */
         background: rgba(0, 0, 0, 0.82);
@@ -141,38 +140,67 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* FIXED: Proper scroll configuration */
+        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glassmorphism-table-wrapper {
+        /* Enhanced Crystal Glass Background */
+        background: rgba(0, 0, 0, 0.82);
+        border-radius: 16px;
+
+        /* Premium Purple Box Shadow System */
+        box-shadow:
+
+            /* Enhanced Blur Effects */
+            backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Permitir scrollbars */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* CRITICAL: Isolate shimmer effects from scroll bars */
-        contain: layout style paint;
-        will-change: auto;
     }
 
-    /* FIXED: Shimmer effect isolated to inner content only */
-    .glassmorphism-table-wrapper::before {
-        content: '';
-        position: absolute;
-        top: 1px;
-        left: 1px;
-        right: 1px;
-        bottom: 1px;
-        border-radius: 15px;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.3) 25%,
-                rgba(138, 43, 226, 0.4) 50%,
-                rgba(255, 255, 255, 0.3) 75%,
-                transparent 100%);
-        animation: shimmer 3s infinite;
-        pointer-events: none;
-        z-index: 1;
-        /* CRITICAL: Prevent shimmer from affecting scroll area */
-        clip-path: inset(0 17px 17px 0);
+    /* Forzar scroll horizontal en responsive */
+    .responsive-container {
+        overflow-x: auto !important;
+        overflow-y: visible;
+        width: 100%;
+    }
+
+    /* Extra: Si quieres scroll vertical en mobile también */
+    .glassmorphism-scroll-wrapper {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+        width: 100%;
+        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
+    }
+
+    @media (max-width: 768px) {
+
+        .glassmorphism-table-wrapper,
+        .glassmorphism-scroll-wrapper {
+            max-height: 50vh;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+    }
+
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(138, 43, 226, 0.4) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%);
+    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
@@ -192,42 +220,10 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
-        z-index: 1;
-        /* CRITICAL: Prevent hover effect from affecting scroll area */
-        clip-path: inset(0 17px 17px 0);
     }
 
     .glassmorphism-table-wrapper:hover::after {
         opacity: 1;
-    }
-
-    /* FIXED: Force scroll bars to remain static */
-    .glassmorphism-scroll-wrapper {
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        width: 100%;
-        /* CRITICAL: Ensure scroll bars are not affected by animations */
-        transform: translateZ(0);
-        backface-visibility: hidden;
-        perspective: 1000px;
-    }
-
-    /* Forzar scroll horizontal en responsive */
-    .responsive-container {
-        overflow-x: auto !important;
-        overflow-y: visible;
-        width: 100%;
-    }
-
-    @media (max-width: 768px) {
-
-        .glassmorphism-table-wrapper,
-        .glassmorphism-scroll-wrapper {
-            max-height: 50vh;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
     }
 
     .glassmorphism-table {
@@ -235,9 +231,6 @@
         border-collapse: collapse;
         color: rgba(255, 255, 255, 0.95);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        /* FIXED: Ensure table content is above shimmer effects */
-        position: relative;
-        z-index: 2;
     }
 
     .glassmorphism-header {
@@ -260,10 +253,9 @@
         position: relative;
         transition: all 0.3s ease;
         overflow: hidden;
-        z-index: 3;
     }
 
-    /* FIXED: Header shimmer effect isolated */
+    /* Shimmer animated effect for table header */
     .glassmorphism-header::after {
         content: '';
         position: absolute;
@@ -274,9 +266,7 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 1;
-        /* CRITICAL: Contain shimmer to header content only */
-        clip-path: inset(0);
+        z-index: 2;
     }
 
     .glassmorphism-header::before {
@@ -296,7 +286,6 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
-        z-index: 1;
     }
 
     .glassmorphism-header:hover::before {
@@ -314,7 +303,6 @@
         border-right: none;
         position: relative;
         transition: all 0.3s ease;
-        z-index: 2;
     }
 
     .glassmorphism-th:last-child {
@@ -334,8 +322,6 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        position: relative;
-        z-index: 2;
     }
 
     .sortable-header {
@@ -386,8 +372,6 @@
 
     .glassmorphism-body {
         background: rgba(0, 0, 0, 0.4);
-        position: relative;
-        z-index: 2;
     }
 
     .glassmorphism-body tr {
@@ -411,8 +395,6 @@
         font-size: 0.875rem;
         border-right: none;
         transition: all 0.3s ease;
-        position: relative;
-        z-index: 2;
     }
 
     .glassmorphism-body td:last-child {
@@ -432,8 +414,6 @@
         flex-direction: column;
         align-items: center;
         gap: 1rem;
-        position: relative;
-        z-index: 2;
     }
 
     .loading-spinner {
@@ -474,7 +454,6 @@
         text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
     }
 
-    /* FIXED: Scroll bar styling that remains static */
     .responsive-container {
         overflow-x: auto;
         scrollbar-width: thin;
@@ -497,31 +476,6 @@
     }
 
     .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
-    }
-
-    /* FIXED: Additional scroll bar isolation */
-    .glassmorphism-scroll-wrapper::-webkit-scrollbar {
-        height: 8px;
-        width: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
-
-    .glassmorphism-scroll-wrapper::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
-
-    .glassmorphism-scroll-wrapper::-webkit-scrollbar-thumb {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
-        border-radius: 4px;
-        /* CRITICAL: Ensure scroll thumb is not affected by animations */
-        animation: none !important;
-        transform: none !important;
-    }
-
-    .glassmorphism-scroll-wrapper::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
     }
 
@@ -642,7 +596,7 @@
         z-index: 1;
     }
 
-    /* FIXED: Enhanced Animations - isolated from scroll bars */
+    /* Enhanced Animations */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -672,17 +626,6 @@
 
         100% {
             left: 100%;
-        }
-    }
-
-    /* FIXED: Shimmer animation isolated */
-    @keyframes shimmer {
-        0% {
-            transform: translateX(-100%);
-        }
-
-        100% {
-            transform: translateX(100%);
         }
     }
 
