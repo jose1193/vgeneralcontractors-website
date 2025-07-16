@@ -215,7 +215,8 @@
     /* Premium Glassmorphism Filter Bar - Matching Table Design */
     .glassmorphism-filter-container {
         position: relative;
-        margin: 1rem 0;
+        margin: 1rem 0 2.5rem 0;
+        /* Added extra margin-bottom for spacing below filter bar */
         border-radius: 20px;
 
         /* Crystal Glass Background with Premium Transparency - Same as table */
