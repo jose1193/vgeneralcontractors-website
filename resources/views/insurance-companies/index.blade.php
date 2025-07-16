@@ -7,11 +7,9 @@
     alert-id="alertContainer" :table-columns="[
         ['field' => 'nro', 'label' => __('nro'), 'sortable' => false],
         ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
-        ['field' => 'address', 'label' => __('address'), 'sortable' => false],
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
         ['field' => 'website', 'label' => __('website'), 'sortable' => false],
-        ['field' => 'user_name', 'label' => __('created_by'), 'sortable' => true],
         ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
         ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
@@ -146,18 +144,6 @@
                             sortable: true
                         },
                         {
-                            field: 'address',
-                            name: translations.address || 'Address',
-                            sortable: false,
-                            getter: (entity) => {
-                                if (!entity.address) return translations.noRecordsFound || 'N/A';
-                                // Truncate long addresses
-                                return entity.address.length > 50 ?
-                                    entity.address.substring(0, 50) + '...' :
-                                    entity.address;
-                            }
-                        },
-                        {
                             field: 'email',
                             name: translations.email || 'Email',
                             sortable: true,
@@ -199,15 +185,6 @@
                                 // Create clickable link
                                 const displayUrl = entity.website.replace(/^https?:\/\//, '');
                                 return `<a href="${entity.website}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${displayUrl}</a>`;
-                            }
-                        },
-                        {
-                            field: 'user_name',
-                            name: translations.createdBy || 'Created By',
-                            sortable: true,
-                            getter: (entity) => {
-                                return entity.user_name || translations.noUserAssigned ||
-                                    'No user assigned';
                             }
                         },
                         {
