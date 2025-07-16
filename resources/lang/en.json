@@ -1,4 +1,6 @@
 {
+    "items_per_page": "Items per page",
+
     "_comment_navigation": "=== MAIN NAVIGATION ===",
     "home": "Home",
     "about_us": "About Us",

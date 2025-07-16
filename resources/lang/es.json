@@ -1,4 +1,6 @@
 {
+    "items_per_page": "Elementos por página",
+
     "_comment_navigation": "=== NAVEGACIÓN PRINCIPAL ===",
     "home": "Inicio",
     "about_us": "Acerca de",
