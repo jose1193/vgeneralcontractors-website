@@ -5,7 +5,7 @@
     'class' => '',
 ])
 
-<div class="flex items-center justify-end sm:justify-start w-full sm:w-auto {{ $class }}">
+<div class="flex items-center justify-start {{ $class }}">
     <label for="{{ $id }}" class="mr-2 text-sm font-medium text-white/90 capitalize">
         🗑️ {{ $label }}
     </label>
