@@ -202,13 +202,7 @@
                     @if ($showInactiveToggle)
                         <div class="flex flex-col items-center justify-center h-full">
                             <label class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
-                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor"
-                                    stroke-width="2" viewBox="0 0 24 24">
-                                    <rect x="3" y="11" width="18" height="7" rx="2"
-                                        stroke="currentColor" stroke-width="2" fill="none" />
-                                    <circle cx="8" cy="14.5" r="2" fill="currentColor" />
-                                </svg>
-                                {{ __('show_inactive') }}
+                                📄 {{ __('show_inactive') }}
                             </label>
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
