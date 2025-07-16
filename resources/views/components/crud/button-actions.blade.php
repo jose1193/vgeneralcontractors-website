@@ -32,7 +32,7 @@
 <div class="flex justify-center space-x-2">
     @if ($showEdit)
         <button data-id="{{ $entityId }}"
-            class="{{ $editClass }} inline-flex items-center justify-center {{ $buttonSize }} bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+            class="{{ $editClass }} inline-flex items-center justify-center {{ $buttonSize }} text-white rounded-xl border border-white/10 bg-blue-500/40 backdrop-blur-md shadow-lg shadow-blue-500/20 hover:bg-blue-600/60 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 transform hover:scale-105"
             title="Edit">
             <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconSize }}" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -44,7 +44,7 @@
 
     @if ($isDeleted && $showRestore)
         <button data-id="{{ $entityId }}"
-            class="{{ $restoreClass }} inline-flex items-center justify-center {{ $buttonSize }} bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+            class="{{ $restoreClass }} inline-flex items-center justify-center {{ $buttonSize }} text-white rounded-xl border border-white/10 bg-emerald-500/40 backdrop-blur-md shadow-lg shadow-emerald-500/20 hover:bg-emerald-600/60 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 transform hover:scale-105"
             title="Restore">
             <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconSize }}" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -54,7 +54,7 @@
         </button>
     @elseif(!$isDeleted && $showDelete)
         <button data-id="{{ $entityId }}"
-            class="{{ $deleteClass }} inline-flex items-center justify-center {{ $buttonSize }} bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+            class="{{ $deleteClass }} inline-flex items-center justify-center {{ $buttonSize }} text-white rounded-xl border border-white/10 bg-red-500/40 backdrop-blur-md shadow-lg shadow-red-500/20 hover:bg-red-600/60 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 transform hover:scale-105"
             title="Delete">
             <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconSize }}" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
