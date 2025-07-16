@@ -10,44 +10,46 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
-        <table id="{{ $id }}" class="glassmorphism-table">
-            <thead class="glassmorphism-header">
-                <tr>
-                    @foreach ($columns as $column)
-                        <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
-                            @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
-                            <div class="th-content">
-                                <span class="column-text">{{ $column['label'] }}</span>
-                                @if ($sortable && ($column['sortable'] ?? true))
-                                    <span class="sort-indicator">
-                                        <svg class="sort-icon" viewBox="0 0 24 24">
-                                            <path d="M7 14l5-5 5 5z" />
-                                            <path d="M7 10l5 5 5-5z" />
-                                        </svg>
-                                    </span>
-                                @endif
+    <div class="glassmorphism-table-wrapper">
+        <div class="glassmorphism-scroll-container">
+            <table id="{{ $id }}" class="glassmorphism-table">
+                <thead class="glassmorphism-header">
+                    <tr>
+                        @foreach ($columns as $column)
+                            <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
+                                @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                                <div class="th-content">
+                                    <span class="column-text">{{ $column['label'] }}</span>
+                                    @if ($sortable && ($column['sortable'] ?? true))
+                                        <span class="sort-indicator">
+                                            <svg class="sort-icon" viewBox="0 0 24 24">
+                                                <path d="M7 14l5-5 5 5z" />
+                                                <path d="M7 10l5 5 5-5z" />
+                                            </svg>
+                                        </span>
+                                    @endif
+                                </div>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody id="{{ $id }}-body" class="glassmorphism-body">
+                    <!-- Loading row -->
+                    <tr id="loadingRow" class="loading-row">
+                        <td colspan="{{ count($columns) }}" class="loading-cell">
+                            <div class="loading-content">
+                                <div class="loading-spinner">
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                </div>
+                                <span class="loading-text">{{ $loadingText }}</span>
                             </div>
-                        </th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody id="{{ $id }}-body" class="glassmorphism-body">
-                <!-- Loading row -->
-                <tr id="loadingRow" class="loading-row">
-                    <td colspan="{{ count($columns) }}" class="loading-cell">
-                        <div class="loading-content">
-                            <div class="loading-spinner">
-                                <div class="spinner-ring"></div>
-                                <div class="spinner-ring"></div>
-                                <div class="spinner-ring"></div>
-                            </div>
-                            <span class="loading-text">{{ $loadingText }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -140,67 +142,68 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        /* Mantener overflow hidden para el shimmer */
         overflow: hidden;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-
-            /* Enhanced Blur Effects */
-            backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
+    /* Nuevo contenedor para el scroll que NO interfiere con el shimmer */
+    .glassmorphism-scroll-container {
+        /* Este contenedor maneja el scroll real */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
+        width: 100%;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Scrollbar personalizada para que se vea bien */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(138, 43, 226, 0.6) transparent;
     }
 
-    /* Forzar scroll horizontal en responsive */
-    .responsive-container {
-        overflow-x: auto !important;
-        overflow-y: visible;
+    /* Scrollbar webkit personalizada */
+    .glassmorphism-scroll-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .glassmorphism-scroll-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+
+    .glassmorphism-scroll-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .glassmorphism-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
+    }
+
+    .glassmorphism-scroll-container::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    /* Shimmer effect que NO interfiere con el scroll */
+    .glassmorphism-table-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
         width: 100%;
-    }
-
-    /* Extra: Si quieres scroll vertical en mobile también */
-    .glassmorphism-scroll-wrapper {
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
-    }
-
-    @media (max-width: 768px) {
-
-        .glassmorphism-table-wrapper,
-        .glassmorphism-scroll-wrapper {
-            max-height: 50vh;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-    }
-
-    rgba(255, 255, 255, 0.3) 25%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 255, 255, 0.3) 75%,
-    transparent 100%);
-    animation: shimmer 3s infinite;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.1) 25%,
+                rgba(138, 43, 226, 0.2) 50%,
+                rgba(255, 255, 255, 0.1) 75%,
+                transparent 100%);
+        animation: shimmer 3s infinite;
+        pointer-events: none;
+        z-index: 1;
     }
 
     .glassmorphism-table-wrapper::after {
@@ -220,6 +223,7 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
+        z-index: 1;
     }
 
     .glassmorphism-table-wrapper:hover::after {
@@ -231,6 +235,10 @@
         border-collapse: collapse;
         color: rgba(255, 255, 255, 0.95);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        position: relative;
+        z-index: 2;
+        min-width: 600px;
+        /* Ancho mínimo para forzar scroll horizontal cuando sea necesario */
     }
 
     .glassmorphism-header {
@@ -266,7 +274,7 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 2;
+        z-index: 3;
     }
 
     .glassmorphism-header::before {
@@ -286,6 +294,7 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
+        z-index: 2;
     }
 
     .glassmorphism-header:hover::before {
@@ -303,6 +312,7 @@
         border-right: none;
         position: relative;
         transition: all 0.3s ease;
+        z-index: 4;
     }
 
     .glassmorphism-th:last-child {
@@ -322,6 +332,8 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+        position: relative;
+        z-index: 5;
     }
 
     .sortable-header {
@@ -372,6 +384,8 @@
 
     .glassmorphism-body {
         background: rgba(0, 0, 0, 0.4);
+        position: relative;
+        z-index: 2;
     }
 
     .glassmorphism-body tr {
@@ -395,6 +409,8 @@
         font-size: 0.875rem;
         border-right: none;
         transition: all 0.3s ease;
+        position: relative;
+        z-index: 3;
     }
 
     .glassmorphism-body td:last-child {
@@ -454,29 +470,21 @@
         text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
     }
 
+    /* Responsive handling */
     .responsive-container {
-        overflow-x: auto;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
+        overflow-x: visible;
+        width: 100%;
     }
 
-    .responsive-container::-webkit-scrollbar {
-        height: 8px;
-    }
+    @media (max-width: 768px) {
+        .glassmorphism-scroll-container {
+            max-height: 50vh;
+        }
 
-    .responsive-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
-
-    .responsive-container::-webkit-scrollbar-thumb {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
-        border-radius: 4px;
-        transition: background 0.3s ease;
-    }
-
-    .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
+        .glassmorphism-table {
+            min-width: 800px;
+            /* Forzar scroll horizontal en mobile */
+        }
     }
 
     /* Enhanced Glassmorphism Pagination */
@@ -616,6 +624,16 @@
 
         to {
             opacity: 1;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+
+        100% {
+            left: 100%;
         }
     }
 
