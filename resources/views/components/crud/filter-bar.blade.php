@@ -64,10 +64,11 @@
     @if ($showInactiveToggle || $showPerPage || $showExport)
         <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div class="p-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Mobile: Filters below Create Button, Desktop: Grid Layout -->
+                <div class="flex flex-col lg:grid lg:grid-cols-3 gap-4">
                     <!-- Show Inactive Toggle -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label class="text-sm font-medium text-gray-300 mb-2">Status Filter</label>
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
@@ -75,11 +76,11 @@
 
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">Items per
                                 page</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200">
                                 @foreach ($perPageOptions as $option)
                                     <option value="{{ $option }}"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
@@ -91,10 +92,10 @@
 
                     <!-- Export Options -->
                     @if ($showExport)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label for="{{ $exportId }}"
                                 class="text-sm font-medium text-gray-300 mb-2">{{ $exportLabel }}</label>
-                            <div class="relative">
+                            <div class="relative w-full">
                                 <select id="{{ $exportId }}"
                                     class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 pl-10 pr-8 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>Choose format...</option>
@@ -122,15 +123,15 @@
                     @endif
                 </div>
 
-                <!-- Clear Filters Button -->
-                <div class="mt-4 pt-3 border-t border-white/10">
+                <!-- Clear Filters Button - Positioned at far right with glassmorphism -->
+                <div class="mt-4 pt-3 border-t border-white/10 flex justify-end">
                     <button id="clearFilters" type="button"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        Clear all filters
+                        <span class="font-medium">Clear filters</span>
                     </button>
                 </div>
             </div>
