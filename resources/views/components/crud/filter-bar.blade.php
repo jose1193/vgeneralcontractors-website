@@ -26,13 +26,14 @@
     <!-- Main Filter Bar - Siempre Visible -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
         <!-- Izquierda: Search Input y Filtros -->
-        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-4">
+        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-4"> <!-- gap-4 para mayor separación -->
             <!-- Search Input -->
             @if ($showSearchBar)
                 <div class="relative flex-1">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-200 drop-shadow-md">
+                            <!-- text-gray-200 y drop-shadow-md para más claridad -->
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
@@ -147,7 +148,7 @@
                         </div>
                     @endif
 
-                    <!-- Export Options -->
+                    <!-- Export Options (moved up) -->
                     @if ($showExport)
                         <div class="flex flex-col items-start justify-center h-full">
                             <label for="{{ $exportId }}"
@@ -155,7 +156,8 @@
                                 📋 {{ __('export_data') }}
                             </label>
                             <div class="relative w-full">
-                                <select id="{{ $exportId }}" class="premium-select w-full">
+                                <select id="{{ $exportId }}"
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>{{ __('choose_format') }}</option>
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
@@ -177,7 +179,8 @@
                         <div class="flex flex-col">
                             <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
                                 {{ __('items_per_page') }}</label>
-                            <select id="{{ $perPageId }}" class="premium-select">
+                            <select id="{{ $perPageId }}"
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
                                 @foreach ($perPageOptions as $option)
                                     <option value="{{ $option }}"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
@@ -188,7 +191,7 @@
                         </div>
                     @endif
 
-                    <!-- Status Toggle -->
+                    <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
                         <div class="flex flex-col items-start justify-center h-full w-full lg:w-auto">
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
@@ -217,8 +220,13 @@
     .glassmorphism-filter-container {
         position: relative;
         margin: 1rem 0 2.5rem 0;
+        /* Added extra margin-bottom for spacing below filter bar */
         border-radius: 20px;
+
+        /* Crystal Glass Background with Premium Transparency - Same as table */
         background: rgba(0, 0, 0, 0.78);
+
+        /* Premium Purple Box Shadow System - Exactly same as table */
         box-shadow:
             0 8px 32px 0 rgba(138, 43, 226, 0.25),
             0 16px 64px 0 rgba(128, 0, 255, 0.18),
@@ -226,14 +234,21 @@
             0 2px 8px 0 rgba(147, 51, 234, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.15),
             inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+
+        /* Advanced Blur Effects - Same as table */
         backdrop-filter: blur(20px) saturate(1.3);
         -webkit-backdrop-filter: blur(20px) saturate(1.3);
+
+        /* Refined Border for Glass Effect - Same as table */
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+        /* Enhanced Animation - Same as table */
         animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Shimmer effect overlay - Same as table */
     .glassmorphism-filter-container::before {
         content: '';
         position: absolute;
@@ -253,6 +268,7 @@
         transition: opacity 0.4s ease;
     }
 
+    /* Hover effects - Same as table */
     .glassmorphism-filter-container:hover {
         transform: translateY(-3px);
         box-shadow:
@@ -268,10 +284,12 @@
         opacity: 1;
     }
 
-    /* Advanced Filters Section */
+    /* Advanced Filters Section - Enhanced styling */
     .glassmorphism-filter-advanced {
         border-top: 1px solid rgba(255, 255, 255, 0.15);
         background: rgba(0, 0, 0, 0.82);
+
+        /* Enhanced Purple Box Shadow for Advanced Section */
         box-shadow:
             0 6px 24px 0 rgba(138, 43, 226, 0.22),
             0 12px 48px 0 rgba(128, 0, 255, 0.15),
@@ -279,17 +297,23 @@
             0 1px 6px 0 rgba(147, 51, 234, 0.18),
             inset 0 1px 0 rgba(255, 255, 255, 0.12),
             inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+
+        /* Enhanced Blur Effects */
         backdrop-filter: blur(16px) saturate(1.2);
         -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         border-left: 1px solid rgba(255, 255, 255, 0.1);
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
+
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Shimmer effect for advanced filters */
     .glassmorphism-filter-advanced::after {
         content: '';
         position: absolute;
@@ -313,135 +337,13 @@
         opacity: 1;
     }
 
-    /* Premium Select Dropdown Styling - FIXED */
-    .premium-select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        color-scheme: dark;
-
-        /* Base styles */
-        padding: 10px 12px;
-        border: 2px solid rgba(147, 51, 234, 0.3);
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* Glass effect */
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-
-        /* Shadow */
-        box-shadow:
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            0 2px 6px rgba(147, 51, 234, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .premium-select:hover {
-        background: rgba(0, 0, 0, 0.8);
-        border-color: rgba(147, 51, 234, 0.5);
-        box-shadow:
-            0 6px 16px rgba(0, 0, 0, 0.4),
-            0 3px 8px rgba(147, 51, 234, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        transform: translateY(-1px);
-    }
-
-    .premium-select:focus {
-        outline: none;
-        border-color: rgba(147, 51, 234, 0.7);
-        box-shadow:
-            0 0 0 3px rgba(147, 51, 234, 0.2),
-            0 6px 16px rgba(0, 0, 0, 0.4),
-            0 3px 8px rgba(147, 51, 234, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    }
-
-    /* Premium Select Options - FIXED */
-    .premium-select option {
-        background: rgba(0, 0, 0, 0.95) !important;
-        color: white !important;
-        padding: 12px 16px !important;
-        border: none !important;
-        border-radius: 8px !important;
-        margin: 4px 0 !important;
-        font-size: 0.875rem !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .premium-select option:hover {
-        background: rgba(147, 51, 234, 0.4) !important;
-        color: white !important;
-    }
-
-    .premium-select option:checked,
-    .premium-select option:selected {
-        background: rgba(147, 51, 234, 0.7) !important;
-        color: white !important;
-        font-weight: 500 !important;
-    }
-
-    .premium-select option:disabled {
-        background: rgba(0, 0, 0, 0.7) !important;
-        color: rgba(255, 255, 255, 0.4) !important;
-        cursor: not-allowed !important;
-    }
-
-    /* Firefox specific styles */
-    @-moz-document url-prefix() {
-        .premium-select {
-            color-scheme: dark;
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .premium-select option {
-            background-color: rgba(0, 0, 0, 0.95);
-            color: white;
-        }
-
-        .premium-select option:hover {
-            background-color: rgba(147, 51, 234, 0.4);
-        }
-
-        .premium-select option:checked {
-            background-color: rgba(147, 51, 234, 0.7);
-        }
-    }
-
-    /* WebKit browsers (Chrome, Safari, Edge) */
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        .premium-select {
-            color-scheme: dark;
-        }
-
-        .premium-select option {
-            background: rgba(0, 0, 0, 0.95);
-            color: white;
-        }
-
-        .premium-select option:hover {
-            background: rgba(147, 51, 234, 0.4);
-        }
-
-        .premium-select option:checked {
-            background: rgba(147, 51, 234, 0.7);
-        }
-    }
-
     /* Enhanced Flatpickr Styles */
     .flatpickr-calendar {
-        background: rgba(0, 0, 0, 0.85) !important;
+        background: rgba(0, 0, 0, 0.8) !important;
         backdrop-filter: blur(20px) !important;
-        border: 2px solid rgba(147, 51, 234, 0.3) !important;
-        border-radius: 16px !important;
-        box-shadow:
-            0 25px 50px -12px rgba(0, 0, 0, 0.4),
-            0 0 30px rgba(147, 51, 234, 0.15),
-            0 8px 32px rgba(147, 51, 234, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(147, 51, 234, 0.1) !important;
     }
 
     .flatpickr-calendar:before,
@@ -452,7 +354,6 @@
     .flatpickr-months {
         background: transparent !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 16px 16px 0 0 !important;
     }
 
     .flatpickr-month {
@@ -461,9 +362,8 @@
     }
 
     .flatpickr-current-month .flatpickr-monthDropdown-months {
-        background: rgba(0, 0, 0, 0.9) !important;
-        border: 1px solid rgba(147, 51, 234, 0.3) !important;
-        border-radius: 8px !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: white !important;
     }
 
@@ -483,7 +383,7 @@
 
     .flatpickr-weekday {
         background: transparent !important;
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: rgba(255, 255, 255, 0.7) !important;
         font-weight: 500 !important;
     }
 
@@ -495,60 +395,53 @@
         background: transparent !important;
         color: white !important;
         border: 1px solid transparent !important;
-        border-radius: 8px !important;
-        margin: 2px !important;
-        transition: all 0.2s ease !important;
+        border-radius: 6px !important;
+        margin: 1px !important;
     }
 
     .flatpickr-day:hover {
-        background: rgba(147, 51, 234, 0.3) !important;
-        border-color: rgba(147, 51, 234, 0.5) !important;
-        transform: scale(1.05) !important;
+        background: rgba(147, 51, 234, 0.2) !important;
+        border-color: rgba(147, 51, 234, 0.4) !important;
     }
 
     .flatpickr-day.selected,
     .flatpickr-day.startRange,
     .flatpickr-day.endRange {
-        background: rgba(147, 51, 234, 0.7) !important;
-        border-color: rgba(147, 51, 234, 0.9) !important;
+        background: rgba(147, 51, 234, 0.6) !important;
+        border-color: rgba(147, 51, 234, 0.8) !important;
         color: white !important;
-        font-weight: 600 !important;
     }
 
     .flatpickr-day.inRange {
-        background: rgba(147, 51, 234, 0.25) !important;
-        border-color: rgba(147, 51, 234, 0.4) !important;
+        background: rgba(147, 51, 234, 0.2) !important;
+        border-color: rgba(147, 51, 234, 0.3) !important;
         color: white !important;
     }
 
     .flatpickr-day.today {
-        border-color: rgba(147, 51, 234, 0.8) !important;
+        border-color: rgba(147, 51, 234, 0.6) !important;
         color: rgba(147, 51, 234, 1) !important;
-        font-weight: 600 !important;
     }
 
     .flatpickr-day.today:hover {
-        background: rgba(147, 51, 234, 0.3) !important;
+        background: rgba(147, 51, 234, 0.2) !important;
         color: white !important;
     }
 
     .flatpickr-day.disabled {
         color: rgba(255, 255, 255, 0.3) !important;
-        background: rgba(0, 0, 0, 0.3) !important;
     }
 
     .flatpickr-prev-month,
     .flatpickr-next-month {
         color: white !important;
         fill: white !important;
-        transition: all 0.2s ease !important;
     }
 
     .flatpickr-prev-month:hover,
     .flatpickr-next-month:hover {
         color: rgba(147, 51, 234, 1) !important;
         fill: rgba(147, 51, 234, 1) !important;
-        transform: scale(1.1) !important;
     }
 
     /* Clear button visibility */
@@ -557,7 +450,7 @@
         pointer-events: auto !important;
     }
 
-    /* Enhanced Animations */
+    /* Enhanced Animations - Same as table */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -601,10 +494,6 @@
         .glassmorphism-filter-advanced {
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .premium-select option {
-            background: rgba(0, 0, 0, 0.95) !important;
         }
     }
 </style>
