@@ -23,31 +23,28 @@
 ])
 
 <div class="glassmorphism-filter-container">
-    <!-- Main Filter Bar - Always Visible -->
+    <!-- Main Filter Bar - Siempre Visible -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
-        <!-- Left Side: Search Input -->
-        @if ($showSearchBar)
-            <div class="relative w-full sm:flex-1 sm:max-w-md">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        viewBox="0 0 24 24" class="w-5 h-5 text-gray-400">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </span>
-                <input type="text" id="{{ $searchId }}" placeholder="{{ $searchPlaceholder }}"
-                    class="pl-10 pr-4 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full text-sm text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200">
-            </div>
-        @endif
+        <!-- Izquierda: Search Input y Filtros -->
+        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-2">
+            <!-- Search Input -->
+            @if ($showSearchBar)
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-400">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </span>
+                    <input type="text" id="{{ $searchId }}" placeholder="{{ $searchPlaceholder }}"
+                        class="pl-10 pr-4 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full text-sm text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200">
+                </div>
+            @endif
 
-        <!-- Right Side: Create Button & Filter Toggle -->
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <!-- Create Button -->
-            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
-
-            <!-- Advanced Filters Toggle Button -->
+            <!-- Filtros Avanzados Toggle Button -->
             @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
                 <button id="toggleFilters" type="button"
-                    class="inline-flex items-center justify-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm w-full sm:w-auto text-center">
+                    class="inline-flex items-center justify-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm">
                     <span class="flex items-center justify-center w-full">
                         <svg id="filterIcon" class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -62,6 +59,12 @@
                     </span>
                 </button>
             @endif
+        </div>
+
+        <!-- Derecha: Botón Crear -->
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-end">
+            <!-- Create Button -->
+            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
         </div>
     </div>
 
