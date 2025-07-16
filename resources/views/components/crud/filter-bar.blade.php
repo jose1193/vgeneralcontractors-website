@@ -157,7 +157,7 @@
                             </label>
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
+                                    class="premium-select border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>{{ __('choose_format') }}</option>
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
@@ -180,7 +180,7 @@
                             <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
+                                class="premium-select border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
                                 @foreach ($perPageOptions as $option)
                                     <option value="{{ $option }}"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
@@ -335,6 +335,71 @@
 
     .glassmorphism-filter-advanced:hover::after {
         opacity: 1;
+    }
+
+    /* Premium Select Dropdown Styling - Consistent with Date Range */
+    .premium-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        color-scheme: dark;
+    }
+
+    /* Premium Select Options Styling */
+    .premium-select option {
+        background: rgba(0, 0, 0, 0.9) !important;
+        color: white !important;
+        padding: 8px 12px !important;
+        border: none !important;
+        border-radius: 4px !important;
+        margin: 2px 0 !important;
+    }
+
+    .premium-select option:hover {
+        background: rgba(147, 51, 234, 0.3) !important;
+        color: white !important;
+    }
+
+    .premium-select option:checked {
+        background: rgba(147, 51, 234, 0.6) !important;
+        color: white !important;
+    }
+
+    .premium-select option:disabled {
+        background: rgba(0, 0, 0, 0.7) !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    /* Enhanced styling for Firefox */
+    @-moz-document url-prefix() {
+        .premium-select {
+            color-scheme: dark;
+        }
+
+        .premium-select option {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+        }
+
+        .premium-select option:hover {
+            background-color: rgba(147, 51, 234, 0.3);
+        }
+    }
+
+    /* Enhanced styling for WebKit browsers */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        .premium-select {
+            color-scheme: dark;
+        }
+
+        .premium-select option {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+        }
+
+        .premium-select option:hover {
+            background: rgba(147, 51, 234, 0.3);
+        }
     }
 
     /* Enhanced Flatpickr Styles */
@@ -494,6 +559,10 @@
         .glassmorphism-filter-advanced {
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .premium-select option {
+            background: rgba(0, 0, 0, 0.95) !important;
         }
     }
 </style>
