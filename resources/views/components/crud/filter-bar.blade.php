@@ -201,9 +201,7 @@
                     <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
                         <div class="flex flex-col items-center justify-center h-full">
-                            <label class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
-                                📄 {{ __('show_inactive') }}
-                            </label>
+
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
                     @endif

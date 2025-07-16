@@ -7,13 +7,15 @@
 
 <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto {{ $class }}">
     <label for="{{ $id }}" class="mr-2 text-sm font-medium text-white/90 capitalize">
-        {{ $label }}
+        📄 {{ $label }}
     </label>
     <label for="{{ $id }}" class="flex items-center cursor-pointer">
         <div class="relative">
             <input type="checkbox" id="{{ $id }}" class="sr-only">
-            <div class="block bg-black/50 border border-white/10 w-10 h-6 rounded-full transition-colors duration-200"></div>
-            <div class="dot absolute left-1 top-1 bg-white/90 w-4 h-4 rounded-full transition-transform duration-200 shadow-sm shadow-purple-500/20">
+            <div class="block bg-black/50 border border-white/10 w-10 h-6 rounded-full transition-colors duration-200">
+            </div>
+            <div
+                class="dot absolute left-1 top-1 bg-white/90 w-4 h-4 rounded-full transition-transform duration-200 shadow-sm shadow-purple-500/20">
             </div>
         </div>
     </label>
@@ -48,7 +50,7 @@
             background-color: rgba(139, 92, 246, 0.3);
             border-color: rgba(139, 92, 246, 0.6);
         }
-        
+
         /* Add glow effect when active */
         #{{ $id }}:checked~.dot {
             box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
