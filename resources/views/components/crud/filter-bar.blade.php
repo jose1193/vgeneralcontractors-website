@@ -4,7 +4,6 @@
     'showInactiveToggle' => true,
     'showPerPage' => true,
     'showExport' => true,
-    'showDateRange' => true,
     'perPageOptions' => [5, 10, 15, 25, 50],
     'defaultPerPage' => 10,
     'addButtonId' => 'addEntityBtn',
@@ -17,8 +16,6 @@
     'addNewLabel' => 'Add New',
     'exportId' => 'exportSelect',
     'exportLabel' => 'Export Data',
-    'dateRangeStartId' => 'dateRangeStart',
-    'dateRangeEndId' => 'dateRangeEnd',
     'managerName' => 'crudManager',
 ])
 
@@ -45,7 +42,7 @@
             <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
 
             <!-- Advanced Filters Toggle Button -->
-            @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
+            @if ($showInactiveToggle || $showPerPage || $showExport)
                 <button id="toggleFilters" type="button"
                     class="inline-flex items-center justify-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm w-full sm:w-auto text-center">
                     <span class="flex items-center justify-center w-full">
@@ -66,84 +63,14 @@
     </div>
 
     <!-- Collapsible Advanced Filters Section -->
-    @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
+    @if ($showInactiveToggle || $showPerPage || $showExport)
         <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div class="p-4">
-                <!-- Responsive Grid Layout -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-
-                    <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
-                    @if ($showDateRange)
-                        <div class="md:col-span-2 lg:col-span-3 xl:col-span-2">
-                            <div class="space-y-3">
-                                <label class="text-sm font-medium text-gray-300 block">{{ __('date_range') }}</label>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <!-- Start Date -->
-                                    <div class="relative">
-                                        <label for="{{ $dateRangeStartId }}"
-                                            class="sr-only">{{ __('start_date') }}</label>
-                                        <div class="relative">
-                                            <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
-                                                placeholder="{{ __('start_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                            <!-- Calendar Icon -->
-                                            <span
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </span>
-                                            <!-- Clear Button -->
-                                            <button type="button" id="{{ $dateRangeStartId }}_clear"
-                                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- End Date -->
-                                    <div class="relative">
-                                        <label for="{{ $dateRangeEndId }}" class="sr-only">{{ __('end_date') }}</label>
-                                        <div class="relative">
-                                            <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
-                                                placeholder="{{ __('end_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                            <!-- Calendar Icon -->
-                                            <span
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </span>
-                                            <!-- Clear Button -->
-                                            <button type="button" id="{{ $dateRangeEndId }}_clear"
-                                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Status Filter -->
+                <!-- Mobile: Filters below Create Button, Desktop: Grid Layout -->
+                <div class="flex flex-col lg:grid lg:grid-cols-3 gap-4">
+                    <!-- Show Inactive Toggle -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label class="text-sm font-medium text-gray-300 mb-2">Status Filter</label>
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
@@ -151,16 +78,15 @@
 
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">Items per
                                 page</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200">
                                 @foreach ($perPageOptions as $option)
                                     <option value="{{ $option }}"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
-                                        {{ $option }} per page
-                                    </option>
+                                        {{ $option }} {{ __('per_page') }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -168,10 +94,10 @@
 
                     <!-- Export Options -->
                     @if ($showExport)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full">
                             <label for="{{ $exportId }}"
                                 class="text-sm font-medium text-gray-300 mb-2">{{ $exportLabel }}</label>
-                            <div class="relative">
+                            <div class="relative w-full">
                                 <select id="{{ $exportId }}"
                                     class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 pl-10 pr-8 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>{{ __('choose_format') }}</option>
@@ -199,8 +125,8 @@
                     @endif
                 </div>
 
-                <!-- Clear Filters Button -->
-                <div class="mt-6 pt-4 border-t border-white/10 flex justify-end">
+                <!-- Clear Filters Button - Positioned at far right with glassmorphism -->
+                <div class="mt-4 pt-3 border-t border-white/10 flex justify-end">
                     <button id="clearFilters" type="button"
                         class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,228 +141,9 @@
     @endif
 </div>
 
-<!-- Enhanced Flatpickr Styles -->
-<style>
-    /* Glassmorphic Flatpickr Theme */
-    .flatpickr-calendar {
-        background: rgba(0, 0, 0, 0.8) !important;
-        backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(147, 51, 234, 0.1) !important;
-    }
-
-    .flatpickr-calendar:before,
-    .flatpickr-calendar:after {
-        display: none !important;
-    }
-
-    .flatpickr-months {
-        background: transparent !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    .flatpickr-month {
-        background: transparent !important;
-        color: white !important;
-    }
-
-    .flatpickr-current-month .flatpickr-monthDropdown-months {
-        background: rgba(0, 0, 0, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-    }
-
-    .flatpickr-current-month .numInputWrapper {
-        color: white !important;
-    }
-
-    .flatpickr-current-month input.cur-year {
-        background: transparent !important;
-        color: white !important;
-    }
-
-    .flatpickr-weekdays {
-        background: transparent !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    .flatpickr-weekday {
-        background: transparent !important;
-        color: rgba(255, 255, 255, 0.7) !important;
-        font-weight: 500 !important;
-    }
-
-    .flatpickr-days {
-        background: transparent !important;
-    }
-
-    .flatpickr-day {
-        background: transparent !important;
-        color: white !important;
-        border: 1px solid transparent !important;
-        border-radius: 6px !important;
-        margin: 1px !important;
-    }
-
-    .flatpickr-day:hover {
-        background: rgba(147, 51, 234, 0.2) !important;
-        border-color: rgba(147, 51, 234, 0.4) !important;
-    }
-
-    .flatpickr-day.selected,
-    .flatpickr-day.startRange,
-    .flatpickr-day.endRange {
-        background: rgba(147, 51, 234, 0.6) !important;
-        border-color: rgba(147, 51, 234, 0.8) !important;
-        color: white !important;
-    }
-
-    .flatpickr-day.inRange {
-        background: rgba(147, 51, 234, 0.2) !important;
-        border-color: rgba(147, 51, 234, 0.3) !important;
-        color: white !important;
-    }
-
-    .flatpickr-day.today {
-        border-color: rgba(147, 51, 234, 0.6) !important;
-        color: rgba(147, 51, 234, 1) !important;
-    }
-
-    .flatpickr-day.today:hover {
-        background: rgba(147, 51, 234, 0.2) !important;
-        color: white !important;
-    }
-
-    .flatpickr-day.disabled {
-        color: rgba(255, 255, 255, 0.3) !important;
-    }
-
-    .flatpickr-prev-month,
-    .flatpickr-next-month {
-        color: white !important;
-        fill: white !important;
-    }
-
-    .flatpickr-prev-month:hover,
-    .flatpickr-next-month:hover {
-        color: rgba(147, 51, 234, 1) !important;
-        fill: rgba(147, 51, 234, 1) !important;
-    }
-
-    /* Clear button visibility */
-    .date-input-active .opacity-0 {
-        opacity: 1 !important;
-        pointer-events: auto !important;
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Flatpickr for date range inputs
-        let startDatePicker = null;
-        let endDatePicker = null;
-
-        // Initialize Start Date Picker
-        const startDateInput = document.getElementById('{{ $dateRangeStartId }}');
-        if (startDateInput) {
-            startDatePicker = flatpickr(startDateInput, {
-                dateFormat: "Y-m-d",
-                placeholder: "{{ __('start_date') }}",
-                allowInput: false,
-                clickOpens: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        // Update end date picker's minDate
-                        if (endDatePicker) {
-                            endDatePicker.set('minDate', selectedDates[0]);
-                        }
-                        // Show clear button
-                        startDateInput.classList.add('date-input-active');
-                    } else {
-                        startDateInput.classList.remove('date-input-active');
-                    }
-
-                    // Trigger filter update
-                    handleDateRangeChange();
-                }
-            });
-        }
-
-        // Initialize End Date Picker
-        const endDateInput = document.getElementById('{{ $dateRangeEndId }}');
-        if (endDateInput) {
-            endDatePicker = flatpickr(endDateInput, {
-                dateFormat: "Y-m-d",
-                placeholder: "{{ __('end_date') }}",
-                allowInput: false,
-                clickOpens: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        // Update start date picker's maxDate
-                        if (startDatePicker) {
-                            startDatePicker.set('maxDate', selectedDates[0]);
-                        }
-                        // Show clear button
-                        endDateInput.classList.add('date-input-active');
-                    } else {
-                        endDateInput.classList.remove('date-input-active');
-                    }
-
-                    // Trigger filter update
-                    handleDateRangeChange();
-                }
-            });
-        }
-
-        // Clear button functionality
-        const startClearBtn = document.getElementById('{{ $dateRangeStartId }}_clear');
-        if (startClearBtn) {
-            startClearBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (startDatePicker) {
-                    startDatePicker.clear();
-                    if (endDatePicker) {
-                        endDatePicker.set('minDate', null);
-                    }
-                }
-                startDateInput.classList.remove('date-input-active');
-                handleDateRangeChange();
-            });
-        }
-
-        const endClearBtn = document.getElementById('{{ $dateRangeEndId }}_clear');
-        if (endClearBtn) {
-            endClearBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (endDatePicker) {
-                    endDatePicker.clear();
-                    if (startDatePicker) {
-                        startDatePicker.set('maxDate', null);
-                    }
-                }
-                endDateInput.classList.remove('date-input-active');
-                handleDateRangeChange();
-            });
-        }
-
-        // Handle date range changes
-        function handleDateRangeChange() {
-            const startDate = startDatePicker ? startDatePicker.selectedDates[0] : null;
-            const endDate = endDatePicker ? endDatePicker.selectedDates[0] : null;
-
-            console.log('Date range changed:', {
-                start: startDate ? startDate.toISOString().split('T')[0] : null,
-                end: endDate ? endDate.toISOString().split('T')[0] : null
-            });
-
-            // Add your date range filtering logic here
-            // This function will be called whenever the date range changes
-        }
-
-        // Toggle Advanced Filters (existing code)
+        // Toggle Advanced Filters
         const toggleButton = document.getElementById('toggleFilters');
         const advancedFilters = document.getElementById('advancedFilters');
         const chevronIcon = document.getElementById('chevronIcon');
@@ -482,7 +189,7 @@
             });
         }
 
-        // Enhanced Clear Filters Functionality
+        // Clear Filters Functionality
         const clearFiltersBtn = document.getElementById('clearFilters');
         if (clearFiltersBtn) {
             clearFiltersBtn.addEventListener('click', function() {
@@ -498,32 +205,18 @@
                 const exportSelect = document.getElementById('{{ $exportId }}');
                 if (exportSelect) exportSelect.selectedIndex = 0;
 
-                // Reset show deleted toggle
+                // Reset show deleted toggle (assuming it's a checkbox)
                 const showDeletedToggle = document.getElementById('{{ $showDeletedId }}');
                 if (showDeletedToggle && showDeletedToggle.type === 'checkbox') {
                     showDeletedToggle.checked = false;
                 }
-
-                // Reset date range pickers
-                if (startDatePicker) {
-                    startDatePicker.clear();
-                    startDatePicker.set('maxDate', null);
-                }
-                if (endDatePicker) {
-                    endDatePicker.clear();
-                    endDatePicker.set('minDate', null);
-                }
-
-                // Remove active states
-                startDateInput?.classList.remove('date-input-active');
-                endDateInput?.classList.remove('date-input-active');
 
                 // Show success message
                 showClearNotification();
             });
         }
 
-        // Export Functionality (existing code)
+        // Export Functionality (from original code)
         const exportSelect = document.getElementById('{{ $exportId }}');
         if (exportSelect) {
             exportSelect.addEventListener('change', function() {
@@ -551,11 +244,11 @@
             });
         }
 
-        // Notification Functions (existing code)
+        // Notification Functions
         function showExportNotification(format) {
             let message = '';
             if (format === 'pdf') {
-                message = @json(__('pdf_export_completed'));
+                showNotification(@json(__('filters_cleared')), 'info');
             } else if (format === 'excel') {
                 message = @json(__('excel_export_completed'));
             } else {
@@ -565,7 +258,7 @@
         }
 
         function showClearNotification() {
-            showNotification(@json(__('filters_cleared')), 'info');
+            showNotification('All filters have been cleared', 'info');
         }
 
         function showNotification(message, type = 'success') {
