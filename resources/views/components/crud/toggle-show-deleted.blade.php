@@ -5,11 +5,11 @@
     'class' => '',
 ])
 
-<div class="flex items-center justify-start {{ $class }}">
+<div class="flex items-center {{ $class }}">
     <label for="{{ $id }}" class="mr-2 text-sm font-medium text-white/90 capitalize">
         🗑️ {{ $label }}
     </label>
-    <label for="{{ $id }}" class="flex items-center cursor-pointer">
+    <label for="{{ $id }}" class="flex items-center cursor-pointer mt-1">
         <div class="relative">
             <input type="checkbox" id="{{ $id }}" class="sr-only">
             <div class="block bg-black/50 border border-white/10 w-10 h-6 rounded-full transition-colors duration-200">
