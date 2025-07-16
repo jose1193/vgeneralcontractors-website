@@ -1954,5 +1954,10 @@
     "pdf_export_completed": "PDF export completed successfully!",
     "excel_export_completed": "Excel export completed successfully!",
     "export_completed_successfully": "Export completed successfully!",
-    "exporting": "Exporting..."
+    "exporting": "Exporting...",
+    "choose_format": "Choose format...",
+    "clear_filters": "Clear filters",
+    "filters": "Filters",
+    "hide_filters": "Hide Filters",
+    "filters_cleared": "All filters have been cleared."
 }

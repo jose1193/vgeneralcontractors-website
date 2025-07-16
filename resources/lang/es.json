@@ -2052,5 +2052,10 @@
     "search_insurance_companies": "Buscar compañías de seguros...",
 
     "errorDeleting": "Error al eliminar el registro",
-    "errorRestoring": "Error al restaurar el registro"
+    "errorRestoring": "Error al restaurar el registro",
+    "choose_format": "Elegir formato...",
+    "clear_filters": "Limpiar filtros",
+    "filters": "Filtros",
+    "hide_filters": "Ocultar filtros",
+    "filters_cleared": "Todos los filtros han sido limpiados."
 }

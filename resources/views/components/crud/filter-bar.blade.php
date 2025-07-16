@@ -51,7 +51,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
                         </svg>
-                        <span id="filterText" class="text-sm font-medium">Filters</span>
+                        <span id="filterText" class="text-sm font-medium">{{ __('filters') }}</span>
                         <svg id="chevronIcon" class="w-4 h-4 ml-1.5 transform transition-transform duration-200"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -159,6 +159,7 @@
                     advancedFilters.style.maxHeight = '0px';
                     advancedFilters.style.overflow = 'hidden';
                     advancedFilters.style.transition = 'max-height 0.3s ease-out';
+                    filterText.textContent = @json(__('hide_filters'));
 
                     // Animate in
                     requestAnimationFrame(() => {
@@ -172,7 +173,7 @@
                 } else {
                     // Hide filters
                     advancedFilters.style.maxHeight = '0px';
-
+                    filterText.textContent = @json(__('filters'));
                     setTimeout(() => {
                         advancedFilters.classList.add('hidden');
                         advancedFilters.style.removeProperty('max-height');
@@ -247,7 +248,7 @@
         function showExportNotification(format) {
             let message = '';
             if (format === 'pdf') {
-                message = @json(__('pdf_export_completed'));
+                showNotification(@json(__('filters_cleared')), 'info');
             } else if (format === 'excel') {
                 message = @json(__('excel_export_completed'));
             } else {
