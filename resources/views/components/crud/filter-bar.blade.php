@@ -100,7 +100,7 @@
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
                                     class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 pl-10 pr-8 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
-                                    <option value="" disabled selected>Choose format...</option>
+                                    <option value="" disabled selected>{{ __('choose_format') }}</option>
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
                                 </select>
@@ -133,7 +133,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        <span class="font-medium">Clear filters</span>
+                        <span class="font-medium">{{ __('clear_filters') }}</span>
                     </button>
                 </div>
             </div>
