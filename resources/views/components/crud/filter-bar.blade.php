@@ -70,7 +70,7 @@
         <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div class="p-4">
                 <!-- Responsive Grid Layout -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
 
                     <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
                     @if ($showDateRange)
