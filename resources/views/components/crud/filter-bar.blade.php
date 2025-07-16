@@ -61,8 +61,8 @@
                 <select id="{{ $exportId }}"
                     class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
                     <option value="" disabled selected>{{ $exportLabel }}</option>
-                    <option value="pdf" class="">📄 PDF Report</option>
-                    <option value="excel" class="">📊 Excel</option>
+                    <option value="pdf" class="bg-gray-800 text-white">📄 PDF Report</option>
+                    <option value="excel" class="bg-gray-800 text-white">📊 Excel</option>
                 </select>
                 <!-- Export Icon -->
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
