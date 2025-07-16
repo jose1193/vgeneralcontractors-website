@@ -347,12 +347,14 @@
 
     /* Premium Select Options Styling */
     .premium-select option {
-        background: rgba(0, 0, 0, 0.9) !important;
-        color: white !important;
-        padding: 8px 12px !important;
-        border: none !important;
-        border-radius: 4px !important;
-        margin: 2px 0 !important;
+        background: rgba(20, 20, 20, 0.97) !important;
+        color: #fff !important;
+        padding: 8px 14px !important;
+        border: 1px solid #aaa !important;
+        border-radius: 5px !important;
+        margin: 3px 0 !important;
+        font-size: 0.97em !important;
+        transition: background 0.2s, color 0.2s;
     }
 
     .premium-select option:hover {
