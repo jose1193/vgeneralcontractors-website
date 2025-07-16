@@ -141,31 +141,8 @@
                         </div>
                     @endif
 
-                    <!-- Status Toggle Only, no label -->
-                    @if ($showInactiveToggle)
-                        <div class="flex flex-col">
-                            <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
-                        </div>
-                    @endif
 
-                    <!-- Per Page Selector -->
-                    @if ($showPerPage)
-                        <div class="flex flex-col">
-                            <label for="{{ $perPageId }}"
-                                class="text-sm font-medium text-gray-300 mb-2">{{ __('items_per_page') }}</label>
-                            <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
-                                @foreach ($perPageOptions as $option)
-                                    <option value="{{ $option }}"
-                                        {{ $option == $defaultPerPage ? 'selected' : '' }}>
-                                        {{ $option }} {{ __('per_page') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
-
-                    <!-- Export Options -->
+                    <!-- Export Options (moved up) -->
                     @if ($showExport)
                         <div class="flex flex-col">
                             <label for="{{ $exportId }}"
@@ -194,6 +171,30 @@
                                     </svg>
                                 </span>
                             </div>
+                        </div>
+                    @endif
+
+                    <!-- Per Page Selector -->
+                    @if ($showPerPage)
+                        <div class="flex flex-col">
+                            <label for="{{ $perPageId }}"
+                                class="text-sm font-medium text-gray-300 mb-2">{{ __('items_per_page') }}</label>
+                            <select id="{{ $perPageId }}"
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
+                                @foreach ($perPageOptions as $option)
+                                    <option value="{{ $option }}"
+                                        {{ $option == $defaultPerPage ? 'selected' : '' }}>
+                                        {{ $option }} {{ __('per_page') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    <!-- Status Toggle Only, no label (moved down) -->
+                    @if ($showInactiveToggle)
+                        <div class="flex flex-col items-end justify-end">
+                            <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
                     @endif
                 </div>
