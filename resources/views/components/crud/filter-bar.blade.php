@@ -157,7 +157,7 @@
                             </label>
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="premium-select border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full appearance-none cursor-pointer transition-all duration-200">
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>{{ __('choose_format') }}</option>
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
@@ -180,7 +180,7 @@
                             <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
-                                class="premium-select border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full appearance-none cursor-pointer transition-all duration-200">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
                                 @foreach ($perPageOptions as $option)
                                     <option value="{{ $option }}"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
@@ -335,116 +335,6 @@
 
     .glassmorphism-filter-advanced:hover::after {
         opacity: 1;
-    }
-
-    /* Premium Select Dropdown Styling */
-    .premium-select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        color-scheme: dark;
-        padding: 10px 12px;
-        border: 2px solid rgba(147, 51, 234, 0.3);
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow:
-            0 4px 12px rgba(0, 0, 0, 0.3),
-            0 2px 6px rgba(147, 51, 234, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .premium-select:hover {
-        background: rgba(0, 0, 0, 0.8);
-        border-color: rgba(147, 51, 234, 0.5);
-        box-shadow:
-            0 6px 16px rgba(0, 0, 0, 0.4),
-            0 3px 8px rgba(147, 51, 234, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        transform: translateY(-1px);
-    }
-
-    .premium-select:focus {
-        outline: none;
-        border-color: rgba(147, 51, 234, 0.7);
-        box-shadow:
-            0 0 0 3px rgba(147, 51, 234, 0.2),
-            0 6px 16px rgba(0, 0, 0, 0.4),
-            0 3px 8px rgba(147, 51, 234, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    }
-
-    .premium-select option {
-        background: rgba(0, 0, 0, 0.95) !important;
-        color: white !important;
-        padding: 12px 16px !important;
-        border: none !important;
-        border-radius: 8px !important;
-        margin: 4px 0 !important;
-        font-size: 0.875rem !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .premium-select option:hover {
-        background: rgba(147, 51, 234, 0.4) !important;
-        color: white !important;
-    }
-
-    .premium-select option:checked,
-    .premium-select option:selected {
-        background: rgba(147, 51, 234, 0.7) !important;
-        color: white !important;
-        font-weight: 500 !important;
-    }
-
-    .premium-select option:disabled {
-        background: rgba(0, 0, 0, 0.7) !important;
-        color: rgba(255, 255, 255, 0.4) !important;
-        cursor: not-allowed !important;
-    }
-
-    @-moz-document url-prefix() {
-        .premium-select {
-            color-scheme: dark;
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .premium-select option {
-            background-color: rgba(0, 0, 0, 0.95);
-            color: white;
-        }
-
-        .premium-select option:hover {
-            background-color: rgba(147, 51, 234, 0.4);
-        }
-
-        .premium-select option:checked {
-            background-color: rgba(147, 51, 234, 0.7);
-        }
-    }
-
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        .premium-select {
-            color-scheme: dark;
-        }
-
-        .premium-select option {
-            background: rgba(0, 0, 0, 0.95);
-            color: white;
-        }
-
-        .premium-select option:hover {
-            background: rgba(147, 51, 234, 0.4);
-        }
-
-        .premium-select option:checked {
-            background: rgba(147, 51, 234, 0.7);
-        }
     }
 
     /* Enhanced Flatpickr Styles */
