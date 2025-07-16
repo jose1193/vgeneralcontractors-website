@@ -26,13 +26,14 @@
     <!-- Main Filter Bar - Siempre Visible -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
         <!-- Izquierda: Search Input y Filtros -->
-        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-2">
+        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-4"> <!-- gap-4 para mayor separación -->
             <!-- Search Input -->
             @if ($showSearchBar)
                 <div class="relative flex-1">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-400">
+                            stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-200 drop-shadow-md">
+                            <!-- text-gray-200 y drop-shadow-md para más claridad -->
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
