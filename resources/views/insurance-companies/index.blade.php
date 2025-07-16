@@ -5,11 +5,12 @@
     manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable" create-button-id="createInsuranceCompanyBtn"
     search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"
     alert-id="alertContainer" :table-columns="[
-        ['field' => 'row_number', 'label' => 'Nro', 'sortable' => false],
         ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
+        ['field' => 'address', 'label' => __('address'), 'sortable' => false],
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
         ['field' => 'website', 'label' => __('website'), 'sortable' => false],
+        ['field' => 'user_name', 'label' => __('created_by'), 'sortable' => true],
         ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
         ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
@@ -136,15 +137,21 @@
                         }
                     ],
                     tableHeaders: [{
-                            field: 'row_number',
-                            name: 'Nro',
-                            sortable: false,
-                            getter: (entity, index) => index + 1
-                        },
-                        {
                             field: 'insurance_company_name',
                             name: translations.companyName || 'Company Name',
                             sortable: true
+                        },
+                        {
+                            field: 'address',
+                            name: translations.address || 'Address',
+                            sortable: false,
+                            getter: (entity) => {
+                                if (!entity.address) return translations.noRecordsFound || 'N/A';
+                                // Truncate long addresses
+                                return entity.address.length > 50 ?
+                                    entity.address.substring(0, 50) + '...' :
+                                    entity.address;
+                            }
                         },
                         {
                             field: 'email',
@@ -188,6 +195,15 @@
                                 // Create clickable link
                                 const displayUrl = entity.website.replace(/^https?:\/\//, '');
                                 return `<a href="${entity.website}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${displayUrl}</a>`;
+                            }
+                        },
+                        {
+                            field: 'user_name',
+                            name: translations.createdBy || 'Created By',
+                            sortable: true,
+                            getter: (entity) => {
+                                return entity.user_name || translations.noUserAssigned ||
+                                    'No user assigned';
                             }
                         },
                         {
