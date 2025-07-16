@@ -74,9 +74,18 @@
 
                     <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
                     @if ($showDateRange)
-                        <div class="md:col-span-2 lg:col-span-3 xl:col-span-2">
-                            <div class="space-y-3">
-                                <label class="text-sm font-medium text-gray-300 block">{{ __('date_range') }}</label>
+                        <div
+                            class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
+                            <div class="space-y-3 w-full">
+                                <label class="flex items-center gap-1 text-sm font-medium text-gray-300">
+                                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="2" fill="none" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h4V8" />
+                                    </svg>
+                                    {{ __('date_range') }}
+                                </label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <!-- Start Date -->
                                     <div class="relative">
@@ -144,24 +153,22 @@
 
                     <!-- Export Options (moved up) -->
                     @if ($showExport)
-                        <div class="flex flex-col">
+                        <div class="flex flex-col items-center justify-center h-full">
                             <label for="{{ $exportId }}"
-                                class="text-sm font-medium text-gray-300 mb-2">{{ $exportLabel }}</label>
-                            <div class="relative">
+                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
+                                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor"
+                                    stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                {{ $exportLabel }}
+                            </label>
+                            <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 pl-10 pr-8 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
                                     <option value="" disabled selected>{{ __('choose_format') }}</option>
                                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                                     <option value="excel">📊 {{ __('excel') }}</option>
                                 </select>
-                                <!-- Export Icon -->
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                        class="w-4 h-4 text-gray-400">
-                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m4-5l5-5 5 5m-5-5v12"></path>
-                                    </svg>
-                                </span>
                                 <!-- Dropdown Arrow -->
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                     <svg fill="none" stroke="currentColor" stroke-linecap="round"
@@ -193,7 +200,16 @@
 
                     <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col items-end justify-end">
+                        <div class="flex flex-col items-center justify-center h-full">
+                            <label class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
+                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor"
+                                    stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="3" y="11" width="18" height="7" rx="2"
+                                        stroke="currentColor" stroke-width="2" fill="none" />
+                                    <circle cx="8" cy="14.5" r="2" fill="currentColor" />
+                                </svg>
+                                {{ __('show_inactive') }}
+                            </label>
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
                     @endif
