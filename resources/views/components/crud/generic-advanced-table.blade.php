@@ -10,7 +10,7 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper">
+    <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -140,7 +140,29 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Fixed overflow settings for proper scrolling */
+        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glassmorphism-table-wrapper {
+        /* Enhanced Crystal Glass Background */
+        background: rgba(0, 0, 0, 0.82);
+        border-radius: 16px;
+
+        /* Premium Purple Box Shadow System */
+        box-shadow:
+
+            /* Enhanced Blur Effects */
+            backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Permitir scrollbars */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
@@ -148,22 +170,37 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glassmorphism-table-wrapper::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
+    /* Forzar scroll horizontal en responsive */
+    .responsive-container {
+        overflow-x: auto !important;
+        overflow-y: visible;
         width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.3) 25%,
-                rgba(138, 43, 226, 0.4) 50%,
-                rgba(255, 255, 255, 0.3) 75%,
-                transparent 100%);
-        animation: shimmer 3s infinite;
-        pointer-events: none;
-        z-index: 1;
+    }
+
+    /* Extra: Si quieres scroll vertical en mobile también */
+    .glassmorphism-scroll-wrapper {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+        width: 100%;
+        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
+    }
+
+    @media (max-width: 768px) {
+
+        .glassmorphism-table-wrapper,
+        .glassmorphism-scroll-wrapper {
+            max-height: 50vh;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+    }
+
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(138, 43, 226, 0.4) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%);
+    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
@@ -183,62 +220,10 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
-        z-index: 2;
     }
 
     .glassmorphism-table-wrapper:hover::after {
         opacity: 1;
-    }
-
-    /* Responsive container settings */
-    .responsive-container {
-        width: 100%;
-        overflow-x: visible;
-        overflow-y: visible;
-    }
-
-    .responsive-container .glassmorphism-table-wrapper {
-        /* Ensure proper scrolling behavior in responsive mode */
-        overflow-x: auto;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Custom scrollbar styling */
-    .glassmorphism-table-wrapper::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    .glassmorphism-table-wrapper::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
-
-    .glassmorphism-table-wrapper::-webkit-scrollbar-thumb {
-        background: linear-gradient(45deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
-        border-radius: 4px;
-        transition: background 0.3s ease;
-    }
-
-    .glassmorphism-table-wrapper::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(45deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
-    }
-
-    .glassmorphism-table-wrapper::-webkit-scrollbar-corner {
-        background: rgba(0, 0, 0, 0.2);
-    }
-
-    /* Firefox scrollbar styling */
-    .glassmorphism-table-wrapper {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(138, 43, 226, 0.6) rgba(255, 255, 255, 0.1);
-    }
-
-    @media (max-width: 768px) {
-        .glassmorphism-table-wrapper {
-            max-height: 50vh;
-        }
     }
 
     .glassmorphism-table {
@@ -246,8 +231,6 @@
         border-collapse: collapse;
         color: rgba(255, 255, 255, 0.95);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        position: relative;
-        z-index: 3;
     }
 
     .glassmorphism-header {
@@ -270,7 +253,6 @@
         position: relative;
         transition: all 0.3s ease;
         overflow: hidden;
-        z-index: 4;
     }
 
     /* Shimmer animated effect for table header */
@@ -284,7 +266,7 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 5;
+        z-index: 2;
     }
 
     .glassmorphism-header::before {
@@ -304,7 +286,6 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
-        z-index: 5;
     }
 
     .glassmorphism-header:hover::before {
@@ -322,7 +303,6 @@
         border-right: none;
         position: relative;
         transition: all 0.3s ease;
-        z-index: 6;
     }
 
     .glassmorphism-th:last-child {
@@ -342,8 +322,6 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        position: relative;
-        z-index: 7;
     }
 
     .sortable-header {
@@ -394,8 +372,6 @@
 
     .glassmorphism-body {
         background: rgba(0, 0, 0, 0.4);
-        position: relative;
-        z-index: 3;
     }
 
     .glassmorphism-body tr {
@@ -419,8 +395,6 @@
         font-size: 0.875rem;
         border-right: none;
         transition: all 0.3s ease;
-        position: relative;
-        z-index: 4;
     }
 
     .glassmorphism-body td:last-child {
@@ -478,6 +452,31 @@
         color: rgba(255, 255, 255, 0.8);
         font-weight: 500;
         text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    }
+
+    .responsive-container {
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
+    }
+
+    .responsive-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .responsive-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .responsive-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .responsive-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
     }
 
     /* Enhanced Glassmorphism Pagination */
@@ -617,16 +616,6 @@
 
         to {
             opacity: 1;
-        }
-    }
-
-    @keyframes shimmer {
-        0% {
-            left: -100%;
-        }
-
-        100% {
-            left: 100%;
         }
     }
 
