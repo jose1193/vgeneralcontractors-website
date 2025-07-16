@@ -581,36 +581,32 @@ export class CrudManager {
         let html = "";
 
         if (entities.length === 0) {
-            const noRecordsText =
-                this.translations.noRecordsFound ||
-                "No se encontraron registros";
-            html = `<tr><td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
+            html = `<tr><td colspan="${
+                this.tableHeaders.length
+            }" class="text-center">${
+                this.translations.noRecordsFound || "No data found"
+            }</td></tr>`;
         } else {
-            entities.forEach((entity) => {
-                const isDeleted = entity.deleted_at !== null;
-                const rowClass = isDeleted
-                    ? "bg-red-50 dark:bg-red-900 opacity-60"
-                    : "";
-
-                // Almacenar datos de la entidad como JSON en atributo data
-                const entityData = JSON.stringify(entity).replace(
-                    /"/g,
-                    "&quot;"
-                );
-
-                html += `<tr class="${rowClass}" data-entity="${entityData}">`;
-
+            entities.forEach((entity, index) => {
+                html += "<tr>";
                 this.tableHeaders.forEach((header) => {
-                    let value = header.getter
-                        ? header.getter(entity)
-                        : entity[header.field];
-                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">${value}</td>`;
+                    let value = "";
+                    if (typeof header.getter === "function") {
+                        // Pass both entity and index for row_number and similar columns
+                        value = header.getter(entity, index);
+                    } else if (
+                        header.field &&
+                        entity.hasOwnProperty(header.field)
+                    ) {
+                        value = entity[header.field];
+                    }
+                    html += `<td>${
+                        value !== undefined && value !== null ? value : ""
+                    }</td>`;
                 });
-
-                html += `</tr>`;
+                html += "</tr>";
             });
         }
-
         $(this.tableSelector).html(html);
     }
 
