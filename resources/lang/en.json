@@ -1953,5 +1953,6 @@
     "excel": "Excel",
     "pdf_export_completed": "PDF export completed successfully!",
     "excel_export_completed": "Excel export completed successfully!",
-    "export_completed_successfully": "Export completed successfully!"
+    "export_completed_successfully": "Export completed successfully!",
+    "exporting": "Exporting..."
 }

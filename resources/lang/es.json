@@ -285,6 +285,7 @@
     "pdf_export_completed": "¡Exportación PDF completada exitosamente!",
     "excel_export_completed": "¡Exportación Excel completada exitosamente!",
     "export_completed_successfully": "¡Exportación completada exitosamente!",
+
     "hail_damage_description": "Especializados en evaluación y reparación de daños por granizo. Proporcionamos <strong>documentación detallada para reclamos de seguros</strong> y trabajamos con <strong>ajustadores CERTIFICADOS</strong> para maximizar su reclamo.",
 
     "_comment_inline_form": "=== FORMULARIO INLINE ===",

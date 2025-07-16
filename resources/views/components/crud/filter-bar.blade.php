@@ -60,7 +60,7 @@
             <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto">
                 <select id="{{ $exportId }}"
                     class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
-                    <option value="" disabled selected>{{ __($exportLabel) }}</option>
+                    <option value="" disabled selected>{{ __('export_label') }}</option>
                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                     <option value="excel">📊 {{ __('excel') }}</option>
                 </select>
@@ -97,7 +97,8 @@
                 if (selectedValue) {
                     // Add loading state
                     const originalHTML = this.innerHTML;
-                    this.innerHTML = '<option value="" disabled selected>Exporting...</option>';
+                    this.innerHTML = '<option value="" disabled selected>' +
+                        @json(__('exporting')) + '</option>';
                     this.disabled = true;
 
                     // Simulate export process (replace with actual export logic)
