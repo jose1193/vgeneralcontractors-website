@@ -59,7 +59,7 @@
             <!-- Export Dropdown -->
             <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto">
                 <select id="{{ $exportId }}"
-                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-white/10 border-white/10 backdrop-blur-lg bg-clip-padding backdrop-saturate-150 appearance-none cursor-pointer hover:bg-white/20 transition-colors duration-200 shadow-lg shadow-yellow-400/10">
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
                     <option value="" disabled selected>{{ $exportLabel }}</option>
                     <option value="pdf" class="bg-gray-800 text-white">📄 PDF Report</option>
                     <option value="excel" class="bg-gray-800 text-white">📊 Excel</option>
