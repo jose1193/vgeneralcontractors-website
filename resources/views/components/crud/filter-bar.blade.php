@@ -67,7 +67,8 @@
         <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div class="p-4">
                 <!-- Mobile: Filters below Create Button, Desktop: Grid Layout -->
-                <div class="flex flex-col lg:grid lg:grid-cols-3 gap-4">
+                <div class="flex flex-col lg:grid lg:grid-cols-5 gap-4">
+
                     <!-- Show Inactive Toggle -->
                     @if ($showInactiveToggle)
                         <div class="flex flex-col w-full">
@@ -75,6 +76,84 @@
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
                     @endif
+
+                    <!-- Date Range Start -->
+                    <div class="flex flex-col w-full">
+                        <label for="dateRangeStart"
+                            class="text-sm font-medium text-gray-300 mb-2">{{ __('Start Date') }}</label>
+                        <input type="text" id="dateRangeStart" name="dateRangeStart"
+                            class="glassmorphic-date-input border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200"
+                            placeholder="{{ __('Select start date') }}" autocomplete="off" />
+                    </div>
+
+                    <!-- Date Range End -->
+                    <div class="flex flex-col w-full">
+                        <label for="dateRangeEnd"
+                            class="text-sm font-medium text-gray-300 mb-2">{{ __('End Date') }}</label>
+                        <input type="text" id="dateRangeEnd" name="dateRangeEnd"
+                            class="glassmorphic-date-input border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200"
+                            placeholder="{{ __('Select end date') }}" autocomplete="off" />
+                    </div>
+                    <style>
+                        /* Glassmorphic Date Input Styling for Filter Bar */
+                        .glassmorphic-date-input {
+                            background: rgba(0, 0, 0, 0.45);
+                            border: 1px solid rgba(255, 255, 255, 0.13);
+                            color: #fff;
+                            border-radius: 0.75rem;
+                            box-shadow: 0 4px 24px 0 rgba(168, 85, 247, 0.08);
+                            backdrop-filter: blur(10px) saturate(1.2);
+                            -webkit-backdrop-filter: blur(10px) saturate(1.2);
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        }
+
+                        .glassmorphic-date-input:focus {
+                            border-color: #a855f7;
+                            background: rgba(40, 0, 80, 0.55);
+                            box-shadow: 0 0 0 2px #a855f7, 0 4px 24px 0 rgba(168, 85, 247, 0.12);
+                        }
+
+                        .glassmorphic-date-input::placeholder {
+                            color: #bdbdbd;
+                            opacity: 1;
+                        }
+
+                        @media (max-width: 1024px) {
+                            .glassmorphic-date-input {
+                                font-size: 0.95rem;
+                                padding: 0.7rem 1rem;
+                            }
+                        }
+                    </style>
+                    // Flatpickr initialization for date range inputs
+                    if (window.flatpickr) {
+                    flatpickr('#dateRangeStart', {
+                    dateFormat: 'Y-m-d',
+                    allowInput: true,
+                    theme: 'dark',
+                    onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length) {
+                    const endPicker = flatpickrInstances['dateRangeEnd'];
+                    if (endPicker) endPicker.set('minDate', dateStr);
+                    }
+                    }
+                    });
+                    flatpickr('#dateRangeEnd', {
+                    dateFormat: 'Y-m-d',
+                    allowInput: true,
+                    theme: 'dark',
+                    onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length) {
+                    const startPicker = flatpickrInstances['dateRangeStart'];
+                    if (startPicker) startPicker.set('maxDate', dateStr);
+                    }
+                    }
+                    });
+                    // Store Flatpickr instances for cross-control
+                    window.flatpickrInstances = window.flatpickrInstances || {};
+                    window.flatpickrInstances['dateRangeStart'] = flatpickr('#dateRangeStart');
+                    window.flatpickrInstances['dateRangeEnd'] = flatpickr('#dateRangeEnd');
+                    }
 
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
