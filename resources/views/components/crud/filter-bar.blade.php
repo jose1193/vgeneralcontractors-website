@@ -68,7 +68,7 @@
     <!-- Collapsible Advanced Filters Section -->
     @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
         <div id="advancedFilters" class="hidden border-t border-white/10 bg-black/20 backdrop-blur-sm">
-            <div class="p-4 pb-6">
+            <div class="p-4">
                 <!-- Responsive Grid Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
 
