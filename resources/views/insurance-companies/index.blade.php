@@ -5,6 +5,7 @@
     manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable" create-button-id="createInsuranceCompanyBtn"
     search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"
     alert-id="alertContainer" :table-columns="[
+        ['field' => 'nro', 'label' => __('nro'), 'sortable' => false],
         ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
         ['field' => 'address', 'label' => __('address'), 'sortable' => false],
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
@@ -51,6 +52,9 @@
                     searchFields: ['insurance_company_name', 'address', 'email', 'phone', 'website'],
                     // Establecer el valor inicial basado en localStorage
                     showDeleted: showDeletedState,
+                    // Configuración de numeración secuencial
+                    showSequentialNumbers: true,
+                    sequentialNumberLabel: "{{ __('nro') }}",
                     entityConfig: {
                         identifierField: 'insurance_company_name',
                         displayName: 'insurance company',

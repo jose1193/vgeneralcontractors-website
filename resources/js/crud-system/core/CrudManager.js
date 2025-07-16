@@ -28,6 +28,10 @@ export class CrudManager {
         this.validationFields = options.validationFields || [];
         this.formFields = options.formFields || [];
 
+        // Configuración de numeración secuencial
+        this.showSequentialNumbers = options.showSequentialNumbers !== false; // default true
+        this.sequentialNumberLabel = options.sequentialNumberLabel || "Nro";
+
         // Estado interno
         this.currentPage = 1;
         this.perPage = 10;
@@ -568,6 +572,17 @@ export class CrudManager {
     }
 
     /**
+     * Calcular número secuencial para la fila
+     */
+    getSequentialNumber(index) {
+        if (!this.currentData) return index + 1;
+
+        // Calcular el número basado en la página actual y el índice
+        const baseNumber = (this.currentPage - 1) * this.perPage;
+        return baseNumber + index + 1;
+    }
+
+    /**
      * Renderizar tabla
      */
     renderTable(data) {
@@ -584,9 +599,14 @@ export class CrudManager {
             const noRecordsText =
                 this.translations.noRecordsFound ||
                 "No se encontraron registros";
-            html = `<tr><td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
+
+            // Calcular el número total de columnas (incluyendo la columna de número si está habilitada)
+            const totalColumns =
+                this.tableHeaders.length + (this.showSequentialNumbers ? 1 : 0);
+
+            html = `<tr><td colspan="${totalColumns}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
         } else {
-            entities.forEach((entity) => {
+            entities.forEach((entity, index) => {
                 const isDeleted = entity.deleted_at !== null;
                 const rowClass = isDeleted
                     ? "bg-red-50 dark:bg-red-900 opacity-60"
@@ -599,6 +619,12 @@ export class CrudManager {
                 );
 
                 html += `<tr class="${rowClass}" data-entity="${entityData}">`;
+
+                // Agregar columna de número secuencial si está habilitada
+                if (this.showSequentialNumbers) {
+                    const sequentialNumber = this.getSequentialNumber(index);
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">${sequentialNumber}</td>`;
+                }
 
                 this.tableHeaders.forEach((header) => {
                     let value = header.getter
@@ -716,9 +742,13 @@ export class CrudManager {
      * Mostrar loading en tabla
      */
     showTableLoading() {
+        // Calcular el número total de columnas (incluyendo la columna de número si está habilitada)
+        const totalColumns =
+            this.tableHeaders.length + (this.showSequentialNumbers ? 1 : 0);
+
         const loadingHtml = `
             <tr id="loadingRow">
-                <td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center">
+                <td colspan="${totalColumns}" class="px-6 py-4 text-center">
                     <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
