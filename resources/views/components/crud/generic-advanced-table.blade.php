@@ -2,15 +2,15 @@
     'id' => 'crud-advanced-table',
     'columns' => [],
     'managerName' => 'crudManager',
-    'loadingText' => __('loading'),
-    'noDataText' => __('no_data'),
+    'loadingText' => 'Loading...',
+    'noDataText' => 'No records found',
     'responsive' => true,
     'sortable' => true,
     'darkMode' => true,
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
+    <div class="glassmorphism-table-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -51,179 +51,44 @@
     </div>
 </div>
 
+
 <style>
-    /* Premium Glassmorphism Table 2025 with Purple Shadows */
+    /* Modern Glassmorphism Table 2025 */
     .glassmorphism-container {
         position: relative;
         margin: 1rem 0;
-        border-radius: 20px;
-        padding: 1.5rem;
-
-        /* Crystal Glass Background with Premium Transparency */
-        background: rgba(0, 0, 0, 0.78);
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-            0 8px 32px 0 rgba(138, 43, 226, 0.25),
-            0 16px 64px 0 rgba(128, 0, 255, 0.18),
-            0 4px 16px 0 rgba(75, 0, 130, 0.3),
-            0 2px 8px 0 rgba(147, 51, 234, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-
-        /* Advanced Blur Effects */
-        backdrop-filter: blur(20px) saturate(1.3);
-        -webkit-backdrop-filter: blur(20px) saturate(1.3);
-
-        /* Refined Border for Glass Effect */
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-top: 1px solid rgba(255, 255, 255, 0.25);
-
-        /* Enhanced Animation */
-        animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glassmorphism-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 20px;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.08) 75%,
-                rgba(128, 0, 255, 0.12) 100%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .glassmorphism-container:hover {
-        transform: translateY(-3px);
-        box-shadow:
-            0 12px 48px 0 rgba(138, 43, 226, 0.35),
-            0 24px 80px 0 rgba(128, 0, 255, 0.25),
-            0 6px 24px 0 rgba(75, 0, 130, 0.4),
-            0 3px 12px 0 rgba(147, 51, 234, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .glassmorphism-container:hover::before {
-        opacity: 1;
+        animation: fadeInUp 0.6s ease-out;
     }
 
     .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
+        background: rgba(0, 0, 0, 0.76);
         border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-            0 6px 24px 0 rgba(138, 43, 226, 0.22),
-            0 12px 48px 0 rgba(128, 0, 255, 0.15),
-            0 2px 12px 0 rgba(75, 0, 130, 0.25),
-            0 1px 6px 0 rgba(147, 51, 234, 0.18),
-            inset 0 1px 0 rgba(255, 255, 255, 0.12),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.06);
-
-        /* Enhanced Blur Effects */
-        backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border: 1px solid rgba(0, 0, 0, 0.3);
         overflow: hidden;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-
-            /* Enhanced Blur Effects */
-            backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    .glassmorphism-table-wrapper:hover {
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
     }
 
-    /* Forzar scroll horizontal en responsive */
-    .responsive-container {
-        overflow-x: auto !important;
-        overflow-y: visible;
-        width: 100%;
-    }
-
-    /* Extra: Si quieres scroll vertical en mobile también */
-    .glassmorphism-scroll-wrapper {
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
-    }
-
-    @media (max-width: 768px) {
-
-        .glassmorphism-table-wrapper,
-        .glassmorphism-scroll-wrapper {
-            max-height: 50vh;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-    }
-
-    rgba(255, 255, 255, 0.3) 25%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 255, 255, 0.3) 75%,
-    transparent 100%);
-    animation: shimmer 3s infinite;
-    }
-
-    .glassmorphism-table-wrapper::after {
+    .glassmorphism-table-wrapper::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        border-radius: 16px;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.06) 75%,
-                rgba(128, 0, 255, 0.1) 100%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .glassmorphism-table-wrapper:hover::after {
-        opacity: 1;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 100%);
+        animation: shimmer 2s infinite;
     }
 
     .glassmorphism-table {
@@ -234,62 +99,11 @@
     }
 
     .glassmorphism-header {
-        /* Premium Glass Header Background */
-        background: rgba(0, 0, 0, 0.85);
-
-        /* Enhanced Purple Shadow for Header */
-        box-shadow:
-            0 2px 16px 0 rgba(138, 43, 226, 0.15),
-            0 4px 24px 0 rgba(128, 0, 255, 0.1),
-            0 1px 6px 0 rgba(75, 0, 130, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-
-        /* Advanced Blur for Header */
-        backdrop-filter: blur(12px) saturate(1.1);
-        -webkit-backdrop-filter: blur(12px) saturate(1.1);
-
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 16px 16px 0 0;
-        position: relative;
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-
-    /* Shimmer animated effect for table header */
-    .glassmorphism-header::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -40%;
-        width: 40%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-        animation: shimmer-header 2.2s infinite;
-        pointer-events: none;
-        z-index: 2;
-    }
-
-    .glassmorphism-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.12) 0%,
-                rgba(255, 255, 255, 0.06) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.08) 75%,
-                rgba(128, 0, 255, 0.12) 100%);
-        border-radius: 16px 16px 0 0;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .glassmorphism-header:hover::before {
-        opacity: 1;
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
     }
 
     .glassmorphism-th {
@@ -299,8 +113,8 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: rgba(255, 255, 255, 0.85);
-        border-right: none;
+        color: rgba(255, 255, 255, 0.8);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
         position: relative;
         transition: all 0.3s ease;
     }
@@ -310,11 +124,8 @@
     }
 
     .glassmorphism-th:hover {
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.98);
-        box-shadow:
-            0 2px 8px 0 rgba(138, 43, 226, 0.2),
-            0 4px 16px 0 rgba(128, 0, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.95);
     }
 
     .th-content {
@@ -330,16 +141,13 @@
     }
 
     .sortable-header:hover {
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow:
-            0 2px 12px 0 rgba(138, 43, 226, 0.25),
-            0 4px 20px 0 rgba(128, 0, 255, 0.15);
+        background: rgba(255, 255, 255, 0.12);
     }
 
     .sort-indicator {
         display: flex;
         align-items: center;
-        opacity: 0.6;
+        opacity: 0.5;
         transition: all 0.3s ease;
     }
 
@@ -347,45 +155,40 @@
         width: 16px;
         height: 16px;
         fill: currentColor;
-        filter: drop-shadow(0 0 6px rgba(138, 43, 226, 0.5));
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
     }
 
     .sortable-header:hover .sort-indicator {
         opacity: 1;
         transform: scale(1.1);
-        filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.7));
     }
 
     .sortable-header.sort-asc .sort-indicator {
         opacity: 1;
-        color: #A855F7;
+        color: #60A5FA;
         transform: rotate(0deg);
-        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8));
     }
 
     .sortable-header.sort-desc .sort-indicator {
         opacity: 1;
-        color: #A855F7;
+        color: #60A5FA;
         transform: rotate(180deg);
-        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8));
     }
 
     .glassmorphism-body {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.3);
     }
 
     .glassmorphism-body tr {
-        border-bottom: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out;
     }
 
     .glassmorphism-body tr:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.05);
         transform: translateY(-1px);
-        box-shadow:
-            0 4px 20px rgba(138, 43, 226, 0.15),
-            0 8px 32px rgba(128, 0, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .glassmorphism-body td {
@@ -393,8 +196,7 @@
         text-align: center;
         color: rgba(255, 255, 255, 0.9);
         font-size: 0.875rem;
-        border-right: none;
-        transition: all 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.03);
     }
 
     .glassmorphism-body td:last-child {
@@ -429,35 +231,31 @@
         width: 100%;
         height: 100%;
         border: 3px solid transparent;
-        border-top: 3px solid #A855F7;
+        border-top: 3px solid #60A5FA;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
     }
 
     .spinner-ring:nth-child(2) {
         animation-delay: -0.15s;
-        border-top-color: #8B5CF6;
-        filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+        border-top-color: #34D399;
     }
 
     .spinner-ring:nth-child(3) {
         animation-delay: -0.3s;
-        border-top-color: #7C3AED;
-        filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6));
+        border-top-color: #F59E0B;
     }
 
     .loading-text {
         font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.7);
         font-weight: 500;
-        text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
     }
 
     .responsive-container {
         overflow-x: auto;
         scrollbar-width: thin;
-        scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
 
     .responsive-container::-webkit-scrollbar {
@@ -470,16 +268,16 @@
     }
 
     .responsive-container::-webkit-scrollbar-thumb {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 4px;
         transition: background 0.3s ease;
     }
 
     .responsive-container::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
+        background: rgba(255, 255, 255, 0.5);
     }
 
-    /* Enhanced Glassmorphism Pagination */
+    /* Modern Glassmorphism Pagination */
     .pagination-wrapper {
         display: flex;
         justify-content: center;
@@ -492,15 +290,13 @@
         display: flex;
         align-items: center;
         gap: 0.25rem;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.76);
         border-radius: 12px;
         padding: 0.5rem;
-        box-shadow:
-            0 4px 24px rgba(138, 43, 226, 0.2),
-            0 8px 40px rgba(128, 0, 255, 0.1);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(1.5px);
+        -webkit-backdrop-filter: blur(1.5px);
+        border: 1px solid rgba(0, 0, 0, 0.3);
     }
 
     .pagination .page-item {
@@ -524,7 +320,6 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-        cursor: pointer;
     }
 
     .pagination .page-link::before {
@@ -536,30 +331,25 @@
         bottom: 0;
         background: linear-gradient(135deg,
                 rgba(255, 255, 255, 0.1) 0%,
-                rgba(138, 43, 226, 0.1) 100%);
+                rgba(255, 255, 255, 0.05) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
-    .pagination .page-link:hover:not(:disabled) {
+    .pagination .page-link:hover {
         color: rgba(255, 255, 255, 0.95);
         transform: translateY(-2px);
-        box-shadow:
-            0 4px 16px rgba(138, 43, 226, 0.3),
-            0 8px 24px rgba(128, 0, 255, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .pagination .page-link:hover:not(:disabled)::before {
+    .pagination .page-link:hover::before {
         opacity: 1;
     }
 
-    /* Estilo para página activa */
     .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
-        color: white !important;
-        box-shadow:
-            0 4px 20px rgba(168, 85, 247, 0.4),
-            0 8px 32px rgba(139, 92, 246, 0.3);
+        background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+        color: white;
+        box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
         transform: translateY(-1px);
     }
 
@@ -567,19 +357,10 @@
         opacity: 0;
     }
 
-    .pagination .page-item.active .page-link:hover {
-        transform: translateY(-1px);
-        box-shadow:
-            0 6px 24px rgba(168, 85, 247, 0.5),
-            0 12px 40px rgba(139, 92, 246, 0.4);
-    }
-
-    /* Estilo para páginas deshabilitadas */
     .pagination .page-item.disabled .page-link {
-        color: rgba(255, 255, 255, 0.3) !important;
+        color: rgba(255, 255, 255, 0.3);
         cursor: not-allowed;
         transform: none;
-        background: transparent !important;
     }
 
     .pagination .page-item.disabled .page-link:hover {
@@ -587,20 +368,16 @@
         box-shadow: none;
     }
 
-    .pagination .page-item.disabled .page-link::before {
-        opacity: 0;
-    }
-
     .pagination .page-link span {
         position: relative;
         z-index: 1;
     }
 
-    /* Enhanced Animations */
+    /* Animations */
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
 
         to {
@@ -619,13 +396,13 @@
         }
     }
 
-    @keyframes shimmer-header {
+    @keyframes shimmer {
         0% {
-            left: -40%;
+            transform: translateX(-100%);
         }
 
         100% {
-            left: 100%;
+            transform: translateX(100%);
         }
     }
 
@@ -647,16 +424,12 @@
         }
 
         50% {
-            opacity: 0.8;
+            opacity: 0.7;
         }
     }
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
-        .glassmorphism-container {
-            padding: 1rem;
-            margin: 0.5rem 0;
-        }
 
         .glassmorphism-th,
         .glassmorphism-body td {
@@ -678,31 +451,18 @@
             height: 36px;
             font-size: 0.8rem;
         }
-
-        .pagination-wrapper {
-            margin: 1rem 0;
-        }
     }
 
     /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
-        .glassmorphism-container {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
         .glassmorphism-table-wrapper {
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .glassmorphism-header {
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pagination {
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     }
 </style>
