@@ -22,7 +22,7 @@
     'managerName' => 'crudManager',
 ])
 
-<div class="mb-5 backdrop-blur-sm bg-black/30 rounded-lg border border-white/10 shadow-lg shadow-purple-500/10">
+<div class="mb-6 backdrop-blur-sm bg-black/30 rounded-lg border border-white/10 shadow-lg shadow-purple-500/10">
     <!-- Main Filter Bar - Always Visible -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
         <!-- Left Side: Search Input -->
