@@ -1946,5 +1946,12 @@
     "search_insurance_companies": "Search insurance companies...",
 
     "errorDeleting": "Error deleting record",
-    "errorRestoring": "Error restoring record"
+    "errorRestoring": "Error restoring record",
+    "export": "Export",
+    "export_label": "Export",
+    "pdf_report": "PDF Report",
+    "excel": "Excel",
+    "pdf_export_completed": "PDF export completed successfully!",
+    "excel_export_completed": "Excel export completed successfully!",
+    "export_completed_successfully": "Export completed successfully!"
 }

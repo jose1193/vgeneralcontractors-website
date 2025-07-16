@@ -60,9 +60,9 @@
             <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto">
                 <select id="{{ $exportId }}"
                     class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
-                    <option value="" disabled selected>{{ $exportLabel }}</option>
-                    <option value="pdf" class="bg-gray-800 text-white">📄 PDF Report</option>
-                    <option value="excel" class="bg-gray-800 text-white">📊 Excel</option>
+                    <option value="" disabled selected>{{ __($exportLabel) }}</option>
+                    <option value="pdf">📄 {{ __('pdf_report') }}</option>
+                    <option value="excel">📊 {{ __('excel') }}</option>
                 </select>
                 <!-- Export Icon -->
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -118,11 +118,19 @@
         }
 
         function showExportNotification(format) {
-            // Create a simple notification (you can replace this with your app's notification system)
+            // Traducción dinámica del mensaje según formato
+            let message = '';
+            if (format === 'pdf') {
+                message = @json(__('pdf_export_completed'));
+            } else if (format === 'excel') {
+                message = @json(__('excel_export_completed'));
+            } else {
+                message = format.toUpperCase() + ' ' + @json(__('export_completed_successfully'));
+            }
             const notification = document.createElement('div');
             notification.className =
                 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg z-50 transform transition-all duration-300';
-            notification.textContent = `${format.toUpperCase()} export completed successfully!`;
+            notification.textContent = message;
 
             document.body.appendChild(notification);
 
