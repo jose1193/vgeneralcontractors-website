@@ -25,7 +25,7 @@
 
         {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
-            <div class="bg-white rounded-2xl shadow-2xl border border-purple-100 mb-8 overflow-hidden">
+            <div class="animated-header-card bg-white rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="animated-gradient-header px-8 py-6 relative">
                     {{-- Floating particles background --}}
                     <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -135,15 +135,16 @@
 <style>
     /* Animated gradient background */
     .animated-gradient-header {
-        background: linear-gradient(135deg,
-                #667eea 0%,
-                #764ba2 25%,
-                #667eea 50%,
-                #f093fb 75%,
-                #f5576c 100%);
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #6a11cb 75%, #2575fc 100%);
         background-size: 300% 300%;
         animation: gradientShift 8s ease infinite;
         position: relative;
+    }
+
+    .animated-header-card {
+        border: 2px solid #34d399;
+        /* border-emerald-400 */
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
     .animated-gradient-header::before {
