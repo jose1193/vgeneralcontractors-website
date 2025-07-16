@@ -51,8 +51,8 @@
                                 <div class="marquee-container overflow-hidden">
                                     <div
                                         class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-sm font-medium">
-                                        ✨ {{ $subtitle }} • 🚀 Gestión eficiente • 💼 Organización profesional • 📊
-                                        Seguimiento completo •
+                                        ✨ {{ $subtitle }} • 🚀 {{ __('efficient_management') }} • 💼
+                                        {{ __('professional_organization') }} • 📊 {{ __('complete_tracking') }} •
                                     </div>
                                 </div>
                             </div>

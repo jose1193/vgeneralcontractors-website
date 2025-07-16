@@ -1,6 +1,8 @@
 {
     "items_per_page": "Items per page",
-
+    "efficient_management": "Efficient management",
+    "professional_organization": "Professional organization",
+    "complete_tracking": "Complete tracking",
     "_comment_navigation": "=== MAIN NAVIGATION ===",
     "home": "Home",
     "about_us": "About Us",
