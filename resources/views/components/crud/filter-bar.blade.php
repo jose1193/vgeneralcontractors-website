@@ -57,35 +57,27 @@
 
         @if ($showExport)
             <!-- Export Dropdown -->
-            <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto group">
+            <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto">
                 <select id="{{ $exportId }}"
-                    class="border rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-400 text-sm py-2.5 pl-10 pr-8 min-w-[140px] w-auto text-white bg-gradient-to-r from-black/60 to-black/40 border-white/20 backdrop-blur-md appearance-none cursor-pointer hover:from-black/70 hover:to-black/50 hover:border-white/30 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 ease-in-out">
-                    <option value="" disabled selected class="bg-gray-900/95 text-white">{{ $exportLabel }}
-                    </option>
-                    <option value="pdf" class="bg-gray-900/95 text-white hover:bg-purple-600/20">📄 PDF Report
-                    </option>
-                    <option value="excel" class="bg-gray-900/95 text-white hover:bg-purple-600/20">📊 Excel</option>
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
+                    <option value="" disabled selected>{{ $exportLabel }}</option>
+                    <option value="pdf" class="bg-gray-800 text-white">📄 PDF Report</option>
+                    <option value="excel" class="bg-gray-800 text-white">📊 Excel</option>
                 </select>
                 <!-- Export Icon -->
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2" viewBox="0 0 24 24"
-                        class="w-4 h-4 text-gray-300 group-hover:text-purple-300 transition-colors duration-300">
+                        stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4 text-gray-400">
                         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m4-5l5-5 5 5m-5-5v12"></path>
                     </svg>
                 </span>
                 <!-- Dropdown Arrow -->
                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2" viewBox="0 0 24 24"
-                        class="w-4 h-4 text-gray-300 group-hover:text-purple-300 transition-colors duration-300">
+                        stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4 text-gray-400">
                         <path d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </span>
-                <!-- Glassmorphic Glow Effect -->
-                <div
-                    class="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none -z-10">
-                </div>
             </div>
         @endif
 
