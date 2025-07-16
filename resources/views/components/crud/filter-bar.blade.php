@@ -78,13 +78,7 @@
                             class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
                             <div class="space-y-3 w-full">
                                 <label class="flex items-center gap-1 text-sm font-medium text-gray-300">
-                                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
-                                        stroke-width="2" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="2" fill="none" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h4V8" />
-                                    </svg>
-                                    {{ __('date_range') }}
+                                    📅 {{ __('date_range') }}
                                 </label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <!-- Start Date -->
