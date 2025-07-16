@@ -205,7 +205,7 @@
                                 d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         <span class="font-medium">{{ __('clear_filters') }}</span>
-                    </button><br>
+                    </button>
                 </div>
             </div>
         </div>
