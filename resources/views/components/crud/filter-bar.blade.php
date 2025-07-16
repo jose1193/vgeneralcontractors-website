@@ -36,17 +36,25 @@
     @endif
 
     <!-- Controls: Show Deleted, Per Page, Export, Add Button -->
-    <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
+    <div class="flex flex-col lg:flex-row items-center w-full lg:w-auto gap-3 lg:gap-4">
+        <!-- Add Entity Button -->
+        <div class="w-full lg:w-auto">
+            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
+        </div>
+
+        <!-- Show Deleted Toggle: below button in mobile, inline in lg -->
         @if ($showInactiveToggle)
-            <!-- Show Deleted Toggle -->
-            <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
+            <div class="w-full lg:w-auto order-2 lg:order-none">
+                <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName"
+                    class="w-full lg:w-auto" />
+            </div>
         @endif
 
+        <!-- Per Page Selector -->
         @if ($showPerPage)
-            <!-- Per Page Selector -->
-            <div class="flex items-center justify-end sm:justify-start w-full sm:w-auto">
+            <div class="w-full lg:w-auto">
                 <select id="{{ $perPageId }}"
-                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm">
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 px-3 pr-8 min-w-[70px] w-full lg:w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm">
                     @foreach ($perPageOptions as $option)
                         <option value="{{ $option }}" {{ $option == $defaultPerPage ? 'selected' : '' }}>
                             {{ $option }} {{ __('per_page') }}</option>
@@ -55,11 +63,11 @@
             </div>
         @endif
 
+        <!-- Export Dropdown -->
         @if ($showExport)
-            <!-- Export Dropdown -->
-            <div class="relative flex items-center justify-end sm:justify-start w-full sm:w-auto">
+            <div class="relative w-full lg:w-auto">
                 <select id="{{ $exportId }}"
-                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
+                    class="border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2 pl-10 pr-8 min-w-[140px] w-full lg:w-auto text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-colors duration-200">
                     <option value="" disabled selected>{{ __('export_label') }}</option>
                     <option value="pdf">📄 {{ __('pdf_report') }}</option>
                     <option value="excel">📊 {{ __('excel') }}</option>
@@ -80,9 +88,6 @@
                 </span>
             </div>
         @endif
-
-        <!-- Add Entity Button -->
-        <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" />
     </div>
 </div>
 
