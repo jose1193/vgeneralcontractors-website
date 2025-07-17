@@ -39,18 +39,18 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10">
-                        <div class="mb-4 sm:mb-0">
-                            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight"
+                        <div class="mb-4 sm:mb-0 w-full">
+                            <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight text-center sm:text-left"
                                 style="text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);">
                                 {{ $title }}
                             </h1>
 
                             {{-- Animated subtitle with marquee effect --}}
                             <div
-                                class="bg-white/10 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20 max-w-md">
-                                <div class="marquee-container overflow-hidden">
+                                class="bg-white/10 backdrop-blur-md rounded-lg px-2 py-2 border border-white/20 max-w-full sm:max-w-md mx-auto sm:mx-0 text-center">
+                                <div class="marquee-container overflow-hidden w-full">
                                     <div
-                                        class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-sm font-medium">
+                                        class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-xs xs:text-sm sm:text-sm font-medium text-center">
                                         ✨ {{ $subtitle }} • 🚀 {{ __('efficient_management') }} • 💼
                                         {{ __('professional_organization') }} • 📊 {{ __('complete_tracking') }} •
                                     </div>
