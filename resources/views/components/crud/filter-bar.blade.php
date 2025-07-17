@@ -35,12 +35,11 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-200 drop-shadow-md">
-                            <!-- text-gray-200 y drop-shadow-md para más claridad -->
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
                     <input type="text" id="{{ $searchId }}" placeholder="{{ $searchPlaceholder }}"
-                        class="pl-10 pr-4 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full text-sm text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200">
+                        class="pl-10 pr-4 py-2.5 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full text-sm text-white bg-black/50 border-white/10 backdrop-blur-sm placeholder-gray-400 transition-all duration-200 text-center sm:text-left placeholder:text-center sm:placeholder:text-left">
                 </div>
             @endif
 
@@ -86,7 +85,8 @@
                         <div
                             class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
                             <div class="space-y-3 w-full">
-                                <label class="flex items-center gap-1 text-sm font-medium text-gray-300">
+                                <label
+                                    class="flex items-center gap-1 text-sm font-medium text-gray-300 justify-center text-center w-full">
                                     📅 {{ __('date_range') }}
                                 </label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -97,7 +97,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
                                                 placeholder="{{ __('start_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-left placeholder:text-center sm:placeholder:text-left">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -126,7 +126,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
                                                 placeholder="{{ __('end_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-left placeholder:text-center sm:placeholder:text-left">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -155,17 +155,18 @@
 
                     <!-- Export Options (moved up) -->
                     @if ($showExport)
-                        <div class="flex flex-col items-start justify-center h-full">
+                        <div class="flex flex-col items-center justify-center h-full w-full">
                             <label for="{{ $exportId }}"
-                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
+                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2 justify-center text-center w-full">
                                 📋 {{ __('export_data') }}
                             </label>
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
-                                    <option value="" disabled selected>{{ __('choose_format') }}</option>
-                                    <option value="pdf">📄 {{ __('pdf_report') }}</option>
-                                    <option value="excel">📊 {{ __('excel') }}</option>
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200 text-center sm:text-left">
+                                    <option value="" disabled selected class="text-center">
+                                        {{ __('choose_format') }}</option>
+                                    <option value="pdf" class="text-center">📄 {{ __('pdf_report') }}</option>
+                                    <option value="excel" class="text-center">📊 {{ __('excel') }}</option>
                                 </select>
                                 <!-- Dropdown Arrow -->
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -181,13 +182,14 @@
 
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
-                        <div class="flex flex-col">
-                            <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
+                        <div class="flex flex-col items-center w-full">
+                            <label for="{{ $perPageId }}"
+                                class="text-sm font-medium text-gray-300 mb-2 text-center w-full">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-left w-full">
                                 @foreach ($perPageOptions as $option)
-                                    <option value="{{ $option }}"
+                                    <option value="{{ $option }}" class="text-center"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
                                         {{ $option }} {{ __('per_page') }}
                                     </option>
@@ -198,8 +200,11 @@
 
                     <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col items-start justify-center h-full w-full lg:w-auto">
-                            <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
+                        <div class="flex flex-col items-center justify-center h-full w-full lg:w-auto">
+                            <div class="w-full flex justify-center">
+                                <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName"
+                                    class="mx-auto" />
+                            </div>
                         </div>
                     @endif
                 </div>
