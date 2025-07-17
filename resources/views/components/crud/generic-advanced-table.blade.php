@@ -10,7 +10,7 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
-    <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
+    <div class="glassmorphism-table-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -118,6 +118,7 @@
         opacity: 1;
     }
 
+    /* Fixed table wrapper - Solo maneja el scroll, no el shimmer */
     .glassmorphism-table-wrapper {
         /* Enhanced Crystal Glass Background */
         background: rgba(0, 0, 0, 0.82);
@@ -140,69 +141,23 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
-        overflow: hidden;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-
-            /* Enhanced Blur Effects */
-            backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
+        /* Configuración optimizada para scroll */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
+        width: 100%;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Forzar scroll horizontal en responsive */
+    /* Responsive container - Solo se enfoca en el scroll horizontal */
     .responsive-container {
-        overflow-x: auto !important;
-        overflow-y: visible;
         width: 100%;
-    }
-
-    /* Extra: Si quieres scroll vertical en mobile también */
-    .glassmorphism-scroll-wrapper {
         overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
+        overflow-y: visible;
     }
 
-    @media (max-width: 768px) {
-
-        .glassmorphism-table-wrapper,
-        .glassmorphism-scroll-wrapper {
-            max-height: 50vh;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-    }
-
-    rgba(255, 255, 255, 0.3) 25%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 255, 255, 0.3) 75%,
-    transparent 100%);
-    animation: shimmer 3s infinite;
-    }
-
+    /* Hover effect separado del shimmer */
     .glassmorphism-table-wrapper::after {
         content: '';
         position: absolute;
@@ -220,6 +175,7 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.4s ease;
+        z-index: 1;
     }
 
     .glassmorphism-table-wrapper:hover::after {
@@ -231,8 +187,11 @@
         border-collapse: collapse;
         color: rgba(255, 255, 255, 0.95);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        position: relative;
+        z-index: 2;
     }
 
+    /* Header con shimmer aislado */
     .glassmorphism-header {
         /* Premium Glass Header Background */
         background: rgba(0, 0, 0, 0.85);
@@ -252,23 +211,30 @@
         border-radius: 16px 16px 0 0;
         position: relative;
         transition: all 0.3s ease;
+
+        /* Importante: overflow hidden solo para el header */
         overflow: hidden;
+        z-index: 3;
     }
 
-    /* Shimmer animated effect for table header */
+    /* Shimmer SOLO para el header - No afecta el scroll */
     .glassmorphism-header::after {
         content: '';
         position: absolute;
         top: 0;
-        left: -40%;
-        width: 40%;
+        left: -100%;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-        animation: shimmer-header 2.2s infinite;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.18) 50%,
+                transparent 100%);
+        animation: shimmer-header 2.5s infinite;
         pointer-events: none;
-        z-index: 2;
+        z-index: 1;
     }
 
+    /* Hover gradient para el header */
     .glassmorphism-header::before {
         content: '';
         position: absolute;
@@ -286,6 +252,7 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
+        z-index: 1;
     }
 
     .glassmorphism-header:hover::before {
@@ -303,6 +270,7 @@
         border-right: none;
         position: relative;
         transition: all 0.3s ease;
+        z-index: 2;
     }
 
     .glassmorphism-th:last-child {
@@ -322,6 +290,8 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+        position: relative;
+        z-index: 2;
     }
 
     .sortable-header {
@@ -372,6 +342,8 @@
 
     .glassmorphism-body {
         background: rgba(0, 0, 0, 0.4);
+        position: relative;
+        z-index: 2;
     }
 
     .glassmorphism-body tr {
@@ -454,12 +426,28 @@
         text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
     }
 
-    .responsive-container {
-        overflow-x: auto;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
+    /* Scrollbar personalizado para el contenedor */
+    .glassmorphism-table-wrapper::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
 
+    .glassmorphism-table-wrapper::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .glassmorphism-table-wrapper::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.6), rgba(128, 0, 255, 0.8));
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .glassmorphism-table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
+    }
+
+    /* Scrollbar para responsive container */
     .responsive-container::-webkit-scrollbar {
         height: 8px;
     }
@@ -619,13 +607,20 @@
         }
     }
 
+    /* Shimmer animado SOLO para el header */
     @keyframes shimmer-header {
         0% {
-            left: -40%;
+            left: -100%;
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
         }
 
         100% {
             left: 100%;
+            opacity: 0;
         }
     }
 
@@ -656,6 +651,10 @@
         .glassmorphism-container {
             padding: 1rem;
             margin: 0.5rem 0;
+        }
+
+        .glassmorphism-table-wrapper {
+            max-height: 50vh;
         }
 
         .glassmorphism-th,
