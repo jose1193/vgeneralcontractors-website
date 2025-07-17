@@ -140,67 +140,11 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
-        overflow: hidden;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-
-            /* Enhanced Blur Effects */
-            backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Forzar scroll horizontal en responsive */
-    .responsive-container {
-        overflow-x: auto !important;
-        overflow-y: visible;
-        width: 100%;
-    }
-
-    /* Extra: Si quieres scroll vertical en mobile también */
-    .glassmorphism-scroll-wrapper {
-        overflow-x: auto;
-        overflow-y: auto;
-        max-height: 70vh;
-        width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
-    }
-
-    @media (max-width: 768px) {
-
-        .glassmorphism-table-wrapper,
-        .glassmorphism-scroll-wrapper {
-            max-height: 50vh;
-            overflow-x: auto;
-            overflow-y: auto;
-        }
-    }
-
-    rgba(255, 255, 255, 0.3) 25%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 255, 255, 0.3) 75%,
-    transparent 100%);
-    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
@@ -253,6 +197,7 @@
         position: relative;
         transition: all 0.3s ease;
         overflow: hidden;
+        /* 👈 Evita scroll horizontal por shimmer */
     }
 
     /* Shimmer animated effect for table header */
@@ -260,13 +205,26 @@
         content: '';
         position: absolute;
         top: 0;
-        left: -40%;
-        width: 40%;
+        left: 0;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.18) 50%,
+                transparent 100%);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
         z-index: 2;
+    }
+
+    @keyframes shimmer-header {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
     }
 
     .glassmorphism-header::before {
@@ -619,16 +577,6 @@
         }
     }
 
-    @keyframes shimmer-header {
-        0% {
-            left: -40%;
-        }
-
-        100% {
-            left: 100%;
-        }
-    }
-
     @keyframes spin {
         0% {
             transform: rotate(0deg);
@@ -681,6 +629,11 @@
 
         .pagination-wrapper {
             margin: 1rem 0;
+        }
+
+        /* Desactivar shimmer en móviles para evitar scroll */
+        .glassmorphism-header::after {
+            display: none;
         }
     }
 
