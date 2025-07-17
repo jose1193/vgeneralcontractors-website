@@ -24,16 +24,16 @@
 
 <div class="glassmorphism-filter-container">
     <!-- Main Filter Bar - Siempre Visible -->
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 p-4">
-        <!-- Izquierda: Search Input y Filtros -->
-        <div class="flex w-full sm:flex-1 sm:max-w-md items-center gap-4"> <!-- gap-4 para mayor separación -->
+    <div class="flex flex-col gap-4 p-4">
+
+        <!-- Primera fila: Search Input y Create Button -->
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
             <!-- Search Input -->
             @if ($showSearchBar)
-                <div class="relative flex-1">
+                <div class="relative flex-1 sm:max-w-md">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 text-gray-200 drop-shadow-md">
-                            <!-- text-gray-200 y drop-shadow-md para más claridad -->
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
@@ -42,167 +42,163 @@
                 </div>
             @endif
 
-            <!-- Filtros Avanzados Toggle Button -->
-            @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
-                <button id="toggleFilters" type="button"
-                    class="inline-flex items-center justify-center px-3 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm">
-                    <span class="flex items-center justify-center w-full">
-                        <svg id="filterIcon" class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor"
+            <!-- Create Button -->
+            <div class="flex-shrink-0">
+                <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
+            </div>
+        </div>
+
+        <!-- Segunda fila: Filtros básicos (mobile) y botón de filtros avanzados -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+
+            <!-- Filtros básicos en mobile (Select export y per page) -->
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:flex-1">
+
+                <!-- Export Select - Prioridad alta en mobile -->
+                @if ($showExport)
+                    <div class="w-full sm:w-auto sm:min-w-[200px]">
+                        <label for="{{ $exportId }}"
+                            class="block text-xs font-medium text-gray-300 mb-1.5 text-center sm:text-left">
+                            📋 {{ __('export_data') }}
+                        </label>
+                        <div class="relative">
+                            <select id="{{ $exportId }}"
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
+                                <option value="" disabled selected>{{ __('choose_format') }}</option>
+                                <option value="pdf">📄 {{ __('pdf_report') }}</option>
+                                <option value="excel">📊 {{ __('excel') }}</option>
+                            </select>
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4 text-gray-400">
+                                    <path d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Per Page Select -->
+                @if ($showPerPage)
+                    <div class="w-full sm:w-auto sm:min-w-[150px]">
+                        <label for="{{ $perPageId }}"
+                            class="block text-xs font-medium text-gray-300 mb-1.5 text-center sm:text-left">
+                            📄 {{ __('items_per_page') }}
+                        </label>
+                        <select id="{{ $perPageId }}"
+                            class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
+                            @foreach ($perPageOptions as $option)
+                                <option value="{{ $option }}"
+                                    {{ $option == $defaultPerPage ? 'selected' : '' }}>
+                                    {{ $option }} {{ __('per_page') }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Advanced Filters Toggle Button -->
+            @if ($showInactiveToggle || $showDateRange)
+                <div class="flex justify-center sm:justify-end">
+                    <button id="toggleFilters" type="button"
+                        class="inline-flex items-center justify-center px-4 py-2.5 border border-white/10 rounded-lg shadow-sm bg-black/50 text-white hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 backdrop-blur-sm">
+                        <svg id="filterIcon" class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
                         </svg>
-                        <span id="filterText" class="text-sm font-medium">{{ __('filters') }}</span>
-                        <svg id="chevronIcon" class="w-4 h-4 ml-1.5 transform transition-transform duration-200"
+                        <span id="filterText" class="text-sm font-medium">{{ __('more_filters') }}</span>
+                        <svg id="chevronIcon" class="w-4 h-4 ml-2 transform transition-transform duration-200"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
-                    </span>
-                </button>
+                    </button>
+                </div>
             @endif
-        </div>
-
-        <!-- Derecha: Botón Crear -->
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-end">
-            <!-- Create Button -->
-            <x-crud.button-create :id="$createButtonId" :label="$addNewLabel" :entity-name="$entityName" class="w-full sm:w-auto" />
         </div>
     </div>
 
     <!-- Collapsible Advanced Filters Section -->
-    @if ($showInactiveToggle || $showPerPage || $showExport || $showDateRange)
+    @if ($showInactiveToggle || $showDateRange)
         <div id="advancedFilters" class="hidden glassmorphism-filter-advanced">
-            <div class="p-4">
-                <!-- Responsive Grid Layout -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
+            <div class="p-4 space-y-6">
 
-                    <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
-                    @if ($showDateRange)
-                        <div
-                            class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
-                            <div class="space-y-3 w-full">
-                                <label class="flex items-center gap-1 text-sm font-medium text-gray-300">
-                                    📅 {{ __('date_range') }}
-                                </label>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <!-- Start Date -->
-                                    <div class="relative">
-                                        <label for="{{ $dateRangeStartId }}"
-                                            class="sr-only">{{ __('start_date') }}</label>
-                                        <div class="relative">
-                                            <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
-                                                placeholder="{{ __('start_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                            <!-- Calendar Icon -->
-                                            <span
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </span>
-                                            <!-- Clear Button -->
-                                            <button type="button" id="{{ $dateRangeStartId }}_clear"
-                                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
+                <!-- Date Range Section -->
+                @if ($showDateRange)
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-gray-300 mb-3 text-center sm:text-left">
+                            📅 {{ __('date_range') }}
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Start Date -->
+                            <div class="relative">
+                                <label for="{{ $dateRangeStartId }}" class="sr-only">{{ __('start_date') }}</label>
+                                <div class="relative">
+                                    <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
+                                        placeholder="{{ __('start_date') }}" readonly
+                                        class="w-full pl-10 pr-10 py-3 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </span>
+                                    <button type="button" id="{{ $dateRangeStartId }}_clear"
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
 
-                                    <!-- End Date -->
-                                    <div class="relative">
-                                        <label for="{{ $dateRangeEndId }}" class="sr-only">{{ __('end_date') }}</label>
-                                        <div class="relative">
-                                            <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
-                                                placeholder="{{ __('end_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
-                                            <!-- Calendar Icon -->
-                                            <span
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </span>
-                                            <!-- Clear Button -->
-                                            <button type="button" id="{{ $dateRangeEndId }}_clear"
-                                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
+                            <!-- End Date -->
+                            <div class="relative">
+                                <label for="{{ $dateRangeEndId }}" class="sr-only">{{ __('end_date') }}</label>
+                                <div class="relative">
+                                    <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
+                                        placeholder="{{ __('end_date') }}" readonly
+                                        class="w-full pl-10 pr-10 py-3 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </span>
+                                    <button type="button" id="{{ $dateRangeEndId }}_clear"
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white transition-colors duration-200 opacity-0 pointer-events-none">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
+                @endif
 
-                    <!-- Export Options (moved up) -->
-                    @if ($showExport)
-                        <div class="flex flex-col items-start justify-center h-full">
-                            <label for="{{ $exportId }}"
-                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2">
-                                📋 {{ __('export_data') }}
-                            </label>
-                            <div class="relative w-full">
-                                <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200">
-                                    <option value="" disabled selected>{{ __('choose_format') }}</option>
-                                    <option value="pdf">📄 {{ __('pdf_report') }}</option>
-                                    <option value="excel">📊 {{ __('excel') }}</option>
-                                </select>
-                                <!-- Dropdown Arrow -->
-                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                        class="w-4 h-4 text-gray-400">
-                                        <path d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Per Page Selector -->
-                    @if ($showPerPage)
-                        <div class="flex flex-col">
-                            <label for="{{ $perPageId }}" class="text-sm font-medium text-gray-300 mb-2">📄
-                                {{ __('items_per_page') }}</label>
-                            <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60">
-                                @foreach ($perPageOptions as $option)
-                                    <option value="{{ $option }}"
-                                        {{ $option == $defaultPerPage ? 'selected' : '' }}>
-                                        {{ $option }} {{ __('per_page') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
-
-                    <!-- Status Toggle Only, no label (moved down) -->
-                    @if ($showInactiveToggle)
-                        <div class="flex flex-col items-start justify-center h-full w-full lg:w-auto">
+                <!-- Status Toggle Section -->
+                @if ($showInactiveToggle)
+                    <div class="w-full">
+                        <label class="block text-sm font-medium text-gray-300 mb-3 text-center sm:text-left">
+                            🔄 {{ __('status_filter') }}
+                        </label>
+                        <div class="flex justify-center sm:justify-start">
                             <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName" />
                         </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
 
                 <!-- Clear Filters Button -->
-                <div class="pt-6 border-t border-white/10 flex justify-end">
+                <div class="pt-4 border-t border-white/10 flex justify-center sm:justify-end">
                     <button id="clearFilters" type="button"
-                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
+                        class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
@@ -220,13 +216,8 @@
     .glassmorphism-filter-container {
         position: relative;
         margin: 1rem 0 2.5rem 0;
-        /* Added extra margin-bottom for spacing below filter bar */
         border-radius: 20px;
-
-        /* Crystal Glass Background with Premium Transparency - Same as table */
         background: rgba(0, 0, 0, 0.78);
-
-        /* Premium Purple Box Shadow System - Exactly same as table */
         box-shadow:
             0 8px 32px 0 rgba(138, 43, 226, 0.25),
             0 16px 64px 0 rgba(128, 0, 255, 0.18),
@@ -234,21 +225,14 @@
             0 2px 8px 0 rgba(147, 51, 234, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.15),
             inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-
-        /* Advanced Blur Effects - Same as table */
         backdrop-filter: blur(20px) saturate(1.3);
         -webkit-backdrop-filter: blur(20px) saturate(1.3);
-
-        /* Refined Border for Glass Effect - Same as table */
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
-
-        /* Enhanced Animation - Same as table */
         animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Shimmer effect overlay - Same as table */
     .glassmorphism-filter-container::before {
         content: '';
         position: absolute;
@@ -268,7 +252,6 @@
         transition: opacity 0.4s ease;
     }
 
-    /* Hover effects - Same as table */
     .glassmorphism-filter-container:hover {
         transform: translateY(-3px);
         box-shadow:
@@ -284,12 +267,10 @@
         opacity: 1;
     }
 
-    /* Advanced Filters Section - Enhanced styling */
+    /* Advanced Filters Section */
     .glassmorphism-filter-advanced {
         border-top: 1px solid rgba(255, 255, 255, 0.15);
         background: rgba(0, 0, 0, 0.82);
-
-        /* Enhanced Purple Box Shadow for Advanced Section */
         box-shadow:
             0 6px 24px 0 rgba(138, 43, 226, 0.22),
             0 12px 48px 0 rgba(128, 0, 255, 0.15),
@@ -297,23 +278,17 @@
             0 1px 6px 0 rgba(147, 51, 234, 0.18),
             inset 0 1px 0 rgba(255, 255, 255, 0.12),
             inset 0 -1px 0 rgba(255, 255, 255, 0.06);
-
-        /* Enhanced Blur Effects */
         backdrop-filter: blur(16px) saturate(1.2);
         -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         border-left: 1px solid rgba(255, 255, 255, 0.1);
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Shimmer effect for advanced filters */
     .glassmorphism-filter-advanced::after {
         content: '';
         position: absolute;
@@ -450,7 +425,7 @@
         pointer-events: auto !important;
     }
 
-    /* Enhanced Animations - Same as table */
+    /* Enhanced Animations */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -463,10 +438,10 @@
         }
     }
 
-    /* Mobile Responsive - Same as table */
-    @media (max-width: 768px) {
+    /* Responsive mejoras */
+    @media (max-width: 640px) {
         .glassmorphism-filter-container {
-            margin: 0.5rem 0;
+            margin: 0.5rem 0 1.5rem 0;
             border-radius: 16px;
         }
 
@@ -482,9 +457,33 @@
         .glassmorphism-filter-advanced::after {
             border-radius: 0 0 16px 16px;
         }
+
+        /* Mejores espacios en mobile */
+        .glassmorphism-filter-container>div:first-child {
+            gap: 1rem;
+        }
+
+        /* Labels centrados en mobile */
+        .glassmorphism-filter-advanced label {
+            text-align: center;
+        }
     }
 
-    /* Dark mode enhancements - Same as table */
+    /* Tablet responsive */
+    @media (min-width: 641px) and (max-width: 1024px) {
+        .glassmorphism-filter-advanced label {
+            text-align: left;
+        }
+    }
+
+    /* Desktop */
+    @media (min-width: 1025px) {
+        .glassmorphism-filter-advanced label {
+            text-align: left;
+        }
+    }
+
+    /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
         .glassmorphism-filter-container {
             background: rgba(0, 0, 0, 0.85);
