@@ -49,6 +49,9 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Protector invisible para prevenir efectos en las primeras 4 filas -->
+        <div class="rows-protection-overlay"></div>
     </div>
 
     <!-- Shimmer efecto completamente separado de la estructura de la tabla -->
@@ -85,22 +88,8 @@
     }
 
     .glassmorphism-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 20px;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.08) 75%,
-                rgba(128, 0, 255, 0.12) 100%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
+        display: none;
+        /* Elimina completamente el pseudo-elemento */
     }
 
     .glassmorphism-container:hover {
@@ -114,10 +103,8 @@
     }
 
     .glassmorphism-container:hover::before {
-        opacity: 0.4;
-        /* Reducido para minimizar el efecto cuadrado */
-        z-index: 0;
-        /* Asegura que esté por debajo de otros elementos */
+        display: none;
+        opacity: 0;
     }
 
     .glassmorphism-table-wrapper {
@@ -187,30 +174,15 @@
         }
     }
 
+    /* Elimina el efecto de cuadro transparente al hacer hover */
     .glassmorphism-table-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 16px;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 25%,
-                transparent 50%,
-                rgba(138, 43, 226, 0.06) 75%,
-                rgba(128, 0, 255, 0.1) 100%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: 1;
-        /* Menor z-index para evitar que afecte a elementos internos */
+        display: none;
+        /* Eliminamos completamente este efecto */
     }
 
     .glassmorphism-table-wrapper:hover::after {
-        opacity: 0.5;
-        /* Reducido para evitar el efecto intenso */
+        opacity: 0;
+        /* Desactivado */
     }
 
     .glassmorphism-table {
@@ -241,6 +213,24 @@
         overflow: hidden;
         /* Contiene el efecto shimmer */
         background-color: transparent;
+    }
+
+    /* Protector invisible para prevenir efectos en las primeras 4 filas */
+    .rows-protection-overlay {
+        position: absolute;
+        top: 60px;
+        /* Justo debajo del header */
+        left: 0;
+        right: 0;
+        height: 200px;
+        /* Altura aproximada para cubrir 4 filas */
+        z-index: 10;
+        /* Por encima de todo */
+        background-color: transparent;
+        pointer-events: none;
+        /* No intercepta eventos de mouse */
+        user-select: none;
+        /* No permite selección de texto */
     }
 
     /* El shimmer solo afecta al encabezado */
@@ -405,69 +395,94 @@
         background: rgba(0, 0, 0, 0.4);
         position: relative;
         z-index: 2;
-        /* Mayor z-index para asegurar que está sobre el degradado */
+        isolation: isolate;
+        /* Aisla completamente del resto */
     }
 
+    /* Base style para todas las filas */
     .glassmorphism-body tr {
         border-bottom: none;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out;
         position: relative;
         isolation: isolate;
-        /* Aisla el contexto de apilamiento */
+        /* Cada fila aislada */
+        background: rgba(0, 0, 0, 0.4);
+        /* Color de fondo fijo para cada fila */
+        z-index: 2;
+        /* Asegura que las filas estén sobre cualquier efecto */
     }
 
-    /* Evita efectos de degradado en las primeras filas */
+    /* Solución específica para las primeras 4 filas - elimina todo tipo de efecto hover */
     .glassmorphism-body tr:nth-child(-n+4) {
         isolation: isolate;
-        /* Crea un contexto de apilamiento independiente */
+        z-index: 3;
+        position: relative;
     }
 
-    /* Previene específicamente el degradado en hover para las primeras 4 filas */
+    /* Prevenir CUALQUIER efecto en hover para las primeras 4 filas */
+    .glassmorphism-body tr:nth-child(-n+4):hover {
+        background: rgba(0, 0, 0, 0.4) !important;
+        /* Mismo color que el fondo normal */
+        transform: none !important;
+        /* Sin transformación */
+        box-shadow: none !important;
+        /* Sin sombra */
+    }
+
+    /* Prevenir específicamente cualquier pseudo-elemento en hover */
     .glassmorphism-body tr:nth-child(-n+4):hover::before,
     .glassmorphism-body tr:nth-child(-n+4):hover::after {
-        display: none;
+        display: none !important;
+        opacity: 0 !important;
     }
 
-    /* Mejora del efecto hover para todas las filas */
-    .glassmorphism-body tr:hover {
+    /* Efecto hover controlado solo para filas a partir de la 5 */
+    .glassmorphism-body tr:nth-child(n+5):hover {
         background: rgba(255, 255, 255, 0.08);
         transform: translateY(-1px);
         box-shadow:
             0 4px 20px rgba(138, 43, 226, 0.15),
             0 8px 32px rgba(128, 0, 255, 0.1);
-        z-index: 3;
-        /* Asegura que la fila con hover esté por encima de otras */
     }
 
-    /* Estilo adicional para todas las celdas de la tabla */
+    /* Estilo base para todas las celdas - sin efectos de hover */
     .glassmorphism-body td {
         padding: 1rem 1.5rem;
         text-align: center;
         color: rgba(255, 255, 255, 0.9);
         font-size: 0.875rem;
         border-right: none;
-        transition: all 0.3s ease;
-        position: relative;
-        /* Para poder controlar mejor el hover */
-        z-index: 1;
-        /* Base z-index */
+        background: transparent;
+        /* Sin fondo propio */
+        transition: none;
+        /* Sin transiciones */
+        position: static;
+        /* Evita posicionamiento que podría causar problemas */
     }
 
-    /* Evita específicamente el efecto de hover en celdas que contengan fechas (columna created) */
-    .glassmorphism-body td:last-child,
+    /* Elimina completamente cualquier efecto visual para celdas en las primeras 4 filas */
+    .glassmorphism-body tr:nth-child(-n+4) td {
+        transition: none !important;
+        transform: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* Tratamiento especial para columnas con fechas */
     .glassmorphism-body td[data-field="created_at"],
-    .glassmorphism-body td[data-field="created"] {
-        position: relative;
-        z-index: 2;
-        /* Mayor z-index */
-        isolation: isolate;
-        /* Crea un contexto de apilamiento independiente */
+    .glassmorphism-body td[data-field="created"],
+    .glassmorphism-body td:last-child {
+        background: transparent !important;
+        transition: none !important;
+        transform: none !important;
     }
 
+    /* Eliminar cualquier efecto hover en todas las celdas */
     .glassmorphism-body td:hover {
-        z-index: 3;
-        /* Asegura que la celda con hover esté por encima */
+        background: transparent !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
     .glassmorphism-body td:last-child {
