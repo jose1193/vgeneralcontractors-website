@@ -443,7 +443,7 @@
 
     "_comment_pagination": "=== PAGINACIÓN ===",
     "Showing :first to :last of :total results": "Mostrando de :first a :last de :total resultados",
-    "total_records": "registros totales",
+    "total_records": "Registros Totales",
 
     "_comment_navigation_menu": "=== MENÚ DE NAVEGACIÓN ===",
     "management": "Gestión",
