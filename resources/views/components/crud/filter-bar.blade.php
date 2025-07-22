@@ -212,9 +212,10 @@
                 </div>
 
                 <!-- Clear Filters Button - Ahora centrado en mobile, a la derecha en desktop -->
-                <div class="pt-6 border-t border-white/10 flex justify-center sm:justify-end">
+                <div
+                    class="pt-6 border-t border-white/10 flex justify-center sm:justify-end sticky bottom-0 bg-black/70 backdrop-filter backdrop-blur-md pb-4 px-4 -mx-2 mt-4">
                     <button id="clearFilters" type="button"
-                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent w-full sm:w-auto">
+                        class="inline-flex items-center px-4 py-3 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent w-full sm:w-auto">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
@@ -491,7 +492,8 @@
             border-bottom-right-radius: 16px;
             overflow-x: hidden;
             max-width: 100%;
-            padding: 0 0.5rem;
+            padding: 0 0.5rem 2rem 0.5rem;
+            /* Aumentar padding inferior */
         }
 
         .glassmorphism-filter-advanced::after {
@@ -509,6 +511,16 @@
             width: 100%;
             justify-content: center;
             margin-bottom: 0.5rem;
+            display: flex !important;
+            /* Asegurar que siempre sea visible */
+        }
+
+        /* Hacer más visible el botón en pantallas pequeñas */
+        .pt-6.border-t.border-white\/10 {
+            padding: 1rem 0.5rem;
+            margin-top: 0.5rem;
+            display: flex;
+            width: 100%;
         }
     }
 
@@ -652,7 +664,7 @@
                     // Animate in
                     requestAnimationFrame(() => {
                         // Agregar padding extra para móviles
-                        const extraPadding = window.innerWidth < 768 ? 50 : 0;
+                        const extraPadding = window.innerWidth < 768 ? 100 : 20;
                         advancedFilters.style.maxHeight = (advancedFilters.scrollHeight +
                             extraPadding) + 'px';
                     });
