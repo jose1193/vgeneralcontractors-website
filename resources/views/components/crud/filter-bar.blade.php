@@ -212,7 +212,8 @@
                 </div>
 
                 <!-- Clear Filters Button - Ahora centrado en mobile, a la derecha en desktop -->
-                <div class="pt-6 border-t border-white/10 flex justify-center sm:justify-end">
+                <div
+                    class="pt-6 border-t border-white/10 flex justify-center sm:justify-end sticky bottom-0 bg-black/80 backdrop-filter backdrop-blur-md pb-4">
                     <button id="clearFilters" type="button"
                         class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent w-full sm:w-auto">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -492,6 +493,8 @@
             overflow-x: hidden;
             max-width: 100%;
             padding: 0 0.5rem;
+            min-height: 200px;
+            /* Asegurar altura mínima */
         }
 
         .glassmorphism-filter-advanced::after {
@@ -652,7 +655,7 @@
                     // Animate in
                     requestAnimationFrame(() => {
                         // Agregar padding extra para móviles
-                        const extraPadding = window.innerWidth < 768 ? 50 : 0;
+                        const extraPadding = window.innerWidth < 768 ? 100 : 50;
                         advancedFilters.style.maxHeight = (advancedFilters.scrollHeight +
                             extraPadding) + 'px';
                     });
@@ -679,6 +682,16 @@
                 }
             });
         }
+
+        // Manejar el redimensionamiento de la ventana
+        window.addEventListener('resize', function() {
+            const advancedFilters = document.getElementById('advancedFilters');
+            if (advancedFilters && !advancedFilters.classList.contains('hidden')) {
+                // Solo ajustar si los filtros están visibles
+                const extraPadding = window.innerWidth < 768 ? 100 : 50;
+                advancedFilters.style.maxHeight = (advancedFilters.scrollHeight + extraPadding) + 'px';
+            }
+        });
 
         // Enhanced Clear Filters Functionality
         const clearFiltersBtn = document.getElementById('clearFilters');
