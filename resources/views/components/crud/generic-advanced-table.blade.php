@@ -243,9 +243,6 @@
         overflow: hidden;
         isolation: isolate;
         /* Crear nuevo contexto de apilamiento */
-        /* Asegurar que el header no afecte elementos fuera de su área */
-        contain: layout style paint;
-        z-index: 1;
     }
 
     /* Shimmer animated effect for table header */
@@ -260,15 +257,13 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 2;
-        /* Aumentado para estar por encima del ::before */
+        z-index: 1;
+        /* Reducido de 2 a 1 para no interferir con scroll */
         /* Aislamiento del shimmer solo al header */
         clip-path: inset(0 0 0 0);
         will-change: transform;
         transform: translateX(-100%) translateZ(0);
         /* Force hardware acceleration */
-        border-radius: 16px 16px 0 0;
-        /* Coincidir con el header */
     }
 
     .glassmorphism-header::before {
@@ -288,11 +283,6 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
-        /* Asegurar que solo afecte el header, no las filas de abajo */
-        z-index: 0;
-        /* Contener el efecto solo al header */
-        clip-path: inset(0 0 0 0);
-        overflow: hidden;
     }
 
     .glassmorphism-header:hover::before {
@@ -379,9 +369,6 @@
 
     .glassmorphism-body {
         background: rgba(0, 0, 0, 0.4);
-        position: relative;
-        z-index: 0;
-        /* Asegurar que esté por debajo del header */
     }
 
     .glassmorphism-body tr {
