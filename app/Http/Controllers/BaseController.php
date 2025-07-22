@@ -13,6 +13,7 @@ use App\Services\TransactionService;
 use App\Traits\ChecksPermissions;
 use App\Enums\RequestMethod;
 use App\Enums\CacheTime;
+use Carbon\Carbon;
 use Throwable;
 
 abstract class BaseController extends Controller
@@ -70,6 +71,16 @@ abstract class BaseController extends Controller
     protected function handleAjaxRequest(Request $request): JsonResponse
     {
         Log::debug('AJAX request detected in '.$this->entityName.'Controller@index.', $request->all());
+        
+        // Validate date range if provided
+        $dateValidation = $this->validateDateRange($request);
+        if (!$dateValidation['valid']) {
+            return response()->json([
+                'success' => false,
+                'message' => $dateValidation['message']
+            ], 422);
+        }
+
         $query = $this->modelClass::query();
         
         // Apply search filter if provided
@@ -78,6 +89,9 @@ abstract class BaseController extends Controller
             $query->where($this->getSearchField(), 'like', $searchTerm);
             Log::debug('Applying search filter.', ['term' => $request->search]);
         }
+
+        // Apply date filters
+        $this->applyDateFilters($query, $request);
         
         // Apply sorting
         $sortField = $request->input('sort_field', 'created_at');
@@ -468,5 +482,65 @@ abstract class BaseController extends Controller
     protected function afterRestore(string $entityName): void
     {
         // Default implementation does nothing
+    }
+
+    /**
+     * Apply date filters to query
+     */
+    protected function applyDateFilters($query, Request $request, string $defaultDateField = 'created_at')
+    {
+        if ($request->has('date_start') && !empty($request->date_start)) {
+            $dateField = $request->input('date_field', $defaultDateField);
+            $query->whereDate($dateField, '>=', $request->date_start);
+            Log::debug('Applied start date filter', [
+                'field' => $dateField,
+                'date' => $request->date_start
+            ]);
+        }
+        
+        if ($request->has('date_end') && !empty($request->date_end)) {
+            $dateField = $request->input('date_field', $defaultDateField);
+            $query->whereDate($dateField, '<=', $request->date_end);
+            Log::debug('Applied end date filter', [
+                'field' => $dateField,
+                'date' => $request->date_end
+            ]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Validate date range
+     */
+    protected function validateDateRange(Request $request): array
+    {
+        $startDate = $request->input('date_start');
+        $endDate = $request->input('date_end');
+
+        if ($startDate && $endDate) {
+            $start = \Carbon\Carbon::parse($startDate);
+            $end = \Carbon\Carbon::parse($endDate);
+
+            if ($end->lt($start)) {
+                return [
+                    'valid' => false,
+                    'message' => 'End date cannot be earlier than start date'
+                ];
+            }
+        }
+
+        return ['valid' => true];
+    }
+
+    /**
+     * Get available date fields for filtering
+     */
+    protected function getAvailableDateFields(): array
+    {
+        return [
+            'created_at' => 'Created Date',
+            'updated_at' => 'Updated Date'
+        ];
     }
 }

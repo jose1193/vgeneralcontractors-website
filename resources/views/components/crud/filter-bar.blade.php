@@ -19,8 +19,15 @@
     'exportLabel' => 'Export Data',
     'dateRangeStartId' => 'dateRangeStart',
     'dateRangeEndId' => 'dateRangeEnd',
+    'clearDatesId' => 'clearDates',
+    'dateRangeLabel' => 'Date Range',
+    'startDateLabel' => 'Start Date',
+    'endDateLabel' => 'End Date',
+    'clearDatesLabel' => 'Clear Dates',
     'managerName' => 'crudManager',
 ])
+
+
 
 <div class="glassmorphism-filter-container">
     <!-- Main Filter Bar - Siempre Visible -->
@@ -148,6 +155,13 @@
                                             </button>
                                         </div>
                                     </div>
+                                </div>
+                                <!-- Clear Dates Button -->
+                                <div class="flex justify-center mt-3">
+                                    <button type="button" id="{{ $clearDatesId }}"
+                                        class="px-4 py-2 text-sm font-medium text-gray-300 bg-black/30 border border-white/10 rounded-lg hover:bg-black/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm">
+                                        🗑️ {{ $clearDatesLabel }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -809,6 +823,143 @@
         function handleExport(format) {
             console.log(`Exporting data as ${format}`);
             // Add your actual export logic here
+        }
+
+        // Initialize Date Range Functionality
+        function initializeDateRange() {
+            const startDateInput = document.getElementById('{{ $dateRangeStartId }}');
+            const endDateInput = document.getElementById('{{ $dateRangeEndId }}');
+            const clearDatesBtn = document.getElementById('{{ $clearDatesId }}');
+            const managerName = '{{ $managerName }}';
+
+            if (!startDateInput || !endDateInput || !clearDatesBtn) {
+                console.warn('Date range elements not found');
+                return;
+            }
+
+            // Initialize Flatpickr for date inputs
+            const startDatePicker = flatpickr(startDateInput, {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'F j, Y',
+                allowInput: false,
+                clickOpens: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    handleDateChange();
+                    updateClearButtonVisibility();
+                }
+            });
+
+            const endDatePicker = flatpickr(endDateInput, {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'F j, Y',
+                allowInput: false,
+                clickOpens: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    handleDateChange();
+                    updateClearButtonVisibility();
+                }
+            });
+
+            // Handle date changes and validation
+            function handleDateChange() {
+                const startDate = startDatePicker.selectedDates[0];
+                const endDate = endDatePicker.selectedDates[0];
+
+                if (startDate && endDate && endDate < startDate) {
+                    showNotification('End date cannot be earlier than start date', 'error');
+                    endDatePicker.clear();
+                    return;
+                }
+
+                // Apply filters if manager is available
+                if (window[managerName] && typeof window[managerName].applyDateFilters === 'function') {
+                    const startDateStr = startDate ? startDatePicker.formatDate(startDate, 'Y-m-d') : '';
+                    const endDateStr = endDate ? endDatePicker.formatDate(endDate, 'Y-m-d') : '';
+
+                    window[managerName].applyDateFilters(startDateStr, endDateStr);
+                } else {
+                    console.warn(`Manager ${managerName} not found or doesn't support date filters`);
+                }
+            }
+
+            // Clear dates functionality
+            clearDatesBtn.addEventListener('click', function() {
+                startDatePicker.clear();
+                endDatePicker.clear();
+                updateClearButtonVisibility();
+
+                if (window[managerName] && typeof window[managerName].clearDateFilters === 'function') {
+                    window[managerName].clearDateFilters();
+                }
+            });
+
+            // Update clear button visibility
+            function updateClearButtonVisibility() {
+                const hasStartDate = startDateInput.value && startDateInput.value.trim() !== '';
+                const hasEndDate = endDateInput.value && endDateInput.value.trim() !== '';
+
+                const startClearBtn = document.getElementById('{{ $dateRangeStartId }}_clear');
+                const endClearBtn = document.getElementById('{{ $dateRangeEndId }}_clear');
+
+                if (startClearBtn) {
+                    if (hasStartDate) {
+                        startClearBtn.classList.remove('opacity-0', 'pointer-events-none');
+                        startClearBtn.classList.add('opacity-100');
+                    } else {
+                        startClearBtn.classList.add('opacity-0', 'pointer-events-none');
+                        startClearBtn.classList.remove('opacity-100');
+                    }
+                }
+
+                if (endClearBtn) {
+                    if (hasEndDate) {
+                        endClearBtn.classList.remove('opacity-0', 'pointer-events-none');
+                        endClearBtn.classList.add('opacity-100');
+                    } else {
+                        endClearBtn.classList.add('opacity-0', 'pointer-events-none');
+                        endClearBtn.classList.remove('opacity-100');
+                    }
+                }
+
+                // Show/hide main clear button
+                if (hasStartDate || hasEndDate) {
+                    clearDatesBtn.style.display = 'block';
+                } else {
+                    clearDatesBtn.style.display = 'none';
+                }
+            }
+
+            // Individual clear buttons
+            const startClearBtn = document.getElementById('{{ $dateRangeStartId }}_clear');
+            const endClearBtn = document.getElementById('{{ $dateRangeEndId }}_clear');
+
+            if (startClearBtn) {
+                startClearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    startDatePicker.clear();
+                    handleDateChange();
+                    updateClearButtonVisibility();
+                });
+            }
+
+            if (endClearBtn) {
+                endClearBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    endDatePicker.clear();
+                    handleDateChange();
+                    updateClearButtonVisibility();
+                });
+            }
+
+            // Initial visibility update
+            updateClearButtonVisibility();
+        }
+
+        // Initialize date range if elements exist
+        if (document.getElementById('{{ $dateRangeStartId }}')) {
+            initializeDateRange();
         }
     });
 </script>

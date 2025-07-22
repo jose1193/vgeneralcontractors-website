@@ -57,6 +57,15 @@ class InsuranceCompanyController extends BaseController
 
     protected function handleAjaxIndexRequest(Request $request): JsonResponse
     {
+        // Validate date range if provided
+        $dateValidation = $this->validateDateRange($request);
+        if (!$dateValidation['valid']) {
+            return response()->json([
+                'success' => false,
+                'message' => $dateValidation['message']
+            ], 422);
+        }
+
         // For AJAX requests, use the parent implementation but with user relationship
         $query = InsuranceCompany::with('user');
         
@@ -71,6 +80,9 @@ class InsuranceCompanyController extends BaseController
                   ->orWhere('website', 'like', $searchTerm);
             });
         }
+
+        // Apply date filters using base controller method
+        $this->applyDateFilters($query, $request);
         
         // Apply sorting
         $sortField = $request->input('sort_field', 'insurance_company_name');

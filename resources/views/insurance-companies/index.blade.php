@@ -50,6 +50,8 @@
                     searchFields: ['insurance_company_name', 'address', 'email', 'phone', 'website'],
                     // Establecer el valor inicial basado en localStorage
                     showDeleted: showDeletedState,
+                    // Configuración de filtros de fecha
+                    dateField: 'created_at', // Campo de fecha por defecto
                     // Configuración de numeración secuencial
                     showSequentialNumbers: true,
                     sequentialNumberLabel: "{{ __('nro') }}",

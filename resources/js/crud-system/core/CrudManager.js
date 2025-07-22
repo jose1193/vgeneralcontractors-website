@@ -44,6 +44,13 @@ export class CrudManager {
         this.isEditing = false;
         this.alertTimeout = null;
 
+        // Filtros de fecha
+        this.dateFilters = {
+            startDate: "",
+            endDate: "",
+            dateField: options.dateField || "created_at", // Campo de fecha por defecto
+        };
+
         // Modo de registro único
         this.singleRecordMode = options.singleRecordMode || false;
 
@@ -132,6 +139,10 @@ export class CrudManager {
             sort_direction: this.sortDirection,
             search: this.searchTerm,
             show_deleted: this.showDeleted ? "true" : "false",
+            // Agregar filtros de fecha
+            date_start: this.dateFilters.startDate,
+            date_end: this.dateFilters.endDate,
+            date_field: this.dateFilters.dateField,
         };
 
         try {
@@ -807,6 +818,78 @@ export class CrudManager {
      */
     hideTableLoading() {
         $("#loadingRow").remove();
+    }
+
+    /**
+     * Aplicar filtros de fecha
+     */
+    applyDateFilters(startDate, endDate, dateField = null) {
+        console.log("Applying date filters:", {
+            startDate,
+            endDate,
+            dateField,
+        });
+
+        // Validar que end date no sea menor que start date
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            this.modalManager.showAlert(
+                "error",
+                "End date cannot be earlier than start date",
+                this.alertSelector
+            );
+            return false;
+        }
+
+        // Actualizar filtros
+        this.dateFilters.startDate = startDate || "";
+        this.dateFilters.endDate = endDate || "";
+        if (dateField) {
+            this.dateFilters.dateField = dateField;
+        }
+
+        // Resetear a página 1 y recargar datos
+        this.currentPage = 1;
+        this.loadEntities();
+        return true;
+    }
+
+    /**
+     * Limpiar filtros de fecha
+     */
+    clearDateFilters() {
+        console.log("Clearing date filters");
+        this.dateFilters.startDate = "";
+        this.dateFilters.endDate = "";
+        this.currentPage = 1;
+        this.loadEntities();
+    }
+
+    /**
+     * Obtener estado actual de filtros de fecha
+     */
+    getDateFilters() {
+        return { ...this.dateFilters };
+    }
+
+    /**
+     * Validar rango de fechas
+     */
+    validateDateRange(startDate, endDate) {
+        if (!startDate || !endDate) {
+            return { valid: true };
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end < start) {
+            return {
+                valid: false,
+                message: "End date cannot be earlier than start date",
+            };
+        }
+
+        return { valid: true };
     }
 
     // Los módulos están disponibles directamente como propiedades de la instancia
