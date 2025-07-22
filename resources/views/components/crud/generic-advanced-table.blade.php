@@ -140,12 +140,17 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Permitir scrollbars */
+        /* Mejorar la gestión del scroll */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Aislar el contexto de apilamiento para evitar interferencias */
+        isolation: isolate;
+        /* Optimizar el scroll para mejor rendimiento */
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* Forzar scroll horizontal en responsive */
@@ -234,7 +239,10 @@
         border-radius: 16px 16px 0 0;
         position: relative;
         transition: all 0.3s ease;
+        /* Mejorado el aislamiento del overflow para el shimmer */
         overflow: hidden;
+        isolation: isolate;
+        /* Crear nuevo contexto de apilamiento */
     }
 
     /* Shimmer animated effect for table header */
@@ -242,13 +250,20 @@
         content: '';
         position: absolute;
         top: 0;
-        left: -40%;
+        left: 0;
+        /* Cambiado para usar con transform */
         width: 40%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
-        z-index: 2;
+        z-index: 1;
+        /* Reducido de 2 a 1 para no interferir con scroll */
+        /* Aislamiento del shimmer solo al header */
+        clip-path: inset(0 0 0 0);
+        will-change: transform;
+        transform: translateX(-100%) translateZ(0);
+        /* Force hardware acceleration */
     }
 
     .glassmorphism-header::before {
@@ -603,11 +618,11 @@
 
     @keyframes shimmer-header {
         0% {
-            left: -40%;
+            transform: translateX(-100%);
         }
 
         100% {
-            left: 100%;
+            transform: translateX(100%);
         }
     }
 
