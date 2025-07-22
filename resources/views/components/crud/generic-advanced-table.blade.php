@@ -142,36 +142,11 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
-        overflow: hidden;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-            0 6px 24px 0 rgba(138, 43, 226, 0.22),
-            0 12px 48px 0 rgba(128, 0, 255, 0.15),
-            0 2px 12px 0 rgba(75, 0, 130, 0.25),
-            0 1px 6px 0 rgba(147, 51, 234, 0.18);
-
-        /* Enhanced Blur Effects */
-        backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
-        overflow-x: auto;
+        /* Asegurar que el scroll horizontal es visible */
+        overflow-x: auto !important;
         overflow-y: auto;
         max-height: 70vh;
+        width: 100%;
         position: relative;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -181,11 +156,15 @@
         overflow-x: auto !important;
         overflow-y: visible;
         width: 100%;
+        /* Asegurar que el scroll horizontal es visible */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
     }
 
     /* Extra: Si quieres scroll vertical en mobile también */
     .glassmorphism-scroll-wrapper {
-        overflow-x: auto;
+        overflow-x: auto !important;
+        /* Forzar scroll horizontal */
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
@@ -196,8 +175,17 @@
         .glassmorphism-table-wrapper,
         .glassmorphism-scroll-wrapper {
             max-height: 50vh;
-            overflow-x: auto;
+            overflow-x: auto !important;
             overflow-y: auto;
+        }
+
+        .header-shimmer-container {
+            overflow: visible;
+        }
+
+        .glassmorphism-container {
+            padding: 1rem;
+            margin: 0.5rem 0;
         }
     }
 
@@ -226,16 +214,24 @@
 
     .glassmorphism-table {
         width: 100%;
+        min-width: 100%;
+        /* Asegura que la tabla ocupe al menos el 100% del ancho */
         border-collapse: collapse;
         color: rgba(255, 255, 255, 0.95);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        table-layout: auto;
+        /* Permite que la tabla se expanda según el contenido */
     }
 
     /* Nuevo contenedor para aislar el shimmer solo al header */
     .header-shimmer-container {
         position: relative;
-        overflow: hidden;
+        overflow: visible;
+        /* Permitir que el contenido se desborde para scroll */
         border-radius: 16px 16px 0 0;
+        width: 100%;
+        min-width: 100%;
+        /* Asegurar que el contenedor abarque todo el ancho */
     }
 
     /* El shimmer solo afecta al encabezado */
