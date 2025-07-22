@@ -11,43 +11,45 @@
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
-        <table id="{{ $id }}" class="glassmorphism-table">
-            <thead class="glassmorphism-header">
-                <tr>
-                    @foreach ($columns as $column)
-                        <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
-                            @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
-                            <div class="th-content">
-                                <span class="column-text">{{ $column['label'] }}</span>
-                                @if ($sortable && ($column['sortable'] ?? true))
-                                    <span class="sort-indicator">
-                                        <svg class="sort-icon" viewBox="0 0 24 24">
-                                            <path d="M7 14l5-5 5 5z" />
-                                            <path d="M7 10l5 5 5-5z" />
-                                        </svg>
-                                    </span>
-                                @endif
+        <div class="header-shimmer-container">
+            <table id="{{ $id }}" class="glassmorphism-table">
+                <thead class="glassmorphism-header">
+                    <tr>
+                        @foreach ($columns as $column)
+                            <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
+                                @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                                <div class="th-content">
+                                    <span class="column-text">{{ $column['label'] }}</span>
+                                    @if ($sortable && ($column['sortable'] ?? true))
+                                        <span class="sort-indicator">
+                                            <svg class="sort-icon" viewBox="0 0 24 24">
+                                                <path d="M7 14l5-5 5 5z" />
+                                                <path d="M7 10l5 5 5-5z" />
+                                            </svg>
+                                        </span>
+                                    @endif
+                                </div>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody id="{{ $id }}-body" class="glassmorphism-body">
+                    <!-- Loading row -->
+                    <tr id="loadingRow" class="loading-row">
+                        <td colspan="{{ count($columns) }}" class="loading-cell">
+                            <div class="loading-content">
+                                <div class="loading-spinner">
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                </div>
+                                <span class="loading-text">{{ $loadingText }}</span>
                             </div>
-                        </th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody id="{{ $id }}-body" class="glassmorphism-body">
-                <!-- Loading row -->
-                <tr id="loadingRow" class="loading-row">
-                    <td colspan="{{ count($columns) }}" class="loading-cell">
-                        <div class="loading-content">
-                            <div class="loading-spinner">
-                                <div class="spinner-ring"></div>
-                                <div class="spinner-ring"></div>
-                                <div class="spinner-ring"></div>
-                            </div>
-                            <span class="loading-text">{{ $loadingText }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -140,7 +142,33 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Permitir scrollbars horizontales y verticales */
+        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glassmorphism-table-wrapper {
+        /* Enhanced Crystal Glass Background */
+        background: rgba(0, 0, 0, 0.82);
+        border-radius: 16px;
+
+        /* Premium Purple Box Shadow System */
+        box-shadow:
+            0 6px 24px 0 rgba(138, 43, 226, 0.22),
+            0 12px 48px 0 rgba(128, 0, 255, 0.15),
+            0 2px 12px 0 rgba(75, 0, 130, 0.25),
+            0 1px 6px 0 rgba(147, 51, 234, 0.18);
+
+        /* Enhanced Blur Effects */
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Permitir scrollbars */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
@@ -161,7 +189,6 @@
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
-        /* Permitir scrollbars reales, pero el shimmer sigue visible porque el overflow: hidden está en el wrapper interno */
     }
 
     @media (max-width: 768px) {
@@ -204,6 +231,33 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
+    /* Nuevo contenedor para aislar el shimmer solo al header */
+    .header-shimmer-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* El shimmer solo afecta al encabezado */
+    .header-shimmer-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150px;
+        width: 150px;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3) 25%,
+                rgba(138, 43, 226, 0.4) 50%,
+                rgba(255, 255, 255, 0.3) 75%,
+                transparent 100%);
+        animation: shimmer 3s infinite;
+        pointer-events: none;
+        /* Limitarlo solo a la parte superior de la tabla */
+        clip-path: polygon(0 0, 100% 0, 100% 70px, 0 70px);
+    }
+
     .glassmorphism-header {
         /* Premium Glass Header Background */
         background: rgba(0, 0, 0, 0.85);
@@ -226,7 +280,7 @@
         overflow: hidden;
     }
 
-    /* Shimmer animated effect for table header */
+    /* Shimmer animated effect for table header - isolated to header only */
     .glassmorphism-header::after {
         content: '';
         position: absolute;
@@ -238,6 +292,9 @@
         animation: shimmer-header 2.2s infinite;
         pointer-events: none;
         z-index: 2;
+        overflow: hidden;
+        border-radius: 16px 16px 0 0;
+        /* Contain within header radius */
     }
 
     .glassmorphism-header::before {
@@ -597,6 +654,16 @@
 
         100% {
             left: 100%;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
         }
     }
 
