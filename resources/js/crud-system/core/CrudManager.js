@@ -666,9 +666,6 @@ export class CrudManager {
             // Contenedor principal con clases glassmorphism
             paginationHtml += '<div class="pagination-wrapper">';
 
-            // Add record information at the top
-            paginationHtml += `<div class="record-info">${recordInfo}</div>`;
-
             paginationHtml +=
                 '<nav class="pagination" aria-label="Pagination">';
 
@@ -730,6 +727,10 @@ export class CrudManager {
             }
 
             paginationHtml += "</nav>";
+
+            // Add record information at the bottom
+            paginationHtml += `<div class="record-info">${recordInfo}</div>`;
+
             paginationHtml += "</div>";
         } else {
             // Single page case - show only record information with wrapper
@@ -774,7 +775,7 @@ export class CrudManager {
         const showingText = this.translations.showing || "Showing";
         const toText = this.translations.to || "to";
         const ofText = this.translations.of || "of";
-        const recordsText = this.translations.totalRecords || "total records";
+        const recordsText = this.translations.total_records || "total records";
 
         return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
     }

@@ -1964,5 +1964,8 @@
     "clear_filters": "Clear filters",
     "filters": "Filters",
     "hide_filters": "Hide Filters",
-    "filters_cleared": "All filters have been cleared."
+    "filters_cleared": "All filters have been cleared.",
+
+    "_comment_pagination": "=== PAGINATION ===",
+    "total_records": "total records"
 }

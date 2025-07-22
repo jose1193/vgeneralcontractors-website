@@ -56,7 +56,6 @@ export class CrudTableRenderer {
         }
 
         let html = `<div class="pagination-wrapper">`;
-        html += `<div class="record-info">${recordInfo}</div>`;
         html += `<div class="flex space-x-1">`;
 
         if (data.current_page > 1) {
@@ -77,7 +76,9 @@ export class CrudTableRenderer {
             }">${this.translations.next || "Next"}</button>`;
         }
 
-        html += `</div></div>`;
+        html += `</div>`;
+        html += `<div class="record-info">${recordInfo}</div>`;
+        html += `</div>`;
         container.innerHTML = html;
     }
 
