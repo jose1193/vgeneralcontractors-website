@@ -11,45 +11,48 @@
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
+        <!-- Contenedor separado para el efecto shimmer -->
         <div class="header-shimmer-container">
-            <table id="{{ $id }}" class="glassmorphism-table">
-                <thead class="glassmorphism-header">
-                    <tr>
-                        @foreach ($columns as $column)
-                            <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
-                                @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
-                                <div class="th-content">
-                                    <span class="column-text">{{ $column['label'] }}</span>
-                                    @if ($sortable && ($column['sortable'] ?? true))
-                                        <span class="sort-indicator">
-                                            <svg class="sort-icon" viewBox="0 0 24 24">
-                                                <path d="M7 14l5-5 5 5z" />
-                                                <path d="M7 10l5 5 5-5z" />
-                                            </svg>
-                                        </span>
-                                    @endif
-                                </div>
-                            </th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody id="{{ $id }}-body" class="glassmorphism-body">
-                    <!-- Loading row -->
-                    <tr id="loadingRow" class="loading-row">
-                        <td colspan="{{ count($columns) }}" class="loading-cell">
-                            <div class="loading-content">
-                                <div class="loading-spinner">
-                                    <div class="spinner-ring"></div>
-                                    <div class="spinner-ring"></div>
-                                    <div class="spinner-ring"></div>
-                                </div>
-                                <span class="loading-text">{{ $loadingText }}</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Este elemento solo contiene la animación de shimmer -->
         </div>
+        <!-- Tabla completa sin animaciones expansivas -->
+        <table id="{{ $id }}" class="glassmorphism-table">
+            <thead class="glassmorphism-header">
+                <tr>
+                    @foreach ($columns as $column)
+                        <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
+                            @if ($sortable && ($column['sortable'] ?? true)) data-field="{{ $column['field'] }}" @endif>
+                            <div class="th-content">
+                                <span class="column-text">{{ $column['label'] }}</span>
+                                @if ($sortable && ($column['sortable'] ?? true))
+                                    <span class="sort-indicator">
+                                        <svg class="sort-icon" viewBox="0 0 24 24">
+                                            <path d="M7 14l5-5 5 5z" />
+                                            <path d="M7 10l5 5 5-5z" />
+                                        </svg>
+                                    </span>
+                                @endif
+                            </div>
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody id="{{ $id }}-body" class="glassmorphism-body">
+                <!-- Loading row -->
+                <tr id="loadingRow" class="loading-row">
+                    <td colspan="{{ count($columns) }}" class="loading-cell">
+                        <div class="loading-content">
+                            <div class="loading-spinner">
+                                <div class="spinner-ring"></div>
+                                <div class="spinner-ring"></div>
+                                <div class="spinner-ring"></div>
+                            </div>
+                            <span class="loading-text">{{ $loadingText }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -81,9 +84,13 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
 
-        /* Enhanced Animation */
+        /* Enhanced Animation - solo para efectos visuales, no para layout */
         animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Prevenir expansión durante animaciones */
+        transform: translateZ(0);
+        will-change: transform, box-shadow;
     }
 
     .glassmorphism-container::before {
@@ -142,13 +149,14 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Asegurar que el scroll horizontal es visible */
+        /* Asegurar que el scroll horizontal es visible sin animaciones */
         overflow-x: auto !important;
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Eliminar transiciones que puedan causar expansión */
+        transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Forzar scroll horizontal en responsive */
@@ -159,6 +167,8 @@
         /* Asegurar que el scroll horizontal es visible */
         scrollbar-width: thin;
         scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
+        /* Evitar transiciones que puedan causar expansión */
+        transition: none;
     }
 
     /* Extra: Si quieres scroll vertical en mobile también */
@@ -168,6 +178,8 @@
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
+        /* Evitar transiciones que puedan causar expansión */
+        transition: none;
     }
 
     @media (max-width: 768px) {
@@ -225,13 +237,20 @@
 
     /* Nuevo contenedor para aislar el shimmer solo al header */
     .header-shimmer-container {
-        position: relative;
-        overflow: visible;
-        /* Permitir que el contenido se desborde para scroll */
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        /* Altura fija */
+        z-index: 3;
         border-radius: 16px 16px 0 0;
-        width: 100%;
-        min-width: 100%;
-        /* Asegurar que el contenedor abarque todo el ancho */
+        pointer-events: none;
+        /* No interceptar clics */
+        /* Prevenir expansión durante animaciones */
+        transform: translateZ(0);
+        will-change: transform;
+        overflow: hidden;
     }
 
     /* El shimmer solo afecta al encabezado */
@@ -241,7 +260,8 @@
         top: 0;
         left: -150px;
         width: 150px;
-        height: 100%;
+        height: 70px;
+        /* Altura fija para el shimmer */
         background: linear-gradient(90deg,
                 transparent,
                 rgba(255, 255, 255, 0.3) 25%,
@@ -250,8 +270,8 @@
                 transparent 100%);
         animation: shimmer 3s infinite;
         pointer-events: none;
-        /* Limitarlo solo a la parte superior de la tabla */
-        clip-path: polygon(0 0, 100% 0, 100% 70px, 0 70px);
+        z-index: 3;
+        /* Asegurar que esté por encima de otros elementos */
     }
 
     .glassmorphism-header {
@@ -656,10 +676,16 @@
     @keyframes shimmer {
         0% {
             transform: translateX(-100%);
+            opacity: 0.3;
+        }
+
+        50% {
+            opacity: 1;
         }
 
         100% {
             transform: translateX(100%);
+            opacity: 0.3;
         }
     }
 
