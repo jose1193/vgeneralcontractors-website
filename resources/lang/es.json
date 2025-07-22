@@ -2064,5 +2064,7 @@
     "clear_filters": "Limpiar filtros",
     "filters": "Filtros",
     "hide_filters": "Ocultar filtros",
-    "filters_cleared": "Todos los filtros han sido limpiados."
+    "filters_cleared": "Todos los filtros han sido limpiados.",
+    "end_date_cannot_be_earlier": "La fecha final no puede ser anterior a la fecha inicial",
+    "date_filters_cleared": "Los filtros de fecha han sido limpiados"
 }

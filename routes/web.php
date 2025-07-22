@@ -243,6 +243,11 @@ Route::middleware([
         Route::post('/check-email', [App\Http\Controllers\InsuranceCompanyController::class, 'checkEmail'])->name('check-email');
         Route::post('/check-phone', [App\Http\Controllers\InsuranceCompanyController::class, 'checkPhoneExists'])->name('check-phone');
         Route::get('/form-data', [App\Http\Controllers\InsuranceCompanyController::class, 'getFormData'])->name('form-data');
+        
+        // Test route for date filter functionality
+        Route::get('/test-filter', function () {
+            return view('insurance-companies.test-filter');
+        })->name('test-filter');
     });
 
     // Model AI Resource Routes (CRUD) - NEW

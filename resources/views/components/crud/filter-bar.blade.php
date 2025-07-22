@@ -545,108 +545,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Flatpickr for date range inputs
-        let startDatePicker = null;
-        let endDatePicker = null;
+        // Get manager name from component props
+        const managerName = '{{ $managerName }}';
 
-        // Initialize Start Date Picker
-        const startDateInput = document.getElementById('{{ $dateRangeStartId }}');
-        if (startDateInput) {
-            startDatePicker = flatpickr(startDateInput, {
-                dateFormat: "Y-m-d",
-                placeholder: "{{ __('start_date') }}",
-                allowInput: false,
-                clickOpens: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        // Update end date picker's minDate
-                        if (endDatePicker) {
-                            endDatePicker.set('minDate', selectedDates[0]);
-                        }
-                        // Show clear button
-                        startDateInput.classList.add('date-input-active');
-                    } else {
-                        startDateInput.classList.remove('date-input-active');
-                    }
-
-                    // Trigger filter update
-                    handleDateRangeChange();
-                }
-            });
-        }
-
-        // Initialize End Date Picker
-        const endDateInput = document.getElementById('{{ $dateRangeEndId }}');
-        if (endDateInput) {
-            endDatePicker = flatpickr(endDateInput, {
-                dateFormat: "Y-m-d",
-                placeholder: "{{ __('end_date') }}",
-                allowInput: false,
-                clickOpens: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        // Update start date picker's maxDate
-                        if (startDatePicker) {
-                            startDatePicker.set('maxDate', selectedDates[0]);
-                        }
-                        // Show clear button
-                        endDateInput.classList.add('date-input-active');
-                    } else {
-                        endDateInput.classList.remove('date-input-active');
-                    }
-
-                    // Trigger filter update
-                    handleDateRangeChange();
-                }
-            });
-        }
-
-        // Clear button functionality
-        const startClearBtn = document.getElementById('{{ $dateRangeStartId }}_clear');
-        if (startClearBtn) {
-            startClearBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (startDatePicker) {
-                    startDatePicker.clear();
-                    if (endDatePicker) {
-                        endDatePicker.set('minDate', null);
-                    }
-                }
-                startDateInput.classList.remove('date-input-active');
-                handleDateRangeChange();
-            });
-        }
-
-        const endClearBtn = document.getElementById('{{ $dateRangeEndId }}_clear');
-        if (endClearBtn) {
-            endClearBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (endDatePicker) {
-                    endDatePicker.clear();
-                    if (startDatePicker) {
-                        startDatePicker.set('maxDate', null);
-                    }
-                }
-                endDateInput.classList.remove('date-input-active');
-                handleDateRangeChange();
-            });
-        }
-
-        // Handle date range changes
-        function handleDateRangeChange() {
-            const startDate = startDatePicker ? startDatePicker.selectedDates[0] : null;
-            const endDate = endDatePicker ? endDatePicker.selectedDates[0] : null;
-
-            console.log('Date range changed:', {
-                start: startDate ? startDate.toISOString().split('T')[0] : null,
-                end: endDate ? endDate.toISOString().split('T')[0] : null
-            });
-
-            // Add your date range filtering logic here
-            // This function will be called whenever the date range changes
-        }
+        // Initialize date range functionality
+        initializeDateRangeFilters();
 
         // Toggle Advanced Filters (existing code)
         const toggleButton = document.getElementById('toggleFilters');
@@ -826,109 +729,101 @@
         }
 
         // Initialize Date Range Functionality
-        function initializeDateRange() {
+        function initializeDateRangeFilters() {
             const startDateInput = document.getElementById('{{ $dateRangeStartId }}');
             const endDateInput = document.getElementById('{{ $dateRangeEndId }}');
-            const clearDatesBtn = document.getElementById('{{ $clearDatesId }}');
-            const managerName = '{{ $managerName }}';
 
-            if (!startDateInput || !endDateInput || !clearDatesBtn) {
-                console.warn('Date range elements not found');
+            if (!startDateInput || !endDateInput) {
+                console.warn('Date range input elements not found');
                 return;
             }
 
-            // Initialize Flatpickr for date inputs
+            // Initialize Flatpickr for start date
             const startDatePicker = flatpickr(startDateInput, {
                 dateFormat: 'Y-m-d',
                 altInput: true,
                 altFormat: 'F j, Y',
                 allowInput: false,
                 clickOpens: true,
+                placeholder: '{{ __('start_date') }}',
                 onChange: function(selectedDates, dateStr, instance) {
-                    handleDateChange();
-                    updateClearButtonVisibility();
+                    handleDateFilterChange();
+                    toggleClearButtonVisibility();
                 }
             });
 
+            // Initialize Flatpickr for end date
             const endDatePicker = flatpickr(endDateInput, {
                 dateFormat: 'Y-m-d',
                 altInput: true,
                 altFormat: 'F j, Y',
                 allowInput: false,
                 clickOpens: true,
+                placeholder: '{{ __('end_date') }}',
                 onChange: function(selectedDates, dateStr, instance) {
-                    handleDateChange();
-                    updateClearButtonVisibility();
+                    handleDateFilterChange();
+                    toggleClearButtonVisibility();
                 }
             });
 
-            // Handle date changes and validation
-            function handleDateChange() {
+            // Handle date filter changes
+            function handleDateFilterChange() {
                 const startDate = startDatePicker.selectedDates[0];
                 const endDate = endDatePicker.selectedDates[0];
 
+                // Validate date range
                 if (startDate && endDate && endDate < startDate) {
-                    showNotification('End date cannot be earlier than start date', 'error');
+                    showNotification('{{ __('end_date_cannot_be_earlier') }}', 'error');
                     endDatePicker.clear();
                     return;
                 }
 
-                // Apply filters if manager is available
+                // Update date picker constraints
+                if (startDate) {
+                    endDatePicker.set('minDate', startDate);
+                } else {
+                    endDatePicker.set('minDate', null);
+                }
+
+                if (endDate) {
+                    startDatePicker.set('maxDate', endDate);
+                } else {
+                    startDatePicker.set('maxDate', null);
+                }
+
+                // Apply filters to CrudManager
                 if (window[managerName] && typeof window[managerName].applyDateFilters === 'function') {
                     const startDateStr = startDate ? startDatePicker.formatDate(startDate, 'Y-m-d') : '';
                     const endDateStr = endDate ? endDatePicker.formatDate(endDate, 'Y-m-d') : '';
 
+                    console.log('Applying date filters via CrudManager:', {
+                        startDateStr,
+                        endDateStr
+                    });
                     window[managerName].applyDateFilters(startDateStr, endDateStr);
                 } else {
-                    console.warn(`Manager ${managerName} not found or doesn't support date filters`);
+                    console.warn(`CrudManager ${managerName} not found or doesn't support date filters`);
                 }
             }
 
             // Clear dates functionality
-            clearDatesBtn.addEventListener('click', function() {
-                startDatePicker.clear();
-                endDatePicker.clear();
-                updateClearButtonVisibility();
+            const clearDatesBtn = document.getElementById('{{ $clearDatesId }}');
+            if (clearDatesBtn) {
+                clearDatesBtn.addEventListener('click', function() {
+                    startDatePicker.clear();
+                    endDatePicker.clear();
+                    startDatePicker.set('maxDate', null);
+                    endDatePicker.set('minDate', null);
 
-                if (window[managerName] && typeof window[managerName].clearDateFilters === 'function') {
-                    window[managerName].clearDateFilters();
-                }
-            });
-
-            // Update clear button visibility
-            function updateClearButtonVisibility() {
-                const hasStartDate = startDateInput.value && startDateInput.value.trim() !== '';
-                const hasEndDate = endDateInput.value && endDateInput.value.trim() !== '';
-
-                const startClearBtn = document.getElementById('{{ $dateRangeStartId }}_clear');
-                const endClearBtn = document.getElementById('{{ $dateRangeEndId }}_clear');
-
-                if (startClearBtn) {
-                    if (hasStartDate) {
-                        startClearBtn.classList.remove('opacity-0', 'pointer-events-none');
-                        startClearBtn.classList.add('opacity-100');
-                    } else {
-                        startClearBtn.classList.add('opacity-0', 'pointer-events-none');
-                        startClearBtn.classList.remove('opacity-100');
+                    // Clear filters in CrudManager
+                    if (window[managerName] && typeof window[managerName].clearDateFilters ===
+                        'function') {
+                        window[managerName].clearDateFilters();
                     }
-                }
 
-                if (endClearBtn) {
-                    if (hasEndDate) {
-                        endClearBtn.classList.remove('opacity-0', 'pointer-events-none');
-                        endClearBtn.classList.add('opacity-100');
-                    } else {
-                        endClearBtn.classList.add('opacity-0', 'pointer-events-none');
-                        endClearBtn.classList.remove('opacity-100');
-                    }
-                }
-
-                // Show/hide main clear button
-                if (hasStartDate || hasEndDate) {
-                    clearDatesBtn.style.display = 'block';
-                } else {
-                    clearDatesBtn.style.display = 'none';
-                }
+                    toggleClearButtonVisibility();
+                    showNotification('{{ __('date_filters_cleared') }}', 'info');
+                });
             }
 
             // Individual clear buttons
@@ -939,8 +834,9 @@
                 startClearBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     startDatePicker.clear();
-                    handleDateChange();
-                    updateClearButtonVisibility();
+                    startDatePicker.set('maxDate', null);
+                    handleDateFilterChange();
+                    toggleClearButtonVisibility();
                 });
             }
 
@@ -948,18 +844,40 @@
                 endClearBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     endDatePicker.clear();
-                    handleDateChange();
-                    updateClearButtonVisibility();
+                    endDatePicker.set('minDate', null);
+                    handleDateFilterChange();
+                    toggleClearButtonVisibility();
                 });
             }
 
-            // Initial visibility update
-            updateClearButtonVisibility();
+            // Toggle clear button visibility
+            function toggleClearButtonVisibility() {
+                const hasStartDate = startDateInput.value && startDateInput.value.trim() !== '';
+                const hasEndDate = endDateInput.value && endDateInput.value.trim() !== '';
+
+                // Individual clear buttons
+                if (startClearBtn) {
+                    startClearBtn.style.display = hasStartDate ? 'block' : 'none';
+                }
+                if (endClearBtn) {
+                    endClearBtn.style.display = hasEndDate ? 'block' : 'none';
+                }
+
+                // Main clear button
+                if (clearDatesBtn) {
+                    clearDatesBtn.style.display = (hasStartDate || hasEndDate) ? 'block' : 'none';
+                }
+            }
+
+            // Initial setup
+            toggleClearButtonVisibility();
         }
 
         // Initialize date range if elements exist
         if (document.getElementById('{{ $dateRangeStartId }}')) {
-            initializeDateRange();
+            console.log('Initializing date range filters for manager:', managerName);
+        } else {
+            console.warn('Date range elements not found - skipping initialization');
         }
     });
 </script>

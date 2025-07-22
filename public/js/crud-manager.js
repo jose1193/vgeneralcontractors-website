@@ -1079,4 +1079,72 @@ class CrudManager {
     capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    /**
+     * Apply date filters
+     */
+    applyDateFilters(startDate, endDate, dateField = null) {
+        console.log("Applying date filters:", {
+            startDate,
+            endDate,
+            dateField,
+        });
+
+        // Validate that end date is not earlier than start date
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            console.error("End date cannot be earlier than start date");
+            return false;
+        }
+
+        // Update internal state
+        this.startDate = startDate || "";
+        this.endDate = endDate || "";
+
+        // Reset to page 1 and reload data
+        this.currentPage = 1;
+        this.loadEntities();
+        return true;
+    }
+
+    /**
+     * Clear date filters
+     */
+    clearDateFilters() {
+        console.log("Clearing date filters");
+        this.startDate = "";
+        this.endDate = "";
+        this.currentPage = 1;
+        this.loadEntities();
+    }
+
+    /**
+     * Get current date filters
+     */
+    getDateFilters() {
+        return {
+            startDate: this.startDate,
+            endDate: this.endDate,
+        };
+    }
+
+    /**
+     * Validate date range
+     */
+    validateDateRange(startDate, endDate) {
+        if (!startDate || !endDate) {
+            return { valid: true };
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end < start) {
+            return {
+                valid: false,
+                message: "End date cannot be earlier than start date",
+            };
+        }
+
+        return { valid: true };
+    }
 }

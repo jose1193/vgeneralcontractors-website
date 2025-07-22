@@ -1966,6 +1966,8 @@
     "hide_filters": "Hide Filters",
     "filters_cleared": "All filters have been cleared.",
     "clear_dates": "Clear Dates",
+    "end_date_cannot_be_earlier": "End date cannot be earlier than start date",
+    "date_filters_cleared": "Date filters have been cleared",
 
     "_comment_pagination": "=== PAGINATION ===",
     "total_records": "Total Records"
