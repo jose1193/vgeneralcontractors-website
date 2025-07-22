@@ -12,60 +12,7 @@
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
-            <thead
-                class="glas    .pagination .page-item.disabled .page-link::before {
-        opacity: 0;
-    }
-
-    /* Animaciones Keyframes */
-    @keyframes fadeInUp {
-        0% {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.5;
-        }
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    @keyframes shimmer-header {
-        0% {
-            left: -40%;
-        }
-        100% {
-            left: 100%;
-        }
-    }
-
-</style>er">
+            <thead class="glassmorphism-header">
                 <tr>
                     @foreach ($columns as $column)
                         <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
@@ -193,7 +140,29 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Permitir scrollbars - quitar overflow hidden que interfiere */
+        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
+        overflow: hidden;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glassmorphism-table-wrapper {
+        /* Enhanced Crystal Glass Background */
+        background: rgba(0, 0, 0, 0.82);
+        border-radius: 16px;
+
+        /* Premium Purple Box Shadow System */
+        box-shadow:
+
+            /* Enhanced Blur Effects */
+            backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Premium Glass Border */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+        /* Permitir scrollbars */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
@@ -225,6 +194,13 @@
             overflow-x: auto;
             overflow-y: auto;
         }
+    }
+
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(138, 43, 226, 0.4) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%);
+    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
@@ -277,32 +253,20 @@
         position: relative;
         transition: all 0.3s ease;
         overflow: hidden;
-
-        /* Pulso sutil de fondo */
-        animation: header-pulse 6s ease-in-out infinite;
     }
 
-    /* Premium Shimmer Effect for Table Header */
+    /* Shimmer animated effect for table header */
     .glassmorphism-header::after {
         content: '';
         position: absolute;
         top: 0;
-        left: -100%;
-        width: 100%;
+        left: -40%;
+        width: 40%;
         height: 100%;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.1) 20%,
-                rgba(168, 85, 247, 0.4) 40%,
-                rgba(255, 255, 255, 0.6) 50%,
-                rgba(139, 92, 246, 0.4) 60%,
-                rgba(255, 255, 255, 0.1) 80%,
-                transparent 100%);
-        animation: shimmer-premium 3s ease-in-out infinite;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+        animation: shimmer-header 2.2s infinite;
         pointer-events: none;
         z-index: 2;
-        border-radius: 16px 16px 0 0;
-        filter: blur(0.5px);
     }
 
     .glassmorphism-header::before {
@@ -324,29 +288,8 @@
         transition: opacity 0.3s ease;
     }
 
-    /* Shimmer adicional sutil y continuo */
-    .glassmorphism-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -50%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.03) 40%,
-                rgba(168, 85, 247, 0.1) 50%,
-                rgba(255, 255, 255, 0.03) 60%,
-                transparent 100%);
-        animation: shimmer-subtle 4s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 1;
-        border-radius: 16px 16px 0 0;
-    }
-
     .glassmorphism-header:hover::before {
         opacity: 1;
-        animation: shimmer-hover 1.5s ease-in-out infinite;
     }
 
     .glassmorphism-th {
@@ -676,77 +619,13 @@
         }
     }
 
-    @keyframes shimmer-premium {
+    @keyframes shimmer-header {
         0% {
-            left: -100%;
-            opacity: 0;
-        }
-
-        10% {
-            opacity: 1;
-        }
-
-        90% {
-            opacity: 1;
+            left: -40%;
         }
 
         100% {
             left: 100%;
-            opacity: 0;
-        }
-    }
-
-    @keyframes shimmer-subtle {
-        0% {
-            left: -50%;
-            opacity: 0.3;
-        }
-
-        50% {
-            left: 50%;
-            opacity: 0.8;
-        }
-
-        100% {
-            left: 150%;
-            opacity: 0.3;
-        }
-    }
-
-    @keyframes shimmer-hover {
-        0% {
-            left: -50%;
-            opacity: 0.5;
-        }
-
-        50% {
-            left: 50%;
-            opacity: 1;
-        }
-
-        100% {
-            left: 150%;
-            opacity: 0.5;
-        }
-    }
-
-    @keyframes header-pulse {
-
-        0%,
-        100% {
-            box-shadow:
-                0 2px 16px 0 rgba(138, 43, 226, 0.15),
-                0 4px 24px 0 rgba(128, 0, 255, 0.1),
-                0 1px 6px 0 rgba(75, 0, 130, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        50% {
-            box-shadow:
-                0 2px 20px 0 rgba(138, 43, 226, 0.25),
-                0 4px 32px 0 rgba(128, 0, 255, 0.18),
-                0 1px 8px 0 rgba(75, 0, 130, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
     }
 
