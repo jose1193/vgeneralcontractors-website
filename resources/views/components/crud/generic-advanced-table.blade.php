@@ -10,6 +10,12 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
+    <!-- Shimmer borders para el contenedor principal -->
+    <div class="container-shimmer-top"></div>
+    <div class="container-shimmer-right"></div>
+    <div class="container-shimmer-bottom"></div>
+    <div class="container-shimmer-left"></div>
+
     <!-- Contenedor de la tabla con scroll -->
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
@@ -85,6 +91,26 @@
         /* Refined Border for Glass Effect */
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+        /* Añade animación sutil de entrada */
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Efecto shimmer sutil en el borde del contenedor principal */
+    .glassmorphism-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                transparent 100%);
+        animation: shimmer-border 4s infinite;
+        z-index: 1;
+        pointer-events: none;
     }
 
     .glassmorphism-container::before {
@@ -135,6 +161,24 @@
         max-height: 70vh;
         width: 100%;
         position: relative;
+    }
+
+    /* Nuevo efecto shimmer en el borde superior de la tabla */
+    .glassmorphism-table-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(138, 43, 226, 0.4) 50%,
+                transparent 100%);
+        animation: shimmer-border 3s infinite;
+        z-index: 4;
+        /* Por encima de la tabla pero por debajo del shimmer del header */
+        pointer-events: none;
     }
 
     /* Forzar scroll horizontal en responsive */
@@ -213,6 +257,52 @@
         overflow: hidden;
         /* Contiene el efecto shimmer */
         background-color: transparent;
+    }
+
+    /* Shimmer borders para el contenedor principal */
+    .container-shimmer-top,
+    .container-shimmer-right,
+    .container-shimmer-bottom,
+    .container-shimmer-left {
+        position: absolute;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(138, 43, 226, 0.3) 50%,
+                transparent 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .container-shimmer-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        animation: shimmer-border 4s infinite;
+    }
+
+    .container-shimmer-right {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 1px;
+        animation: shimmer-border-vertical 5s infinite;
+    }
+
+    .container-shimmer-bottom {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        animation: shimmer-border 4s infinite reverse;
+    }
+
+    .container-shimmer-left {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 1px;
+        animation: shimmer-border-vertical 5s infinite reverse;
     }
 
     /* Protector invisible para prevenir efectos en las primeras 4 filas */
@@ -724,6 +814,26 @@
 
         100% {
             left: 100%;
+        }
+    }
+
+    @keyframes shimmer-border {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    @keyframes shimmer-border-vertical {
+        0% {
+            transform: translateY(-100%);
+        }
+
+        100% {
+            transform: translateY(100%);
         }
     }
 
