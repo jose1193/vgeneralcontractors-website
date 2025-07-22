@@ -479,10 +479,38 @@
     /* Enhanced Glassmorphism Pagination */
     .pagination-wrapper {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         margin: 2rem 0;
-        gap: 0.5rem;
+        gap: 1rem;
+    }
+
+    /* Record information styling */
+    .record-info,
+    .record-info-single {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        box-shadow:
+            0 2px 12px rgba(138, 43, 226, 0.15),
+            0 4px 20px rgba(128, 0, 255, 0.1);
+    }
+
+    .record-info-single {
+        margin: 1rem 0;
+    }
+
+    .single-page {
+        margin: 1rem 0;
     }
 
     .pagination {
@@ -678,6 +706,13 @@
 
         .pagination-wrapper {
             margin: 1rem 0;
+            gap: 0.75rem;
+        }
+
+        .record-info,
+        .record-info-single {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
         }
     }
 

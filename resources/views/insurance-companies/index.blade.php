@@ -255,7 +255,14 @@
                         usernameAlreadyInUse: "{{ __('username_already_in_use') }}",
                         usernameAvailable: "{{ __('username_available') }}",
                         pleaseCorrectErrors: "{{ __('please_correct_errors') }}",
-                        noRecordsFound: "{{ __('no_data') }}"
+                        noRecordsFound: "{{ __('no_data') }}",
+                        // Pagination translations
+                        showing: "{{ __('showing') }}",
+                        to: "{{ __('to') }}",
+                        of: "{{ __('of') }}",
+                        results: "{{ __('results') }}",
+                        totalRecords: "{{ __('total_records') }}",
+                        records: "{{ __('records') }}"
                     }
                 });
 

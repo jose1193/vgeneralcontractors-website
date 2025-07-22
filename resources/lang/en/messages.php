@@ -118,6 +118,14 @@ return [
     'phone_required' => 'Phone number required',
     'recaptcha_failed' => 'reCAPTCHA validation failed. Please try again.',
     
+    // Pagination
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'total_records' => 'total records',
+    'records' => 'records',
+    
     // CTA
     'ready_transform_roof' => 'Ready to transform your roof? Get your free inspection today!',
     'ready_free_inspection' => 'Ready for Your Free Inspection?',

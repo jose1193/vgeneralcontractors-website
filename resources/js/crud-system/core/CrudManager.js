@@ -75,6 +75,13 @@ export class CrudManager {
             restoredSuccessfully: "restored successfully",
             errorDeleting: "Error deleting record",
             errorRestoring: "Error restoring record",
+            // Pagination translations
+            showing: "Showing",
+            to: "to",
+            of: "of",
+            results: "results",
+            totalRecords: "total records",
+            records: "records",
         };
 
         // Configuración de entidad
@@ -652,9 +659,16 @@ export class CrudManager {
 
         let paginationHtml = "";
 
+        // Always show record count information, even for single page
+        const recordInfo = this.generateRecordInfo(data);
+
         if (data.last_page > 1) {
             // Contenedor principal con clases glassmorphism
             paginationHtml += '<div class="pagination-wrapper">';
+
+            // Add record information at the top
+            paginationHtml += `<div class="record-info">${recordInfo}</div>`;
+
             paginationHtml +=
                 '<nav class="pagination" aria-label="Pagination">';
 
@@ -717,6 +731,11 @@ export class CrudManager {
 
             paginationHtml += "</nav>";
             paginationHtml += "</div>";
+        } else {
+            // Single page case - show only record information with wrapper
+            paginationHtml += '<div class="pagination-wrapper single-page">';
+            paginationHtml += `<div class="record-info-single">${recordInfo}</div>`;
+            paginationHtml += "</div>";
         }
 
         $(this.paginationSelector).html(paginationHtml);
@@ -736,6 +755,28 @@ export class CrudManager {
                 this.loadEntities(page);
             }
         });
+    }
+
+    /**
+     * Generate record information text
+     */
+    generateRecordInfo(data) {
+        const from = data.from || 0;
+        const to = data.to || 0;
+        const total = data.total || 0;
+
+        if (total === 0) {
+            return `${this.translations.showing || "Showing"} 0 ${
+                this.translations.results || "results"
+            }`;
+        }
+
+        const showingText = this.translations.showing || "Showing";
+        const toText = this.translations.to || "to";
+        const ofText = this.translations.of || "of";
+        const recordsText = this.translations.totalRecords || "total records";
+
+        return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
     }
 
     /**

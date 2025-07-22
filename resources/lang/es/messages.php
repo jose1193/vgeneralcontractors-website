@@ -118,6 +118,14 @@ return [
     'phone_required' => 'Número de teléfono requerido',
     'recaptcha_failed' => 'Validación de reCAPTCHA fallida. Por favor, intente de nuevo.',
     
+    // Pagination
+    'showing' => 'Mostrando',
+    'to' => 'a',
+    'of' => 'de',
+    'results' => 'resultados',
+    'total_records' => 'registros totales',
+    'records' => 'registros',
+    
     // CTA
     'ready_transform_roof' => '¿Listo para transformar su techo? ¡Obtenga su inspección gratuita hoy!',
     'ready_free_inspection' => '¿Listo para su Inspección Gratuita?',
