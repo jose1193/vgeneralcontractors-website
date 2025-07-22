@@ -86,7 +86,7 @@
                             class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
                             <div class="space-y-3 w-full">
                                 <label
-                                    class="flex items-center gap-1 text-sm font-medium text-gray-300 justify-center md:justify-start text-center md:text-left w-full">
+                                    class="flex items-center gap-1 text-sm font-medium text-gray-300 justify-center text-center w-full">
                                     📅 {{ __('date_range') }}
                                 </label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -97,7 +97,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
                                                 placeholder="{{ __('start_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-left placeholder:text-center sm:placeholder:text-left">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -126,7 +126,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
                                                 placeholder="{{ __('end_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-left placeholder:text-center sm:placeholder:text-left">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -157,18 +157,16 @@
                     @if ($showExport)
                         <div class="flex flex-col items-center justify-center h-full w-full">
                             <label for="{{ $exportId }}"
-                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2 justify-center md:justify-start text-center md:text-left w-full">
+                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2 justify-center text-center w-full">
                                 📋 {{ __('export_data') }}
                             </label>
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200 text-center sm:text-center md:text-left">
-                                    <option value="" disabled selected class="text-center md:text-left">
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200 text-center sm:text-left">
+                                    <option value="" disabled selected class="text-center">
                                         {{ __('choose_format') }}</option>
-                                    <option value="pdf" class="text-center md:text-left">📄 {{ __('pdf_report') }}
-                                    </option>
-                                    <option value="excel" class="text-center md:text-left">📊 {{ __('excel') }}
-                                    </option>
+                                    <option value="pdf" class="text-center">📄 {{ __('pdf_report') }}</option>
+                                    <option value="excel" class="text-center">📊 {{ __('excel') }}</option>
                                 </select>
                                 <!-- Dropdown Arrow -->
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -186,12 +184,12 @@
                     @if ($showPerPage)
                         <div class="flex flex-col items-center w-full">
                             <label for="{{ $perPageId }}"
-                                class="text-sm font-medium text-gray-300 mb-2 text-center md:text-left w-full flex items-center justify-center md:justify-start">📄
+                                class="text-sm font-medium text-gray-300 mb-2 text-center w-full">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-center md:text-left w-full">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-left w-full">
                                 @foreach ($perPageOptions as $option)
-                                    <option value="{{ $option }}" class="text-center md:text-left"
+                                    <option value="{{ $option }}" class="text-center"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
                                         {{ $option }} {{ __('per_page') }}
                                     </option>
@@ -202,20 +200,19 @@
 
                     <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col items-center md:items-start justify-center h-full w-full lg:w-auto">
-                            <div class="w-full flex justify-center md:justify-start">
+                        <div class="flex flex-col items-center justify-center h-full w-full lg:w-auto">
+                            <div class="w-full flex justify-center">
                                 <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName"
-                                    class="mx-auto md:mx-0" />
+                                    class="mx-auto" />
                             </div>
                         </div>
                     @endif
                 </div>
 
                 <!-- Clear Filters Button - Ahora centrado en mobile, a la derecha en desktop -->
-                <div
-                    class="pt-6 border-t border-white/10 flex justify-center sm:justify-end sticky bottom-0 bg-black/70 backdrop-filter backdrop-blur-md pb-4 px-4 -mx-2 mt-4">
+                <div class="pt-6 border-t border-white/10 flex justify-center sm:justify-end">
                     <button id="clearFilters" type="button"
-                        class="inline-flex items-center px-4 py-3 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent w-full sm:w-auto">
+                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-white bg-red-500/30 hover:bg-red-500/40 border border-red-400/30 rounded-lg shadow-lg backdrop-blur-md transition-all duration-200 hover:shadow-red-500/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-transparent w-full sm:w-auto">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
@@ -492,8 +489,7 @@
             border-bottom-right-radius: 16px;
             overflow-x: hidden;
             max-width: 100%;
-            padding: 0 0.5rem 2rem 0.5rem;
-            /* Aumentar padding inferior */
+            padding: 0 0.5rem;
         }
 
         .glassmorphism-filter-advanced::after {
@@ -511,16 +507,6 @@
             width: 100%;
             justify-content: center;
             margin-bottom: 0.5rem;
-            display: flex !important;
-            /* Asegurar que siempre sea visible */
-        }
-
-        /* Hacer más visible el botón en pantallas pequeñas */
-        .pt-6.border-t.border-white\/10 {
-            padding: 1rem 0.5rem;
-            margin-top: 0.5rem;
-            display: flex;
-            width: 100%;
         }
     }
 
@@ -664,7 +650,7 @@
                     // Animate in
                     requestAnimationFrame(() => {
                         // Agregar padding extra para móviles
-                        const extraPadding = window.innerWidth < 768 ? 100 : 20;
+                        const extraPadding = window.innerWidth < 768 ? 50 : 0;
                         advancedFilters.style.maxHeight = (advancedFilters.scrollHeight +
                             extraPadding) + 'px';
                     });
