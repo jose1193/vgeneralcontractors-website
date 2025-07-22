@@ -10,12 +10,8 @@
 ])
 
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
+    <!-- Contenedor de la tabla con scroll -->
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
-        <!-- Contenedor separado para el efecto shimmer -->
-        <div class="header-shimmer-container">
-            <!-- Este elemento solo contiene la animación de shimmer -->
-        </div>
-        <!-- Tabla completa sin animaciones expansivas -->
         <table id="{{ $id }}" class="glassmorphism-table">
             <thead class="glassmorphism-header">
                 <tr>
@@ -54,6 +50,9 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Shimmer efecto completamente separado de la estructura de la tabla -->
+    <div class="header-shimmer-overlay"></div>
 </div>
 
 <style>
@@ -83,14 +82,6 @@
         /* Refined Border for Glass Effect */
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
-
-        /* Enhanced Animation - solo para efectos visuales, no para layout */
-        animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* Prevenir expansión durante animaciones */
-        transform: translateZ(0);
-        will-change: transform, box-shadow;
     }
 
     .glassmorphism-container::before {
@@ -113,7 +104,6 @@
     }
 
     .glassmorphism-container:hover {
-        transform: translateY(-3px);
         box-shadow:
             0 12px 48px 0 rgba(138, 43, 226, 0.35),
             0 24px 80px 0 rgba(128, 0, 255, 0.25),
@@ -149,37 +139,30 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Asegurar que el scroll horizontal es visible sin animaciones */
-        overflow-x: auto !important;
+        /* Configuración de scroll fija */
+        overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
         position: relative;
-        /* Eliminar transiciones que puedan causar expansión */
-        transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Forzar scroll horizontal en responsive */
     .responsive-container {
-        overflow-x: auto !important;
+        overflow-x: auto;
         overflow-y: visible;
         width: 100%;
         /* Asegurar que el scroll horizontal es visible */
         scrollbar-width: thin;
         scrollbar-color: rgba(138, 43, 226, 0.5) transparent;
-        /* Evitar transiciones que puedan causar expansión */
-        transition: none;
     }
 
     /* Extra: Si quieres scroll vertical en mobile también */
     .glassmorphism-scroll-wrapper {
-        overflow-x: auto !important;
-        /* Forzar scroll horizontal */
+        overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
         width: 100%;
-        /* Evitar transiciones que puedan causar expansión */
-        transition: none;
     }
 
     @media (max-width: 768px) {
@@ -236,42 +219,50 @@
     }
 
     /* Nuevo contenedor para aislar el shimmer solo al header */
-    .header-shimmer-container {
+    .header-shimmer-overlay {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 70px;
-        /* Altura fija */
-        z-index: 3;
+        top: 1.5rem;
+        /* Alineado con el padding del contenedor padre */
+        left: 1.5rem;
+        right: 1.5rem;
+        height: 60px;
+        /* Altura fija para el header */
         border-radius: 16px 16px 0 0;
         pointer-events: none;
-        /* No interceptar clics */
-        /* Prevenir expansión durante animaciones */
-        transform: translateZ(0);
-        will-change: transform;
+        /* No intercepta eventos de mouse */
+        z-index: 5;
+        /* Sobre todo lo demás */
         overflow: hidden;
+        /* Contiene el efecto shimmer */
+        background-color: transparent;
     }
 
     /* El shimmer solo afecta al encabezado */
-    .header-shimmer-container::after {
+    .header-shimmer-overlay::after {
         content: '';
         position: absolute;
         top: 0;
         left: -150px;
         width: 150px;
-        height: 70px;
-        /* Altura fija para el shimmer */
+        height: 100%;
         background: linear-gradient(90deg,
                 transparent,
                 rgba(255, 255, 255, 0.3) 25%,
                 rgba(138, 43, 226, 0.4) 50%,
                 rgba(255, 255, 255, 0.3) 75%,
                 transparent 100%);
-        animation: shimmer 3s infinite;
+        animation: shimmer-fixed 3s infinite;
         pointer-events: none;
-        z-index: 3;
-        /* Asegurar que esté por encima de otros elementos */
+    }
+
+    @keyframes shimmer-fixed {
+        0% {
+            left: -150px;
+        }
+
+        100% {
+            left: 100%;
+        }
     }
 
     .glassmorphism-header {
@@ -296,21 +287,10 @@
         overflow: hidden;
     }
 
-    /* Shimmer animated effect for table header - isolated to header only */
+    /* Shimmer animated effect for table header - removed to prevent conflicts */
     .glassmorphism-header::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -40%;
-        width: 40%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-        animation: shimmer-header 2.2s infinite;
-        pointer-events: none;
-        z-index: 2;
-        overflow: hidden;
-        border-radius: 16px 16px 0 0;
-        /* Contain within header radius */
+        display: none;
+        /* Desactivado para evitar conflictos con el overlay */
     }
 
     .glassmorphism-header::before {
@@ -673,19 +653,13 @@
         }
     }
 
-    @keyframes shimmer {
+    @keyframes shimmer-fixed {
         0% {
-            transform: translateX(-100%);
-            opacity: 0.3;
-        }
-
-        50% {
-            opacity: 1;
+            left: -150px;
         }
 
         100% {
-            transform: translateX(100%);
-            opacity: 0.3;
+            left: 100%;
         }
     }
 
