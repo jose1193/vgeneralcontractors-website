@@ -12,7 +12,60 @@
 <div class="glassmorphism-container {{ $responsive ? 'responsive-container' : '' }}">
     <div class="glassmorphism-table-wrapper glassmorphism-scroll-wrapper">
         <table id="{{ $id }}" class="glassmorphism-table">
-            <thead class="glassmorphism-header">
+            <thead
+                class="glas    .pagination .page-item.disabled .page-link::before {
+        opacity: 0;
+    }
+
+    /* Animaciones Keyframes */
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes shimmer-header {
+        0% {
+            left: -40%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+</style>er">
                 <tr>
                     @foreach ($columns as $column)
                         <th class="glassmorphism-th {{ $sortable && ($column['sortable'] ?? true) ? 'sortable-header' : '' }}"
@@ -140,29 +193,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.18);
 
-        /* Restaurar overflow: hidden para el shimmer, pero permitir scroll en el contenedor padre */
-        overflow: hidden;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glassmorphism-table-wrapper {
-        /* Enhanced Crystal Glass Background */
-        background: rgba(0, 0, 0, 0.82);
-        border-radius: 16px;
-
-        /* Premium Purple Box Shadow System */
-        box-shadow:
-
-            /* Enhanced Blur Effects */
-            backdrop-filter: blur(16px) saturate(1.2);
-        -webkit-backdrop-filter: blur(16px) saturate(1.2);
-
-        /* Premium Glass Border */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-        /* Permitir scrollbars */
+        /* Permitir scrollbars - quitar overflow hidden que interfiere */
         overflow-x: auto;
         overflow-y: auto;
         max-height: 70vh;
@@ -194,13 +225,6 @@
             overflow-x: auto;
             overflow-y: auto;
         }
-    }
-
-    rgba(255, 255, 255, 0.3) 25%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 255, 255, 0.3) 75%,
-    transparent 100%);
-    animation: shimmer 3s infinite;
     }
 
     .glassmorphism-table-wrapper::after {
