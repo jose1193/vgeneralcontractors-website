@@ -60,7 +60,7 @@
 
         /* Header Styles */
         .header {
-            width: 90%;
+            width: 85%;
             margin: 0 auto 20px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
@@ -90,6 +90,7 @@
             vertical-align: top;
             padding-left: 150px;
             padding-top: 23px;
+            padding-right: 30px;
         }
 
         .company-name {
@@ -103,6 +104,7 @@
             font-size: 10px;
             color: var(--text-secondary);
             line-height: 1.2;
+            margin-right: 20px;
         }
 
         .report-title {
@@ -151,7 +153,7 @@
 
         /* Table Styles */
         .data-table {
-            width: 90%;
+            width: 85%;
             margin: 0 auto 20px auto;
             border-collapse: collapse;
             font-size: 12px;
@@ -227,7 +229,7 @@
 
         /* Summary Section */
         .summary {
-            width: 90%;
+            width: 85%;
             margin: 20px auto 0 auto;
             padding: 15px;
             background: var(--background-light);
@@ -270,7 +272,7 @@
 
         /* Footer */
         .footer {
-            width: 90%;
+            width: 85%;
             margin: 30px auto 0 auto;
             padding-top: 15px;
             border-top: 1px solid var(--border-light);
@@ -330,8 +332,8 @@
 
         /* Container for full-width layouts */
         .container {
-            width: 90%;
-            max-width: 90%;
+            width: 85%;
+            max-width: 85%;
             margin: 0 auto;
             padding: 0;
         }
@@ -406,10 +408,8 @@
             @endforeach
         @endif
 
-        /* Theme customization stack */
         @stack('pdf-theme-styles')
 
-        /* Additional custom styles stack */
         @stack('pdf-custom-styles')
     </style>
 
