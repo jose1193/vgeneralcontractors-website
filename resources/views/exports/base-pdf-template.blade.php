@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles */
         @page {
-            margin: 15mm 12mm 15mm 12mm;
+            margin: 10mm 8mm 15mm 8mm;
 
             @top-center {
                 content: "{{ $title }}";
@@ -65,7 +65,7 @@
         .company-details {
             display: table-cell;
             vertical-align: top;
-            padding-left: 120px;
+            padding-left: 150px;
             padding-top: 23px;
         }
 
@@ -131,6 +131,10 @@
             border-collapse: collapse;
             margin-bottom: 20px;
             font-size: 9px;
+        }
+
+        .data-table thead {
+            display: table-header-group;
         }
 
         .data-table th {
@@ -251,6 +255,11 @@
         /* Page Break */
         .page-break {
             page-break-before: always;
+        }
+
+        /* Page counter styling */
+        .page-counter::after {
+            content: counter(page) " / " counter(pages);
         }
 
         /* Responsive adjustments for PDF */
@@ -396,7 +405,9 @@
         <div class="footer">
             <div>This report was generated automatically by {{ config('app.name') }} on {{ $exportDate }}</div>
             @if ($options['show_page_numbers'] ?? true)
-                <div>Page information will be handled by @page CSS rules</div>
+                <div style="margin-top: 5px; text-align: center; font-size: 10px; font-weight: bold;">
+                    <span class="page-counter"></span>
+                </div>
             @endif
         </div>
     @endif

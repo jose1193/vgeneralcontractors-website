@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles - Consistent with invoice PDF */
         @page {
-            margin: 15mm 12mm 15mm 12mm;
+            margin: 10mm 8mm 15mm 8mm;
 
             @top-center {
                 content: "{{ $title }}";
@@ -39,8 +39,9 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         /* Header Section - Similar to invoice */
@@ -62,7 +63,7 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 120px;
+            padding-left: 150px;
             padding-top: 23px;
         }
 
@@ -136,6 +137,10 @@
             border-collapse: collapse;
             margin-bottom: 20px;
             font-size: 9px;
+        }
+
+        .data-table thead {
+            display: table-header-group;
         }
 
         .data-table th {
@@ -270,19 +275,19 @@
 
         /* Column specific styles */
         .col-0 {
-            width: 8%;
+            width: 6%;
             text-align: center;
         }
 
         /* Nro */
         .col-1 {
-            width: 25%;
+            width: 28%;
             text-align: center;
         }
 
         /* Company Name */
         .col-2 {
-            width: 20%;
+            width: 22%;
             text-align: center;
         }
 
@@ -294,17 +299,42 @@
 
         /* Phone */
         .col-4 {
-            width: 20%;
+            width: 22%;
             text-align: center;
         }
 
         /* Address */
         .col-5 {
-            width: 12%;
+            width: 7%;
             text-align: center;
         }
 
         /* Created By */
+
+        /* Page handling for headers */
+        .page-header {
+            position: running(page-header);
+        }
+
+        .data-table thead tr th {
+            background-color: #e6f0fa;
+            color: #6c9bd0;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px 6px;
+            border: 1px solid #ddd;
+            font-size: 9px;
+        }
+
+        /* Prevent header repetition on page breaks */
+        .data-table thead {
+            display: table-header-group;
+        }
+
+        /* Page counter styling */
+        .page-counter::after {
+            content: counter(page) " / " counter(pages);
+        }
     </style>
 </head>
 
@@ -453,6 +483,9 @@
         <!-- Footer -->
         <div class="footer">
             <div>This report was generated automatically by {{ config('app.name') }} on {{ $exportDate }}</div>
+            <div style="margin-top: 5px; text-align: center; font-size: 10px; font-weight: bold;">
+                <span class="page-counter"></span>
+            </div>
         </div>
     </div>
 </body>
