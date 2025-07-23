@@ -2071,53 +2071,124 @@ class CrudManagerModal {
 
         let paginationHtml = "";
 
+        // Always show record count information, even for single page
+        const recordInfo = this.generateRecordInfo(data);
+
         if (data.last_page > 1) {
-            paginationHtml += '<div class="flex items-center justify-between">';
-            paginationHtml += `<div class="text-sm text-gray-700">${__(
-                "showing",
-                "Showing"
-            )} ${data.from} ${__("to", "to")} ${data.to} ${__("of", "of")} ${
-                data.total
-            } ${__("results", "results")}</div>`;
-            paginationHtml += '<div class="flex space-x-1">';
+            // Contenedor principal con clases glassmorphism
+            paginationHtml += '<div class="pagination-wrapper">';
+
+            paginationHtml +=
+                '<nav class="pagination" aria-label="Pagination">';
 
             // Botón anterior
             if (data.current_page > 1) {
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
-                    data.current_page - 1
-                }">${__("previous", "Previous")}</button>`;
+                paginationHtml += `
+                <div class="page-item">
+                    <button class="page-link" data-page="${
+                        data.current_page - 1
+                    }">
+                        <span>&laquo;</span>
+                    </button>
+                </div>`;
+            } else {
+                paginationHtml += `
+                <div class="page-item disabled">
+                    <button class="page-link" disabled>
+                        <span>&laquo;</span>
+                    </button>
+                </div>`;
             }
 
-            // Números de página
-            for (
-                let i = Math.max(1, data.current_page - 2);
-                i <= Math.min(data.last_page, data.current_page + 2);
-                i++
-            ) {
-                const activeClass =
-                    i === data.current_page
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-50";
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border border-gray-300 rounded-md ${activeClass}" data-page="${i}">${i}</button>`;
+            // Números de página (máximo 5 visibles)
+            let start = Math.max(1, data.current_page - 2);
+            let end = Math.min(data.last_page, data.current_page + 2);
+            if (data.current_page <= 2) end = Math.min(5, data.last_page);
+            if (data.current_page >= data.last_page - 1)
+                start = Math.max(1, data.last_page - 4);
+
+            for (let i = start; i <= end; i++) {
+                const isActive = i === data.current_page;
+                const activeClass = isActive ? " active" : "";
+
+                paginationHtml += `
+                <div class="page-item${activeClass}">
+                    <button class="page-link" data-page="${i}">
+                        <span>${i}</span>
+                    </button>
+                </div>`;
             }
 
             // Botón siguiente
             if (data.current_page < data.last_page) {
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" data-page="${
-                    data.current_page + 1
-                }">${__("next", "Next")}</button>`;
+                paginationHtml += `
+                <div class="page-item">
+                    <button class="page-link" data-page="${
+                        data.current_page + 1
+                    }">
+                        <span>&raquo;</span>
+                    </button>
+                </div>`;
+            } else {
+                paginationHtml += `
+                <div class="page-item disabled">
+                    <button class="page-link" disabled>
+                        <span>&raquo;</span>
+                    </button>
+                </div>`;
             }
 
-            paginationHtml += "</div></div>";
+            paginationHtml += "</nav>";
+
+            // Add record information at the bottom
+            paginationHtml += `<div class="record-info">${recordInfo}</div>`;
+
+            paginationHtml += "</div>";
+        } else {
+            // Single page case - show only record information with wrapper
+            paginationHtml += '<div class="pagination-wrapper single-page">';
+            paginationHtml += `<div class="record-info-single">${recordInfo}</div>`;
+            paginationHtml += "</div>";
         }
 
         $(this.paginationSelector).html(paginationHtml);
 
         // Event listener para paginación
-        $(".pagination-btn").on("click", (e) => {
-            const page = $(e.target).data("page");
-            this.loadEntities(page);
+        $(".page-link").on("click", (e) => {
+            e.preventDefault();
+            const $button = $(e.currentTarget);
+            
+            if ($button.closest('.page-item').hasClass('disabled')) {
+                return;
+            }
+            
+            const page = $button.data("page");
+            if (page && page !== this.currentPage) {
+                this.loadEntities(page);
+            }
         });
+    }
+
+    /**
+     * Generate record information text
+     */
+    generateRecordInfo(data) {
+        const from = data.from || 0;
+        const to = data.to || 0;
+        const total = data.total || 0;
+
+        if (total === 0) {
+            return `${this.translations.showing || "Showing"} 0 ${
+                this.translations.results || "results"
+            }`;
+        }
+
+        const showingText = this.translations.showing || "Showing";
+        const toText = this.translations.to || "to";
+        const ofText = this.translations.of || "of";
+        const recordsText = this.translations.totalRecords || "Total Records";
+
+        return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
     }
 
     /**
