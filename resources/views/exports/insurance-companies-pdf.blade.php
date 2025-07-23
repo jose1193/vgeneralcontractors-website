@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles - Consistent with invoice PDF */
         @page {
-            margin: 10mm 8mm 15mm 8mm;
+            margin: 15mm 10mm 15mm 10mm;
 
             @top-center {
                 content: "{{ $title }}";
