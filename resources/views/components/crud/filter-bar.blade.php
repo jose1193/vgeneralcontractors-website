@@ -104,7 +104,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeStartId }}" name="date_range_start"
                                                 placeholder="{{ __('start_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left glassmorphic-date-input">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -133,7 +133,7 @@
                                         <div class="relative">
                                             <input type="text" id="{{ $dateRangeEndId }}" name="date_range_end"
                                                 placeholder="{{ __('end_date') }}" readonly
-                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg shadow-sm backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left">
+                                                class="w-full pl-10 pr-4 py-2.5 text-sm text-white bg-black/50 border border-white/10 rounded-lg backdrop-blur-sm placeholder-gray-400 cursor-pointer hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-center sm:text-center md:text-left placeholder:text-center sm:placeholder:text-center md:placeholder:text-left glassmorphic-date-input">
                                             <!-- Calendar Icon -->
                                             <span
                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -592,6 +592,50 @@
     .glassmorphic-select option:checked {
         background: rgba(138, 43, 226, 0.3) !important;
         color: rgba(255, 255, 255, 1) !important;
+    }
+
+    /* Glassmorphic Date Input Styles - Matching Select Elements */
+    .glassmorphic-date-input {
+        /* Enhanced background with deeper transparency - Same as selects */
+        background: rgba(0, 0, 0, 0.85) !important;
+
+        /* Premium box shadow with purple accents - Same as selects */
+        box-shadow:
+            0 4px 16px 0 rgba(138, 43, 226, 0.15),
+            0 8px 32px 0 rgba(128, 0, 255, 0.1),
+            0 2px 8px 0 rgba(75, 0, 130, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+
+        /* Enhanced blur effects - Same as selects */
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Refined border - Same as selects */
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .glassmorphic-date-input:hover {
+        background: rgba(0, 0, 0, 0.9) !important;
+        box-shadow:
+            0 6px 24px 0 rgba(138, 43, 226, 0.2),
+            0 12px 48px 0 rgba(128, 0, 255, 0.15),
+            0 3px 12px 0 rgba(75, 0, 130, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+        transform: translateY(-1px);
+    }
+
+    .glassmorphic-date-input:focus {
+        background: rgba(0, 0, 0, 0.9) !important;
+        box-shadow:
+            0 8px 32px 0 rgba(138, 43, 226, 0.3),
+            0 16px 64px 0 rgba(128, 0, 255, 0.2),
+            0 4px 16px 0 rgba(75, 0, 130, 0.3),
+            0 0 20px 0 rgba(147, 51, 234, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
     }
 
     /* Enhanced Animations - Same as table */

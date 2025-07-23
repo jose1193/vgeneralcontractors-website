@@ -29,7 +29,7 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 20mm 10mm 15mm 10mm;
+            margin: 15mm 10mm 15mm 10mm;
             size: A4;
 
             @top-center {
@@ -60,7 +60,7 @@
 
         /* Prevent page breaks in inappropriate places */
         @page :first {
-            margin-top: 20mm;
+            margin-top: 15mm;
         }
 
         * {
@@ -80,8 +80,8 @@
         /* Header Styles */
         .header {
             width: 95%;
-            margin: 10px auto 25px auto;
-            padding-bottom: 15px;
+            margin: 5px auto 15px auto;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
         }
@@ -92,9 +92,9 @@
             justify-content: space-between;
             align-items: flex-start;
             width: 100%;
-            margin-bottom: 20px;
-            padding: 15px 0;
-            min-height: 100px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            min-height: 80px;
         }
 
         .company-info {
@@ -148,10 +148,10 @@
 
         .report-title {
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--text-primary);
-            margin: 20px 0;
+            margin: 10px 0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -160,10 +160,10 @@
         .report-info {
             display: table;
             width: 100%;
-            margin-bottom: 20px;
-            font-size: 10px;
+            margin-bottom: 15px;
+            font-size: 9px;
             color: var(--text-secondary);
-            padding: 0 10px;
+            padding: 0 5px;
         }
 
         .report-info-left {
@@ -260,17 +260,14 @@
             display: table-footer-group;
         }
 
-        /* Header repetition */
-        .repeating-header {
-            display: table-header-group;
-            page-break-before: avoid;
-            page-break-after: avoid;
+        /* Header repetition - Simplified */
+        .header {
             page-break-inside: avoid;
         }
 
-        /* Content group */
-        .content-group {
-            display: table-row-group;
+        /* Content starts immediately after header */
+        .content {
+            margin-top: 0;
         }
 
         /* Prevent orphaned headers */
@@ -529,109 +526,104 @@
 </head>
 
 <body>
-    <div style="display: table; width: 100%;">
-        @if ($options['show_header'] ?? true)
-            <!-- Repeating Header Section -->
-            <div class="repeating-header">
-                <div class="header">
-                    @if ($options['show_company_info'] ?? true)
-                        <div class="header-content">
-                            <div class="company-info">
-                                @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
-                                    <div class="company-logo">
-                                        <img src="{{ $companyInfo['logo_path'] }}"
-                                            alt="{{ $companyInfo['name'] ?? 'Company Logo' }}">
-                                    </div>
-                                @endif
-                                <div class="company-details">
-                                    <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}
-                                    </div>
-                                    <div class="company-contact">
-                                        {{ $companyInfo['address'] ?? '1302 Waugh Dr # 810, Houston, TX 77019' }}<br>
-                                        {{ $companyInfo['phone'] ?? '+1 (713) 587-6423' }}<br>
-                                        {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
-                                        {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    <div class="report-title">{{ $title }}</div>
-
-                    @if ($options['show_export_info'] ?? true)
-                        <div class="report-info">
-                            <div class="report-info-left">
-                                <div><strong>Generated:</strong> {{ $exportDate }}</div>
-                                <div><strong>By:</strong> {{ $exportedBy }}</div>
-                            </div>
-                            <div class="report-info-right">
-                                <div><strong>Total Records:</strong> {{ $totalRecords }}</div>
-                                @if (isset($additionalData['date_range']))
-                                    <div><strong>Period:</strong> {{ $additionalData['date_range'] }}</div>
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        @endif
-
-        <!-- Content Section -->
-        <div class="content-group">
-            <div class="content">
-                @yield('content')
-            </div>
-
-            @if ($options['show_summary'] ?? false && isset($additionalData['summary']))
-                <!-- Summary Section -->
-                <div class="page-break-avoid">
-                    <div class="summary">
-                        <div class="summary-title">Report Summary</div>
-                        <div class="summary-stats">
-                            @if (isset($additionalData['summary']['total_companies']))
-                                <div class="summary-stat">
-                                    <span
-                                        class="summary-stat-value">{{ $additionalData['summary']['total_companies'] }}</span>
-                                    <span class="summary-stat-label">Total</span>
-                                </div>
-                            @endif
-                            @if (isset($additionalData['summary']['active_companies']))
-                                <div class="summary-stat">
-                                    <span
-                                        class="summary-stat-value">{{ $additionalData['summary']['active_companies'] }}</span>
-                                    <span class="summary-stat-label">Active</span>
-                                </div>
-                            @endif
-                            @if (isset($additionalData['summary']['inactive_companies']))
-                                <div class="summary-stat">
-                                    <span
-                                        class="summary-stat-value">{{ $additionalData['summary']['inactive_companies'] }}</span>
-                                    <span class="summary-stat-label">Inactive</span>
-                                </div>
-                            @endif
-                            @if (isset($additionalData['summary']['active_percentage']))
-                                <div class="summary-stat">
-                                    <span
-                                        class="summary-stat-value">{{ $additionalData['summary']['active_percentage'] }}%</span>
-                                    <span class="summary-stat-label">Active Rate</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                @endif @if ($options['show_footer'] ?? true)
-                    <!-- Footer Section -->
-                    <div class="footer">
-                        <div>This report was generated automatically by {{ config('app.name') }}</div>
-                        @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
-                            <div style="margin-top: 5px; text-align: center; font-size: 9px;">
-                                <strong>Applied Filters:</strong> {{ $additionalData['filters_applied'] }}
+    @if ($options['show_header'] ?? true)
+        <!-- Header Section -->
+        <div class="header">
+            @if ($options['show_company_info'] ?? true)
+                <div class="header-content">
+                    <div class="company-info">
+                        @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
+                            <div class="company-logo">
+                                <img src="{{ $companyInfo['logo_path'] }}"
+                                    alt="{{ $companyInfo['name'] ?? 'Company Logo' }}">
                             </div>
                         @endif
+                        <div class="company-details">
+                            <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}
+                            </div>
+                            <div class="company-contact">
+                                {{ $companyInfo['address'] ?? '1302 Waugh Dr # 810, Houston, TX 77019' }}<br>
+                                {{ $companyInfo['phone'] ?? '+1 (713) 587-6423' }}<br>
+                                {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
+                                {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com' }}
+                            </div>
+                        </div>
                     </div>
-                @endif
+                </div>
+            @endif
+            <div class="report-title">{{ $title }}</div>
+
+            @if ($options['show_export_info'] ?? true)
+                <div class="report-info">
+                    <div class="report-info-left">
+                        <div><strong>Generated:</strong> {{ $exportDate }}</div>
+                        <div><strong>By:</strong> {{ $exportedBy }}</div>
+                    </div>
+                    <div class="report-info-right">
+                        <div><strong>Total Records:</strong> {{ $totalRecords }}</div>
+                        @if (isset($additionalData['date_range']))
+                            <div><strong>Period:</strong> {{ $additionalData['date_range'] }}</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
         </div>
+    @endif
+
+    <!-- Content Section -->
+    <div class="content">
+        @yield('content')
     </div>
+
+    @if ($options['show_summary'] ?? false && isset($additionalData['summary']))
+        <!-- Summary Section -->
+        <div class="page-break-avoid">
+            <div class="summary">
+                <div class="summary-title">Report Summary</div>
+                <div class="summary-stats">
+                    @if (isset($additionalData['summary']['total_companies']))
+                        <div class="summary-stat">
+                            <span class="summary-stat-value">{{ $additionalData['summary']['total_companies'] }}</span>
+                            <span class="summary-stat-label">Total</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['active_companies']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['active_companies'] }}</span>
+                            <span class="summary-stat-label">Active</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['inactive_companies']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['inactive_companies'] }}</span>
+                            <span class="summary-stat-label">Inactive</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['active_percentage']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['active_percentage'] }}%</span>
+                            <span class="summary-stat-label">Active Rate</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($options['show_footer'] ?? true)
+        <!-- Footer Section -->
+        <div class="footer">
+            <div>This report was generated automatically by {{ config('app.name') }}</div>
+            @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
+                <div style="margin-top: 5px; text-align: center; font-size: 9px;">
+                    <strong>Applied Filters:</strong> {{ $additionalData['filters_applied'] }}
+                </div>
+            @endif
+        </div>
+    @endif
 </body>
 
 </html>
