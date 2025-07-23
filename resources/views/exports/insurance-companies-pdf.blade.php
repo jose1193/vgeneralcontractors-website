@@ -120,24 +120,6 @@
             max-width: 1140px;
             max-height: 300px;
         }
-
-        /* Specific adjustments for insurance companies PDF */
-        @page :not(:first) {
-            margin-top: 40mm;
-        }
-
-        /* Ensure table content spacing on continuation pages */
-        .data-table {
-            margin-top: 0;
-        }
-
-        .data-table thead {
-            page-break-after: avoid;
-        }
-
-        .data-table tbody tr {
-            page-break-inside: avoid;
-        }
     </style>
 @endpush
 

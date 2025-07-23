@@ -55,7 +55,7 @@
             }
 
             @bottom-center {
-                content: "Page " counter(page) " of " counter(pages);
+                content: "Page " counter(page) " of ~{{ $estimatedPages ?? '?' }}";
                 font-size: 9px;
                 color: #666;
                 font-weight: bold;
@@ -71,11 +71,6 @@
         /* Prevent page breaks in inappropriate places */
         @page :first {
             margin-top: 20mm;
-        }
-
-        /* Ensure adequate top margin for subsequent pages */
-        @page :not(:first) {
-            margin-top: 35mm;
         }
 
         * {
@@ -280,11 +275,6 @@
         /* Content starts immediately after header */
         .content {
             margin-top: 0;
-        }
-
-        /* Ensure proper spacing for table headers that repeat on new pages */
-        .data-table thead {
-            margin-top: 5mm;
         }
 
         /* Prevent orphaned headers */
