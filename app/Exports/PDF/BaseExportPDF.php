@@ -34,6 +34,9 @@ abstract class BaseExportPDF
      */
     public function generate(): \Barryvdh\DomPDF\PDF
     {
+        // Calculate estimated pages based on data count
+        $estimatedPages = $this->calculateEstimatedPages();
+        
         $pdf = Pdf::loadView($this->getTemplatePath(), [
             'data' => $this->data,
             'title' => $this->title,
@@ -43,11 +46,18 @@ abstract class BaseExportPDF
             'exportDate' => now()->format('Y-m-d H:i:s'),
             'exportedBy' => auth()->user()->name ?? 'System',
             'totalRecords' => $this->data->count(),
+            'estimatedPages' => $estimatedPages,
             'additionalData' => $this->getAdditionalData()
         ]);
 
         // Set PDF options
         $pdf->setPaper($this->paperSize, $this->orientation);
+        
+        // Configure DomPDF specific options
+        $pdf->setOption('isHtml5ParserEnabled', true);
+        $pdf->setOption('isPhpEnabled', false);
+        $pdf->setOption('isFontSubsettingEnabled', true);
+        $pdf->setOption('isRemoteEnabled', true);
         
         // Set additional options if needed
         if (isset($this->options['dpi'])) {
@@ -146,11 +156,12 @@ abstract class BaseExportPDF
         return [
             'orientation' => 'portrait',
             'paper_size' => 'letter',
-            'dpi' => 96,
-            'defaultFont' => 'serif',
+            'dpi' => 150,
+            'defaultFont' => 'DejaVu Sans',
             'isHtml5ParserEnabled' => true,
             'isPhpEnabled' => false,
             'isFontSubsettingEnabled' => true,
+            'isRemoteEnabled' => true,
             'margin_top' => 10,
             'margin_right' => 10,
             'margin_bottom' => 10,
@@ -234,5 +245,22 @@ abstract class BaseExportPDF
     protected function chunkData(Collection $data, int $chunkSize = 50): Collection
     {
         return $data->chunk($chunkSize);
+    }
+
+    /**
+     * Calculate estimated number of pages based on data count and layout
+     */
+    protected function calculateEstimatedPages(): int
+    {
+        $recordCount = $this->data->count();
+        
+        // Estimate based on typical table rows per page
+        // This varies by orientation and font size
+        $rowsPerPage = $this->orientation === 'landscape' ? 30 : 25;
+        
+        // Account for header space (first page)
+        $effectiveRows = max(1, $recordCount);
+        
+        return max(1, ceil($effectiveRows / $rowsPerPage));
     }
 }

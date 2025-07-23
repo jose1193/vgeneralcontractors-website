@@ -39,20 +39,20 @@
             }
 
             @bottom-left {
-                content: "Generated on {{ $exportDate }}";
+                content: "Generated: {{ $exportDate }}";
                 font-size: 8px;
                 color: #666;
             }
 
             @bottom-center {
-                content: "Page " counter(page);
+                content: "Page " counter(page) " of ~{{ $estimatedPages ?? '?' }}";
                 font-size: 9px;
                 color: #666;
                 font-weight: bold;
             }
 
             @bottom-right {
-                content: "Total: {{ $totalRecords }} records";
+                content: "{{ $totalRecords }} records";
                 font-size: 8px;
                 color: #666;
             }
@@ -110,7 +110,7 @@
         .company-details {
             flex: 1;
             text-align: right;
-            padding-top: 23px;
+            padding-top: 10px;
             padding-left: 20px;
         }
 
@@ -489,16 +489,6 @@
 
     <!-- Additional head content stack -->
     @stack('pdf-head')
-
-    <script>
-        // Simple page counting for better PDF generation
-        window.addEventListener('DOMContentLoaded', function() {
-            // This helps with page counting in some PDF generators
-            if (typeof window.print !== 'undefined') {
-                document.body.setAttribute('data-pdf-ready', 'true');
-            }
-        });
-    </script>
 </head>
 
 <body>

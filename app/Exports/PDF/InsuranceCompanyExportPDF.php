@@ -30,6 +30,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
         $defaultOptions = [
             'orientation' => 'landscape', // Better for table with many columns
             'paper_size' => 'letter',
+            'dpi' => 150,
             'show_borders' => true,
             'alternate_row_colors' => true,
             'show_summary' => true,
@@ -264,5 +265,21 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
         return strlen($text) > $limit 
             ? substr($text, 0, $limit) . '...' 
             : $text;
+    }
+
+    /**
+     * Calculate estimated pages for insurance companies in landscape
+     */
+    protected function calculateEstimatedPages(): int
+    {
+        $recordCount = $this->data->count();
+        
+        // For landscape insurance company reports, more rows fit per page
+        $rowsPerPage = 35; // Landscape allows more rows
+        
+        // Account for header and summary sections
+        $effectiveRows = max(1, $recordCount);
+        
+        return max(1, ceil($effectiveRows / $rowsPerPage));
     }
 }
