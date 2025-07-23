@@ -1683,7 +1683,13 @@ class CrudManagerModal {
             });
 
             Swal.close();
-            this.showAlert("success", `${this.entityName} ${__("created_successfully2", "creado exitosamente")}`);
+            this.showAlert(
+                "success",
+                `${this.entityName} ${__(
+                    "created_successfully2",
+                    "creado exitosamente"
+                )}`
+            );
             this.loadEntities();
         } catch (error) {
             Swal.close();
@@ -1729,7 +1735,10 @@ class CrudManagerModal {
             Swal.close();
             this.showAlert(
                 "success",
-                `${this.entityName} ${__("updated_successfully2", "actualizado exitosamente")}`
+                `${this.entityName} ${__(
+                    "updated_successfully2",
+                    "actualizado exitosamente"
+                )}`
             );
             this.loadEntities();
         } catch (error) {
@@ -1881,7 +1890,10 @@ class CrudManagerModal {
             entityIdentifier &&
             entityIdentifier !== __("this_element", "this element")
         ) {
-            customMessage = `${__('confirm_delete_entity', '¿Deseas eliminar')} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            customMessage = `${__(
+                "confirm_delete_entity",
+                "¿Deseas eliminar"
+            )} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
@@ -1973,7 +1985,10 @@ class CrudManagerModal {
             entityIdentifier &&
             entityIdentifier !== __("this_element", "this element")
         ) {
-            customMessage = `${__('confirm_restore_entity', '¿Deseas restaurar')} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            customMessage = `${__(
+                "confirm_restore_entity",
+                "¿Deseas restaurar"
+            )} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
         }
 
         const result = await Swal.fire({
@@ -2154,14 +2169,14 @@ class CrudManagerModal {
         $(this.paginationSelector).html(paginationHtml);
 
         // Event listener para paginación
-        $(".page-link").on("click", (e) => {
+        $(".pagination .page-link").on("click", (e) => {
             e.preventDefault();
             const $button = $(e.currentTarget);
-            
-            if ($button.closest('.page-item').hasClass('disabled')) {
+
+            if ($button.closest(".page-item").hasClass("disabled")) {
                 return;
             }
-            
+
             const page = $button.data("page");
             if (page && page !== this.currentPage) {
                 this.loadEntities(page);
