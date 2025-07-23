@@ -90,7 +90,7 @@
         /* Header Styles */
         .header {
             width: 90%;
-            margin: 15px auto 25px auto;
+            margin: 18px auto 25px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;

@@ -141,7 +141,7 @@ abstract class BaseExportPDF
                 'phone' => '+1 (713) 364-6240',
                 'email' => 'info@vgeneralcontractors.com',
                 'website' => 'https://vgeneralcontractors.com/',
-                'logo_path' => public_path('assets/logo/logo-png.png'),
+                'logo_path' => public_path('assets/logo/header-document.jpg'),
             ];
         }
 
