@@ -60,8 +60,8 @@
 
         /* Header Styles */
         .header {
-            width: 85%;
-            margin: 25px auto 20px auto;
+            width: 80%;
+            margin: 30px auto 25px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
         }
@@ -156,7 +156,7 @@
 
         /* Table Styles */
         .data-table {
-            width: 85%;
+            width: 80%;
             margin: 0 auto 20px auto;
             border-collapse: collapse;
             font-size: 12px;
@@ -232,7 +232,7 @@
 
         /* Summary Section */
         .summary {
-            width: 85%;
+            width: 80%;
             margin: 20px auto 0 auto;
             padding: 15px;
             background: var(--background-light);
@@ -275,7 +275,7 @@
 
         /* Footer */
         .footer {
-            width: 85%;
+            width: 80%;
             margin: 30px auto 0 auto;
             padding-top: 15px;
             border-top: 1px solid var(--border-light);
@@ -335,8 +335,8 @@
 
         /* Container for full-width layouts */
         .container {
-            width: 85%;
-            max-width: 85%;
+            width: 80%;
+            max-width: 80%;
             margin: 0 auto;
             padding: 0;
         }
