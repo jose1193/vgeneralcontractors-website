@@ -351,11 +351,33 @@ class InsuranceCompanyController extends BaseController
         return $website;
     }
 
-    public function store(InsuranceCompanyRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
+            // Create and validate using InsuranceCompanyRequest
+            $formRequest = InsuranceCompanyRequest::createFrom($request);
+            $formRequest->setContainer(app());
+            $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
+            $formRequest->prepareForValidation();
+            
+            // Validate the request
+            $validator = app('validator')->make(
+                $formRequest->all(),
+                $formRequest->rules(),
+                $formRequest->messages(),
+                $formRequest->attributes()
+            );
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation errors occurred.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
             // Convert validated request to DTO
-            $dto = $request->toDTO();
+            $dto = $formRequest->toDTO();
             
             // Create insurance company using service
             $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
@@ -368,7 +390,7 @@ class InsuranceCompanyController extends BaseController
         } catch (\Exception $e) {
             Log::error('Error creating insurance company', [
                 'error' => $e->getMessage(),
-                'data' => $request->validated()
+                'data' => $request->all()
             ]);
             
             return response()->json([
@@ -378,14 +400,44 @@ class InsuranceCompanyController extends BaseController
         }
     }
 
-    public function update(InsuranceCompanyRequest $request, string $uuid): JsonResponse
+    public function update(Request $request, string $uuid): JsonResponse
     {
         try {
+            // Create and validate using InsuranceCompanyRequest
+            $formRequest = InsuranceCompanyRequest::createFrom($request);
+            $formRequest->setContainer(app());
+            $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
+            
+            // Set route parameters for unique validation to work properly
+            $formRequest->setRouteResolver(function () use ($uuid) {
+                $route = app('router')->current();
+                $route->setParameter('insurance_company', $uuid);
+                return $route;
+            });
+            
+            $formRequest->prepareForValidation();
+            
+            // Validate the request
+            $validator = app('validator')->make(
+                $formRequest->all(),
+                $formRequest->rules(),
+                $formRequest->messages(),
+                $formRequest->attributes()
+            );
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation errors occurred.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
             // Find the existing insurance company
             $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
             
             // Convert validated request to DTO (preserving UUID)
-            $dto = $request->toDTO();
+            $dto = $formRequest->toDTO();
             
             // Update using the service with model and DTO data
             $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toArray());
@@ -404,7 +456,7 @@ class InsuranceCompanyController extends BaseController
             Log::error('Error updating insurance company', [
                 'uuid' => $uuid,
                 'error' => $e->getMessage(),
-                'data' => $request->validated()
+                'data' => $request->all()
             ]);
             
             return response()->json([
