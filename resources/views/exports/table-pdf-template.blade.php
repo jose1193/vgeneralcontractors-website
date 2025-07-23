@@ -66,13 +66,4 @@
             <div style="font-size: 10px;">No records match the current filters or selection criteria.</div>
         </div>
     @endif
-
-    @if ($data->count() > 0 && ($options['show_record_count'] ?? true))
-        <div style="margin-top: 15px; text-align: center; font-size: 9px; color: #6B7280;">
-            Showing {{ $data->count() }} record{{ $data->count() !== 1 ? 's' : '' }}
-            @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
-                with applied filters
-            @endif
-        </div>
-    @endif
 @endsection

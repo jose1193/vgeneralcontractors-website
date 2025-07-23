@@ -170,13 +170,4 @@
             <div class="no-data-text">No records match the current filters or selection criteria.</div>
         </div>
     @endif
-
-    @if ($data->count() > 0)
-        <div class="record-count">
-            Showing {{ $data->count() }} record{{ $data->count() !== 1 ? 's' : '' }}
-            @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
-                with applied filters
-            @endif
-        </div>
-    @endif
 @endsection

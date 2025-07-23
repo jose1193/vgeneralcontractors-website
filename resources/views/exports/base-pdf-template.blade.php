@@ -38,9 +38,22 @@
                 color: #666;
             }
 
+            @bottom-left {
+                content: "Generated on {{ $exportDate }}";
+                font-size: 8px;
+                color: #666;
+            }
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-size: 9px;
+                color: #666;
+                font-weight: bold;
+            }
+
+            @bottom-right {
+                content: "Total: {{ $totalRecords }} records";
+                font-size: 8px;
                 color: #666;
             }
         }
@@ -144,15 +157,6 @@
             display: table-cell;
             width: 50%;
             text-align: right;
-        }
-
-        .filters-info {
-            background: var(--background-light);
-            padding: 8px 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 9px;
-            color: #374151;
         }
 
         .filters-title {
@@ -359,11 +363,6 @@
             break-inside: auto;
         }
 
-        /* Page counter styling */
-        .page-counter::after {
-            content: "Page " counter(page);
-        }
-
         /* Responsive adjustments for PDF */
         @media print {
             .no-print {
@@ -541,13 +540,6 @@
                     </div>
                 </div>
             @endif
-
-            @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
-                <div class="filters-info">
-                    <div class="filters-title">Applied Filters:</div>
-                    <div>{{ $additionalData['filters_applied'] }}</div>
-                </div>
-            @endif
         </div>
     @endif
 
@@ -592,10 +584,10 @@
     @if ($options['show_footer'] ?? true)
         <!-- Footer Section -->
         <div class="footer">
-            <div>This report was generated automatically by {{ config('app.name') }} on {{ $exportDate }}</div>
-            @if ($options['show_page_numbers'] ?? true)
-                <div style="margin-top: 5px; text-align: center; font-size: 10px; font-weight: bold;">
-                    <span>Total Records: {{ $totalRecords }}</span>
+            <div>This report was generated automatically by {{ config('app.name') }}</div>
+            @if (isset($additionalData['filters_applied']) && $additionalData['filters_applied'] !== 'No filters applied')
+                <div style="margin-top: 5px; text-align: center; font-size: 9px;">
+                    <strong>Applied Filters:</strong> {{ $additionalData['filters_applied'] }}
                 </div>
             @endif
         </div>
