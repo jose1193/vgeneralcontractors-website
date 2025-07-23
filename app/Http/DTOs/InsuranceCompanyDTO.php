@@ -2,38 +2,74 @@
 
 namespace App\Http\DTOs;
 
+use Illuminate\Support\Str;
+
 class InsuranceCompanyDTO extends BaseDTO
 {
-    public readonly ?string $uuid;
-    public readonly string $insurance_company_name;
-    public readonly ?string $address;
-    public readonly ?string $phone;
-    public readonly ?string $email;
-    public readonly ?string $website;
-    public readonly ?int $user_id;
-    public readonly bool $is_active;
-    public readonly ?string $created_at;
-    public readonly ?string $updated_at;
-    public readonly ?string $deleted_at;
+    public ?string $uuid;
+    public string $insurance_company_name;
+    public ?string $address;
+    public ?string $phone;
+    public ?string $email;
+    public ?string $website;
+    public ?int $user_id;
+    public bool $is_active;
+    public ?string $created_at;
+    public ?string $updated_at;
+    public ?string $deleted_at;
 
     public function __construct(array $data = [])
     {
         // Set defaults for required fields
         $data = array_merge([
-            'uuid' => null,
+            'uuid' => $data['uuid'] ?? (string) Str::uuid(),
             'insurance_company_name' => '',
             'address' => null,
             'phone' => null,
             'email' => null,
             'website' => null,
-            'user_id' => auth()->id(), // Set authenticated user ID as default
+            'user_id' => $data['user_id'] ?? auth()->id(),
             'is_active' => true,
             'created_at' => null,
             'updated_at' => null,
             'deleted_at' => null,
         ], $data);
         
-        parent::__construct($data);
+        // Skip validation since data comes from validated FormRequest
+        $this->fillFromArray($data);
+        $this->transformData();
+    }
+
+    /**
+     * Transform data after filling
+     */
+    protected function transformData(): void
+    {
+        // Clean and format insurance company name
+        if (!empty($this->insurance_company_name)) {
+            $this->insurance_company_name = trim($this->insurance_company_name);
+        }
+
+        // Clean and format email
+        if (!empty($this->email)) {
+            $this->email = strtolower(trim($this->email));
+        }
+
+        // Format website - same logic as FormRequest
+        if (!empty($this->website)) {
+            $website = trim($this->website);
+            if (!preg_match('/^https?:\/\//', $website)) {
+                $this->website = 'https://' . $website;
+            } else {
+                $this->website = $website;
+            }
+        }
+
+        // Phone formatting should already be done by FormRequest
+        // DTO just ensures consistency
+        if (!empty($this->phone)) {
+            $this->phone = trim($this->phone);
+        }
     }
 
     /**

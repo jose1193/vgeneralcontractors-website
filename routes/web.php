@@ -235,10 +235,19 @@ Route::middleware([
     Route::prefix('insurance-companies')->name('insurance-companies.')->group(function () {
         Route::get('/', [App\Http\Controllers\InsuranceCompanyController::class, 'index'])->name('index');
         Route::post('/', [App\Http\Controllers\InsuranceCompanyController::class, 'store'])->name('store');
+        
+        // Export Routes (MUST come before UUID routes to avoid conflicts)
+        Route::get('/export/excel', [App\Http\Controllers\InsuranceCompanyController::class, 'exportExcel'])->name('export-excel');
+        Route::get('/export/pdf', [App\Http\Controllers\InsuranceCompanyController::class, 'exportPdf'])->name('export-pdf');
+        Route::post('/bulk-export', [App\Http\Controllers\InsuranceCompanyController::class, 'bulkExport'])->name('bulk-export');
+        
+        // UUID-based Routes
         Route::get('/{uuid}/edit', [App\Http\Controllers\InsuranceCompanyController::class, 'edit'])->name('edit');
         Route::put('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'update'])->name('update');
         Route::delete('/{uuid}', [App\Http\Controllers\InsuranceCompanyController::class, 'destroy'])->name('destroy');
         Route::patch('/{uuid}/restore', [App\Http\Controllers\InsuranceCompanyController::class, 'restore'])->name('restore');
+        
+        // Utility Routes
         Route::post('/check-name', [App\Http\Controllers\InsuranceCompanyController::class, 'checkNameExists'])->name('check-name');
         Route::post('/check-email', [App\Http\Controllers\InsuranceCompanyController::class, 'checkEmail'])->name('check-email');
         Route::post('/check-phone', [App\Http\Controllers\InsuranceCompanyController::class, 'checkPhoneExists'])->name('check-phone');

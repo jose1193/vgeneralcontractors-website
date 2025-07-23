@@ -725,7 +725,48 @@
 
         function handleExport(format) {
             console.log(`Exporting data as ${format}`);
-            // Add your actual export logic here
+
+            // Get the manager instance using the manager name
+            const managerName = '{{ $managerName }}';
+            const manager = window[managerName];
+
+            if (!manager) {
+                console.error(`Manager ${managerName} not found`);
+                return;
+            }
+
+            // Get current filters from the manager
+            const currentFilters = {
+                search: manager.searchTerm || '',
+                showDeleted: manager.showDeleted || false,
+                startDate: document.getElementById('{{ $dateRangeStartId }}')?.value || '',
+                endDate: document.getElementById('{{ $dateRangeEndId }}')?.value || '',
+                perPage: document.getElementById('{{ $perPageId }}')?.value || 10
+            };
+
+            // Build URL with filters
+            let exportUrl = '';
+            if (format === 'excel' && manager.routes?.exportExcel) {
+                exportUrl = manager.routes.exportExcel;
+            } else if (format === 'pdf' && manager.routes?.exportPdf) {
+                exportUrl = manager.routes.exportPdf;
+            } else {
+                console.error(`Export route not found for format: ${format}`);
+                return;
+            }
+
+            // Add filters as query parameters
+            const params = new URLSearchParams();
+            if (currentFilters.search) params.append('search', currentFilters.search);
+            if (currentFilters.showDeleted) params.append('show_deleted', '1');
+            if (currentFilters.startDate) params.append('start_date', currentFilters.startDate);
+            if (currentFilters.endDate) params.append('end_date', currentFilters.endDate);
+            if (currentFilters.perPage) params.append('per_page', currentFilters.perPage);
+
+            const finalUrl = exportUrl + (params.toString() ? '?' + params.toString() : '');
+
+            // Trigger download
+            window.open(finalUrl, '_blank');
         }
 
         // Initialize Date Range Functionality

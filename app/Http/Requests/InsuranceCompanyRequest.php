@@ -247,4 +247,27 @@ class InsuranceCompanyRequest extends BaseFormRequest
         
         return $website;
     }
+
+    /**
+     * Convert validated request data to DTO
+     * 
+     * @return \App\Http\DTOs\InsuranceCompanyDTO
+     */
+    public function toDTO(): \App\Http\DTOs\InsuranceCompanyDTO
+    {
+        $validated = $this->validated();
+        
+        // Add additional fields that might not be in validation
+        $data = array_merge($validated, [
+            'user_id' => $validated['user_id'] ?? auth()->id(),
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        // If updating, preserve the UUID
+        if ($this->route('insurance_company')) {
+            $data['uuid'] = $this->route('insurance_company');
+        }
+
+        return new \App\Http\DTOs\InsuranceCompanyDTO($data);
+    }
 }

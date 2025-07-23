@@ -37,7 +37,10 @@
                         restore: "{{ secure_url(route('insurance-companies.restore', ':id', false)) }}",
                         checkEmail: "{{ secure_url(route('insurance-companies.check-email', [], false)) }}",
                         checkPhone: "{{ secure_url(route('insurance-companies.check-phone', [], false)) }}",
-                        checkName: "{{ secure_url(route('insurance-companies.check-name', [], false)) }}"
+                        checkName: "{{ secure_url(route('insurance-companies.check-name', [], false)) }}",
+                        exportExcel: "{{ secure_url(route('insurance-companies.export-excel', [], false)) }}",
+                        exportPdf: "{{ secure_url(route('insurance-companies.export-pdf', [], false)) }}",
+                        bulkExport: "{{ secure_url(route('insurance-companies.bulk-export', [], false)) }}"
                     },
                     tableSelector: '#insuranceCompanyTable-body',
                     searchSelector: '#searchInput',

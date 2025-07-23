@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InsuranceCompany;
 use App\Models\User;
 use App\Http\Requests\InsuranceCompanyRequest;
+use App\Http\DTOs\InsuranceCompanyDTO;
 use App\Services\TransactionService;
 use App\Services\InsuranceCompanyService;
 use App\Enums\RequestMethod;
@@ -19,7 +20,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use App\Traits\CacheTraitCrud;
 use Throwable;
-use App\Http\DTOs\InsuranceCompanyDTO;
 
 class InsuranceCompanyController extends BaseController
 {
@@ -351,84 +351,67 @@ class InsuranceCompanyController extends BaseController
         return $website;
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(InsuranceCompanyRequest $request): JsonResponse
     {
-        // Create and validate using InsuranceCompanyRequest
-        $formRequest = InsuranceCompanyRequest::createFrom($request);
-        $formRequest->setContainer(app());
-        $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
-        $formRequest->prepareForValidation();
-        
-        // Manually validate the request
-        $validator = app('validator')->make(
-            $formRequest->all(),
-            $formRequest->rules(),
-            $formRequest->messages(),
-            $formRequest->attributes()
-        );
-        
-        if ($validator->fails()) {
+        try {
+            // Convert validated request to DTO
+            $dto = $request->toDTO();
+            
+            // Create insurance company using service
+            $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('Insurance company created successfully'),
+                'data' => $insuranceCompany,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error creating insurance company', [
+                'error' => $e->getMessage(),
+                'data' => $request->validated()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Validation errors occurred.',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => 'Error creating insurance company: ' . $e->getMessage()
+            ], 500);
         }
-        
-        $validated = $validator->validated();
-        $dto = InsuranceCompanyDTO::fromArray($validated);
-        $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
-        return response()->json([
-            'success' => true,
-            'message' => __('Insurance company created successfully'),
-            'data' => $insuranceCompany,
-        ]);
     }
 
-    public function update(Request $request, string $uuid): JsonResponse
+    public function update(InsuranceCompanyRequest $request, string $uuid): JsonResponse
     {
-        // Create and validate using InsuranceCompanyRequest
-        $formRequest = InsuranceCompanyRequest::createFrom($request);
-        $formRequest->setContainer(app());
-        $formRequest->setRedirector(app('Illuminate\Routing\Redirector'));
-        
-        // Set route parameters for unique validation to work properly
-        $formRequest->setRouteResolver(function () use ($uuid) {
-            $route = app('router')->current();
-            $route->setParameter('insurance_company', $uuid);
-            return $route;
-        });
-        
-        $formRequest->prepareForValidation();
-        
-        // Manually validate the request
-        $validator = app('validator')->make(
-            $formRequest->all(),
-            $formRequest->rules(),
-            $formRequest->messages(),
-            $formRequest->attributes()
-        );
-        
-        if ($validator->fails()) {
+        try {
+            // Find the existing insurance company
+            $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
+            
+            // Convert validated request to DTO (preserving UUID)
+            $dto = $request->toDTO();
+            
+            // Update using the service with model and DTO data
+            $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toArray());
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('Insurance company updated successfully'),
+                'data' => $updatedInsuranceCompany,
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation errors occurred.',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => 'Insurance company not found'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error updating insurance company', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'data' => $request->validated()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating insurance company: ' . $e->getMessage()
+            ], 500);
         }
-        
-        $validated = $validator->validated();
-        
-        // Find the existing insurance company
-        $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
-        
-        // Update using the service with model and data
-        $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $validated);
-        return response()->json([
-            'success' => true,
-            'message' => __('Insurance company updated successfully'),
-            'data' => $updatedInsuranceCompany,
-        ]);
     }
 
     public function show(string $uuid): JsonResponse
@@ -497,6 +480,129 @@ class InsuranceCompanyController extends BaseController
                 false => 'Email is available'
             }
         ]);
+    }
+
+    /**
+     * Export insurance companies to Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            $searchFilters = [
+                'search' => $request->input('search'),
+                'sort_field' => $request->input('sort_field', 'insurance_company_name'),
+                'sort_direction' => $request->input('sort_direction', 'asc'),
+                'show_deleted' => $request->input('show_deleted', false),
+            ];
+
+            $dateFilters = [
+                'start_date' => $request->input('date_start'),
+                'end_date' => $request->input('date_end'),
+            ];
+
+            $export = new \App\Exports\Excel\InsuranceCompanyExport(null, $searchFilters, $dateFilters);
+            
+            $filename = 'insurance_companies_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+            
+            return $export->download($filename);
+            
+        } catch (\Exception $e) {
+            Log::error('Error exporting insurance companies to Excel: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error generating Excel export: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->with('error', 'Error generating Excel export: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export insurance companies to PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        try {
+            $searchFilters = [
+                'search' => $request->input('search'),
+                'sort_field' => $request->input('sort_field', 'insurance_company_name'),
+                'sort_direction' => $request->input('sort_direction', 'asc'),
+                'show_deleted' => $request->input('show_deleted', false),
+            ];
+
+            $dateFilters = [
+                'start_date' => $request->input('date_start'),
+                'end_date' => $request->input('date_end'),
+            ];
+
+            $export = new \App\Exports\PDF\InsuranceCompanyExportPDF(null, $searchFilters, $dateFilters);
+            
+            $filename = 'insurance_companies_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+            
+            return $export->download($filename);
+            
+        } catch (\Exception $e) {
+            Log::error('Error exporting insurance companies to PDF: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error generating PDF export: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->with('error', 'Error generating PDF export: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk export with multiple formats and filters
+     */
+    public function bulkExport(Request $request)
+    {
+        try {
+            $request->validate([
+                'format' => 'required|in:excel,pdf',
+                'filters' => 'nullable|array',
+                'date_filters' => 'nullable|array',
+                'export_options' => 'nullable|array'
+            ]);
+
+            $format = $request->input('format');
+            $searchFilters = $request->input('filters', []);
+            $dateFilters = $request->input('date_filters', []);
+            $exportOptions = $request->input('export_options', []);
+
+            if ($format === 'excel') {
+                $export = new \App\Exports\Excel\InsuranceCompanyExport(null, $searchFilters, $dateFilters);
+                $filename = 'insurance_companies_bulk_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+                return $export->download($filename);
+            } else {
+                $export = new \App\Exports\PDF\InsuranceCompanyExportPDF(null, $searchFilters, $dateFilters, $exportOptions);
+                $filename = 'insurance_companies_bulk_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+                return $export->download($filename);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Error in bulk export: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error generating bulk export: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 

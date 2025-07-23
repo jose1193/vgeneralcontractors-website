@@ -4,6 +4,8 @@ namespace App\Http\DTOs;
 
 use JsonSerializable;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 abstract class BaseDTO implements JsonSerializable, Arrayable
 {
@@ -12,6 +14,16 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
      */
     public function __construct(array $data = [])
     {
+        $this->fillFromArray($data);
+        $this->validateData();
+        $this->transformData();
+    }
+
+    /**
+     * Fill DTO properties from array data
+     */
+    protected function fillFromArray(array $data): void
+    {
         $reflection = new \ReflectionClass($this);
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
         
@@ -19,9 +31,9 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
             $propertyName = $property->getName();
             
             if (array_key_exists($propertyName, $data)) {
-                $this->$propertyName = $data[$propertyName];
-            } elseif ($property->hasType() && !$property->getType()->allowsNull() && $property->isReadOnly()) {
-                // For required readonly properties, we need to set a default value
+                $this->$propertyName = $this->castValue($data[$propertyName], $property);
+            } elseif ($property->hasType() && !$property->getType()->allowsNull()) {
+                // Set default values for non-nullable properties
                 $type = $property->getType();
                 if ($type instanceof \ReflectionNamedType) {
                     $this->$propertyName = match($type->getName()) {
@@ -38,11 +50,71 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     }
 
     /**
+     * Cast value based on property type
+     */
+    protected function castValue($value, \ReflectionProperty $property)
+    {
+        if (!$property->hasType()) {
+            return $value;
+        }
+
+        $type = $property->getType();
+        if (!$type instanceof \ReflectionNamedType) {
+            return $value;
+        }
+
+        return match($type->getName()) {
+            'string' => (string) $value,
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'bool' => (bool) $value,
+            'array' => is_array($value) ? $value : [$value],
+            default => $value
+        };
+    }
+
+    /**
+     * Validate data - to be overridden by child classes
+     */
+    protected function validateData(): void
+    {
+        // Default implementation does nothing
+        // Child classes can override to add validation
+    }
+
+    /**
+     * Transform data after filling - to be overridden by child classes
+     */
+    protected function transformData(): void
+    {
+        // Default implementation does nothing
+        // Child classes can override to add transformations
+    }
+
+    /**
      * Create a new DTO instance from array data
      */
     public static function fromArray(array $data): static
     {
         return new static($data);
+    }
+
+    /**
+     * Create DTO instance from model
+     */
+    public static function fromModel($model): static
+    {
+        return new static($model->toArray());
+    }
+
+    /**
+     * Create collection of DTOs from array of data
+     */
+    public static function fromCollection($collection): Collection
+    {
+        return collect($collection)->map(function ($item) {
+            return static::fromArray(is_array($item) ? $item : $item->toArray());
+        });
     }
 
     /**

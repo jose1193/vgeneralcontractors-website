@@ -543,4 +543,37 @@ abstract class BaseController extends Controller
             'updated_at' => 'Updated Date'
         ];
     }
+
+    /**
+     * Create DTO instance from Eloquent model
+     * 
+     * @param mixed $model Eloquent model instance
+     * @return mixed DTO instance
+     */
+    protected function fromEloquent($model)
+    {
+        if (!$model) {
+            return null;
+        }
+
+        // Get the DTO class name based on the model class
+        $modelClass = get_class($model);
+        $modelName = class_basename($modelClass);
+        $dtoClass = "App\\Http\\DTOs\\{$modelName}DTO";
+
+        // Check if DTO class exists
+        if (!class_exists($dtoClass)) {
+            throw new \InvalidArgumentException("DTO class {$dtoClass} not found for model {$modelName}");
+        }
+
+        // Convert model to array and create DTO
+        $data = $model->toArray();
+        
+        // Add any special attributes that might not be in toArray()
+        if (method_exists($model, 'getUuidAttribute')) {
+            $data['uuid'] = $model->uuid;
+        }
+        
+        return new $dtoClass($data);
+    }
 }
