@@ -61,21 +61,24 @@
         /* Header Styles */
         .header {
             width: 85%;
-            margin: 0 auto 20px auto;
+            margin: 25px auto 20px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
         }
 
         .company-info {
-            display: table;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             width: 100%;
             margin-bottom: 15px;
+            padding: 10px 0;
         }
 
         .company-logo {
-            display: table-cell;
-            width: 80px;
-            vertical-align: top;
+            flex-shrink: 0;
+            width: 164px;
+            margin-right: 30px;
         }
 
         .company-logo img {
@@ -86,11 +89,10 @@
         }
 
         .company-details {
-            display: table-cell;
-            vertical-align: top;
-            padding-left: 150px;
+            flex: 1;
+            text-align: right;
             padding-top: 23px;
-            padding-right: 30px;
+            padding-left: 20px;
         }
 
         .company-name {
@@ -98,13 +100,14 @@
             font-weight: bold;
             color: var(--text-primary);
             margin-bottom: 5px;
+            text-align: right;
         }
 
         .company-contact {
             font-size: 10px;
             color: var(--text-secondary);
             line-height: 1.2;
-            margin-right: 20px;
+            text-align: right;
         }
 
         .report-title {
@@ -341,23 +344,25 @@
         /* Alternative header layout */
         .header-alternative {
             width: 100%;
-            display: table;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 20px;
+            padding: 10px 0;
         }
 
         .header-left {
-            display: table-cell;
+            flex-shrink: 0;
             width: 50%;
             vertical-align: top;
             text-align: left;
         }
 
         .header-right {
-            display: table-cell;
-            width: 50%;
-            text-align: left;
+            flex: 1;
+            text-align: right;
             vertical-align: top;
-            padding-left: 150px;
+            padding-left: 20px;
             padding-top: 23px;
         }
 
@@ -431,10 +436,10 @@
                     <div class="company-details">
                         <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}</div>
                         <div class="company-contact">
-                            {{ $companyInfo['address'] ?? '1522 Waugh Dr # 510, Houston, TX 77019' }}<br>
-                            {{ $companyInfo['phone'] ?? '+1 (713) 364-6240' }}<br>
+                            {{ $companyInfo['address'] ?? '1302 Waugh Dr # 810, Houston, TX 77019' }}<br>
+                            {{ $companyInfo['phone'] ?? '+1 (713) 587-6423' }}<br>
                             {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
-                            {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com/' }}
+                            {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com' }}
                         </div>
                     </div>
                 </div>
