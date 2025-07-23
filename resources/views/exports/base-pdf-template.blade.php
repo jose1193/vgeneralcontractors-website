@@ -66,7 +66,7 @@
         .company-details {
             display: table-cell;
             vertical-align: top;
-            padding-left: 200px;
+            padding-left: 150px;
             padding-top: 23px;
         }
 

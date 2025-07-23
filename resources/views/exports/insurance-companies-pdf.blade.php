@@ -63,7 +63,7 @@
             width: 50%;
             text-align: left;
             vertical-align: top;
-            padding-left: 200px;
+            padding-left: 150px;
             padding-top: 23px;
         }
 
