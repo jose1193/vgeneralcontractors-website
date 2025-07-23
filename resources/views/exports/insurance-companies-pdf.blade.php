@@ -96,7 +96,7 @@
 
         .data-table {
             width: 92%;
-            margin-top: 25px; /* Extra margin for landscape */
+            margin-top: 15px; /* Reduced from 25px */
         }
 
         .summary {

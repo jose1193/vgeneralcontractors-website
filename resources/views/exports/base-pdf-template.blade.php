@@ -39,7 +39,7 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 25mm 15mm 25mm 15mm;
+            margin: 20mm 15mm 20mm 15mm;
             size: A4;
 
             @top-center {
@@ -70,15 +70,15 @@
 
         /* Specific margins for different page types */
         @page :first {
-            margin-top: 25mm;
+            margin-top: 20mm; /* Normal margin for first page */
         }
 
         @page :left {
-            margin-top: 30mm;
+            margin-top: 30mm; /* Extra margin for continuation pages */
         }
 
         @page :right {
-            margin-top: 30mm;
+            margin-top: 30mm; /* Extra margin for continuation pages */
         }
 
         * {
@@ -292,7 +292,7 @@
 
         /* Add spacing when content breaks to new page */
         .data-table {
-            margin-top: 15px;
+            margin-top: 5px; /* Reduced from 15px */
         }
 
         /* Prevent orphaned headers and improve page flow */
@@ -304,7 +304,7 @@
         /* Additional margin for landscape orientation */
         @media print and (orientation: landscape) {
             .data-table {
-                margin-top: 20px;
+                margin-top: 10px; /* Reduced from 20px */
             }
         }
 
