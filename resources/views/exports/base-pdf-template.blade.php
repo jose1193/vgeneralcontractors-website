@@ -88,29 +88,32 @@
         .company-info {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             width: 100%;
             margin-bottom: 15px;
             padding: 10px 0;
+            min-height: 80px;
         }
 
         .company-logo {
             flex-shrink: 0;
             width: 164px;
             margin-right: 30px;
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
 
         .company-logo img {
             max-width: 164px;
             height: auto;
-            margin-top: 10px;
-            vertical-align: top;
+            vertical-align: middle;
         }
 
         .company-details {
             flex: 1;
             text-align: right;
-            padding-top: 10px;
+            padding-top: 15px;
             padding-left: 20px;
         }
 
@@ -127,7 +130,6 @@
             color: var(--text-secondary);
             line-height: 1.2;
             text-align: right;
-            margin-top: -50px
         }
 
         .report-title {
@@ -168,7 +170,7 @@
         /* Table Styles */
         .data-table {
             width: 80%;
-            margin: 0 auto 20px auto;
+            margin: 0 auto 40px auto;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -292,7 +294,7 @@
         /* Summary Section */
         .summary {
             width: 80%;
-            margin: 30px auto 40px auto;
+            margin: 50px auto 60px auto;
             padding: 15px;
             background: var(--background-light);
             border-radius: 6px;
@@ -520,7 +522,6 @@
                     </div>
                 </div>
             @endif
-
             <div class="report-title">{{ $title }}</div>
 
             @if ($options['show_export_info'] ?? true)
@@ -547,35 +548,39 @@
 
     @if ($options['show_summary'] ?? false && isset($additionalData['summary']))
         <!-- Summary Section -->
-        <div class="summary">
-            <div class="summary-title">Report Summary</div>
-            <div class="summary-stats">
-                @if (isset($additionalData['summary']['total_companies']))
-                    <div class="summary-stat">
-                        <span class="summary-stat-value">{{ $additionalData['summary']['total_companies'] }}</span>
-                        <span class="summary-stat-label">Total</span>
-                    </div>
-                @endif
-                @if (isset($additionalData['summary']['active_companies']))
-                    <div class="summary-stat">
-                        <span class="summary-stat-value">{{ $additionalData['summary']['active_companies'] }}</span>
-                        <span class="summary-stat-label">Active</span>
-                    </div>
-                @endif
-                @if (isset($additionalData['summary']['inactive_companies']))
-                    <div class="summary-stat">
-                        <span class="summary-stat-value">{{ $additionalData['summary']['inactive_companies'] }}</span>
-                        <span class="summary-stat-label">Inactive</span>
-                    </div>
-                @endif
-                @if (isset($additionalData['summary']['active_percentage']))
-                    <div class="summary-stat">
-                        <span class="summary-stat-value">{{ $additionalData['summary']['active_percentage'] }}%</span>
-                        <span class="summary-stat-label">Active Rate</span>
-                    </div>
-                @endif
+        <div class="page-break-avoid">
+            <div class="summary">
+                <div class="summary-title">Report Summary</div>
+                <div class="summary-stats">
+                    @if (isset($additionalData['summary']['total_companies']))
+                        <div class="summary-stat">
+                            <span class="summary-stat-value">{{ $additionalData['summary']['total_companies'] }}</span>
+                            <span class="summary-stat-label">Total</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['active_companies']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['active_companies'] }}</span>
+                            <span class="summary-stat-label">Active</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['inactive_companies']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['inactive_companies'] }}</span>
+                            <span class="summary-stat-label">Inactive</span>
+                        </div>
+                    @endif
+                    @if (isset($additionalData['summary']['active_percentage']))
+                        <div class="summary-stat">
+                            <span
+                                class="summary-stat-value">{{ $additionalData['summary']['active_percentage'] }}%</span>
+                            <span class="summary-stat-label">Active Rate</span>
+                        </div>
+                    @endif
+                </div>
             </div>
-        </div>
     @endif
 
     @if ($options['show_footer'] ?? true)
