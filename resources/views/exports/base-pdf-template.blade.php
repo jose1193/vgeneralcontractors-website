@@ -201,7 +201,7 @@
             font-size: 12px;
         }
 
-        @if (($options['repeat_headers'] ?? true) === true)
+        @if (($options['repeat_headers'] ?? false) === true)
             .data-table thead {
                 display: table-header-group;
             }
@@ -253,14 +253,10 @@
             break-after: avoid;
         }
 
-        /* Force header repetition across pages */
+        /* Conditional header repetition across pages */
         .data-table {
             page-break-inside: auto;
             break-inside: auto;
-        }
-
-        .data-table thead {
-            display: table-header-group;
         }
 
         .data-table tbody {

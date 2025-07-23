@@ -27,9 +27,9 @@
                                     'Phone' => 'phone',
                                     'Address' => 'address',
                                     'Website' => 'website',
-                                    'Created By' => 'assigned_user',
-                                    'Assigned User' => 'assigned_user',
                                     'Status' => 'status',
+                                    'Assigned User' => 'assigned_user',
+                                    'Created By' => 'assigned_user',
                                     'Created Date' => 'created_date',
                                     default => strtolower(str_replace(' ', '_', $header)),
                                 };
@@ -39,8 +39,13 @@
 
                             <td class="col-{{ $loop->index }} text-{{ $align }}">
                                 @if ($field === 'status')
-                                    <span class="{{ $row['status_class'] ?? 'status-active' }}">
-                                        {{ $value }}
+                                    @php
+                                        // Determine status based on deleted_at field
+                                        $statusValue = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
+                                        $statusClass = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'status-inactive' : 'status-active';
+                                    @endphp
+                                    <span class="{{ $statusClass }}">
+                                        {{ $statusValue }}
                                     </span>
                                 @elseif($field === 'email' && $value !== 'N/A')
                                     <span class="email">{{ $value }}</span>

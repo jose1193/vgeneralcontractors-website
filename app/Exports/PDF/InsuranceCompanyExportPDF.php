@@ -68,11 +68,12 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
     {
         return [
             '#' => ['width' => '5%', 'align' => 'center'],
-            'Company Name' => ['width' => '25%', 'align' => 'left'],
-            'Email' => ['width' => '20%', 'align' => 'left'],
-            'Phone' => ['width' => '15%', 'align' => 'center'],
-            'Address' => ['width' => '20%', 'align' => 'left'],
-            'Created By' => ['width' => '15%', 'align' => 'center'],
+            'Company Name' => ['width' => '22%', 'align' => 'left'],
+            'Email' => ['width' => '18%', 'align' => 'left'],
+            'Phone' => ['width' => '12%', 'align' => 'center'],
+            'Address' => ['width' => '25%', 'align' => 'left'],
+            'Status' => ['width' => '10%', 'align' => 'center'],
+            'Created By' => ['width' => '8%', 'align' => 'center'],
         ];
     }
 
@@ -129,6 +130,8 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
                 'phone' => $this->formatPhoneForDisplay($company->phone),
                 'address' => $this->truncateText($company->address, 50),
                 'website' => $this->formatWebsiteForDisplay($company->website),
+                'status' => $company->deleted_at ? 'Inactive' : 'Active',
+                'deleted_at' => $company->deleted_at,
                 'assigned_user' => $company->user 
                     ? $company->user->name . ' ' . $company->user->last_name 
                     : 'System',

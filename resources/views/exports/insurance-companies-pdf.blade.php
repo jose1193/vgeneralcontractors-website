@@ -39,7 +39,7 @@
 
         /* Insurance-specific column widths - Optimized for better fit */
         .col-0 {
-            width: 6%;
+            width: 5%;
             text-align: center;
         }
 
@@ -63,13 +63,19 @@
 
         /* Phone */
         .col-4 {
-            width: 28%;
+            width: 25%;
             text-align: left;
         }
 
         /* Address */
         .col-5 {
-            width: 14%;
+            width: 10%;
+            text-align: center;
+        }
+
+        /* Status */
+        .col-6 {
+            width: 8%;
             text-align: center;
         }
 
@@ -128,7 +134,8 @@
                     <th class="col-2">Email</th>
                     <th class="col-3">Phone</th>
                     <th class="col-4">Address</th>
-                    <th class="col-5">Created By</th>
+                    <th class="col-5">Status</th>
+                    <th class="col-6">Created By</th>
                 </tr>
             </thead>
             <tbody>
@@ -154,6 +161,16 @@
                             {{ $row['address'] }}
                         </td>
                         <td class="col-5">
+                            @php
+                                // Determine status based on deleted_at field
+                                $statusValue = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
+                                $statusClass = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'status-inactive' : 'status-active';
+                            @endphp
+                            <span class="{{ $statusClass }}">
+                                {{ $statusValue }}
+                            </span>
+                        </td>
+                        <td class="col-6">
                             {{ $row['assigned_user'] }}
                         </td>
                     </tr>
