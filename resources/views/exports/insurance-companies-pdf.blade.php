@@ -96,7 +96,6 @@
 
         .data-table {
             width: 92%;
-            margin-top: 15px; /* Reduced from 25px */
         }
 
         .summary {
@@ -120,16 +119,6 @@
         .company-logo img {
             max-width: 1140px;
             max-height: 300px;
-        }
-
-        /* Better spacing for continuation pages in landscape */
-        .data-table tbody tr {
-            page-break-inside: avoid;
-        }
-
-        /* Ensure proper spacing when table continues to next page */
-        .data-table {
-            page-break-before: avoid;
         }
     </style>
 @endpush

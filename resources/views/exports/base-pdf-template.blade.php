@@ -68,17 +68,9 @@
             }
         }
 
-        /* Specific margins for different page types */
+        /* Prevent page breaks in inappropriate places */
         @page :first {
-            margin-top: 20mm; /* Normal margin for first page */
-        }
-
-        @page :left {
-            margin-top: 30mm; /* Extra margin for continuation pages */
-        }
-
-        @page :right {
-            margin-top: 30mm; /* Extra margin for continuation pages */
+            margin-top: 20mm;
         }
 
         * {
@@ -285,28 +277,7 @@
             margin-top: 0;
         }
 
-        /* Better spacing for continued content on subsequent pages */
-        .data-table tbody tr:first-child {
-            margin-top: 10px;
-        }
-
-        /* Add spacing when content breaks to new page */
-        .data-table {
-            margin-top: 5px; /* Reduced from 15px */
-        }
-
-        /* Prevent orphaned headers and improve page flow */
-        .data-table thead th {
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-
-        /* Additional margin for landscape orientation */
-        @media print and (orientation: landscape) {
-            .data-table {
-                margin-top: 10px; /* Reduced from 20px */
-            }
-        }
+        /* Prevent orphaned headers */
 
         /* Optimize row height */
         .data-table tr {
