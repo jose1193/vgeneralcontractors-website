@@ -1,4 +1,4 @@
-<x-crud.index-layout :title="__('blog_categories_title')" :subtitle="__('blog_categories_subtitle')" entity-name="{{ __('blog_category_entity_name') }}"
+<x-crud.index-layout :title="__('blog_categories_title')" :subtitle="__('blog_categories_subtitle')" entity-nam                                    <button data-id="${blogCategory.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="{{ __('edit_blog_category') }}">`;="{{ __('blog_category_entity_name') }}"
     entity-name-plural="{{ __('blog_category_entity_plural') }}" :search-placeholder="__('search_blog_categories')" :show-deleted-label="__('show_inactive_records')" :add-new-label="__('add_blog_category')"
     manager-name="blogCategoryManager" table-id="blogCategoryTable" create-button-id="createBlogCategoryBtn"
     search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"
