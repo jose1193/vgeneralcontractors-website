@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title }}</title>
     <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary-color: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary-color: #6c9bd0;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --background-light: #F9FAFB;
+            --background-alt: #F3F4F6;
+            --border-light: #E5E7EB;
+            --success-bg: #D1FAE5;
+            --success-text: #065F46;
+            --error-bg: #FEE2E2;
+            --error-text: #991B1B;
+            --highlight-bg: #FEF3C7;
+            --link-color: #3B82F6;
+            --font-family: 'DejaVu Sans', Arial, sans-serif;
+            --font-family-mono: 'Courier New', monospace;
+        }
+
         /* Base PDF Styles */
         @page {
             margin: 15mm 10mm 15mm 10mm;
@@ -30,18 +51,19 @@
         }
 
         body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-family: var(--font-family);
             font-size: 10px;
             line-height: 1.4;
             color: #333;
             background: #fff;
         }
 
+        /* Header Styles */
         .header {
             width: 90%;
             margin: 0 auto 20px auto;
             padding-bottom: 15px;
-            border-bottom: 2px solid #4F46E5;
+            border-bottom: 2px solid var(--primary-color);
         }
 
         .company-info {
@@ -73,13 +95,13 @@
         .company-name {
             font-size: 12px;
             font-weight: bold;
-            color: #1F2937;
+            color: var(--text-primary);
             margin-bottom: 5px;
         }
 
         .company-contact {
             font-size: 10px;
-            color: #6B7280;
+            color: var(--text-secondary);
             line-height: 1.2;
         }
 
@@ -87,18 +109,19 @@
             text-align: center;
             font-size: 16px;
             font-weight: bold;
-            color: #1F2937;
+            color: var(--text-primary);
             margin: 15px 0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        /* Report Information */
         .report-info {
             display: table;
             width: 100%;
             margin-bottom: 15px;
             font-size: 9px;
-            color: #6B7280;
+            color: var(--text-secondary);
         }
 
         .report-info-left {
@@ -113,7 +136,7 @@
         }
 
         .filters-info {
-            background: #F9FAFB;
+            background: var(--background-light);
             padding: 8px 10px;
             border-radius: 4px;
             margin-bottom: 15px;
@@ -139,35 +162,35 @@
         }
 
         .data-table th {
-            background: #4F46E5;
+            background: var(--primary-color);
             color: white;
             padding: 10px 8px;
             text-align: center;
             font-weight: bold;
             font-size: 12px;
-            border: 1px solid #4338CA;
+            border: 1px solid var(--primary-dark);
         }
 
         .data-table td {
             padding: 8px;
-            border: 1px solid #E5E7EB;
+            border: 1px solid var(--border-light);
             vertical-align: top;
             text-align: center;
             font-size: 12px;
         }
 
         .data-table tbody tr:nth-child(even) {
-            background: #F9FAFB;
+            background: var(--background-light);
         }
 
         .data-table tbody tr:hover {
-            background: #F3F4F6;
+            background: var(--background-alt);
         }
 
         /* Status Styles */
         .status-active {
-            background: #D1FAE5;
-            color: #065F46;
+            background: var(--success-bg);
+            color: var(--success-text);
             padding: 2px 6px;
             border-radius: 12px;
             font-size: 8px;
@@ -178,8 +201,8 @@
         }
 
         .status-inactive {
-            background: #FEE2E2;
-            color: #991B1B;
+            background: var(--error-bg);
+            color: var(--error-text);
             padding: 2px 6px;
             border-radius: 12px;
             font-size: 8px;
@@ -207,15 +230,15 @@
             width: 90%;
             margin: 20px auto 0 auto;
             padding: 15px;
-            background: #F9FAFB;
+            background: var(--background-light);
             border-radius: 6px;
-            border-left: 4px solid #4F46E5;
+            border-left: 4px solid var(--primary-color);
         }
 
         .summary-title {
             font-size: 12px;
             font-weight: bold;
-            color: #1F2937;
+            color: var(--text-primary);
             margin-bottom: 8px;
         }
 
@@ -234,13 +257,13 @@
         .summary-stat-value {
             font-size: 14px;
             font-weight: bold;
-            color: #4F46E5;
+            color: var(--primary-color);
             display: block;
         }
 
         .summary-stat-label {
             font-size: 8px;
-            color: #6B7280;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -250,9 +273,9 @@
             width: 90%;
             margin: 30px auto 0 auto;
             padding-top: 15px;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid var(--border-light);
             font-size: 8px;
-            color: #9CA3AF;
+            color: var(--text-muted);
             text-align: center;
         }
 
@@ -288,12 +311,12 @@
         /* Number formatting */
         .number {
             text-align: right;
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-family-mono);
         }
 
         /* Highlight important data */
         .highlight {
-            background: #FEF3C7;
+            background: var(--highlight-bg);
             padding: 1px 3px;
             border-radius: 2px;
         }
@@ -301,8 +324,76 @@
         /* Email and URL styling */
         .email,
         .url {
-            color: #3B82F6;
+            color: var(--link-color);
             text-decoration: none;
+        }
+
+        /* Container for full-width layouts */
+        .container {
+            width: 90%;
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Alternative header layout */
+        .header-alternative {
+            width: 100%;
+            display: table;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .header-right {
+            display: table-cell;
+            width: 50%;
+            text-align: left;
+            vertical-align: top;
+            padding-left: 150px;
+            padding-top: 23px;
+        }
+
+        .logo {
+            max-width: 164px;
+            height: auto;
+            margin-top: 10px;
+            vertical-align: top;
+        }
+
+        /* No data message styling */
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .no-data-icon {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .no-data-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .no-data-text {
+            font-size: 10px;
+        }
+
+        /* Record count styling */
+        .record-count {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 9px;
+            color: var(--text-secondary);
         }
 
         /* Custom column widths based on headers */
@@ -314,7 +405,16 @@
                 }
             @endforeach
         @endif
+
+        /* Theme customization stack */
+        @stack('pdf-theme-styles')
+
+        /* Additional custom styles stack */
+        @stack('pdf-custom-styles')
     </style>
+
+    <!-- Additional head content stack -->
+    @stack('pdf-head')
 </head>
 
 <body>
