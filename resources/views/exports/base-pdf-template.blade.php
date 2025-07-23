@@ -127,6 +127,7 @@
             color: var(--text-secondary);
             line-height: 1.2;
             text-align: right;
+            margin-top: -50px
         }
 
         .report-title {
