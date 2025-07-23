@@ -172,9 +172,15 @@
             font-size: 12px;
         }
 
-        .data-table thead {
-            display: table-header-group;
-        }
+        @if (($options['repeat_headers'] ?? true) === true)
+            .data-table thead {
+                display: table-header-group;
+            }
+        @else
+            .data-table thead {
+                display: table-row-group;
+            }
+        @endif
 
         .data-table th {
             background: var(--primary-color);
@@ -285,7 +291,7 @@
         /* Summary Section */
         .summary {
             width: 80%;
-            margin: 20px auto 0 auto;
+            margin: 30px auto 40px auto;
             padding: 15px;
             background: var(--background-light);
             border-radius: 6px;
@@ -328,8 +334,8 @@
         /* Footer */
         .footer {
             width: 80%;
-            margin: 30px auto 0 auto;
-            padding-top: 15px;
+            margin: 50px auto 0 auto;
+            padding-top: 20px;
             border-top: 1px solid var(--border-light);
             font-size: 8px;
             color: var(--text-muted);

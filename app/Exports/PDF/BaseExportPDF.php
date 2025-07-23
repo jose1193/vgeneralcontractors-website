@@ -171,6 +171,7 @@ abstract class BaseExportPDF
             'show_page_numbers' => true,
             'show_company_info' => true,
             'show_export_info' => true,
+            'repeat_headers' => false, // By default, don't repeat headers
         ];
     }
 

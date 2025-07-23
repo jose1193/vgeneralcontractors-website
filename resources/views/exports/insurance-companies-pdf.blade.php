@@ -22,23 +22,6 @@
             height: auto;
         }
 
-        /* Ensure headers repeat properly on each page */
-        .data-table thead {
-            display: table-header-group;
-        }
-
-        .data-table thead tr {
-            page-break-inside: avoid;
-            break-inside: avoid;
-            page-break-after: avoid;
-            break-after: avoid;
-        }
-
-        .data-table thead th {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
         /* Enhanced report title for this theme */
         .report-title {
             color: var(--primary-color);

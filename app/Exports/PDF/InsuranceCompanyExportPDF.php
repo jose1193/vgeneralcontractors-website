@@ -11,6 +11,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
 {
     private array $searchFilters;
     private array $dateFilters;
+    private Collection $originalData;
 
     public function __construct(
         Collection $data = null,
@@ -26,6 +27,9 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
             $data = $this->getFilteredInsuranceCompanies();
         }
 
+        // Store original data for summary calculations
+        $this->originalData = $data;
+
         // Set default options for insurance companies
         $defaultOptions = [
             'orientation' => 'landscape', // Better for table with many columns
@@ -34,6 +38,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
             'show_borders' => true,
             'alternate_row_colors' => true,
             'show_summary' => true,
+            'repeat_headers' => false, // Don't repeat headers on each page
         ];
 
         $options = array_merge($defaultOptions, $options);
@@ -151,15 +156,17 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
     {
         $summary = parent::calculateSummary($this->data);
         
-        $activeCount = $this->data->where('status', 'Active')->count();
-        $inactiveCount = $this->data->where('status', 'Inactive')->count();
+        // Use original data to get accurate counts
+        $activeCount = $this->originalData->where('deleted_at', null)->count();
+        $inactiveCount = $this->originalData->whereNotNull('deleted_at')->count();
+        $totalCount = $this->originalData->count();
         
         return array_merge($summary, [
             'active_companies' => $activeCount,
             'inactive_companies' => $inactiveCount,
-            'total_companies' => $this->data->count(),
-            'active_percentage' => $this->data->count() > 0 
-                ? round(($activeCount / $this->data->count()) * 100, 1) 
+            'total_companies' => $totalCount,
+            'active_percentage' => $totalCount > 0 
+                ? round(($activeCount / $totalCount) * 100, 1) 
                 : 0,
         ]);
     }
