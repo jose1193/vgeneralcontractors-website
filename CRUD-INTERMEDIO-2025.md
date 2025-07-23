@@ -43,6 +43,7 @@ resources/
       bulk-pdf.blade.php               # 📄 Plantilla PDF para reportes
     exports/
       base-pdf-template.blade.php      # 📄 Plantilla base para PDFs
+      insurance-companies-pdf.blade.php      # 📄 Plantilla base para reportes
       table-pdf-template.blade.php     # 📄 Plantilla tabla para PDFs
 resources/js/
 ├── crud-system/

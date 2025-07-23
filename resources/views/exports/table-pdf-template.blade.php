@@ -7,7 +7,7 @@
             <thead>
                 <tr>
                     @foreach ($headers as $header => $config)
-                        <th class="col-{{ $loop->index }} text-{{ $config['align'] ?? 'left' }}"
+                        <th class="col-{{ $loop->index }} text-{{ $config['align'] ?? 'center' }}"
                             style="width: {{ $config['width'] ?? 'auto' }};">
                             {{ $header }}
                         </th>
@@ -20,6 +20,7 @@
                         @foreach ($headers as $header => $config)
                             @php
                                 $field = match ($header) {
+                                    'Nro' => 'number',
                                     '#' => 'number',
                                     'Company Name' => 'company_name',
                                     'Email' => 'email',
@@ -33,7 +34,7 @@
                                     default => strtolower(str_replace(' ', '_', $header)),
                                 };
                                 $value = $row[$field] ?? 'N/A';
-                                $align = $config['align'] ?? 'left';
+                                $align = $config['align'] ?? 'center';
                             @endphp
 
                             <td class="col-{{ $loop->index }} text-{{ $align }}">
@@ -46,7 +47,7 @@
                                 @elseif($field === 'website' && $value !== 'N/A')
                                     <span class="url">{{ $value }}</span>
                                 @elseif($field === 'company_name')
-                                    <strong>{{ $value }}</strong>
+                                    {{ $value }}
                                 @elseif($field === 'number')
                                     <span class="number">{{ $value }}</span>
                                 @else

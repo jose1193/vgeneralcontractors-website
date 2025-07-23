@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles - Consistent with invoice PDF */
         @page {
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 15mm 12mm 15mm 12mm;
 
             @top-center {
                 content: "{{ $title }}";
@@ -142,7 +142,7 @@
             background-color: #e6f0fa;
             color: #6c9bd0;
             font-weight: bold;
-            text-align: left;
+            text-align: center;
             padding: 8px 6px;
             border: 1px solid #ddd;
             font-size: 9px;
@@ -153,6 +153,7 @@
             border: 1px solid #E5E7EB;
             vertical-align: top;
             font-weight: 600;
+            text-align: center;
         }
 
         .data-table tbody tr:nth-child(even) {
@@ -269,20 +270,20 @@
 
         /* Column specific styles */
         .col-0 {
-            width: 5%;
+            width: 8%;
             text-align: center;
         }
 
-        /* # */
+        /* Nro */
         .col-1 {
             width: 25%;
-            text-align: left;
+            text-align: center;
         }
 
         /* Company Name */
         .col-2 {
             width: 20%;
-            text-align: left;
+            text-align: center;
         }
 
         /* Email */
@@ -294,12 +295,12 @@
         /* Phone */
         .col-4 {
             width: 20%;
-            text-align: left;
+            text-align: center;
         }
 
         /* Address */
         .col-5 {
-            width: 15%;
+            width: 12%;
             text-align: center;
         }
 
@@ -358,7 +359,7 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th class="col-0">#</th>
+                        <th class="col-0">Nro</th>
                         <th class="col-1">Company Name</th>
                         <th class="col-2">Email</th>
                         <th class="col-3">Phone</th>
@@ -373,7 +374,7 @@
                                 <span class="number">{{ $row['number'] }}</span>
                             </td>
                             <td class="col-1">
-                                <strong>{{ $row['company_name'] }}</strong>
+                                {{ $row['company_name'] }}
                             </td>
                             <td class="col-2">
                                 @if ($row['email'] !== 'N/A')

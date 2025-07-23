@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles */
         @page {
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 15mm 12mm 15mm 12mm;
 
             @top-center {
                 content: "{{ $title }}";
@@ -137,7 +137,7 @@
             background: #4F46E5;
             color: white;
             padding: 8px 6px;
-            text-align: left;
+            text-align: center;
             font-weight: bold;
             font-size: 9px;
             border: 1px solid #4338CA;
@@ -147,6 +147,7 @@
             padding: 6px;
             border: 1px solid #E5E7EB;
             vertical-align: top;
+            text-align: center;
         }
 
         .data-table tbody tr:nth-child(even) {
