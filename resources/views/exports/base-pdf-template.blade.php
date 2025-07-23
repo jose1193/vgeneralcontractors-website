@@ -39,7 +39,7 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 25mm 15mm 25mm 15mm;
             size: A4;
 
             @top-center {
@@ -68,9 +68,17 @@
             }
         }
 
-        /* Prevent page breaks in inappropriate places */
+        /* Specific margins for different page types */
         @page :first {
-            margin-top: 20mm;
+            margin-top: 25mm;
+        }
+
+        @page :left {
+            margin-top: 30mm;
+        }
+
+        @page :right {
+            margin-top: 30mm;
         }
 
         * {
@@ -277,7 +285,28 @@
             margin-top: 0;
         }
 
-        /* Prevent orphaned headers */
+        /* Better spacing for continued content on subsequent pages */
+        .data-table tbody tr:first-child {
+            margin-top: 10px;
+        }
+
+        /* Add spacing when content breaks to new page */
+        .data-table {
+            margin-top: 15px;
+        }
+
+        /* Prevent orphaned headers and improve page flow */
+        .data-table thead th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        /* Additional margin for landscape orientation */
+        @media print and (orientation: landscape) {
+            .data-table {
+                margin-top: 20px;
+            }
+        }
 
         /* Optimize row height */
         .data-table tr {

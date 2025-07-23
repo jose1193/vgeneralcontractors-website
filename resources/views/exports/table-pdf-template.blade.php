@@ -41,8 +41,14 @@
                                 @if ($field === 'status')
                                     @php
                                         // Determine status based on deleted_at field
-                                        $statusValue = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
-                                        $statusClass = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'status-inactive' : 'status-active';
+                                        $statusValue =
+                                            isset($row['deleted_at']) && $row['deleted_at'] !== null
+                                                ? 'Inactive'
+                                                : 'Active';
+                                        $statusClass =
+                                            isset($row['deleted_at']) && $row['deleted_at'] !== null
+                                                ? 'status-inactive'
+                                                : 'status-active';
                                     @endphp
                                     <span class="{{ $statusClass }}">
                                         {{ $statusValue }}

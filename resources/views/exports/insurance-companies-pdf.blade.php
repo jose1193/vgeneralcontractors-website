@@ -96,6 +96,7 @@
 
         .data-table {
             width: 92%;
+            margin-top: 25px; /* Extra margin for landscape */
         }
 
         .summary {
@@ -119,6 +120,16 @@
         .company-logo img {
             max-width: 1140px;
             max-height: 300px;
+        }
+
+        /* Better spacing for continuation pages in landscape */
+        .data-table tbody tr {
+            page-break-inside: avoid;
+        }
+
+        /* Ensure proper spacing when table continues to next page */
+        .data-table {
+            page-break-before: avoid;
         }
     </style>
 @endpush
@@ -163,8 +174,12 @@
                         <td class="col-5">
                             @php
                                 // Determine status based on deleted_at field
-                                $statusValue = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
-                                $statusClass = isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'status-inactive' : 'status-active';
+                                $statusValue =
+                                    isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
+                                $statusClass =
+                                    isset($row['deleted_at']) && $row['deleted_at'] !== null
+                                        ? 'status-inactive'
+                                        : 'status-active';
                             @endphp
                             <span class="{{ $statusClass }}">
                                 {{ $statusValue }}
