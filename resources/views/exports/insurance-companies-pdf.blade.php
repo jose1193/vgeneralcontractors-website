@@ -15,9 +15,11 @@
             color: var(--primary-color);
             font-weight: bold;
             text-align: center;
-            padding: 10px 8px;
+            padding: 6px 8px;
             border: 1px solid #ddd;
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 1.2;
+            height: auto;
         }
 
         /* Enhanced report title for this theme */
@@ -29,6 +31,10 @@
         /* Theme-specific table data styling */
         .data-table td {
             font-weight: 600;
+            padding: 6px 8px;
+            font-size: 11px;
+            line-height: 1.3;
+            height: auto;
         }
 
         /* Insurance-specific column widths */

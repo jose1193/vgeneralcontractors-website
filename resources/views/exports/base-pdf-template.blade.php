@@ -30,6 +30,7 @@
         /* Base PDF Styles */
         @page {
             margin: 15mm 10mm 15mm 10mm;
+            size: A4;
 
             @top-center {
                 content: "{{ $title }}";
@@ -42,6 +43,11 @@
                 font-size: 9px;
                 color: #666;
             }
+        }
+
+        /* Prevent page breaks in inappropriate places */
+        @page :first {
+            margin-top: 20mm;
         }
 
         * {
@@ -169,19 +175,23 @@
         .data-table th {
             background: var(--primary-color);
             color: white;
-            padding: 10px 8px;
+            padding: 6px 8px;
             text-align: center;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             border: 1px solid var(--primary-dark);
+            line-height: 1.2;
+            height: auto;
         }
 
         .data-table td {
-            padding: 8px;
+            padding: 6px 8px;
             border: 1px solid var(--border-light);
-            vertical-align: top;
+            vertical-align: middle;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 1.3;
+            height: auto;
         }
 
         .data-table tbody tr:nth-child(even) {
@@ -190,6 +200,37 @@
 
         .data-table tbody tr:hover {
             background: var(--background-alt);
+        }
+
+        /* Table pagination and page breaks */
+        .data-table tbody tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            height: auto;
+        }
+
+        .data-table thead tr {
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+
+        /* Prevent orphaned headers */
+        .data-table thead {
+            display: table-header-group;
+        }
+
+        .data-table tbody {
+            display: table-row-group;
+        }
+
+        .data-table tfoot {
+            display: table-footer-group;
+        }
+
+        /* Optimize row height */
+        .data-table tr {
+            min-height: 25px;
+            height: auto;
         }
 
         /* Status Styles */
@@ -287,6 +328,31 @@
         /* Page Break */
         .page-break {
             page-break-before: always;
+            break-before: page;
+        }
+
+        .page-break-avoid {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Better page flow control */
+        .keep-together {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Table row distribution */
+        .data-table {
+            page-break-inside: auto;
+            break-inside: auto;
+        }
+
+        /* Ensure headers repeat on new pages */
+        .data-table thead {
+            display: table-header-group;
+            page-break-before: avoid;
+            break-before: avoid;
         }
 
         /* Page counter styling */
