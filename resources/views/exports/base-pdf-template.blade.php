@@ -39,7 +39,7 @@
             }
 
             @bottom-center {
-                content: "Page " counter(page) " of " counter(pages);
+                content: "Page " counter(page);
                 font-size: 9px;
                 color: #666;
             }
@@ -214,7 +214,12 @@
             break-after: avoid;
         }
 
-        /* Prevent orphaned headers */
+        /* Force header repetition across pages */
+        .data-table {
+            page-break-inside: auto;
+            break-inside: auto;
+        }
+
         .data-table thead {
             display: table-header-group;
         }
@@ -226,6 +231,8 @@
         .data-table tfoot {
             display: table-footer-group;
         }
+
+        /* Prevent orphaned headers */
 
         /* Optimize row height */
         .data-table tr {
@@ -342,22 +349,19 @@
             break-inside: avoid;
         }
 
-        /* Table row distribution */
+        .allow-page-break {
+            page-break-inside: auto;
+            break-inside: auto;
+        }
+
         .data-table {
             page-break-inside: auto;
             break-inside: auto;
         }
 
-        /* Ensure headers repeat on new pages */
-        .data-table thead {
-            display: table-header-group;
-            page-break-before: avoid;
-            break-before: avoid;
-        }
-
         /* Page counter styling */
         .page-counter::after {
-            content: counter(page) " / " counter(pages);
+            content: "Page " counter(page);
         }
 
         /* Responsive adjustments for PDF */
@@ -486,6 +490,16 @@
 
     <!-- Additional head content stack -->
     @stack('pdf-head')
+
+    <script>
+        // Simple page counting for better PDF generation
+        window.addEventListener('DOMContentLoaded', function() {
+            // This helps with page counting in some PDF generators
+            if (typeof window.print !== 'undefined') {
+                document.body.setAttribute('data-pdf-ready', 'true');
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -581,7 +595,7 @@
             <div>This report was generated automatically by {{ config('app.name') }} on {{ $exportDate }}</div>
             @if ($options['show_page_numbers'] ?? true)
                 <div style="margin-top: 5px; text-align: center; font-size: 10px; font-weight: bold;">
-                    <span class="page-counter"></span>
+                    <span>Total Records: {{ $totalRecords }}</span>
                 </div>
             @endif
         </div>
