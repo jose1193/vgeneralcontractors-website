@@ -127,10 +127,10 @@
 
         /* Table Styles */
         .data-table {
-            width: 85%;
+            width: 90%;
             margin: 0 auto 20px auto;
             border-collapse: collapse;
-            font-size: 9px;
+            font-size: 12px;
         }
 
         .data-table thead {
