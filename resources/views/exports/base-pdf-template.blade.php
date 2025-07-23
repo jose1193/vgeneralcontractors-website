@@ -125,7 +125,7 @@
         }
 
         .company-logo img {
-            max-width: 1080px;
+            max-width: 1200px;
             height: auto;
             max-height: 80px;
             object-fit: contain;
