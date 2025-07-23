@@ -3,7 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-wi        .company-details {
+            flex: 1;
+            text-align: right;
+            padding-left: 40px;
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }ial-scale=1.0">
     <title>{{ $title }}</title>
     <style>
         /* CSS Variables for Theming */
@@ -80,7 +90,7 @@
         /* Header Styles */
         .header {
             width: 90%;
-            margin: 10px auto 20px auto;
+            margin: 15px auto 25px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
@@ -93,8 +103,8 @@
             align-items: flex-start;
             width: 100%;
             margin-bottom: 15px;
-            padding: 10px 0;
-            min-height: 80px;
+            padding: 15px 0;
+            min-height: 90px;
         }
 
         .company-info {
@@ -111,6 +121,7 @@
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
+            margin-top: 5px;
         }
 
         .company-logo img {
