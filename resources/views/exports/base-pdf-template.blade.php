@@ -127,9 +127,9 @@
 
         /* Table Styles */
         .data-table {
-            width: 100%;
+            width: 85%;
+            margin: 0 auto 20px auto;
             border-collapse: collapse;
-            margin-bottom: 20px;
             font-size: 9px;
         }
 

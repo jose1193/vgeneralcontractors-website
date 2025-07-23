@@ -133,9 +133,9 @@
 
         /* Table Styles - Enhanced from invoice style */
         .data-table {
-            width: 100%;
+            width: 85%;
+            margin: 0 auto 20px auto;
             border-collapse: collapse;
-            margin-bottom: 20px;
             font-size: 9px;
         }
 
@@ -275,19 +275,19 @@
 
         /* Column specific styles */
         .col-0 {
-            width: 6%;
+            width: 8%;
             text-align: center;
         }
 
         /* Nro */
         .col-1 {
-            width: 28%;
+            width: 25%;
             text-align: center;
         }
 
         /* Company Name */
         .col-2 {
-            width: 22%;
+            width: 20%;
             text-align: center;
         }
 
@@ -299,13 +299,13 @@
 
         /* Phone */
         .col-4 {
-            width: 22%;
+            width: 20%;
             text-align: center;
         }
 
         /* Address */
         .col-5 {
-            width: 7%;
+            width: 12%;
             text-align: center;
         }
 
