@@ -20,7 +20,7 @@ class CompanyDataHelper
                 'phone' => self::formatPhoneForDisplay($companyData->phone) ?: '+1 (713) 364-6240',
                 'email' => $companyData->email ?: 'info@vgeneralcontractors.com',
                 'website' => $companyData->website ?: 'https://vgeneralcontractors.com/',
-                'logo_path' => public_path('assets/logo/header-document.png'),
+                'logo_path' => public_path('assets/logo/header-document.jpg'),
                 'signature_path' => $companyData->signature_path,
                 'latitude' => $companyData->latitude,
                 'longitude' => $companyData->longitude,
