@@ -117,7 +117,7 @@
 
         .company-logo {
             flex-shrink: 0;
-            width: 180px;
+            width: 1080px;
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
@@ -125,7 +125,7 @@
         }
 
         .company-logo img {
-            max-width: 180px;
+            max-width: 1080px;
             height: auto;
             max-height: 80px;
             object-fit: contain;
