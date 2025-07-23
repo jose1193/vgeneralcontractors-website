@@ -117,7 +117,7 @@
 
         .company-logo {
             flex-shrink: 0;
-            width: 1080px;
+            width: 1200px;
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
