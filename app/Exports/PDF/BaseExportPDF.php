@@ -16,12 +16,12 @@ abstract class BaseExportPDF
     protected string $paperSize;
 
     public function __construct(
-        Collection $data, 
+        ?Collection $data, 
         string $title = 'PDF Export',
         array $companyInfo = [],
         array $options = []
     ) {
-        $this->data = $data;
+        $this->data = $data ?? collect();
         $this->title = $title;
         $this->companyInfo = $this->getCompanyInfo($companyInfo);
         $this->options = array_merge($this->getDefaultOptions(), $options);
