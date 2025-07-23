@@ -79,67 +79,79 @@
 
         /* Header Styles */
         .header {
-            width: 80%;
+            width: 95%;
             margin: 10px auto 25px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
-            display: table;
+        }
+
+        /* New dedicated container for logo and company data */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 15px 0;
+            min-height: 100px;
         }
 
         .company-info {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             width: 100%;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            min-height: 80px;
+            gap: 30px;
         }
 
         .company-logo {
             flex-shrink: 0;
-            width: 164px;
-            margin-right: 30px;
+            width: 180px;
             display: flex;
-            align-items: center;
-            height: 100%;
+            align-items: flex-start;
+            justify-content: flex-start;
         }
 
         .company-logo img {
-            max-width: 164px;
+            max-width: 180px;
             height: auto;
-            vertical-align: middle;
+            max-height: 80px;
+            object-fit: contain;
         }
 
         .company-details {
             flex: 1;
             text-align: right;
-            padding-top: 15px;
-            padding-left: 20px;
+            padding-left: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-end;
         }
 
         .company-name {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             color: var(--text-primary);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             text-align: right;
+            line-height: 1.2;
         }
 
         .company-contact {
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-secondary);
-            line-height: 1.2;
+            line-height: 1.4;
             text-align: right;
         }
 
         .report-title {
             text-align: center;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: var(--text-primary);
-            margin: 15px 0;
+            margin: 20px 0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -148,9 +160,10 @@
         .report-info {
             display: table;
             width: 100%;
-            margin-bottom: 15px;
-            font-size: 9px;
+            margin-bottom: 20px;
+            font-size: 10px;
             color: var(--text-secondary);
+            padding: 0 10px;
         }
 
         .report-info-left {
@@ -171,7 +184,7 @@
 
         /* Table Styles */
         .data-table {
-            width: 80%;
+            width: 95%;
             margin: 0 auto 40px auto;
             border-collapse: collapse;
             font-size: 12px;
@@ -308,7 +321,7 @@
 
         /* Summary Section */
         .summary {
-            width: 80%;
+            width: 95%;
             margin: 50px auto 60px auto;
             padding: 15px;
             background: var(--background-light);
@@ -351,7 +364,7 @@
 
         /* Footer */
         .footer {
-            width: 80%;
+            width: 95%;
             margin: 50px auto 0 auto;
             padding-top: 20px;
             border-top: 1px solid var(--border-light);
@@ -428,8 +441,8 @@
 
         /* Container for full-width layouts */
         .container {
-            width: 80%;
-            max-width: 80%;
+            width: 95%;
+            max-width: 95%;
             margin: 0 auto;
             padding: 0;
         }
@@ -522,20 +535,23 @@
             <div class="repeating-header">
                 <div class="header">
                     @if ($options['show_company_info'] ?? true)
-                        <div class="company-info">
-                            @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
-                                <div class="company-logo">
-                                    <img src="{{ $companyInfo['logo_path'] }}"
-                                        alt="{{ $companyInfo['name'] ?? 'Company Logo' }}">
-                                </div>
-                            @endif
-                            <div class="company-details">
-                                <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}</div>
-                                <div class="company-contact">
-                                    {{ $companyInfo['address'] ?? '1302 Waugh Dr # 810, Houston, TX 77019' }}<br>
-                                    {{ $companyInfo['phone'] ?? '+1 (713) 587-6423' }}<br>
-                                    {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
-                                    {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com' }}
+                        <div class="header-content">
+                            <div class="company-info">
+                                @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
+                                    <div class="company-logo">
+                                        <img src="{{ $companyInfo['logo_path'] }}"
+                                            alt="{{ $companyInfo['name'] ?? 'Company Logo' }}">
+                                    </div>
+                                @endif
+                                <div class="company-details">
+                                    <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}
+                                    </div>
+                                    <div class="company-contact">
+                                        {{ $companyInfo['address'] ?? '1302 Waugh Dr # 810, Houston, TX 77019' }}<br>
+                                        {{ $companyInfo['phone'] ?? '+1 (713) 587-6423' }}<br>
+                                        {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
+                                        {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

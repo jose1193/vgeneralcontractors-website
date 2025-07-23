@@ -176,12 +176,15 @@
                             </label>
                             <div class="relative w-full">
                                 <select id="{{ $exportId }}"
-                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200 text-center sm:text-center md:text-left">
-                                    <option value="" disabled selected class="text-center md:text-left">
+                                    class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 w-full text-white bg-black/50 border-white/10 backdrop-blur-sm appearance-none cursor-pointer hover:bg-black/60 transition-all duration-200 text-center sm:text-center md:text-left glassmorphic-select">
+                                    <option value="" disabled selected
+                                        class="text-center md:text-left glassmorphic-option">
                                         {{ __('choose_format') }}</option>
-                                    <option value="pdf" class="text-center md:text-left">📄 {{ __('pdf_report') }}
+                                    <option value="pdf" class="text-center md:text-left glassmorphic-option">📄
+                                        {{ __('pdf_report') }}
                                     </option>
-                                    <option value="excel" class="text-center md:text-left">📊 {{ __('excel') }}
+                                    <option value="excel" class="text-center md:text-left glassmorphic-option">📊
+                                        {{ __('excel') }}
                                     </option>
                                 </select>
                                 <!-- Dropdown Arrow -->
@@ -203,9 +206,10 @@
                                 class="text-sm font-medium text-gray-300 mb-2 text-center md:text-left w-full">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
-                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-center md:text-left w-full">
+                                class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-center md:text-left w-full glassmorphic-select">
                                 @foreach ($perPageOptions as $option)
-                                    <option value="{{ $option }}" class="text-center md:text-left"
+                                    <option value="{{ $option }}"
+                                        class="text-center md:text-left glassmorphic-option"
                                         {{ $option == $defaultPerPage ? 'selected' : '' }}>
                                         {{ $option }} {{ __('per_page') }}
                                     </option>
@@ -475,6 +479,119 @@
     .date-input-active .opacity-0 {
         opacity: 1 !important;
         pointer-events: auto !important;
+    }
+
+    /* Glassmorphic Select and Option Styles */
+    .glassmorphic-select {
+        /* Enhanced background with deeper transparency */
+        background: rgba(0, 0, 0, 0.85) !important;
+
+        /* Premium box shadow with purple accents */
+        box-shadow:
+            0 4px 16px 0 rgba(138, 43, 226, 0.15),
+            0 8px 32px 0 rgba(128, 0, 255, 0.1),
+            0 2px 8px 0 rgba(75, 0, 130, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+
+        /* Enhanced blur effects */
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+        /* Refined border */
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .glassmorphic-select:hover {
+        background: rgba(0, 0, 0, 0.9) !important;
+        box-shadow:
+            0 6px 24px 0 rgba(138, 43, 226, 0.2),
+            0 12px 48px 0 rgba(128, 0, 255, 0.15),
+            0 3px 12px 0 rgba(75, 0, 130, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+        transform: translateY(-1px);
+    }
+
+    .glassmorphic-select:focus {
+        background: rgba(0, 0, 0, 0.9) !important;
+        box-shadow:
+            0 8px 32px 0 rgba(138, 43, 226, 0.3),
+            0 16px 64px 0 rgba(128, 0, 255, 0.2),
+            0 4px 16px 0 rgba(75, 0, 130, 0.3),
+            0 0 20px 0 rgba(147, 51, 234, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Enhanced Option Styles */
+    .glassmorphic-option {
+        /* Dark glassmorphic background */
+        background: rgba(0, 0, 0, 0.95) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+
+        /* Enhanced border and padding */
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 8px 12px !important;
+        margin: 2px 0 !important;
+
+        /* Subtle shadow for depth */
+        box-shadow:
+            0 2px 8px 0 rgba(0, 0, 0, 0.3),
+            0 1px 4px 0 rgba(138, 43, 226, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+        /* Smooth transitions */
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .glassmorphic-option:hover {
+        background: rgba(138, 43, 226, 0.2) !important;
+        color: rgba(255, 255, 255, 1) !important;
+        border-color: rgba(138, 43, 226, 0.4) !important;
+        box-shadow:
+            0 4px 16px 0 rgba(138, 43, 226, 0.2),
+            0 2px 8px 0 rgba(128, 0, 255, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px) !important;
+    }
+
+    .glassmorphic-option:checked,
+    .glassmorphic-option:selected {
+        background: rgba(138, 43, 226, 0.3) !important;
+        color: rgba(255, 255, 255, 1) !important;
+        border-color: rgba(138, 43, 226, 0.6) !important;
+        box-shadow:
+            0 4px 16px 0 rgba(138, 43, 226, 0.25),
+            0 2px 8px 0 rgba(128, 0, 255, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        font-weight: 500 !important;
+    }
+
+    .glassmorphic-option:disabled {
+        background: rgba(0, 0, 0, 0.7) !important;
+        color: rgba(255, 255, 255, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+        cursor: not-allowed !important;
+        box-shadow: none !important;
+    }
+
+    /* Browser-specific dropdown styling */
+    .glassmorphic-select option {
+        background: rgba(0, 0, 0, 0.95) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .glassmorphic-select option:hover {
+        background: rgba(138, 43, 226, 0.2) !important;
+        color: rgba(255, 255, 255, 1) !important;
+    }
+
+    .glassmorphic-select option:checked {
+        background: rgba(138, 43, 226, 0.3) !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     /* Enhanced Animations - Same as table */

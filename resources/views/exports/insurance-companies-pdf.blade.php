@@ -37,39 +37,39 @@
             height: auto;
         }
 
-        /* Insurance-specific column widths */
+        /* Insurance-specific column widths - Optimized for better fit */
         .col-0 {
-            width: 8%;
+            width: 6%;
             text-align: center;
         }
 
         /* Nro */
         .col-1 {
-            width: 25%;
-            text-align: center;
+            width: 22%;
+            text-align: left;
         }
 
         /* Company Name */
         .col-2 {
-            width: 20%;
-            text-align: center;
+            width: 18%;
+            text-align: left;
         }
 
         /* Email */
         .col-3 {
-            width: 15%;
+            width: 12%;
             text-align: center;
         }
 
         /* Phone */
         .col-4 {
-            width: 20%;
-            text-align: center;
+            width: 28%;
+            text-align: left;
         }
 
         /* Address */
         .col-5 {
-            width: 12%;
+            width: 14%;
             text-align: center;
         }
 
@@ -84,21 +84,35 @@
 
         /* Use moderately wider container for insurance companies */
         .header {
-            width: 90%;
+            width: 98%;
             border-bottom: 2px solid var(--primary-color);
         }
 
         .data-table {
-            width: 90%;
+            width: 98%;
         }
 
         .summary {
-            width: 90%;
+            width: 98%;
             border-left: 4px solid var(--primary-color);
         }
 
         .footer {
-            width: 90%;
+            width: 98%;
+        }
+
+        /* Enhanced company info layout for insurance companies */
+        .header-content {
+            padding: 20px 0;
+        }
+
+        .company-logo {
+            width: 200px;
+        }
+
+        .company-logo img {
+            max-width: 200px;
+            max-height: 90px;
         }
     </style>
 @endpush
