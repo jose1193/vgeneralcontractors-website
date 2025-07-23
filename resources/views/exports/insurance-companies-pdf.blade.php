@@ -84,26 +84,26 @@
 
         /* Use moderately wider container for insurance companies */
         .header {
-            width: 98%;
+            width: 92%;
             border-bottom: 2px solid var(--primary-color);
         }
 
         .data-table {
-            width: 98%;
+            width: 92%;
         }
 
         .summary {
-            width: 98%;
+            width: 92%;
             border-left: 4px solid var(--primary-color);
         }
 
         .footer {
-            width: 98%;
+            width: 92%;
         }
 
         /* Enhanced company info layout for insurance companies */
         .header-content {
-            padding: 20px 0;
+            padding: 25px 0;
         }
 
         .company-logo {

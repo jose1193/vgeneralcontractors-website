@@ -29,7 +29,7 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 15mm 10mm 15mm 10mm;
+            margin: 20mm 15mm 20mm 15mm;
             size: A4;
 
             @top-center {
@@ -60,7 +60,7 @@
 
         /* Prevent page breaks in inappropriate places */
         @page :first {
-            margin-top: 15mm;
+            margin-top: 20mm;
         }
 
         * {
@@ -79,9 +79,9 @@
 
         /* Header Styles */
         .header {
-            width: 95%;
-            margin: 5px auto 15px auto;
-            padding-bottom: 10px;
+            width: 90%;
+            margin: 10px auto 20px auto;
+            padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
         }
@@ -102,7 +102,7 @@
             justify-content: space-between;
             align-items: flex-start;
             width: 100%;
-            gap: 30px;
+            gap: 40px;
         }
 
         .company-logo {
@@ -123,7 +123,7 @@
         .company-details {
             flex: 1;
             text-align: right;
-            padding-left: 30px;
+            padding-left: 40px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -184,8 +184,8 @@
 
         /* Table Styles */
         .data-table {
-            width: 95%;
-            margin: 0 auto 40px auto;
+            width: 90%;
+            margin: 0 auto 50px auto;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -318,9 +318,9 @@
 
         /* Summary Section */
         .summary {
-            width: 95%;
-            margin: 50px auto 60px auto;
-            padding: 15px;
+            width: 90%;
+            margin: 60px auto 70px auto;
+            padding: 20px;
             background: var(--background-light);
             border-radius: 6px;
             border-left: 4px solid var(--primary-color);
@@ -361,9 +361,9 @@
 
         /* Footer */
         .footer {
-            width: 95%;
-            margin: 50px auto 0 auto;
-            padding-top: 20px;
+            width: 90%;
+            margin: 60px auto 0 auto;
+            padding-top: 25px;
             border-top: 1px solid var(--border-light);
             font-size: 8px;
             color: var(--text-muted);
@@ -438,8 +438,8 @@
 
         /* Container for full-width layouts */
         .container {
-            width: 95%;
-            max-width: 95%;
+            width: 90%;
+            max-width: 90%;
             margin: 0 auto;
             padding: 0;
         }
