@@ -659,7 +659,7 @@ export class CrudManager {
     }
 
     /**
-     * Renderizar paginación con estilos glassmorphism
+     * Renderizar paginación con estilos glassmorphism mejorados
      */
     renderPagination(data) {
         // En modo de registro único, no renderizamos paginación
@@ -674,32 +674,30 @@ export class CrudManager {
         const recordInfo = this.generateRecordInfo(data);
 
         if (data.last_page > 1) {
-            // Contenedor principal con clases glassmorphism
+            // Contenedor principal con clases glassmorphism exactas del CSS
             paginationHtml += '<div class="pagination-wrapper">';
 
-            paginationHtml +=
-                '<nav class="pagination" aria-label="Pagination">';
+            // Nav con clases glassmorphism exactas
+            paginationHtml += '<nav class="pagination" aria-label="Pagination">';
 
-            // Botón anterior
+            // Botón anterior con estilos glassmorphism
             if (data.current_page > 1) {
                 paginationHtml += `
                 <div class="page-item">
-                    <button class="page-link" data-page="${
-                        data.current_page - 1
-                    }">
+                    <button class="page-link" data-page="${data.current_page - 1}" type="button">
                         <span>&laquo;</span>
                     </button>
                 </div>`;
             } else {
                 paginationHtml += `
                 <div class="page-item disabled">
-                    <button class="page-link" disabled>
+                    <button class="page-link" disabled type="button">
                         <span>&laquo;</span>
                     </button>
                 </div>`;
             }
 
-            // Números de página (máximo 5 visibles)
+            // Números de página (máximo 5 visibles) con estilos glassmorphism
             let start = Math.max(1, data.current_page - 2);
             let end = Math.min(data.last_page, data.current_page + 2);
             if (data.current_page <= 2) end = Math.min(5, data.last_page);
@@ -712,26 +710,24 @@ export class CrudManager {
 
                 paginationHtml += `
                 <div class="page-item${activeClass}">
-                    <button class="page-link" data-page="${i}">
+                    <button class="page-link" data-page="${i}" type="button">
                         <span>${i}</span>
                     </button>
                 </div>`;
             }
 
-            // Botón siguiente
+            // Botón siguiente con estilos glassmorphism
             if (data.current_page < data.last_page) {
                 paginationHtml += `
                 <div class="page-item">
-                    <button class="page-link" data-page="${
-                        data.current_page + 1
-                    }">
+                    <button class="page-link" data-page="${data.current_page + 1}" type="button">
                         <span>&raquo;</span>
                     </button>
                 </div>`;
             } else {
                 paginationHtml += `
                 <div class="page-item disabled">
-                    <button class="page-link" disabled>
+                    <button class="page-link" disabled type="button">
                         <span>&raquo;</span>
                     </button>
                 </div>`;
@@ -739,21 +735,22 @@ export class CrudManager {
 
             paginationHtml += "</nav>";
 
-            // Add record information at the bottom
+            // Add record information at the bottom con clases glassmorphism
             paginationHtml += `<div class="record-info">${recordInfo}</div>`;
 
             paginationHtml += "</div>";
         } else {
-            // Single page case - show only record information with wrapper
+            // Single page case - show only record information with wrapper glassmorphism
             paginationHtml += '<div class="pagination-wrapper single-page">';
             paginationHtml += `<div class="record-info-single">${recordInfo}</div>`;
             paginationHtml += "</div>";
         }
 
+        // Insertar HTML en el contenedor
         $(this.paginationSelector).html(paginationHtml);
 
-        // Event listener para paginación
-        $(".pagination .page-link").on("click", (e) => {
+        // Event listener para paginación con delegación mejorada
+        $(this.paginationSelector).off('click.pagination').on('click.pagination', '.pagination .page-link', (e) => {
             e.preventDefault();
             const $button = $(e.currentTarget);
             const page = $button.data("page");
