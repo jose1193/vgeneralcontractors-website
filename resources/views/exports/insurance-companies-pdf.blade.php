@@ -107,11 +107,11 @@
         }
 
         .company-logo {
-            width: 1150px;
+            width: 1140px;
         }
 
         .company-logo img {
-            max-width: 1150px;
+            max-width: 1140px;
             max-height: 300px;
         }
     </style>
