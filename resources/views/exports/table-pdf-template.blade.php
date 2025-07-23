@@ -26,6 +26,7 @@
                                     'Phone' => 'phone',
                                     'Address' => 'address',
                                     'Website' => 'website',
+                                    'Created By' => 'assigned_user',
                                     'Assigned User' => 'assigned_user',
                                     'Status' => 'status',
                                     'Created Date' => 'created_date',

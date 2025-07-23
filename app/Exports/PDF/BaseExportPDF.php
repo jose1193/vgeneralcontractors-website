@@ -120,16 +120,22 @@ abstract class BaseExportPDF
      */
     protected function getCompanyInfo(array $companyInfo = []): array
     {
-        $defaults = [
-            'name' => config('app.name', 'Company Name'),
-            'address' => 'Company Address',
-            'phone' => 'Company Phone',
-            'email' => 'info@company.com',
-            'website' => 'www.company.com',
-            'logo' => null, // Path to logo file
-        ];
+        // Use CompanyDataHelper if available
+        if (class_exists('App\Helpers\CompanyDataHelper')) {
+            $defaultInfo = \App\Helpers\CompanyDataHelper::getCompanyInfo();
+        } else {
+            // Fallback to manual defaults
+            $defaultInfo = [
+                'name' => config('app.name', 'V General Contractors'),
+                'address' => '1522 Waugh Dr # 510, Houston, TX 77019',
+                'phone' => '+1 (713) 364-6240',
+                'email' => 'info@vgeneralcontractors.com',
+                'website' => 'https://vgeneralcontractors.com/',
+                'logo_path' => public_path('assets/logo/logo-png.png'),
+            ];
+        }
 
-        return array_merge($defaults, $companyInfo);
+        return array_merge($defaultInfo, $companyInfo);
     }
 
     /**

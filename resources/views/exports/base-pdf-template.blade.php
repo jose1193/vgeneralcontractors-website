@@ -8,7 +8,7 @@
     <style>
         /* Base PDF Styles */
         @page {
-            margin: {{ $options['margin_top'] ?? 15 }}mm {{ $options['margin_right'] ?? 15 }}mm {{ $options['margin_bottom'] ?? 15 }}mm {{ $options['margin_left'] ?? 15 }}mm;
+            margin: 20mm 15mm 20mm 15mm;
 
             @top-center {
                 content: "{{ $title }}";
@@ -56,27 +56,30 @@
         }
 
         .company-logo img {
-            max-width: 70px;
-            max-height: 50px;
+            max-width: 164px;
+            height: auto;
+            margin-top: 10px;
+            vertical-align: top;
         }
 
         .company-details {
             display: table-cell;
             vertical-align: top;
-            padding-left: 15px;
+            padding-left: 120px;
+            padding-top: 23px;
         }
 
         .company-name {
-            font-size: 18px;
+            font-size: 12px;
             font-weight: bold;
             color: #1F2937;
             margin-bottom: 5px;
         }
 
         .company-contact {
-            font-size: 9px;
+            font-size: 10px;
             color: #6B7280;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .report-title {
@@ -306,33 +309,18 @@
         <div class="header">
             @if ($options['show_company_info'] ?? true)
                 <div class="company-info">
-                    @if (isset($companyInfo['logo']) && $companyInfo['logo'])
+                    @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
                         <div class="company-logo">
-                            <img src="{{ $companyInfo['logo'] }}" alt="Company Logo">
+                            <img src="{{ $companyInfo['logo_path'] }}" alt="{{ $companyInfo['name'] ?? 'Company Logo' }}">
                         </div>
                     @endif
                     <div class="company-details">
-                        <div class="company-name">{{ $companyInfo['name'] ?? 'Company Name' }}</div>
+                        <div class="company-name">{{ $companyInfo['name'] ?? 'V GENERAL CONTRACTORS' }}</div>
                         <div class="company-contact">
-                            @if (isset($companyInfo['address']))
-                                <div>{{ $companyInfo['address'] }}</div>
-                            @endif
-                            @if (isset($companyInfo['phone']) || isset($companyInfo['email']))
-                                <div>
-                                    @if (isset($companyInfo['phone']))
-                                        Phone: {{ $companyInfo['phone'] }}
-                                    @endif
-                                    @if (isset($companyInfo['phone']) && isset($companyInfo['email']))
-                                        |
-                                    @endif
-                                    @if (isset($companyInfo['email']))
-                                        Email: {{ $companyInfo['email'] }}
-                                    @endif
-                                </div>
-                            @endif
-                            @if (isset($companyInfo['website']))
-                                <div>Website: {{ $companyInfo['website'] }}</div>
-                            @endif
+                            {{ $companyInfo['address'] ?? '1522 Waugh Dr # 510, Houston, TX 77019' }}<br>
+                            {{ $companyInfo['phone'] ?? '+1 (713) 364-6240' }}<br>
+                            {{ $companyInfo['email'] ?? 'info@vgeneralcontractors.com' }}<br>
+                            {{ $companyInfo['website'] ?? 'https://vgeneralcontractors.com/' }}
                         </div>
                     </div>
                 </div>

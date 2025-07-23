@@ -3,6 +3,8 @@
 namespace App\Exports\PDF;
 
 use App\Models\InsuranceCompany;
+use App\Models\CompanyData;
+use App\Helpers\CompanyDataHelper;
 use Illuminate\Support\Collection;
 
 class InsuranceCompanyExportPDF extends BaseExportPDF
@@ -64,8 +66,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
             'Email' => ['width' => '20%', 'align' => 'left'],
             'Phone' => ['width' => '15%', 'align' => 'center'],
             'Address' => ['width' => '20%', 'align' => 'left'],
-            'Assigned User' => ['width' => '10%', 'align' => 'center'],
-            'Status' => ['width' => '5%', 'align' => 'center'],
+            'Created By' => ['width' => '15%', 'align' => 'center'],
         ];
     }
 
@@ -124,10 +125,8 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
                 'website' => $this->formatWebsiteForDisplay($company->website),
                 'assigned_user' => $company->user 
                     ? $company->user->name . ' ' . $company->user->last_name 
-                    : 'Unassigned',
-                'status' => $company->deleted_at ? 'Inactive' : 'Active',
+                    : 'System',
                 'created_date' => $company->created_at ? $company->created_at->format('M j, Y') : 'N/A',
-                'status_class' => $company->deleted_at ? 'status-inactive' : 'status-active',
             ];
         });
     }
@@ -169,15 +168,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
      */
     private function getCompanyInformation(): array
     {
-        // You can fetch this from your CompanyData model or config
-        return [
-            'name' => config('app.name', 'V General Contractors'),
-            'address' => '123 Business Street, City, State 12345',
-            'phone' => '+1 (555) 123-4567',
-            'email' => 'info@vgeneralcontractors.com',
-            'website' => 'www.vgeneralcontractors.com',
-            'logo' => public_path('images/logo.png'), // Adjust path as needed
-        ];
+        return CompanyDataHelper::getCompanyInfo();
     }
 
     /**
