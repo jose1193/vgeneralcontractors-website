@@ -133,10 +133,10 @@
 
         /* Table Styles - Enhanced from invoice style */
         .data-table {
-            width: 85%;
+            width: 90%;
             margin: 0 auto 20px auto;
             border-collapse: collapse;
-            font-size: 9px;
+            font-size: 12px;
         }
 
         .data-table thead {
@@ -148,17 +148,18 @@
             color: #6c9bd0;
             font-weight: bold;
             text-align: center;
-            padding: 8px 6px;
+            padding: 10px 8px;
             border: 1px solid #ddd;
-            font-size: 9px;
+            font-size: 12px;
         }
 
         .data-table td {
-            padding: 6px;
+            padding: 8px;
             border: 1px solid #E5E7EB;
             vertical-align: top;
             font-weight: 600;
             text-align: center;
+            font-size: 12px;
         }
 
         .data-table tbody tr:nth-child(even) {
@@ -321,9 +322,9 @@
             color: #6c9bd0;
             font-weight: bold;
             text-align: center;
-            padding: 8px 6px;
+            padding: 10px 8px;
             border: 1px solid #ddd;
-            font-size: 9px;
+            font-size: 12px;
         }
 
         /* Prevent header repetition on page breaks */

@@ -140,18 +140,19 @@
         .data-table th {
             background: #4F46E5;
             color: white;
-            padding: 8px 6px;
+            padding: 10px 8px;
             text-align: center;
             font-weight: bold;
-            font-size: 9px;
+            font-size: 12px;
             border: 1px solid #4338CA;
         }
 
         .data-table td {
-            padding: 6px;
+            padding: 8px;
             border: 1px solid #E5E7EB;
             vertical-align: top;
             text-align: center;
+            font-size: 12px;
         }
 
         .data-table tbody tr:nth-child(even) {
