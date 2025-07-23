@@ -121,19 +121,22 @@
             max-height: 300px;
         }
 
-        /* Specific page break handling for insurance companies */
+        /* Specific adjustments for insurance companies PDF */
         @page :not(:first) {
             margin-top: 40mm;
         }
 
-        /* Ensure table header spacing on new pages */
-        .data-table thead {
-            padding-top: 5mm;
+        /* Ensure table content spacing on continuation pages */
+        .data-table {
+            margin-top: 0;
         }
 
-        /* Additional spacing for continuation pages */
-        .data-table tbody {
-            margin-top: 3mm;
+        .data-table thead {
+            page-break-after: avoid;
+        }
+
+        .data-table tbody tr {
+            page-break-inside: avoid;
         }
     </style>
 @endpush

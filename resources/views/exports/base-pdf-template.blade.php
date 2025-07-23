@@ -55,7 +55,7 @@
             }
 
             @bottom-center {
-                content: "Page " counter(page) " of ~{{ $estimatedPages ?? '?' }}";
+                content: "Page " counter(page) " of " counter(pages);
                 font-size: 9px;
                 color: #666;
                 font-weight: bold;
@@ -74,11 +74,6 @@
         }
 
         /* Ensure adequate top margin for subsequent pages */
-        @page :left, @page :right {
-            margin-top: 30mm;
-        }
-
-        /* Alternative approach for non-first pages */
         @page :not(:first) {
             margin-top: 35mm;
         }
@@ -287,6 +282,11 @@
             margin-top: 0;
         }
 
+        /* Ensure proper spacing for table headers that repeat on new pages */
+        .data-table thead {
+            margin-top: 5mm;
+        }
+
         /* Prevent orphaned headers */
 
         /* Optimize row height */
@@ -412,16 +412,6 @@
         .data-table {
             page-break-inside: auto;
             break-inside: auto;
-        }
-
-        /* Ensure proper spacing for content on subsequent pages */
-        .data-table thead {
-            margin-top: 15mm;
-        }
-
-        /* Additional spacing for table content that breaks across pages */
-        .data-table tbody tr:first-child {
-            margin-top: 10mm;
         }
 
         /* Responsive adjustments for PDF */
