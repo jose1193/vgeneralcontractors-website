@@ -120,6 +120,21 @@
             max-width: 1140px;
             max-height: 300px;
         }
+
+        /* Specific page break handling for insurance companies */
+        @page :not(:first) {
+            margin-top: 40mm;
+        }
+
+        /* Ensure table header spacing on new pages */
+        .data-table thead {
+            padding-top: 5mm;
+        }
+
+        /* Additional spacing for continuation pages */
+        .data-table tbody {
+            margin-top: 3mm;
+        }
     </style>
 @endpush
 

@@ -73,6 +73,16 @@
             margin-top: 20mm;
         }
 
+        /* Ensure adequate top margin for subsequent pages */
+        @page :left, @page :right {
+            margin-top: 30mm;
+        }
+
+        /* Alternative approach for non-first pages */
+        @page :not(:first) {
+            margin-top: 35mm;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -402,6 +412,16 @@
         .data-table {
             page-break-inside: auto;
             break-inside: auto;
+        }
+
+        /* Ensure proper spacing for content on subsequent pages */
+        .data-table thead {
+            margin-top: 15mm;
+        }
+
+        /* Additional spacing for table content that breaks across pages */
+        .data-table tbody tr:first-child {
+            margin-top: 10mm;
         }
 
         /* Responsive adjustments for PDF */
