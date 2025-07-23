@@ -64,7 +64,7 @@ abstract class BaseExportPDF
     /**
      * Download PDF file
      */
-    public function download(string $filename = null): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(string $filename = null): \Illuminate\Http\Response
     {
         $filename = $filename ?: $this->getDefaultFilename();
         return $this->generate()->download($filename);
@@ -73,7 +73,7 @@ abstract class BaseExportPDF
     /**
      * Stream PDF to browser
      */
-    public function stream(string $filename = null): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function stream(string $filename = null): \Illuminate\Http\Response
     {
         $filename = $filename ?: $this->getDefaultFilename();
         return $this->generate()->stream($filename);
