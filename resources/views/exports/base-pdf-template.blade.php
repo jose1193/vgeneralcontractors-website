@@ -38,7 +38,8 @@
         }
 
         .header {
-            margin-bottom: 20px;
+            width: 90%;
+            margin: 0 auto 20px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid #4F46E5;
         }
@@ -203,7 +204,8 @@
 
         /* Summary Section */
         .summary {
-            margin-top: 20px;
+            width: 90%;
+            margin: 20px auto 0 auto;
             padding: 15px;
             background: #F9FAFB;
             border-radius: 6px;
@@ -245,7 +247,8 @@
 
         /* Footer */
         .footer {
-            margin-top: 30px;
+            width: 90%;
+            margin: 30px auto 0 auto;
             padding-top: 15px;
             border-top: 1px solid #E5E7EB;
             font-size: 8px;

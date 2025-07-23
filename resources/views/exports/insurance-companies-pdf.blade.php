@@ -38,9 +38,9 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
+            width: 90%;
+            max-width: 90%;
+            margin: 0 auto;
             padding: 0;
         }
 
@@ -133,7 +133,7 @@
 
         /* Table Styles - Enhanced from invoice style */
         .data-table {
-            width: 90%;
+            width: 100%;
             margin: 0 auto 20px auto;
             border-collapse: collapse;
             font-size: 12px;
@@ -210,7 +210,8 @@
 
         /* Summary Section */
         .summary {
-            margin-top: 20px;
+            width: 100%;
+            margin: 20px auto 0 auto;
             padding: 15px;
             background: #F9FAFB;
             border-radius: 6px;
@@ -252,7 +253,8 @@
 
         /* Footer */
         .footer {
-            margin-top: 30px;
+            width: 100%;
+            margin: 30px auto 0 auto;
             padding-top: 15px;
             border-top: 1px solid #E5E7EB;
             font-size: 8px;
