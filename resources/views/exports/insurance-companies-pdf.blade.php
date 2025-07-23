@@ -76,23 +76,23 @@
             font-weight: bold;
         }
 
-        /* Use full width container for insurance companies */
+        /* Use slightly wider container for insurance companies but not full width */
         .header {
-            width: 100%;
+            width: 95%;
             border-bottom: 2px solid var(--primary-color);
         }
 
         .data-table {
-            width: 100%;
+            width: 95%;
         }
 
         .summary {
-            width: 100%;
+            width: 95%;
             border-left: 4px solid var(--primary-color);
         }
 
         .footer {
-            width: 100%;
+            width: 95%;
         }
     </style>
 @endpush
