@@ -89,8 +89,7 @@
 
                     <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
                     @if ($showDateRange)
-                        <div
-                            class="md:col-span-2 lg:col-span-2 xl:col-span-2 flex flex-col items-center justify-center h-full">
+                        <div class="md:col-span-2 lg:col-span-2 xl:col-span-2 flex flex-col justify-start h-full">
                             <div class="space-y-3 w-full">
                                 <label
                                     class="flex items-center gap-1 text-sm font-medium text-gray-300 justify-center text-center md:justify-start md:text-left w-full">
@@ -156,10 +155,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Clear Dates Button -->
-                                <div class="flex justify-center mt-2">
+                                <!-- Clear Dates Button - Compacto -->
+                                <div class="flex justify-center">
                                     <button type="button" id="{{ $clearDatesId }}"
-                                        class="px-3 py-1.5 text-xs font-medium text-gray-300 bg-black/30 border border-white/10 rounded-lg hover:bg-black/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm">
+                                        class="px-2 py-1 text-xs font-medium text-gray-400 bg-black/20 border border-white/10 rounded-md hover:bg-black/40 hover:text-white focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm">
                                         🗑️ {{ $clearDatesLabel }}
                                     </button>
                                 </div>
@@ -169,9 +168,9 @@
 
                     <!-- Export Options (moved up) -->
                     @if ($showExport)
-                        <div class="flex flex-col items-center justify-center h-full w-full">
+                        <div class="flex flex-col justify-start h-full w-full">
                             <label for="{{ $exportId }}"
-                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-2 justify-center text-center md:justify-start md:text-left w-full">
+                                class="flex items-center gap-1 text-sm font-medium text-gray-300 mb-3 justify-center text-center md:justify-start md:text-left w-full">
                                 📋 {{ __('export_data') }}
                             </label>
                             <div class="relative w-full">
@@ -201,9 +200,9 @@
 
                     <!-- Per Page Selector -->
                     @if ($showPerPage)
-                        <div class="flex flex-col items-center w-full">
+                        <div class="flex flex-col justify-start w-full">
                             <label for="{{ $perPageId }}"
-                                class="text-sm font-medium text-gray-300 mb-2 text-center md:text-left w-full">📄
+                                class="text-sm font-medium text-gray-300 mb-3 text-center md:text-left w-full">📄
                                 {{ __('items_per_page') }}</label>
                             <select id="{{ $perPageId }}"
                                 class="border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm py-2.5 px-3 text-white bg-black/50 border-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 text-center sm:text-center md:text-left w-full glassmorphic-select">
@@ -220,7 +219,9 @@
 
                     <!-- Status Toggle Only, no label (moved down) -->
                     @if ($showInactiveToggle)
-                        <div class="flex flex-col items-center justify-center h-full w-full lg:w-auto">
+                        <div class="flex flex-col justify-start h-full w-full lg:w-auto">
+                            <!-- Espaciador para alinear con otros labels -->
+                            <div class="h-6 mb-3"></div>
                             <div class="w-full flex justify-center md:justify-start">
                                 <x-crud.toggle-show-deleted :id="$showDeletedId" :label="$showDeletedLabel" :manager-name="$managerName"
                                     class="mx-auto md:ml-0" />
