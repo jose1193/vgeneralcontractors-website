@@ -486,6 +486,9 @@
         /* Enhanced background with deeper transparency */
         background: rgba(0, 0, 0, 0.85) !important;
 
+        /* Text color gray for both dark and light mode */
+        color: rgba(156, 163, 175, 1) !important; /* text-gray-400 */
+
         /* Premium box shadow with purple accents */
         box-shadow:
             0 4px 16px 0 rgba(138, 43, 226, 0.15),
@@ -701,6 +704,22 @@
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
+
+        .glassmorphic-select {
+            color: rgba(156, 163, 175, 1) !important; /* text-gray-400 for dark mode */
+        }
+    }
+
+    /* Light mode enhancements */
+    @media (prefers-color-scheme: light) {
+        .glassmorphic-select {
+            color: rgba(107, 114, 128, 1) !important; /* text-gray-500 for light mode */
+        }
+    }
+
+    /* Ensure gray color is applied regardless of color scheme */
+    .glassmorphic-select {
+        color: rgba(156, 163, 175, 1) !important; /* Default gray color */
     }
 </style>
 
