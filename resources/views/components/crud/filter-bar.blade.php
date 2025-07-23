@@ -90,7 +90,7 @@
                     <!-- Date Range Section - Full width on mobile, spans 2 columns on larger screens -->
                     @if ($showDateRange)
                         <div
-                            class="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col items-center justify-center h-full">
+                            class="md:col-span-2 lg:col-span-2 xl:col-span-2 flex flex-col items-center justify-center h-full">
                             <div class="space-y-3 w-full">
                                 <label
                                     class="flex items-center gap-1 text-sm font-medium text-gray-300 justify-center text-center md:justify-start md:text-left w-full">
@@ -157,9 +157,9 @@
                                     </div>
                                 </div>
                                 <!-- Clear Dates Button -->
-                                <div class="flex justify-center mt-3">
+                                <div class="flex justify-center mt-2">
                                     <button type="button" id="{{ $clearDatesId }}"
-                                        class="px-4 py-2 text-sm font-medium text-gray-300 bg-black/30 border border-white/10 rounded-lg hover:bg-black/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm">
+                                        class="px-3 py-1.5 text-xs font-medium text-gray-300 bg-black/30 border border-white/10 rounded-lg hover:bg-black/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm">
                                         🗑️ {{ $clearDatesLabel }}
                                     </button>
                                 </div>
@@ -487,7 +487,8 @@
         background: rgba(0, 0, 0, 0.85) !important;
 
         /* Text color gray for both dark and light mode */
-        color: rgba(156, 163, 175, 1) !important; /* text-gray-400 */
+        color: rgba(156, 163, 175, 1) !important;
+        /* text-gray-400 */
 
         /* Premium box shadow with purple accents */
         box-shadow:
@@ -706,20 +707,23 @@
         }
 
         .glassmorphic-select {
-            color: rgba(156, 163, 175, 1) !important; /* text-gray-400 for dark mode */
+            color: rgba(156, 163, 175, 1) !important;
+            /* text-gray-400 for dark mode */
         }
     }
 
     /* Light mode enhancements */
     @media (prefers-color-scheme: light) {
         .glassmorphic-select {
-            color: rgba(107, 114, 128, 1) !important; /* text-gray-500 for light mode */
+            color: rgba(107, 114, 128, 1) !important;
+            /* text-gray-500 for light mode */
         }
     }
 
     /* Ensure gray color is applied regardless of color scheme */
     .glassmorphic-select {
-        color: rgba(156, 163, 175, 1) !important; /* Default gray color */
+        color: rgba(156, 163, 175, 1) !important;
+        /* Default gray color */
     }
 </style>
 
