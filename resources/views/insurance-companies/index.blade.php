@@ -1,7 +1,6 @@
 <x-crud.index-layout title="{{ __('insurance_companies_management') }}"
     subtitle="{{ __('manage_insurance_companies_subtitle') }}" entity-name="{{ __('insurance_company') }}"
-    entity-name-plural="{{ __('i                                // Edit button (always available)
-                                buttons += `<button data-id="${entity.uuid}" class="edit-btn inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/10 bg-purple-500/40 backdrop-blur-md shadow-lg shadow-purple-500/20 hover:bg-purple-600/60 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-200 mr-2" title="${translations.editInsuranceCompany || 'Edit Insurance Company'}">`;urance_companies') }}" search-placeholder="{{ __('search_insurance_companies') }}"
+    entity-name-plural="{{ __('insurance_companies') }}" search-placeholder="{{ __('search_insurance_companies') }}"
     show-deleted-label="{{ __('show_inactive_records') }}" add-new-label="{{ __('add_insurance_company') }}"
     manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable" create-button-id="createInsuranceCompanyBtn"
     search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"

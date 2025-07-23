@@ -68,13 +68,13 @@
         .sort-header.sort-asc .sort-icon::after {
             content: '↑';
             opacity: 1;
-            color: #A855F7;
+            color: #3B82F6;
         }
 
         .sort-header.sort-desc .sort-icon::after {
             content: '↓';
             opacity: 1;
-            color: #A855F7;
+            color: #3B82F6;
         }
 
         .sort-header:hover .sort-icon::after {

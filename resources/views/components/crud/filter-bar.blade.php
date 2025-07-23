@@ -882,7 +882,7 @@
         }
 
         function showNotification(message, type = 'success') {
-            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-purple-500';
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-blue-500';
             const notification = document.createElement('div');
             notification.className =
                 `fixed top-4 right-4 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 max-w-sm`;
