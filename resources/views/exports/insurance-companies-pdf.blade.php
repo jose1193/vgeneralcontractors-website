@@ -92,10 +92,29 @@
         .header {
             width: 92%;
             border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 30px;
         }
 
         .data-table {
             width: 92%;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        /* Ensure proper page breaks for multi-page tables */
+        .data-table tbody tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Add space before table on continuation pages */
+        .data-table thead {
+            display: table-header-group;
+        }
+
+        /* Improve page continuation styling */
+        @page :not(:first) {
+            margin-top: 35mm;
         }
 
         .summary {
@@ -120,25 +139,43 @@
             max-width: 1140px;
             max-height: 300px;
         }
+
+        /* Table container for better page flow */
+        .table-container {
+            margin-top: 20px;
+            page-break-inside: auto;
+        }
+
+        /* Ensure header is always visible on new pages */
+        .table-container .data-table thead {
+            display: table-header-group;
+            page-break-after: avoid;
+        }
+
+        /* Better spacing for continued tables */
+        .table-container .data-table tbody tr:first-child {
+            page-break-before: avoid;
+        }
     </style>
 @endpush
 
 @section('content')
-    <!-- Data Table -->
+    <!-- Data Table with improved page handling -->
     @if ($data->count() > 0)
-        <table class="data-table allow-page-break">
-            <thead>
-                <tr>
-                    <th class="col-0">Nro</th>
-                    <th class="col-1">Company Name</th>
-                    <th class="col-2">Email</th>
-                    <th class="col-3">Phone</th>
-                    <th class="col-4">Address</th>
-                    <th class="col-5">Status</th>
-                    <th class="col-6">Created By</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-container">
+            <table class="data-table allow-page-break">
+                <thead>
+                    <tr>
+                        <th class="col-0">Nro</th>
+                        <th class="col-1">Company Name</th>
+                        <th class="col-2">Email</th>
+                        <th class="col-3">Phone</th>
+                        <th class="col-4">Address</th>
+                        <th class="col-5">Status</th>
+                        <th class="col-6">Created By</th>
+                    </tr>
+                </thead>
+                <tbody>
                 @foreach ($data as $row)
                     <tr>
                         <td class="col-0">
@@ -181,6 +218,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     @else
         <div class="no-data">
             <div class="no-data-icon">📄</div>

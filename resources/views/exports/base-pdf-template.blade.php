@@ -39,7 +39,7 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 20mm 15mm 25mm 15mm;
             size: A4;
 
             @top-center {
@@ -55,7 +55,7 @@
             }
 
             @bottom-center {
-                content: "Page " counter(page) " of ~{{ $estimatedPages ?? '?' }}";
+                content: "Page " counter(page) " of " counter(pages);
                 font-size: 9px;
                 color: #666;
                 font-weight: bold;
@@ -68,9 +68,17 @@
             }
         }
 
-        /* Prevent page breaks in inappropriate places */
+        /* Ensure consistent spacing for all pages */
         @page :first {
-            margin-top: 20mm;
+            margin-top: 25mm;
+        }
+
+        @page :left {
+            margin-top: 25mm;
+        }
+
+        @page :right {
+            margin-top: 25mm;
         }
 
         * {
@@ -94,6 +102,26 @@
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
+            position: running(header);
+        }
+
+        /* Ensure proper spacing for continued content on new pages */
+        .data-table {
+            margin-top: 20px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        /* Header repetition for all pages */
+        @page :not(:first) {
+            margin-top: 30mm;
+            
+            @top-left {
+                content: element(header);
+            }
         }
 
         /* New dedicated container for logo and company data */
