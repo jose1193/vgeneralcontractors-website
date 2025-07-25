@@ -512,7 +512,7 @@ class CrudManagerModal {
                         : "";
                 html += `<input type="${field.type}" id="${field.name}" name="${
                     field.name
-                }" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent${capitalizationClass}" placeholder="${
+                }" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent${capitalizationClass}" placeholder="${
                     field.placeholder || ""
                 }">`;
                 break;
@@ -525,13 +525,13 @@ class CrudManagerModal {
                     field.name
                 }" ${required} ${disabled} rows="${
                     field.rows || 3
-                }" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent${textareaCapitalizationClass}" placeholder="${
+                }" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent${textareaCapitalizationClass}" placeholder="${
                     field.placeholder || ""
                 }">${value}</textarea>`;
                 break;
 
             case "select":
-                html += `<select id="${field.name}" name="${field.name}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">`;
+                html += `<select id="${field.name}" name="${field.name}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">`;
                 if (field.placeholder) {
                     html += `<option value="">${field.placeholder}</option>`;
                 }
@@ -545,7 +545,7 @@ class CrudManagerModal {
             case "checkbox":
                 const checked = value ? "checked" : "";
                 html += `<div class="flex items-center">`;
-                html += `<input type="checkbox" id="${field.name}" name="${field.name}" ${checked} ${disabled} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">`;
+                html += `<input type="checkbox" id="${field.name}" name="${field.name}" ${checked} ${disabled} class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">`;
                 html += `<label for="${
                     field.name
                 }" class="ml-2 block text-sm text-gray-700">${
@@ -555,11 +555,11 @@ class CrudManagerModal {
                 break;
 
             case "date":
-                html += `<input type="date" id="${field.name}" name="${field.name}" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">`;
+                html += `<input type="date" id="${field.name}" name="${field.name}" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">`;
                 break;
 
             case "time":
-                html += `<input type="time" id="${field.name}" name="${field.name}" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">`;
+                html += `<input type="time" id="${field.name}" name="${field.name}" value="${value}" ${required} ${disabled} class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">`;
                 break;
         }
 

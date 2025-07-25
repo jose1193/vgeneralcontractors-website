@@ -2111,9 +2111,9 @@ class CrudManagerModal {
             ) {
                 const activeClass =
                     i === data.current_page
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-50";
-                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border border-gray-300 rounded-md ${activeClass}" data-page="${i}">${i}</button>`;
+                        ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30 border-purple-500"
+                        : "bg-black/20 text-white border-white/20 hover:bg-white/10 backdrop-blur-md";
+                paginationHtml += `<button class="pagination-btn px-3 py-2 text-sm border rounded-md transition-all duration-200 ${activeClass}" data-page="${i}">${i}</button>`;
             }
 
             // Botón siguiente
@@ -2144,7 +2144,7 @@ class CrudManagerModal {
                 <td colspan="${
                     this.tableHeaders.length
                 }" class="px-6 py-4 text-center">
-                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                    <svg class="animate-spin h-5 w-5 mr-3 text-purple-500 inline-block" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
