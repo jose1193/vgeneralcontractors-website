@@ -5,7 +5,9 @@ namespace App\Http\DTOs;
 use JsonSerializable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionProperty;
+use ReflectionNamedType;
 
 abstract class BaseDTO implements JsonSerializable, Arrayable
 {
@@ -16,27 +18,27 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     {
         $this->fillFromArray($data);
         $this->validateData();
-        $this->transformData();
     }
 
     /**
-     * Fill DTO properties from array data
+     * Fill DTO properties from array data using PHP 8.4 property hooks
      */
     protected function fillFromArray(array $data): void
     {
-        $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $reflection = new ReflectionClass($this);
+        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_READONLY);
         
         foreach ($properties as $property) {
             $propertyName = $property->getName();
             
             if (array_key_exists($propertyName, $data)) {
-                $this->$propertyName = $this->castValue($data[$propertyName], $property);
-            } elseif ($property->hasType() && !$property->getType()->allowsNull()) {
+                $value = $this->castValue($data[$propertyName], $property);
+                $property->setValue($this, $value);
+            } elseif ($property->hasType() && !$property->getType()?->allowsNull()) {
                 // Set default values for non-nullable properties
                 $type = $property->getType();
-                if ($type instanceof \ReflectionNamedType) {
-                    $this->$propertyName = match($type->getName()) {
+                if ($type instanceof ReflectionNamedType) {
+                    $defaultValue = match($type->getName()) {
                         'string' => '',
                         'int' => 0,
                         'float' => 0.0,
@@ -44,31 +46,32 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
                         'array' => [],
                         default => null
                     };
+                    $property->setValue($this, $defaultValue);
                 }
             }
         }
     }
 
     /**
-     * Cast value based on property type
+     * Cast value based on property type with strict typing
      */
-    protected function castValue($value, \ReflectionProperty $property)
+    protected function castValue(mixed $value, ReflectionProperty $property): mixed
     {
         if (!$property->hasType()) {
             return $value;
         }
 
         $type = $property->getType();
-        if (!$type instanceof \ReflectionNamedType) {
+        if (!$type instanceof ReflectionNamedType) {
             return $value;
         }
 
         return match($type->getName()) {
-            'string' => (string) $value,
-            'int' => (int) $value,
-            'float' => (float) $value,
-            'bool' => (bool) $value,
-            'array' => is_array($value) ? $value : [$value],
+            'string' => $value !== null ? (string) $value : null,
+            'int' => $value !== null ? (int) $value : null,
+            'float' => $value !== null ? (float) $value : null,
+            'bool' => $value !== null ? (bool) $value : null,
+            'array' => is_array($value) ? $value : ($value !== null ? [$value] : []),
             default => $value
         };
     }
@@ -83,18 +86,9 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     }
 
     /**
-     * Transform data after filling - to be overridden by child classes
-     */
-    protected function transformData(): void
-    {
-        // Default implementation does nothing
-        // Child classes can override to add transformations
-    }
-
-    /**
      * Create a new DTO instance from array data
      */
-    public static function fromArray(array $data): static
+    public static function from(array $data): static
     {
         return new static($data);
     }
@@ -102,7 +96,7 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     /**
      * Create DTO instance from model
      */
-    public static function fromModel($model): static
+    public static function fromModel(object $model): static
     {
         return new static($model->toArray());
     }
@@ -110,40 +104,34 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     /**
      * Create collection of DTOs from array of data
      */
-    public static function fromCollection($collection): Collection
+    public static function collection(iterable $collection): Collection
     {
-        return collect($collection)->map(function ($item) {
-            return static::fromArray(is_array($item) ? $item : $item->toArray());
-        });
+        return collect($collection)->map(fn($item) => 
+            static::from(is_array($item) ? $item : $item->toArray())
+        );
     }
 
     /**
      * Create a new DTO instance from request data
      */
-    public static function fromRequest($request): static
+    public static function fromRequest(object $request): static
     {
-        $data = is_array($request) ? $request : $request->all();
-        return static::fromArray($data);
+        $data = is_array($request) ? $request : $request->validated();
+        return static::from($data);
     }
 
     /**
-     * Convert DTO to array
+     * Convert DTO to array using PHP 8.4 features
      */
     public function toArray(): array
     {
-        $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $reflection = new ReflectionClass($this);
+        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_READONLY);
         
         $array = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            
-            // Check if property is initialized before accessing
-            if ($property->isInitialized($this)) {
-                $array[$propertyName] = $property->getValue($this);
-            } else {
-                $array[$propertyName] = null;
-            }
+            $array[$propertyName] = $property->getValue($this);
         }
         
         return $array;
@@ -162,7 +150,7 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
      */
     public function toArrayFiltered(): array
     {
-        return array_filter($this->toArray(), fn($value) => !is_null($value));
+        return array_filter($this->toArray(), fn($value) => $value !== null);
     }
 
     /**
@@ -192,9 +180,17 @@ abstract class BaseDTO implements JsonSerializable, Arrayable
     /**
      * Merge with another array or DTO
      */
-    public function merge($data): array
+    public function merge(array|self $data): array
     {
         $mergeData = $data instanceof self ? $data->toArray() : $data;
-        return array_merge($this->toArray(), $mergeData);
+        return [...$this->toArray(), ...$mergeData];
+    }
+
+    /**
+     * Convert to JSON string
+     */
+    public function toJson(int $options = 0): string
+    {
+        return json_encode($this->jsonSerialize(), $options);
     }
 }

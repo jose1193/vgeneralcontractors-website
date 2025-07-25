@@ -2,124 +2,191 @@
 
 namespace App\Http\DTOs;
 
-use Illuminate\Support\Str;
-
-class InsuranceCompanyDTO extends BaseDTO
+/**
+ * Insurance Company Data Transfer Object
+ * 
+ * PURE DATA CONTAINER - No validation logic (handled by FormRequest)
+ * Just data formatting and transformation
+ */
+final class InsuranceCompanyDTO extends BaseDTO
 {
-    public ?string $uuid;
-    public string $insurance_company_name;
-    public ?string $address;
-    public ?string $phone;
-    public ?string $email;
-    public ?string $website;
-    public ?int $user_id;
-    public bool $is_active;
-    public ?string $created_at;
-    public ?string $updated_at;
-    public ?string $deleted_at;
+    public readonly ?string $uuid;
+    public readonly string $insurance_company_name;
+    public readonly ?string $phone;
+    public readonly ?string $email;
+    public readonly ?string $website;
+    public readonly ?string $address;
+    public readonly int $user_id;
+    public readonly bool $is_active;
+    public readonly ?\DateTime $created_at;
+    public readonly ?\DateTime $updated_at;
 
+    /**
+     * Constructor - Initialize with validated data only
+     */
     public function __construct(array $data = [])
     {
         // Set defaults for required fields
-        $data = array_merge([
-            'uuid' => $data['uuid'] ?? (string) Str::uuid(),
-            'insurance_company_name' => '',
-            'address' => null,
-            'phone' => null,
-            'email' => null,
-            'website' => null,
-            'user_id' => $data['user_id'] ?? auth()->id(),
-            'is_active' => true,
-            'created_at' => null,
-            'updated_at' => null,
-            'deleted_at' => null,
-        ], $data);
+        $data['insurance_company_name'] = $data['insurance_company_name'] ?? '';
+        $data['user_id'] = $data['user_id'] ?? 0;
+        $data['is_active'] = $data['is_active'] ?? true;
         
-        // Skip validation since data comes from validated FormRequest
-        $this->fillFromArray($data);
-        $this->transformData();
+        parent::__construct($data);
     }
 
     /**
-     * Transform data after filling
+     * Transform data after filling - format and clean data
      */
     protected function transformData(): void
     {
-        // Clean and format insurance company name
-        if (!empty($this->insurance_company_name)) {
-            $this->insurance_company_name = trim($this->insurance_company_name);
+        // Format phone number if provided
+        if ($this->phone) {
+            $this->phone = $this->formatPhone($this->phone);
         }
 
-        // Clean and format email
-        if (!empty($this->email)) {
-            $this->email = strtolower(trim($this->email));
+        // Format email if provided
+        if ($this->email) {
+            $this->email = $this->formatEmail($this->email);
         }
 
-        // Format website - same logic as FormRequest
-        if (!empty($this->website)) {
-            $website = trim($this->website);
-            if (!preg_match('/^https?:\/\//', $website)) {
-                $this->website = 'https://' . $website;
-            } else {
-                $this->website = $website;
-            }
+        // Format website if provided
+        if ($this->website) {
+            $this->website = $this->formatWebsite($this->website);
         }
 
-        // Phone formatting should already be done by FormRequest
-        // DTO just ensures consistency
-        if (!empty($this->phone)) {
-            $this->phone = trim($this->phone);
+        // Format company name
+        if ($this->insurance_company_name) {
+            $this->insurance_company_name = $this->formatCompanyName($this->insurance_company_name);
+        }
+
+        // Parse dates if provided as strings
+        if (isset($this->created_at) && is_string($this->created_at)) {
+            $this->created_at = new \DateTime($this->created_at);
+        }
+
+        if (isset($this->updated_at) && is_string($this->updated_at)) {
+            $this->updated_at = new \DateTime($this->updated_at);
         }
     }
 
     /**
-     * Create DTO from Eloquent model
+     * Format phone number to (XXX) XXX-XXXX
      */
-    public static function fromModel($model): static
+    private function formatPhone(string $phone): string
     {
-        return static::fromArray([
-            'uuid' => $model->uuid,
-            'insurance_company_name' => $model->insurance_company_name,
-            'address' => $model->address,
-            'phone' => $model->phone,
-            'email' => $model->email,
-            'website' => $model->website,
-            'user_id' => $model->user_id,
-            'is_active' => $model->is_active,
-            'created_at' => $model->created_at?->toISOString(),
-            'updated_at' => $model->updated_at?->toISOString(),
-            'deleted_at' => $model->deleted_at?->toISOString(),
-        ]);
+        // Already formatted? Return as-is
+        if (preg_match('/^\(\d{3}\)\s\d{3}-\d{4}$/', $phone)) {
+            return $phone;
+        }
+
+        // Clean and format
+        $cleaned = preg_replace('/\D/', '', $phone);
+        
+        if (strlen($cleaned) === 10) {
+            return sprintf('(%s) %s-%s', 
+                substr($cleaned, 0, 3),
+                substr($cleaned, 3, 3),
+                substr($cleaned, 6, 4)
+            );
+        }
+        
+        if (strlen($cleaned) === 11 && str_starts_with($cleaned, '1')) {
+            $cleaned = substr($cleaned, 1);
+            return sprintf('(%s) %s-%s', 
+                substr($cleaned, 0, 3),
+                substr($cleaned, 3, 3),
+                substr($cleaned, 6, 4)
+            );
+        }
+
+        return $phone; // Return original if can't format
     }
 
-    public function isActive(): bool
+    /**
+     * Format email to lowercase
+     */
+    private function formatEmail(string $email): string
     {
-        return $this->is_active;
+        return strtolower(trim($email));
     }
 
-    public function getStatusLabel(): string
+    /**
+     * Format website URL
+     */
+    private function formatWebsite(string $website): string
     {
-        return match($this->is_active) {
-            true => 'Active',
-            false => 'Inactive',
-        };
+        $website = trim($website);
+        
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'https://' . $website;
+        }
+        
+        return $website;
     }
 
-    public function getStatusColor(): string
+    /**
+     * Format company name
+     */
+    private function formatCompanyName(string $name): string
     {
-        return match($this->is_active) {
-            true => 'green',
-            false => 'red',
-        };
+        return trim($name);
     }
 
-    public function getFormattedPhone(): ?string
+    /**
+     * Get data ready for database insertion/update
+     */
+    public function toDatabase(): array
     {
-        return $this->phone;
+        $data = $this->toArray();
+        
+        // Remove UUID for creation
+        if (empty($data['uuid'])) {
+            unset($data['uuid']);
+        }
+
+        // Convert DateTime objects to strings for database
+        if ($data['created_at'] instanceof \DateTime) {
+            $data['created_at'] = $data['created_at']->format('Y-m-d H:i:s');
+        }
+
+        if ($data['updated_at'] instanceof \DateTime) {
+            $data['updated_at'] = $data['updated_at']->format('Y-m-d H:i:s');
+        }
+
+        return $data;
     }
 
-    public function getDisplayName(): string
+    /**
+     * Get display-friendly data
+     */
+    public function toDisplay(): array
     {
-        return $this->insurance_company_name;
+        return [
+            'uuid' => $this->uuid,
+            'name' => $this->insurance_company_name,
+            'phone' => $this->phone ?: __('common.not_provided'),
+            'email' => $this->email ?: __('common.not_provided'),
+            'website' => $this->website ?: __('common.not_provided'),
+            'address' => $this->address ?: __('common.not_provided'),
+            'status' => $this->is_active ? __('common.active') : __('common.inactive'),
+            'created_at' => $this->created_at?->format('M d, Y'),
+            'updated_at' => $this->updated_at?->format('M d, Y'),
+        ];
+    }
+
+    /**
+     * Check if this is a new record (no UUID)
+     */
+    public function isNew(): bool
+    {
+        return empty($this->uuid);
+    }
+
+    /**
+     * Get the identifier for this record
+     */
+    public function getIdentifier(): ?string
+    {
+        return $this->uuid;
     }
 }
