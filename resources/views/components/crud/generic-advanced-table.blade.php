@@ -476,7 +476,7 @@
         background: linear-gradient(90deg, rgba(138, 43, 226, 0.8), rgba(128, 0, 255, 1));
     }
 
-    /* Enhanced Glassmorphism Pagination */
+    /* Enhanced Glassmorphism Pagination - Premium Version 2025 */
     .pagination-wrapper {
         display: flex;
         flex-direction: column;
@@ -484,6 +484,8 @@
         align-items: center;
         margin: 2rem 0;
         gap: 1rem;
+        position: relative;
+        z-index: 10;
     }
 
     /* Record information styling */
@@ -513,112 +515,265 @@
         margin: 1rem 0;
     }
 
-    .pagination {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        background: rgba(0, 0, 0, 0.8);
-        border-radius: 12px;
-        padding: 0.5rem;
+    /* Premium Glassmorphism Pagination Container */
+    .pagination,
+    nav.pagination,
+    .pagination-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.375rem !important;
+        background: rgba(0, 0, 0, 0.85) !important;
+        border-radius: 16px !important;
+        padding: 0.75rem !important;
         box-shadow:
-            0 4px 24px rgba(138, 43, 226, 0.2),
-            0 8px 40px rgba(128, 0, 255, 0.1);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+            0 8px 32px rgba(138, 43, 226, 0.25) !important,
+            0 16px 64px rgba(128, 0, 255, 0.18) !important,
+            0 4px 16px rgba(75, 0, 130, 0.3) !important,
+            inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        backdrop-filter: blur(20px) saturate(1.2) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        z-index: 20 !important;
     }
 
-    .pagination .page-item {
-        margin: 0;
-    }
-
-    .pagination .page-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-    }
-
-    .pagination .page-link::before {
+    /* Glassmorphism shimmer effect for pagination */
+    .pagination::before,
+    nav.pagination::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(138, 43, 226, 0.1) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .pagination .page-link:hover:not(:disabled) {
-        color: rgba(255, 255, 255, 0.95);
-        transform: translateY(-2px);
-        box-shadow:
-            0 4px 16px rgba(138, 43, 226, 0.3),
-            0 8px 24px rgba(128, 0, 255, 0.2);
-    }
-
-    .pagination .page-link:hover:not(:disabled)::before {
-        opacity: 1;
-    }
-
-    /* Estilo para página activa */
-    .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
-        color: white !important;
-        box-shadow:
-            0 4px 20px rgba(168, 85, 247, 0.4),
-            0 8px 32px rgba(139, 92, 246, 0.3);
-        transform: translateY(-1px);
-    }
-
-    .pagination .page-item.active .page-link::before {
-        opacity: 0;
-    }
-
-    .pagination .page-item.active .page-link:hover {
-        transform: translateY(-1px);
-        box-shadow:
-            0 6px 24px rgba(168, 85, 247, 0.5),
-            0 12px 40px rgba(139, 92, 246, 0.4);
-    }
-
-    /* Estilo para páginas deshabilitadas */
-    .pagination .page-item.disabled .page-link {
-        color: rgba(255, 255, 255, 0.3) !important;
-        cursor: not-allowed;
-        transform: none;
-        background: transparent !important;
-    }
-
-    .pagination .page-item.disabled .page-link:hover {
-        transform: none;
-        box-shadow: none;
-    }
-
-    .pagination .page-item.disabled .page-link::before {
-        opacity: 0;
-    }
-
-    .pagination .page-link span {
-        position: relative;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        animation: pagination-shimmer 3s infinite;
+        pointer-events: none;
         z-index: 1;
+    }
+
+    @keyframes pagination-shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* Page Item Styling */
+    .pagination .page-item,
+    nav.pagination .page-item {
+        margin: 0 !important;
+        position: relative !important;
+        z-index: 2 !important;
+    }
+
+    /* Premium Page Link Styling - Override all external styles */
+    .pagination .page-link,
+    nav.pagination .page-link,
+    .pagination a,
+    nav.pagination a,
+    .pagination button,
+    nav.pagination button,
+    .pagination span:not(.sr-only),
+    nav.pagination span:not(.sr-only) {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 44px !important;
+        height: 44px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-decoration: none !important;
+        border-radius: 10px !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+        z-index: 3 !important;
+    }
+
+    /* Glass effect overlay */
+    .pagination .page-link::before,
+    nav.pagination .page-link::before,
+    .pagination a::before,
+    nav.pagination a::before,
+    .pagination button::before,
+    nav.pagination button::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(138, 43, 226, 0.1) 50%,
+                rgba(128, 0, 255, 0.05) 100%) !important;
+        opacity: 0 !important;
+        transition: opacity 0.4s ease !important;
+        border-radius: 10px !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+    }
+
+    /* Hover Effects */
+    .pagination .page-link:hover:not(:disabled),
+    nav.pagination .page-link:hover:not(:disabled),
+    .pagination a:hover,
+    nav.pagination a:hover,
+    .pagination button:hover:not(:disabled),
+    nav.pagination button:hover:not(:disabled) {
+        color: rgba(255, 255, 255, 1) !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        transform: translateY(-2px) scale(1.05) !important;
+        box-shadow: 
+            0 6px 20px rgba(138, 43, 226, 0.4) !important,
+            0 12px 32px rgba(128, 0, 255, 0.25) !important,
+            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        text-shadow: 0 0 8px rgba(168, 85, 247, 0.6) !important;
+    }
+
+    .pagination .page-link:hover::before,
+    nav.pagination .page-link:hover::before,
+    .pagination a:hover::before,
+    nav.pagination a:hover::before,
+    .pagination button:hover::before,
+    nav.pagination button:hover::before {
+        opacity: 1 !important;
+    }
+
+    /* Active Page Styling - Premium Glassmorphism */
+    .pagination .page-item.active .page-link,
+    nav.pagination .page-item.active .page-link,
+    .pagination .page-item.active a,
+    nav.pagination .page-item.active a,
+    .pagination .page-item.active button,
+    nav.pagination .page-item.active button,
+    .pagination .page-item.active span,
+    nav.pagination .page-item.active span,
+    .pagination .active,
+    nav.pagination .active {
+        background: linear-gradient(135deg, 
+            rgba(168, 85, 247, 0.9) 0%, 
+            rgba(139, 92, 246, 0.95) 50%,
+            rgba(124, 58, 237, 0.9) 100%) !important;
+        color: rgba(255, 255, 255, 1) !important;
+        box-shadow:
+            0 8px 32px rgba(168, 85, 247, 0.6) !important,
+            0 16px 48px rgba(139, 92, 246, 0.4) !important,
+            0 4px 16px rgba(124, 58, 237, 0.5) !important,
+            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important,
+            inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(-1px) scale(1.02) !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        font-weight: 700 !important;
+    }
+
+    .pagination .page-item.active .page-link::before,
+    nav.pagination .page-item.active .page-link::before,
+    .pagination .page-item.active a::before,
+    nav.pagination .page-item.active a::before {
+        opacity: 0 !important;
+    }
+
+    .pagination .page-item.active .page-link:hover,
+    nav.pagination .page-item.active .page-link:hover,
+    .pagination .page-item.active a:hover,
+    nav.pagination .page-item.active a:hover {
+        transform: translateY(-1px) scale(1.02) !important;
+        box-shadow:
+            0 10px 40px rgba(168, 85, 247, 0.7) !important,
+            0 20px 60px rgba(139, 92, 246, 0.5) !important,
+            0 6px 20px rgba(124, 58, 237, 0.6) !important,
+            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    }
+
+    /* Disabled Page Styling */
+    .pagination .page-item.disabled .page-link,
+    nav.pagination .page-item.disabled .page-link,
+    .pagination .page-item.disabled a,
+    nav.pagination .page-item.disabled a,
+    .pagination .page-item.disabled button,
+    nav.pagination .page-item.disabled button,
+    .pagination .page-item.disabled span,
+    nav.pagination .page-item.disabled span,
+    .pagination .disabled,
+    nav.pagination .disabled {
+        color: rgba(255, 255, 255, 0.3) !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+        box-shadow: none !important;
+        opacity: 0.5 !important;
+    }
+
+    .pagination .page-item.disabled .page-link:hover,
+    nav.pagination .page-item.disabled .page-link:hover,
+    .pagination .disabled:hover,
+    nav.pagination .disabled:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .pagination .page-item.disabled .page-link::before,
+    nav.pagination .page-item.disabled .page-link::before,
+    .pagination .disabled::before,
+    nav.pagination .disabled::before {
+        opacity: 0 !important;
+    }
+
+    /* Text content styling */
+    .pagination .page-link span,
+    nav.pagination .page-link span,
+    .pagination a span,
+    nav.pagination a span {
+        position: relative !important;
+        z-index: 2 !important;
+        font-weight: inherit !important;
+        color: inherit !important;
+    }
+
+    /* Override any Bootstrap or external pagination styles */
+    .pagination *,
+    nav.pagination * {
+        box-sizing: border-box !important;
+    }
+
+    /* Ensure no external blue styles can override */
+    .pagination .page-link:not(.disabled),
+    nav.pagination .page-link:not(.disabled) {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: transparent !important;
+    }
+
+    /* Remove any focus styles that might show blue */
+    .pagination .page-link:focus,
+    nav.pagination .page-link:focus,
+    .pagination a:focus,
+    nav.pagination a:focus {
+        outline: none !important;
+        box-shadow: 
+            0 6px 20px rgba(138, 43, 226, 0.4) !important,
+            0 12px 32px rgba(128, 0, 255, 0.25) !important,
+            0 0 0 3px rgba(168, 85, 247, 0.3) !important;
+        border-color: rgba(168, 85, 247, 0.5) !important;
     }
 
     /* Enhanced Animations */
@@ -698,10 +853,21 @@
             height: 40px;
         }
 
-        .pagination .page-link {
-            width: 36px;
-            height: 36px;
-            font-size: 0.8rem;
+        .pagination .page-link,
+        nav.pagination .page-link,
+        .pagination a,
+        nav.pagination a,
+        .pagination button,
+        nav.pagination button {
+            min-width: 38px !important;
+            height: 38px !important;
+            font-size: 0.8rem !important;
+        }
+
+        .pagination,
+        nav.pagination {
+            padding: 0.5rem !important;
+            gap: 0.25rem !important;
         }
 
         .pagination-wrapper {
@@ -714,6 +880,38 @@
             font-size: 0.75rem;
             padding: 0.375rem 0.75rem;
         }
+    }
+
+    /* Force glassmorphic styles over any external CSS frameworks */
+    body .pagination,
+    body nav.pagination,
+    body .pagination-wrapper .pagination {
+        background: rgba(0, 0, 0, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(20px) saturate(1.2) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+    }
+
+    body .pagination .page-link,
+    body nav.pagination .page-link,
+    body .pagination a,
+    body nav.pagination a,
+    body .pagination button,
+    body nav.pagination button {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        border: none !important;
+    }
+
+    body .pagination .page-item.active .page-link,
+    body nav.pagination .page-item.active .page-link,
+    body .pagination .page-item.active a,
+    body nav.pagination .page-item.active a {
+        background: linear-gradient(135deg, 
+            rgba(168, 85, 247, 0.9) 0%, 
+            rgba(139, 92, 246, 0.95) 50%,
+            rgba(124, 58, 237, 0.9) 100%) !important;
+        color: rgba(255, 255, 255, 1) !important;
     }
 
     /* Dark mode enhancements */
@@ -732,9 +930,10 @@
             background: rgba(0, 0, 0, 0.9);
         }
 
-        .pagination {
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        .pagination,
+        nav.pagination {
+            background: rgba(0, 0, 0, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
         }
     }
 </style>
