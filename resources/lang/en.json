@@ -2000,5 +2000,23 @@
     "api_error": "API Error:",
     "network_error": "Network error:",
     "restore_confirmation": "Do you want to restore this element?",
-    "delete_confirmation": "Do you want to delete this element?"
+    "delete_confirmation": "Do you want to delete this element?",
+
+    "_comment_crud_new_translations": "=== NEW CRUD SYSTEM TRANSLATIONS ===",
+    "confirmDelete": "Are you sure?",
+    "deleteMessage": "Do you want to delete this element?",
+    "confirmRestore": "Restore record?",
+    "restoreMessage": "Do you want to restore this element?",
+    "yesDelete": "Yes, delete",
+    "yesRestore": "Yes, restore",
+    "deletedSuccessfully": "deleted successfully",
+    "restoredSuccessfully": "restored successfully",
+    "pleaseCorrectErrors": "Please correct the errors before continuing",
+    "createdSuccessfully": "created successfully",
+    "updatedSuccessfully": "updated successfully",
+    "endDateBeforeStart": "End date cannot be earlier than start date",
+    "confirmAction": "Do you want to",
+    "deleteAction": "delete",
+    "restoreAction": "restore",
+    "noRecordsFound": "No records found"
 }

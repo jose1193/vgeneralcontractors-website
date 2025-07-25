@@ -163,6 +163,13 @@ export class CrudTranslations {
             ok: this.get("ok"),
             validationErrors: this.get("validation_errors"),
 
+            // Mensajes específicos de CRUD
+            createdSuccessfully: this.get("created_successfully"),
+            updatedSuccessfully: this.get("updated_successfully"),
+            errorCreatingRecord: this.get("error_creating_record"),
+            errorUpdatingRecord: this.get("error_updating_record"),
+            pleaseCorrectErrors: this.get("please_correct_errors"),
+
             // Para API y red
             networkError: this.get("network_error"),
             apiError: this.get("api_error"),

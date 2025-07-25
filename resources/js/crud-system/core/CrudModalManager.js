@@ -1,4 +1,6 @@
 // Gestión de modales y alertas - Implementación completa con SweetAlert2
+import { crudTranslations } from "../utils/CrudTranslations.js";
+
 export class CrudModalManager {
     constructor(modalConfig, colorConfig) {
         this.modalConfig = modalConfig || {
@@ -230,14 +232,27 @@ export class CrudModalManager {
      * Mostrar errores de validación
      */
     showValidationErrors(errors) {
-        let errorMessage = "Errores de validación:\n";
+        let errorMessage = "";
+        try {
+            errorMessage = crudTranslations.get("validation_errors") + ":\n";
+        } catch (e) {
+            errorMessage = "Errores de validación:\n";
+        }
+
         Object.keys(errors).forEach((field) => {
             errorMessage += `• ${errors[field][0]}\n`;
         });
 
+        let title = "";
+        try {
+            title = crudTranslations.get("validation_errors");
+        } catch (e) {
+            title = "Errores de validación";
+        }
+
         Swal.fire({
             icon: "error",
-            title: "Errores de validación",
+            title: title,
             text: errorMessage,
         });
     }

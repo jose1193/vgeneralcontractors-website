@@ -5,6 +5,7 @@ import { CrudTableRenderer } from "./CrudTableRenderer.js";
 import { CrudModalManager } from "./CrudModalManager.js";
 import { CrudEventHandler } from "./CrudEventHandler.js";
 import { debounce } from "../utils/CrudUtils.js";
+import { crudTranslations } from "../utils/CrudTranslations.js";
 
 export class CrudManager {
     constructor(options) {
@@ -70,26 +71,8 @@ export class CrudManager {
         };
 
         // Configuración de traducciones
-        this.translations = options.translations || {
-            confirmDelete: "Are you sure?",
-            deleteMessage: "Do you want to delete this element?",
-            confirmRestore: "Restore record?",
-            restoreMessage: "Do you want to restore this element?",
-            yesDelete: "Yes, delete",
-            yesRestore: "Yes, restore",
-            cancel: "Cancel",
-            deletedSuccessfully: "deleted successfully",
-            restoredSuccessfully: "restored successfully",
-            errorDeleting: "Error deleting record",
-            errorRestoring: "Error restoring record",
-            // Pagination translations
-            showing: "Showing",
-            to: "to",
-            of: "of",
-            results: "results",
-            total_records: "Total Records",
-            records: "records",
-        };
+        this.translations =
+            options.translations || this.getDefaultTranslations();
 
         // Configuración de entidad
         this.entityConfig = options.entityConfig || {
@@ -109,6 +92,62 @@ export class CrudManager {
         this.eventHandler = new CrudEventHandler(this);
 
         this.init();
+    }
+
+    /**
+     * Obtener traducciones por defecto usando el sistema centralizado
+     */
+    getDefaultTranslations() {
+        // Usar el sistema de traducciones centralizado
+        try {
+            return crudTranslations.getCrudTranslations();
+        } catch (error) {
+            console.warn(
+                "CrudTranslations not available, using fallback:",
+                error
+            );
+            // Fallback a traducciones hardcodeadas si no está disponible el sistema
+            return {
+                confirmDelete: "Are you sure?",
+                deleteMessage: "Do you want to delete this element?",
+                confirmRestore: "Restore record?",
+                restoreMessage: "Do you want to restore this element?",
+                yesDelete: "Yes, delete",
+                yesRestore: "Yes, restore",
+                cancel: "Cancel",
+                deletedSuccessfully: "deleted successfully",
+                restoredSuccessfully: "restored successfully",
+                errorDeleting: "Error deleting record",
+                errorRestoring: "Error restoring record",
+                validationErrors: "Validation errors",
+                pleaseCorrectErrors:
+                    "Please correct the errors before continuing",
+                createdSuccessfully: "created successfully",
+                updatedSuccessfully: "updated successfully",
+                errorCreatingRecord: "Error creating record",
+                errorUpdatingRecord: "Error updating record",
+                invalidIdEditing: "Invalid ID provided for editing",
+                noEditInfoFound:
+                    "No information found for editing. Contact administrator.",
+                errorLoadingEditData: "Error loading data for editing",
+                // Pagination translations
+                showing: "Showing",
+                to: "to",
+                of: "of",
+                results: "results",
+                total_records: "Total Records",
+                records: "records",
+                // Additional translations
+                loading: "Loading...",
+                create: "Create",
+                edit: "Edit",
+                endDateBeforeStart:
+                    "End date cannot be earlier than start date",
+                confirmAction: "Do you want to",
+                deleteAction: "delete",
+                restoreAction: "restore",
+            };
+        }
     }
 
     /**
@@ -182,7 +221,8 @@ export class CrudManager {
             }
             this.modalManager.showAlert(
                 "info",
-                "No se encontró información para editar. Contacte al administrador."
+                this.translations.noEditInfoFound ||
+                    "No se encontró información para editar. Contacte al administrador."
             );
             return;
         }
@@ -194,7 +234,7 @@ export class CrudManager {
         const formHtml = this.formBuilder.generateFormHtml();
 
         await this.modalManager.showCreateModal(
-            `Crear ${this.entityName}`,
+            `${this.translations.create || "Crear"} ${this.entityName}`,
             formHtml,
             () => this.validator.validateAndGetFormData(false),
             () => this.initializeFormElements(),
@@ -218,7 +258,8 @@ export class CrudManager {
             console.error("Invalid ID provided to showEditModal:", id);
             this.modalManager.showAlert(
                 "error",
-                "Invalid ID provided for editing"
+                this.translations.invalidIdEditing ||
+                    "ID inválido proporcionado para edición"
             );
             return;
         }
@@ -251,7 +292,7 @@ export class CrudManager {
             );
 
             await this.modalManager.showEditModal(
-                `Editar ${this.entityName}`,
+                `${this.translations.edit || "Editar"} ${this.entityName}`,
                 formHtml,
                 () => this.validator.validateAndGetFormData(true),
                 () => {
@@ -272,7 +313,8 @@ export class CrudManager {
             console.error("Error loading entity for edit:", error);
             this.modalManager.showAlert(
                 "error",
-                "Error loading data for editing"
+                this.translations.errorLoadingEditData ||
+                    "Error al cargar datos para edición"
             );
         }
     }
@@ -289,7 +331,7 @@ export class CrudManager {
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} creado exitosamente`,
+                `${this.entityName} ${this.translations.createdSuccessfully}`,
                 this.alertSelector
             );
             this.loadEntities();
@@ -304,7 +346,7 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || "Error creating record"
+                    error.message || this.translations.errorCreatingRecord
                 );
             }
         }
@@ -322,7 +364,7 @@ export class CrudManager {
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} actualizado exitosamente`,
+                `${this.entityName} ${this.translations.updatedSuccessfully}`,
                 this.alertSelector
             );
             this.loadEntities();
@@ -337,7 +379,7 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || "Error updating record"
+                    error.message || this.translations.errorUpdatingRecord
                 );
             }
         }
@@ -392,7 +434,19 @@ export class CrudManager {
         // Crear mensaje personalizado
         let customMessage = this.translations.deleteMessage;
         if (entityIdentifier && entityIdentifier !== "this element") {
-            customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            // Usar función de formato si está disponible, si no usar template básico
+            if (typeof this.translations.formatConfirmMessage === "function") {
+                customMessage = this.translations.formatConfirmMessage(
+                    "delete",
+                    entityDisplayName,
+                    entityIdentifier
+                );
+            } else {
+                const deleteText = this.translations.deleteAction || "eliminar";
+                customMessage = `${
+                    this.translations.confirmAction || "¿Deseas"
+                } ${deleteText} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            }
         }
 
         const result = await Swal.fire({
@@ -474,7 +528,20 @@ export class CrudManager {
         // Crear mensaje personalizado
         let customMessage = this.translations.restoreMessage;
         if (entityIdentifier && entityIdentifier !== "this element") {
-            customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            // Usar función de formato si está disponible, si no usar template básico
+            if (typeof this.translations.formatConfirmMessage === "function") {
+                customMessage = this.translations.formatConfirmMessage(
+                    "restore",
+                    entityDisplayName,
+                    entityIdentifier
+                );
+            } else {
+                const restoreText =
+                    this.translations.restoreAction || "restaurar";
+                customMessage = `${
+                    this.translations.confirmAction || "¿Deseas"
+                } ${restoreText} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+            }
         }
 
         const result = await Swal.fire({
@@ -806,7 +873,7 @@ export class CrudManager {
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Loading...
+                    ${this.translations.loading || "Loading..."}
                 </td>
             </tr>
         `;
@@ -834,7 +901,8 @@ export class CrudManager {
         if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
             this.modalManager.showAlert(
                 "error",
-                "End date cannot be earlier than start date",
+                this.translations.endDateBeforeStart ||
+                    "End date cannot be earlier than start date",
                 this.alertSelector
             );
             return false;
@@ -885,7 +953,9 @@ export class CrudManager {
         if (end < start) {
             return {
                 valid: false,
-                message: "End date cannot be earlier than start date",
+                message:
+                    this.translations.endDateBeforeStart ||
+                    "End date cannot be earlier than start date",
             };
         }
 

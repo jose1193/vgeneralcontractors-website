@@ -2095,5 +2095,22 @@
     "api_error": "Error de API:",
     "network_error": "Error de red:",
     "restore_confirmation": "¿Deseas restaurar este elemento?",
-    "delete_confirmation": "¿Deseas eliminar este elemento?"
+    "delete_confirmation": "¿Deseas eliminar este elemento?",
+
+    "_comment_crud_new_translations": "=== NUEVAS TRADUCCIONES CRUD ===",
+    "confirmDelete": "¿Estás seguro?",
+    "deleteMessage": "¿Deseas eliminar este elemento?",
+    "confirmRestore": "¿Restaurar registro?",
+    "restoreMessage": "¿Deseas restaurar este elemento?",
+    "yesDelete": "Sí, eliminar",
+    "yesRestore": "Sí, restaurar",
+    "deletedSuccessfully": "eliminado exitosamente",
+    "restoredSuccessfully": "restaurado exitosamente",
+    "pleaseCorrectErrors": "Por favor corrija los errores antes de continuar",
+    "createdSuccessfully": "creado exitosamente",
+    "updatedSuccessfully": "actualizado exitosamente",
+    "confirmAction": "¿Deseas",
+    "deleteAction": "eliminar",
+    "restoreAction": "restaurar",
+    "noRecordsFound": "No se encontraron registros"
 }
