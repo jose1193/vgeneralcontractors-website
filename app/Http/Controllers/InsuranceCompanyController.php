@@ -352,67 +352,149 @@ class InsuranceCompanyController extends BaseController
         return $website;
     }
 
-    public function store(InsuranceCompanyRequest $request): JsonResponse
+    /**
+     * Validate request data using InsuranceCompanyRequest rules
+     */
+    private function validateInsuranceCompanyRequest(Request $request, ?string $uuid = null): array
+    {
+        // Create an instance of InsuranceCompanyRequest to get validation rules
+        $formRequest = new InsuranceCompanyRequest();
+        
+        // Simulate the route parameter for unique validation
+        if ($uuid) {
+            $request->route()->setParameter('insurance_company', $uuid);
+        }
+        
+        // Get validation rules
+        $rules = $formRequest->rules();
+        $messages = $formRequest->messages();
+        $attributes = $formRequest->attributes();
+        
+        // Add user_id if not present
+        $requestData = $request->all();
+        if (!isset($requestData['user_id'])) {
+            $requestData['user_id'] = auth()->id();
+        }
+        
+        // Perform validation
+        $validator = Validator::make($requestData, $rules, $messages, $attributes);
+        
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+        
+        return $validator->validated();
+    }
+
+    /**
+     * Store a new insurance company using modern Laravel 12 patterns
+     */
+    public function store(Request $request): JsonResponse
     {
         try {
-            // The request is automatically validated by Laravel
-            // Convert validated request to DTO
-            $dto = $request->toDTO();
+            // Validate using InsuranceCompanyRequest manually
+            $validatedData = $this->validateInsuranceCompanyRequest($request);
             
-            // Create insurance company using service
-            $insuranceCompany = $this->insuranceCompanyService->create($dto->toArray());
+            // Create DTO from validated data
+            $dto = InsuranceCompanyDTO::fromArray($validatedData);
+            
+            // Create insurance company using service with DTO data
+            $insuranceCompany = $this->insuranceCompanyService->create($dto->toDatabase());
             
             return response()->json([
                 'success' => true,
-                'message' => __('Insurance company created successfully'),
+                'message' => __('insurance_companies.messages.created_successfully'),
                 'data' => $insuranceCompany,
             ]);
-        } catch (\Exception $e) {
-            Log::error('Error creating insurance company', [
-                'error' => $e->getMessage(),
-                'data' => $request->all()
+            
+        } catch (ValidationException $e) {
+            Log::error('InsuranceCompanyController::store validation failed', [
+                'errors' => $e->errors(),
+                'request' => $request->all()
             ]);
             
             return response()->json([
                 'success' => false,
-                'message' => 'Error creating insurance company: ' . $e->getMessage()
+                'message' => __('insurance_companies.messages.validation_failed'),
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            Log::error('InsuranceCompanyController::store error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.creation_failed') . ': ' . $e->getMessage()
             ], 500);
         }
     }
 
-    public function update(InsuranceCompanyRequest $request, string $uuid): JsonResponse
+    /**
+     * Update an existing insurance company using modern Laravel 12 patterns
+     */
+    public function update(Request $request, string $uuid): JsonResponse
     {
         try {
-            // The request is automatically validated by Laravel
             // Find the existing insurance company
             $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
             
-            // Convert validated request to DTO
-            $dto = $request->toDTO();
+            // Validate using InsuranceCompanyRequest manually for updates
+            $validatedData = $this->validateInsuranceCompanyRequest($request, $uuid);
             
-            // Update using the service with model and DTO data
-            $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toArray());
+            // Add UUID to validated data for DTO
+            $validatedData['uuid'] = $uuid;
+            
+            // Create DTO from validated data
+            $dto = InsuranceCompanyDTO::fromArray($validatedData);
+            
+            // Update using the service with DTO data
+            $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toDatabase());
             
             return response()->json([
                 'success' => true,
-                'message' => __('Insurance company updated successfully'),
+                'message' => __('insurance_companies.messages.updated_successfully'),
                 'data' => $updatedInsuranceCompany,
             ]);
+            
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Insurance company not found'
-            ], 404);
-        } catch (\Exception $e) {
-            Log::error('Error updating insurance company', [
+            Log::warning('InsuranceCompanyController::update - Company not found', [
                 'uuid' => $uuid,
-                'error' => $e->getMessage(),
-                'data' => $request->all()
+                'request' => $request->all()
             ]);
             
             return response()->json([
                 'success' => false,
-                'message' => 'Error updating insurance company: ' . $e->getMessage()
+                'message' => __('insurance_companies.messages.not_found')
+            ], 404);
+            
+        } catch (ValidationException $e) {
+            Log::error('InsuranceCompanyController::update validation failed', [
+                'uuid' => $uuid,
+                'errors' => $e->errors(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.validation_failed'),
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            Log::error('InsuranceCompanyController::update error', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.update_failed') . ': ' . $e->getMessage()
             ], 500);
         }
     }
