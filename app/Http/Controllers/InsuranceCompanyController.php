@@ -387,7 +387,7 @@ class InsuranceCompanyController extends BaseController
     }
 
     /**
-     * Store a new insurance company using modern Laravel 12 patterns
+     * Store a new insurance company - BaseController compatible method
      */
     public function store(Request $request): JsonResponse
     {
@@ -434,7 +434,7 @@ class InsuranceCompanyController extends BaseController
     }
 
     /**
-     * Update an existing insurance company using modern Laravel 12 patterns
+     * Update an existing insurance company - BaseController compatible method
      */
     public function update(Request $request, string $uuid): JsonResponse
     {
@@ -498,6 +498,69 @@ class InsuranceCompanyController extends BaseController
             ], 500);
         }
     }
+
+    /**
+     * Update using FormRequest injection (alternative method)
+     */
+    public function updateWithFormRequest(InsuranceCompanyRequest $request, string $uuid): JsonResponse
+    {
+        try {
+            // Find the existing insurance company
+            $insuranceCompany = InsuranceCompany::where('uuid', $uuid)->firstOrFail();
+            
+            // The request is automatically validated by Laravel
+            // Convert validated request to DTO
+            $dto = $request->toDTO();
+            
+            // Update using the service with DTO data
+            $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toDatabase());
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('insurance_companies.messages.updated_successfully'),
+                'data' => $updatedInsuranceCompany,
+            ]);
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning('InsuranceCompanyController::updateWithFormRequest - Company not found', [
+                'uuid' => $uuid,
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.not_found')
+            ], 404);
+            
+        } catch (ValidationException $e) {
+            Log::error('InsuranceCompanyController::updateWithFormRequest validation failed', [
+                'uuid' => $uuid,
+                'errors' => $e->errors(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.validation_failed'),
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            Log::error('InsuranceCompanyController::updateWithFormRequest error', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => __('insurance_companies.messages.update_failed') . ': ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 
     public function show(string $uuid): JsonResponse
     {
