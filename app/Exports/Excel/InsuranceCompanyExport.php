@@ -36,7 +36,7 @@ class InsuranceCompanyExport extends BaseExportExcel
     public function headings(): array
     {
         return [
-            '#',
+            'Nro',
             'Company Name',
             'Email',
             'Phone',

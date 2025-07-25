@@ -115,7 +115,7 @@
         /* Header repetition for all pages */
         @page :not(:first) {
             margin-top: 30mm;
-            
+
             @top-left {
                 content: element(header);
             }

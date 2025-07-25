@@ -171,48 +171,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($data as $row)
-                    <tr>
-                        <td class="col-0">
-                            <span class="number">{{ $row['number'] }}</span>
-                        </td>
-                        <td class="col-1">
-                            {{ $row['company_name'] }}
-                        </td>
-                        <td class="col-2">
-                            @if ($row['email'] !== 'N/A')
-                                <span class="email">{{ $row['email'] }}</span>
-                            @else
-                                {{ $row['email'] }}
-                            @endif
-                        </td>
-                        <td class="col-3">
-                            {{ $row['phone'] }}
-                        </td>
-                        <td class="col-4">
-                            {{ $row['address'] }}
-                        </td>
-                        <td class="col-5">
-                            @php
-                                // Determine status based on deleted_at field
-                                $statusValue =
-                                    isset($row['deleted_at']) && $row['deleted_at'] !== null ? 'Inactive' : 'Active';
-                                $statusClass =
-                                    isset($row['deleted_at']) && $row['deleted_at'] !== null
-                                        ? 'status-inactive'
-                                        : 'status-active';
-                            @endphp
-                            <span class="{{ $statusClass }}">
-                                {{ $statusValue }}
-                            </span>
-                        </td>
-                        <td class="col-6">
-                            {{ $row['assigned_user'] }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    @foreach ($data as $row)
+                        <tr>
+                            <td class="col-0">
+                                <span class="number">{{ $row['number'] }}</span>
+                            </td>
+                            <td class="col-1">
+                                {{ $row['company_name'] }}
+                            </td>
+                            <td class="col-2">
+                                @if ($row['email'] !== 'N/A')
+                                    <span class="email">{{ $row['email'] }}</span>
+                                @else
+                                    {{ $row['email'] }}
+                                @endif
+                            </td>
+                            <td class="col-3">
+                                {{ $row['phone'] }}
+                            </td>
+                            <td class="col-4">
+                                {{ $row['address'] }}
+                            </td>
+                            <td class="col-5">
+                                @php
+                                    // Determine status based on deleted_at field
+                                    $statusValue =
+                                        isset($row['deleted_at']) && $row['deleted_at'] !== null
+                                            ? 'Inactive'
+                                            : 'Active';
+                                    $statusClass =
+                                        isset($row['deleted_at']) && $row['deleted_at'] !== null
+                                            ? 'status-inactive'
+                                            : 'status-active';
+                                @endphp
+                                <span class="{{ $statusClass }}">
+                                    {{ $statusValue }}
+                                </span>
+                            </td>
+                            <td class="col-6">
+                                {{ $row['assigned_user'] }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     @else
         <div class="no-data">
