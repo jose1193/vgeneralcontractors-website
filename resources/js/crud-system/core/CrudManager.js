@@ -87,7 +87,7 @@ export class CrudManager {
             to: "to",
             of: "of",
             results: "results",
-            total_records: "Total aa",
+            total_records: "Total Records",
             records: "records",
         };
 
@@ -786,7 +786,7 @@ export class CrudManager {
         const showingText = this.translations.showing || "Showing";
         const toText = this.translations.to || "to";
         const ofText = this.translations.of || "of";
-        const recordsText = this.translations.total_records || "Total Records";
+        const recordsText = this.translations.total_records || "Total Recorda";
 
         return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
     }
