@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use App\Traits\CacheTraitCrud;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
 class InsuranceCompanyController extends BaseController
@@ -556,7 +557,7 @@ class InsuranceCompanyController extends BaseController
             
             $filename = 'insurance_companies_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
             
-            return $export->download($filename);
+            return Excel::download($export, $filename);
             
         } catch (\Exception $e) {
             Log::error('Error exporting insurance companies to Excel: ' . $e->getMessage(), [
@@ -637,7 +638,7 @@ class InsuranceCompanyController extends BaseController
             if ($format === 'excel') {
                 $export = new \App\Exports\Excel\InsuranceCompanyExport(null, $searchFilters, $dateFilters);
                 $filename = 'insurance_companies_bulk_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
-                return $export->download($filename);
+                return Excel::download($export, $filename);
             } else {
                 $export = new \App\Exports\PDF\InsuranceCompanyExportPDF(null, $searchFilters, $dateFilters, $exportOptions);
                 $filename = 'insurance_companies_bulk_' . now()->format('Y-m-d_H-i-s') . '.pdf';

@@ -68,17 +68,14 @@
             }
         }
 
-        /* Ensure consistent spacing for all pages */
+        /* First page keeps original spacing */
         @page :first {
-            margin-top: 25mm;
+            margin-top: 20mm;
         }
 
-        @page :left {
-            margin-top: 25mm;
-        }
-
-        @page :right {
-            margin-top: 25mm;
+        /* Subsequent pages need more space for continued content */
+        @page :not(:first) {
+            margin-top: 30mm;
         }
 
         * {

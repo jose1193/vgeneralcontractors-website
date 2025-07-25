@@ -112,11 +112,6 @@
             display: table-header-group;
         }
 
-        /* Improve page continuation styling */
-        @page :not(:first) {
-            margin-top: 35mm;
-        }
-
         .summary {
             width: 92%;
             border-left: 4px solid var(--primary-color);
