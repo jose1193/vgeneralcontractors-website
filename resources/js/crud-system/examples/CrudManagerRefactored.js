@@ -1,3 +1,10 @@
+/**
+ * EJEMPLO PRÁCTICO: Refactorización de CrudManager para usar traducciones
+ *
+ * Este archivo muestra una implementación refactorizada del CrudManager
+ * que reemplaza todos los mensajes hardcodeados con el sistema de traducciones.
+ */
+
 import { CrudApiClient } from "./CrudApiClient.js";
 import { CrudFormBuilder } from "./CrudFormBuilder.js";
 import { CrudValidator } from "./CrudValidator.js";
@@ -5,8 +12,9 @@ import { CrudTableRenderer } from "./CrudTableRenderer.js";
 import { CrudModalManager } from "./CrudModalManager.js";
 import { CrudEventHandler } from "./CrudEventHandler.js";
 import { debounce } from "../utils/CrudUtils.js";
+import { crudTranslations } from "../utils/CrudTranslations.js";
 
-export class CrudManager {
+export class CrudManagerRefactored {
     constructor(options) {
         // Configuración básica
         this.entityName = options.entityName || "Entity";
@@ -29,7 +37,7 @@ export class CrudManager {
         this.formFields = options.formFields || [];
 
         // Configuración de numeración secuencial
-        this.showSequentialNumbers = options.showSequentialNumbers !== false; // default true
+        this.showSequentialNumbers = options.showSequentialNumbers !== false;
         this.sequentialNumberLabel = options.sequentialNumberLabel || "Nro";
 
         // Estado interno
@@ -48,19 +56,19 @@ export class CrudManager {
         this.dateFilters = {
             startDate: "",
             endDate: "",
-            dateField: options.dateField || "created_at", // Campo de fecha por defecto
+            dateField: options.dateField || "created_at",
         };
 
         // Modo de registro único
         this.singleRecordMode = options.singleRecordMode || false;
 
-        // Configuración de modales
+        // Configuración de modales CON TRADUCCIONES
         this.modalConfig = {
             width: options.modalWidth || "800px",
             showCloseButton: true,
             showCancelButton: true,
-            confirmButtonText: "Save",
-            cancelButtonText: "Cancel",
+            confirmButtonText: crudTranslations.get("save"), // ✅ TRADUCIDO
+            cancelButtonText: crudTranslations.get("cancel"), // ✅ TRADUCIDO
         };
 
         // Configuración de colores para diferentes modos
@@ -69,32 +77,14 @@ export class CrudManager {
             edit: { confirmButtonColor: "#3B82F6" },
         };
 
-        // Configuración de traducciones
-        this.translations = options.translations || {
-            confirmDelete: "Are you sure?",
-            deleteMessage: "Do you want to delete this element?",
-            confirmRestore: "Restore record?",
-            restoreMessage: "Do you want to restore this element?",
-            yesDelete: "Yes, delete",
-            yesRestore: "Yes, restore",
-            cancel: "Cancel",
-            deletedSuccessfully: "deleted successfully",
-            restoredSuccessfully: "restored successfully",
-            errorDeleting: "Error deleting record",
-            errorRestoring: "Error restoring record",
-            // Pagination translations
-            showing: "Showing",
-            to: "to",
-            of: "of",
-            results: "results",
-            total_records: "Total Records",
-            records: "records",
-        };
+        // CONFIGURACIÓN DE TRADUCCIONES - REEMPLAZA OBJETO HARDCODEADO
+        this.translations =
+            options.translations || crudTranslations.getCrudTranslations();
 
         // Configuración de entidad
         this.entityConfig = options.entityConfig || {
             identifierField: "name",
-            displayName: "element",
+            displayName: crudTranslations.get("element"), // ✅ TRADUCIDO
             fallbackFields: ["title", "description", "email"],
         };
 
@@ -112,24 +102,12 @@ export class CrudManager {
     }
 
     /**
-     * Inicializar el manager
-     */
-    init() {
-        // Establecer el estado inicial del toggle
-        $(this.showDeletedSelector).prop("checked", this.showDeleted);
-
-        this.eventHandler.attachEventListeners();
-        this.loadEntities();
-    }
-
-    /**
-     * Cargar entidades
+     * Cargar entidades - CON TRADUCCIONES EN MENSAJES DE ERROR
      */
     async loadEntities(page = 1) {
         console.log("loadEntities called with page:", page);
         this.currentPage = page;
 
-        // Mostrar loading
         this.showTableLoading();
 
         const requestData = {
@@ -139,7 +117,6 @@ export class CrudManager {
             sort_direction: this.sortDirection,
             search: this.searchTerm,
             show_deleted: this.showDeleted ? "true" : "false",
-            // Agregar filtros de fecha
             date_start: this.dateFilters.startDate,
             date_end: this.dateFilters.endDate,
             date_field: this.dateFilters.dateField,
@@ -155,20 +132,20 @@ export class CrudManager {
             console.error("Error loading entities:", error);
             this.modalManager.showAlert(
                 "error",
-                `Error loading ${this.entityNamePlural}: ${error.message}`
+                `${crudTranslations.get("error")} ${this.entityNamePlural}: ${
+                    error.message
+                }` // ✅ TRADUCIDO
             );
             this.hideTableLoading();
         }
     }
 
     /**
-     * Mostrar modal de creación
+     * Mostrar modal de creación - CON TRADUCCIONES
      */
     async showCreateModal() {
-        // Limpiar alertas previas
         this.modalManager.clearAlerts(this.alertSelector);
 
-        // En modo de registro único, redirigir a editar el registro existente
         if (this.singleRecordMode) {
             await this.loadEntities();
             if (
@@ -182,7 +159,7 @@ export class CrudManager {
             }
             this.modalManager.showAlert(
                 "info",
-                "No se encontró información para editar. Contacte al administrador."
+                crudTranslations.get("no_edit_info_found") // ✅ TRADUCIDO
             );
             return;
         }
@@ -194,7 +171,7 @@ export class CrudManager {
         const formHtml = this.formBuilder.generateFormHtml();
 
         await this.modalManager.showCreateModal(
-            `Crear ${this.entityName}`,
+            `${crudTranslations.get("create")} ${this.entityName}`, // ✅ TRADUCIDO
             formHtml,
             () => this.validator.validateAndGetFormData(false),
             () => this.initializeFormElements(),
@@ -203,22 +180,19 @@ export class CrudManager {
     }
 
     /**
-     * Mostrar modal de edición
+     * Mostrar modal de edición - CON TRADUCCIONES EN MENSAJES DE ERROR
      */
     async showEditModal(id) {
         console.log("showEditModal called with id:", id);
-
-        // Limpiar alertas previas
         this.modalManager.clearAlerts(this.alertSelector);
-
         this.isEditing = true;
 
-        // Validar que tenemos un ID válido
+        // Validar ID con mensaje traducido
         if (!id || id === "undefined" || id === "null") {
             console.error("Invalid ID provided to showEditModal:", id);
             this.modalManager.showAlert(
                 "error",
-                "Invalid ID provided for editing"
+                crudTranslations.get("invalid_id_editing") // ✅ TRADUCIDO
             );
             return;
         }
@@ -251,14 +225,12 @@ export class CrudManager {
             );
 
             await this.modalManager.showEditModal(
-                `Editar ${this.entityName}`,
+                `${crudTranslations.get("edit")} ${this.entityName}`, // ✅ TRADUCIDO
                 formHtml,
                 () => this.validator.validateAndGetFormData(true),
                 () => {
                     this.initializeFormElements();
                     this.formBuilder.populateForm(this.currentEntity);
-
-                    // Verificar y corregir valores de select después de un breve delay
                     setTimeout(() => {
                         this.formBuilder.verifyAndFixSelectValues(
                             this.currentEntity
@@ -272,24 +244,25 @@ export class CrudManager {
             console.error("Error loading entity for edit:", error);
             this.modalManager.showAlert(
                 "error",
-                "Error loading data for editing"
+                crudTranslations.get("error_loading_edit_data") // ✅ TRADUCIDO
             );
         }
     }
 
     /**
-     * Crear entidad
+     * Crear entidad - CON MENSAJES TRADUCIDOS
      */
     async createEntity(data) {
         try {
             Swal.showLoading();
-
             const response = await this.apiClient.createEntity(data);
-
             Swal.close();
+
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} creado exitosamente`,
+                `${this.entityName} ${crudTranslations.get(
+                    "created_successfully"
+                )}`, // ✅ TRADUCIDO
                 this.alertSelector
             );
             this.loadEntities();
@@ -304,25 +277,27 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || "Error creating record"
+                    error.message ||
+                        crudTranslations.get("error_creating_record") // ✅ TRADUCIDO
                 );
             }
         }
     }
 
     /**
-     * Actualizar entidad
+     * Actualizar entidad - CON MENSAJES TRADUCIDOS
      */
     async updateEntity(id, data) {
         try {
             Swal.showLoading();
-
             const response = await this.apiClient.updateEntity(id, data);
-
             Swal.close();
+
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} actualizado exitosamente`,
+                `${this.entityName} ${crudTranslations.get(
+                    "updated_successfully"
+                )}`, // ✅ TRADUCIDO
                 this.alertSelector
             );
             this.loadEntities();
@@ -337,14 +312,15 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || "Error updating record"
+                    error.message ||
+                        crudTranslations.get("error_updating_record") // ✅ TRADUCIDO
                 );
             }
         }
     }
 
     /**
-     * Eliminar entidad
+     * Eliminar entidad - CON MENSAJES DINÁMICOS TRADUCIDOS
      */
     async deleteEntity(id) {
         let entityDisplayName = "";
@@ -370,15 +346,14 @@ export class CrudManager {
                         Accept: "application/json",
                     },
                 });
-
                 entity = response.data || response;
             } catch (error) {
                 console.error(
                     "Error getting entity data for delete confirmation:",
                     error
                 );
-                entityIdentifier = "this element";
-                entityDisplayName = "element";
+                entityIdentifier = crudTranslations.get("this_element"); // ✅ TRADUCIDO
+                entityDisplayName = crudTranslations.get("element"); // ✅ TRADUCIDO
             }
         }
 
@@ -389,11 +364,12 @@ export class CrudManager {
             entityDisplayName = entityInfo.displayName;
         }
 
-        // Crear mensaje personalizado
-        let customMessage = this.translations.deleteMessage;
-        if (entityIdentifier && entityIdentifier !== "this element") {
-            customMessage = `¿Deseas eliminar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
-        }
+        // Crear mensaje personalizado USANDO FUNCIÓN DE FORMATO TRADUCIDA
+        const customMessage = crudTranslations.formatConfirmMessage(
+            "delete",
+            entityDisplayName,
+            entityIdentifier
+        ); // ✅ TRADUCIDO
 
         const result = await Swal.fire({
             title: this.translations.confirmDelete,
@@ -426,20 +402,19 @@ export class CrudManager {
     }
 
     /**
-     * Restaurar entidad
+     * Restaurar entidad - CON MENSAJES DINÁMICOS TRADUCIDOS
      */
     async restoreEntity(id) {
         let entityDisplayName = "";
         let entityIdentifier = "";
         let entity = null;
 
-        // Intentar obtener datos desde la fila de la tabla
+        // Similar al deleteEntity, pero para restaurar
         const buttonElement = $(`.restore-btn[data-id="${id}"]`)[0];
         if (buttonElement) {
             entity = this.getEntityDataFromRow(buttonElement);
         }
 
-        // Si no se pudo obtener desde la tabla, hacer llamada AJAX como fallback
         if (!entity) {
             try {
                 const response = await $.ajax({
@@ -452,30 +427,29 @@ export class CrudManager {
                         Accept: "application/json",
                     },
                 });
-
                 entity = response.data || response;
             } catch (error) {
                 console.error(
                     "Error getting entity data for restore confirmation:",
                     error
                 );
-                entityIdentifier = "this element";
-                entityDisplayName = "element";
+                entityIdentifier = crudTranslations.get("this_element"); // ✅ TRADUCIDO
+                entityDisplayName = crudTranslations.get("element"); // ✅ TRADUCIDO
             }
         }
 
-        // Obtener identificador usando la configuración
         if (entity) {
             const entityInfo = this.getEntityIdentifier(entity);
             entityIdentifier = entityInfo.identifier;
             entityDisplayName = entityInfo.displayName;
         }
 
-        // Crear mensaje personalizado
-        let customMessage = this.translations.restoreMessage;
-        if (entityIdentifier && entityIdentifier !== "this element") {
-            customMessage = `¿Deseas restaurar ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
-        }
+        // Crear mensaje personalizado USANDO FUNCIÓN DE FORMATO TRADUCIDA
+        const customMessage = crudTranslations.formatConfirmMessage(
+            "restore",
+            entityDisplayName,
+            entityIdentifier
+        ); // ✅ TRADUCIDO
 
         const result = await Swal.fire({
             title: this.translations.confirmRestore,
@@ -508,103 +482,63 @@ export class CrudManager {
     }
 
     /**
-     * Inicializar elementos del formulario
+     * Mostrar loading en tabla - CON TEXTO TRADUCIDO
      */
-    initializeFormElements() {
-        this.validator.setupPhoneFormatting();
-        this.validator.setupRealTimeValidation();
-        this.validator.setupAutoCapitalization();
+    showTableLoading() {
+        const totalColumns =
+            this.tableHeaders.length + (this.showSequentialNumbers ? 1 : 0);
+
+        const loadingHtml = `
+            <tr id="loadingRow">
+                <td colspan="${totalColumns}" class="px-6 py-4 text-center">
+                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    ${crudTranslations.get("loading")}... 
+                </td>
+            </tr>
+        `;
+        $(this.tableSelector).html(loadingHtml);
     }
 
     /**
-     * Obtener datos de entidad desde la fila de la tabla
+     * Aplicar filtros de fecha - CON MENSAJES DE VALIDACIÓN TRADUCIDOS
      */
-    getEntityDataFromRow(button) {
-        try {
-            const row = $(button).closest("tr");
-            const entityDataString = row.attr("data-entity");
+    applyDateFilters(startDate, endDate, dateField = null) {
+        console.log("Applying date filters:", {
+            startDate,
+            endDate,
+            dateField,
+        });
 
-            if (entityDataString) {
-                const entityData = JSON.parse(
-                    entityDataString.replace(/&quot;/g, '"')
-                );
-                return entityData;
-            }
-
-            return null;
-        } catch (error) {
-            console.error("Error parsing entity data from row:", error);
-            return null;
+        // Validar que end date no sea menor que start date CON MENSAJE TRADUCIDO
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            this.modalManager.showAlert(
+                "error",
+                crudTranslations.get("end_date_cannot_be_earlier"), // ✅ TRADUCIDO
+                this.alertSelector
+            );
+            return false;
         }
+
+        // Actualizar filtros
+        this.dateFilters.startDate = startDate || "";
+        this.dateFilters.endDate = endDate || "";
+        if (dateField) {
+            this.dateFilters.dateField = dateField;
+        }
+
+        // Resetear a página 1 y recargar datos
+        this.currentPage = 1;
+        this.loadEntities();
+        return true;
     }
 
     /**
-     * Obtener identificador de entidad usando configuración
-     */
-    getEntityIdentifier(entity) {
-        // Si hay una función personalizada de formato, usarla
-        if (
-            this.entityConfig.detailFormat &&
-            typeof this.entityConfig.detailFormat === "function"
-        ) {
-            try {
-                const customIdentifier = this.entityConfig.detailFormat(entity);
-                return {
-                    identifier: customIdentifier,
-                    displayName: this.entityConfig.displayName,
-                    field: "custom",
-                };
-            } catch (error) {
-                console.error("Error using custom detail format:", error);
-            }
-        }
-
-        // Intentar con el campo principal configurado
-        if (entity && entity[this.entityConfig.identifierField]) {
-            const identifier = entity[this.entityConfig.identifierField];
-            return {
-                identifier: identifier,
-                displayName: this.entityConfig.displayName,
-                field: this.entityConfig.identifierField,
-            };
-        }
-
-        // Intentar con campos alternativos
-        for (const field of this.entityConfig.fallbackFields) {
-            if (entity && entity[field]) {
-                const identifier = entity[field];
-                return {
-                    identifier: identifier,
-                    displayName: this.entityConfig.displayName,
-                    field: field,
-                };
-            }
-        }
-
-        // Fallback final
-        return {
-            identifier: "this element",
-            displayName: "element",
-            field: null,
-        };
-    }
-
-    /**
-     * Calcular número secuencial para la fila
-     */
-    getSequentialNumber(index) {
-        if (!this.currentData) return index + 1;
-
-        // Calcular el número basado en la página actual y el índice
-        const baseNumber = (this.currentPage - 1) * this.perPage;
-        return baseNumber + index + 1;
-    }
-
-    /**
-     * Renderizar tabla
+     * Renderizar tabla - CON MENSAJE DE "NO REGISTROS" TRADUCIDO
      */
     renderTable(data) {
-        // En modo de registro único, no renderizamos tabla
         if (this.singleRecordMode) {
             console.log("Single record mode - skipping table rendering");
             return;
@@ -616,12 +550,9 @@ export class CrudManager {
         if (entities.length === 0) {
             const noRecordsText =
                 this.translations.noRecordsFound ||
-                "No se encontraron registros";
-
-            // Calcular el número total de columnas (incluyendo la columna de número si está habilitada)
+                crudTranslations.get("no_records_found"); // ✅ TRADUCIDO
             const totalColumns =
                 this.tableHeaders.length + (this.showSequentialNumbers ? 1 : 0);
-
             html = `<tr><td colspan="${totalColumns}" class="px-6 py-4 text-center text-sm text-gray-500">${noRecordsText}</td></tr>`;
         } else {
             entities.forEach((entity, index) => {
@@ -629,8 +560,6 @@ export class CrudManager {
                 const rowClass = isDeleted
                     ? "bg-red-50 dark:bg-red-900 opacity-60"
                     : "";
-
-                // Almacenar datos de la entidad como JSON en atributo data
                 const entityData = JSON.stringify(entity).replace(
                     /"/g,
                     "&quot;"
@@ -638,7 +567,6 @@ export class CrudManager {
 
                 html += `<tr class="${rowClass}" data-entity="${entityData}">`;
 
-                // Agregar columna de número secuencial si está habilitada
                 if (this.showSequentialNumbers) {
                     const sequentialNumber = this.getSequentialNumber(index);
                     html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">${sequentialNumber}</td>`;
@@ -659,24 +587,116 @@ export class CrudManager {
     }
 
     /**
-     * Renderizar paginación con estilos glassmorphism
+     * Generar información de registros - CON FUNCIÓN DE FORMATO TRADUCIDA
      */
+    generateRecordInfo(data) {
+        const from = data.from || 0;
+        const to = data.to || 0;
+        const total = data.total || 0;
+
+        if (total === 0) {
+            return `${
+                this.translations.showing || crudTranslations.get("showing")
+            } 0 ${
+                this.translations.results || crudTranslations.get("results")
+            }`;
+        }
+
+        // Usar función de formato traducida
+        return crudTranslations.formatPaginationMessage(from, to, total); // ✅ TRADUCIDO
+    }
+
+    // El resto de métodos permanecen igual...
+    init() {
+        $(this.showDeletedSelector).prop("checked", this.showDeleted);
+        this.eventHandler.attachEventListeners();
+        this.loadEntities();
+    }
+
+    initializeFormElements() {
+        this.validator.setupPhoneFormatting();
+        this.validator.setupRealTimeValidation();
+        this.validator.setupAutoCapitalization();
+    }
+
+    getEntityDataFromRow(button) {
+        try {
+            const row = $(button).closest("tr");
+            const entityDataString = row.attr("data-entity");
+            if (entityDataString) {
+                const entityData = JSON.parse(
+                    entityDataString.replace(/&quot;/g, '"')
+                );
+                return entityData;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error parsing entity data from row:", error);
+            return null;
+        }
+    }
+
+    getEntityIdentifier(entity) {
+        if (
+            this.entityConfig.detailFormat &&
+            typeof this.entityConfig.detailFormat === "function"
+        ) {
+            try {
+                const customIdentifier = this.entityConfig.detailFormat(entity);
+                return {
+                    identifier: customIdentifier,
+                    displayName: this.entityConfig.displayName,
+                    field: "custom",
+                };
+            } catch (error) {
+                console.error("Error using custom detail format:", error);
+            }
+        }
+
+        if (entity && entity[this.entityConfig.identifierField]) {
+            const identifier = entity[this.entityConfig.identifierField];
+            return {
+                identifier: identifier,
+                displayName: this.entityConfig.displayName,
+                field: this.entityConfig.identifierField,
+            };
+        }
+
+        for (const field of this.entityConfig.fallbackFields) {
+            if (entity && entity[field]) {
+                const identifier = entity[field];
+                return {
+                    identifier: identifier,
+                    displayName: this.entityConfig.displayName,
+                    field: field,
+                };
+            }
+        }
+
+        return {
+            identifier: crudTranslations.get("this_element"), // ✅ TRADUCIDO
+            displayName: crudTranslations.get("element"), // ✅ TRADUCIDO
+            field: null,
+        };
+    }
+
+    getSequentialNumber(index) {
+        if (!this.currentData) return index + 1;
+        const baseNumber = (this.currentPage - 1) * this.perPage;
+        return baseNumber + index + 1;
+    }
+
     renderPagination(data) {
-        // En modo de registro único, no renderizamos paginación
         if (this.singleRecordMode) {
             console.log("Single record mode - skipping pagination rendering");
             return;
         }
 
         let paginationHtml = "";
-
-        // Always show record count information, even for single page
         const recordInfo = this.generateRecordInfo(data);
 
         if (data.last_page > 1) {
-            // Contenedor principal con clases glassmorphism
             paginationHtml += '<div class="pagination-wrapper">';
-
             paginationHtml +=
                 '<nav class="pagination" aria-label="Pagination">';
 
@@ -709,7 +729,6 @@ export class CrudManager {
             for (let i = start; i <= end; i++) {
                 const isActive = i === data.current_page;
                 const activeClass = isActive ? " active" : "";
-
                 paginationHtml += `
                 <div class="page-item${activeClass}">
                     <button class="page-link" data-page="${i}">
@@ -738,13 +757,9 @@ export class CrudManager {
             }
 
             paginationHtml += "</nav>";
-
-            // Add record information at the bottom
             paginationHtml += `<div class="record-info">${recordInfo}</div>`;
-
             paginationHtml += "</div>";
         } else {
-            // Single page case - show only record information with wrapper
             paginationHtml += '<div class="pagination-wrapper single-page">';
             paginationHtml += `<div class="record-info-single">${recordInfo}</div>`;
             paginationHtml += "</div>";
@@ -758,7 +773,6 @@ export class CrudManager {
             const $button = $(e.currentTarget);
             const page = $button.data("page");
 
-            // Verificar que no esté deshabilitado y que tenga un número de página válido
             if (
                 !$button.closest(".page-item").hasClass("disabled") &&
                 page &&
@@ -769,93 +783,10 @@ export class CrudManager {
         });
     }
 
-    /**
-     * Generate record information text
-     */
-    generateRecordInfo(data) {
-        const from = data.from || 0;
-        const to = data.to || 0;
-        const total = data.total || 0;
-
-        if (total === 0) {
-            return `${this.translations.showing || "Showing"} 0 ${
-                this.translations.results || "results"
-            }`;
-        }
-
-        const showingText = this.translations.showing || "Showing";
-        const toText = this.translations.to || "to";
-        const ofText = this.translations.of || "of";
-        const recordsText = this.translations.total_records || "Total Records";
-
-        return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
-    }
-
-    /**
-     * Mostrar loading en tabla
-     */
-    showTableLoading() {
-        // Calcular el número total de columnas (incluyendo la columna de número si está habilitada)
-        const totalColumns =
-            this.tableHeaders.length + (this.showSequentialNumbers ? 1 : 0);
-
-        const loadingHtml = `
-            <tr id="loadingRow">
-                <td colspan="${totalColumns}" class="px-6 py-4 text-center">
-                    <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Loading...
-                </td>
-            </tr>
-        `;
-        $(this.tableSelector).html(loadingHtml);
-    }
-
-    /**
-     * Ocultar loading en tabla
-     */
     hideTableLoading() {
         $("#loadingRow").remove();
     }
 
-    /**
-     * Aplicar filtros de fecha
-     */
-    applyDateFilters(startDate, endDate, dateField = null) {
-        console.log("Applying date filters:", {
-            startDate,
-            endDate,
-            dateField,
-        });
-
-        // Validar que end date no sea menor que start date
-        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-            this.modalManager.showAlert(
-                "error",
-                "End date cannot be earlier than start date",
-                this.alertSelector
-            );
-            return false;
-        }
-
-        // Actualizar filtros
-        this.dateFilters.startDate = startDate || "";
-        this.dateFilters.endDate = endDate || "";
-        if (dateField) {
-            this.dateFilters.dateField = dateField;
-        }
-
-        // Resetear a página 1 y recargar datos
-        this.currentPage = 1;
-        this.loadEntities();
-        return true;
-    }
-
-    /**
-     * Limpiar filtros de fecha
-     */
     clearDateFilters() {
         console.log("Clearing date filters");
         this.dateFilters.startDate = "";
@@ -864,16 +795,10 @@ export class CrudManager {
         this.loadEntities();
     }
 
-    /**
-     * Obtener estado actual de filtros de fecha
-     */
     getDateFilters() {
         return { ...this.dateFilters };
     }
 
-    /**
-     * Validar rango de fechas
-     */
     validateDateRange(startDate, endDate) {
         if (!startDate || !endDate) {
             return { valid: true };
@@ -885,13 +810,10 @@ export class CrudManager {
         if (end < start) {
             return {
                 valid: false,
-                message: "End date cannot be earlier than start date",
+                message: crudTranslations.get("end_date_cannot_be_earlier"), // ✅ TRADUCIDO
             };
         }
 
         return { valid: true };
     }
-
-    // Los módulos están disponibles directamente como propiedades de la instancia
-    // No necesitamos getters que causen conflictos
 }

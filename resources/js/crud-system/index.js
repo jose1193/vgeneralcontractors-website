@@ -8,3 +8,4 @@ export * from "./core/CrudModalManager.js";
 export * from "./core/CrudEventHandler.js";
 export * from "./utils/CrudUtils.js";
 export * from "./utils/CrudConstants.js";
+export * from "./utils/CrudTranslations.js";

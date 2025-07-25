@@ -2084,5 +2084,16 @@
     "hide_filters": "Ocultar filtros",
     "filters_cleared": "Todos los filtros han sido limpiados.",
     "end_date_cannot_be_earlier": "La fecha final no puede ser anterior a la fecha inicial",
-    "date_filters_cleared": "Los filtros de fecha han sido limpiados"
+    "date_filters_cleared": "Los filtros de fecha han sido limpiados",
+
+    "_comment_crud_missing": "=== TRADUCCIONES CRUD FALTANTES ===",
+    "invalid_id_editing": "ID inválido proporcionado para edición",
+    "no_edit_info_found": "No se encontró información para editar. Contacte al administrador.",
+    "error_loading_edit_data": "Error al cargar datos para edición",
+    "network_error_fetch": "Error de red al obtener entidades:",
+    "unexpected_server_response": "Respuesta inesperada del servidor:",
+    "api_error": "Error de API:",
+    "network_error": "Error de red:",
+    "restore_confirmation": "¿Deseas restaurar este elemento?",
+    "delete_confirmation": "¿Deseas eliminar este elemento?"
 }
