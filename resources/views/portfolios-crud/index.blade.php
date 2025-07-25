@@ -99,8 +99,7 @@
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <!-- Sortable.js para drag & drop -->
             <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-            <!-- CrudManagerModal base -->
-            <script src="{{ asset('js/crud-manager-modal.js') }}"></script>
+            <!-- CrudManagerModal ya está disponible vía el sistema modular -->
             <!-- Portfolio CRUD específico -->
             <script src="{{ asset('js/portfolioCrud.js') }}"></script>
 

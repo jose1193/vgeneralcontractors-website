@@ -156,7 +156,7 @@
         window.translations = @json(__('*'));
     </script>
 
-    <script src="{{ secure_asset('js/crud-manager.js') }}"></script>
+    <!-- SweetAlert2 for notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @stack('scripts')
