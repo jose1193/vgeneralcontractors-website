@@ -11,7 +11,7 @@ export class CrudTableRenderer {
             to: "to",
             of: "of",
             results: "results",
-            totalRecords: "total records",
+            total_records: "Total Records",
             previous: "Previous",
             next: "Next",
             ...translations,
@@ -99,7 +99,7 @@ export class CrudTableRenderer {
         const showingText = this.translations.showing || "Showing";
         const toText = this.translations.to || "to";
         const ofText = this.translations.of || "of";
-        const recordsText = this.translations.totalRecords || "total records";
+        const recordsText = this.translations.total_records || "Total Records";
 
         return `${showingText} ${from}-${to} ${ofText} ${total} ${recordsText}`;
     }

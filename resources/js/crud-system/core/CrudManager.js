@@ -87,7 +87,7 @@ export class CrudManager {
             to: "to",
             of: "of",
             results: "results",
-            totalRecords: "total records",
+            total_records: "Total Records",
             records: "records",
         };
 
