@@ -557,9 +557,7 @@ export class CrudManagerRefactored {
         } else {
             entities.forEach((entity, index) => {
                 const isDeleted = entity.deleted_at !== null;
-                const rowClass = isDeleted
-                    ? "bg-red-50 dark:bg-red-900 opacity-60"
-                    : "";
+                const rowClass = isDeleted ? "deleted-row" : "";
                 const entityData = JSON.stringify(entity).replace(
                     /"/g,
                     "&quot;"

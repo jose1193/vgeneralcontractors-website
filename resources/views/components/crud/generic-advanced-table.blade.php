@@ -385,6 +385,199 @@
             0 8px 32px rgba(128, 0, 255, 0.1);
     }
 
+    /* Deleted/Soft Deleted Row Styles - Premium Red Glass Effect */
+    .glassmorphism-body tr.deleted-row {
+        position: relative;
+        background: rgba(220, 38, 38, 0.15) !important;
+        backdrop-filter: blur(12px) saturate(1.1);
+        -webkit-backdrop-filter: blur(12px) saturate(1.1);
+        border: 1px solid rgba(220, 38, 38, 0.25);
+        border-radius: 8px;
+        box-shadow:
+            0 2px 16px rgba(220, 38, 38, 0.2),
+            0 4px 24px rgba(239, 68, 68, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        opacity: 0.75;
+        transform: scale(0.995);
+        overflow: hidden;
+    }
+
+    .glassmorphism-body tr.deleted-row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg,
+                rgba(220, 38, 38, 0.1) 0%,
+                rgba(239, 68, 68, 0.08) 25%,
+                transparent 50%,
+                rgba(185, 28, 28, 0.12) 75%,
+                rgba(220, 38, 38, 0.15) 100%);
+        pointer-events: none;
+        border-radius: 8px;
+    }
+
+    .glassmorphism-body tr.deleted-row::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        right: 5%;
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(220, 38, 38, 0.3) 10%,
+                rgba(220, 38, 38, 0.8) 20%,
+                rgba(239, 68, 68, 1) 50%,
+                rgba(220, 38, 38, 0.8) 80%,
+                rgba(220, 38, 38, 0.3) 90%,
+                transparent 100%);
+        transform: translateY(-50%);
+        pointer-events: none;
+        border-radius: 1px;
+        box-shadow:
+            0 0 8px rgba(220, 38, 38, 0.6),
+            0 0 16px rgba(239, 68, 68, 0.4);
+        z-index: 1;
+        animation: deletedGlow 2s ease-in-out infinite alternate;
+    }
+
+    .glassmorphism-body tr.deleted-row:hover {
+        background: rgba(220, 38, 38, 0.2) !important;
+        transform: scale(0.995) translateY(-1px);
+        box-shadow:
+            0 4px 24px rgba(220, 38, 38, 0.3),
+            0 8px 40px rgba(239, 68, 68, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        opacity: 0.85;
+    }
+
+    .glassmorphism-body tr.deleted-row td {
+        color: rgba(255, 255, 255, 0.7) !important;
+        text-decoration: line-through;
+        text-decoration-color: rgba(220, 38, 38, 0.8);
+        text-decoration-thickness: 1.5px;
+        text-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
+        position: relative;
+        z-index: 2;
+    }
+
+    .glassmorphism-body tr.deleted-row td:hover {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    /* Deleted row animation */
+    @keyframes deletedGlow {
+        0% {
+            opacity: 0.6;
+            box-shadow:
+                0 0 8px rgba(220, 38, 38, 0.6),
+                0 0 16px rgba(239, 68, 68, 0.4);
+        }
+
+        100% {
+            opacity: 1;
+            box-shadow:
+                0 0 12px rgba(220, 38, 38, 0.8),
+                0 0 24px rgba(239, 68, 68, 0.6);
+        }
+    }
+
+    @keyframes deletedPulse {
+
+        0%,
+        100% {
+            transform: scale(0.995);
+            opacity: 0.75;
+        }
+
+        50% {
+            transform: scale(1);
+            opacity: 0.85;
+        }
+    }
+
+    /* Enhanced deleted row for better visibility */
+    .glassmorphism-body tr.deleted-row .btn,
+    .glassmorphism-body tr.deleted-row button,
+    .glassmorphism-body tr.deleted-row .action-button {
+        opacity: 0.8;
+        filter: grayscale(20%);
+        transition: all 0.3s ease;
+    }
+
+    .glassmorphism-body tr.deleted-row .btn:hover,
+    .glassmorphism-body tr.deleted-row button:hover,
+    .glassmorphism-body tr.deleted-row .action-button:hover {
+        opacity: 1;
+        filter: grayscale(0%);
+        transform: scale(1.05);
+    }
+
+    /* Special styling for restore button in deleted rows */
+    .glassmorphism-body tr.deleted-row .restore-btn {
+        background: rgba(34, 197, 94, 0.3) !important;
+        border-color: rgba(34, 197, 94, 0.5) !important;
+        box-shadow:
+            0 2px 12px rgba(34, 197, 94, 0.2),
+            0 4px 20px rgba(34, 197, 94, 0.1) !important;
+        opacity: 1 !important;
+        filter: none !important;
+        animation: restoreButtonGlow 2s ease-in-out infinite alternate;
+    }
+
+    .glassmorphism-body tr.deleted-row .restore-btn:hover {
+        background: rgba(34, 197, 94, 0.5) !important;
+        transform: scale(1.1) !important;
+        box-shadow:
+            0 4px 16px rgba(34, 197, 94, 0.3),
+            0 8px 24px rgba(34, 197, 94, 0.2) !important;
+        animation: none;
+    }
+
+    @keyframes restoreButtonGlow {
+        0% {
+            box-shadow:
+                0 2px 12px rgba(34, 197, 94, 0.2),
+                0 4px 20px rgba(34, 197, 94, 0.1);
+        }
+
+        100% {
+            box-shadow:
+                0 4px 16px rgba(34, 197, 94, 0.4),
+                0 8px 28px rgba(34, 197, 94, 0.2);
+        }
+    }
+
+    /* Additional UX improvements for deleted rows */
+    .glassmorphism-body tr.deleted-row {
+        animation: deletedPulse 3s ease-in-out infinite;
+    }
+
+    .glassmorphism-body tr.deleted-row:hover {
+        animation: none;
+    }
+
+    /* Subtle deleted indicator for better UX */
+    .glassmorphism-body tr.deleted-row td:first-child::before {
+        content: '🗑️';
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.875rem;
+        opacity: 0.6;
+        z-index: 3;
+        filter: drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3));
+    }
+
+    .glassmorphism-body tr.deleted-row td:first-child {
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
     .glassmorphism-body td {
         padding: 1rem 1.5rem;
         text-align: center;

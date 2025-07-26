@@ -91,11 +91,16 @@ export class CrudModalManager {
         } else {
             // Mostrar como modal de SweetAlert2
             const icon = type === "success" ? "success" : "error";
+            const title =
+                type === "success"
+                    ? crudTranslations.get("success")
+                    : crudTranslations.get("error");
+
             Swal.fire({
                 icon: icon,
-                title: type === "success" ? "Éxito" : "Error",
+                title: title,
                 text: message,
-                confirmButtonText: "OK",
+                confirmButtonText: crudTranslations.get("ok"),
             });
         }
     }
