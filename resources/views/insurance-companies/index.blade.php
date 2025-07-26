@@ -71,7 +71,7 @@
                     // Configuración de filtros de fecha
                     dateField: 'created_at', // Campo de fecha por defecto
                     // Configuración de numeración secuencial
-                    showSequentialNumbers: true, // Deshabilitado porque ya está en table-columns
+                    showSequentialNumbers: false, // Deshabilitado porque ya está en table-columns
                     sequentialNumberLabel: "{{ __('nro') }}",
                     entityConfig: {
                         identifierField: 'insurance_company_name',
