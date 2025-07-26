@@ -348,7 +348,7 @@ class InsuranceCompanyRequest extends BaseFormRequest
             $validatedData['uuid'] = $uuid;
         }
 
-        $dto = InsuranceCompanyDTO::fromArray($validatedData);
+        $dto = InsuranceCompanyDTO::from($validatedData);
         
         $this->logDTOCreation($dto);
         

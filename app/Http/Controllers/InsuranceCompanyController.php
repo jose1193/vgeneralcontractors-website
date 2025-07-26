@@ -396,7 +396,7 @@ class InsuranceCompanyController extends BaseController
             $validatedData = $this->validateInsuranceCompanyRequest($request);
             
             // Create DTO from validated data
-            $dto = InsuranceCompanyDTO::fromArray($validatedData);
+            $dto = InsuranceCompanyDTO::from($validatedData);
             
             // Create insurance company using service with DTO data
             $insuranceCompany = $this->insuranceCompanyService->create($dto->toDatabase());
@@ -449,7 +449,7 @@ class InsuranceCompanyController extends BaseController
             $validatedData['uuid'] = $uuid;
             
             // Create DTO from validated data
-            $dto = InsuranceCompanyDTO::fromArray($validatedData);
+            $dto = InsuranceCompanyDTO::from($validatedData);
             
             // Update using the service with DTO data
             $updatedInsuranceCompany = $this->insuranceCompanyService->update($insuranceCompany, $dto->toDatabase());
