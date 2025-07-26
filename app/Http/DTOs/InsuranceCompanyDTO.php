@@ -31,42 +31,56 @@ final class InsuranceCompanyDTO extends BaseDTO
         $data['user_id'] = $data['user_id'] ?? 0;
         $data['is_active'] = $data['is_active'] ?? true;
         
+        // Ensure nullable fields are explicitly set
+        $data['uuid'] = $data['uuid'] ?? null;
+        $data['phone'] = $data['phone'] ?? null;
+        $data['email'] = $data['email'] ?? null;
+        $data['website'] = $data['website'] ?? null;
+        $data['address'] = $data['address'] ?? null;
+        $data['created_at'] = $data['created_at'] ?? null;
+        $data['updated_at'] = $data['updated_at'] ?? null;
+        
+        // Transform data BEFORE setting readonly properties
+        $data = $this->transformDataBeforeInit($data);
+        
         parent::__construct($data);
     }
 
     /**
-     * Transform data after filling - format and clean data
+     * Transform data before initializing readonly properties
      */
-    protected function transformData(): void
+    private function transformDataBeforeInit(array $data): array
     {
         // Format phone number if provided
-        if ($this->phone) {
-            $this->phone = $this->formatPhone($this->phone);
+        if (!empty($data['phone'])) {
+            $data['phone'] = $this->formatPhone($data['phone']);
         }
 
         // Format email if provided
-        if ($this->email) {
-            $this->email = $this->formatEmail($this->email);
+        if (!empty($data['email'])) {
+            $data['email'] = $this->formatEmail($data['email']);
         }
 
         // Format website if provided
-        if ($this->website) {
-            $this->website = $this->formatWebsite($this->website);
+        if (!empty($data['website'])) {
+            $data['website'] = $this->formatWebsite($data['website']);
         }
 
         // Format company name
-        if ($this->insurance_company_name) {
-            $this->insurance_company_name = $this->formatCompanyName($this->insurance_company_name);
+        if (!empty($data['insurance_company_name'])) {
+            $data['insurance_company_name'] = $this->formatCompanyName($data['insurance_company_name']);
         }
 
         // Parse dates if provided as strings
-        if (isset($this->created_at) && is_string($this->created_at)) {
-            $this->created_at = new \DateTime($this->created_at);
+        if (isset($data['created_at']) && is_string($data['created_at'])) {
+            $data['created_at'] = new \DateTime($data['created_at']);
         }
 
-        if (isset($this->updated_at) && is_string($this->updated_at)) {
-            $this->updated_at = new \DateTime($this->updated_at);
+        if (isset($data['updated_at']) && is_string($data['updated_at'])) {
+            $data['updated_at'] = new \DateTime($data['updated_at']);
         }
+
+        return $data;
     }
 
     /**
