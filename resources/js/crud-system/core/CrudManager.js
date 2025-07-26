@@ -440,19 +440,12 @@ export class CrudManager {
         // Crear mensaje personalizado
         let customMessage = this.translations.deleteMessage;
         if (entityIdentifier && entityIdentifier !== "this element") {
-            // Usar función de formato si está disponible, si no usar template básico
-            if (typeof this.translations.formatConfirmMessage === "function") {
-                customMessage = this.translations.formatConfirmMessage(
-                    "delete",
-                    entityDisplayName,
-                    entityIdentifier
-                );
-            } else {
-                const deleteText = this.translations.deleteAction || "eliminar";
-                customMessage = `${
-                    this.translations.confirmAction || "¿Deseas"
-                } ${deleteText} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
-            }
+            // Usar función de formato desde crudTranslations directamente
+            customMessage = crudTranslations.formatConfirmMessage(
+                "delete",
+                entityDisplayName,
+                entityIdentifier
+            );
         }
 
         const result = await Swal.fire({
@@ -534,20 +527,12 @@ export class CrudManager {
         // Crear mensaje personalizado
         let customMessage = this.translations.restoreMessage;
         if (entityIdentifier && entityIdentifier !== "this element") {
-            // Usar función de formato si está disponible, si no usar template básico
-            if (typeof this.translations.formatConfirmMessage === "function") {
-                customMessage = this.translations.formatConfirmMessage(
-                    "restore",
-                    entityDisplayName,
-                    entityIdentifier
-                );
-            } else {
-                const restoreText =
-                    this.translations.restoreAction || "restaurar";
-                customMessage = `${
-                    this.translations.confirmAction || "¿Deseas"
-                } ${restoreText} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
-            }
+            // Usar función de formato desde crudTranslations directamente
+            customMessage = crudTranslations.formatConfirmMessage(
+                "restore",
+                entityDisplayName,
+                entityIdentifier
+            );
         }
 
         const result = await Swal.fire({

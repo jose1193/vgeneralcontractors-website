@@ -400,7 +400,6 @@
         opacity: 0.75;
         transform: scale(0.995);
         overflow: hidden;
-        isolation: isolate;
     }
 
     .glassmorphism-body tr.deleted-row::before {
@@ -418,7 +417,31 @@
                 rgba(220, 38, 38, 0.15) 100%);
         pointer-events: none;
         border-radius: 8px;
-        z-index: -1;
+    }
+
+    .glassmorphism-body tr.deleted-row::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        right: 5%;
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(220, 38, 38, 0.3) 10%,
+                rgba(220, 38, 38, 0.8) 20%,
+                rgba(239, 68, 68, 1) 50%,
+                rgba(220, 38, 38, 0.8) 80%,
+                rgba(220, 38, 38, 0.3) 90%,
+                transparent 100%);
+        transform: translateY(-50%);
+        pointer-events: none;
+        border-radius: 1px;
+        box-shadow:
+            0 0 8px rgba(220, 38, 38, 0.6),
+            0 0 16px rgba(239, 68, 68, 0.4);
+        z-index: 1;
+        animation: deletedGlow 2s ease-in-out infinite alternate;
     }
 
     .glassmorphism-body tr.deleted-row:hover {
@@ -435,19 +458,35 @@
         color: rgba(255, 255, 255, 0.7) !important;
         text-decoration: line-through;
         text-decoration-color: rgba(220, 38, 38, 0.8);
-        text-decoration-thickness: 2px;
+        text-decoration-thickness: 1.5px;
         text-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
         position: relative;
-        z-index: 1;
-        opacity: 0.8;
+        z-index: 2;
     }
 
     .glassmorphism-body tr.deleted-row td:hover {
         color: rgba(255, 255, 255, 0.85) !important;
     }
 
-    /* Deleted row animation - simplificada */
+    /* Deleted row animation */
+    @keyframes deletedGlow {
+        0% {
+            opacity: 0.6;
+            box-shadow:
+                0 0 8px rgba(220, 38, 38, 0.6),
+                0 0 16px rgba(239, 68, 68, 0.4);
+        }
+
+        100% {
+            opacity: 1;
+            box-shadow:
+                0 0 12px rgba(220, 38, 38, 0.8),
+                0 0 24px rgba(239, 68, 68, 0.6);
+        }
+    }
+
     @keyframes deletedPulse {
+
         0%,
         100% {
             transform: scale(0.995);

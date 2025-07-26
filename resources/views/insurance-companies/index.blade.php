@@ -5,7 +5,6 @@
     manager-name="insuranceCompanyManager" table-id="insuranceCompanyTable" create-button-id="createInsuranceCompanyBtn"
     search-id="searchInput" show-deleted-id="showDeleted" per-page-id="perPage" pagination-id="pagination"
     alert-id="alertContainer" :table-columns="[
-        ['field' => 'nro', 'label' => __('nro'), 'sortable' => false],
         ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
