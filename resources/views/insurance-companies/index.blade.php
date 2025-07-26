@@ -11,7 +11,6 @@
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
         ['field' => 'website', 'label' => __('website'), 'sortable' => false],
         ['field' => 'created_at', 'label' => __('created'), 'sortable' => true],
-        ['field' => 'actions', 'label' => __('actions'), 'sortable' => false],
     ]">
 
     @push('scripts')
