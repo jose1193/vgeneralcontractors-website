@@ -248,4 +248,17 @@ return [
     'posts' => 'Publicaciones',
     'blog_categories' => 'Categorías del Blog',
     'model_ai_title' => 'Modelos de IA',
+    
+    // Insurance Companies specific messages
+    'insurance_companies' => [
+        'messages' => [
+            'validation_failed' => 'Validación fallida. Por favor revise los datos del formulario.',
+            'created_successfully' => 'Compañía de seguros creada exitosamente.',
+            'updated_successfully' => 'Compañía de seguros actualizada exitosamente.',
+            'deleted_successfully' => 'Compañía de seguros eliminada exitosamente.',
+            'creation_failed' => 'Error al crear la compañía de seguros',
+            'update_failed' => 'Error al actualizar la compañía de seguros',
+            'not_found' => 'Compañía de seguros no encontrada',
+        ],
+    ],
 ]; 

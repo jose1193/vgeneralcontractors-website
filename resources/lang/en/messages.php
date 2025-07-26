@@ -248,4 +248,17 @@ return [
     'posts' => 'Posts',
     'blog_categories' => 'Blog Categories',
     'model_ai_title' => 'AI Models',
+    
+    // Insurance Companies specific messages
+    'insurance_companies' => [
+        'messages' => [
+            'validation_failed' => 'Validation failed. Please check the form data.',
+            'created_successfully' => 'Insurance company created successfully.',
+            'updated_successfully' => 'Insurance company updated successfully.',
+            'deleted_successfully' => 'Insurance company deleted successfully.',
+            'creation_failed' => 'Failed to create insurance company',
+            'update_failed' => 'Failed to update insurance company',
+            'not_found' => 'Insurance company not found',
+        ],
+    ],
 ]; 

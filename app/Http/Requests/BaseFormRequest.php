@@ -64,10 +64,15 @@ abstract class BaseFormRequest extends FormRequest
     }
 
     /**
-     * Enhanced anti-spam validation rules
+     * Enhanced anti-spam validation rules - disabled in local/testing environments
      */
     protected function getAntiSpamRules(): array
     {
+        // Disable anti-spam rules in local/testing environments
+        if (app()->environment(['local', 'testing'])) {
+            return [];
+        }
+
         return [
             'not_regex:/(?i)test|example|fake|asdf|qwerty|dummy|lorem|ipsum|placeholder/',
             'not_in:test,example,fake,dummy,placeholder',

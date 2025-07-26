@@ -163,6 +163,7 @@ return [
     */
 
     'custom' => [
+        'not_test_data' => 'Test data is not allowed in production. Please use real data.',
         'first_name' => [
             'required' => 'First name is required',
             'max' => 'First name must not exceed 50 characters',
