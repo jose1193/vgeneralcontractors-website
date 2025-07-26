@@ -7,7 +7,6 @@
     alert-id="alertContainer" :table-columns="[
         ['field' => 'nro', 'label' => __('nro'), 'sortable' => false],
         ['field' => 'insurance_company_name', 'label' => __('company_name'), 'sortable' => true],
-    
         ['field' => 'email', 'label' => __('email'), 'sortable' => true],
         ['field' => 'phone', 'label' => __('phone'), 'sortable' => false],
         ['field' => 'website', 'label' => __('website'), 'sortable' => false],
@@ -72,7 +71,7 @@
                     // Configuración de filtros de fecha
                     dateField: 'created_at', // Campo de fecha por defecto
                     // Configuración de numeración secuencial
-                    showSequentialNumbers: true,
+                    showSequentialNumbers: true, // Deshabilitado porque ya está en table-columns
                     sequentialNumberLabel: "{{ __('nro') }}",
                     entityConfig: {
                         identifierField: 'insurance_company_name',
