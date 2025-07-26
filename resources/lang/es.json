@@ -79,6 +79,9 @@
     "sort": "Ordenar",
 
     "demo": "Demo",
+    "not_available": "N/A",
+    "want_to_delete": "¿Deseas eliminar",
+    "want_to_restore": "¿Deseas restaurar",
 
     "_comment_company_info": "=== INFORMACIÓN DE LA EMPRESA ===",
     "welcome_title": "¡Bienvenido a V General Contractors!",

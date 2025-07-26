@@ -95,6 +95,8 @@ export class CrudTranslations {
             error_loading_edit_data: "error_loading_edit_data",
             delete_confirmation: "delete_confirmation",
             restore_confirmation: "restore_confirmation",
+            want_to_delete: "want_to_delete",
+            want_to_restore: "want_to_restore",
             created_successfully: "created_successfully",
             error_creating_record: "error_creating_record",
             updated_successfully: "updated_successfully",
@@ -183,17 +185,19 @@ export class CrudTranslations {
      */
     formatConfirmMessage(type, entityDisplayName, entityIdentifier) {
         const baseKey =
+            type === "delete" ? "want_to_delete" : "want_to_restore";
+
+        if (entityIdentifier && entityIdentifier !== "this element") {
+            const actionText = this.get(baseKey);
+            return `${actionText} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
+        }
+
+        // Fallback para casos genéricos
+        const fallbackKey =
             type === "delete"
                 ? "confirm_delete_entity"
                 : "confirm_restore_entity";
-        const baseMessage = this.get(baseKey);
-
-        if (entityIdentifier && entityIdentifier !== "this element") {
-            const action = type === "delete" ? "eliminar" : "restaurar";
-            return `¿Deseas ${action} ${entityDisplayName}: <strong>${entityIdentifier}</strong>?`;
-        }
-
-        return baseMessage;
+        return this.get(fallbackKey);
     }
 
     /**
