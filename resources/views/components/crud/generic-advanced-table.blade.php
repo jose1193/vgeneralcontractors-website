@@ -560,24 +560,6 @@
         animation: none;
     }
 
-    /* Subtle deleted indicator for better UX */
-    .glassmorphism-body tr.deleted-row td:first-child::before {
-        content: '🗑️';
-        position: absolute;
-        left: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.875rem;
-        opacity: 0.6;
-        z-index: 3;
-        filter: drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3));
-    }
-
-    .glassmorphism-body tr.deleted-row td:first-child {
-        position: relative;
-        padding-left: 2.5rem;
-    }
-
     .glassmorphism-body td {
         padding: 1rem 1.5rem;
         text-align: center;
