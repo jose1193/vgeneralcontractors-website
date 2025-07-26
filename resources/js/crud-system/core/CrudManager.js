@@ -331,7 +331,8 @@ export class CrudManager {
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} ${this.translations.createdSuccessfully}`,
+                this.translations.createdSuccessfully ||
+                    `${this.entityName} created successfully`,
                 this.alertSelector
             );
             this.loadEntities();
@@ -346,7 +347,9 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || this.translations.errorCreatingRecord
+                    error.message ||
+                        this.translations.errorCreatingRecord ||
+                        "Error creating record"
                 );
             }
         }
@@ -364,7 +367,8 @@ export class CrudManager {
             Swal.close();
             this.modalManager.showAlert(
                 "success",
-                `${this.entityName} ${this.translations.updatedSuccessfully}`,
+                this.translations.updatedSuccessfully ||
+                    `${this.entityName} updated successfully`,
                 this.alertSelector
             );
             this.loadEntities();
@@ -379,7 +383,9 @@ export class CrudManager {
             } else {
                 this.modalManager.showAlert(
                     "error",
-                    error.message || this.translations.errorUpdatingRecord
+                    error.message ||
+                        this.translations.errorUpdatingRecord ||
+                        "Error updating record"
                 );
             }
         }

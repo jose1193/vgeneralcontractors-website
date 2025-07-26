@@ -260,5 +260,18 @@ return [
             'update_failed' => 'Error al actualizar la compañía de seguros',
             'not_found' => 'Compañía de seguros no encontrada',
         ],
+        'fields' => [
+            'name' => 'Nombre de la Empresa',
+            'email' => 'Correo Electrónico',
+            'phone' => 'Teléfono',
+            'website' => 'Sitio Web',
+            'address' => 'Dirección',
+            'assigned_user' => 'Usuario Asignado',
+            'status' => 'Estado',
+        ],
     ],
+    
+    // Common field labels
+    'company_name' => 'Nombre de la Empresa',
+    'not_available' => 'N/D',
 ]; 

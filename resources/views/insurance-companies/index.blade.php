@@ -24,6 +24,21 @@
                 const showDeletedState = localStorage.getItem('showDeleted') === 'true';
                 console.log('Estado inicial de showDeleted:', showDeletedState);
 
+                // Define translations object for use in table headers
+                const translations = {
+                    companyName: "{{ __('company_name') }}",
+                    email: "{{ __('email') }}",
+                    phone: "{{ __('phone') }}",
+                    website: "{{ __('website') }}",
+                    created: "{{ __('created') }}",
+                    actions: "{{ __('actions') }}",
+                    notAvailable: "{{ __('not_available') }}",
+                    noRecordsFound: "{{ __('no_data') }}",
+                    editInsuranceCompany: "{{ __('edit') }} {{ __('insurance_company') }}",
+                    deleteInsuranceCompany: "{{ __('delete') }} {{ __('insurance_company') }}",
+                    restoreInsuranceCompany: "{{ __('restore') }} {{ __('insurance_company') }}"
+                };
+
                 // Make the manager globally accessible
                 window.insuranceCompanyManager = new CrudManagerModal({
                     entityName: 'Insurance Company',
@@ -153,7 +168,7 @@
                             name: translations.email || 'Email',
                             sortable: true,
                             getter: (entity) => {
-                                return entity.email || translations.noRecordsFound || 'N/A';
+                                return entity.email || translations.notAvailable || 'N/A';
                             }
                         },
                         {
@@ -161,7 +176,7 @@
                             name: translations.phone || 'Phone',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.phone) return translations.noRecordsFound || 'N/A';
+                                if (!entity.phone) return translations.notAvailable || 'N/A';
 
                                 // Extraer solo los dígitos
                                 const cleaned = entity.phone.replace(/\D/g, '');
@@ -185,7 +200,7 @@
                             name: translations.website || 'Website',
                             sortable: false,
                             getter: (entity) => {
-                                if (!entity.website) return translations.noRecordsFound || 'N/A';
+                                if (!entity.website) return translations.notAvailable || 'N/A';
 
                                 // Create clickable link
                                 const displayUrl = entity.website.replace(/^https?:\/\//, '');
@@ -248,6 +263,10 @@
                         restoredSuccessfully: "{{ __('restored_successfully') }}",
                         errorDeleting: "{{ __('errorDeleting') }}",
                         errorRestoring: "{{ __('errorRestoring') }}",
+                        createdSuccessfully: "{{ __('insurance_companies.messages.created_successfully') }}",
+                        updatedSuccessfully: "{{ __('insurance_companies.messages.updated_successfully') }}",
+                        errorCreatingRecord: "{{ __('insurance_companies.messages.creation_failed') }}",
+                        errorUpdatingRecord: "{{ __('insurance_companies.messages.update_failed') }}",
                         emailAlreadyInUse: "{{ __('email_already_in_use') }}",
                         phoneAlreadyInUse: "{{ __('phone_already_in_use') }}",
                         nameAlreadyInUse: "{{ __('name_already_in_use') }}",
@@ -261,6 +280,7 @@
                         usernameAvailable: "{{ __('username_available') }}",
                         pleaseCorrectErrors: "{{ __('please_correct_errors') }}",
                         noRecordsFound: "{{ __('no_data') }}",
+                        notAvailable: "N/A",
                         // Pagination translations
                         showing: "{{ __('showing') }}",
                         to: "{{ __('to') }}",

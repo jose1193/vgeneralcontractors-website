@@ -260,5 +260,18 @@ return [
             'update_failed' => 'Failed to update insurance company',
             'not_found' => 'Insurance company not found',
         ],
+        'fields' => [
+            'name' => 'Company Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'website' => 'Website',
+            'address' => 'Address',
+            'assigned_user' => 'Assigned User',
+            'status' => 'Status',
+        ],
     ],
+    
+    // Common field labels
+    'company_name' => 'Company Name',
+    'not_available' => 'N/A',
 ]; 
