@@ -400,6 +400,7 @@
         opacity: 0.75;
         transform: scale(0.995);
         overflow: hidden;
+        isolation: isolate;
     }
 
     .glassmorphism-body tr.deleted-row::before {
@@ -423,8 +424,8 @@
         content: '';
         position: absolute;
         top: 50%;
-        left: 5%;
-        right: 5%;
+        left: 0;
+        right: 0;
         height: 2px;
         background: linear-gradient(90deg,
                 transparent 0%,
@@ -440,8 +441,11 @@
         box-shadow:
             0 0 8px rgba(220, 38, 38, 0.6),
             0 0 16px rgba(239, 68, 68, 0.4);
-        z-index: 1;
+        z-index: 10;
         animation: deletedGlow 2s ease-in-out infinite alternate;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .glassmorphism-body tr.deleted-row:hover {
@@ -462,6 +466,9 @@
         text-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
         position: relative;
         z-index: 2;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     .glassmorphism-body tr.deleted-row td:hover {
