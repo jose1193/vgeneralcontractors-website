@@ -197,8 +197,10 @@
             display: table;
             width: 100%;
             margin-bottom: 15px;
-            font-size: 9px;
-            color: var(--text-secondary);
+            font-size: 13px;
+            /* Aumenta el tamaño de fuente del encabezado de exportación */
+            color: var(--text-primary);
+            font-weight: bold;
             padding: 0 5px;
         }
 
@@ -228,7 +230,7 @@
 
         @if (($options['repeat_headers'] ?? false) === true)
             .data-table thead {
-                display: table-header-group;
+                display: table-header-group !important;
             }
         @else
             .data-table thead {
