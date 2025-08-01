@@ -1033,8 +1033,8 @@
                             city = component.long_name;
                         }
                         // Sometimes city is in "sublocality" or "sublocality_level_1"
-                        if (!city && (component.types.includes('sublocality') || 
-                            component.types.includes('sublocality_level_1'))) {
+                        if (!city && (component.types.includes('sublocality') ||
+                                component.types.includes('sublocality_level_1'))) {
                             city = component.long_name;
                         }
                         if (component.types.includes('administrative_area_level_1')) {
@@ -1051,11 +1051,16 @@
                     }
 
                     // Debug log the values we extracted
-                    console.log('Extracted values:', {addressLine1, city, state, zipcode});
+                    console.log('Extracted values:', {
+                        addressLine1,
+                        city,
+                        state,
+                        zipcode
+                    });
 
                     // Fill in form fields
                     if (addressLine1) document.getElementById('address').value = addressLine1;
-                    
+
                     // For city and state, ensure we're setting them and log any issues
                     if (city) {
                         const cityField = document.getElementById('city');
@@ -1066,7 +1071,7 @@
                             console.error('City field not found');
                         }
                     }
-                    
+
                     if (state) {
                         const stateField = document.getElementById('state');
                         if (stateField) {
@@ -1076,7 +1081,7 @@
                             console.error('State field not found');
                         }
                     }
-                    
+
                     if (zipcode) document.getElementById('zipcode').value = zipcode;
                     document.getElementById('country').value = 'USA';
                 });
