@@ -1008,7 +1008,7 @@
                         }
                     }
                 });
-                
+
                 // If no radio is selected (first time), ensure all labels are in default state
                 const anySelected = Array.from(insuranceRadios).some(radio => radio.checked);
                 if (!anySelected) {
