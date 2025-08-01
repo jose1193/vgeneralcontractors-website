@@ -295,7 +295,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
         style="background-color: #141414;">
         <div class="flex flex-col items-center py-4 space-y-4">
             <!-- Dashboard -->
-            <div class="relative group">
+            <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('dashboard') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                     onmouseover="{{ !request()->routeIs('dashboard') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
@@ -309,7 +309,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </svg>
                 </a>
                 @if (!request()->routeIs('dashboard'))
-                    <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
+                    <div x-show="open" x-transition class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
                         style="background-color: #2C2E36;">
                         {{ __('dashboard') }}
                         <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -449,7 +449,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                <div class="relative group">
+                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
@@ -460,7 +460,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
+                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -486,7 +486,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Appointments Group -->
             @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
-                <div class="relative group">
+                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('appointments.index') || request()->routeIs('appointment-calendar')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
@@ -497,7 +497,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
+                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -519,7 +519,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Call Records -->
             @if (auth()->check() && auth()->user()->can('READ_CALL_RECORD'))
-                <div class="relative group">
+                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <a href="{{ route('call-records') }}"
                         class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !request()->routeIs('call-records') ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
@@ -530,7 +530,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         </svg>
                     </a>
                     @if (!request()->routeIs('call-records'))
-                        <div class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 whitespace-nowrap z-50"
+                        <div x-show="open" x-transition class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
                             {{ __('call_records_title') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -565,7 +565,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
-                <div class="relative group">
+                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
                         onmouseover="{{ !(request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
                         onmouseout="{{ !(request()->routeIs('posts-crud.*') || request()->routeIs('blog-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
@@ -576,7 +576,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
+                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
