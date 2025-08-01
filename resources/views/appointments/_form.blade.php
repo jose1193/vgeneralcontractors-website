@@ -404,7 +404,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_yes" name="insurance_property" type="radio" value="1"
                         class="radio-field sr-only" required
-                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}>
+                        {{ old('insurance_property', $appointment->insurance_property ?? null) == '1' ? 'checked' : '' }}>
                     <label for="insurance_yes"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('Yes') }}
@@ -413,7 +413,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_no" name="insurance_property" type="radio" value="0"
                         class="radio-field sr-only" required
-                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}>
+                        {{ old('insurance_property', $appointment->insurance_property ?? null) == '0' ? 'checked' : '' }}>
                     <label for="insurance_no"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('No') }}
@@ -1008,6 +1008,14 @@
                         }
                     }
                 });
+                
+                // If no radio is selected (first time), ensure all labels are in default state
+                const anySelected = Array.from(insuranceRadios).some(radio => radio.checked);
+                if (!anySelected) {
+                    insuranceLabels.forEach(label => {
+                        label.classList.remove('selected');
+                    });
+                }
             }, 100);
 
             // Add click event listeners to labels for better UX
