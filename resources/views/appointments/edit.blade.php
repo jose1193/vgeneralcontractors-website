@@ -132,9 +132,6 @@
                             // Reset button state as well
                             setLoadingState(false);
 
-                            // Establecer bandera para recargar datos en index
-                            sessionStorage.setItem('appointment_crud_action', 'edit');
-                            
                             Swal.fire({
                                 title: '{{ __('success_title') }}',
                                 text: data.message,
