@@ -334,19 +334,20 @@
     </div>
 
     {{-- Other checkboxes --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="block">
-            <label for="sms_consent" class="inline-flex items-start cursor-pointer">
+    <div class="block">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ __('Additional Options') }}
+        </label>
+        <div class="flex flex-col space-y-3">
+            <label for="sms_consent" class="inline-flex items-center cursor-pointer">
                 <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
-                    class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
+                    class="checkbox-field form-checkbox text-yellow-500 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
                     {{ old('sms_consent', $appointment->sms_consent ?? false) ? 'checked' : '' }}>
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('SMS Consent') }}</span>
             </label>
-        </div>
-        <div class="block">
-            <label for="intent_to_claim" class="inline-flex items-start cursor-pointer">
+            <label for="intent_to_claim" class="inline-flex items-center cursor-pointer">
                 <input id="intent_to_claim" name="intent_to_claim" type="checkbox" value="1"
-                    class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
+                    class="checkbox-field form-checkbox text-yellow-500 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
                     {{ old('intent_to_claim', $appointment->intent_to_claim ?? false) ? 'checked' : '' }}>
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Intent to Claim?') }}</span>
             </label>
@@ -1014,27 +1015,33 @@
                     let state = '';
                     let zipcode = '';
 
-                    for (const component of place.address_components) {
-                        const componentType = component.types[0];
+                    // Debug log to see what we're getting
+                    console.log('Place address components:', place.address_components);
 
-                        switch (componentType) {
-                            case 'street_number':
-                                addressLine1 = component.long_name;
-                                break;
-                            case 'route':
-                                addressLine1 = addressLine1 ?
-                                    addressLine1 + ' ' + component.long_name :
-                                    component.long_name;
-                                break;
-                            case 'locality':
-                                city = component.long_name;
-                                break;
-                            case 'administrative_area_level_1':
-                                state = component.short_name;
-                                break;
-                            case 'postal_code':
-                                zipcode = component.long_name;
-                                break;
+                    // Search through all components and their types
+                    for (const component of place.address_components) {
+                        // Check all types for each component, not just the first one
+                        if (component.types.includes('street_number')) {
+                            addressLine1 = component.long_name;
+                        }
+                        if (component.types.includes('route')) {
+                            addressLine1 = addressLine1 ?
+                                addressLine1 + ' ' + component.long_name :
+                                component.long_name;
+                        }
+                        if (component.types.includes('locality')) {
+                            city = component.long_name;
+                        }
+                        // Sometimes city is in "sublocality" or "sublocality_level_1"
+                        if (!city && (component.types.includes('sublocality') || 
+                            component.types.includes('sublocality_level_1'))) {
+                            city = component.long_name;
+                        }
+                        if (component.types.includes('administrative_area_level_1')) {
+                            state = component.short_name;
+                        }
+                        if (component.types.includes('postal_code')) {
+                            zipcode = component.long_name;
                         }
                     }
 
@@ -1043,10 +1050,33 @@
                         addressMapInput.value = place.formatted_address;
                     }
 
+                    // Debug log the values we extracted
+                    console.log('Extracted values:', {addressLine1, city, state, zipcode});
+
                     // Fill in form fields
                     if (addressLine1) document.getElementById('address').value = addressLine1;
-                    if (city) document.getElementById('city').value = city;
-                    if (state) document.getElementById('state').value = state;
+                    
+                    // For city and state, ensure we're setting them and log any issues
+                    if (city) {
+                        const cityField = document.getElementById('city');
+                        if (cityField) {
+                            cityField.value = city;
+                            console.log('City field updated:', city);
+                        } else {
+                            console.error('City field not found');
+                        }
+                    }
+                    
+                    if (state) {
+                        const stateField = document.getElementById('state');
+                        if (stateField) {
+                            stateField.value = state;
+                            console.log('State field updated:', state);
+                        } else {
+                            console.error('State field not found');
+                        }
+                    }
+                    
                     if (zipcode) document.getElementById('zipcode').value = zipcode;
                     document.getElementById('country').value = 'USA';
                 });
