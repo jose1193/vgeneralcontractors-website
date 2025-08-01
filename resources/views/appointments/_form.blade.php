@@ -993,6 +993,54 @@
                     inspectionTimeMinuteField.setAttribute('disabled', 'disabled');
                 }
             }
+
+            // Insurance radio buttons styling setup
+            const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+            const insuranceLabels = document.querySelectorAll('.insurance-label');
+
+            // Initial setup - ensure selected radio has its label styled
+            setTimeout(() => {
+                insuranceRadios.forEach(radio => {
+                    if (radio.checked) {
+                        const label = document.querySelector(`label[for="${radio.id}"]`);
+                        if (label) {
+                            label.classList.add('selected');
+                        }
+                    }
+                });
+            }, 100);
+
+            // Add click event listeners to labels for better UX
+            insuranceLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const radioId = this.getAttribute('for');
+                    const radio = document.getElementById(radioId);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
+                    }
+                });
+            });
+
+            // Change event handlers for radio buttons
+            insuranceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove selected class from all labels
+                    insuranceLabels.forEach(label => {
+                        label.classList.remove('selected');
+                    });
+
+                    // Add selected class to the checked radio's label
+                    if (this.checked) {
+                        const label = document.querySelector(`label[for="${this.id}"]`);
+                        if (label) {
+                            label.classList.add('selected');
+                        }
+                    }
+                });
+            });
         });
 
         // Initialize map
