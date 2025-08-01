@@ -1017,132 +1017,133 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             @endif
         </div>
     </div>
-</div>
 
-<script>
-    function handleMobileSearch(event) {
-        event.preventDefault();
-        const searchInput = event.target.querySelector('input[type="text"]');
-        const searchTerm = searchInput.value.trim();
+    <!-- Scripts and Styles -->
+    <script>
+        function handleMobileSearch(event) {
+            event.preventDefault();
+            const searchInput = event.target.querySelector('input[type="text"]');
+            const searchTerm = searchInput.value.trim();
 
-        if (searchTerm) {
-            // Aquí puedes agregar la lógica de búsqueda
-            console.log('Searching for:', searchTerm);
+            if (searchTerm) {
+                // Aquí puedes agregar la lógica de búsqueda
+                console.log('Searching for:', searchTerm);
 
-            // Ejemplo: redirigir a una página de búsqueda
-            // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+                // Ejemplo: redirigir a una página de búsqueda
+                // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
 
-            // Por ahora, simplemente mostraremos un mensaje
-            alert(`Buscando: ${searchTerm}`);
+                // Por ahora, simplemente mostraremos un mensaje
+                alert(`Buscando: ${searchTerm}`);
 
-            // Cerrar el modal de búsqueda después de buscar
-            // Si usas Alpine.js store para manejar el estado
-            // Alpine.store('mobileSearch', false);
+                // Cerrar el modal de búsqueda después de buscar
+                // Si usas Alpine.js store para manejar el estado
+                // Alpine.store('mobileSearch', false);
+            }
         }
-    }
 
-    // Enhanced dropdown behavior
-    document.addEventListener('alpine:init', () => {
-        // Close all dropdowns when clicking outside
-        document.addEventListener('click', (event) => {
-            // Check if click is outside any dropdown
-            const dropdowns = document.querySelectorAll('[x-data*="Open"]');
-            dropdowns.forEach(dropdown => {
-                const button = dropdown.querySelector('button');
-                const menu = dropdown.querySelector('[x-show]');
-                
-                if (button && menu && !dropdown.contains(event.target)) {
-                    // Close dropdown using Alpine.js
-                    Alpine.$data(dropdown).adminOpen = false;
-                    Alpine.$data(dropdown).servicesOpen = false;
-                    Alpine.$data(dropdown).appointmentsOpen = false;
-                    Alpine.$data(dropdown).blogOpen = false;
-                    Alpine.$data(dropdown).open = false;
+        // Enhanced dropdown behavior
+        document.addEventListener('alpine:init', () => {
+            // Close all dropdowns when clicking outside
+            document.addEventListener('click', (event) => {
+                // Check if click is outside any dropdown
+                const dropdowns = document.querySelectorAll('[x-data*="Open"]');
+                dropdowns.forEach(dropdown => {
+                    const button = dropdown.querySelector('button');
+                    const menu = dropdown.querySelector('[x-show]');
+                    
+                    if (button && menu && !dropdown.contains(event.target)) {
+                        // Close dropdown using Alpine.js
+                        Alpine.$data(dropdown).adminOpen = false;
+                        Alpine.$data(dropdown).servicesOpen = false;
+                        Alpine.$data(dropdown).appointmentsOpen = false;
+                        Alpine.$data(dropdown).blogOpen = false;
+                        Alpine.$data(dropdown).open = false;
+                    }
+                });
+            });
+
+            // Prevent rapid clicking conflicts
+            let clickTimeout;
+            document.addEventListener('click', (event) => {
+                const button = event.target.closest('button[\\@click]');
+                if (button) {
+                    clearTimeout(clickTimeout);
+                    clickTimeout = setTimeout(() => {
+                        // Allow normal processing after brief delay
+                    }, 50);
+                }
+            });
+
+            // Keyboard navigation for dropdowns
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    // Close all dropdowns on Escape
+                    const dropdowns = document.querySelectorAll('[x-data*="Open"]');
+                    dropdowns.forEach(dropdown => {
+                        Alpine.$data(dropdown).adminOpen = false;
+                        Alpine.$data(dropdown).servicesOpen = false;
+                        Alpine.$data(dropdown).appointmentsOpen = false;
+                        Alpine.$data(dropdown).blogOpen = false;
+                        Alpine.$data(dropdown).open = false;
+                    });
                 }
             });
         });
 
-        // Prevent rapid clicking conflicts
-        let clickTimeout;
-        document.addEventListener('click', (event) => {
-            const button = event.target.closest('button[\\@click]');
-            if (button) {
-                clearTimeout(clickTimeout);
-                clickTimeout = setTimeout(() => {
-                    // Allow normal processing after brief delay
-                }, 50);
-            }
-        });
-
-        // Keyboard navigation for dropdowns
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                // Close all dropdowns on Escape
-                const dropdowns = document.querySelectorAll('[x-data*="Open"]');
-                dropdowns.forEach(dropdown => {
-                    Alpine.$data(dropdown).adminOpen = false;
-                    Alpine.$data(dropdown).servicesOpen = false;
-                    Alpine.$data(dropdown).appointmentsOpen = false;
-                    Alpine.$data(dropdown).blogOpen = false;
-                    Alpine.$data(dropdown).open = false;
+        // Improve focus management
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add proper focus management for dropdown buttons
+            const dropdownButtons = document.querySelectorAll('[x-data] button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Ensure the click is properly handled
+                    e.stopPropagation();
+                    
+                    // Add visual feedback
+                    this.classList.add('active');
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 150);
                 });
-            }
-        });
-    });
-
-    // Improve focus management
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add proper focus management for dropdown buttons
-        const dropdownButtons = document.querySelectorAll('[x-data] button');
-        dropdownButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                // Ensure the click is properly handled
-                e.stopPropagation();
-                
-                // Add visual feedback
-                this.classList.add('active');
-                setTimeout(() => {
-                    this.classList.remove('active');
-                }, 150);
             });
         });
-    });
-</script>
+    </script>
 
-<style>
-    /* Enhanced dropdown styles for better interaction */
-    [x-data] button:focus {
-        outline: 2px solid #facc15 !important;
-        outline-offset: 2px !important;
-    }
-    
-    [x-data] button.active {
-        transform: scale(0.98);
-        transition: transform 0.1s ease;
-    }
-    
-    /* Prevent dropdown flickering */
-    [x-show] {
-        transition-property: opacity, transform;
-        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-    
-    /* Improve z-index stacking */
-    .relative [x-show] {
-        z-index: 60 !important;
-    }
-    
-    /* Smooth hover transitions */
-    button {
-        transition: all 0.15s ease-in-out;
-    }
-    
-    /* Better visual feedback for interactive elements */
-    button:hover {
-        transform: translateY(-1px);
-    }
-    
-    button:active {
-        transform: translateY(0);
-    }
-</style>
+    <style>
+        /* Enhanced dropdown styles for better interaction */
+        [x-data] button:focus {
+            outline: 2px solid #facc15 !important;
+            outline-offset: 2px !important;
+        }
+        
+        [x-data] button.active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+        
+        /* Prevent dropdown flickering */
+        [x-show] {
+            transition-property: opacity, transform;
+            transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        /* Improve z-index stacking */
+        .relative [x-show] {
+            z-index: 60 !important;
+        }
+        
+        /* Smooth hover transitions */
+        button {
+            transition: all 0.15s ease-in-out;
+        }
+        
+        /* Better visual feedback for interactive elements */
+        button:hover {
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</div>
