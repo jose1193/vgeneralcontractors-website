@@ -277,12 +277,28 @@ export class CrudModalManager {
      * @param {string} endDate - The end date in YYYY-MM-DD format
      */
     applyDateFilters(startDate, endDate) {
-        console.log("CrudModalManager: Applying date filters:", { startDate, endDate });
+        console.log("CrudModalManager: Applying date filters:", { 
+            startDate, 
+            endDate,
+            startDateType: typeof startDate,
+            endDateType: typeof endDate,
+            startDateEmpty: startDate === '',
+            endDateEmpty: endDate === '',
+            startDateValid: startDate && startDate.match(/^\d{4}-\d{2}-\d{2}$/),
+            endDateValid: endDate && endDate.match(/^\d{4}-\d{2}-\d{2}$/)
+        });
         
         // Store the date filter values
         if (window.insuranceCompanyManager) {
+            console.log("CrudModalManager: Found insuranceCompanyManager, applying date filters");
             window.insuranceCompanyManager.dateStart = startDate;
             window.insuranceCompanyManager.dateEnd = endDate;
+            
+            // Log the state after setting
+            console.log("CrudModalManager: Date filters set on insuranceCompanyManager:", {
+                dateStart: window.insuranceCompanyManager.dateStart,
+                dateEnd: window.insuranceCompanyManager.dateEnd
+            });
             
             // Reload data with the new filters
             window.insuranceCompanyManager.currentPage = 1;

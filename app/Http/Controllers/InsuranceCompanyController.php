@@ -58,6 +58,15 @@ class InsuranceCompanyController extends BaseController
 
     protected function handleAjaxIndexRequest(Request $request): JsonResponse
     {
+        // Log all request parameters for debugging
+        Log::debug('InsuranceCompanyController: received request parameters', [
+            'all_parameters' => $request->all(),
+            'date_start' => $request->input('date_start'),
+            'date_end' => $request->input('date_end'),
+            'has_date_start' => $request->has('date_start'),
+            'has_date_end' => $request->has('date_end')
+        ]);
+        
         // Validate date range if provided
         $dateValidation = $this->validateDateRange($request);
         if (!$dateValidation['valid']) {
@@ -83,7 +92,17 @@ class InsuranceCompanyController extends BaseController
         }
 
         // Apply date filters using base controller method
+        Log::debug('InsuranceCompanyController: before applying date filters', [
+            'sql' => $query->toSql(),
+            'bindings' => $query->getBindings()
+        ]);
+        
         $this->applyDateFilters($query, $request);
+        
+        Log::debug('InsuranceCompanyController: after applying date filters', [
+            'sql' => $query->toSql(),
+            'bindings' => $query->getBindings()
+        ]);
         
         // Apply sorting
         $sortField = $request->input('sort_field', 'insurance_company_name');

@@ -43,8 +43,6 @@ class CrudManagerModal {
         this.sortDirection = options.defaultSortDirection || "desc";
         this.searchTerm = "";
         this.showDeleted = options.showDeleted || false;
-        this.dateStart = "";  // For date filter start
-        this.dateEnd = "";    // For date filter end
         this.currentEntity = null;
         this.currentData = null; // Para almacenar los datos actuales
         this.isEditing = false;
@@ -260,6 +258,7 @@ class CrudManagerModal {
         }
 
         console.log("Making AJAX request with data:", requestData);
+        console.log("Date filters being sent:", { dateStart: this.dateStart, dateEnd: this.dateEnd });
 
         return $.ajax({
             url: this.routes.index,
@@ -2319,28 +2318,6 @@ class CrudManagerModal {
             title: "Errores de validación",
             text: errorMessage,
         });
-    }
-    
-    /**
-     * Apply date filters to the data request
-     */
-    applyDateFilters(startDate, endDate) {
-        console.log("Applying date filters:", { startDate, endDate });
-        this.dateStart = startDate;
-        this.dateEnd = endDate;
-        this.currentPage = 1;
-        this.loadEntities();
-    }
-    
-    /**
-     * Clear date filters
-     */
-    clearDateFilters() {
-        console.log("Clearing date filters");
-        this.dateStart = "";
-        this.dateEnd = "";
-        this.currentPage = 1;
-        this.loadEntities();
     }
 }
 

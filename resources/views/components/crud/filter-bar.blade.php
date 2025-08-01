@@ -1025,7 +1025,12 @@
                 console.log('Attempting to apply date filters:', {
                     startDateStr,
                     endDateStr,
-                    managerName
+                    managerName,
+                    hasInsuranceCompanyManager: !!window.insuranceCompanyManager,
+                    hasCrudModalManager: !!window.crudModalManager,
+                    hasManagerByName: !!window[managerName],
+                    hasDateStartProperty: window.insuranceCompanyManager?.dateStart !== undefined,
+                    hasDateEndProperty: window.insuranceCompanyManager?.dateEnd !== undefined
                 });
                 
                 // For insurance companies, ensure we use the specific manager
