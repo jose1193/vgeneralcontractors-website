@@ -392,10 +392,10 @@
     </div>
 </div>
 
-{{-- Property Insurance and Additional Options Section --}}
-<div class="md:col-span-2 mt-6 my-10 py-5">
-    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        {{-- Property Insurance --}}
+{{-- Property Insurance and Additional Options Row --}}
+<div class="md:col-span-2 mt-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start py-5">
+        {{-- Property Insurance Section --}}
         <div class="block">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {{ __('Property Insurance') }} <span class="text-red-500">*</span>
@@ -427,12 +427,12 @@
             <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
         </div>
 
-        {{-- Additional Options - Now aligned with Property Insurance --}}
+        {{-- Additional Options Section --}}
         <div class="block">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 md:text-right">
                 {{ __('Additional Options') }}
             </label>
-            <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6 mt-2">
+            <div class="flex flex-col md:flex-row md:justify-end md:items-center space-y-2 md:space-y-0 md:space-x-6 mt-2">
                 <label for="sms_consent" class="inline-flex items-center cursor-pointer">
                     <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                         class="checkbox-field form-checkbox text-yellow-500 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
@@ -447,8 +447,6 @@
                 </label>
             </div>
         </div>
-    </div>
-</div>
     </div>
 </div>
 
