@@ -16,45 +16,40 @@
     {{-- First Name --}}
     <div>
         <x-label for="first_name" value="{{ __('First Name') }}" />
-        <x-input id="first_name" class="block mt-1 w-full capitalize input-field" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
+        <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
             required autofocus pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="first_name" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
     </div>
 
     {{-- Last Name --}}
     <div>
         <x-label for="last_name" value="{{ __('Last Name') }}" />
-        <x-input id="last_name" class="block mt-1 w-full capitalize input-field" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
+        <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
             required pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="last_name" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>
     </div>
 
     {{-- Phone --}}
     <div>
         <x-label for="phone" value="{{ __('Phone') }}" />
-        <x-input id="phone" class="block mt-1 w-full input-field" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
+        <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
             :value="old('phone', $appointment->phone ?? '')" required />
         <x-input-error for="phone" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="phone"></span>
     </div>
 
     {{-- Email --}}
     <div>
         <x-label for="email" value="{{ __('Email') }}" />
-        <x-input id="email" class="block mt-1 w-full input-field" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
+        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
         <x-input-error for="email" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="email"></span>
     </div>
 
     {{-- Address Map Input (for Google Maps Autocomplete) --}}
     <div class="md:col-span-2">
         <x-label for="address_map_input" value="{{ __('Address') }}" />
-        <x-input id="address_map_input" class="block mt-1 w-full input-field" type="text" name="address_map_input"
+        <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
             placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
         <x-input-error for="address_map_input" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_map_input"></span>
     </div>
 
     {{-- Map Display --}}
@@ -145,37 +140,33 @@
     {{-- City --}}
     <div>
         <x-label for="city" value="{{ __('City') }}" />
-        <x-input id="city" class="block mt-1 w-full input-field" type="text" name="city" :value="old('city', $appointment->city ?? '')"
+        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
             required />
         <x-input-error for="city" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="city"></span>
     </div>
 
     {{-- State --}}
     <div>
         <x-label for="state" value="{{ __('State') }}" />
-        <x-input id="state" class="block mt-1 w-full input-field" type="text" name="state" :value="old('state', $appointment->state ?? '')"
+        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
             required />
         <x-input-error for="state" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="state"></span>
     </div>
 
     {{-- Zipcode --}}
     <div>
         <x-label for="zipcode" value="{{ __('Zip Code') }}" />
-        <x-input id="zipcode" class="block mt-1 w-full input-field" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
+        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
             required />
         <x-input-error for="zipcode" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="zipcode"></span>
     </div>
 
     {{-- Country --}}
     <div>
         <x-label for="country" value="{{ __('Country') }}" />
-        <x-input id="country" class="block mt-1 w-full input-field" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
+        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
             required />
         <x-input-error for="country" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="country"></span>
     </div>
 
     {{-- Inspection Date --}}
@@ -1647,210 +1638,6 @@
                     }
                 });
             });
-
-            // Real-time field validation setup
-            const form = document.querySelector('form');
-            const csrfToken = document.querySelector('input[name="_token"]')?.value;
-            const appointmentUuid = '{{ $appointment->uuid ?? '' }}'; // For edit mode
-            
-            // Get all input fields that need validation
-            const inputFields = form.querySelectorAll('.input-field');
-            const radioFields = form.querySelectorAll('.radio-field');
-            
-            console.log('Real-time validation initialized');
-            console.log('Found input fields:', inputFields.length);
-            console.log('Found radio fields:', radioFields.length);
-            console.log('CSRF Token:', csrfToken ? 'Found' : 'Missing');
-            
-            // Debounce function to limit API calls
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-
-            // Function to clear field errors
-            function clearFieldError(fieldElement) {
-                const fieldName = fieldElement.name;
-                const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
-                if (errorSpan) errorSpan.textContent = '';
-                fieldElement.classList.remove('border-red-500');
-            }
-
-            // Function to validate individual field
-            function validateField(fieldElement) {
-                const fieldName = fieldElement.name;
-                let fieldValue = fieldElement.type === 'checkbox' ? (fieldElement.checked ? 1 : 0) : fieldElement.value;
-
-                console.log('Validating field:', fieldName, 'with value:', fieldValue);
-
-                // Handle radio buttons
-                if (fieldElement.type === 'radio') {
-                    const checkedRadio = form.querySelector(`input[name="${fieldName}"]:checked`);
-                    if (!checkedRadio) {
-                        clearFieldError(fieldElement);
-                        return;
-                    }
-                    fieldValue = checkedRadio.value;
-                }
-
-                // Skip validation for empty non-required fields
-                if (!fieldValue && !fieldElement.required) {
-                    clearFieldError(fieldElement);
-                    return;
-                }
-
-                // Prepare request data
-                const requestData = {
-                    fieldName: fieldName,
-                    fieldValue: fieldValue
-                };
-
-                // Add UUID for edit mode to exclude current record
-                if (appointmentUuid) {
-                    requestData.excludeUuid = appointmentUuid;
-                }
-
-                console.log('Sending validation request:', requestData);
-
-                fetch('{{ route('appointments.validate-field') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                })
-                .then(response => {
-                    console.log('Validation response status:', response.status);
-                    if (!response.ok && response.status !== 422) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Validation response data:', data);
-                    const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
-                    if (errorSpan) {
-                        if (!data.valid && data.errors?.[0]) {
-                            errorSpan.textContent = data.errors[0];
-                            fieldElement.classList.add('border-red-500');
-
-                            // Special handling for duplicate email
-                            if (fieldName === 'email' && data.duplicate_email) {
-                                // Show additional info for duplicate email
-                                errorSpan.innerHTML = `${data.errors[0]}<br><small class="text-gray-600">Contact support at (713) 587-6423 if you need assistance.</small>`;
-                            }
-                        } else {
-                            errorSpan.textContent = '';
-                            fieldElement.classList.remove('border-red-500');
-                        }
-                    } else {
-                        console.warn('Error span not found for field:', fieldName);
-                    }
-                })
-                .catch(error => {
-                    console.error('Validation request failed:', error);
-                });
-            }
-
-            // Debounced version of validation
-            const debouncedValidateField = debounce(validateField, 500);
-
-            // Add event listeners to input fields
-            inputFields.forEach(input => {
-                // Special handling for different field types
-                if (input.name === 'first_name' || input.name === 'last_name') {
-                    // Name fields: format and validate
-                    input.addEventListener('input', function(event) {
-                        // Capitalize first letter and remove non-letters
-                        let value = event.target.value.replace(/[^A-Za-z]/g, '');
-                        if (value.length > 0) {
-                            value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-                        }
-                        event.target.value = value;
-                        
-                        // Validate after formatting
-                        debouncedValidateField(this);
-                    });
-                } else if (input.name === 'phone') {
-                    // Phone field: format and validate
-                    input.addEventListener('input', function(event) {
-                        // Format phone number as (XXX) XXX-XXXX
-                        let value = event.target.value.replace(/\D/g, '');
-                        if (value.length >= 6) {
-                            value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
-                        } else if (value.length >= 3) {
-                            value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
-                        }
-                        event.target.value = value;
-                        
-                        // Validate after formatting
-                        debouncedValidateField(this);
-                    });
-                } else {
-                    // Regular fields: validate on input (debounced)
-                    input.addEventListener('input', function() {
-                        debouncedValidateField(this);
-                    });
-                }
-
-                // Common event listeners for all input fields
-                // Immediate validation on blur
-                input.addEventListener('blur', function() {
-                    validateField(this);
-                });
-
-                // Clear errors on focus
-                input.addEventListener('focus', function() {
-                    clearFieldError(this);
-                });
-            });
-
-            // Add event listeners to radio fields
-            radioFields.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    validateField(this);
-                });
-            });
         });
     </script>
-@endpush
-
-@push('styles')
-<style>
-    /* Styling for error indication */
-    .border-red-500 {
-        border-color: #f56565 !important;
-    }
-
-    .error-message {
-        min-height: 1rem;
-    }
-
-    /* Radio buttons styling */
-    .insurance-label {
-        transition: all 0.2s ease;
-        background-color: white;
-    }
-
-    .insurance-label:hover {
-        background-color: #facc15 !important;
-        color: white !important;
-        border-color: #eab308 !important;
-    }
-
-    .insurance-label.selected {
-        background-color: #f59e0b !important;
-        color: white !important;
-        border-color: #d97706 !important;
-    }
-</style>
 @endpush
