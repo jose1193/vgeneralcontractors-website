@@ -1117,8 +1117,6 @@
                     // Set coordinates in hidden fields
                     document.getElementById('latitude').value = lat;
                     document.getElementById('longitude').value = lng;
-                    
-                    console.log('Place selected:', place);
 
                     // Update map with selected location
                     if (appointmentMap && appointmentMarker) {
@@ -1171,43 +1169,39 @@
 
                     // Fill in form fields
                     const addressField = document.getElementById('address');
-                    const cityField = document.getElementById('city');
-                    const stateField = document.getElementById('state');
-                    const zipcodeField = document.getElementById('zipcode');
-                    const countryField = document.getElementById('country');
-                    
-                    // Fill values
-                    if (addressLine1) {
+                    if (addressLine1 && addressField) {
                         addressField.value = addressLine1;
                         addressField.dataset.touched = 'true';
                     }
                     
-                    if (city) {
+                    const cityField = document.getElementById('city');
+                    if (city && cityField) {
                         cityField.value = city;
                         cityField.dataset.touched = 'true';
                     }
                     
-                    if (state) {
+                    const stateField = document.getElementById('state');
+                    if (state && stateField) {
                         stateField.value = state;
                         stateField.dataset.touched = 'true';
                     }
                     
-                    if (zipcode) {
+                    const zipcodeField = document.getElementById('zipcode');
+                    if (zipcode && zipcodeField) {
                         zipcodeField.value = zipcode;
                         zipcodeField.dataset.touched = 'true';
                     }
                     
-                    // Always set USA as country
-                    countryField.value = 'USA';
-                    countryField.dataset.touched = 'true';
+                    const countryField = document.getElementById('country');
+                    if (countryField) {
+                        countryField.value = 'USA';
+                        countryField.dataset.touched = 'true';
+                    }
                     
-                    // Run form validation after filling address fields
-                    console.log('Address fields filled, running form validation...');
-                    setTimeout(() => {
-                        if (window.appointmentFormValidation && window.appointmentFormValidation.checkFormValidity) {
-                            window.appointmentFormValidation.checkFormValidity();
-                        }
-                    }, 100);
+                    // Trigger validation after populating fields
+                    if (typeof checkFormValidity === 'function') {
+                        checkFormValidity();
+                    }
                 });
             } catch (error) {
                 console.error('Error initializing autocomplete:', error);
@@ -1547,15 +1541,6 @@
                     case 'address':
                         if (!value || value.trim() === '') {
                             showFieldError(fieldName, '{{ __('address_required') }}');
-                            
-                            // Also check if address_map_input has a value but address doesn't
-                            const addressMapInput = document.getElementById('address_map_input');
-                            if (addressMapInput && addressMapInput.value.trim() !== '') {
-                                // Copy value from address_map_input to address
-                                document.getElementById('address').value = addressMapInput.value.trim();
-                                clearFieldError(fieldName);
-                                return true;
-                            }
                             return false;
                         } else {
                             clearFieldError(fieldName);
@@ -1651,9 +1636,6 @@
 
                 let isValid = true;
                 let allFieldsFilled = true;
-                
-                // Debugging object to track field validation status
-                const fieldStatus = {};
 
                 requiredFields.forEach(fieldName => {
                     let value = '';
@@ -1673,8 +1655,6 @@
                     // Check if field has value
                     if (!hasValue) {
                         allFieldsFilled = false;
-                        // Track which field is missing a value
-                        fieldStatus[fieldName] = 'empty';
                     }
 
                     // Only validate fields that have been touched or have values
@@ -1684,24 +1664,12 @@
                     if (hasValue || hasBeenTouched) {
                         if (!validateField(fieldName, value)) {
                             isValid = false;
-                            // Track which field failed validation
-                            fieldStatus[fieldName] = 'invalid';
-                        } else {
-                            fieldStatus[fieldName] = 'valid';
                         }
                     }
                 });
 
                 // Enable submit button only if ALL required fields are filled AND valid
                 const shouldEnable = allFieldsFilled && isValid;
-                
-                // Log form validation status to the console for debugging
-                console.log('Form Validation Status:', {
-                    shouldEnableButton: shouldEnable,
-                    allFieldsFilled: allFieldsFilled,
-                    isValid: isValid,
-                    fieldStatus: fieldStatus
-                });
 
                 if (submitButton) {
                     submitButton.disabled = !shouldEnable;
@@ -1748,6 +1716,23 @@
                         }
                         checkFormValidity();
                     });
+                }
+            });
+            
+            // Special handling for address_map_input to sync with hidden address field
+            const addressMapInput = document.getElementById('address_map_input');
+            const addressHiddenField = document.getElementById('address');
+            if (addressMapInput && addressHiddenField) {
+                addressMapInput.addEventListener('input', function() {
+                    // Copy the value to the hidden address field
+                    addressHiddenField.value = this.value;
+                    addressHiddenField.dataset.touched = 'true';
+                    
+                    // Check form validity after updating hidden field
+                    validateField('address', addressHiddenField.value);
+                    checkFormValidity();
+                });
+            }
 
                     // For select fields, also listen to change events
                     if (field.tagName === 'SELECT') {
@@ -1777,36 +1762,6 @@
                 submitButton.classList.remove('hover:bg-gray-700');
             }
 
-            // Setup address map input to sync with hidden address field
-            const addressMapInput = document.getElementById('address_map_input');
-            if (addressMapInput) {
-                // Sync address map input with hidden address field
-                addressMapInput.addEventListener('input', function() {
-                    const addressField = document.getElementById('address');
-                    if (addressField && this.value) {
-                        addressField.value = this.value;
-                        addressField.dataset.touched = 'true';
-                        
-                        // Run validation after a short delay
-                        setTimeout(() => {
-                            validateField('address', addressField.value);
-                            checkFormValidity();
-                        }, 100);
-                    }
-                });
-                
-                // Handle blur event to ensure address is saved
-                addressMapInput.addEventListener('blur', function() {
-                    const addressField = document.getElementById('address');
-                    if (addressField && this.value && !addressField.value) {
-                        addressField.value = this.value;
-                        addressField.dataset.touched = 'true';
-                        validateField('address', addressField.value);
-                        checkFormValidity();
-                    }
-                });
-            }
-
             // Make checkFormValidity available globally for other scripts
             window.appointmentFormValidation = {
                 checkFormValidity: checkFormValidity,
@@ -1818,8 +1773,7 @@
             checkFormValidity();
             setTimeout(() => {
                 checkFormValidity();
-                console.log('Initial form validation completed');
-            }, 100);
+            }, 50);
         });
     </script>
 @endpush
