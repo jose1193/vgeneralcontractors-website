@@ -4,6 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>❌ Solicitud Rechazada - V General Contractors</title>
+    @php
+    // Get admin email for BCC
+    $adminEmail = \App\Models\EmailData::where('type', 'Admin')->first();
+    $adminEmailAddress = $adminEmail ? $adminEmail->email : ($companyData ? $companyData->email : null);
+    @endphp
+    
+    @if($adminEmailAddress)
+    <meta name="x-admin-bcc" content="{{ $adminEmailAddress }}">
+    @endif
     <style>
         body {
             font-family: Arial, sans-serif;

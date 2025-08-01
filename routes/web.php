@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\MailDebugController;
+
+// Debugging routes
+Route::get('/debug/mail-test', [MailDebugController::class, 'testMail'])->middleware(['auth'])->name('debug.mail-test');
 
 // Language switching routes
 Route::get('/lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
