@@ -1087,7 +1087,7 @@
         .checkbox-field:hover {
             border-color: #eab308;
         }
-        
+
         /* Insurance Radio Label Styles */
         .insurance-label {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1140,9 +1140,12 @@
         }
 
         @keyframes pulse-selected {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
             }
+
             50% {
                 box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.5), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
             }
@@ -1163,7 +1166,7 @@
                     }
                 });
             });
-            
+
             // Insurance radio buttons styling setup
             const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
             const insuranceLabels = document.querySelectorAll('.insurance-label');
