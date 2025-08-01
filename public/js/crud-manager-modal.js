@@ -43,6 +43,8 @@ class CrudManagerModal {
         this.sortDirection = options.defaultSortDirection || "desc";
         this.searchTerm = "";
         this.showDeleted = options.showDeleted || false;
+        this.dateStart = "";  // For date filter start
+        this.dateEnd = "";    // For date filter end
         this.currentEntity = null;
         this.currentData = null; // Para almacenar los datos actuales
         this.isEditing = false;
@@ -247,6 +249,15 @@ class CrudManagerModal {
             search: this.searchTerm,
             show_deleted: this.showDeleted ? "true" : "false",
         };
+        
+        // Add date filter parameters if they exist
+        if (this.dateStart) {
+            requestData.date_start = this.dateStart;
+        }
+        
+        if (this.dateEnd) {
+            requestData.date_end = this.dateEnd;
+        }
 
         console.log("Making AJAX request with data:", requestData);
 
@@ -2308,6 +2319,28 @@ class CrudManagerModal {
             title: "Errores de validación",
             text: errorMessage,
         });
+    }
+    
+    /**
+     * Apply date filters to the data request
+     */
+    applyDateFilters(startDate, endDate) {
+        console.log("Applying date filters:", { startDate, endDate });
+        this.dateStart = startDate;
+        this.dateEnd = endDate;
+        this.currentPage = 1;
+        this.loadEntities();
+    }
+    
+    /**
+     * Clear date filters
+     */
+    clearDateFilters() {
+        console.log("Clearing date filters");
+        this.dateStart = "";
+        this.dateEnd = "";
+        this.currentPage = 1;
+        this.loadEntities();
     }
 }
 
