@@ -88,16 +88,16 @@
             font-weight: bold;
         }
 
-        /* Use moderately wider container for insurance companies */
+        /* Use wider container for insurance companies */
         .header {
-            width: 92%;
+            width: 95%;
             border-bottom: 2px solid var(--primary-color);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .data-table {
-            width: 92%;
-            margin-top: 25px;
+            width: 95%;
+            margin-top: 15px;
             margin-bottom: 20px;
         }
 
@@ -107,29 +107,23 @@
             break-inside: avoid;
         }
 
-        /* Table headers - respect the repeat_headers option from PHP */
-        @if (($options['repeat_headers'] ?? false) === true)
-            .data-table thead {
-                display: table-header-group;
-            }
-        @else
-            .data-table thead {
-                display: table-row-group;
-            }
-        @endif
+        /* Simplified table headers - no repetition conflicts */
+        .data-table thead {
+            display: table-header-group;
+        }
 
         .summary {
-            width: 92%;
+            width: 95%;
             border-left: 4px solid var(--primary-color);
         }
 
         .footer {
-            width: 92%;
+            width: 95%;
         }
 
         /* Enhanced company info layout for insurance companies */
         .header-content {
-            padding: 25px 0;
+            padding: 15px 0;
         }
 
         .company-logo {
@@ -138,26 +132,14 @@
 
         .company-logo img {
             max-width: 1140px;
-            max-height: 300px;
+            max-height: 60px;
         }
 
         /* Table container for better page flow */
         .table-container {
-            margin-top: 20px;
+            margin-top: 10px;
             page-break-inside: auto;
         }
-
-        /* Ensure header is controlled by the repeat_headers option */
-        @if (($options['repeat_headers'] ?? false) === true)
-            .table-container .data-table thead {
-                display: table-header-group;
-                page-break-after: avoid;
-            }
-        @else
-            .table-container .data-table thead {
-                display: table-row-group;
-            }
-        @endif
 
         /* Better spacing for continued tables */
         .table-container .data-table tbody tr:first-child {

@@ -39,14 +39,8 @@
 
         /* Base PDF Styles */
         @page {
-            margin: 20mm 15mm 25mm 15mm;
+            margin: 15mm 15mm 20mm 15mm;
             size: A4;
-
-            @top-center {
-                content: "{{ $title }}";
-                font-size: 10px;
-                color: #666;
-            }
 
             @bottom-left {
                 content: "Generated: {{ $exportDate }}";
@@ -68,14 +62,21 @@
             }
         }
 
-        /* First page keeps original spacing */
+        /* First page with full header */
         @page :first {
-            margin-top: 20mm;
+            margin-top: 15mm;
         }
 
-        /* Subsequent pages need more space for continued content */
+        /* Subsequent pages with reduced top margin */
         @page :not(:first) {
-            margin-top: 30mm;
+            margin-top: 15mm;
+            
+            @top-center {
+                content: "{{ $title }} - Continued";
+                font-size: 9px;
+                color: #666;
+                padding-bottom: 5mm;
+            }
         }
 
         * {
@@ -95,17 +96,15 @@
         /* Header Styles */
         .header {
             width: 90%;
-            margin: 18px auto 25px auto;
+            margin: 10px auto 20px auto;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
-            position: running(header);
         }
 
         /* Ensure proper spacing for continued content on new pages */
         .data-table {
-            margin-top: 60px;
-            /* Aumentado para dar espacio al header reducido */
+            margin-top: 15px;
             width: 90%;
             margin-left: auto;
             margin-right: auto;
@@ -113,40 +112,9 @@
             font-size: 12px;
         }
 
-        /* Header repetition for all pages */
-        @page :not(:first) {
-            margin-top: 50mm;
-            /* Aumentado para acomodar el header reducido */
-
-            @top-left {
-                content: element(header-continuation);
-            }
-        }
-
-        /* Header reducido para páginas siguientes */
+        /* Remove conflicting header repetition styles */
         .header-continuation {
-            position: running(header-continuation);
-            width: 90%;
-            margin: 10px auto 15px auto;
-            /* Más espacio arriba y abajo */
-            padding: 10px 0;
-            border-bottom: 1px solid var(--primary-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-        }
-
-        .header-continuation .mini-logo {
-            max-height: 40px;
-            width: auto;
-        }
-
-        .header-continuation .mini-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-transform: uppercase;
+            display: none; /* Hide this element as it causes conflicts */
         }
 
         /* New dedicated container for logo and company data */
@@ -251,9 +219,14 @@
         /* Table Styles */
         .data-table {
             width: 90%;
-            margin: 0 auto 50px auto;
+            margin: 20px auto 50px auto;
             border-collapse: collapse;
             font-size: 12px;
+        }
+
+        /* Simplified header control based on options */
+        .data-table thead {
+            display: table-header-group;
         }
 
         @if (($options['repeat_headers'] ?? false) === true)
@@ -308,7 +281,7 @@
             break-after: avoid;
         }
 
-        /* Conditional header repetition across pages */
+        /* Improved page break control */
         .data-table {
             page-break-inside: auto;
             break-inside: auto;
@@ -322,17 +295,10 @@
             display: table-footer-group;
         }
 
-        /* Header repetition - Simplified */
-        .header {
-            page-break-inside: avoid;
-        }
-
-        /* Content starts immediately after header */
+        /* Content starts with proper spacing after header */
         .content {
             margin-top: 0;
         }
-
-        /* Prevent orphaned headers */
 
         /* Optimize row height */
         .data-table tr {
@@ -631,17 +597,6 @@
             @endif
         </div>
     @endif
-
-    <!-- Header reducido para páginas siguientes (estilo Word) -->
-    <div class="header-continuation">
-        @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
-            <img src="{{ $companyInfo['logo_path'] }}" alt="Logo" class="mini-logo">
-        @endif
-        <div class="mini-title">{{ $title }}</div>
-        <div style="font-size: 9px; color: var(--text-muted);">
-            Page <span class="page-number"></span>
-        </div>
-    </div>
 
     <!-- Content Section -->
     <div class="content">

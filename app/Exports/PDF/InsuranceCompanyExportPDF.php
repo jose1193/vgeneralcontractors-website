@@ -38,7 +38,11 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
             'show_borders' => true,
             'alternate_row_colors' => true,
             'show_summary' => true,
-            'repeat_headers' => false, // Don't repeat table headers on each page
+            'repeat_headers' => false, // Explicitly disable header repetition
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_left' => 10,
+            'margin_right' => 10,
         ];
 
         $options = array_merge($defaultOptions, $options);
