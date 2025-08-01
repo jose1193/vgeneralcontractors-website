@@ -296,36 +296,35 @@
 
         @push('styles')
             <style>
-                /* Premium Glassmorphism Index 2025 with Purple Shadows */
+                /* Modern Dark Crystal Index 2025 with Purple Accents */
                 .glassmorphism-container {
                     position: relative;
                     margin: 1rem 0;
-                    border-radius: 20px;
+                    border-radius: 16px;
                     padding: 1.5rem;
+                    overflow: hidden;
 
-                    /* Crystal Glass Background with Premium Transparency */
-                    background: rgba(0, 0, 0, 0.78);
+                    /* Dark Crystal Background */
+                    background: linear-gradient(135deg, 
+                        rgba(17, 17, 17, 0.95) 0%,
+                        rgba(30, 30, 30, 0.92) 50%,
+                        rgba(20, 20, 20, 0.95) 100%);
 
-                    /* Premium Purple Box Shadow System */
+                    /* Elegant Border */
+                    border: 1px solid rgba(139, 69, 190, 0.3);
+                    
+                    /* Modern Shadow System */
                     box-shadow:
-                        0 8px 32px 0 rgba(138, 43, 226, 0.25),
-                        0 16px 64px 0 rgba(128, 0, 255, 0.18),
-                        0 4px 16px 0 rgba(75, 0, 130, 0.3),
-                        0 2px 8px 0 rgba(147, 51, 234, 0.2),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                        inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+                        0 8px 32px rgba(139, 69, 190, 0.15),
+                        0 4px 16px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-                    /* Advanced Blur Effects */
-                    backdrop-filter: blur(20px) saturate(1.3);
-                    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+                    /* Subtle Blur */
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
 
-                    /* Refined Border for Glass Effect */
-                    border: 1px solid rgba(255, 255, 255, 0.12);
-                    border-top: 1px solid rgba(255, 255, 255, 0.25);
-
-                    /* Enhanced Animation */
-                    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    /* Smooth Animation */
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
                 .glassmorphism-container::before {
@@ -334,43 +333,76 @@
                     top: 0;
                     left: 0;
                     right: 0;
-                    bottom: 0;
-                    border-radius: 20px;
-                    background: linear-gradient(135deg,
-                            rgba(255, 255, 255, 0.1) 0%,
-                            rgba(255, 255, 255, 0.05) 25%,
-                            transparent 50%,
-                            rgba(138, 43, 226, 0.08) 75%,
-                            rgba(128, 0, 255, 0.12) 100%);
-                    pointer-events: none;
-                    opacity: 0;
-                    transition: opacity 0.4s ease;
+                    height: 2px;
+                    background: linear-gradient(90deg, 
+                        transparent 0%,
+                        rgba(139, 69, 190, 0.8) 25%,
+                        rgba(168, 85, 247, 0.9) 50%,
+                        rgba(139, 69, 190, 0.8) 75%,
+                        transparent 100%);
+                    opacity: 0.8;
                 }
 
                 .glassmorphism-container:hover {
-                    transform: translateY(-3px);
+                    transform: translateY(-2px);
+                    border-color: rgba(168, 85, 247, 0.5);
                     box-shadow:
-                        0 12px 48px 0 rgba(138, 43, 226, 0.35),
-                        0 24px 80px 0 rgba(128, 0, 255, 0.25),
-                        0 6px 24px 0 rgba(75, 0, 130, 0.4),
-                        0 3px 12px 0 rgba(147, 51, 234, 0.3),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+                        0 12px 40px rgba(139, 69, 190, 0.25),
+                        0 6px 20px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
                 }
 
-                .glassmorphism-container:hover::before {
-                    opacity: 1;
+                /* Table Enhancement */
+                .glassmorphism-container table {
+                    background: transparent !important;
                 }
 
-                @keyframes fadeInUp {
-                    0% {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    100% {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                .glassmorphism-container table thead th {
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    color: #e5e7eb !important;
+                }
+
+                .glassmorphism-container table tbody tr {
+                    background: rgba(30, 30, 30, 0.6) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
+                    transition: all 0.2s ease;
+                }
+
+                .glassmorphism-container table tbody tr:hover {
+                    background: rgba(139, 69, 190, 0.1) !important;
+                    transform: scale(1.01);
+                }
+
+                .glassmorphism-container table tbody td {
+                    color: #f3f4f6 !important;
+                    border-color: rgba(139, 69, 190, 0.2) !important;
+                }
+
+                /* Input and Button Enhancements */
+                .glassmorphism-container input,
+                .glassmorphism-container select {
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                }
+
+                .glassmorphism-container input:focus,
+                .glassmorphism-container select:focus {
+                    border-color: rgba(168, 85, 247, 0.6) !important;
+                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
+                }
+
+                .glassmorphism-container .btn,
+                .glassmorphism-container button {
+                    border-radius: 8px !important;
+                    transition: all 0.2s ease !important;
+                }
+
+                /* Label Enhancement */
+                .glassmorphism-container label {
+                    color: #e5e7eb !important;
                 }
             </style>
         @endpush
