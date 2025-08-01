@@ -554,6 +554,18 @@
                 font-weight: 500;
             }
 
+            /* Fix for text colors in table cells */
+            .glassmorphism-container table tbody td,
+            .glassmorphism-container table tbody td * {
+                color: #f1f5f9 !important;
+            }
+
+            /* Override dark text colors specifically */
+            .glassmorphism-container .text-gray-900,
+            .glassmorphism-container .dark\\:text-gray-100 {
+                color: #f1f5f9 !important;
+            }
+
             /* Enhanced Input and Button Styling */
             .glassmorphism-container input,
             .glassmorphism-container select,
@@ -577,6 +589,55 @@
                 border-color: rgba(168, 85, 247, 0.6) !important;
                 box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
                 background: rgba(50, 50, 50, 0.9) !important;
+            }
+
+            /* Enhanced Checkbox Styling */
+            .glassmorphism-container input[type="checkbox"],
+            .appointment-checkbox,
+            #selectAll {
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                width: 1.25rem !important;
+                height: 1.25rem !important;
+                border: 2px solid rgba(139, 69, 190, 0.6) !important;
+                border-radius: 0.375rem !important;
+                background: rgba(40, 40, 40, 0.8) !important;
+                cursor: pointer !important;
+                position: relative !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                display: block !important;
+            }
+
+            .glassmorphism-container input[type="checkbox"]:hover,
+            .appointment-checkbox:hover,
+            #selectAll:hover {
+                border-color: rgba(168, 85, 247, 0.8) !important;
+                background: rgba(50, 50, 60, 0.9) !important;
+                transform: scale(1.05) !important;
+                box-shadow: 0 0 10px rgba(139, 69, 190, 0.3) !important;
+            }
+
+            .glassmorphism-container input[type="checkbox"]:checked,
+            .appointment-checkbox:checked,
+            #selectAll:checked {
+                background: linear-gradient(135deg, rgba(139, 69, 190, 0.9), rgba(168, 85, 247, 1)) !important;
+                border-color: rgba(168, 85, 247, 1) !important;
+            }
+
+            .glassmorphism-container input[type="checkbox"]:checked::after,
+            .appointment-checkbox:checked::after,
+            #selectAll:checked::after {
+                content: "✓" !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                color: #ffffff !important;
+                font-size: 0.875rem !important;
+                font-weight: bold !important;
+                line-height: 1 !important;
             }
 
             /* Enhanced Button Styling */
@@ -839,6 +900,58 @@
                 }
             }
 
+            /* Text Color Fixes */
+            .glassmorphism-container table td,
+            .glassmorphism-container table td *,
+            .glassmorphism-container tbody td,
+            .glassmorphism-container tbody td *,
+            .appointments-table td,
+            .appointments-table td *,
+            .glassmorphism-container .text-sm {
+                color: rgba(255, 255, 255, 0.95) !important;
+            }
+
+            .glassmorphism-container table td a,
+            .glassmorphism-container table td button,
+            .glassmorphism-container td .badge,
+            .glassmorphism-container td .btn {
+                color: rgba(255, 255, 255, 0.9) !important;
+            }
+
+            /* Table Overflow Fix */
+            .glassmorphism-container .table-responsive,
+            .table-container {
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+                max-width: 100% !important;
+                scrollbar-width: thin !important;
+                scrollbar-color: rgba(139, 69, 190, 0.6) rgba(40, 40, 40, 0.3) !important;
+            }
+
+            .glassmorphism-container .table-responsive::-webkit-scrollbar {
+                height: 8px !important;
+                width: 8px !important;
+            }
+
+            .glassmorphism-container .table-responsive::-webkit-scrollbar-track {
+                background: rgba(40, 40, 40, 0.3) !important;
+                border-radius: 4px !important;
+            }
+
+            .glassmorphism-container .table-responsive::-webkit-scrollbar-thumb {
+                background: linear-gradient(135deg, rgba(139, 69, 190, 0.6), rgba(168, 85, 247, 0.8)) !important;
+                border-radius: 4px !important;
+            }
+
+            .glassmorphism-container .table-responsive::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 1)) !important;
+            }
+
+            .glassmorphism-container table {
+                min-width: 100% !important;
+                white-space: nowrap !important;
+            }
+
             .animate-float-slow {
                 animation: float-slow 6s ease-in-out infinite;
             }
@@ -944,135 +1057,135 @@
         </style>
 
 
+        @push('scripts')
+            <script>
+                $(document).ready(function() {
+                    // Recuperar estado del toggle de localStorage antes de inicializar el manager
+                    const showDeletedState = localStorage.getItem('showDeleted') === 'true';
+                    console.log('Estado inicial de showDeleted:', showDeletedState);
 
-        <script>
-            $(document).ready(function() {
-                // Recuperar estado del toggle de localStorage antes de inicializar el manager
-                const showDeletedState = localStorage.getItem('showDeleted') === 'true';
-                console.log('Estado inicial de showDeleted:', showDeletedState);
-
-                // Make the manager globally accessible
-                window.appointmentManager = new CrudManager({
-                    entityName: 'Appointment',
-                    entityNamePlural: 'Appointments',
-                    routes: {
-                        index: "{{ secure_url(route('appointments.index', [], false)) }}",
-                        store: "{{ secure_url(route('appointments.store', [], false)) }}",
-                        edit: "{{ secure_url(route('appointments.edit', ':id', false)) }}",
-                        update: "{{ secure_url(route('appointments.update', ':id', false)) }}",
-                        destroy: "{{ secure_url(route('appointments.destroy', ':id', false)) }}",
-                        restore: "{{ secure_url(route('appointments.restore', ':id', false)) }}",
-                        checkName: "{{ secure_url(route('appointments.check-email', [], false)) }}",
-                        sendRejection: "{{ secure_url(route('appointments.send-rejection', [], false)) }}"
-                    },
-                    tableSelector: '#appointmentsTable',
-                    searchSelector: '#searchInput',
-                    perPageSelector: '#perPage',
-                    showDeletedSelector: '#showDeleted',
-                    paginationSelector: '#pagination',
-                    alertSelector: '#alertContainer',
-                    // Date filter selectors
-                    startDateSelector: '#start_date',
-                    endDateSelector: '#end_date',
-                    clearDateFilterSelector: '#clearDateFilters',
-                    statusLeadFilterSelector: '#status_lead_filter',
-                    idField: 'uuid',
-                    searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
-                    // Establecer el valor inicial basado en localStorage
-                    showDeleted: showDeletedState,
-                    tableHeaders: [{
-                            field: 'checkbox',
-                            name: '',
-                            sortable: false,
-                            getter: (entity) =>
-                                entity.deleted_at ? '' :
-                                `<input type="checkbox" class="appointment-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" data-id="${entity.uuid}">`
+                    // Make the manager globally accessible
+                    window.appointmentManager = new CrudManager({
+                        entityName: 'Appointment',
+                        entityNamePlural: 'Appointments',
+                        routes: {
+                            index: "{{ secure_url(route('appointments.index', [], false)) }}",
+                            store: "{{ secure_url(route('appointments.store', [], false)) }}",
+                            edit: "{{ secure_url(route('appointments.edit', ':id', false)) }}",
+                            update: "{{ secure_url(route('appointments.update', ':id', false)) }}",
+                            destroy: "{{ secure_url(route('appointments.destroy', ':id', false)) }}",
+                            restore: "{{ secure_url(route('appointments.restore', ':id', false)) }}",
+                            checkName: "{{ secure_url(route('appointments.check-email', [], false)) }}",
+                            sendRejection: "{{ secure_url(route('appointments.send-rejection', [], false)) }}"
                         },
-                        {
-                            field: 'first_name',
-                            name: 'Name',
-                            sortable: true,
-                            getter: (entity) => `${entity.first_name} ${entity.last_name}`
-                        },
-                        {
-                            field: 'email',
-                            name: 'Email',
-                            sortable: true
-                        },
-                        {
-                            field: 'phone',
-                            name: 'Phone',
-                            sortable: false
-                        },
-                        {
-                            field: 'inspection_date',
-                            name: 'Inspection Date',
-                            sortable: true,
-                            getter: (entity) => entity.inspection_date ? new Date(entity.inspection_date)
-                                .toLocaleDateString() : 'N/A'
-                        },
-                        {
-                            field: 'inspection_time',
-                            name: 'Inspection Time',
-                            sortable: true,
-                            getter: (entity) => entity.inspection_time ? new Date(
-                                    `2000-01-01T${entity.inspection_time}`)
-                                .toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                }) : 'N/A'
-                        },
-                        {
-                            field: 'insurance_property',
-                            name: 'Insurance',
-                            sortable: true,
-                            getter: (entity) => {
-                                if (entity.insurance_property === true) {
-                                    return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Yes</span>';
-                                } else {
-                                    return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">No</span>';
+                        tableSelector: '#appointmentsTable',
+                        searchSelector: '#searchInput',
+                        perPageSelector: '#perPage',
+                        showDeletedSelector: '#showDeleted',
+                        paginationSelector: '#pagination',
+                        alertSelector: '#alertContainer',
+                        // Date filter selectors
+                        startDateSelector: '#start_date',
+                        endDateSelector: '#end_date',
+                        clearDateFilterSelector: '#clearDateFilters',
+                        statusLeadFilterSelector: '#status_lead_filter',
+                        idField: 'uuid',
+                        searchFields: ['first_name', 'last_name', 'email', 'status_lead', 'phone'],
+                        // Establecer el valor inicial basado en localStorage
+                        showDeleted: showDeletedState,
+                        tableHeaders: [{
+                                field: 'checkbox',
+                                name: '',
+                                sortable: false,
+                                getter: (entity) =>
+                                    entity.deleted_at ? '' :
+                                    `<input type="checkbox" class="appointment-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" data-id="${entity.uuid}">`
+                            },
+                            {
+                                field: 'first_name',
+                                name: 'Name',
+                                sortable: true,
+                                getter: (entity) => `${entity.first_name} ${entity.last_name}`
+                            },
+                            {
+                                field: 'email',
+                                name: 'Email',
+                                sortable: true
+                            },
+                            {
+                                field: 'phone',
+                                name: 'Phone',
+                                sortable: false
+                            },
+                            {
+                                field: 'inspection_date',
+                                name: 'Inspection Date',
+                                sortable: true,
+                                getter: (entity) => entity.inspection_date ? new Date(entity.inspection_date)
+                                    .toLocaleDateString() : 'N/A'
+                            },
+                            {
+                                field: 'inspection_time',
+                                name: 'Inspection Time',
+                                sortable: true,
+                                getter: (entity) => entity.inspection_time ? new Date(
+                                        `2000-01-01T${entity.inspection_time}`)
+                                    .toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    }) : 'N/A'
+                            },
+                            {
+                                field: 'insurance_property',
+                                name: 'Insurance',
+                                sortable: true,
+                                getter: (entity) => {
+                                    if (entity.insurance_property === true) {
+                                        return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Yes</span>';
+                                    } else {
+                                        return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">No</span>';
+                                    }
                                 }
-                            }
-                        },
-                        {
-                            field: 'status_lead',
-                            name: 'Status',
-                            sortable: true,
-                            getter: (entity) => {
-                                const statusMap = {
-                                    'New': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">New</span>',
-                                    'Called': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Called</span>',
-                                    'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
-                                    'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
-                                };
-                                return entity.status_lead ? statusMap[entity.status_lead] || entity
-                                    .status_lead : 'N/A';
-                            }
-                        },
-                        {
-                            field: 'inspection_status',
-                            name: 'Inspection Status',
-                            sortable: true,
-                            getter: (entity) => {
-                                const statusMap = {
-                                    'Confirmed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Confirmed</span>',
-                                    'Completed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>',
-                                    'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
-                                    'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
-                                };
-                                return entity.inspection_status ? statusMap[entity.inspection_status] ||
-                                    entity
-                                    .inspection_status : 'N/A';
-                            }
-                        },
-                        {
-                            field: 'actions',
-                            name: 'Actions',
-                            sortable: false,
-                            getter: (appointment) => {
-                                const editUrl = `/appointments/${appointment.uuid}/edit`;
+                            },
+                            {
+                                field: 'status_lead',
+                                name: 'Status',
+                                sortable: true,
+                                getter: (entity) => {
+                                    const statusMap = {
+                                        'New': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">New</span>',
+                                        'Called': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Called</span>',
+                                        'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
+                                        'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
+                                    };
+                                    return entity.status_lead ? statusMap[entity.status_lead] || entity
+                                        .status_lead : 'N/A';
+                                }
+                            },
+                            {
+                                field: 'inspection_status',
+                                name: 'Inspection Status',
+                                sortable: true,
+                                getter: (entity) => {
+                                    const statusMap = {
+                                        'Confirmed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Confirmed</span>',
+                                        'Completed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>',
+                                        'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
+                                        'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
+                                    };
+                                    return entity.inspection_status ? statusMap[entity.inspection_status] ||
+                                        entity
+                                        .inspection_status : 'N/A';
+                                }
+                            },
+                            {
+                                field: 'actions',
+                                name: 'Actions',
+                                sortable: false,
+                                getter: (appointment) => {
+                                    const editUrl = `/appointments/${appointment.uuid}/edit`;
 
-                                let actionsHtml = `
+                                    let actionsHtml = `
                                 <div class="flex justify-center space-x-2">
                                     <a href="${editUrl}" class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Edit Appointment">
                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1080,263 +1193,263 @@
                                          </svg>
                                     </a>`;
 
-                                // Botón para compartir ubicación - Se agrega independientemente del estado de borrado
-                                if (appointment.latitude && appointment.longitude) {
-                                    const address =
-                                        `${appointment.address || ''}, ${appointment.city || ''}`;
-                                    actionsHtml += `
+                                    // Botón para compartir ubicación - Se agrega independientemente del estado de borrado
+                                    if (appointment.latitude && appointment.longitude) {
+                                        const address =
+                                            `${appointment.address || ''}, ${appointment.city || ''}`;
+                                        actionsHtml += `
                                     <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Share Location">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
                                     </button>`;
-                                } else {
-                                    // Si no hay coordenadas, aún mostrar el botón pero con un comportamiento diferente
-                                    actionsHtml += `
+                                    } else {
+                                        // Si no hay coordenadas, aún mostrar el botón pero con un comportamiento diferente
+                                        actionsHtml += `
                                     <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-lg cursor-not-allowed opacity-60" title="No Location Available">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"/>
                                         </svg>
                                     </button>`;
-                                }
+                                    }
 
-                                if (appointment.deleted_at) {
-                                    actionsHtml += `
+                                    if (appointment.deleted_at) {
+                                        actionsHtml += `
                                     <button data-id="${appointment.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Restore Appointment">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
                                     </button>`;
-                                } else {
-                                    actionsHtml += `
+                                    } else {
+                                        actionsHtml += `
                                     <button data-id="${appointment.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Delete Appointment">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                     </button>`;
+                                    }
+
+                                    actionsHtml += `</div>`;
+                                    return actionsHtml;
                                 }
-
-                                actionsHtml += `</div>`;
-                                return actionsHtml;
                             }
-                        }
-                    ],
-                    validationFields: [{
-                            name: 'first_name',
-                            errorMessage: 'Please enter a valid first name.'
-                        },
-                        {
-                            name: 'last_name',
-                            errorMessage: 'Please enter a valid last name.'
-                        },
-                        {
-                            name: 'email',
-                            validation: {
-                                url: "{{ route('appointments.check-email') }}",
-                                delay: 500,
-                                minLength: 5,
-                                errorMessage: '{{ __('This email is already taken.') }}',
-                                successMessage: '{{ __('Email is available') }}'
+                        ],
+                        validationFields: [{
+                                name: 'first_name',
+                                errorMessage: 'Please enter a valid first name.'
                             },
-                            errorMessage: '{{ __('Please choose a different email.') }}'
-                        },
-                        {
-                            name: 'phone',
-                            errorMessage: 'Please enter a valid phone number.'
-                        },
-                        {
-                            name: 'inspection_date',
-                            errorMessage: 'Please enter a valid inspection date.'
-                        },
-                        {
-                            name: 'status_lead',
-                            errorMessage: 'Please select a valid lead status.'
+                            {
+                                name: 'last_name',
+                                errorMessage: 'Please enter a valid last name.'
+                            },
+                            {
+                                name: 'email',
+                                validation: {
+                                    url: "{{ route('appointments.check-email') }}",
+                                    delay: 500,
+                                    minLength: 5,
+                                    errorMessage: '{{ __('This email is already taken.') }}',
+                                    successMessage: '{{ __('Email is available') }}'
+                                },
+                                errorMessage: '{{ __('Please choose a different email.') }}'
+                            },
+                            {
+                                name: 'phone',
+                                errorMessage: 'Please enter a valid phone number.'
+                            },
+                            {
+                                name: 'inspection_date',
+                                errorMessage: 'Please enter a valid inspection date.'
+                            },
+                            {
+                                name: 'status_lead',
+                                errorMessage: 'Please select a valid lead status.'
+                            }
+                        ],
+                        defaultSortField: 'inspection_date',
+                        defaultSortDirection: 'desc'
+                    });
+
+                    // Add statusLeadFilter property to appointmentManager
+                    window.appointmentManager.statusLeadFilter = '';
+
+                    // Extend the original loadEntities method
+                    const originalLoadEntities = window.appointmentManager.loadEntities;
+                    window.appointmentManager.loadEntities = function(page = 1) {
+                        // Set current page
+                        this.currentPage = page;
+
+                        // Show loading state
+                        $(this.tableSelector + ' #loadingRow').show();
+                        $(this.tableSelector + ' tr:not(#loadingRow)').remove();
+
+                        // Prepare request data
+                        const requestData = {
+                            page: this.currentPage,
+                            per_page: this.perPage,
+                            sort_field: this.sortField,
+                            sort_direction: this.sortDirection,
+                            search: this.searchTerm,
+                            show_deleted: this.showDeleted ? "true" : "false",
+                        };
+
+                        // Add date filters if they exist
+                        if (this.startDate) {
+                            requestData.start_date = this.startDate;
                         }
-                    ],
-                    defaultSortField: 'inspection_date',
-                    defaultSortDirection: 'desc'
-                });
 
-                // Add statusLeadFilter property to appointmentManager
-                window.appointmentManager.statusLeadFilter = '';
+                        if (this.endDate) {
+                            requestData.end_date = this.endDate;
+                        }
 
-                // Extend the original loadEntities method
-                const originalLoadEntities = window.appointmentManager.loadEntities;
-                window.appointmentManager.loadEntities = function(page = 1) {
-                    // Set current page
-                    this.currentPage = page;
+                        // Add status_lead_filter if it exists
+                        if (this.statusLeadFilter) {
+                            requestData.status_lead_filter = this.statusLeadFilter;
+                        }
 
-                    // Show loading state
-                    $(this.tableSelector + ' #loadingRow').show();
-                    $(this.tableSelector + ' tr:not(#loadingRow)').remove();
+                        // Make AJAX request
+                        $.ajax({
+                            url: this.routes.index,
+                            type: 'GET',
+                            dataType: 'json',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                'Accept': 'application/json'
+                            },
+                            data: requestData,
+                            success: (response) => {
+                                this.renderAppointmentsTable(response);
+                                this.renderPagination(response);
+                            },
+                            error: (xhr) => {
+                                console.error(`Error loading ${this.entityNamePlural}:`, xhr.responseText);
 
-                    // Prepare request data
-                    const requestData = {
-                        page: this.currentPage,
-                        per_page: this.perPage,
-                        sort_field: this.sortField,
-                        sort_direction: this.sortDirection,
-                        search: this.searchTerm,
-                        show_deleted: this.showDeleted ? "true" : "false",
-                    };
-
-                    // Add date filters if they exist
-                    if (this.startDate) {
-                        requestData.start_date = this.startDate;
-                    }
-
-                    if (this.endDate) {
-                        requestData.end_date = this.endDate;
-                    }
-
-                    // Add status_lead_filter if it exists
-                    if (this.statusLeadFilter) {
-                        requestData.status_lead_filter = this.statusLeadFilter;
-                    }
-
-                    // Make AJAX request
-                    $.ajax({
-                        url: this.routes.index,
-                        type: 'GET',
-                        dataType: 'json',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            'Accept': 'application/json'
-                        },
-                        data: requestData,
-                        success: (response) => {
-                            this.renderAppointmentsTable(response);
-                            this.renderPagination(response);
-                        },
-                        error: (xhr) => {
-                            console.error(`Error loading ${this.entityNamePlural}:`, xhr.responseText);
-
-                            // Show error message in table
-                            $(this.tableSelector).html(`
+                                // Show error message in table
+                                $(this.tableSelector).html(`
                                 <tr>
                                     <td colspan="${this.tableHeaders.length}" class="px-6 py-4 text-center text-sm text-red-500">
                                         Error loading ${this.entityNamePlural}. Please check the console for details.
                                     </td>
                                 </tr>
                             `);
-                        },
-                        complete: () => {
-                            $(this.tableSelector + ' #loadingRow').hide();
-                        }
-                    });
-                };
+                            },
+                            complete: () => {
+                                $(this.tableSelector + ' #loadingRow').hide();
+                            }
+                        });
+                    };
 
-                // Custom render table method for appointments
-                window.appointmentManager.renderAppointmentsTable = function(data) {
-                    const self = this;
-                    const entities = data.data;
-                    let html = "";
+                    // Custom render table method for appointments
+                    window.appointmentManager.renderAppointmentsTable = function(data) {
+                        const self = this;
+                        const entities = data.data;
+                        let html = "";
 
-                    if (entities.length === 0) {
-                        html =
-                            `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">{{ __('no_appointments_found_matching_criteria') }}</td></tr>`;
-                    } else {
-                        entities.forEach((entity) => {
-                            const isDeleted = entity.deleted_at !== null;
-                            const rowClass = isDeleted ? "bg-red-50 dark:bg-red-900 opacity-60" : "";
+                        if (entities.length === 0) {
+                            html =
+                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">{{ __('no_appointments_found_matching_criteria') }}</td></tr>`;
+                        } else {
+                            entities.forEach((entity) => {
+                                const isDeleted = entity.deleted_at !== null;
+                                const rowClass = isDeleted ? "bg-red-50 dark:bg-red-900 opacity-60" : "";
 
-                            html += `<tr class="${rowClass}">`;
+                                html += `<tr class="${rowClass}">`;
 
-                            // Use the table headers to render each cell
-                            self.tableHeaders.forEach((header) => {
-                                if (header.field === 'checkbox') {
-                                    const checkboxHtml = header.getter ? header.getter(entity) : '';
-                                    html +=
-                                        `<td class="px-4 py-3 text-center">${checkboxHtml}</td>`;
-                                } else if (header.field === 'actions') {
-                                    const actionsHtml = header.getter ? header.getter(entity) : '';
-                                    html +=
-                                        `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">${actionsHtml}</td>`;
-                                } else {
-                                    let value = header.getter ? header.getter(entity) : entity[
-                                        header.field];
-                                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">
+                                // Use the table headers to render each cell
+                                self.tableHeaders.forEach((header) => {
+                                    if (header.field === 'checkbox') {
+                                        const checkboxHtml = header.getter ? header.getter(entity) : '';
+                                        html +=
+                                            `<td class="px-4 py-3 text-center">${checkboxHtml}</td>`;
+                                    } else if (header.field === 'actions') {
+                                        const actionsHtml = header.getter ? header.getter(entity) : '';
+                                        html +=
+                                            `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">${actionsHtml}</td>`;
+                                    } else {
+                                        let value = header.getter ? header.getter(entity) : entity[
+                                            header.field];
+                                        html += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 text-center">
                                         ${value}
                                         ${header.field === "first_name" && isDeleted ? '<span class="ml-2 text-xs text-red-500 dark:text-red-400">(Inactive)</span>' : ""}
                                     </td>`;
-                                }
+                                    }
+                                });
+
+                                html += `</tr>`;
                             });
+                        }
 
-                            html += `</tr>`;
+                        // Replace table content
+                        $(self.tableSelector).html(html);
+
+                        // Don't attach edit-btn event handlers since we're using direct links
+                        // But still attach delete and restore handlers
+                        $(self.tableSelector + " .delete-btn").off('click').on("click", function(e) {
+                            e.preventDefault();
+                            const id = $(this).data("id");
+                            self.deleteEntity(id);
                         });
-                    }
 
-                    // Replace table content
-                    $(self.tableSelector).html(html);
+                        $(self.tableSelector + " .restore-btn").off('click').on("click", function(e) {
+                            e.preventDefault();
+                            const id = $(this).data("id");
+                            self.restoreEntity(id);
+                        });
+                    };
 
-                    // Don't attach edit-btn event handlers since we're using direct links
-                    // But still attach delete and restore handlers
-                    $(self.tableSelector + " .delete-btn").off('click').on("click", function(e) {
-                        e.preventDefault();
-                        const id = $(this).data("id");
-                        self.deleteEntity(id);
+                    // Add event listeners for delete and restore buttons
+                    $(document).on('click', '.delete-btn', function() {
+                        const id = $(this).data('id');
+                        window.appointmentManager.deleteEntity(id);
                     });
 
-                    $(self.tableSelector + " .restore-btn").off('click').on("click", function(e) {
-                        e.preventDefault();
-                        const id = $(this).data("id");
-                        self.restoreEntity(id);
+                    $(document).on('click', '.restore-btn', function() {
+                        const id = $(this).data('id');
+                        window.appointmentManager.restoreEntity(id);
                     });
-                };
 
-                // Add event listeners for delete and restore buttons
-                $(document).on('click', '.delete-btn', function() {
-                    const id = $(this).data('id');
-                    window.appointmentManager.deleteEntity(id);
-                });
+                    // Add event listener for status lead filter
+                    $('#status_lead_filter').on('change', function() {
+                        // Update the statusLeadFilter property
+                        window.appointmentManager.statusLeadFilter = $(this).val();
+                        // Reset to first page when changing filter
+                        window.appointmentManager.currentPage = 1;
+                        // Load entities with new filter
+                        window.appointmentManager.loadEntities();
+                    });
 
-                $(document).on('click', '.restore-btn', function() {
-                    const id = $(this).data('id');
-                    window.appointmentManager.restoreEntity(id);
-                });
+                    // Add event listeners for date filters to update properties
+                    $('#start_date').on('change', function() {
+                        window.appointmentManager.startDate = $(this).val();
+                        window.appointmentManager.currentPage = 1; // Reset to first page
+                        window.appointmentManager.loadEntities();
+                    });
 
-                // Add event listener for status lead filter
-                $('#status_lead_filter').on('change', function() {
-                    // Update the statusLeadFilter property
-                    window.appointmentManager.statusLeadFilter = $(this).val();
-                    // Reset to first page when changing filter
-                    window.appointmentManager.currentPage = 1;
-                    // Load entities with new filter
+                    $('#end_date').on('change', function() {
+                        window.appointmentManager.endDate = $(this).val();
+                        window.appointmentManager.currentPage = 1; // Reset to first page
+                        window.appointmentManager.loadEntities();
+                    });
+
+                    // Initialize loading of entities
                     window.appointmentManager.loadEntities();
-                });
 
-                // Add event listeners for date filters to update properties
-                $('#start_date').on('change', function() {
-                    window.appointmentManager.startDate = $(this).val();
-                    window.appointmentManager.currentPage = 1; // Reset to first page
-                    window.appointmentManager.loadEntities();
-                });
+                    // Update the clear filters button to also clear status filter
+                    $('#clearDateFilters').on('click', function() {
+                        $('#start_date, #end_date').val('');
+                        $('#status_lead_filter').val('');
+                        window.appointmentManager.startDate = '';
+                        window.appointmentManager.endDate = '';
+                        window.appointmentManager.statusLeadFilter = '';
+                        window.appointmentManager.loadEntities();
+                    });
 
-                $('#end_date').on('change', function() {
-                    window.appointmentManager.endDate = $(this).val();
-                    window.appointmentManager.currentPage = 1; // Reset to first page
-                    window.appointmentManager.loadEntities();
-                });
-
-                // Initialize loading of entities
-                window.appointmentManager.loadEntities();
-
-                // Update the clear filters button to also clear status filter
-                $('#clearDateFilters').on('click', function() {
-                    $('#start_date, #end_date').val('');
-                    $('#status_lead_filter').val('');
-                    window.appointmentManager.startDate = '';
-                    window.appointmentManager.endDate = '';
-                    window.appointmentManager.statusLeadFilter = '';
-                    window.appointmentManager.loadEntities();
-                });
-
-                // Handle export to Excel with status filter
-                function exportAppointmentsToExcel() {
-                    // Show loading indicator
-                    const originalButtonContent = $('#exportToExcel').html();
-                    $('#exportToExcel').html(`
+                    // Handle export to Excel with status filter
+                    function exportAppointmentsToExcel() {
+                        // Show loading indicator
+                        const originalButtonContent = $('#exportToExcel').html();
+                        $('#exportToExcel').html(`
                     <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -1344,196 +1457,196 @@
                     Exporting...
                 `).prop('disabled', true);
 
-                    // Gather filter parameters
-                    const searchValue = $(window.appointmentManager.searchSelector).val();
-                    const showDeleted = $(window.appointmentManager.showDeletedSelector).is(':checked') ? 'true' :
-                        'false';
-                    const startDate = window.appointmentManager.startDate;
-                    const endDate = window.appointmentManager.endDate;
-                    const statusLeadFilter = window.appointmentManager.statusLeadFilter;
-                    const sortField = window.appointmentManager.sortField;
-                    const sortDirection = window.appointmentManager.sortDirection;
+                        // Gather filter parameters
+                        const searchValue = $(window.appointmentManager.searchSelector).val();
+                        const showDeleted = $(window.appointmentManager.showDeletedSelector).is(':checked') ? 'true' :
+                            'false';
+                        const startDate = window.appointmentManager.startDate;
+                        const endDate = window.appointmentManager.endDate;
+                        const statusLeadFilter = window.appointmentManager.statusLeadFilter;
+                        const sortField = window.appointmentManager.sortField;
+                        const sortDirection = window.appointmentManager.sortDirection;
 
-                    // Create the URL with query parameters
-                    const exportUrl = new URL(window.appointmentManager.routes.index, window.location.origin);
-                    exportUrl.searchParams.append('export', 'excel');
-                    exportUrl.searchParams.append('search', searchValue);
-                    exportUrl.searchParams.append('show_deleted', showDeleted);
-                    if (startDate) exportUrl.searchParams.append('start_date', startDate);
-                    if (endDate) exportUrl.searchParams.append('end_date', endDate);
-                    if (statusLeadFilter) exportUrl.searchParams.append('status_lead_filter', statusLeadFilter);
-                    exportUrl.searchParams.append('sort_field', sortField);
-                    exportUrl.searchParams.append('sort_direction', sortDirection);
+                        // Create the URL with query parameters
+                        const exportUrl = new URL(window.appointmentManager.routes.index, window.location.origin);
+                        exportUrl.searchParams.append('export', 'excel');
+                        exportUrl.searchParams.append('search', searchValue);
+                        exportUrl.searchParams.append('show_deleted', showDeleted);
+                        if (startDate) exportUrl.searchParams.append('start_date', startDate);
+                        if (endDate) exportUrl.searchParams.append('end_date', endDate);
+                        if (statusLeadFilter) exportUrl.searchParams.append('status_lead_filter', statusLeadFilter);
+                        exportUrl.searchParams.append('sort_field', sortField);
+                        exportUrl.searchParams.append('sort_direction', sortDirection);
 
-                    // Ensure the button resets after a max time (fallback)
-                    const resetTimeout = setTimeout(function() {
-                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-                    }, 10000); // 10 seconds timeout as fallback
+                        // Ensure the button resets after a max time (fallback)
+                        const resetTimeout = setTimeout(function() {
+                            $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+                        }, 10000); // 10 seconds timeout as fallback
 
-                    try {
-                        // Use fetch API instead of iframe for better control
-                        fetch(exportUrl.toString())
-                            .then(response => {
-                                clearTimeout(resetTimeout);
+                        try {
+                            // Use fetch API instead of iframe for better control
+                            fetch(exportUrl.toString())
+                                .then(response => {
+                                    clearTimeout(resetTimeout);
 
-                                if (!response.ok) {
-                                    throw new Error('Export failed');
-                                }
+                                    if (!response.ok) {
+                                        throw new Error('Export failed');
+                                    }
 
-                                // Check content disposition to confirm it's a file download
-                                const contentDisposition = response.headers.get('content-disposition');
-                                if (!contentDisposition || !contentDisposition.includes('attachment')) {
-                                    throw new Error('Invalid response format');
-                                }
+                                    // Check content disposition to confirm it's a file download
+                                    const contentDisposition = response.headers.get('content-disposition');
+                                    if (!contentDisposition || !contentDisposition.includes('attachment')) {
+                                        throw new Error('Invalid response format');
+                                    }
 
-                                return response.blob();
-                            })
-                            .then(blob => {
-                                // Create download link
-                                const url = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                const filename = 'appointments_export_' + new Date().toISOString().slice(0, 10) +
-                                    '.xlsx';
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    // Create download link
+                                    const url = window.URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    const filename = 'appointments_export_' + new Date().toISOString().slice(0, 10) +
+                                        '.xlsx';
 
-                                a.href = url;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.click();
+                                    a.href = url;
+                                    a.download = filename;
+                                    document.body.appendChild(a);
+                                    a.click();
 
-                                // Cleanup
-                                window.URL.revokeObjectURL(url);
-                                a.remove();
+                                    // Cleanup
+                                    window.URL.revokeObjectURL(url);
+                                    a.remove();
 
-                                // Reset button and show success message
-                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+                                    // Reset button and show success message
+                                    $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
 
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Export Successful',
-                                    text: 'Your appointments have been exported to Excel',
-                                    confirmButtonColor: '#3B82F6'
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Export Successful',
+                                        text: 'Your appointments have been exported to Excel',
+                                        confirmButtonColor: '#3B82F6'
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Export error:', error);
+
+                                    // Reset button and show error message
+                                    $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Export Failed',
+                                        text: 'There was an error exporting to Excel. Please try again.',
+                                        confirmButtonColor: '#3B82F6'
+                                    });
                                 });
-                            })
-                            .catch(error => {
-                                console.error('Export error:', error);
+                        } catch (error) {
+                            // Handle any unexpected errors
+                            clearTimeout(resetTimeout);
+                            console.error('Unexpected export error:', error);
 
-                                // Reset button and show error message
-                                $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
+                            // Reset button and show error message
+                            $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
 
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Export Failed',
-                                    text: 'There was an error exporting to Excel. Please try again.',
-                                    confirmButtonColor: '#3B82F6'
-                                });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Export Failed',
+                                text: 'There was an unexpected error. Please try again.',
+                                confirmButtonColor: '#3B82F6'
                             });
-                    } catch (error) {
-                        // Handle any unexpected errors
-                        clearTimeout(resetTimeout);
-                        console.error('Unexpected export error:', error);
-
-                        // Reset button and show error message
-                        $('#exportToExcel').html(originalButtonContent).prop('disabled', false);
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Export Failed',
-                            text: 'There was an unexpected error. Please try again.',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                    }
-                }
-
-                // Replace the handle export to Excel
-                $('#exportToExcel').on('click', function() {
-                    exportAppointmentsToExcel();
-                });
-
-                // Selected appointments tracking
-                let selectedAppointments = [];
-
-                // Handle select all checkbox
-                $(document).on('change', '#selectAll', function() {
-                    const isChecked = $(this).prop('checked');
-                    $('.appointment-checkbox').prop('checked', isChecked);
-
-                    // Update selected appointments array
-                    selectedAppointments = isChecked ?
-                        $('.appointment-checkbox').map(function() {
-                            return $(this).data('id');
-                        }).get() : [];
-
-                    // Enable/disable rejection button
-                    updateRejectionButtonState();
-                });
-
-                // Handle individual checkbox changes
-                $(document).on('change', '.appointment-checkbox', function() {
-                    const id = $(this).data('id');
-
-                    if ($(this).prop('checked')) {
-                        // Add to selected if not already there
-                        if (!selectedAppointments.includes(id)) {
-                            selectedAppointments.push(id);
                         }
-                    } else {
-                        // Remove from selected
-                        selectedAppointments = selectedAppointments.filter(item => item !== id);
-                        // Uncheck "select all" if any individual checkbox is unchecked
-                        $('#selectAll').prop('checked', false);
                     }
 
-                    // Enable/disable rejection button
-                    updateRejectionButtonState();
-                });
+                    // Replace the handle export to Excel
+                    $('#exportToExcel').on('click', function() {
+                        exportAppointmentsToExcel();
+                    });
 
-                // Update rejection button state
-                function updateRejectionButtonState() {
-                    $('#sendRejectionBtn').prop('disabled', selectedAppointments.length === 0);
-                }
+                    // Selected appointments tracking
+                    let selectedAppointments = [];
 
-                // Open rejection modal
-                $('#sendRejectionBtn').on('click', function() {
-                    $('#rejectionModal').removeClass('hidden');
-                });
+                    // Handle select all checkbox
+                    $(document).on('change', '#selectAll', function() {
+                        const isChecked = $(this).prop('checked');
+                        $('.appointment-checkbox').prop('checked', isChecked);
 
-                // Close rejection modal
-                $('#cancelRejection').on('click', function() {
-                    $('#rejectionModal').addClass('hidden');
-                    resetRejectionForm();
-                });
+                        // Update selected appointments array
+                        selectedAppointments = isChecked ?
+                            $('.appointment-checkbox').map(function() {
+                                return $(this).data('id');
+                            }).get() : [];
 
-                // Submit rejection notification
-                $('#sendRejectionNotification').on('click', function() {
-                    // Get selected reason
-                    const selectedReason = $('input[name="rejection_reason"]:checked').val();
-                    const otherReason = $('#reason_other').val().trim();
+                        // Enable/disable rejection button
+                        updateRejectionButtonState();
+                    });
 
-                    // Validate a reason is selected
-                    if (!selectedReason) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '{{ __('error_occurred') }}',
-                            text: '{{ __('please_select_reason') }}',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                        return;
+                    // Handle individual checkbox changes
+                    $(document).on('change', '.appointment-checkbox', function() {
+                        const id = $(this).data('id');
+
+                        if ($(this).prop('checked')) {
+                            // Add to selected if not already there
+                            if (!selectedAppointments.includes(id)) {
+                                selectedAppointments.push(id);
+                            }
+                        } else {
+                            // Remove from selected
+                            selectedAppointments = selectedAppointments.filter(item => item !== id);
+                            // Uncheck "select all" if any individual checkbox is unchecked
+                            $('#selectAll').prop('checked', false);
+                        }
+
+                        // Enable/disable rejection button
+                        updateRejectionButtonState();
+                    });
+
+                    // Update rejection button state
+                    function updateRejectionButtonState() {
+                        $('#sendRejectionBtn').prop('disabled', selectedAppointments.length === 0);
                     }
 
-                    // If "other" is selected, validate text is provided
-                    if (selectedReason === 'other' && otherReason === '') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '{{ __('error_occurred') }}',
-                            text: '{{ __('please_provide_other_reason') }}',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                        return;
-                    }
+                    // Open rejection modal
+                    $('#sendRejectionBtn').on('click', function() {
+                        $('#rejectionModal').removeClass('hidden');
+                    });
 
-                    // Show loading state
-                    const originalBtnText = $('#sendRejectionNotification').text();
-                    $('#sendRejectionNotification').html(`
+                    // Close rejection modal
+                    $('#cancelRejection').on('click', function() {
+                        $('#rejectionModal').addClass('hidden');
+                        resetRejectionForm();
+                    });
+
+                    // Submit rejection notification
+                    $('#sendRejectionNotification').on('click', function() {
+                        // Get selected reason
+                        const selectedReason = $('input[name="rejection_reason"]:checked').val();
+                        const otherReason = $('#reason_other').val().trim();
+
+                        // Validate a reason is selected
+                        if (!selectedReason) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __('error_occurred') }}',
+                                text: '{{ __('please_select_reason') }}',
+                                confirmButtonColor: '#3B82F6'
+                            });
+                            return;
+                        }
+
+                        // If "other" is selected, validate text is provided
+                        if (selectedReason === 'other' && otherReason === '') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __('error_occurred') }}',
+                                text: '{{ __('please_provide_other_reason') }}',
+                                confirmButtonColor: '#3B82F6'
+                            });
+                            return;
+                        }
+
+                        // Show loading state
+                        const originalBtnText = $('#sendRejectionNotification').text();
+                        $('#sendRejectionNotification').html(`
                     <svg class="animate-spin h-4 w-4 mr-2 text-white inline-block" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -1541,112 +1654,112 @@
                     {{ __('sending') }}...
                 `).prop('disabled', true);
 
-                    // Prepare data based on selected reason
-                    const requestData = {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        appointment_ids: selectedAppointments,
-                        no_contact: selectedReason === 'no_contact',
-                        no_insurance: selectedReason === 'no_insurance',
-                        other_reason: selectedReason === 'other' ? otherReason : null
-                    };
+                        // Prepare data based on selected reason
+                        const requestData = {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            appointment_ids: selectedAppointments,
+                            no_contact: selectedReason === 'no_contact',
+                            no_insurance: selectedReason === 'no_insurance',
+                            other_reason: selectedReason === 'other' ? otherReason : null
+                        };
 
-                    // Send the rejection notification
-                    $.ajax({
-                        url: window.appointmentManager.routes.sendRejection,
-                        type: 'POST',
-                        data: requestData,
-                        success: function(response) {
-                            $('#rejectionModal').addClass('hidden');
-                            resetRejectionForm();
+                        // Send the rejection notification
+                        $.ajax({
+                            url: window.appointmentManager.routes.sendRejection,
+                            type: 'POST',
+                            data: requestData,
+                            success: function(response) {
+                                $('#rejectionModal').addClass('hidden');
+                                resetRejectionForm();
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: '{{ __('success_title') }}',
-                                text: '{{ __('rejection_notifications_sent') }}',
-                                confirmButtonColor: '#3B82F6'
-                            });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __('success_title') }}',
+                                    text: '{{ __('rejection_notifications_sent') }}',
+                                    confirmButtonColor: '#3B82F6'
+                                });
 
-                            // Clear selected appointments
-                            selectedAppointments = [];
-                            $('.appointment-checkbox, #selectAll').prop('checked', false);
-                            updateRejectionButtonState();
+                                // Clear selected appointments
+                                selectedAppointments = [];
+                                $('.appointment-checkbox, #selectAll').prop('checked', false);
+                                updateRejectionButtonState();
 
-                            // Refresh the table
-                            window.appointmentManager.loadEntities();
-                        },
-                        error: function(xhr) {
-                            let errorMessage =
-                                '{{ __('rejection_error') }}';
+                                // Refresh the table
+                                window.appointmentManager.loadEntities();
+                            },
+                            error: function(xhr) {
+                                let errorMessage =
+                                    '{{ __('rejection_error') }}';
 
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                errorMessage = xhr.responseJSON.message;
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '{{ __('error_occurred') }}',
+                                    text: errorMessage,
+                                    confirmButtonColor: '#3B82F6'
+                                });
+                            },
+                            complete: function() {
+                                $('#sendRejectionNotification').text(originalBtnText).prop('disabled',
+                                    false);
                             }
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: '{{ __('error_occurred') }}',
-                                text: errorMessage,
-                                confirmButtonColor: '#3B82F6'
-                            });
-                        },
-                        complete: function() {
-                            $('#sendRejectionNotification').text(originalBtnText).prop('disabled',
-                                false);
-                        }
+                        });
                     });
-                });
 
-                // Reset rejection form
-                function resetRejectionForm() {
-                    $('input[name="rejection_reason"]').prop('checked', false);
-                    $('#reason_other').val('');
-                    $('#other_reason_container').addClass('hidden');
-                }
-
-                // Toggle other reason textarea visibility
-                $(document).on('change', 'input[name="rejection_reason"]', function() {
-                    if ($(this).val() === 'other') {
-                        $('#other_reason_container').removeClass('hidden');
-                    } else {
+                    // Reset rejection form
+                    function resetRejectionForm() {
+                        $('input[name="rejection_reason"]').prop('checked', false);
+                        $('#reason_other').val('');
                         $('#other_reason_container').addClass('hidden');
                     }
-                });
 
-                // Compartir ubicación desde el listado
-                $(document).on('click', '.share-location', function(e) {
-                    e.preventDefault();
+                    // Toggle other reason textarea visibility
+                    $(document).on('change', 'input[name="rejection_reason"]', function() {
+                        if ($(this).val() === 'other') {
+                            $('#other_reason_container').removeClass('hidden');
+                        } else {
+                            $('#other_reason_container').addClass('hidden');
+                        }
+                    });
 
-                    // Verificar si no hay coordenadas disponibles
-                    if ($(this).data('no-coords')) {
+                    // Compartir ubicación desde el listado
+                    $(document).on('click', '.share-location', function(e) {
+                        e.preventDefault();
+
+                        // Verificar si no hay coordenadas disponibles
+                        if ($(this).data('no-coords')) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '{{ __('no_location_title') }}',
+                                text: '{{ __('no_coordinates_edit_appointment') }}',
+                                confirmButtonColor: '#3B82F6'
+                            });
+                            return;
+                        }
+
+                        const lat = $(this).data('lat');
+                        const lng = $(this).data('lng');
+                        const address = $(this).data('address');
+
+                        if (!lat || !lng) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __('error_title') }}',
+                                text: '{{ __('no_coordinates_address') }}',
+                                confirmButtonColor: '#3B82F6'
+                            });
+                            return;
+                        }
+
+                        const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                        // Mostrar opciones de compartir
                         Swal.fire({
-                            icon: 'warning',
-                            title: '{{ __('no_location_title') }}',
-                            text: '{{ __('no_coordinates_edit_appointment') }}',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                        return;
-                    }
-
-                    const lat = $(this).data('lat');
-                    const lng = $(this).data('lng');
-                    const address = $(this).data('address');
-
-                    if (!lat || !lng) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: '{{ __('error_title') }}',
-                            text: '{{ __('no_coordinates_address') }}',
-                            confirmButtonColor: '#3B82F6'
-                        });
-                        return;
-                    }
-
-                    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-
-                    // Mostrar opciones de compartir
-                    Swal.fire({
-                        title: '{{ __('share_location_title') }}',
-                        html: `
+                            title: '{{ __('share_location_title') }}',
+                            html: `
                         <div class="p-6">
                             <div class="mb-6 text-center">
                                 <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
@@ -1694,29 +1807,29 @@
                             </div>
                         </div>
                     `,
-                        showConfirmButton: false,
-                        showCloseButton: true,
-                        customClass: {
-                            container: 'swal-fullscreen',
-                            popup: 'swal-fullscreen-popup'
-                        },
-                        width: '95%',
-                        heightAuto: false
-                    });
+                            showConfirmButton: false,
+                            showCloseButton: true,
+                            customClass: {
+                                container: 'swal-fullscreen',
+                                popup: 'swal-fullscreen-popup'
+                            },
+                            width: '95%',
+                            heightAuto: false
+                        });
 
-                    // Copiar enlace
-                    $(document).on('click', '#copy-map-link', function() {
-                        navigator.clipboard.writeText(mapsUrl).then(() => {
-                            $(this).text('{{ __('copied') }}');
-                            setTimeout(() => {
-                                $(this).text('{{ __('copy_link') }}');
-                            }, 2000);
+                        // Copiar enlace
+                        $(document).on('click', '#copy-map-link', function() {
+                            navigator.clipboard.writeText(mapsUrl).then(() => {
+                                $(this).text('{{ __('copied') }}');
+                                setTimeout(() => {
+                                    $(this).text('{{ __('copy_link') }}');
+                                }, 2000);
+                            });
                         });
                     });
                 });
-            });
-        </script>
-
+            </script>
+        @endpush
 
         <style>
             .swal-fullscreen .swal2-container {
