@@ -57,30 +57,40 @@ class AdminRejectionNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $reasons = [];
-        if ($this->noContact) {
-            $reasons[] = 'No fue posible contactar';
-        }
-        if ($this->noInsurance) {
-            $reasons[] = 'No tiene seguro de propiedad';
-        }
-        if ($this->otherReason) {
-            $reasons[] = 'Otro: ' . $this->otherReason;
-        }
+        // Gather rejection reasons
+        $noRoof = false;
+        $notOwner = false;
+        $noInsurance = $this->noInsurance;
+        $areaNotServiced = false;
+        $duplicateEntry = false;
+        $canceledByCustomer = false;
+        $unsuccessfulContact = $this->noContact;
+        $otherReason = $this->otherReason;
         
-        $reasonsText = implode(', ', $reasons);
+        // Determine which template to use based on app locale
+        $locale = app()->getLocale();
+        $templateView = $locale === 'es' 
+            ? 'emails.admin-rejection-notification-es' 
+            : 'emails.admin-rejection-notification';
+            
+        $subject = $locale === 'es'
+            ? 'Alerta de Admin: Cita Rechazada - ' . $this->appointment->first_name . ' ' . $this->appointment->last_name
+            : 'Admin Alert: Appointment Rejected - ' . $this->appointment->first_name . ' ' . $this->appointment->last_name;
         
         return (new MailMessage)
-            ->subject('Notificación Admin: Solicitud Rechazada - ' . $this->appointment->first_name . ' ' . $this->appointment->last_name)
-            ->line('Se ha rechazado una solicitud de inspección:')
-            ->line('Cliente: ' . $this->appointment->first_name . ' ' . $this->appointment->last_name)
-            ->line('Email: ' . $this->appointment->email)
-            ->line('Teléfono: ' . $this->appointment->phone)
-            ->line('Dirección: ' . $this->appointment->address)
-            ->line('Ciudad: ' . $this->appointment->city . ', ' . $this->appointment->state)
-            ->line('Razones del rechazo: ' . $reasonsText)
-            ->line('Fecha de rechazo: ' . now()->format('d/m/Y H:i:s'))
-            ->line('Esta es una notificación automática del sistema.');
+            ->subject($subject)
+            ->view($templateView, [
+                'appointment' => $this->appointment,
+                'noRoof' => $noRoof,
+                'notOwner' => $notOwner,
+                'noInsurance' => $noInsurance,
+                'areaNotServiced' => $areaNotServiced,
+                'duplicateEntry' => $duplicateEntry,
+                'canceledByCustomer' => $canceledByCustomer,
+                'unsuccessfulContact' => $unsuccessfulContact,
+                'otherReason' => $otherReason,
+                'companyData' => $this->companyData
+            ]);
     }
 
     /**

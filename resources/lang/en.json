@@ -191,6 +191,8 @@
     "team_settings": "Team Settings",
     "create_new_team": "Create New Team",
     "switch_teams": "Switch Teams",
+    "mortgage_company": "Mortgage Company",
+    "no_appointments_found": "No appointments found matching your search criteria.",
     "manage_account": "Manage Account",
     "profile": "Profile",
     "api_tokens": "API Tokens",

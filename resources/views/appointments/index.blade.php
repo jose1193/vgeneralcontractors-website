@@ -1056,7 +1056,7 @@
 
                         if (entities.length === 0) {
                             html =
-                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">No appointments found matching your search criteria.</td></tr>`;
+                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">{{ __('no_appointments_found') }}</td></tr>`;
                         } else {
                             entities.forEach((entity) => {
                                 const isDeleted = entity.deleted_at !== null;
