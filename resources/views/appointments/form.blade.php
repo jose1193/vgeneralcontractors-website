@@ -3,14 +3,72 @@
 @section('content')
     <div class="container mx-auto px-4 sm:px-8">
         <div class="py-8">
-            <div class="flex justify-between my-5">
-                <h2 class="text-2xl font-semibold leading-tight text-white">
-                    {{ isset($appointment->uuid) ? __('edit_appointment') : __('create_appointment') }}
-                </h2>
-                <a href="{{ route('appointments.index') }}"
-                    class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    {{ __('back_to_list') }}
-                </a>
+            {{-- Enhanced Animated Header Section --}}
+            <div class="p-4 sm:p-6 mb-8">
+                <div class="animated-header-card bg-white rounded-2xl shadow-2xl mb-8 overflow-hidden">
+                    <div class="animated-gradient-header px-8 py-6 relative">
+                        {{-- Floating particles background --}}
+                        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                            <div class="absolute top-10 left-20 w-2 h-2 bg-white/20 rounded-full animate-float-slow"></div>
+                            <div class="absolute top-20 right-32 w-1 h-1 bg-purple-200/30 rounded-full animate-float-medium">
+                            </div>
+                            <div class="absolute bottom-16 left-40 w-3 h-3 bg-blue-200/20 rounded-full animate-float-fast">
+                            </div>
+                            <div class="absolute bottom-8 right-20 w-2 h-2 bg-white/15 rounded-full animate-float-slow">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10">
+                            <div class="mb-4 sm:mb-0 w-full">
+                                <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight text-center sm:text-left"
+                                    style="text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);">
+                                    {{ isset($appointment->uuid) ? __('edit_appointment') : __('create_appointment') }}
+                                </h1>
+
+                                {{-- Animated subtitle with marquee effect --}}
+                                <div
+                                    class="bg-white/10 backdrop-blur-md rounded-lg px-2 py-2 border border-white/20 max-w-full sm:max-w-md mx-auto sm:mx-0 text-center">
+                                    <div class="marquee-container overflow-hidden w-full">
+                                        <div
+                                            class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-xs xs:text-sm sm:text-sm font-medium text-center">
+                                            ✨ {{ isset($appointment->uuid) ? __('update_your_appointment_details') : __('schedule_your_perfect_appointment') }} • 🚀 {{ __('efficient_scheduling') }} • 💼
+                                            {{ __('professional_service') }} • 📅 {{ __('complete_management') }} •
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Animated icon section --}}
+                            <div class="flex items-center space-x-4">
+                                {{-- Primary animated icon --}}
+                                <div class="relative">
+                                    <div
+                                        class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center animate-pulse-soft border border-white/30">
+                                        <svg class="w-7 h-7 text-white animate-bounce-subtle" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-6 0h6m-6 0v13a1 1 0 001 1h4a1 1 0 001-1V7M5 7h14l-1 11a1 1 0 01-1 1H7a1 1 0 01-1-1L5 7z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    {{-- Animated ring --}}
+                                    <div class="absolute inset-0 border-2 border-white/30 rounded-xl animate-ping-slow">
+                                    </div>
+                                </div>
+
+                                {{-- Back to list button --}}
+                                <a href="{{ route('appointments.index') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg font-semibold text-sm text-white uppercase tracking-wide hover:bg-white/30 focus:bg-white/30 active:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                                        </path>
+                                    </svg>
+                                    {{ __('back_to_list') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
                 <form id="{{ isset($appointment->uuid) ? 'appointmentEditForm' : 'appointmentCreateForm' }}"
@@ -1115,4 +1173,192 @@
             }
         });
     </script>
+
+    {{-- Enhanced Animated Header Styles --}}
+    <style>
+        /* Animated gradient background */
+        .animated-gradient-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #6a11cb 75%, #2575fc 100%);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            position: relative;
+        }
+
+        .animated-header-card {
+            border: 2px solid #34d399;
+            /* border-emerald-400 */
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .animated-gradient-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 50%,
+                    rgba(255, 255, 255, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Marquee animation */
+        .marquee-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Floating animations */
+        @keyframes float-slow {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+            }
+        }
+
+        @keyframes float-medium {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(90deg);
+            }
+        }
+
+        @keyframes float-fast {
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(270deg);
+            }
+        }
+
+        .animate-float-slow {
+            animation: float-slow 6s ease-in-out infinite;
+        }
+
+        .animate-float-medium {
+            animation: float-medium 4s ease-in-out infinite;
+        }
+
+        .animate-float-fast {
+            animation: float-fast 3s ease-in-out infinite;
+        }
+
+        /* Pulse animations */
+        @keyframes pulse-soft {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+
+        /* Bounce subtle animation */
+        @keyframes bounce-subtle {
+            0%,
+            100% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: translateY(-5px);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+
+        .animate-bounce-subtle {
+            animation: bounce-subtle 2s infinite;
+        }
+
+        /* Ping slow animation */
+        @keyframes ping-slow {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            75%,
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .animate-ping-slow {
+            animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        /* Enhanced hover effects for header elements */
+        .animated-header-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.5), 0 25px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .marquee-container {
+                max-width: 280px;
+            }
+
+            .marquee-text {
+                font-size: 0.75rem;
+            }
+
+            .animated-gradient-header {
+                padding: 1rem;
+            }
+        }
+    </style>
 @endpush
