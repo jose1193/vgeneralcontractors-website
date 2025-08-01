@@ -427,18 +427,18 @@
             <legend class="sr-only">Property Insurance</legend>
             <div class="flex items-center space-x-4">
                 <div class="radio-option flex items-center">
-                <input id="insurance_yes" name="insurance_property" type="radio" value="1"
+                    <input id="insurance_yes" name="insurance_property" type="radio" value="1"
                         class="radio-field sr-only"
-                        {{ old('insurance_property', $appointment->insurance_property ?? true) ? 'checked' : '' }}>
+                        {{ (string) old('insurance_property', isset($appointment->insurance_property) ? $appointment->insurance_property : '') === '1' ? 'checked' : '' }}>
                     <label for="insurance_yes"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('yes') }}
                     </label>
                 </div>
                 <div class="radio-option flex items-center">
-                <input id="insurance_no" name="insurance_property" type="radio" value="0"
+                    <input id="insurance_no" name="insurance_property" type="radio" value="0"
                         class="radio-field sr-only"
-                        {{ old('insurance_property', $appointment->insurance_property ?? true) ? '' : 'checked' }}>
+                        {{ (string) old('insurance_property', isset($appointment->insurance_property) ? $appointment->insurance_property : '') === '0' ? 'checked' : '' }}>
                     <label for="insurance_no"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('no') }}
@@ -1609,7 +1609,7 @@
             function checkFormValidity() {
                 const requiredFields = [
                     'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                    'city', 'state', 'zipcode', 'country', 'insurance_property',
+                    'city', 'state', 'zipcode', 'country',
                     'lead_source', 'inspection_status', 'status_lead'
                 ];
 
