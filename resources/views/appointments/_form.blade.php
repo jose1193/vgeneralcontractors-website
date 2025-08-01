@@ -333,12 +333,12 @@
         <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
     </div>
 
-    {{-- Other checkboxes --}}
+    {{-- Other checkboxes moved to the end --}}
     <div class="block">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ __('Additional Options') }}
         </label>
-        <div class="flex items-center space-x-6">
+        <div class="flex items-center justify-between">
             <label for="sms_consent" class="inline-flex items-center cursor-pointer">
                 <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                     class="checkbox-field form-checkbox text-yellow-500 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
