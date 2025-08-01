@@ -672,6 +672,17 @@
 
                     // Initialize loading of entities
                     window.appointmentManager.loadEntities();
+                    
+                    // Agregar función para recargar datos si viene de una creación/edición
+                    if (performance.navigation.type !== 1 && sessionStorage.getItem('appointment_crud_action')) {
+                        console.log("Reloading data after CRUD operation");
+                        // Limpiar la bandera de sesión
+                        sessionStorage.removeItem('appointment_crud_action');
+                        // Forzar recarga de datos
+                        setTimeout(() => {
+                            window.appointmentManager.loadEntities();
+                        }, 500);
+                    }
 
                     // Update the clear filters button to also clear status filter
                     $('#clearDateFilters').on('click', function() {
