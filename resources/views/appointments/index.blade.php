@@ -130,7 +130,7 @@
                     <!-- Appointments table -->
                     <div
                         class="overflow-x-auto bg-gray-50 dark:bg-gray-700 rounded-lg shadow-inner border border-gray-200 dark:border-gray-600">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <table id="appointmentsTable" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th
