@@ -107,10 +107,16 @@
             break-inside: avoid;
         }
 
-        /* Add space before table on continuation pages */
-        .data-table thead {
-            display: table-header-group;
-        }
+        /* Table headers - respect the repeat_headers option from PHP */
+        @if (($options['repeat_headers'] ?? false) === true)
+            .data-table thead {
+                display: table-header-group;
+            }
+        @else
+            .data-table thead {
+                display: table-row-group;
+            }
+        @endif
 
         .summary {
             width: 92%;
@@ -141,11 +147,17 @@
             page-break-inside: auto;
         }
 
-        /* Ensure header is always visible on new pages */
-        .table-container .data-table thead {
-            display: table-header-group;
-            page-break-after: avoid;
-        }
+        /* Ensure header is controlled by the repeat_headers option */
+        @if (($options['repeat_headers'] ?? false) === true)
+            .table-container .data-table thead {
+                display: table-header-group;
+                page-break-after: avoid;
+            }
+        @else
+            .table-container .data-table thead {
+                display: table-row-group;
+            }
+        @endif
 
         /* Better spacing for continued tables */
         .table-container .data-table tbody tr:first-child {
