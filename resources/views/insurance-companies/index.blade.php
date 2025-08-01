@@ -17,9 +17,6 @@
     @push('scripts')
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
-        <!-- Date Filter Bridge -->
-        <script src="{{ asset('js/crud-date-filters-bridge.js') }}"></script>
 
         <script>
             $(document).ready(function() {
@@ -296,32 +293,6 @@
 
                 // Load initial data
                 window.insuranceCompanyManager.loadEntities();
-                
-                // Create a bridge between the CrudModalManager and CrudManagerModal for date filtering
-                // This ensures the date filters work correctly when the filter-bar component calls the date filter methods
-                if (typeof window.crudModalManager === 'undefined') {
-                    // Import the CrudModalManager if available (or create a simplified version if not)
-                    window.crudModalManager = {
-                        applyDateFilters: function(startDate, endDate) {
-                            console.log("Bridge: Forwarding date filters to insuranceCompanyManager", { startDate, endDate });
-                            if (window.insuranceCompanyManager) {
-                                window.insuranceCompanyManager.dateStart = startDate;
-                                window.insuranceCompanyManager.dateEnd = endDate;
-                                window.insuranceCompanyManager.currentPage = 1;
-                                window.insuranceCompanyManager.loadEntities();
-                            }
-                        },
-                        clearDateFilters: function() {
-                            console.log("Bridge: Clearing date filters via insuranceCompanyManager");
-                            if (window.insuranceCompanyManager) {
-                                window.insuranceCompanyManager.dateStart = "";
-                                window.insuranceCompanyManager.dateEnd = "";
-                                window.insuranceCompanyManager.currentPage = 1;
-                                window.insuranceCompanyManager.loadEntities();
-                            }
-                        }
-                    };
-                }
             });
         </script>
     @endpush
