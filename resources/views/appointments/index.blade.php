@@ -305,14 +305,14 @@
                     overflow: hidden;
 
                     /* Dark Crystal Background */
-                    background: linear-gradient(135deg, 
-                        rgba(17, 17, 17, 0.95) 0%,
-                        rgba(30, 30, 30, 0.92) 50%,
-                        rgba(20, 20, 20, 0.95) 100%);
+                    background: linear-gradient(135deg,
+                            rgba(17, 17, 17, 0.95) 0%,
+                            rgba(30, 30, 30, 0.92) 50%,
+                            rgba(20, 20, 20, 0.95) 100%);
 
                     /* Elegant Border */
                     border: 1px solid rgba(139, 69, 190, 0.3);
-                    
+
                     /* Modern Shadow System */
                     box-shadow:
                         0 8px 32px rgba(139, 69, 190, 0.15),
@@ -334,12 +334,12 @@
                     left: 0;
                     right: 0;
                     height: 2px;
-                    background: linear-gradient(90deg, 
-                        transparent 0%,
-                        rgba(139, 69, 190, 0.8) 25%,
-                        rgba(168, 85, 247, 0.9) 50%,
-                        rgba(139, 69, 190, 0.8) 75%,
-                        transparent 100%);
+                    background: linear-gradient(90deg,
+                            transparent 0%,
+                            rgba(139, 69, 190, 0.8) 25%,
+                            rgba(168, 85, 247, 0.9) 50%,
+                            rgba(139, 69, 190, 0.8) 75%,
+                            transparent 100%);
                     opacity: 0.8;
                 }
 
