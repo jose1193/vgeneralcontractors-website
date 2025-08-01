@@ -392,48 +392,47 @@
     </div>
 </div>
 
-{{-- Property Insurance Section --}}
+{{-- Property Insurance and Additional Options Section --}}
 <div class="md:col-span-2 mt-6 my-10 py-5">
-    <div class="block">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {{ __('Property Insurance') }} <span class="text-red-500">*</span>
-        </label>
-        <fieldset class="mt-2">
-            <legend class="sr-only">Property Insurance</legend>
-            <div class="flex items-center space-x-4">
-                <div class="radio-option flex items-center">
-                    <input id="insurance_yes" name="insurance_property" type="radio" value="1"
-                        class="radio-field sr-only" required
-                        {{ old('insurance_property', $appointment->insurance_property ?? null) == '1' ? 'checked' : '' }}>
-                    <label for="insurance_yes"
-                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                        {{ __('Yes') }}
-                    </label>
-                </div>
-                <div class="radio-option flex items-center">
-                    <input id="insurance_no" name="insurance_property" type="radio" value="0"
-                        class="radio-field sr-only" required
-                        {{ old('insurance_property', $appointment->insurance_property ?? null) == '0' ? 'checked' : '' }}>
-                    <label for="insurance_no"
-                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
-                        {{ __('No') }}
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-        <x-input-error for="insurance_property" class="mt-2" />
-        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
-    </div>
-</div>
-
-{{-- Additional Options Section - Positioned at the end and aligned to the right --}}
-<div class="md:col-span-2 -mt-16 mb-6">
-    <div class="flex justify-end">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+        {{-- Property Insurance --}}
         <div class="block">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-right">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ __('Property Insurance') }} <span class="text-red-500">*</span>
+            </label>
+            <fieldset class="mt-2">
+                <legend class="sr-only">Property Insurance</legend>
+                <div class="flex items-center space-x-4">
+                    <div class="radio-option flex items-center">
+                        <input id="insurance_yes" name="insurance_property" type="radio" value="1"
+                            class="radio-field sr-only" required
+                            {{ old('insurance_property', $appointment->insurance_property ?? null) == '1' ? 'checked' : '' }}>
+                        <label for="insurance_yes"
+                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                            {{ __('Yes') }}
+                        </label>
+                    </div>
+                    <div class="radio-option flex items-center">
+                        <input id="insurance_no" name="insurance_property" type="radio" value="0"
+                            class="radio-field sr-only" required
+                            {{ old('insurance_property', $appointment->insurance_property ?? null) == '0' ? 'checked' : '' }}>
+                        <label for="insurance_no"
+                            class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                            {{ __('No') }}
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <x-input-error for="insurance_property" class="mt-2" />
+            <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
+        </div>
+
+        {{-- Additional Options - Now aligned with Property Insurance --}}
+        <div class="block">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 md:text-right">
                 {{ __('Additional Options') }}
             </label>
-            <div class="flex items-center space-x-6">
+            <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6 mt-2">
                 <label for="sms_consent" class="inline-flex items-center cursor-pointer">
                     <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
                         class="checkbox-field form-checkbox text-yellow-500 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
@@ -448,6 +447,8 @@
                 </label>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 
