@@ -1137,18 +1137,18 @@
                     let city = '';
                     let state = '';
                     let zipcode = '';
-                    let street_number = '';
-                    let route = '';
 
                     for (const component of place.address_components) {
                         const componentType = component.types[0];
 
                         switch (componentType) {
                             case 'street_number':
-                                street_number = component.long_name;
+                                addressLine1 = component.long_name;
                                 break;
                             case 'route':
-                                route = component.short_name;
+                                addressLine1 = addressLine1 ?
+                                    addressLine1 + ' ' + component.long_name :
+                                    component.long_name;
                                 break;
                             case 'locality':
                                 city = component.long_name;
@@ -1162,42 +1162,17 @@
                         }
                     }
 
-                    addressLine1 = `${street_number} ${route}`.trim();
-
-                    // Use formatted_address if available and trigger validation
+                    // Use formatted_address if available
                     if (place.formatted_address) {
                         addressMapInput.value = place.formatted_address;
-                        addressMapInput.dispatchEvent(new Event('input', { bubbles: true }));
                     }
 
-                    // Fill in form fields and trigger validation
-                    if (addressLine1) {
-                        const field = document.getElementById('address');
-                        field.value = addressLine1;
-                        field.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                    if (city) {
-                        const field = document.getElementById('city');
-                        field.value = city;
-                        field.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                    if (state) {
-                        const field = document.getElementById('state');
-                        field.value = state;
-                        field.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                    if (zipcode) {
-                        const field = document.getElementById('zipcode');
-                        field.value = zipcode;
-                        field.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                    
-                    const countryField = document.getElementById('country');
-                    countryField.value = 'USA';
-                    countryField.dispatchEvent(new Event('input', { bubbles: true }));
-
-                    // Final check to enable button
-                    checkFormValidity();
+                    // Fill in form fields
+                    if (addressLine1) document.getElementById('address').value = addressLine1;
+                    if (city) document.getElementById('city').value = city;
+                    if (state) document.getElementById('state').value = state;
+                    if (zipcode) document.getElementById('zipcode').value = zipcode;
+                    document.getElementById('country').value = 'USA';
                 });
             } catch (error) {
                 console.error('Error initializing autocomplete:', error);
