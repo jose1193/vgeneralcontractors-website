@@ -27,8 +27,9 @@
                             title="Submit Form">
 
                             {{-- Glass overlay effect --}}
-                            <span class="absolute inset-0 w-full h-full bg-white/5 backdrop-filter backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            
+                            <span
+                                class="absolute inset-0 w-full h-full bg-white/5 backdrop-filter backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+
                             {{-- Content container --}}
                             <span class="relative z-10 flex items-center">
                                 {{-- Spinner (hidden initially) --}}
