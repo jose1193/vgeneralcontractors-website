@@ -68,6 +68,11 @@
     "message": "Message",
     "send_message": "Send Message",
     "submit": "Submit",
+    "add_appointment": "Add Appointment",
+    "per_page": "per page",
+    "send_rejection": "Send Rejection",
+    "excel_export": "Excel Export",
+    "all_statuses": "All Statuses",
 
     "_comment_general_actions": "=== GENERAL ACTIONS ===",
     "edit": "Edit",
