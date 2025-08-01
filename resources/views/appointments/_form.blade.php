@@ -720,7 +720,7 @@
             // Function to format name fields
             function formatNameField(input) {
                 // Allow letters, spaces, apostrophes, and hyphens
-                input.value = input.value.replace(/[^A-Za-z\s'\-]/g, '');
+                input.value = input.value.replace(/[^A-Za-z\s'-]/g, '');
             }
 
             if (firstNameInput) {
@@ -1462,7 +1462,7 @@
                         } else if (value.length > 50) {
                             showFieldError(fieldName, '{{ __('first_name_max') }}');
                             return false;
-                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                        } else if (!/^[A-Za-z\s'-]+$/.test(value)) {
                             showFieldError(fieldName, '{{ __('first_name_regex') }}');
                             return false;
                         } else {
@@ -1488,7 +1488,7 @@
                         } else if (value.length > 50) {
                             showFieldError(fieldName, '{{ __('last_name_max') }}');
                             return false;
-                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
+                        } else if (!/^[A-Za-z\s'-]+$/.test(value)) {
                             showFieldError(fieldName, '{{ __('last_name_regex') }}');
                             return false;
                         } else {
@@ -1671,17 +1671,16 @@
                 const shouldEnable = allFieldsFilled && isValid;
 
                 if (submitButton) {
-                    // Update button state only if it's changed to avoid unnecessary DOM operations
-                    if (submitButton.disabled === shouldEnable) {
-                        submitButton.disabled = !shouldEnable;
-                        if (shouldEnable) {
-                            submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                            submitButton.classList.add('hover:bg-gray-700');
-                        } else {
-                            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                            submitButton.classList.remove('hover:bg-gray-700');
-                        }
+                    // Update button state to match our calculated shouldEnable value
+                    submitButton.disabled = !shouldEnable;
+                    if (shouldEnable) {
+                        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        submitButton.classList.add('hover:bg-gray-700');
+                    } else {
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        submitButton.classList.remove('hover:bg-gray-700');
                     }
+                }
                 }
 
                 return shouldEnable;
@@ -1781,6 +1780,14 @@
 
             // Initial form validation check - after a brief timeout to ensure DOM is fully ready
             setTimeout(() => {
+                // Do initial validation on each field
+                fieldsToValidate.forEach(fieldName => {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field && field.value) {
+                        validateField(fieldName, field.value);
+                    }
+                });
+                // Then check overall form validity
                 checkFormValidity();
             }, 100);
         });
