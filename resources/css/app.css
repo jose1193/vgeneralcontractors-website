@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Default Dark Background for body */
-body {
-    background: #141414 !important;
-}
-
-/* Allow pages to override background */
-.custom-page-background {
-    background: inherit !important;
-}
-
 /* Roboto Font */
 @font-face {
     font-family: "Roboto";

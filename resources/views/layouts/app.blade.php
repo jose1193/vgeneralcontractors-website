@@ -99,15 +99,15 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" style="background-color: #141414;">
     <x-banner />
 
-    <div class="min-h-screen">
+    <div class="min-h-screen" style="background-color: #141414;">
         @livewire('navigation-menu')
 
         <!-- Page Heading - Hidden while using custom titles -->
         @if (isset($header))
-            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4 hidden">
+            <header class="ml-18 sm:ml-20 lg:ml-22 pt-16 pb-4 hidden" style="background-color: #141414;">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
