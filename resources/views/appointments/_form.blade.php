@@ -1609,7 +1609,7 @@
             function checkFormValidity() {
                 const requiredFields = [
                     'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                    'city', 'state', 'zipcode', 'country',
+                    'city', 'state', 'zipcode', 'country', 'insurance_property',
                     'lead_source', 'inspection_status', 'status_lead'
                 ];
 
@@ -1667,7 +1667,7 @@
             // Add event listeners for real-time validation
             const fieldsToValidate = [
                 'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                'city', 'state', 'zipcode', 'country', 'lead_source',
+                'city', 'state', 'zipcode', 'country', 'insurance_property', 'lead_source',
                 'inspection_status', 'status_lead'
             ];
 
