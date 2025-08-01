@@ -51,9 +51,10 @@
     {{-- Address Map Input (for Google Maps Autocomplete) --}}
     <div class="md:col-span-2">
         <x-label for="address_map_input" value="{{ __('Address') }}" />
-        <x-input id="address_map_input" class="block mt-1 w-full" type="text" name="address_map_input"
+        <x-input id="address_map_input" class="block mt-1 w-full input-field" type="text" name="address_map_input"
             placeholder="Enter complete address for autocomplete" :value="old('address', $appointment->address ?? '')" autocomplete="off" required />
         <x-input-error for="address_map_input" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="address_map_input"></span>
     </div>
 
     {{-- Map Display --}}
@@ -144,33 +145,37 @@
     {{-- City --}}
     <div>
         <x-label for="city" value="{{ __('City') }}" />
-        <x-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city', $appointment->city ?? '')"
+        <x-input id="city" class="block mt-1 w-full input-field" type="text" name="city" :value="old('city', $appointment->city ?? '')"
             required />
         <x-input-error for="city" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="city"></span>
     </div>
 
     {{-- State --}}
     <div>
         <x-label for="state" value="{{ __('State') }}" />
-        <x-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state', $appointment->state ?? '')"
+        <x-input id="state" class="block mt-1 w-full input-field" type="text" name="state" :value="old('state', $appointment->state ?? '')"
             required />
         <x-input-error for="state" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="state"></span>
     </div>
 
     {{-- Zipcode --}}
     <div>
         <x-label for="zipcode" value="{{ __('Zip Code') }}" />
-        <x-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
+        <x-input id="zipcode" class="block mt-1 w-full input-field" type="text" name="zipcode" :value="old('zipcode', $appointment->zipcode ?? '')"
             required />
         <x-input-error for="zipcode" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="zipcode"></span>
     </div>
 
     {{-- Country --}}
     <div>
         <x-label for="country" value="{{ __('Country') }}" />
-        <x-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
+        <x-input id="country" class="block mt-1 w-full input-field" type="text" name="country" :value="old('country', $appointment->country ?? 'USA')"
             required />
         <x-input-error for="country" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="country"></span>
     </div>
 
     {{-- Inspection Date --}}
@@ -1652,6 +1657,11 @@
             const inputFields = form.querySelectorAll('.input-field');
             const radioFields = form.querySelectorAll('.radio-field');
             
+            console.log('Real-time validation initialized');
+            console.log('Found input fields:', inputFields.length);
+            console.log('Found radio fields:', radioFields.length);
+            console.log('CSRF Token:', csrfToken ? 'Found' : 'Missing');
+            
             // Debounce function to limit API calls
             function debounce(func, wait) {
                 let timeout;
@@ -1677,6 +1687,8 @@
             function validateField(fieldElement) {
                 const fieldName = fieldElement.name;
                 let fieldValue = fieldElement.type === 'checkbox' ? (fieldElement.checked ? 1 : 0) : fieldElement.value;
+
+                console.log('Validating field:', fieldName, 'with value:', fieldValue);
 
                 // Handle radio buttons
                 if (fieldElement.type === 'radio') {
@@ -1705,6 +1717,8 @@
                     requestData.excludeUuid = appointmentUuid;
                 }
 
+                console.log('Sending validation request:', requestData);
+
                 fetch('{{ route('appointments.validate-field') }}', {
                     method: 'POST',
                     headers: {
@@ -1715,12 +1729,14 @@
                     body: JSON.stringify(requestData)
                 })
                 .then(response => {
+                    console.log('Validation response status:', response.status);
                     if (!response.ok && response.status !== 422) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    console.log('Validation response data:', data);
                     const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
                     if (errorSpan) {
                         if (!data.valid && data.errors?.[0]) {
@@ -1736,6 +1752,8 @@
                             errorSpan.textContent = '';
                             fieldElement.classList.remove('border-red-500');
                         }
+                    } else {
+                        console.warn('Error span not found for field:', fieldName);
                     }
                 })
                 .catch(error => {
@@ -1748,11 +1766,43 @@
 
             // Add event listeners to input fields
             inputFields.forEach(input => {
-                // Real-time validation on input (debounced)
-                input.addEventListener('input', function() {
-                    debouncedValidateField(this);
-                });
+                // Special handling for different field types
+                if (input.name === 'first_name' || input.name === 'last_name') {
+                    // Name fields: format and validate
+                    input.addEventListener('input', function(event) {
+                        // Capitalize first letter and remove non-letters
+                        let value = event.target.value.replace(/[^A-Za-z]/g, '');
+                        if (value.length > 0) {
+                            value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+                        }
+                        event.target.value = value;
+                        
+                        // Validate after formatting
+                        debouncedValidateField(this);
+                    });
+                } else if (input.name === 'phone') {
+                    // Phone field: format and validate
+                    input.addEventListener('input', function(event) {
+                        // Format phone number as (XXX) XXX-XXXX
+                        let value = event.target.value.replace(/\D/g, '');
+                        if (value.length >= 6) {
+                            value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                        } else if (value.length >= 3) {
+                            value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                        }
+                        event.target.value = value;
+                        
+                        // Validate after formatting
+                        debouncedValidateField(this);
+                    });
+                } else {
+                    // Regular fields: validate on input (debounced)
+                    input.addEventListener('input', function() {
+                        debouncedValidateField(this);
+                    });
+                }
 
+                // Common event listeners for all input fields
                 // Immediate validation on blur
                 input.addEventListener('blur', function() {
                     validateField(this);
@@ -1770,49 +1820,6 @@
                     validateField(this);
                 });
             });
-
-            // Special formatting for name fields
-            const firstNameInput = document.getElementById('first_name');
-            const lastNameInput = document.getElementById('last_name');
-            const phoneInput = document.getElementById('phone');
-
-            if (firstNameInput) {
-                firstNameInput.addEventListener('input', function(event) {
-                    // Capitalize first letter and remove non-letters
-                    let value = event.target.value.replace(/[^A-Za-z]/g, '');
-                    if (value.length > 0) {
-                        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-                    }
-                    event.target.value = value;
-                });
-            }
-
-            if (lastNameInput) {
-                lastNameInput.addEventListener('input', function(event) {
-                    // Capitalize first letter and remove non-letters
-                    let value = event.target.value.replace(/[^A-Za-z]/g, '');
-                    if (value.length > 0) {
-                        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-                    }
-                    event.target.value = value;
-                });
-            }
-
-            if (phoneInput) {
-                phoneInput.addEventListener('input', function(event) {
-                    // Format phone number as (XXX) XXX-XXXX
-                    let value = event.target.value.replace(/\D/g, '');
-                    if (value.length >= 6) {
-                        value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
-                    } else if (value.length >= 3) {
-                        value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
-                    }
-                    event.target.value = value;
-                    
-                    // Validate after formatting
-                    debouncedValidateField(event.target);
-                });
-            }
         });
     </script>
 @endpush
