@@ -309,7 +309,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </svg>
                 </a>
                 @if (!request()->routeIs('dashboard'))
-                    <div x-show="open" x-transition class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
+                    <div x-show="open" x-transition
+                        class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
                         style="background-color: #2C2E36;">
                         {{ __('dashboard') }}
                         <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -460,7 +461,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="open" x-transition
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -497,7 +499,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="open" x-transition
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
@@ -530,7 +533,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                         </svg>
                     </a>
                     @if (!request()->routeIs('call-records'))
-                        <div x-show="open" x-transition class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
+                        <div x-show="open" x-transition
+                            class="absolute left-12 top-0 text-white px-3 py-2 rounded-lg shadow-lg whitespace-nowrap z-50"
                             style="background-color: #2C2E36;">
                             {{ __('call_records_title') }}
                             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
@@ -576,7 +580,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
+                    <div x-show="open" x-transition
+                        class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max"
                         style="background-color: #2C2E36;">
                         <div class="p-2 space-y-1">
                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
