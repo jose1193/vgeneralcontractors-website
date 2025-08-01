@@ -23,7 +23,7 @@
         @endif
     </label>
     <input type="{{ $type }}" name="{{ $name }}" id="{{ $id }}"
-        @if ($required) required="required" @endif style="{{ $style }}"
+        @if ($required) required @endif style="{{ $style }}"
         class="{{ $class }} @if ($capitalize && in_array($type, ['text', 'search'])) auto-capitalize @endif"
         value="{{ old($name, $value) }}" {{-- Add old() helper for form persistence --}} {{ $attributes->merge(['class' => $class]) }}
         {{-- Merge classes and allow passing extra attributes --}}>

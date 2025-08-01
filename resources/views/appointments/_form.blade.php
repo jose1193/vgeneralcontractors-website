@@ -429,7 +429,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_yes" name="insurance_property" type="radio" value="1"
                         class="radio-field sr-only"
-                        {{ (string) old('insurance_property', isset($appointment->insurance_property) ? $appointment->insurance_property : '') === '1' ? 'checked' : '' }}>
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}>
                     <label for="insurance_yes"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('yes') }}
@@ -438,7 +438,7 @@
                 <div class="radio-option flex items-center">
                     <input id="insurance_no" name="insurance_property" type="radio" value="0"
                         class="radio-field sr-only"
-                        {{ (string) old('insurance_property', isset($appointment->insurance_property) ? $appointment->insurance_property : '') === '0' ? 'checked' : '' }}>
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}>
                     <label for="insurance_no"
                         class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
                         {{ __('no') }}
@@ -1509,14 +1509,6 @@
                             return true;
                         }
 
-                    case 'address_map_input':
-                        if (!value || value.trim() === '') {
-                            showFieldError(fieldName, '{{ __('address_required') }}');
-                            return false;
-                        } else {
-                            clearFieldError(fieldName);
-                            return true;
-                        }
                     case 'address':
                         if (!value || value.trim() === '') {
                             showFieldError(fieldName, '{{ __('address_required') }}');
@@ -1608,8 +1600,8 @@
             // Function to check overall form validity
             function checkFormValidity() {
                 const requiredFields = [
-                    'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                    'city', 'state', 'zipcode', 'country',
+                    'first_name', 'last_name', 'email', 'phone', 'address',
+                    'city', 'state', 'zipcode', 'country', 'insurance_property',
                     'lead_source', 'inspection_status', 'status_lead'
                 ];
 
@@ -1666,7 +1658,7 @@
 
             // Add event listeners for real-time validation
             const fieldsToValidate = [
-                'first_name', 'last_name', 'email', 'phone', 'address_map_input',
+                'first_name', 'last_name', 'email', 'phone', 'address',
                 'city', 'state', 'zipcode', 'country', 'lead_source',
                 'inspection_status', 'status_lead'
             ];

@@ -23,7 +23,7 @@
         @endif
     </label>
     <input type="{{ $type }}" name="{{ $name }}" id="{{ $id }}"
-        @if ($required) required="required" @endif
+        @if ($required) required @endif
         @if ($maxlength) maxlength="{{ $maxlength }}" @endif
         style="{{ $style }}" class="{{ $class }}"
         value="{{ old($name, $value) }}" {{ $attributes }}>
