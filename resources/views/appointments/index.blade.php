@@ -70,8 +70,8 @@
 
                             {{-- Create appointment button --}}
                             <a href="{{ route('appointments.create') }}"
-                                class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg font-semibold text-sm text-white uppercase tracking-wide hover:bg-white/30 focus:bg-white/30 active:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-md border border-white/30 rounded-xl font-bold text-base text-white uppercase tracking-wide hover:bg-white/30 focus:bg-white/30 active:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4">
                                     </path>
@@ -118,21 +118,6 @@
                                 <option value="25">25 {{ __('per_page') }}</option>
                                 <option value="50">50 {{ __('per_page') }}</option>
                             </x-select-input-per-pages>
-
-                            <!-- Add appointment button -->
-                            <div class="w-full sm:w-auto">
-                                <a href="{{ route('appointments.create') }}"
-                                    class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring focus:ring-green-200 disabled:opacity-25">
-                                    <span class="mr-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                        </svg>
-                                    </span>
-                                    {{ __('add_appointment') }}
-                                </a>
-                            </div>
                         </div>
                     </div>
 
@@ -640,6 +625,23 @@
                 line-height: 1 !important;
             }
 
+            /* Row click interaction styles */
+            .glassmorphism-container tbody tr {
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .glassmorphism-container tbody tr:hover {
+                background: rgba(139, 69, 190, 0.1) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(139, 69, 190, 0.2) !important;
+            }
+
+            .glassmorphism-container tbody tr.selected {
+                background: linear-gradient(135deg, rgba(139, 69, 190, 0.2), rgba(168, 85, 247, 0.15)) !important;
+                border-left: 4px solid rgba(168, 85, 247, 0.8) !important;
+            }
+
             /* Enhanced Button Styling */
             .glassmorphism-container .btn,
             .glassmorphism-container button {
@@ -950,6 +952,50 @@
             .glassmorphism-container table {
                 min-width: 100% !important;
                 white-space: nowrap !important;
+            }
+
+            /* Enhanced styling for inactive appointments */
+            .glassmorphism-container .bg-red-50\/20 {
+                background: linear-gradient(135deg, rgba(254, 202, 202, 0.15), rgba(252, 165, 165, 0.1)) !important;
+                backdrop-filter: blur(10px) !important;
+                border-left: 4px solid rgba(239, 68, 68, 0.6) !important;
+                position: relative !important;
+            }
+
+            .glassmorphism-container .bg-red-50\/20::before {
+                content: "" !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%) !important;
+                pointer-events: none !important;
+            }
+
+            /* Improved text visibility for inactive appointments */
+            .glassmorphism-container .bg-red-50\/20 td,
+            .glassmorphism-container .bg-red-50\/20 td * {
+                color: rgba(255, 255, 255, 0.8) !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            /* Enhanced checkbox styling for inactive rows */
+            .glassmorphism-container .bg-red-50\/20 input[type="checkbox"] {
+                border-color: rgba(239, 68, 68, 0.6) !important;
+                background: rgba(60, 60, 60, 0.8) !important;
+            }
+
+            .glassmorphism-container .bg-red-50\/20 input[type="checkbox"]:checked {
+                background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 1)) !important;
+                border-color: rgba(220, 38, 38, 1) !important;
+            }
+
+            /* Row hover effects for inactive appointments */
+            .glassmorphism-container .bg-red-50\/20:hover {
+                background: linear-gradient(135deg, rgba(254, 202, 202, 0.25), rgba(252, 165, 165, 0.2)) !important;
+                transform: translateX(2px) !important;
+                transition: all 0.3s ease !important;
             }
 
             .animate-float-slow {
@@ -1352,7 +1398,8 @@
                         } else {
                             entities.forEach((entity) => {
                                 const isDeleted = entity.deleted_at !== null;
-                                const rowClass = isDeleted ? "bg-red-50 dark:bg-red-900 opacity-60" : "";
+                                const rowClass = isDeleted ?
+                                    "bg-red-50/20 dark:bg-red-900/30 border-l-4 border-red-400 opacity-75" : "";
 
                                 html += `<tr class="${rowClass}">`;
 
