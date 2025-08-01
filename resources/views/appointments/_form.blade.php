@@ -1230,7 +1230,7 @@
                     const isHidden = shareOptions.classList.contains('hidden');
                     const icon = this.querySelector('svg');
                     const text = this.querySelector('span') || this.childNodes[this.childNodes.length - 1];
-                    
+
                     if (isHidden) {
                         // Reset to original content
                         this.innerHTML = `
@@ -1413,6 +1413,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -1422,6 +1423,7 @@
             from {
                 opacity: 1;
             }
+
             to {
                 opacity: 0;
             }
@@ -1437,6 +1439,7 @@
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -1448,6 +1451,7 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
             to {
                 transform: translateX(100%);
                 opacity: 0;
