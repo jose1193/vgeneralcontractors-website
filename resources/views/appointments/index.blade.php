@@ -201,31 +201,31 @@
                                         {{ __('name') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="email">
                                         {{ __('email') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         {{ __('phone') }}
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_date">
                                         {{ __('inspection_date') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_time">
                                         {{ __('inspection_time') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="insurance_property">
                                         {{ __('insurance') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="status_lead">
                                         {{ __('status_lead') }}
                                         <span class="sort-icon"></span>
@@ -571,6 +571,287 @@
                     box-shadow:
                         0 4px 16px rgba(0, 0, 0, 0.3),
                         inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                }
+
+                /* GLASSMORPHISM SPECIFIC CLASSES - High Specificity to Override app.css */
+                .glassmorphism-table {
+                    background: transparent !important;
+                    border-radius: 12px !important;
+                    overflow: hidden !important;
+                }
+
+                .glassmorphism-thead {
+                    background: rgba(40, 40, 40, 0.95) !important;
+                    border-bottom: 2px solid rgba(139, 69, 190, 0.4) !important;
+                }
+
+                .glassmorphism-th {
+                    background: rgba(40, 40, 40, 0.95) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: rgba(192, 132, 252, 0.9) !important;
+                    font-weight: 600 !important;
+                    padding: 1rem 0.75rem !important;
+                    text-transform: uppercase !important;
+                    letter-spacing: 0.05em !important;
+                    font-size: 0.875rem !important;
+                    border-color: rgba(139, 69, 190, 0.3) !important;
+                }
+
+                .glassmorphism-tbody {
+                    background: rgba(30, 30, 30, 0.7) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
+                }
+
+                .glassmorphism-tbody tr {
+                    background: rgba(30, 30, 30, 0.7) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                }
+
+                .glassmorphism-tbody tr:hover {
+                    background: rgba(139, 69, 190, 0.15) !important;
+                    transform: scale(1.005) !important;
+                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.2) !important;
+                }
+
+                .glassmorphism-tbody td {
+                    color: #f1f5f9 !important;
+                    border-color: rgba(139, 69, 190, 0.2) !important;
+                    padding: 1rem 0.75rem !important;
+                    font-weight: 500 !important;
+                }
+
+                /* GLASSMORPHISM CHECKBOX - Ultra High Specificity to Override app.css */
+                .glassmorphism-container .glassmorphism-checkbox,
+                .glassmorphism-container input[type="checkbox"].glassmorphism-checkbox,
+                .glassmorphism-container input.glassmorphism-checkbox {
+                    appearance: none !important;
+                    -webkit-appearance: none !important;
+                    width: 1.25rem !important;
+                    height: 1.25rem !important;
+                    border: 2px solid rgba(139, 69, 190, 0.6) !important;
+                    border-radius: 0.375rem !important;
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    cursor: pointer !important;
+                    position: relative !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    flex-shrink: 0 !important;
+                    box-shadow: 
+                        0 2px 6px rgba(139, 69, 190, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                .glassmorphism-container .glassmorphism-checkbox:hover,
+                .glassmorphism-container input[type="checkbox"].glassmorphism-checkbox:hover,
+                .glassmorphism-container input.glassmorphism-checkbox:hover {
+                    border-color: rgba(168, 85, 247, 0.8) !important;
+                    background: rgba(139, 69, 190, 0.2) !important;
+                    transform: scale(1.05) !important;
+                    box-shadow: 
+                        0 4px 12px rgba(139, 69, 190, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+                }
+
+                .glassmorphism-container .glassmorphism-checkbox:focus,
+                .glassmorphism-container input[type="checkbox"].glassmorphism-checkbox:focus,
+                .glassmorphism-container input.glassmorphism-checkbox:focus {
+                    outline: none !important;
+                    border-color: rgba(168, 85, 247, 0.9) !important;
+                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.3) !important;
+                    transform: scale(1.02) !important;
+                }
+
+                .glassmorphism-container .glassmorphism-checkbox:checked,
+                .glassmorphism-container input[type="checkbox"].glassmorphism-checkbox:checked,
+                .glassmorphism-container input.glassmorphism-checkbox:checked {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.9), rgba(168, 85, 247, 0.9)) !important;
+                    border-color: rgba(168, 85, 247, 0.9) !important;
+                    color: white !important;
+                }
+
+                .glassmorphism-container .glassmorphism-checkbox:checked::after,
+                .glassmorphism-container input[type="checkbox"].glassmorphism-checkbox:checked::after,
+                .glassmorphism-container input.glassmorphism-checkbox:checked::after {
+                    content: "✓" !important;
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) scale(1) !important;
+                    color: #ffffff !important;
+                    font-size: 0.875rem !important;
+                    font-weight: bold !important;
+                    line-height: 1 !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+                }
+
+                /* GLASSMORPHISM INPUTS - Override app.css conflicts */
+                .glassmorphism-container input:not(.glassmorphism-checkbox),
+                .glassmorphism-container select,
+                .glassmorphism-container textarea {
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    padding: 0.75rem 1rem !important;
+                    transition: all 0.3s ease !important;
+                    font-weight: 500 !important;
+                    box-shadow: 
+                        0 2px 6px rgba(0, 0, 0, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+                }
+
+                .glassmorphism-container input:not(.glassmorphism-checkbox)::placeholder {
+                    color: rgba(255, 255, 255, 0.6) !important;
+                }
+
+                .glassmorphism-container input:not(.glassmorphism-checkbox):focus,
+                .glassmorphism-container select:focus,
+                .glassmorphism-container textarea:focus {
+                    border-color: rgba(168, 85, 247, 0.7) !important;
+                    box-shadow: 
+                        0 0 0 3px rgba(139, 69, 190, 0.25),
+                        0 4px 12px rgba(139, 69, 190, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                    background: rgba(50, 50, 50, 0.95) !important;
+                    outline: none !important;
+                    ring: none !important;
+                }
+
+                /* GLASSMORPHISM BUTTONS - Override app.css */
+                .glassmorphism-container .btn:not(.glassmorphism-checkbox),
+                .glassmorphism-container button:not(.glassmorphism-checkbox) {
+                    border-radius: 8px !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    font-weight: 600 !important;
+                    box-shadow: 
+                        0 2px 6px rgba(0, 0, 0, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                }
+
+                .glassmorphism-container button:not(.glassmorphism-checkbox):hover {
+                    transform: translateY(-2px) !important;
+                    box-shadow: 
+                        0 6px 16px rgba(139, 69, 190, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+                }
+
+                /* GLASSMORPHISM LABELS - Override app.css */
+                .glassmorphism-container label {
+                    color: rgba(226, 232, 240, 0.95) !important;
+                    font-weight: 600 !important;
+                    margin-bottom: 0.5rem !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+                }
+
+                /* GLASSMORPHISM PAGINATION */
+                .glassmorphism-container .pagination,
+                .glassmorphism-container #pagination {
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border-radius: 12px !important;
+                    padding: 1rem !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    box-shadow: 
+                        0 4px 12px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+                }
+
+                .glassmorphism-container .pagination button,
+                .glassmorphism-container #pagination button {
+                    background: rgba(139, 69, 190, 0.3) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #ffffff !important;
+                    margin: 0 0.25rem !important;
+                    border-radius: 6px !important;
+                    padding: 0.5rem 1rem !important;
+                    transition: all 0.3s ease !important;
+                }
+
+                .glassmorphism-container .pagination button:hover,
+                .glassmorphism-container #pagination button:hover {
+                    background: rgba(168, 85, 247, 0.5) !important;
+                    border-color: rgba(168, 85, 247, 0.7) !important;
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.25) !important;
+                }
+
+                .glassmorphism-container .pagination .active,
+                .glassmorphism-container #pagination .active {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
+                    border-color: rgba(168, 85, 247, 0.8) !important;
+                    box-shadow: 
+                        0 4px 12px rgba(139, 69, 190, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                }
+
+                /* MODAL BUTTONS - Override app.css styles */
+                .glassmorphism-container .modal button,
+                #rejectionModal button {
+                    border-radius: 8px !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    font-weight: 600 !important;
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+                }
+
+                /* FORM ELEMENTS - Stronger Override */
+                .glassmorphism-container .form-group input,
+                .glassmorphism-container .form-group select,
+                .glassmorphism-container .form-group textarea {
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                }
+
+                .glassmorphism-container .form-group input:focus,
+                .glassmorphism-container .form-group select:focus,
+                .glassmorphism-container .form-group textarea:focus {
+                    border-color: rgba(168, 85, 247, 0.7) !important;
+                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.25) !important;
+                    ring: none !important;
+                }
+
+                /* SEARCH CONTAINER */
+                .glassmorphism-container .search-container {
+                    background: rgba(30, 30, 30, 0.7) !important;
+                    border-radius: 12px !important;
+                    padding: 1.5rem !important;
+                    border: 1px solid rgba(139, 69, 190, 0.25) !important;
+                    margin-bottom: 1.5rem !important;
+                    box-shadow: 
+                        0 4px 12px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+                }
+
+                /* TOGGLE SWITCH - Override app.css */
+                .glassmorphism-container .toggle-switch {
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    transition: all 0.3s ease !important;
+                }
+
+                .glassmorphism-container .toggle-switch:checked {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
+                    border-color: rgba(168, 85, 247, 0.8) !important;
+                }
+
+                /* ACTION BUTTONS - Enhanced Styling */
+                .glassmorphism-container .action-button {
+                    background: rgba(139, 69, 190, 0.3) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.5) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    padding: 0.5rem 1rem !important;
+                    transition: all 0.3s ease !important;
+                    font-weight: 600 !important;
+                }
+
+                .glassmorphism-container .action-button:hover {
+                    background: rgba(168, 85, 247, 0.5) !important;
+                    border-color: rgba(168, 85, 247, 0.7) !important;
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.25) !important;
                 }
 
                 /* Animated gradient background */
