@@ -720,7 +720,7 @@
             // Function to format name fields
             function formatNameField(input) {
                 // Allow letters, spaces, apostrophes, and hyphens
-                input.value = input.value.replace(/[^A-Za-z\s'-]/g, '');
+                input.value = input.value.replace(/[^A-Za-z\s'\-]/g, '');
             }
 
             if (firstNameInput) {
@@ -1137,18 +1137,18 @@
                     let city = '';
                     let state = '';
                     let zipcode = '';
+                    let street_number = '';
+                    let route = '';
 
                     for (const component of place.address_components) {
                         const componentType = component.types[0];
 
                         switch (componentType) {
                             case 'street_number':
-                                addressLine1 = component.long_name;
+                                street_number = component.long_name;
                                 break;
                             case 'route':
-                                addressLine1 = addressLine1 ?
-                                    addressLine1 + ' ' + component.long_name :
-                                    component.long_name;
+                                route = component.short_name;
                                 break;
                             case 'locality':
                                 city = component.long_name;
@@ -1162,17 +1162,42 @@
                         }
                     }
 
-                    // Use formatted_address if available
+                    addressLine1 = `${street_number} ${route}`.trim();
+
+                    // Use formatted_address if available and trigger validation
                     if (place.formatted_address) {
                         addressMapInput.value = place.formatted_address;
+                        addressMapInput.dispatchEvent(new Event('input', { bubbles: true }));
                     }
 
-                    // Fill in form fields
-                    if (addressLine1) document.getElementById('address').value = addressLine1;
-                    if (city) document.getElementById('city').value = city;
-                    if (state) document.getElementById('state').value = state;
-                    if (zipcode) document.getElementById('zipcode').value = zipcode;
-                    document.getElementById('country').value = 'USA';
+                    // Fill in form fields and trigger validation
+                    if (addressLine1) {
+                        const field = document.getElementById('address');
+                        field.value = addressLine1;
+                        field.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                    if (city) {
+                        const field = document.getElementById('city');
+                        field.value = city;
+                        field.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                    if (state) {
+                        const field = document.getElementById('state');
+                        field.value = state;
+                        field.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                    if (zipcode) {
+                        const field = document.getElementById('zipcode');
+                        field.value = zipcode;
+                        field.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                    
+                    const countryField = document.getElementById('country');
+                    countryField.value = 'USA';
+                    countryField.dispatchEvent(new Event('input', { bubbles: true }));
+
+                    // Final check to enable button
+                    checkFormValidity();
                 });
             } catch (error) {
                 console.error('Error initializing autocomplete:', error);
@@ -1409,7 +1434,7 @@
                     field.classList.add('border-gray-300');
                 }
 
-                // Removed the call to checkFormValidity() to prevent infinite recursion
+                checkFormValidity();
             }
 
             // Function to show field error
@@ -1439,7 +1464,7 @@
                     field.classList.remove('border-gray-300', 'border-green-500');
                 }
 
-                // Removed the call to checkFormValidity() to prevent infinite recursion
+                checkFormValidity();
             }
 
             // Helper function to capitalize first letter
@@ -1462,22 +1487,11 @@
                         } else if (value.length > 50) {
                             showFieldError(fieldName, '{{ __('first_name_max') }}');
                             return false;
-                        } else if (!/^[A-Za-z\s'-]+$/.test(value)) {
+                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
                             showFieldError(fieldName, '{{ __('first_name_regex') }}');
                             return false;
                         } else {
-                            // Handle field success without calling clearFieldError
-                            const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
-                            if (errorElement) {
-                                errorElement.textContent = '';
-                                errorElement.classList.add('hidden');
-                            }
-                            
-                            const field = document.querySelector(`[name="${fieldName}"]`);
-                            if (field) {
-                                field.classList.remove('border-red-500', 'border-red-300');
-                                field.classList.add('border-gray-300');
-                            }
+                            clearFieldError(fieldName);
                             return true;
                         }
 
@@ -1488,7 +1502,7 @@
                         } else if (value.length > 50) {
                             showFieldError(fieldName, '{{ __('last_name_max') }}');
                             return false;
-                        } else if (!/^[A-Za-z\s'-]+$/.test(value)) {
+                        } else if (!/^[A-Za-z\s\'-]+$/.test(value)) {
                             showFieldError(fieldName, '{{ __('last_name_regex') }}');
                             return false;
                         } else {
@@ -1611,44 +1625,34 @@
                         }
 
                     default:
-                        // Handle field success without calling clearFieldError
-                        const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
-                        if (errorElement) {
-                            errorElement.textContent = '';
-                            errorElement.classList.add('hidden');
-                        }
-                        
-                        const field = document.querySelector(`[name="${fieldName}"]`);
-                        if (field) {
-                            field.classList.remove('border-red-500', 'border-red-300');
-                            field.classList.add('border-gray-300');
-                        }
+                        clearFieldError(fieldName);
                         return true;
                 }
             }
 
-            // Function to check overall form validity without causing recursion
+            // Function to check overall form validity
             function checkFormValidity() {
                 const requiredFields = [
                     'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                    'city', 'state', 'zipcode', 'country', 'insurance_property',
+                    'city', 'state', 'zipcode', 'country',
                     'lead_source', 'inspection_status', 'status_lead'
                 ];
 
                 let isValid = true;
                 let allFieldsFilled = true;
 
-                // First pass: just check if all fields are filled without triggering validation
                 requiredFields.forEach(fieldName => {
+                    let value = '';
                     let hasValue = false;
 
                     if (fieldName === 'insurance_property') {
                         const checkedRadio = document.querySelector(
                             'input[name="insurance_property"]:checked');
+                        value = checkedRadio ? checkedRadio.value : '';
                         hasValue = !!checkedRadio;
                     } else {
                         const field = document.querySelector(`[name="${fieldName}"]`);
-                        const value = field ? field.value.trim() : '';
+                        value = field ? field.value.trim() : '';
                         hasValue = value !== '';
                     }
 
@@ -1656,14 +1660,15 @@
                     if (!hasValue) {
                         allFieldsFilled = false;
                     }
-                });
-                
-                // Second pass: check field validation state by examining error messages
-                // This avoids calling validateField which would cause recursion
-                requiredFields.forEach(fieldName => {
-                    const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]:not(.hidden)`);
-                    if (errorElement && errorElement.textContent.trim() !== '') {
-                        isValid = false;
+
+                    // Only validate fields that have been touched or have values
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    const hasBeenTouched = field && (field.dataset.touched === 'true');
+
+                    if (hasValue || hasBeenTouched) {
+                        if (!validateField(fieldName, value)) {
+                            isValid = false;
+                        }
                     }
                 });
 
@@ -1671,7 +1676,6 @@
                 const shouldEnable = allFieldsFilled && isValid;
 
                 if (submitButton) {
-                    // Update button state to match our calculated shouldEnable value
                     submitButton.disabled = !shouldEnable;
                     if (shouldEnable) {
                         submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -1681,7 +1685,6 @@
                         submitButton.classList.remove('hover:bg-gray-700');
                     }
                 }
-                }
 
                 return shouldEnable;
             }
@@ -1689,7 +1692,7 @@
             // Add event listeners for real-time validation
             const fieldsToValidate = [
                 'first_name', 'last_name', 'email', 'phone', 'address_map_input',
-                'city', 'state', 'zipcode', 'country', 'insurance_property', 'lead_source',
+                'city', 'state', 'zipcode', 'country', 'lead_source',
                 'inspection_status', 'status_lead'
             ];
 
@@ -1705,10 +1708,7 @@
                     field.addEventListener('blur', function() {
                         this.dataset.touched = 'true';
                         validateField(fieldName, this.value);
-                        // Call checkFormValidity after a short delay to prevent recursion
-                        setTimeout(() => {
-                            checkFormValidity();
-                        }, 0);
+                        checkFormValidity();
                     });
 
                     // Validate on input for immediate feedback
@@ -1716,21 +1716,9 @@
                         this.dataset.touched = 'true';
                         // Clear errors immediately when user starts typing
                         if (this.value.trim() !== '') {
-                            // Clear error display without triggering recursion
-                            const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
-                            if (errorElement) {
-                                errorElement.textContent = '';
-                                errorElement.classList.add('hidden');
-                            }
-                            
-                            // Remove red border
-                            field.classList.remove('border-red-500', 'border-red-300');
-                            field.classList.add('border-gray-300');
+                            clearFieldError(fieldName);
                         }
-                        // Call checkFormValidity after a short delay to prevent recursion
-                        setTimeout(() => {
-                            checkFormValidity();
-                        }, 0);
+                        checkFormValidity();
                     });
 
                     // For select fields, also listen to change events
@@ -1749,18 +1737,8 @@
                 radio.addEventListener('change', function() {
                     // Mark all radio buttons in the group as touched
                     insuranceRadios.forEach(r => r.dataset.touched = 'true');
-                    
-                    // Clear any validation errors for insurance_property
-                    const errorElement = document.querySelector(`.text-red-500[data-field="insurance_property"]`);
-                    if (errorElement) {
-                        errorElement.textContent = '';
-                        errorElement.classList.add('hidden');
-                    }
-                    
-                    // Call checkFormValidity after a short delay to prevent recursion
-                    setTimeout(() => {
-                        checkFormValidity();
-                    }, 0);
+                    validateField('insurance_property', this.value);
+                    checkFormValidity();
                 });
             });
 
@@ -1778,18 +1756,11 @@
                 submitButton: submitButton
             };
 
-            // Initial form validation check - after a brief timeout to ensure DOM is fully ready
+            // Initial form validation check - immediate and with timeout as backup
+            checkFormValidity();
             setTimeout(() => {
-                // Do initial validation on each field
-                fieldsToValidate.forEach(fieldName => {
-                    const field = document.querySelector(`[name="${fieldName}"]`);
-                    if (field && field.value) {
-                        validateField(fieldName, field.value);
-                    }
-                });
-                // Then check overall form validity
                 checkFormValidity();
-            }, 100);
+            }, 50);
         });
     </script>
 @endpush
