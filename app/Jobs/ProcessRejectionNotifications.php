@@ -9,7 +9,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Appointment;
 use App\Models\CompanyData;
+use App\Models\EmailData;
 use App\Notifications\AppointmentRejectionNotification;
+use App\Notifications\AdminRejectionNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -77,7 +79,7 @@ class ProcessRejectionNotifications implements ShouldQueue
                     continue;
                 }
                 
-                // Enviar notificación
+                // 1. Enviar notificación al cliente
                 Notification::route('mail', $appointment->email)
                     ->notify(new AppointmentRejectionNotification(
                         $appointment, 
@@ -86,6 +88,35 @@ class ProcessRejectionNotifications implements ShouldQueue
                         $this->otherReason,
                         $companyData
                     ));
+                
+                // 2. Enviar notificación al administrador
+                try {
+                    // Use our helper to verify admin email
+                    $adminEmailVerification = \App\Helpers\EmailHelper::verifyAdminEmail();
+                    
+                    if ($adminEmailVerification['isValid']) {
+                        Log::info("Enviando notificación de rechazo al administrador: {$adminEmailVerification['email']}");
+                        
+                        Notification::route('mail', $adminEmailVerification['email'])
+                            ->notify(new AdminRejectionNotification(
+                                $appointment, 
+                                $this->noContact, 
+                                $this->noInsurance, 
+                                $this->otherReason,
+                                $companyData
+                            ));
+                        Log::info("Notificación de rechazo enviada al administrador para la cita UUID: {$appointmentId}");
+                    } else {
+                        $emailFound = $adminEmailVerification['exists'] ? 'encontrado pero inválido' : 'no encontrado';
+                        $emailValue = $adminEmailVerification['email'] ?? 'No hay email';
+                        Log::warning("Email de administrador {$emailFound}. Omitiendo notificación de rechazo al administrador. Email: {$emailValue}");
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Error al enviar notificación de rechazo al administrador para la cita UUID: {$appointmentId} - Error: {$e->getMessage()}", [
+                        'exception' => get_class($e),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
                 
                 // Actualizar estado de la cita a rechazada
                 $appointment->status_lead = 'Declined';
@@ -106,6 +137,8 @@ class ProcessRejectionNotifications implements ShouldQueue
         }
         
         // Log de resumen al finalizar todas las notificaciones
+        $adminEmailVerification = \App\Helpers\EmailHelper::verifyAdminEmail();
+        
         Log::info("Procesamiento de notificaciones de rechazo completado", [
             'total' => count($this->appointmentIds),
             'processed' => $processed,
@@ -114,7 +147,10 @@ class ProcessRejectionNotifications implements ShouldQueue
                 'no_contact' => $this->noContact,
                 'no_insurance' => $this->noInsurance,
                 'has_other_reason' => !empty($this->otherReason),
-            ]
+            ],
+            'admin_email_found' => $adminEmailVerification['exists'],
+            'admin_email' => $adminEmailVerification['email'],
+            'admin_email_valid' => $adminEmailVerification['isValid']
         ]);
     }
 } 

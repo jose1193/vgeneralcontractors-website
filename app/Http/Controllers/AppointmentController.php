@@ -1050,7 +1050,8 @@ class AppointmentController extends BaseCrudController
 
             return response()->json([
                 'success' => true,
-                'message' => 'Rejection notifications sent and appointments moved to trash',
+                'message' => __('rejection_notifications_sent'),
+                'title' => __('success_title'),
                 'processed' => $processed,
                 'errors' => $errors,
             ]);

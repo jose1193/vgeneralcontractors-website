@@ -223,6 +223,11 @@
     "export_timeout": "Export timed out, please try again",
     "large_dataset_warning": "Large dataset detected, this may take a moment",
 
+    "success_title": "Success",
+    "rejection_notifications_sent": "Rejection notifications sent successfully",
+    "rejection_error": "Error sending rejection notifications",
+    "inactive": "Inactive",
+
     "error_loading_data_for_edit": "Error loading data for editing",
     "error_creating_record": "Error creating record",
     "error_updating_record": "Error updating record",

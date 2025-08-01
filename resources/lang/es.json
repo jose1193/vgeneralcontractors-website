@@ -1193,6 +1193,10 @@
     "error_creating_record": "Error al crear el registro",
     "error_updating_record": "Error al actualizar el registro",
 
+    "success_title": "Éxito",
+    "rejection_notifications_sent": "Notificaciones de rechazo enviadas exitosamente",
+    "rejection_error": "Error al enviar notificaciones de rechazo",
+
     "confirm_restoration": "Confirmar Restauración",
     "restore": "Restaurar",
     "restoring": "Restaurando...",
