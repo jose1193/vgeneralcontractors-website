@@ -1017,15 +1017,32 @@
                     startDatePicker.set('maxDate', null);
                 }
 
-                // Apply filters to CrudManager
-                if (window[managerName] && typeof window[managerName].applyDateFilters === 'function') {
-                    const startDateStr = startDate ? startDatePicker.formatDate(startDate, 'Y-m-d') : '';
-                    const endDateStr = endDate ? endDatePicker.formatDate(endDate, 'Y-m-d') : '';
-
-                    console.log('Applying date filters via CrudManager:', {
-                        startDateStr,
-                        endDateStr
-                    });
+                // Apply filters to CrudManager or CrudModalManager
+                // Try first with direct manager (old implementation)
+                const startDateStr = startDate ? startDatePicker.formatDate(startDate, 'Y-m-d') : '';
+                const endDateStr = endDate ? endDatePicker.formatDate(endDate, 'Y-m-d') : '';
+                
+                console.log('Attempting to apply date filters:', {
+                    startDateStr,
+                    endDateStr,
+                    managerName
+                });
+                
+                // For insurance companies, ensure we use the specific manager
+                if (managerName === 'insuranceCompanyManager') {
+                    console.log('Using insuranceCompanyManager directly');
+                    if (window.insuranceCompanyManager && typeof window.insuranceCompanyManager.applyDateFilters === 'function') {
+                        window.insuranceCompanyManager.applyDateFilters(startDateStr, endDateStr);
+                    } else if (window.crudModalManager && typeof window.crudModalManager.applyDateFilters === 'function') {
+                        // Try fallback to crudModalManager if it exists
+                        console.log('Using crudModalManager as fallback');
+                        window.crudModalManager.applyDateFilters(startDateStr, endDateStr);
+                    } else {
+                        console.warn(`Neither insuranceCompanyManager nor crudModalManager found with date filter support`);
+                    }
+                } else if (window[managerName] && typeof window[managerName].applyDateFilters === 'function') {
+                    // Generic manager case
+                    console.log(`Using ${managerName} for date filters`);
                     window[managerName].applyDateFilters(startDateStr, endDateStr);
                 } else {
                     console.warn(`CrudManager ${managerName} not found or doesn't support date filters`);
@@ -1041,9 +1058,18 @@
                     startDatePicker.set('maxDate', null);
                     endDatePicker.set('minDate', null);
 
-                    // Clear filters in CrudManager
-                    if (window[managerName] && typeof window[managerName].clearDateFilters ===
-                        'function') {
+                    // Clear filters in CrudManager or CrudModalManager
+                    if (managerName === 'insuranceCompanyManager') {
+                        console.log('Attempting to clear date filters with insuranceCompanyManager');
+                        if (window.insuranceCompanyManager && typeof window.insuranceCompanyManager.clearDateFilters === 'function') {
+                            window.insuranceCompanyManager.clearDateFilters();
+                        } else if (window.crudModalManager && typeof window.crudModalManager.clearDateFilters === 'function') {
+                            // Try fallback to crudModalManager if it exists
+                            console.log('Using crudModalManager as fallback for clearing filters');
+                            window.crudModalManager.clearDateFilters();
+                        }
+                    } else if (window[managerName] && typeof window[managerName].clearDateFilters === 'function') {
+                        // Generic manager case
                         window[managerName].clearDateFilters();
                     }
 

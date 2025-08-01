@@ -270,4 +270,44 @@ export class CrudModalManager {
             $(alertSelector).empty().show();
         }
     }
+    
+    /**
+     * Apply date filters to the data request
+     * @param {string} startDate - The start date in YYYY-MM-DD format
+     * @param {string} endDate - The end date in YYYY-MM-DD format
+     */
+    applyDateFilters(startDate, endDate) {
+        console.log("CrudModalManager: Applying date filters:", { startDate, endDate });
+        
+        // Store the date filter values
+        if (window.insuranceCompanyManager) {
+            window.insuranceCompanyManager.dateStart = startDate;
+            window.insuranceCompanyManager.dateEnd = endDate;
+            
+            // Reload data with the new filters
+            window.insuranceCompanyManager.currentPage = 1;
+            window.insuranceCompanyManager.loadEntities();
+        } else {
+            console.warn("CrudModalManager: insuranceCompanyManager not found");
+        }
+    }
+    
+    /**
+     * Clear date filters and reload data
+     */
+    clearDateFilters() {
+        console.log("CrudModalManager: Clearing date filters");
+        
+        // Clear the date filter values
+        if (window.insuranceCompanyManager) {
+            window.insuranceCompanyManager.dateStart = "";
+            window.insuranceCompanyManager.dateEnd = "";
+            
+            // Reload data without date filters
+            window.insuranceCompanyManager.currentPage = 1;
+            window.insuranceCompanyManager.loadEntities();
+        } else {
+            console.warn("CrudModalManager: insuranceCompanyManager not found");
+        }
+    }
 }
