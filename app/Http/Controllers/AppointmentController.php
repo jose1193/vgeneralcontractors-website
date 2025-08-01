@@ -985,17 +985,10 @@ class AppointmentController extends BaseCrudController
                 }
             }
 
-            // Dispatch job to process rejection notifications
-            ProcessRejectionNotifications::dispatch(
-                $appointmentIds,
-                $noContact,
-                $noInsurance,
-                $otherReason
-            );
-
             // Actualizar y mover a papelera todas las citas seleccionadas
             $processed = 0;
             $errors = 0;
+            $processedAppointments = [];
             
             foreach ($appointmentIds as $appointmentId) {
                 try {
@@ -1013,6 +1006,10 @@ class AppointmentController extends BaseCrudController
                         }
                         
                         return $appointment;
+                    }, function($appointment) use (&$processedAppointments) {
+                        if ($appointment) {
+                            $processedAppointments[] = $appointment->uuid;
+                        }
                     });
                     
                     $processed++;
@@ -1028,6 +1025,17 @@ class AppointmentController extends BaseCrudController
             // Clear cache after batch processing
             $this->significantDataChange = true;
             $this->clearCache('appointments');
+            
+            // Dispatch job to process rejection notifications AFTER all appointments have been updated
+            // and we have a list of successfully processed appointment UUIDs
+            if (!empty($processedAppointments)) {
+                ProcessRejectionNotifications::dispatch(
+                    $processedAppointments,
+                    $noContact,
+                    $noInsurance,
+                    $otherReason
+                );
+            }
 
             Log::info('Rejection notifications sent and appointments moved to trash', [
                 'total' => count($appointmentIds),

@@ -53,12 +53,21 @@ class ProcessRejectionNotifications implements ShouldQueue
             Log::warning("No se encontró información de la compañía para las notificaciones de rechazo");
         }
         
+        $processed = 0;
+        $errors = 0;
+        
+        Log::info("Iniciando procesamiento de notificaciones de rechazo", [
+            'total_appointments' => count($this->appointmentIds)
+        ]);
+        
         foreach ($this->appointmentIds as $appointmentId) {
             try {
-                $appointment = Appointment::where('uuid', $appointmentId)->first();
+                // Use withTrashed() to find the appointment even if it's been soft-deleted
+                $appointment = Appointment::withTrashed()->where('uuid', $appointmentId)->first();
                 
                 if (!$appointment) {
                     Log::warning("Cita con UUID {$appointmentId} no encontrada al procesar rechazo.");
+                    $errors++;
                     continue;
                 }
                 
@@ -88,10 +97,24 @@ class ProcessRejectionNotifications implements ShouldQueue
                 $appointment->save();
                 
                 Log::info("Notificación de rechazo enviada con éxito para la cita UUID: {$appointmentId}");
+                $processed++;
             } catch (\Exception $e) {
                 Log::error("Error al enviar notificación de rechazo para la cita UUID: {$appointmentId} - Error: {$e->getMessage()}");
                 // Continuar procesando otras citas aunque una falle
+                $errors++;
             }
         }
+        
+        // Log de resumen al finalizar todas las notificaciones
+        Log::info("Procesamiento de notificaciones de rechazo completado", [
+            'total' => count($this->appointmentIds),
+            'processed' => $processed,
+            'errors' => $errors,
+            'reasons' => [
+                'no_contact' => $this->noContact,
+                'no_insurance' => $this->noInsurance,
+                'has_other_reason' => !empty($this->otherReason),
+            ]
+        ]);
     }
 } 
