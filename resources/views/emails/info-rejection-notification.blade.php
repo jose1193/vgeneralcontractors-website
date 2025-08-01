@@ -110,7 +110,9 @@
     <div class="container">
         <!-- Logo -->
         <div class="logo">
-            <img src="{{ $logoUrl }}" width="180" alt="Logo V General Contractors">
+            <img src="https://vgeneralcontractors.com/assets/logo/logo-png.png" width="180"
+                alt="Logo V General Contractors">
+
         </div>
 
         <div class="details">
