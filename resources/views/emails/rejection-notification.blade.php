@@ -211,82 +211,82 @@
         </div>
 
         <!-- Redes Sociales -->
-        @if(isset($companyData))
-        <div class="social-icons">
-            @if ($companyData->facebook_link)
-                <a href="{{ $companyData->facebook_link }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
-                </a>
-            @endif
-            @if ($companyData->instagram_link)
-                <a href="{{ $companyData->instagram_link }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
-                </a>
-            @endif
-            @if ($companyData->linkedin_link)
-                <a href="{{ $companyData->linkedin_link }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
-                </a>
-            @endif
-            @if ($companyData->twitter_link)
-                <a href="{{ $companyData->twitter_link }}" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
-                </a>
-            @endif
-        </div>
+        @if (isset($companyData))
+            <div class="social-icons">
+                @if ($companyData->facebook_link)
+                    <a href="{{ $companyData->facebook_link }}" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="30" alt="Facebook">
+                    </a>
+                @endif
+                @if ($companyData->instagram_link)
+                    <a href="{{ $companyData->instagram_link }}" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="30" alt="Instagram">
+                    </a>
+                @endif
+                @if ($companyData->linkedin_link)
+                    <a href="{{ $companyData->linkedin_link }}" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="30" alt="LinkedIn">
+                    </a>
+                @endif
+                @if ($companyData->twitter_link)
+                    <a href="{{ $companyData->twitter_link }}" target="_blank">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="30" alt="Twitter">
+                    </a>
+                @endif
+            </div>
 
-        <!-- Pie de Página -->
-        <div class="footer">
-            <p>Horario de oficina:<br>
-                Lunes a Viernes: 9:00 AM - 5:00 PM</p>
-            <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
-                Todos los derechos reservados.</p>
-            @if ($companyData->address)
-                <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
-            @endif
+            <!-- Pie de Página -->
+            <div class="footer">
+                <p>Horario de oficina:<br>
+                    Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+                <p style="margin-top: 10px; font-size: 12px;">© {{ date('Y') }} {{ $companyData->company_name }}.
+                    Todos los derechos reservados.</p>
+                @if ($companyData->address)
+                    <p style="font-size: 10px; color: #999;">{{ $companyData->address }}</p>
+                @endif
 
-            <div style="margin-top: 5px; font-size: 12px; color: #777;">
-                <p style="margin: 3px 0;">
-                    @if ($companyData->phone)
-                        <span>
-                            @php
-                                $phone = $companyData->phone ?? '';
-                                $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
-                                if (strlen($digitsOnly) == 10) {
-                                    $formattedPhone =
-                                        '(' .
-                                        substr($digitsOnly, 0, 3) .
-                                        ') ' .
-                                        substr($digitsOnly, 3, 3) .
-                                        '-' .
-                                        substr($digitsOnly, 6);
-                                } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
-                                    $formattedPhone =
-                                        '(' .
-                                        substr($digitsOnly, 1, 3) .
-                                        ') ' .
-                                        substr($digitsOnly, 4, 3) .
-                                        '-' .
-                                        substr($digitsOnly, 7);
-                                } else {
-                                    $formattedPhone = $phone;
-                                }
-                                echo $formattedPhone;
-                            @endphp
-                        </span>
+                <div style="margin-top: 5px; font-size: 12px; color: #777;">
+                    <p style="margin: 3px 0;">
+                        @if ($companyData->phone)
+                            <span>
+                                @php
+                                    $phone = $companyData->phone ?? '';
+                                    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+                                    if (strlen($digitsOnly) == 10) {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 0, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 3, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 6);
+                                    } elseif (strlen($digitsOnly) == 11 && substr($digitsOnly, 0, 1) == '1') {
+                                        $formattedPhone =
+                                            '(' .
+                                            substr($digitsOnly, 1, 3) .
+                                            ') ' .
+                                            substr($digitsOnly, 4, 3) .
+                                            '-' .
+                                            substr($digitsOnly, 7);
+                                    } else {
+                                        $formattedPhone = $phone;
+                                    }
+                                    echo $formattedPhone;
+                                @endphp
+                            </span>
+
+                            @if ($companyData->email)
+                                <span style="margin: 0 5px;">|</span>
+                            @endif
+                        @endif
 
                         @if ($companyData->email)
-                            <span style="margin: 0 5px;">|</span>
+                            <a href="mailto:{{ $companyData->email }}"
+                                style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
                         @endif
-                    @endif
-
-                    @if ($companyData->email)
-                        <a href="mailto:{{ $companyData->email }}"
-                            style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
-                    @endif
-                </p>
+                    </p>
+                </div>
             </div>
-        </div>
         @endif
     </div>
 </body>

@@ -314,6 +314,10 @@
     "complete_management": "Complete Management",
     "search_appointments": "Search appointments...",
     "show_inactive_appointments": "Show Inactive Appointments",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "lead_status": "Lead Status",
+    "inactive_item": "Inactive",
 
     "_comment_hero_landing": "=== HERO AND LANDING PAGE ===",
     "hero_title": "Professional Commercial & Residential Roofing Services in Texas",

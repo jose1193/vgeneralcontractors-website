@@ -95,27 +95,17 @@ class ProcessRejectionNotifications implements ShouldQueue
                     $adminEmailVerification = \App\Helpers\EmailHelper::verifyAdminEmail();
                     
                     if ($adminEmailVerification['isValid']) {
-                        Log::info("Enviando notificación de rechazo al administrador: {$adminEmailVerification['email']}", [
-                            'appointment_uuid' => $appointmentId,
-                            'template' => app()->getLocale() === 'es' ? 'emails.admin-rejection-notification-es' : 'emails.admin-rejection-notification'
-                        ]);
+                        Log::info("Enviando notificación de rechazo al administrador: {$adminEmailVerification['email']}");
                         
-                        try {
-                            Notification::route('mail', $adminEmailVerification['email'])
-                                ->notify(new AdminRejectionNotification(
-                                    $appointment, 
-                                    $this->noContact, 
-                                    $this->noInsurance, 
-                                    $this->otherReason,
-                                    $companyData
-                                ));
-                            Log::info("Notificación de rechazo enviada al administrador para la cita UUID: {$appointmentId}");
-                        } catch (\Exception $notificationError) {
-                            Log::error("Error específico al enviar la notificación al administrador: " . $notificationError->getMessage(), [
-                                'exception' => get_class($notificationError),
-                                'trace' => $notificationError->getTraceAsString()
-                            ]);
-                        }
+                        Notification::route('mail', $adminEmailVerification['email'])
+                            ->notify(new AdminRejectionNotification(
+                                $appointment, 
+                                $this->noContact, 
+                                $this->noInsurance, 
+                                $this->otherReason,
+                                $companyData
+                            ));
+                        Log::info("Notificación de rechazo enviada al administrador para la cita UUID: {$appointmentId}");
                     } else {
                         $emailFound = $adminEmailVerification['exists'] ? 'encontrado pero inválido' : 'no encontrado';
                         $emailValue = $adminEmailVerification['email'] ?? 'No hay email';
