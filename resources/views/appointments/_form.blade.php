@@ -300,7 +300,7 @@
 </div>
 
 {{-- Checkboxes section transformed to radio buttons for insurance_property --}}
-<div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 my-10 py-5">
+<div class="md:col-span-2 mt-6 my-10 py-5">
     {{-- Insurance Property as Radio Buttons --}}
     <div class="block">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -334,8 +334,8 @@
     </div>
 </div>
 
-{{-- Additional Options moved to the end --}}
-<div class="md:col-span-2 mt-4 mb-6">
+{{-- Additional Options moved to the very end --}}
+<div class="md:col-span-2 mt-6 mb-6">
     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
         {{ __('Additional Options') }}
     </label>
