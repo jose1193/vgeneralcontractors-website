@@ -68,7 +68,7 @@ class ProcessRejectionNotifications implements ShouldQueue
                     continue;
                 }
                 
-                // 1. Enviar notificación al cliente
+                // Enviar notificación
                 Notification::route('mail', $appointment->email)
                     ->notify(new AppointmentRejectionNotification(
                         $appointment, 
@@ -77,22 +77,6 @@ class ProcessRejectionNotifications implements ShouldQueue
                         $this->otherReason,
                         $companyData
                     ));
-                
-                // 2. Enviar copia al administrador
-                $adminEmailData = \App\Models\EmailData::where('type', 'Admin')->first();
-                if ($adminEmailData && $adminEmailData->email) {
-                    Notification::route('mail', $adminEmailData->email)
-                        ->notify(new AppointmentRejectionNotification(
-                            $appointment, 
-                            $this->noContact, 
-                            $this->noInsurance, 
-                            $this->otherReason,
-                            $companyData
-                        ));
-                    Log::info("Notificación de rechazo enviada al administrador para la cita UUID: {$appointmentId}");
-                } else {
-                    Log::warning("No se pudo encontrar la dirección de correo del administrador en la tabla EmailData. Omitiendo notificación de rechazo al administrador.");
-                }
                 
                 // Actualizar estado de la cita a rechazada
                 $appointment->status_lead = 'Declined';

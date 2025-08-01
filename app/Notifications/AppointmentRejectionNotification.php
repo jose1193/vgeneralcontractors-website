@@ -57,14 +57,6 @@ class AppointmentRejectionNotification extends Notification implements ShouldQue
      */
     public function toMail($notifiable)
     {
-        // Log before sending for debugging
-        \Illuminate\Support\Facades\Log::info('Sending rejection notification email', [
-            'to' => $notifiable->routes['mail'] ?? 'unknown',
-            'appointment_id' => $this->appointment->id,
-            'appointment_email' => $this->appointment->email,
-            'company_data' => $this->companyData ? $this->companyData->name : 'Not provided'
-        ]);
-        
         return (new MailMessage)
             ->subject('Información Importante Sobre Su Solicitud de Inspección')
             ->view('emails.appointment-rejection', [
