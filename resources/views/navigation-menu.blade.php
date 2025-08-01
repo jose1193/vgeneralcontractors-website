@@ -96,8 +96,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" type="button"
-                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
+                        <button @click.stop="open = !open" type="button"
+                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
@@ -140,7 +140,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -195,8 +195,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- User Profile -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open"
-                            class="flex items-center space-x-1 sm:space-x-2 text-gray-300 hover:text-white">
+                        <button @click.stop="open = !open"
+                            class="flex items-center space-x-1 sm:space-x-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 rounded-full transition-all duration-150">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <img class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-gray-700"
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
@@ -213,7 +213,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border z-50"
@@ -709,9 +709,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     (auth()->user()->can('READ_COMPANY_DATA') ||
                         auth()->user()->can('READ_USER') ||
                         auth()->user()->can('READ_INSURANCE_COMPANY')))
-                <div x-data="{ adminOpen: false }">
-                    <button @click="adminOpen = !adminOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                <div x-data="{ adminOpen: false }" class="relative">
+                    <button @click.stop="adminOpen = !adminOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -722,13 +722,21 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('administration') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform" :class="adminOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="adminOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="adminOpen" x-transition class="ml-9 mt-2 space-y-2">
+                    <div x-show="adminOpen" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="ml-9 mt-2 space-y-2 relative z-50"
+                         style="display: none;">
                         @can('READ_COMPANY_DATA')
                             <a href="{{ route('company-data.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('company-data.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -834,9 +842,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                <div x-data="{ servicesOpen: false }">
-                    <button @click="servicesOpen = !servicesOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                <div x-data="{ servicesOpen: false }" class="relative">
+                    <button @click.stop="servicesOpen = !servicesOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -845,13 +853,21 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('services') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform" :class="servicesOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="servicesOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="servicesOpen" x-transition class="ml-9 mt-2 space-y-2">
+                    <div x-show="servicesOpen" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="ml-9 mt-2 space-y-2 relative z-50"
+                         style="display: none;">
                         @can('READ_EMAIL_DATA')
                             <a href="{{ route('email-datas.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -870,9 +886,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Appointments Group -->
             @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
-                <div x-data="{ appointmentsOpen: false }">
-                    <button @click="appointmentsOpen = !appointmentsOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                <div x-data="{ appointmentsOpen: false }" class="relative">
+                    <button @click.stop="appointmentsOpen = !appointmentsOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -881,13 +897,21 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('appointments') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform" :class="appointmentsOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="appointmentsOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="appointmentsOpen" x-transition class="ml-9 mt-2 space-y-2">
+                    <div x-show="appointmentsOpen" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="ml-9 mt-2 space-y-2 relative z-50"
+                         style="display: none;">
                         <a href="{{ route('appointments.index') }}"
                             class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointments.index') ? 'bg-gray-700 text-white' : '' }}">
                             {{ __('manage_appointments') }}
@@ -926,9 +950,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
-                <div x-data="{ blogOpen: false }">
-                    <button @click="blogOpen = !blogOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                <div x-data="{ blogOpen: false }" class="relative">
+                    <button @click.stop="blogOpen = !blogOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -937,13 +961,21 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('blog_management') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''" fill="none"
+                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="blogOpen ? 'rotate-180' : ''" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="blogOpen" x-transition class="ml-9 mt-2 space-y-2">
+                    <div x-show="blogOpen" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="ml-9 mt-2 space-y-2 relative z-50"
+                         style="display: none;">
                         @can('READ_POST')
                             <a href="{{ route('posts-crud.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('posts-crud.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -1008,4 +1040,109 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             // Alpine.store('mobileSearch', false);
         }
     }
+
+    // Enhanced dropdown behavior
+    document.addEventListener('alpine:init', () => {
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', (event) => {
+            // Check if click is outside any dropdown
+            const dropdowns = document.querySelectorAll('[x-data*="Open"]');
+            dropdowns.forEach(dropdown => {
+                const button = dropdown.querySelector('button');
+                const menu = dropdown.querySelector('[x-show]');
+                
+                if (button && menu && !dropdown.contains(event.target)) {
+                    // Close dropdown using Alpine.js
+                    Alpine.$data(dropdown).adminOpen = false;
+                    Alpine.$data(dropdown).servicesOpen = false;
+                    Alpine.$data(dropdown).appointmentsOpen = false;
+                    Alpine.$data(dropdown).blogOpen = false;
+                    Alpine.$data(dropdown).open = false;
+                }
+            });
+        });
+
+        // Prevent rapid clicking conflicts
+        let clickTimeout;
+        document.addEventListener('click', (event) => {
+            const button = event.target.closest('button[\\@click]');
+            if (button) {
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    // Allow normal processing after brief delay
+                }, 50);
+            }
+        });
+
+        // Keyboard navigation for dropdowns
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                // Close all dropdowns on Escape
+                const dropdowns = document.querySelectorAll('[x-data*="Open"]');
+                dropdowns.forEach(dropdown => {
+                    Alpine.$data(dropdown).adminOpen = false;
+                    Alpine.$data(dropdown).servicesOpen = false;
+                    Alpine.$data(dropdown).appointmentsOpen = false;
+                    Alpine.$data(dropdown).blogOpen = false;
+                    Alpine.$data(dropdown).open = false;
+                });
+            }
+        });
+    });
+
+    // Improve focus management
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add proper focus management for dropdown buttons
+        const dropdownButtons = document.querySelectorAll('[x-data] button');
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Ensure the click is properly handled
+                e.stopPropagation();
+                
+                // Add visual feedback
+                this.classList.add('active');
+                setTimeout(() => {
+                    this.classList.remove('active');
+                }, 150);
+            });
+        });
+    });
 </script>
+
+<style>
+    /* Enhanced dropdown styles for better interaction */
+    [x-data] button:focus {
+        outline: 2px solid #facc15 !important;
+        outline-offset: 2px !important;
+    }
+    
+    [x-data] button.active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+    
+    /* Prevent dropdown flickering */
+    [x-show] {
+        transition-property: opacity, transform;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    /* Improve z-index stacking */
+    .relative [x-show] {
+        z-index: 60 !important;
+    }
+    
+    /* Smooth hover transitions */
+    button {
+        transition: all 0.15s ease-in-out;
+    }
+    
+    /* Better visual feedback for interactive elements */
+    button:hover {
+        transform: translateY(-1px);
+    }
+    
+    button:active {
+        transform: translateY(0);
+    }
+</style>
