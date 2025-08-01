@@ -58,7 +58,7 @@ class InsuranceCompanyExportPDF extends BaseExportPDF
      */
     protected function getTemplatePath(): string
     {
-        return 'exports.insurance-companies-pdf';
+        return 'exports.insurance-companies-pdf-new';
     }
 
     /**

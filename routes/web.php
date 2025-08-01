@@ -379,6 +379,11 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/feed', [FeedController::class, 'rss'])->name('feeds.rss');
 });
 
+// Test routes for PDF system (temporary - remove in production)
+if (app()->environment('local')) {
+    require __DIR__.'/test-pdf.php';
+}
+
 
 
 

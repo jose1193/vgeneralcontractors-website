@@ -167,6 +167,7 @@ abstract class BaseExportPDF
             'margin_bottom' => 10,
             'margin_left' => 10,
             'show_header' => true,
+            'show_main_header' => true, // Header principal en primera página
             'show_footer' => true,
             'show_page_numbers' => true,
             'show_company_info' => true,
