@@ -1168,40 +1168,11 @@
                     }
 
                     // Fill in form fields
-                    const addressField = document.getElementById('address');
-                    if (addressLine1 && addressField) {
-                        addressField.value = addressLine1;
-                        addressField.dataset.touched = 'true';
-                    }
-                    
-                    const cityField = document.getElementById('city');
-                    if (city && cityField) {
-                        cityField.value = city;
-                        cityField.dataset.touched = 'true';
-                    }
-                    
-                    const stateField = document.getElementById('state');
-                    if (state && stateField) {
-                        stateField.value = state;
-                        stateField.dataset.touched = 'true';
-                    }
-                    
-                    const zipcodeField = document.getElementById('zipcode');
-                    if (zipcode && zipcodeField) {
-                        zipcodeField.value = zipcode;
-                        zipcodeField.dataset.touched = 'true';
-                    }
-                    
-                    const countryField = document.getElementById('country');
-                    if (countryField) {
-                        countryField.value = 'USA';
-                        countryField.dataset.touched = 'true';
-                    }
-                    
-                    // Trigger validation after populating fields
-                    if (typeof checkFormValidity === 'function') {
-                        checkFormValidity();
-                    }
+                    if (addressLine1) document.getElementById('address').value = addressLine1;
+                    if (city) document.getElementById('city').value = city;
+                    if (state) document.getElementById('state').value = state;
+                    if (zipcode) document.getElementById('zipcode').value = zipcode;
+                    document.getElementById('country').value = 'USA';
                 });
             } catch (error) {
                 console.error('Error initializing autocomplete:', error);
@@ -1716,23 +1687,6 @@
                         }
                         checkFormValidity();
                     });
-                }
-            });
-            
-            // Special handling for address_map_input to sync with hidden address field
-            const addressMapInput = document.getElementById('address_map_input');
-            const addressHiddenField = document.getElementById('address');
-            if (addressMapInput && addressHiddenField) {
-                addressMapInput.addEventListener('input', function() {
-                    // Copy the value to the hidden address field
-                    addressHiddenField.value = this.value;
-                    addressHiddenField.dataset.touched = 'true';
-                    
-                    // Check form validity after updating hidden field
-                    validateField('address', addressHiddenField.value);
-                    checkFormValidity();
-                });
-            }
 
                     // For select fields, also listen to change events
                     if (field.tagName === 'SELECT') {
