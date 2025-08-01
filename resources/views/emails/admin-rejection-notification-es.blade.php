@@ -211,7 +211,8 @@
         <div class="header">
             <div class="notification-badge">🔔</div>
             <div class="logo">
-                <img src="{{ $message->embed(public_path('images/logo.png')) }}" alt="V General Contractors Logo">
+                <!-- Logo text fallback in case image doesn't exist -->
+                <h1 style="color: white; margin: 0; font-size: 22px; text-align: center;">V General Contractors</h1>
             </div>
         </div>
 
