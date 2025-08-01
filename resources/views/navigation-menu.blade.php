@@ -21,12 +21,22 @@ $store.darkMode = {
         this.updateTheme();
     },
     updateTheme() {
+        // Check if page has custom background (like appointments page)
+        const hasCustomBackground = document.body.classList.contains('custom-page-background') || 
+                                  document.querySelector('.appointments-page-bg') !== null;
+        
         if (this.on) {
             document.documentElement.classList.add('dark');
-            document.body.style.backgroundColor = '#141414';
+            // Only set default background if page doesn't have custom background
+            if (!hasCustomBackground) {
+                document.body.style.backgroundColor = '#141414';
+            }
         } else {
             document.documentElement.classList.remove('dark');
-            document.body.style.backgroundColor = '#f9fafb';
+            // Only set default background if page doesn't have custom background
+            if (!hasCustomBackground) {
+                document.body.style.backgroundColor = '#f9fafb';
+            }
         }
     }
 };

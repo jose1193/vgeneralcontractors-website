@@ -7,7 +7,7 @@
     </x-slot> --}}
 
     {{-- Dark background container with consistent styling --}}
-    <div class="min-h-screen" style="background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%);">
+    <div class="min-h-screen appointments-page-bg" style="background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%) !important;">
         {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
             <div class="animated-header-card glassmorphism-form-container rounded-2xl shadow-2xl mb-8 overflow-hidden">
@@ -355,6 +355,15 @@
 
         @push('styles')
             <style>
+                /* Override global background for appointments page */
+                body {
+                    background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%) !important;
+                }
+                
+                .appointments-page-bg {
+                    background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%) !important;
+                }
+                
                 /* Modern Dark Crystal Index 2025 with Purple Accents - Enhanced Glassmorphic Version */
                 
                 /* Main Glassmorphic Form Container - Same as form.blade.php */
@@ -1534,5 +1543,24 @@
                 }
             }
         </style>
+
+        <script>
+            // Add custom background class to body for navigation script detection
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.classList.add('custom-page-background');
+                // Force the background style with high priority
+                document.body.style.setProperty('background', 'linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%)', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
+            });
+            
+            // Also ensure the background stays when Alpine.js dark mode updates
+            document.addEventListener('alpine:init', () => {
+                Alpine.effect(() => {
+                    if (document.body.classList.contains('custom-page-background')) {
+                        document.body.style.setProperty('background', 'linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%)', 'important');
+                    }
+                });
+            });
+        </script>
     </div>
 </x-app-layout>
