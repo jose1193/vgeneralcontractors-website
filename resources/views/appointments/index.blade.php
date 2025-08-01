@@ -7,10 +7,10 @@
     </x-slot> --}}
 
     {{-- Dark background container with consistent styling --}}
-    <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
+    <div class="min-h-screen" style="background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(25, 25, 25, 0.95) 50%, rgba(15, 15, 15, 0.98) 100%);">
         {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
-            <div class="animated-header-card bg-white rounded-2xl shadow-2xl mb-8 overflow-hidden">
+            <div class="animated-header-card glassmorphism-form-container rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="animated-gradient-header px-8 py-6 relative">
                     {{-- Floating particles background --}}
                     <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -89,7 +89,7 @@
             @endif
 
             <!-- Main container -->
-            <div class="glassmorphism-container shadow-xl rounded-lg">
+            <div class="glassmorphism-form-container shadow-xl rounded-lg">
                 <div class="p-6">
                     <!-- Filter and action bar -->
                     <div
@@ -187,9 +187,9 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div class="overflow-x-auto glassmorphism-container table-container">
+                    <div class="overflow-x-auto glassmorphism-form-container table-container">
                         <table id="appointmentsTable"
-                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table">
+                            class="min-w-full divide-y divide-purple-300/20 glassmorphism-table">
                             <thead class="glassmorphism-thead">
                                 <tr>
                                     <th
@@ -201,38 +201,39 @@
                                         {{ __('name') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="email">
                                         {{ __('email') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         {{ __('phone') }}
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_date">
                                         {{ __('inspection_date') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_time">
                                         {{ __('inspection_time') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="insurance_property">
                                         {{ __('insurance') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="status_lead">
                                         {{ __('status_lead') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
+                                        data-field="inspection_status">
                                         {{ __('inspection_status') }}
+                                        <span class="sort-icon"></span>
                                     </th>
                                     <th
                                         class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
@@ -354,19 +355,21 @@
 
         @push('styles')
             <style>
-                /* Modern Dark Crystal Index 2025 with Purple Accents - Enhanced Version */
-                .glassmorphism-container {
+                /* Modern Dark Crystal Index 2025 with Purple Accents - Enhanced Glassmorphic Version */
+                
+                /* Main Glassmorphic Form Container - Same as form.blade.php */
+                .glassmorphism-form-container {
                     position: relative;
-                    margin: 1rem 0;
                     border-radius: 16px;
-                    padding: 1.5rem;
                     overflow: hidden;
 
                     /* Dark Crystal Background */
                     background: linear-gradient(135deg,
                             rgba(17, 17, 17, 0.95) 0%,
-                            rgba(30, 30, 30, 0.92) 50%,
-                            rgba(20, 20, 20, 0.95) 100%);
+                            rgba(25, 25, 30, 0.92) 25%,
+                            rgba(30, 30, 35, 0.90) 50%,
+                            rgba(25, 25, 30, 0.92) 75%,
+                            rgba(20, 20, 25, 0.95) 100%);
 
                     /* Elegant Border */
                     border: 1px solid rgba(139, 69, 190, 0.3);
@@ -385,7 +388,7 @@
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
-                .glassmorphism-container::before {
+                .glassmorphism-form-container::before {
                     content: '';
                     position: absolute;
                     top: 0;
@@ -401,7 +404,7 @@
                     opacity: 0.8;
                 }
 
-                .glassmorphism-container:hover {
+                .glassmorphism-form-container:hover {
                     transform: translateY(-2px);
                     border-color: rgba(168, 85, 247, 0.5);
                     box-shadow:
@@ -410,14 +413,39 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.15);
                 }
 
+                /* Enhanced Input Fields */
+                .glassmorphism-form-container input,
+                .glassmorphism-form-container select,
+                .glassmorphism-form-container textarea {
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    transition: all 0.3s ease !important;
+                }
+
+                .glassmorphism-form-container input:focus,
+                .glassmorphism-form-container select:focus,
+                .glassmorphism-form-container textarea:focus {
+                    border-color: rgba(168, 85, 247, 0.6) !important;
+                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
+                    background: rgba(50, 50, 50, 0.9) !important;
+                }
+
+                /* Enhanced Labels */
+                .glassmorphism-form-container label {
+                    color: #e5e7eb !important;
+                    font-weight: 500;
+                }
+
                 /* Enhanced Table Styling */
-                .glassmorphism-container table {
+                .glassmorphism-form-container table {
                     background: transparent !important;
                     border-radius: 12px;
                     overflow: hidden;
                 }
 
-                .glassmorphism-container table thead th {
+                .glassmorphism-form-container table thead th {
                     background: rgba(40, 40, 40, 0.9) !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
                     color: #f8fafc !important;
@@ -428,78 +456,46 @@
                     font-size: 0.875rem;
                 }
 
-                .glassmorphism-container table tbody tr {
+                .glassmorphism-form-container table tbody tr {
                     background: rgba(30, 30, 30, 0.7) !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
-                .glassmorphism-container table tbody tr:hover {
+                .glassmorphism-form-container table tbody tr:hover {
                     background: rgba(139, 69, 190, 0.15) !important;
                     transform: scale(1.005);
                     box-shadow: 0 4px 12px rgba(139, 69, 190, 0.2);
                 }
 
-                .glassmorphism-container table tbody td {
+                .glassmorphism-form-container table tbody td {
                     color: #f1f5f9 !important;
                     border-color: rgba(139, 69, 190, 0.2) !important;
                     padding: 1rem 0.75rem;
                     font-weight: 500;
                 }
 
-                /* Enhanced Input and Button Styling */
-                .glassmorphism-container input,
-                .glassmorphism-container select,
-                .glassmorphism-container textarea {
-                    background: rgba(40, 40, 40, 0.8) !important;
-                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
-                    color: #ffffff !important;
-                    border-radius: 8px !important;
-                    padding: 0.75rem 1rem !important;
-                    transition: all 0.3s ease !important;
-                    font-weight: 500;
-                }
-
-                .glassmorphism-container input::placeholder {
-                    color: rgba(255, 255, 255, 0.6) !important;
-                }
-
-                .glassmorphism-container input:focus,
-                .glassmorphism-container select:focus,
-                .glassmorphism-container textarea:focus {
-                    border-color: rgba(168, 85, 247, 0.6) !important;
-                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
-                    background: rgba(50, 50, 50, 0.9) !important;
-                }
-
                 /* Enhanced Button Styling */
-                .glassmorphism-container .btn,
-                .glassmorphism-container button {
+                .glassmorphism-form-container .btn,
+                .glassmorphism-form-container button {
                     border-radius: 8px !important;
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
                     font-weight: 600 !important;
                 }
 
-                .glassmorphism-container button:hover {
+                .glassmorphism-form-container button:hover {
                     transform: translateY(-2px) !important;
                     box-shadow: 0 6px 16px rgba(139, 69, 190, 0.25) !important;
                 }
 
-                /* Enhanced Label Styling */
-                .glassmorphism-container label {
-                    color: #e2e8f0 !important;
-                    font-weight: 600 !important;
-                    margin-bottom: 0.5rem !important;
-                }
-
                 /* Enhanced Pagination Styling */
-                .glassmorphism-container .pagination {
+                .glassmorphism-form-container .pagination {
                     background: rgba(40, 40, 40, 0.8) !important;
                     border-radius: 12px !important;
                     padding: 1rem !important;
                 }
 
-                .glassmorphism-container .pagination button {
+                .glassmorphism-form-container .pagination button {
                     background: rgba(139, 69, 190, 0.2) !important;
                     border: 1px solid rgba(139, 69, 190, 0.3) !important;
                     color: #ffffff !important;
@@ -508,62 +504,18 @@
                     padding: 0.5rem 1rem !important;
                 }
 
-                .glassmorphism-container .pagination button:hover {
+                .glassmorphism-form-container .pagination button:hover {
                     background: rgba(168, 85, 247, 0.4) !important;
                     border-color: rgba(168, 85, 247, 0.6) !important;
                 }
 
-                .glassmorphism-container .pagination .active {
+                .glassmorphism-form-container .pagination .active {
                     background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
                     border-color: rgba(168, 85, 247, 0.8) !important;
                 }
 
-                /* Enhanced Search and Filter Styling */
-                .glassmorphism-container .search-container {
-                    background: rgba(30, 30, 30, 0.6) !important;
-                    border-radius: 12px !important;
-                    padding: 1.5rem !important;
-                    border: 1px solid rgba(139, 69, 190, 0.2) !important;
-                    margin-bottom: 1.5rem !important;
-                }
-
-                /* Enhanced Toggle Styling */
-                .glassmorphism-container .toggle-switch {
-                    background: rgba(40, 40, 40, 0.8) !important;
-                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
-                }
-
-                .glassmorphism-container .toggle-switch:checked {
-                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
-                }
-
-                /* Enhanced Modal Styling */
-                .glassmorphism-container .modal {
-                    background: rgba(20, 20, 20, 0.95) !important;
-                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
-                    border-radius: 16px !important;
-                    backdrop-filter: blur(20px) !important;
-                }
-
-                /* Enhanced Action Buttons */
-                .glassmorphism-container .action-button {
-                    background: rgba(139, 69, 190, 0.2) !important;
-                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
-                    color: #ffffff !important;
-                    border-radius: 8px !important;
-                    padding: 0.5rem 1rem !important;
-                    transition: all 0.3s ease !important;
-                }
-
-                .glassmorphism-container .action-button:hover {
-                    background: rgba(168, 85, 247, 0.4) !important;
-                    border-color: rgba(168, 85, 247, 0.6) !important;
-                    transform: translateY(-2px) !important;
-                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.25) !important;
-                }
-
                 /* Enhanced Table Container */
-                .glassmorphism-container .table-container {
+                .glassmorphism-form-container .table-container {
                     background: rgba(25, 25, 25, 0.8) !important;
                     border: 1px solid rgba(139, 69, 190, 0.3) !important;
                     border-radius: 12px !important;
@@ -573,18 +525,23 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
                 }
 
+                /* Glassmorphic Header Card Styling */
+                .animated-header-card {
+                    border: 2px solid rgba(139, 69, 190, 0.4) !important;
+                    box-shadow: 0 0 30px rgba(139, 69, 190, 0.3), 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+                }
+
                 /* Animated gradient background */
                 .animated-gradient-header {
-                    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #6a11cb 75%, #2575fc 100%);
+                    background: linear-gradient(135deg, 
+                        rgba(139, 69, 190, 0.8) 0%, 
+                        rgba(168, 85, 247, 0.7) 25%, 
+                        rgba(139, 69, 190, 0.8) 50%, 
+                        rgba(107, 33, 168, 0.8) 75%, 
+                        rgba(139, 69, 190, 0.8) 100%);
                     background-size: 300% 300%;
                     animation: gradientShift 8s ease infinite;
                     position: relative;
-                }
-
-                .animated-header-card {
-                    border: 2px solid #34d399;
-                    /* border-emerald-400 */
-                    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
                 }
 
                 .animated-gradient-header::before {
@@ -638,7 +595,6 @@
 
                 /* Floating animations */
                 @keyframes float-slow {
-
                     0%,
                     100% {
                         transform: translateY(0px) rotate(0deg);
@@ -650,7 +606,6 @@
                 }
 
                 @keyframes float-medium {
-
                     0%,
                     100% {
                         transform: translateY(0px) rotate(0deg);
@@ -662,7 +617,6 @@
                 }
 
                 @keyframes float-fast {
-
                     0%,
                     100% {
                         transform: translateY(0px) rotate(0deg);
@@ -687,7 +641,6 @@
 
                 /* Pulse animations */
                 @keyframes pulse-soft {
-
                     0%,
                     100% {
                         transform: scale(1);
@@ -706,7 +659,6 @@
 
                 /* Bounce subtle animation */
                 @keyframes bounce-subtle {
-
                     0%,
                     100% {
                         transform: translateY(0);
@@ -744,7 +696,7 @@
                 /* Enhanced hover effects for header elements */
                 .animated-header-card:hover {
                     transform: translateY(-5px);
-                    box-shadow: 0 0 40px rgba(16, 185, 129, 0.5), 0 25px 50px rgba(0, 0, 0, 0.4);
+                    box-shadow: 0 0 40px rgba(139, 69, 190, 0.5), 0 25px 50px rgba(0, 0, 0, 0.4);
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
