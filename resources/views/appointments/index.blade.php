@@ -7,7 +7,7 @@
     </x-slot> --}}
 
     {{-- Dark background container with consistent styling --}}
-    <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
+    <div class="min-h-screen ">
         {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
             <div class="animated-header-card rounded-2xl shadow-2xl mb-8 overflow-hidden">
