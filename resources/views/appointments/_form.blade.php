@@ -334,7 +334,7 @@
 </div>
 
 {{-- Additional Options Section - Positioned at the end and aligned to the right --}}
-<div class="md:col-span-2 mt-6 mb-6">
+<div class="md:col-span-2 -mt-16 mb-6">
     <div class="flex justify-end">
         <div class="block">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-right">
