@@ -96,8 +96,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- Language Switcher -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click.stop="open = !open" type="button"
-                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition ease-in-out duration-150">
+                        <button @click="open = !open" type="button"
+                            class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm leading-4 font-medium rounded-md text-gray-400 hover:text-white focus:outline-none transition ease-in-out duration-150">
                             @php
                                 $currentLocale = app()->getLocale();
                                 $languages = [
@@ -140,7 +140,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -195,8 +195,8 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
                     <!-- User Profile -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click.stop="open = !open"
-                            class="flex items-center space-x-1 sm:space-x-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 rounded-full transition-all duration-150">
+                        <button @click="open = !open"
+                            class="flex items-center space-x-1 sm:space-x-2 text-gray-300 hover:text-white">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <img class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-gray-700"
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
@@ -213,7 +213,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="transform opacity-100 scale-100"
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border z-50"
@@ -323,10 +323,10 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     (auth()->user()->can('READ_COMPANY_DATA') ||
                         auth()->user()->can('READ_USER') ||
                         auth()->user()->can('READ_INSURANCE_COMPANY')))
-                <div class="relative group">
+                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                        onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                        onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                         onmouseover="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                         onmouseout="{{ !(request()->routeIs('company-data.*') || request()->routeIs('users.*') || request()->routeIs('insurance-companies.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -336,114 +336,112 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     </div>
 
                     <!-- Submenu -->
-                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
-                        style="background-color: #2C2E36;">
-                        <div class="p-2 space-y-1">
-                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
-                                {{ __('administration') }}</div>
-                            @can('READ_COMPANY_DATA')
-                                <a href="{{ route('company-data.index') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('company-data.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('company_data_title') }}
-                                </a>
-                            @endcan
-                            @can('READ_USER')
-                                <a href="{{ route('users.index') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('users') }}
-                                </a>
-                            @endcan
-                            @can('READ_INSURANCE_COMPANY')
-                                <a href="{{ route('insurance-companies.index') }}"
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('insurance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('insurance_companies') }}
-                                </a>
-                            @endcan
-                            @can('READ_PUBLIC_COMPANY')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-companies.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('public_companies') }}
-                                </a>
-                            @endcan
-                            @can('READ_ROLE')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('roles.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('roles') }}
-                                </a>
-                            @endcan
-                            @can('READ_PERMISSION')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('permissions.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('permissions') }}
-                                </a>
-                            @endcan
-                            @can('READ_CUSTOMER')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('customers.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('customers') }}
-                                </a>
-                            @endcan
-                            
-                            @can('READ_PUBLIC_ADJUSTER')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-adjusters.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('public_adjusters') }}
-                                </a>
-                            @endcan
-                            @can('READ_SCOPE_SHEET')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('scope-sheets.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('scope_sheets') }}
-                                </a>
-                            @endcan
-                            @can('READ_MORTGAGE_COMPANY')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('mortgage-companies.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('mortgage_companies') }}
-                                </a>
-                            @endcan
-                            
-                            @can('READ_ALLIANCE_COMPANY')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('alliance_companies') }}
-                                </a>
-                            @endcan
-                            @can('READ_ZONE')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('zones.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('zones') }}
-                                </a>
-                            @endcan
-                            @can('READ_PROPERTIES')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('properties.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('properties') }}
-                                </a>
-                            @endcan
-                            @can('READ_TYPE_DAMAGE')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('damage-types.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('type_damage') }}
-                                </a>
-                            @endcan
-                            @can('READ_CAUSE_OF_LOSS')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('cause-of-losses.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('cause_of_loss') }}
-                                </a>
-                            @endcan
-                            @can('READ_PRODUCT')
-                                <a href=""
-                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('products.*') ? 'bg-gray-700 text-white' : '' }}">
-                                    {{ __('products') }}
-                                </a>
-                            @endcan
-                        </div>
-                        <div class="absolute left-0 top-4 transform -translate-x-1 w-2 h-2 rotate-45"
-                            style="background-color: #2C2E36;"></div>
-                    </div>
-                </div>
+                    <div x-show="open" x-transition class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max" style="background-color: #2C2E36;">
+                         <div class="p-2 space-y-1">
+                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
+                                 {{ __('administration') }}</div>
+                             @can('READ_COMPANY_DATA')
+                                 <a href="{{ route('company-data.index') }}"
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('company-data.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('company_data_title') }}
+                                 </a>
+                             @endcan
+                             @can('READ_USER')
+                                 <a href="{{ route('users.index') }}"
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('users.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('users') }}
+                                 </a>
+                             @endcan
+                             @can('READ_INSURANCE_COMPANY')
+                                 <a href="{{ route('insurance-companies.index') }}"
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('insurance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('insurance_companies') }}
+                                 </a>
+                             @endcan
+                             @can('READ_PUBLIC_COMPANY')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('public_companies') }}
+                                 </a>
+                             @endcan
+                             @can('READ_ROLE')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('roles.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('roles') }}
+                                 </a>
+                             @endcan
+                             @can('READ_PERMISSION')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('permissions.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('permissions') }}
+                                 </a>
+                             @endcan
+                             @can('READ_CUSTOMER')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('customers.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('customers') }}
+                                 </a>
+                             @endcan
+                             
+                             @can('READ_PUBLIC_ADJUSTER')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('public-adjusters.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('public_adjusters') }}
+                                 </a>
+                             @endcan
+                             @can('READ_SCOPE_SHEET')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('scope-sheets.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('scope_sheets') }}
+                                 </a>
+                             @endcan
+                             @can('READ_MORTGAGE_COMPANY')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('mortgage-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('mortgage_companies') }}
+                                 </a>
+                             @endcan
+                             
+                             @can('READ_ALLIANCE_COMPANY')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('alliance_companies') }}
+                                 </a>
+                             @endcan
+                             @can('READ_ZONE')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('zones.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('zones') }}
+                                 </a>
+                             @endcan
+                             @can('READ_PROPERTIES')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('properties.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('properties') }}
+                                 </a>
+                             @endcan
+                             @can('READ_TYPE_DAMAGE')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('damage-types.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('type_damage') }}
+                                 </a>
+                             @endcan
+                             @can('READ_CAUSE_OF_LOSS')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('cause-of-losses.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('cause_of_loss') }}
+                                 </a>
+                             @endcan
+                             @can('READ_PRODUCT')
+                                 <a href=""
+                                     class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('products.*') ? 'bg-gray-700 text-white' : '' }}">
+                                     {{ __('products') }}
+                                 </a>
+                             @endcan
+                         </div>
+                        <div class="absolute left-0 top-4 transform -translate-x-1 w-2 h-2 rotate-45" style="background-color: #2C2E36;"></div>
+                     </div>
+                 </div>
             @endif
 
             <!-- Services Group -->
@@ -709,9 +707,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                     (auth()->user()->can('READ_COMPANY_DATA') ||
                         auth()->user()->can('READ_USER') ||
                         auth()->user()->can('READ_INSURANCE_COMPANY')))
-                <div x-data="{ adminOpen: false }" class="relative">
-                    <button @click.stop="adminOpen = !adminOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
+                <div x-data="{ adminOpen: false }">
+                    <button @click="adminOpen = !adminOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -722,21 +720,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('administration') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="adminOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform" :class="adminOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="adminOpen" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95"
-                         class="ml-9 mt-2 space-y-2 relative z-50"
-                         style="display: none;">
+                    <div x-show="adminOpen" x-transition class="ml-9 mt-2 space-y-2">
                         @can('READ_COMPANY_DATA')
                             <a href="{{ route('company-data.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('company-data.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -779,7 +769,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 {{ __('customers') }}
                             </a>
                         @endcan
-                       
+                        
                         @can('READ_PUBLIC_ADJUSTER')
                             <a href=""
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('public-adjusters.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -798,7 +788,7 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 {{ __('mortgage_companies') }}
                             </a>
                         @endcan
-                       
+                        
                         @can('READ_ALLIANCE_COMPANY')
                             <a href=""
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('alliance-companies.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -835,16 +825,15 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                                 {{ __('products') }}
                             </a>
                         @endcan
-                        
                     </div>
                 </div>
             @endif
 
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                <div x-data="{ servicesOpen: false }" class="relative">
-                    <button @click.stop="servicesOpen = !servicesOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
+                <div x-data="{ servicesOpen: false }">
+                    <button @click="servicesOpen = !servicesOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -853,21 +842,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('services') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="servicesOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform" :class="servicesOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="servicesOpen" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95"
-                         class="ml-9 mt-2 space-y-2 relative z-50"
-                         style="display: none;">
+                    <div x-show="servicesOpen" x-transition class="ml-9 mt-2 space-y-2">
                         @can('READ_EMAIL_DATA')
                             <a href="{{ route('email-datas.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -886,9 +867,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Appointments Group -->
             @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
-                <div x-data="{ appointmentsOpen: false }" class="relative">
-                    <button @click.stop="appointmentsOpen = !appointmentsOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
+                <div x-data="{ appointmentsOpen: false }">
+                    <button @click="appointmentsOpen = !appointmentsOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -897,21 +878,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('appointments') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="appointmentsOpen ? 'rotate-180' : ''"
+                        <svg class="w-4 h-4 transition-transform" :class="appointmentsOpen ? 'rotate-180' : ''"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="appointmentsOpen" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95"
-                         class="ml-9 mt-2 space-y-2 relative z-50"
-                         style="display: none;">
+                    <div x-show="appointmentsOpen" x-transition class="ml-9 mt-2 space-y-2">
                         <a href="{{ route('appointments.index') }}"
                             class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointments.index') ? 'bg-gray-700 text-white' : '' }}">
                             {{ __('manage_appointments') }}
@@ -950,9 +923,9 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Blog Management Group -->
             @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
-                <div x-data="{ blogOpen: false }" class="relative">
-                    <button @click.stop="blogOpen = !blogOpen"
-                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 transition-all duration-150">
+                <div x-data="{ blogOpen: false }">
+                    <button @click="blogOpen = !blogOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
                         <div class="flex items-center space-x-3">
                             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -961,21 +934,13 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
                             </svg>
                             <span class="font-medium text-yellow-400">{{ __('blog_management') }}</span>
                         </div>
-                        <svg class="w-4 h-4 transition-transform duration-200 ease-in-out" :class="blogOpen ? 'rotate-180' : ''" fill="none"
+                        <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                    <div x-show="blogOpen" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-150"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95"
-                         class="ml-9 mt-2 space-y-2 relative z-50"
-                         style="display: none;">
+                    <div x-show="blogOpen" x-transition class="ml-9 mt-2 space-y-2">
                         @can('READ_POST')
                             <a href="{{ route('posts-crud.index') }}"
                                 class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('posts-crud.*') ? 'bg-gray-700 text-white' : '' }}">
@@ -1017,133 +982,27 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
             @endif
         </div>
     </div>
-
-    <!-- Scripts and Styles -->
-    <script>
-        function handleMobileSearch(event) {
-            event.preventDefault();
-            const searchInput = event.target.querySelector('input[type="text"]');
-            const searchTerm = searchInput.value.trim();
-
-            if (searchTerm) {
-                // Aquí puedes agregar la lógica de búsqueda
-                console.log('Searching for:', searchTerm);
-
-                // Ejemplo: redirigir a una página de búsqueda
-                // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
-
-                // Por ahora, simplemente mostraremos un mensaje
-                alert(`Buscando: ${searchTerm}`);
-
-                // Cerrar el modal de búsqueda después de buscar
-                // Si usas Alpine.js store para manejar el estado
-                // Alpine.store('mobileSearch', false);
-            }
-        }
-
-        // Enhanced dropdown behavior
-        document.addEventListener('alpine:init', () => {
-            // Close all dropdowns when clicking outside
-            document.addEventListener('click', (event) => {
-                // Check if click is outside any dropdown
-                const dropdowns = document.querySelectorAll('[x-data*="Open"]');
-                dropdowns.forEach(dropdown => {
-                    const button = dropdown.querySelector('button');
-                    const menu = dropdown.querySelector('[x-show]');
-                    
-                    if (button && menu && !dropdown.contains(event.target)) {
-                        // Close dropdown using Alpine.js
-                        Alpine.$data(dropdown).adminOpen = false;
-                        Alpine.$data(dropdown).servicesOpen = false;
-                        Alpine.$data(dropdown).appointmentsOpen = false;
-                        Alpine.$data(dropdown).blogOpen = false;
-                        Alpine.$data(dropdown).open = false;
-                    }
-                });
-            });
-
-            // Prevent rapid clicking conflicts
-            let clickTimeout;
-            document.addEventListener('click', (event) => {
-                const button = event.target.closest('button[\\@click]');
-                if (button) {
-                    clearTimeout(clickTimeout);
-                    clickTimeout = setTimeout(() => {
-                        // Allow normal processing after brief delay
-                    }, 50);
-                }
-            });
-
-            // Keyboard navigation for dropdowns
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    // Close all dropdowns on Escape
-                    const dropdowns = document.querySelectorAll('[x-data*="Open"]');
-                    dropdowns.forEach(dropdown => {
-                        Alpine.$data(dropdown).adminOpen = false;
-                        Alpine.$data(dropdown).servicesOpen = false;
-                        Alpine.$data(dropdown).appointmentsOpen = false;
-                        Alpine.$data(dropdown).blogOpen = false;
-                        Alpine.$data(dropdown).open = false;
-                    });
-                }
-            });
-        });
-
-        // Improve focus management
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add proper focus management for dropdown buttons
-            const dropdownButtons = document.querySelectorAll('[x-data] button');
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // Ensure the click is properly handled
-                    e.stopPropagation();
-                    
-                    // Add visual feedback
-                    this.classList.add('active');
-                    setTimeout(() => {
-                        this.classList.remove('active');
-                    }, 150);
-                });
-            });
-        });
-    </script>
-
-    <style>
-        /* Enhanced dropdown styles for better interaction */
-        [x-data] button:focus {
-            outline: 2px solid #facc15 !important;
-            outline-offset: 2px !important;
-        }
-        
-        [x-data] button.active {
-            transform: scale(0.98);
-            transition: transform 0.1s ease;
-        }
-        
-        /* Prevent dropdown flickering */
-        [x-show] {
-            transition-property: opacity, transform;
-            transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-        
-        /* Improve z-index stacking */
-        .relative [x-show] {
-            z-index: 60 !important;
-        }
-        
-        /* Smooth hover transitions */
-        button {
-            transition: all 0.15s ease-in-out;
-        }
-        
-        /* Better visual feedback for interactive elements */
-        button:hover {
-            transform: translateY(-1px);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-    </style>
 </div>
+
+<script>
+    function handleMobileSearch(event) {
+        event.preventDefault();
+        const searchInput = event.target.querySelector('input[type="text"]');
+        const searchTerm = searchInput.value.trim();
+
+        if (searchTerm) {
+            // Aquí puedes agregar la lógica de búsqueda
+            console.log('Searching for:', searchTerm);
+
+            // Ejemplo: redirigir a una página de búsqueda
+            // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+
+            // Por ahora, simplemente mostraremos un mensaje
+            alert(`Buscando: ${searchTerm}`);
+
+            // Cerrar el modal de búsqueda después de buscar
+            // Si usas Alpine.js store para manejar el estado
+            // Alpine.store('mobileSearch', false);
+        }
+    }
+</script>
