@@ -301,14 +301,36 @@
 
 {{-- Checkboxes section transformed to radio buttons for insurance_property --}}
 <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 my-10 py-5">
-    {{-- Insurance Property as Checkbox --}}
+    {{-- Insurance Property as Radio Buttons --}}
     <div class="block">
-        <label for="insurance_property" class="flex items-center">
-            <x-checkbox id="insurance_property" name="insurance_property" :checked="old('insurance_property', $appointment->insurance_property ?? false)" value="1"
-                required />
-            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Property Insurance') }}
-                <span class="text-red-500">*</span></span>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ __('Property Insurance') }} <span class="text-red-500">*</span>
         </label>
+        <fieldset class="mt-2">
+            <legend class="sr-only">Property Insurance</legend>
+            <div class="flex items-center space-x-4">
+                <div class="radio-option flex items-center">
+                    <input id="insurance_yes" name="insurance_property" type="radio" value="1"
+                        class="radio-field sr-only" required
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? 'checked' : '' }}>
+                    <label for="insurance_yes"
+                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                        {{ __('Yes') }}
+                    </label>
+                </div>
+                <div class="radio-option flex items-center">
+                    <input id="insurance_no" name="insurance_property" type="radio" value="0"
+                        class="radio-field sr-only" required
+                        {{ old('insurance_property', $appointment->insurance_property ?? false) ? '' : 'checked' }}>
+                    <label for="insurance_no"
+                        class="insurance-label flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-sm w-20">
+                        {{ __('No') }}
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <x-input-error for="insurance_property" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="insurance_property"></span>
     </div>
 
     {{-- Other checkboxes --}}
@@ -1065,6 +1087,66 @@
         .checkbox-field:hover {
             border-color: #eab308;
         }
+        
+        /* Insurance Radio Label Styles */
+        .insurance-label {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insurance-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .insurance-label:hover {
+            background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+            color: white !important;
+            border-color: #eab308 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.25), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .insurance-label:hover::before {
+            left: 100%;
+        }
+
+        .insurance-label.selected {
+            background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+            color: white !important;
+            border-color: #d97706 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .insurance-label:active {
+            transform: translateY(0) !important;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Animation for selected state */
+        .insurance-label.selected {
+            animation: pulse-selected 2s infinite;
+        }
+
+        @keyframes pulse-selected {
+            0%, 100% {
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.5), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            }
+        }
     </style>
 
     <script>
@@ -1078,6 +1160,52 @@
                         setTimeout(() => {
                             this.classList.remove('animate-pulse');
                         }, 500);
+                    }
+                });
+            });
+            
+            // Insurance radio buttons styling setup
+            const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+            const insuranceLabels = document.querySelectorAll('.insurance-label');
+
+            // Initial setup - ensure selected radio has its label styled
+            insuranceRadios.forEach(radio => {
+                if (radio.checked) {
+                    const label = document.querySelector(`label[for="${radio.id}"]`);
+                    if (label) {
+                        label.classList.add('selected');
+                    }
+                }
+            });
+
+            // Add click event listeners to labels for better UX
+            insuranceLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const radioId = this.getAttribute('for');
+                    const radio = document.getElementById(radioId);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
+                    }
+                });
+            });
+
+            // Change event handlers for radio buttons
+            insuranceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove selected class from all labels
+                    insuranceLabels.forEach(label => {
+                        label.classList.remove('selected');
+                    });
+
+                    // Add selected class to the checked radio's label
+                    if (this.checked) {
+                        const label = document.querySelector(`label[for="${this.id}"]`);
+                        if (label) {
+                            label.classList.add('selected');
+                        }
                     }
                 });
             });
