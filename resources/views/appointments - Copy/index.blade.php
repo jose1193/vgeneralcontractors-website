@@ -434,7 +434,7 @@
                                     // Botón para compartir ubicación - Se agrega independientemente del estado de borrado
                                     if (appointment.latitude && appointment.longitude) {
                                         const address =
-                                            `${appointment.address || ''}, ${appointment.city || ''}`;
+                                            `${appointment.address || ''}, ${appointment.city || ''}, ${appointment.state || ''} ${appointment.zipcode || ''}`;
                                         actionsHtml += `
                                     <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Share Location">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -586,7 +586,7 @@
 
                         if (entities.length === 0) {
                             html =
-                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">No appointments found matching your search criteria.</td></tr>`;
+                                `<tr><td colspan="10" class="px-6 py-4 text-center text-sm text-gray-500">{{ __('no_appointments_found_matching_criteria') }}</td></tr>`;
                         } else {
                             entities.forEach((entity) => {
                                 const isDeleted = entity.deleted_at !== null;
@@ -1007,7 +1007,7 @@
                                     </svg>
                                 </div>
                                 <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">${address}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Choose how you want to share this location</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('choose_how_share_location') }}</p>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
@@ -1049,7 +1049,8 @@
                             showCloseButton: true,
                             customClass: {
                                 container: 'swal-fullscreen',
-                                popup: 'swal-fullscreen-popup'
+                                popup: 'swal-fullscreen-popup',
+                                closeButton: 'custom-close-button'
                             },
                             width: '95%',
                             heightAuto: false
@@ -1098,6 +1099,37 @@
                 overflow-y: auto !important;
                 padding: 0 !important;
                 margin: 0 !important;
+            }
+
+            /* Custom close button styles */
+            .custom-close-button {
+                background-color: #dc2626 !important;
+                color: white !important;
+                border-radius: 50% !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 20px !important;
+                font-weight: bold !important;
+                border: none !important;
+                position: absolute !important;
+                top: 15px !important;
+                right: 15px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3) !important;
+            }
+
+            .custom-close-button:hover {
+                background-color: #b91c1c !important;
+                transform: scale(1.1) !important;
+                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+            }
+
+            .custom-close-button:focus {
+                outline: none !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;
             }
 
             @media (max-width: 640px) {

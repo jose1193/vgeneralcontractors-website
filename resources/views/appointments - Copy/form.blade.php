@@ -22,8 +22,8 @@
                     @endif
                     @include('appointments._form')
                     <div class="mt-10 mb-3 flex justify-center">
-                        <button type="submit" id="submit-button"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed">
+                        <button type="submit" id="submit-button" disabled
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed opacity-50 cursor-not-allowed">
 
                             {{-- Spinner (hidden initially) --}}
                             <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -56,16 +56,29 @@
             const submitSpinner = document.getElementById('submit-spinner');
             const submitButtonText = document.getElementById('submit-button-text');
 
+            // Wait for the form validation system to be ready
+            const waitForValidation = setInterval(() => {
+                if (window.appointmentFormValidation) {
+                    clearInterval(waitForValidation);
+                    // Initial check to ensure button state is correct
+                    window.appointmentFormValidation.checkFormValidity();
+                }
+            }, 100);
+
             // Function to set loading state
             function setLoadingState(isLoading) {
-                submitButton.disabled = isLoading;
                 if (isLoading) {
+                    submitButton.disabled = true;
                     submitSpinner.classList.remove('hidden');
                     submitButtonText.textContent = '{{ __('sending') }}...';
                 } else {
                     submitSpinner.classList.add('hidden');
                     submitButtonText.textContent =
                         '{{ isset($appointment->uuid) ? __('update_appointment_btn') : __('create_appointment_btn') }}';
+                    // Re-check form validity after loading to restore proper button state
+                    if (window.appointmentFormValidation) {
+                        window.appointmentFormValidation.checkFormValidity();
+                    }
                 }
             }
 

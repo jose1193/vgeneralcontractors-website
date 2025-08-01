@@ -4,21 +4,20 @@
     <div class="container mx-auto px-4 sm:px-8">
         <div class="py-8">
             <div class="flex justify-between">
-                <h2 class="text-2xl font-semibold leading-tight">{{ __('edit_appointment') }}</h2>
+                <h2 class="text-2xl font-semibold leading-tight">{{ __('create_appointment') }}</h2>
                 <a href="{{ route('appointments.index') }}"
                     class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     {{ __('back_to_list') }}
                 </a>
             </div>
             <div class="my-4 overflow-hidden sm:rounded-md">
-                <form id="appointmentEditForm" action="{{ route('appointments.update', $appointment->uuid) }}" method="POST"
-                    class=" dark:bg-gray-800 shadow-md rounded-lg p-6">
+                <form id="appointmentCreateForm" action="{{ secure_url(route('appointments.store', [], false)) }}"
+                    method="POST" class=" dark:bg-gray-800 shadow-md rounded-lg p-6">
                     @csrf
-                    @method('PUT')
                     @include('appointments._form')
                     <div class="mt-10 mb-3 flex justify-center">
-                        <button type="submit" id="submit-button"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed">
+                        <button type="submit" id="submit-button" disabled
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed opacity-50 cursor-not-allowed">
 
                             {{-- Spinner (hidden initially) --}}
                             <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -30,7 +29,7 @@
                                 </path>
                             </svg>
 
-                            <span id="submit-button-text">{{ __('update_appointment_btn') }}</span>
+                            <span id="submit-button-text">{{ __('create_appointment_btn') }}</span>
                         </button>
                     </div>
                 </form>
@@ -44,10 +43,19 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('appointmentEditForm');
+            const form = document.getElementById('appointmentCreateForm');
             const submitButton = document.getElementById('submit-button');
             const submitSpinner = document.getElementById('submit-spinner');
             const submitButtonText = document.getElementById('submit-button-text');
+
+            // Wait for the form validation system to be ready
+            const waitForValidation = setInterval(() => {
+                if (window.appointmentFormValidation) {
+                    clearInterval(waitForValidation);
+                    // Initial check to ensure button state is correct
+                    window.appointmentFormValidation.checkFormValidity();
+                }
+            }, 100);
 
             // Extra code to ensure insurance radio buttons styling works
             const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
@@ -99,13 +107,17 @@
 
             // Function to set loading state
             function setLoadingState(isLoading) {
-                submitButton.disabled = isLoading;
                 if (isLoading) {
+                    submitButton.disabled = true;
                     submitSpinner.classList.remove('hidden');
                     submitButtonText.textContent = '{{ __('sending') }}...';
                 } else {
                     submitSpinner.classList.add('hidden');
-                    submitButtonText.textContent = '{{ __('update_appointment_btn') }}';
+                    submitButtonText.textContent = '{{ __('create_appointment_btn') }}';
+                    // Re-check form validity after loading to restore proper button state
+                    if (window.appointmentFormValidation) {
+                        window.appointmentFormValidation.checkFormValidity();
+                    }
                 }
             }
 
