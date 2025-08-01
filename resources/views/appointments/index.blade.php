@@ -189,7 +189,8 @@
                     <!-- Appointments table -->
                     <div class="overflow-x-auto glassmorphism-container table-container">
                         <table id="appointmentsTable"
-                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table">
+                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table"
+                            style="border-collapse: separate; border-spacing: 0;">
                             <thead class="glassmorphism-thead">
                                 <tr>
                                     <th
@@ -415,6 +416,8 @@
                     background: transparent !important;
                     border-radius: 12px;
                     overflow: hidden;
+                    border-collapse: separate !important;
+                    border-spacing: 0 !important;
                 }
 
                 /* Estilos específicos para el encabezado de la tabla con glassmorphism */
@@ -423,11 +426,11 @@
                             rgba(30, 30, 40, 0.95) 0%,
                             rgba(50, 40, 60, 0.92) 50%,
                             rgba(30, 30, 40, 0.95) 100%) !important;
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
+                    backdrop-filter: blur(10px) !important;
+                    -webkit-backdrop-filter: blur(10px) !important;
                     border-bottom: 2px solid rgba(139, 69, 190, 0.5) !important;
                 }
-                
+
                 .glassmorphism-th {
                     background: transparent !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
@@ -435,7 +438,7 @@
                     position: relative;
                     overflow: hidden;
                 }
-                
+
                 .glassmorphism-th::after {
                     content: '';
                     position: absolute;
@@ -444,11 +447,11 @@
                     right: 0;
                     height: 1px;
                     background: linear-gradient(90deg,
-                        transparent 0%,
-                        rgba(139, 69, 190, 0.6) 50%,
-                        transparent 100%);
+                            transparent 0%,
+                            rgba(139, 69, 190, 0.6) 50%,
+                            transparent 100%);
                 }
-                
+
                 .glassmorphism-container table thead th {
                     background: transparent !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
@@ -458,6 +461,8 @@
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                     font-size: 0.875rem;
+                    position: relative;
+                    z-index: 1;
                 }
 
                 .glassmorphism-container table tbody tr {
