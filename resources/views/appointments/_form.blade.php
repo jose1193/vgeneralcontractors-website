@@ -428,7 +428,7 @@
         </div>
 
         {{-- Additional Options Section --}}
-        <div class="block">
+        <div class="block mt-4">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 md:text-right">
                 {{ __('Additional Options') }}
             </label>
