@@ -23,20 +23,27 @@
                     @include('appointments._form')
                     <div class="mt-10 mb-3 flex justify-center">
                         <button type="submit" id="submit-button" disabled
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="glassmorphism-submit-btn inline-flex items-center justify-center px-6 py-3 border border-white/10 rounded-lg font-semibold text-sm text-white uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group"
+                            title="Submit Form">
 
-                            {{-- Spinner (hidden initially) --}}
-                            <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
+                            {{-- Glass overlay effect --}}
+                            <span class="absolute inset-0 w-full h-full bg-white/5 backdrop-filter backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            
+                            {{-- Content container --}}
+                            <span class="relative z-10 flex items-center">
+                                {{-- Spinner (hidden initially) --}}
+                                <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
 
-                            <span
-                                id="submit-button-text">{{ isset($appointment->uuid) ? __('update_appointment_btn') : __('create_appointment_btn') }}</span>
+                                <span
+                                    id="submit-button-text">{{ isset($appointment->uuid) ? __('update_appointment_btn') : __('create_appointment_btn') }}</span>
+                            </span>
                         </button>
                     </div>
                 </form>
@@ -140,10 +147,133 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
         }
 
+        /* Glassmorphism Submit Button - Dark Blue Crystal Style */
+        .glassmorphism-submit-btn {
+            /* Dark Blue Crystal Background */
+            background: linear-gradient(135deg,
+                    rgba(30, 58, 138, 0.85) 0%,
+                    rgba(37, 99, 235, 0.80) 50%,
+                    rgba(29, 78, 216, 0.85) 100%);
+
+            /* Premium Blue Box Shadow System */
+            box-shadow:
+                0 8px 32px 0 rgba(37, 99, 235, 0.25),
+                0 16px 64px 0 rgba(59, 130, 246, 0.18),
+                0 4px 16px 0 rgba(30, 58, 138, 0.3),
+                0 2px 8px 0 rgba(37, 99, 235, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+
+            /* Enhanced Blur Effects */
+            backdrop-filter: blur(16px) saturate(1.2);
+            -webkit-backdrop-filter: blur(16px) saturate(1.2);
+
+            /* Refined Border for Glass Effect */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+            /* Smooth Transitions */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Shimmer effect overlay */
+        .glassmorphism-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 25%,
+                    transparent 50%,
+                    rgba(37, 99, 235, 0.08) 75%,
+                    rgba(59, 130, 246, 0.12) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Shimmer animation */
+        .glassmorphism-submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* Hover effects */
+        .glassmorphism-submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg,
+                    rgba(37, 99, 235, 0.9) 0%,
+                    rgba(59, 130, 246, 0.85) 50%,
+                    rgba(37, 99, 235, 0.9) 100%);
+            box-shadow:
+                0 12px 48px 0 rgba(37, 99, 235, 0.35),
+                0 24px 80px 0 rgba(59, 130, 246, 0.25),
+                0 6px 24px 0 rgba(30, 58, 138, 0.4),
+                0 3px 12px 0 rgba(37, 99, 235, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .glassmorphism-submit-btn:hover:not(:disabled)::before {
+            opacity: 1;
+        }
+
+        .glassmorphism-submit-btn:hover:not(:disabled)::after {
+            left: 100%;
+        }
+
+        /* Active state */
+        .glassmorphism-submit-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow:
+                0 6px 24px 0 rgba(37, 99, 235, 0.3),
+                0 12px 48px 0 rgba(59, 130, 246, 0.2),
+                0 3px 12px 0 rgba(30, 58, 138, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        /* Focus state */
+        .glassmorphism-submit-btn:focus:not(:disabled) {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow:
+                0 8px 32px 0 rgba(37, 99, 235, 0.3),
+                0 16px 64px 0 rgba(59, 130, 246, 0.2),
+                0 4px 16px 0 rgba(30, 58, 138, 0.3),
+                0 0 20px 0 rgba(37, 99, 235, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+
         .submit-button-disabled {
+            background: linear-gradient(135deg,
+                    rgba(55, 65, 81, 0.7) 0%,
+                    rgba(75, 85, 99, 0.65) 50%,
+                    rgba(55, 65, 81, 0.7) 100%) !important;
+            box-shadow:
+                0 4px 16px 0 rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.05) !important;
             opacity: 0.5 !important;
             cursor: not-allowed !important;
             pointer-events: none;
+            transform: none !important;
+        }
+
+        .submit-button-disabled::before,
+        .submit-button-disabled::after {
+            display: none !important;
         }
 
         .submit-button-enabled {
