@@ -201,31 +201,31 @@
                                         {{ __('name') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="email">
                                         {{ __('email') }}
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         {{ __('phone') }}
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_date">
                                         {{ __('inspection_date') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="inspection_time">
                                         {{ __('inspection_time') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="insurance_property">
                                         {{ __('insurance') }}
                                         <span class="sort-icon"></span>
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="status_lead">
                                         {{ __('status_lead') }}
                                         <span class="sort-icon"></span>
@@ -417,8 +417,40 @@
                     overflow: hidden;
                 }
 
+                /* Estilos específicos para el encabezado de la tabla con glassmorphism */
+                .glassmorphism-thead {
+                    background: linear-gradient(135deg,
+                            rgba(30, 30, 40, 0.95) 0%,
+                            rgba(50, 40, 60, 0.92) 50%,
+                            rgba(30, 30, 40, 0.95) 100%) !important;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border-bottom: 2px solid rgba(139, 69, 190, 0.5) !important;
+                }
+                
+                .glassmorphism-th {
+                    background: transparent !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #f8fafc !important;
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .glassmorphism-th::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: linear-gradient(90deg,
+                        transparent 0%,
+                        rgba(139, 69, 190, 0.6) 50%,
+                        transparent 100%);
+                }
+                
                 .glassmorphism-container table thead th {
-                    background: rgba(40, 40, 40, 0.9) !important;
+                    background: transparent !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
                     color: #f8fafc !important;
                     font-weight: 600;
