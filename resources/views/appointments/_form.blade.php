@@ -16,32 +16,36 @@
     {{-- First Name --}}
     <div>
         <x-label for="first_name" value="{{ __('First Name') }}" />
-        <x-input id="first_name" class="block mt-1 w-full capitalize" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
+        <x-input id="first_name" class="block mt-1 w-full capitalize input-field" type="text" name="first_name" :value="old('first_name', $appointment->first_name ?? '')"
             required autofocus pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="first_name" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="first_name"></span>
     </div>
 
     {{-- Last Name --}}
     <div>
         <x-label for="last_name" value="{{ __('Last Name') }}" />
-        <x-input id="last_name" class="block mt-1 w-full capitalize" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
+        <x-input id="last_name" class="block mt-1 w-full capitalize input-field" type="text" name="last_name" :value="old('last_name', $appointment->last_name ?? '')"
             required pattern="[A-Za-z]+" title="Only letters allowed, no spaces" />
         <x-input-error for="last_name" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="last_name"></span>
     </div>
 
     {{-- Phone --}}
     <div>
         <x-label for="phone" value="{{ __('Phone') }}" />
-        <x-input id="phone" class="block mt-1 w-full" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
+        <x-input id="phone" class="block mt-1 w-full input-field" type="tel" name="phone" placeholder="(XXX) XXX-XXXX"
             :value="old('phone', $appointment->phone ?? '')" required />
         <x-input-error for="phone" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="phone"></span>
     </div>
 
     {{-- Email --}}
     <div>
         <x-label for="email" value="{{ __('Email') }}" />
-        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
+        <x-input id="email" class="block mt-1 w-full input-field" type="email" name="email" :value="old('email', $appointment->email ?? '')" required />
         <x-input-error for="email" class="mt-2" />
+        <span class="error-message text-xs text-red-500 mt-1 block h-4" data-field="email"></span>
     </div>
 
     {{-- Address Map Input (for Google Maps Autocomplete) --}}
@@ -1638,6 +1642,208 @@
                     }
                 });
             });
+
+            // Real-time field validation setup
+            const form = document.querySelector('form');
+            const csrfToken = document.querySelector('input[name="_token"]')?.value;
+            const appointmentUuid = '{{ $appointment->uuid ?? '' }}'; // For edit mode
+            
+            // Get all input fields that need validation
+            const inputFields = form.querySelectorAll('.input-field');
+            const radioFields = form.querySelectorAll('.radio-field');
+            
+            // Debounce function to limit API calls
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Function to clear field errors
+            function clearFieldError(fieldElement) {
+                const fieldName = fieldElement.name;
+                const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                if (errorSpan) errorSpan.textContent = '';
+                fieldElement.classList.remove('border-red-500');
+            }
+
+            // Function to validate individual field
+            function validateField(fieldElement) {
+                const fieldName = fieldElement.name;
+                let fieldValue = fieldElement.type === 'checkbox' ? (fieldElement.checked ? 1 : 0) : fieldElement.value;
+
+                // Handle radio buttons
+                if (fieldElement.type === 'radio') {
+                    const checkedRadio = form.querySelector(`input[name="${fieldName}"]:checked`);
+                    if (!checkedRadio) {
+                        clearFieldError(fieldElement);
+                        return;
+                    }
+                    fieldValue = checkedRadio.value;
+                }
+
+                // Skip validation for empty non-required fields
+                if (!fieldValue && !fieldElement.required) {
+                    clearFieldError(fieldElement);
+                    return;
+                }
+
+                // Prepare request data
+                const requestData = {
+                    fieldName: fieldName,
+                    fieldValue: fieldValue
+                };
+
+                // Add UUID for edit mode to exclude current record
+                if (appointmentUuid) {
+                    requestData.excludeUuid = appointmentUuid;
+                }
+
+                fetch('{{ route('appointments.validate-field') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (!response.ok && response.status !== 422) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const errorSpan = form.querySelector(`.error-message[data-field="${fieldName}"]`);
+                    if (errorSpan) {
+                        if (!data.valid && data.errors?.[0]) {
+                            errorSpan.textContent = data.errors[0];
+                            fieldElement.classList.add('border-red-500');
+
+                            // Special handling for duplicate email
+                            if (fieldName === 'email' && data.duplicate_email) {
+                                // Show additional info for duplicate email
+                                errorSpan.innerHTML = `${data.errors[0]}<br><small class="text-gray-600">Contact support at (713) 587-6423 if you need assistance.</small>`;
+                            }
+                        } else {
+                            errorSpan.textContent = '';
+                            fieldElement.classList.remove('border-red-500');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Validation request failed:', error);
+                });
+            }
+
+            // Debounced version of validation
+            const debouncedValidateField = debounce(validateField, 500);
+
+            // Add event listeners to input fields
+            inputFields.forEach(input => {
+                // Real-time validation on input (debounced)
+                input.addEventListener('input', function() {
+                    debouncedValidateField(this);
+                });
+
+                // Immediate validation on blur
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                // Clear errors on focus
+                input.addEventListener('focus', function() {
+                    clearFieldError(this);
+                });
+            });
+
+            // Add event listeners to radio fields
+            radioFields.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    validateField(this);
+                });
+            });
+
+            // Special formatting for name fields
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
+            const phoneInput = document.getElementById('phone');
+
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', function(event) {
+                    // Capitalize first letter and remove non-letters
+                    let value = event.target.value.replace(/[^A-Za-z]/g, '');
+                    if (value.length > 0) {
+                        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+                    }
+                    event.target.value = value;
+                });
+            }
+
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', function(event) {
+                    // Capitalize first letter and remove non-letters
+                    let value = event.target.value.replace(/[^A-Za-z]/g, '');
+                    if (value.length > 0) {
+                        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+                    }
+                    event.target.value = value;
+                });
+            }
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(event) {
+                    // Format phone number as (XXX) XXX-XXXX
+                    let value = event.target.value.replace(/\D/g, '');
+                    if (value.length >= 6) {
+                        value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                    } else if (value.length >= 3) {
+                        value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                    }
+                    event.target.value = value;
+                    
+                    // Validate after formatting
+                    debouncedValidateField(event.target);
+                });
+            }
         });
     </script>
+@endpush
+
+@push('styles')
+<style>
+    /* Styling for error indication */
+    .border-red-500 {
+        border-color: #f56565 !important;
+    }
+
+    .error-message {
+        min-height: 1rem;
+    }
+
+    /* Radio buttons styling */
+    .insurance-label {
+        transition: all 0.2s ease;
+        background-color: white;
+    }
+
+    .insurance-label:hover {
+        background-color: #facc15 !important;
+        color: white !important;
+        border-color: #eab308 !important;
+    }
+
+    .insurance-label.selected {
+        background-color: #f59e0b !important;
+        color: white !important;
+        border-color: #d97706 !important;
+    }
+</style>
 @endpush

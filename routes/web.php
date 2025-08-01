@@ -211,6 +211,7 @@ Route::middleware([
         Route::delete('/{uuid}', [AppointmentController::class, 'destroy'])->name('destroy');
         Route::patch('/{uuid}/restore', [AppointmentController::class, 'restore'])->name('restore');
         Route::post('/check-email', [AppointmentController::class, 'checkEmailExists'])->name('check-email');
+        Route::post('/validate-field', [AppointmentController::class, 'validateField'])->name('validate-field');
         Route::post('/send-rejection', [AppointmentController::class, 'sendRejection'])->name('send-rejection');
     });
 
