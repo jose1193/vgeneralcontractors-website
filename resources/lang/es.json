@@ -222,6 +222,8 @@
     "efficient_scheduling": "Programación Eficiente",
     "professional_service": "Servicio Profesional",
     "complete_management": "Gestión Completa",
+    "search_appointments": "Buscar citas...",
+    "show_inactive_appointments": "Mostrar Citas Inactivas",
 
     "_comment_hero_landing": "=== HERO Y PÁGINA PRINCIPAL ===",
     "hero_title": "Servicios Profesionales de Techado Comercial y Residencial en Texas",

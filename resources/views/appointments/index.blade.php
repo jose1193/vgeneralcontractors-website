@@ -8,14 +8,73 @@
 
     {{-- Dark background container with consistent styling --}}
     <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
-        {{-- Header section with title and subtitle --}}
+        {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
-            <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
-                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    {{ __('appointments_management_title') }}</h2>
-                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    {{ __('appointments_management_subtitle') }}
-                </p>
+            <div class="animated-header-card bg-white rounded-2xl shadow-2xl mb-8 overflow-hidden">
+                <div class="animated-gradient-header px-8 py-6 relative">
+                    {{-- Floating particles background --}}
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div class="absolute top-10 left-20 w-2 h-2 bg-white/20 rounded-full animate-float-slow"></div>
+                        <div class="absolute top-20 right-32 w-1 h-1 bg-purple-200/30 rounded-full animate-float-medium">
+                        </div>
+                        <div class="absolute bottom-16 left-40 w-3 h-3 bg-blue-200/20 rounded-full animate-float-fast">
+                        </div>
+                        <div class="absolute bottom-8 right-20 w-2 h-2 bg-white/15 rounded-full animate-float-slow">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10">
+                        <div class="mb-4 sm:mb-0 w-full">
+                            <h1 class="text-2xl xs:text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight text-center sm:text-left"
+                                style="text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);">
+                                {{ __('appointments_management_title') }}
+                            </h1>
+
+                            {{-- Animated subtitle with marquee effect --}}
+                            <div
+                                class="bg-white/10 backdrop-blur-md rounded-lg px-2 py-2 border border-white/20 max-w-full sm:max-w-md mx-auto sm:mx-0 text-center">
+                                <div class="marquee-container overflow-hidden w-full">
+                                    <div
+                                        class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-xs xs:text-sm sm:text-sm font-medium text-center">
+                                        ✨ {{ __('appointments_management_subtitle') }} • 🚀
+                                        {{ __('efficient_management') }} • 💼
+                                        {{ __('professional_organization') }} • 📊 {{ __('complete_tracking') }} •
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Animated icon section --}}
+                        <div class="flex items-center space-x-4">
+                            {{-- Primary animated icon --}}
+                            <div class="relative">
+                                <div
+                                    class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center animate-pulse-soft border border-white/30">
+                                    <svg class="w-7 h-7 text-white animate-bounce-subtle" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                        </path>
+                                    </svg>
+                                </div>
+                                {{-- Animated ring --}}
+                                <div class="absolute inset-0 border-2 border-white/30 rounded-xl animate-ping-slow">
+                                </div>
+                            </div>
+
+                            {{-- Create appointment button --}}
+                            <a href="{{ route('appointments.create') }}"
+                                class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg font-semibold text-sm text-white uppercase tracking-wide hover:bg-white/30 focus:bg-white/30 active:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4">
+                                    </path>
+                                </svg>
+                                {{ __('create_appointment') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -128,17 +187,16 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div
-                        class="overflow-x-auto bg-gray-50 dark:bg-gray-700 rounded-lg shadow-inner border border-gray-200 dark:border-gray-600">
-                        <table id="appointmentsTable" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
+                    <div class="overflow-x-auto glassmorphism-container table-container">
+                        <table id="appointmentsTable"
+                            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table">
+                            <thead class="glassmorphism-thead">
                                 <tr>
                                     <th
-                                        class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        <input type="checkbox" id="selectAll"
-                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        class="px-4 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
+                                        <input type="checkbox" id="selectAll" class="glassmorphism-checkbox">
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer sort-header"
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider cursor-pointer sort-header glassmorphism-th"
                                         data-field="first_name">
                                         {{ __('name') }}
                                         <span class="sort-icon"></span>
@@ -173,16 +231,16 @@
                                         <span class="sort-icon"></span>
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         {{ __('inspection_status') }}
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        class="px-6 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         {{ __('actions') }}
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody class="glassmorphism-tbody divide-y divide-purple-300/20">
                                 <tr id="loadingRow">
                                     <td colspan="10" class="px-6 py-4 text-center">
                                         <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
@@ -296,7 +354,7 @@
 
         @push('styles')
             <style>
-                /* Modern Dark Crystal Index 2025 with Purple Accents */
+                /* Modern Dark Crystal Index 2025 with Purple Accents - Enhanced Version */
                 .glassmorphism-container {
                     position: relative;
                     margin: 1rem 0;
@@ -352,62 +410,357 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.15);
                 }
 
-                /* Table Enhancement */
+                /* Enhanced Table Styling */
                 .glassmorphism-container table {
                     background: transparent !important;
-                    box-shadow: 
-                        0 4px 16px rgba(139, 69, 190, 0.2),
-                        0 2px 8px rgba(168, 85, 247, 0.15) !important;
-                    border-radius: 12px !important;
+                    border-radius: 12px;
                     overflow: hidden;
                 }
 
                 .glassmorphism-container table thead th {
-                    background: rgba(40, 40, 40, 0.8) !important;
-                    border-bottom: 1px solid rgba(139, 69, 190, 0.3) !important;
-                    color: #e5e7eb !important;
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #f8fafc !important;
+                    font-weight: 600;
+                    padding: 1rem 0.75rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    font-size: 0.875rem;
                 }
 
                 .glassmorphism-container table tbody tr {
-                    background: rgba(30, 30, 30, 0.6) !important;
+                    background: rgba(30, 30, 30, 0.7) !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
-                    transition: all 0.2s ease;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
                 .glassmorphism-container table tbody tr:hover {
-                    background: rgba(139, 69, 190, 0.1) !important;
-                    transform: scale(1.01);
+                    background: rgba(139, 69, 190, 0.15) !important;
+                    transform: scale(1.005);
+                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.2);
                 }
 
                 .glassmorphism-container table tbody td {
-                    color: #f3f4f6 !important;
+                    color: #f1f5f9 !important;
                     border-color: rgba(139, 69, 190, 0.2) !important;
+                    padding: 1rem 0.75rem;
+                    font-weight: 500;
                 }
 
-                /* Input and Button Enhancements */
+                /* Enhanced Input and Button Styling */
                 .glassmorphism-container input,
-                .glassmorphism-container select {
+                .glassmorphism-container select,
+                .glassmorphism-container textarea {
                     background: rgba(40, 40, 40, 0.8) !important;
                     border: 1px solid rgba(139, 69, 190, 0.3) !important;
                     color: #ffffff !important;
                     border-radius: 8px !important;
+                    padding: 0.75rem 1rem !important;
+                    transition: all 0.3s ease !important;
+                    font-weight: 500;
+                }
+
+                .glassmorphism-container input::placeholder {
+                    color: rgba(255, 255, 255, 0.6) !important;
                 }
 
                 .glassmorphism-container input:focus,
-                .glassmorphism-container select:focus {
+                .glassmorphism-container select:focus,
+                .glassmorphism-container textarea:focus {
                     border-color: rgba(168, 85, 247, 0.6) !important;
                     box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
+                    background: rgba(50, 50, 50, 0.9) !important;
                 }
 
+                /* Enhanced Button Styling */
                 .glassmorphism-container .btn,
                 .glassmorphism-container button {
                     border-radius: 8px !important;
-                    transition: all 0.2s ease !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    font-weight: 600 !important;
                 }
 
-                /* Label Enhancement */
+                .glassmorphism-container button:hover {
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 6px 16px rgba(139, 69, 190, 0.25) !important;
+                }
+
+                /* Enhanced Label Styling */
                 .glassmorphism-container label {
-                    color: #e5e7eb !important;
+                    color: #e2e8f0 !important;
+                    font-weight: 600 !important;
+                    margin-bottom: 0.5rem !important;
+                }
+
+                /* Enhanced Pagination Styling */
+                .glassmorphism-container .pagination {
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    border-radius: 12px !important;
+                    padding: 1rem !important;
+                }
+
+                .glassmorphism-container .pagination button {
+                    background: rgba(139, 69, 190, 0.2) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    color: #ffffff !important;
+                    margin: 0 0.25rem !important;
+                    border-radius: 6px !important;
+                    padding: 0.5rem 1rem !important;
+                }
+
+                .glassmorphism-container .pagination button:hover {
+                    background: rgba(168, 85, 247, 0.4) !important;
+                    border-color: rgba(168, 85, 247, 0.6) !important;
+                }
+
+                .glassmorphism-container .pagination .active {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
+                    border-color: rgba(168, 85, 247, 0.8) !important;
+                }
+
+                /* Enhanced Search and Filter Styling */
+                .glassmorphism-container .search-container {
+                    background: rgba(30, 30, 30, 0.6) !important;
+                    border-radius: 12px !important;
+                    padding: 1.5rem !important;
+                    border: 1px solid rgba(139, 69, 190, 0.2) !important;
+                    margin-bottom: 1.5rem !important;
+                }
+
+                /* Enhanced Toggle Styling */
+                .glassmorphism-container .toggle-switch {
+                    background: rgba(40, 40, 40, 0.8) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                }
+
+                .glassmorphism-container .toggle-switch:checked {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
+                }
+
+                /* Enhanced Modal Styling */
+                .glassmorphism-container .modal {
+                    background: rgba(20, 20, 20, 0.95) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    border-radius: 16px !important;
+                    backdrop-filter: blur(20px) !important;
+                }
+
+                /* Enhanced Action Buttons */
+                .glassmorphism-container .action-button {
+                    background: rgba(139, 69, 190, 0.2) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #ffffff !important;
+                    border-radius: 8px !important;
+                    padding: 0.5rem 1rem !important;
+                    transition: all 0.3s ease !important;
+                }
+
+                .glassmorphism-container .action-button:hover {
+                    background: rgba(168, 85, 247, 0.4) !important;
+                    border-color: rgba(168, 85, 247, 0.6) !important;
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 4px 12px rgba(139, 69, 190, 0.25) !important;
+                }
+
+                /* Enhanced Table Container */
+                .glassmorphism-container .table-container {
+                    background: rgba(25, 25, 25, 0.8) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                    border-radius: 12px !important;
+                    overflow: hidden;
+                    box-shadow:
+                        0 4px 16px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                }
+
+                /* Animated gradient background */
+                .animated-gradient-header {
+                    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e3c72 50%, #6a11cb 75%, #2575fc 100%);
+                    background-size: 300% 300%;
+                    animation: gradientShift 8s ease infinite;
+                    position: relative;
+                }
+
+                .animated-header-card {
+                    border: 2px solid #34d399;
+                    /* border-emerald-400 */
+                    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 20px 40px rgba(0, 0, 0, 0.3);
+                }
+
+                .animated-gradient-header::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(45deg,
+                            rgba(255, 255, 255, 0.1) 0%,
+                            rgba(255, 255, 255, 0.05) 50%,
+                            rgba(255, 255, 255, 0.1) 100%);
+                    pointer-events: none;
+                }
+
+                @keyframes gradientShift {
+                    0% {
+                        background-position: 0% 50%;
+                    }
+
+                    50% {
+                        background-position: 100% 50%;
+                    }
+
+                    100% {
+                        background-position: 0% 50%;
+                    }
+                }
+
+                /* Marquee animation */
+                .marquee-container {
+                    width: 100%;
+                    max-width: 400px;
+                }
+
+                .marquee-text {
+                    display: inline-block;
+                    animation: marquee 20s linear infinite;
+                }
+
+                @keyframes marquee {
+                    0% {
+                        transform: translateX(100%);
+                    }
+
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+
+                /* Floating animations */
+                @keyframes float-slow {
+
+                    0%,
+                    100% {
+                        transform: translateY(0px) rotate(0deg);
+                    }
+
+                    50% {
+                        transform: translateY(-10px) rotate(180deg);
+                    }
+                }
+
+                @keyframes float-medium {
+
+                    0%,
+                    100% {
+                        transform: translateY(0px) rotate(0deg);
+                    }
+
+                    50% {
+                        transform: translateY(-15px) rotate(90deg);
+                    }
+                }
+
+                @keyframes float-fast {
+
+                    0%,
+                    100% {
+                        transform: translateY(0px) rotate(0deg);
+                    }
+
+                    50% {
+                        transform: translateY(-20px) rotate(270deg);
+                    }
+                }
+
+                .animate-float-slow {
+                    animation: float-slow 6s ease-in-out infinite;
+                }
+
+                .animate-float-medium {
+                    animation: float-medium 4s ease-in-out infinite;
+                }
+
+                .animate-float-fast {
+                    animation: float-fast 3s ease-in-out infinite;
+                }
+
+                /* Pulse animations */
+                @keyframes pulse-soft {
+
+                    0%,
+                    100% {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+
+                    50% {
+                        transform: scale(1.05);
+                        opacity: 0.8;
+                    }
+                }
+
+                .animate-pulse-soft {
+                    animation: pulse-soft 3s ease-in-out infinite;
+                }
+
+                /* Bounce subtle animation */
+                @keyframes bounce-subtle {
+
+                    0%,
+                    100% {
+                        transform: translateY(0);
+                        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+                    }
+
+                    50% {
+                        transform: translateY(-5px);
+                        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+                    }
+                }
+
+                .animate-bounce-subtle {
+                    animation: bounce-subtle 2s infinite;
+                }
+
+                /* Ping slow animation */
+                @keyframes ping-slow {
+                    0% {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+
+                    75%,
+                    100% {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+
+                .animate-ping-slow {
+                    animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+                }
+
+                /* Enhanced hover effects for header elements */
+                .animated-header-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 0 40px rgba(16, 185, 129, 0.5), 0 25px 50px rgba(0, 0, 0, 0.4);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 640px) {
+                    .marquee-container {
+                        max-width: 280px;
+                    }
+
+                    .marquee-text {
+                        font-size: 0.75rem;
+                    }
+
+                    .animated-gradient-header {
+                        padding: 1rem;
+                    }
                 }
             </style>
         @endpush
