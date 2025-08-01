@@ -70,20 +70,19 @@ class AdminRejectionNotification extends Notification implements ShouldQueue
         
         $reasonsText = implode(', ', $reasons);
         
-        // Build email without using logo
-        return (new MailMessage)
+        $mailMessage = new MailMessage();
+        
+        // Use the absolute URL for the logo
+        $mailMessage->view('emails.rejection-notification', [
+            'appointment' => $this->appointment,
+            'reasonsText' => $reasonsText,
+            'companyData' => $this->companyData,
+            'logoUrl' => 'https://vgeneralcontractors.com/assets/logo/logo-png.png'
+        ]);
+        
+        return $mailMessage
             ->subject('Notificación Admin: Solicitud Rechazada - ' . $this->appointment->first_name . ' ' . $this->appointment->last_name)
-            ->greeting('Notificación de Rechazo')
-            ->line('Se ha rechazado una solicitud de inspección:')
-            ->line('Cliente: ' . $this->appointment->first_name . ' ' . $this->appointment->last_name)
-            ->line('Email: ' . $this->appointment->email)
-            ->line('Teléfono: ' . $this->appointment->phone)
-            ->line('Dirección: ' . $this->appointment->address)
-            ->line('Ciudad: ' . $this->appointment->city . ', ' . $this->appointment->state)
-            ->line('Razones del rechazo: ' . $reasonsText)
-            ->line('Fecha de rechazo: ' . now()->format('d/m/Y H:i:s'))
-            ->action('Ver en el sistema', url('/appointments/' . $this->appointment->uuid))
-            ->line('Esta es una notificación automática del sistema.');
+            ->action('Ver en el sistema', url('/appointments/' . $this->appointment->uuid));
     }
 
     /**

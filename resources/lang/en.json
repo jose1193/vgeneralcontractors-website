@@ -497,6 +497,15 @@
     "zones": "Zones",
     "properties": "Properties",
 
+    "send_rejection_notification": "Send Rejection Notification",
+    "select_reason_rejecting": "Select the reason for rejecting",
+    "unable_to_contact": "Unable to contact the client",
+    "no_property_insurance": "No property insurance",
+    "other_reason": "Other reason",
+    "specify_other_reason": "Specify other reason",
+    "send_notification": "Send Notification",
+    "please_provide_other_reason": "Please provide details for the other reason",
+
     "_comment_blog_posts": "=== BLOG POSTS SECTION ===",
     "latest_from_our_blog": "Latest From Our Blog",
     "blog_section_description": "Stay updated with the latest roofing trends, maintenance tips, and industry insights from our expert team at V General Contractors.",
