@@ -4,6 +4,9 @@ console.log("Loading CRUD modular system...");
 // Importar módulos del sistema CRUD
 import { CrudManager } from "./crud-system/core/CrudManager.js";
 
+// Exponer CrudManager globalmente
+window.CrudManager = CrudManager;
+
 // Función helper para obtener traducciones
 function __(key, fallback = "") {
     if (
