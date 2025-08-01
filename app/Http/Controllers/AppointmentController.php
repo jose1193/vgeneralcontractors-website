@@ -613,13 +613,33 @@ class AppointmentController extends BaseCrudController
             $email = $request->input('email');
             $excludeUuid = $request->input('exclude_uuid');
 
+            Log::info('Checking email existence', [
+                'email' => $email,
+                'exclude_uuid' => $excludeUuid
+            ]);
+
             $query = Appointment::where('email', $email);
 
             if ($excludeUuid) {
                 $query->where('uuid', '!=', $excludeUuid);
             }
 
+            // Debug: Log the SQL query being executed
+            Log::info('Email check SQL', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
             $exists = $query->withTrashed()->exists();
+            
+            // Debug: Also get the actual records for debugging
+            $records = $query->withTrashed()->get(['uuid', 'email', 'deleted_at']);
+            
+            Log::info('Email check results', [
+                'exists' => $exists,
+                'records_found' => $records->count(),
+                'records' => $records->toArray()
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -654,13 +674,33 @@ class AppointmentController extends BaseCrudController
             $phone = $request->input('phone');
             $excludeUuid = $request->input('exclude_uuid');
 
+            Log::info('Checking phone existence', [
+                'phone' => $phone,
+                'exclude_uuid' => $excludeUuid
+            ]);
+
             $query = Appointment::where('phone', $phone);
 
             if ($excludeUuid) {
                 $query->where('uuid', '!=', $excludeUuid);
             }
 
+            // Debug: Log the SQL query being executed
+            Log::info('Phone check SQL', [
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
             $exists = $query->withTrashed()->exists();
+            
+            // Debug: Also get the actual records for debugging
+            $records = $query->withTrashed()->get(['uuid', 'phone', 'deleted_at']);
+            
+            Log::info('Phone check results', [
+                'exists' => $exists,
+                'records_found' => $records->count(),
+                'records' => $records->toArray()
+            ]);
 
             return response()->json([
                 'success' => true,
