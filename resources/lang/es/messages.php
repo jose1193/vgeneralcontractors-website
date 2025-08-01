@@ -278,4 +278,8 @@ return [
     // Form validation messages
     'validation_error' => 'Error de Validación',
     'please_fill_required_fields' => 'Por favor complete todos los campos requeridos correctamente antes de enviar.',
+    'This email is already registered' => 'Este email ya está registrado con otra cita.',
+    'Email is available' => 'El email está disponible.',
+    'This phone number is already registered' => 'Este número de teléfono ya está registrado con otra cita.',
+    'Phone number is available' => 'El número de teléfono está disponible.',
 ]; 

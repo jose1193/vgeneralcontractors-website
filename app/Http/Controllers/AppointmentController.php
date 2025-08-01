@@ -639,6 +639,47 @@ class AppointmentController extends BaseCrudController
     }
 
     /**
+     * Check if a phone number already exists for real-time validation
+     */
+    public function checkPhoneExists(Request $request)
+    {
+        if (!$this->checkPermissionWithMessage("READ_APPOINTMENT", "You don't have permission to check appointment phones")) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permission denied',
+            ], 403);
+        }
+
+        try {
+            $phone = $request->input('phone');
+            $excludeUuid = $request->input('exclude_uuid');
+
+            $query = Appointment::where('phone', $phone);
+
+            if ($excludeUuid) {
+                $query->where('uuid', '!=', $excludeUuid);
+            }
+
+            $exists = $query->withTrashed()->exists();
+
+            return response()->json([
+                'success' => true,
+                'exists' => $exists,
+            ]);
+        } catch (Throwable $e) {
+            Log::error("Error checking phone existence: {$e->getMessage()}", [
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error checking phone existence',
+            ], 500);
+        }
+    }
+
+    /**
      * Validate the request data
      */
     protected function validateRequest(Request $request, $id = null)

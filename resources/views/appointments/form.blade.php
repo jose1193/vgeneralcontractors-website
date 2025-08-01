@@ -71,6 +71,41 @@
             cursor: pointer !important;
             pointer-events: auto;
         }
+
+        .realtime-validation-message {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loading spinner for real-time validation */
+        .validation-loading {
+            position: relative;
+        }
+
+        .validation-loading::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -144,6 +179,18 @@
                 const email = document.getElementById('email');
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (email && email.value.trim() && !emailPattern.test(email.value.trim())) {
+                    isValid = false;
+                }
+
+                // Check for duplicate indicators
+                const emailField = document.getElementById('email');
+                const phoneField = document.getElementById('phone');
+                
+                if (emailField && emailField.classList.contains('field-invalid')) {
+                    isValid = false;
+                }
+                
+                if (phoneField && phoneField.classList.contains('field-invalid')) {
                     isValid = false;
                 }
 
@@ -230,6 +277,84 @@
                 return isValid;
             }
 
+            // Function to check if email exists in real-time
+            function checkEmailExists(email, excludeUuid = null) {
+                if (!email || email.trim() === '') return Promise.resolve(false);
+
+                const formData = new FormData();
+                formData.append('email', email);
+                if (excludeUuid) {
+                    formData.append('exclude_uuid', excludeUuid);
+                }
+
+                return fetch('{{ route("appointments.check-email") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        return data.exists;
+                    }
+                    return false;
+                })
+                .catch(error => {
+                    console.error('Error checking email:', error);
+                    return false;
+                });
+            }
+
+            // Function to check if phone exists in real-time
+            function checkPhoneExists(phone, excludeUuid = null) {
+                if (!phone || phone.trim() === '') return Promise.resolve(false);
+
+                const formData = new FormData();
+                formData.append('phone', phone);
+                if (excludeUuid) {
+                    formData.append('exclude_uuid', excludeUuid);
+                }
+
+                return fetch('{{ route("appointments.check-phone") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        return data.exists;
+                    }
+                    return false;
+                })
+                .catch(error => {
+                    console.error('Error checking phone:', error);
+                    return false;
+                });
+            }
+
+            // Function to show validation message
+            function showValidationMessage(fieldElement, message, isError = true) {
+                // Remove existing messages
+                const existingMessage = fieldElement.parentNode.querySelector('.realtime-validation-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                if (message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `realtime-validation-message text-xs mt-1 ${isError ? 'text-red-500' : 'text-green-500'}`;
+                    messageElement.textContent = message;
+                    fieldElement.parentNode.appendChild(messageElement);
+                }
+            }
+
             // Add event listeners to all form fields
             const allInputs = form.querySelectorAll('input, select, textarea');
             allInputs.forEach(input => {
@@ -238,19 +363,98 @@
                     validateField(e.target);
                     updateSubmitButton();
                 });
-
+                
                 input.addEventListener('change', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
                 });
-
+                
                 input.addEventListener('blur', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
                 });
             });
 
-            // Special handling for radio buttons (insurance_property)
+            // Special handling for email field - Real-time duplicate check
+            const emailField = document.getElementById('email');
+            if (emailField) {
+                let emailTimeout;
+                emailField.addEventListener('input', function(e) {
+                    clearTimeout(emailTimeout);
+                    const email = e.target.value.trim();
+                    
+                    // Clear previous messages
+                    showValidationMessage(e.target, '');
+                    e.target.classList.remove('validation-loading');
+                    
+                    if (email && email.includes('@')) {
+                        // Show loading indicator
+                        e.target.classList.add('validation-loading');
+                        
+                        emailTimeout = setTimeout(() => {
+                            const excludeUuid = '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
+                            checkEmailExists(email, excludeUuid).then(exists => {
+                                e.target.classList.remove('validation-loading');
+                                if (exists) {
+                                    showValidationMessage(e.target, '{{ __('This email is already registered') }}', true);
+                                    e.target.classList.add('field-invalid');
+                                    e.target.classList.remove('field-valid');
+                                } else {
+                                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    if (emailPattern.test(email)) {
+                                        showValidationMessage(e.target, '{{ __('Email is available') }}', false);
+                                        e.target.classList.add('field-valid');
+                                        e.target.classList.remove('field-invalid');
+                                    }
+                                }
+                                updateSubmitButton();
+                            }).catch(() => {
+                                e.target.classList.remove('validation-loading');
+                                updateSubmitButton();
+                            });
+                        }, 800); // Wait 800ms after user stops typing
+                    }
+                });
+            }
+
+            // Special handling for phone field - Real-time duplicate check
+            const phoneField = document.getElementById('phone');
+            if (phoneField) {
+                let phoneTimeout;
+                phoneField.addEventListener('input', function(e) {
+                    clearTimeout(phoneTimeout);
+                    const phone = e.target.value.trim();
+                    
+                    // Clear previous messages
+                    showValidationMessage(e.target, '');
+                    e.target.classList.remove('validation-loading');
+                    
+                    if (phone && phone.length >= 10) {
+                        // Show loading indicator
+                        e.target.classList.add('validation-loading');
+                        
+                        phoneTimeout = setTimeout(() => {
+                            const excludeUuid = '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
+                            checkPhoneExists(phone, excludeUuid).then(exists => {
+                                e.target.classList.remove('validation-loading');
+                                if (exists) {
+                                    showValidationMessage(e.target, '{{ __('This phone number is already registered') }}', true);
+                                    e.target.classList.add('field-invalid');
+                                    e.target.classList.remove('field-valid');
+                                } else {
+                                    showValidationMessage(e.target, '{{ __('Phone number is available') }}', false);
+                                    e.target.classList.add('field-valid');
+                                    e.target.classList.remove('field-invalid');
+                                }
+                                updateSubmitButton();
+                            }).catch(() => {
+                                e.target.classList.remove('validation-loading');
+                                updateSubmitButton();
+                            });
+                        }, 800); // Wait 800ms after user stops typing
+                    }
+                });
+            }            // Special handling for radio buttons (insurance_property)
             const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
             insuranceRadios.forEach(radio => {
                 radio.addEventListener('change', updateSubmitButton);
