@@ -21,6 +21,12 @@
                         </div>
                         <div class="absolute bottom-8 right-20 w-2 h-2 bg-white/15 rounded-full animate-float-slow">
                         </div>
+                        <div
+                            class="absolute top-32 left-60 w-1.5 h-1.5 bg-emerald-200/25 rounded-full animate-float-medium">
+                        </div>
+                        <div
+                            class="absolute bottom-32 right-60 w-2.5 h-2.5 bg-indigo-200/20 rounded-full animate-float-fast">
+                        </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10">
@@ -187,12 +193,12 @@
                     </div>
 
                     <!-- Appointments table -->
-                    <div class="overflow-x-auto glassmorphism-container table-container">
+                    <div class="overflow-x-auto glassmorphism-container table-container animate-fadeInUp">
                         <table id="appointmentsTable"
                             class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table"
                             style="border-collapse: separate; border-spacing: 0;">
-                            <thead class="glassmorphism-thead">
-                                <tr>
+                            <thead class="glassmorphism-thead animate-shimmer">
+                                <tr class="glassmorphism-header-row">
                                     <th
                                         class="px-4 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
                                         <input type="checkbox" id="selectAll" class="glassmorphism-checkbox">
@@ -363,27 +369,31 @@
                     padding: 1.5rem;
                     overflow: hidden;
 
-                    /* Dark Crystal Background */
+                    /* Dark Crystal Background with enhanced glassmorphism */
                     background: linear-gradient(135deg,
                             rgba(17, 17, 17, 0.95) 0%,
                             rgba(30, 30, 30, 0.92) 50%,
                             rgba(20, 20, 20, 0.95) 100%);
 
-                    /* Elegant Border */
+                    /* Elegant Border with glow effect */
                     border: 1px solid rgba(139, 69, 190, 0.3);
 
-                    /* Modern Shadow System */
+                    /* Advanced Shadow System */
                     box-shadow:
                         0 8px 32px rgba(139, 69, 190, 0.15),
                         0 4px 16px rgba(0, 0, 0, 0.4),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        0 0 0 1px rgba(139, 69, 190, 0.1);
 
-                    /* Subtle Blur */
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
+                    /* Enhanced Blur */
+                    backdrop-filter: blur(15px);
+                    -webkit-backdrop-filter: blur(15px);
 
                     /* Smooth Animation */
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+                    /* Animated border */
+                    background-clip: padding-box;
                 }
 
                 .glassmorphism-container::before {
@@ -400,6 +410,24 @@
                             rgba(139, 69, 190, 0.8) 75%,
                             transparent 100%);
                     opacity: 0.8;
+                    animation: pulseGlow 3s ease-in-out infinite;
+                }
+
+                .glassmorphism-container::after {
+                    content: '';
+                    position: absolute;
+                    top: -2px;
+                    left: -2px;
+                    right: -2px;
+                    bottom: -2px;
+                    background: linear-gradient(45deg,
+                            rgba(139, 69, 190, 0.2),
+                            rgba(168, 85, 247, 0.3),
+                            rgba(139, 69, 190, 0.2));
+                    border-radius: 18px;
+                    z-index: -1;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
                 }
 
                 .glassmorphism-container:hover {
@@ -408,10 +436,15 @@
                     box-shadow:
                         0 12px 40px rgba(139, 69, 190, 0.25),
                         0 6px 20px rgba(0, 0, 0, 0.5),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                        0 0 30px rgba(139, 69, 190, 0.3);
                 }
 
-                /* Enhanced Table Styling */
+                .glassmorphism-container:hover::after {
+                    opacity: 1;
+                }
+
+                /* Enhanced Table Styling with Advanced Glassmorphism */
                 .glassmorphism-container table {
                     background: transparent !important;
                     border-radius: 12px;
@@ -426,9 +459,25 @@
                             rgba(30, 30, 40, 0.95) 0%,
                             rgba(50, 40, 60, 0.92) 50%,
                             rgba(30, 30, 40, 0.95) 100%) !important;
-                    backdrop-filter: blur(10px) !important;
-                    -webkit-backdrop-filter: blur(10px) !important;
+                    backdrop-filter: blur(15px) !important;
+                    -webkit-backdrop-filter: blur(15px) !important;
                     border-bottom: 2px solid rgba(139, 69, 190, 0.5) !important;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .glassmorphism-thead::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg,
+                            transparent,
+                            rgba(255, 255, 255, 0.1),
+                            transparent);
+                    animation: shimmer 3s infinite;
                 }
 
                 .glassmorphism-th {
@@ -437,6 +486,12 @@
                     color: #f8fafc !important;
                     position: relative;
                     overflow: hidden;
+                    transition: all 0.3s ease;
+                }
+
+                .glassmorphism-th:hover {
+                    background: rgba(139, 69, 190, 0.1) !important;
+                    transform: translateY(-1px);
                 }
 
                 .glassmorphism-th::after {
@@ -450,6 +505,11 @@
                             transparent 0%,
                             rgba(139, 69, 190, 0.6) 50%,
                             transparent 100%);
+                    animation: glow 2s ease-in-out infinite alternate;
+                }
+
+                .glassmorphism-header-row {
+                    animation: slideInFromTop 0.8s ease-out;
                 }
 
                 .glassmorphism-container table thead th {
@@ -469,11 +529,22 @@
                     background: rgba(30, 30, 30, 0.7) !important;
                     border-bottom: 1px solid rgba(139, 69, 190, 0.2) !important;
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    animation: fadeInUp 0.6s ease-out forwards;
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                .glassmorphism-container table tbody tr:nth-child(odd) {
+                    animation-delay: 0.1s;
+                }
+
+                .glassmorphism-container table tbody tr:nth-child(even) {
+                    animation-delay: 0.2s;
                 }
 
                 .glassmorphism-container table tbody tr:hover {
                     background: rgba(139, 69, 190, 0.15) !important;
-                    transform: scale(1.005);
+                    transform: translateY(-1px) scale(1.002);
                     box-shadow: 0 4px 12px rgba(139, 69, 190, 0.2);
                 }
 
@@ -710,6 +781,65 @@
                     }
                 }
 
+                /* New animations for glassmorphic effects */
+                @keyframes shimmer {
+                    0% {
+                        transform: translateX(-100%);
+                    }
+
+                    100% {
+                        transform: translateX(100%);
+                    }
+                }
+
+                @keyframes glow {
+                    0% {
+                        opacity: 0.3;
+                        box-shadow: 0 0 5px rgba(139, 69, 190, 0.3);
+                    }
+
+                    100% {
+                        opacity: 0.8;
+                        box-shadow: 0 0 15px rgba(139, 69, 190, 0.6);
+                    }
+                }
+
+                @keyframes slideInFromTop {
+                    0% {
+                        transform: translateY(-20px);
+                        opacity: 0;
+                    }
+
+                    100% {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes fadeInUp {
+                    0% {
+                        transform: translateY(30px);
+                        opacity: 0;
+                    }
+
+                    100% {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes pulseGlow {
+
+                    0%,
+                    100% {
+                        box-shadow: 0 0 20px rgba(139, 69, 190, 0.3);
+                    }
+
+                    50% {
+                        box-shadow: 0 0 30px rgba(139, 69, 190, 0.5);
+                    }
+                }
+
                 .animate-float-slow {
                     animation: float-slow 6s ease-in-out infinite;
                 }
@@ -720,6 +850,19 @@
 
                 .animate-float-fast {
                     animation: float-fast 3s ease-in-out infinite;
+                }
+
+                .animate-shimmer {
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .animate-fadeInUp {
+                    animation: fadeInUp 0.8s ease-out;
+                }
+
+                .animate-pulseGlow {
+                    animation: pulseGlow 3s ease-in-out infinite;
                 }
 
                 /* Pulse animations */
