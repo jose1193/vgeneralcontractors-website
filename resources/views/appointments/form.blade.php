@@ -431,28 +431,28 @@
             /* Override any conflicting styles with higher specificity */
             background: rgba(40, 40, 40, 0.8) !important;
             border: 1px solid rgba(139, 69, 190, 0.3) !important;
-            
+
             /* Remove default text colors */
             color: transparent !important;
-            
+
             /* Enhanced positioning and sizing */
             width: 1.25rem !important;
             height: 1.25rem !important;
             border-radius: 0.375rem !important;
-            
+
             /* Remove default appearance completely */
             appearance: none !important;
             -webkit-appearance: none !important;
             -moz-appearance: none !important;
-            
+
             /* Enhanced shadow system */
-            box-shadow: 
+            box-shadow:
                 0 2px 8px 0 rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-            
+
             /* Smooth transitions */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            
+
             /* Positioning */
             position: relative !important;
             cursor: pointer !important;
@@ -462,13 +462,13 @@
             /* Enhanced hover state */
             border-color: rgba(168, 85, 247, 0.5) !important;
             background: rgba(50, 50, 50, 0.9) !important;
-            
+
             /* Enhanced hover shadow */
-            box-shadow: 
+            box-shadow:
                 0 4px 12px 0 rgba(139, 69, 190, 0.15),
                 0 2px 8px 0 rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-                
+
             /* Subtle elevation */
             transform: translateY(-1px) !important;
         }
@@ -477,9 +477,9 @@
             /* Enhanced focus state */
             outline: none !important;
             border-color: rgba(168, 85, 247, 0.6) !important;
-            
+
             /* Focus ring with purple accent */
-            box-shadow: 
+            box-shadow:
                 0 0 0 3px rgba(139, 69, 190, 0.2),
                 0 4px 12px 0 rgba(139, 69, 190, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
@@ -488,14 +488,14 @@
         .glassmorphism-form-container input[type="checkbox"].checkbox-field:checked {
             /* Enhanced checked state with gradient */
             background: linear-gradient(135deg,
-                rgba(139, 69, 190, 0.9) 0%,
-                rgba(168, 85, 247, 0.8) 50%,
-                rgba(139, 69, 190, 0.9) 100%) !important;
-            
+                    rgba(139, 69, 190, 0.9) 0%,
+                    rgba(168, 85, 247, 0.8) 50%,
+                    rgba(139, 69, 190, 0.9) 100%) !important;
+
             border-color: rgba(168, 85, 247, 0.8) !important;
-            
+
             /* Enhanced checked shadow */
-            box-shadow: 
+            box-shadow:
                 0 6px 16px 0 rgba(139, 69, 190, 0.3),
                 0 3px 8px 0 rgba(168, 85, 247, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2),
@@ -505,30 +505,32 @@
         .glassmorphism-form-container input[type="checkbox"].checkbox-field:checked:hover {
             /* Enhanced checked hover state */
             background: linear-gradient(135deg,
-                rgba(168, 85, 247, 0.95) 0%,
-                rgba(139, 69, 190, 0.85) 50%,
-                rgba(168, 85, 247, 0.95) 100%) !important;
-                
-            box-shadow: 
+                    rgba(168, 85, 247, 0.95) 0%,
+                    rgba(139, 69, 190, 0.85) 50%,
+                    rgba(168, 85, 247, 0.95) 100%) !important;
+
+            box-shadow:
                 0 8px 20px 0 rgba(139, 69, 190, 0.4),
                 0 4px 12px 0 rgba(168, 85, 247, 0.25),
                 inset 0 1px 0 rgba(255, 255, 255, 0.25),
                 inset 0 -1px 0 rgba(255, 255, 255, 0.15) !important;
-                
+
             transform: translateY(-2px) !important;
         }
 
         /* Enhanced Additional Options Label Styles */
         .glassmorphism-form-container label[for="sms_consent"] span,
         .glassmorphism-form-container label[for="intent_to_claim"] span {
-            color: #e5e7eb !important; /* Light gray text */
+            color: #e5e7eb !important;
+            /* Light gray text */
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .glassmorphism-form-container label[for="sms_consent"]:hover span,
         .glassmorphism-form-container label[for="intent_to_claim"]:hover span {
-            color: #ffffff !important; /* White on hover */
+            color: #ffffff !important;
+            /* White on hover */
         }
 
         .glassmorphism-form-container label[for="sms_consent"],
