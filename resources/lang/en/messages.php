@@ -274,4 +274,8 @@ return [
     // Common field labels
     'company_name' => 'Company Name',
     'not_available' => 'N/A',
+    
+    // Form validation messages
+    'validation_error' => 'Validation Error',
+    'please_fill_required_fields' => 'Please fill in all required fields correctly before submitting.',
 ]; 

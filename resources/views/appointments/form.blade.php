@@ -22,8 +22,8 @@
                     @endif
                     @include('appointments._form')
                     <div class="mt-10 mb-3 flex justify-center">
-                        <button type="submit" id="submit-button"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-75 disabled:cursor-not-allowed">
+                        <button type="submit" id="submit-button" disabled
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
 
                             {{-- Spinner (hidden initially) --}}
                             <svg id="submit-spinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -48,6 +48,30 @@
 @push('scripts')
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        /* Custom styles for form validation feedback */
+        .field-invalid {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 1px #ef4444 !important;
+        }
+        
+        .field-valid {
+            border-color: #10b981 !important;
+        }
+        
+        .submit-button-disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+        
+        .submit-button-enabled {
+            opacity: 1 !important;
+            cursor: pointer !important;
+            pointer-events: auto;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById(
@@ -69,8 +93,192 @@
                 }
             }
 
+            // Form validation function
+            function validateForm() {
+                const requiredFields = [
+                    'first_name',
+                    'last_name', 
+                    'email',
+                    'phone',
+                    'address_map_input',
+                    'city',
+                    'state',
+                    'zipcode',
+                    'country',
+                    'lead_source',
+                    'inspection_status',
+                    'status_lead'
+                ];
+
+                let isValid = true;
+
+                // Check text/email/select fields
+                requiredFields.forEach(fieldName => {
+                    const field = document.getElementById(fieldName);
+                    if (field && (!field.value.trim() || field.value === '')) {
+                        isValid = false;
+                    }
+                });
+
+                // Check radio buttons for insurance_property
+                const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+                const insuranceChecked = Array.from(insuranceRadios).some(radio => radio.checked);
+                if (!insuranceChecked) {
+                    isValid = false;
+                }
+
+                // Special validation for names (letters only)
+                const firstName = document.getElementById('first_name');
+                const lastName = document.getElementById('last_name');
+                const namePattern = /^[A-Za-z\s\'-]+$/;
+                
+                if (firstName && firstName.value.trim() && !namePattern.test(firstName.value.trim())) {
+                    isValid = false;
+                }
+                
+                if (lastName && lastName.value.trim() && !namePattern.test(lastName.value.trim())) {
+                    isValid = false;
+                }
+
+                // Email validation
+                const email = document.getElementById('email');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (email && email.value.trim() && !emailPattern.test(email.value.trim())) {
+                    isValid = false;
+                }
+
+                // Special date/time validation logic
+                const inspectionDate = document.getElementById('inspection_date');
+                const inspectionTimeHour = document.getElementById('inspection_time_hour');
+                const inspectionTimeMinute = document.getElementById('inspection_time_minute');
+                
+                // If inspection date is selected, both hour and minute must be selected
+                if (inspectionDate && inspectionDate.value) {
+                    if (!inspectionTimeHour || !inspectionTimeHour.value || 
+                        !inspectionTimeMinute || !inspectionTimeMinute.value) {
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+
+            // Function to update submit button state
+            function updateSubmitButton() {
+                const isFormValid = validateForm();
+                submitButton.disabled = !isFormValid;
+                
+                if (isFormValid) {
+                    submitButton.classList.remove('submit-button-disabled');
+                    submitButton.classList.add('submit-button-enabled');
+                } else {
+                    submitButton.classList.remove('submit-button-enabled');
+                    submitButton.classList.add('submit-button-disabled');
+                }
+            }
+
+            // Function to validate individual field and provide visual feedback
+            function validateField(fieldElement, value = null) {
+                if (!fieldElement) return true;
+                
+                const fieldValue = value !== null ? value : fieldElement.value.trim();
+                const fieldName = fieldElement.name || fieldElement.id;
+                let isValid = true;
+
+                // Remove existing validation classes
+                fieldElement.classList.remove('field-valid', 'field-invalid');
+
+                // Skip validation for optional fields or if field is empty and not required
+                if (!fieldElement.hasAttribute('required') && !fieldValue) {
+                    return true;
+                }
+
+                // Validate based on field type and name
+                switch (fieldName) {
+                    case 'first_name':
+                    case 'last_name':
+                        const namePattern = /^[A-Za-z\s\'-]+$/;
+                        isValid = fieldValue && namePattern.test(fieldValue);
+                        break;
+                    
+                    case 'email':
+                        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        isValid = fieldValue && emailPattern.test(fieldValue);
+                        break;
+                    
+                    case 'phone':
+                        isValid = fieldValue && fieldValue.length >= 10;
+                        break;
+                    
+                    default:
+                        // For other required fields, just check if they have a value
+                        if (fieldElement.hasAttribute('required')) {
+                            isValid = fieldValue !== '' && fieldValue !== null;
+                        }
+                        break;
+                }
+
+                // Apply visual feedback
+                if (fieldValue) { // Only apply visual feedback if field has content
+                    if (isValid) {
+                        fieldElement.classList.add('field-valid');
+                    } else {
+                        fieldElement.classList.add('field-invalid');
+                    }
+                }
+
+                return isValid;
+            }
+
+            // Add event listeners to all form fields
+            const allInputs = form.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                // Real-time validation on input/change
+                input.addEventListener('input', function(e) {
+                    validateField(e.target);
+                    updateSubmitButton();
+                });
+                
+                input.addEventListener('change', function(e) {
+                    validateField(e.target);
+                    updateSubmitButton();
+                });
+                
+                input.addEventListener('blur', function(e) {
+                    validateField(e.target);
+                    updateSubmitButton();
+                });
+            });
+
+            // Special handling for radio buttons (insurance_property)
+            const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
+            insuranceRadios.forEach(radio => {
+                radio.addEventListener('change', updateSubmitButton);
+            });
+
+            // Special handling for time fields that might be added dynamically
+            document.addEventListener('change', function(e) {
+                if (e.target.id === 'inspection_time_hour' || e.target.id === 'inspection_time_minute') {
+                    updateSubmitButton();
+                }
+            });
+
+            // Initial validation check
+            updateSubmitButton();
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+
+                // Final validation check before submission
+                if (!validateForm()) {
+                    Swal.fire({
+                        title: '{{ __('validation_error') }}',
+                        text: '{{ __('please_fill_required_fields') }}',
+                        icon: 'warning',
+                        confirmButtonText: '{{ __('swal_ok') }}'
+                    });
+                    return;
+                }
 
                 // Show spinner and disable button
                 setLoadingState(true);
