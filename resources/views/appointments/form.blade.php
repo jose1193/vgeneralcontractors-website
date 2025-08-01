@@ -31,7 +31,9 @@
                                     <div class="marquee-container overflow-hidden w-full">
                                         <div
                                             class="marquee-text animate-marquee whitespace-nowrap text-purple-100/90 text-xs xs:text-sm sm:text-sm font-medium text-center">
-                                            ✨ {{ isset($appointment->uuid) ? __('update_your_appointment_details') : __('schedule_your_perfect_appointment') }} • 🚀 {{ __('efficient_scheduling') }} • 💼
+                                            ✨
+                                            {{ isset($appointment->uuid) ? __('update_your_appointment_details') : __('schedule_your_perfect_appointment') }}
+                                            • 🚀 {{ __('efficient_scheduling') }} • 💼
                                             {{ __('professional_service') }} • 📅 {{ __('complete_management') }} •
                                         </div>
                                     </div>
@@ -60,7 +62,8 @@
                                 <a href="{{ route('appointments.index') }}"
                                     class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg font-semibold text-sm text-white uppercase tracking-wide hover:bg-white/30 focus:bg-white/30 active:bg-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 19l-7-7m0 0l7-7m-7 7h18">
                                         </path>
                                     </svg>
                                     {{ __('back_to_list') }}
@@ -1241,6 +1244,7 @@
 
         /* Floating animations */
         @keyframes float-slow {
+
             0%,
             100% {
                 transform: translateY(0px) rotate(0deg);
@@ -1252,6 +1256,7 @@
         }
 
         @keyframes float-medium {
+
             0%,
             100% {
                 transform: translateY(0px) rotate(0deg);
@@ -1263,6 +1268,7 @@
         }
 
         @keyframes float-fast {
+
             0%,
             100% {
                 transform: translateY(0px) rotate(0deg);
@@ -1287,6 +1293,7 @@
 
         /* Pulse animations */
         @keyframes pulse-soft {
+
             0%,
             100% {
                 transform: scale(1);
@@ -1305,6 +1312,7 @@
 
         /* Bounce subtle animation */
         @keyframes bounce-subtle {
+
             0%,
             100% {
                 transform: translateY(0);
