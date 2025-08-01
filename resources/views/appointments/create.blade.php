@@ -49,20 +49,10 @@
             const submitButtonText = document.getElementById('submit-button-text');
 
             // Wait for the form validation system to be ready
-            console.log('Waiting for form validation system to be ready...');
             const waitForValidation = setInterval(() => {
                 if (window.appointmentFormValidation) {
-                    console.log('Form validation system found, initializing form validation...');
                     clearInterval(waitForValidation);
                     // Initial check to ensure button state is correct
-                    window.appointmentFormValidation.checkFormValidity();
-                    // Force mark all fields as "touched" to ensure validation runs
-                    document.querySelectorAll('input, select, textarea').forEach(field => {
-                        if (field.name) {
-                            field.dataset.touched = 'true';
-                        }
-                    });
-                    // Run form validation again after setting touched state
                     window.appointmentFormValidation.checkFormValidity();
                 }
             }, 100);
