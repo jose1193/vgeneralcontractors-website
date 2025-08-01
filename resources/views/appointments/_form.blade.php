@@ -314,14 +314,18 @@
     {{-- Other checkboxes --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="block">
-            <label for="sms_consent" class="flex items-center">
-                <x-checkbox id="sms_consent" name="sms_consent" :checked="old('sms_consent', $appointment->sms_consent ?? false)" />
+            <label for="sms_consent" class="inline-flex items-start cursor-pointer">
+                <input id="sms_consent" name="sms_consent" type="checkbox" value="1"
+                    class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
+                    {{ old('sms_consent', $appointment->sms_consent ?? false) ? 'checked' : '' }}>
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('SMS Consent') }}</span>
             </label>
         </div>
         <div class="block">
-            <label for="intent_to_claim" class="flex items-center">
-                <x-checkbox id="intent_to_claim" name="intent_to_claim" :checked="old('intent_to_claim', $appointment->intent_to_claim ?? false)" />
+            <label for="intent_to_claim" class="inline-flex items-start cursor-pointer">
+                <input id="intent_to_claim" name="intent_to_claim" type="checkbox" value="1"
+                    class="checkbox-field form-checkbox text-yellow-500 mt-1 h-5 w-5 border-gray-300 rounded focus:ring-yellow-500"
+                    {{ old('intent_to_claim', $appointment->intent_to_claim ?? false) ? 'checked' : '' }}>
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Intent to Claim?') }}</span>
             </label>
         </div>
@@ -1042,5 +1046,41 @@
         .capitalize-first::first-letter {
             text-transform: uppercase;
         }
+
+        /* Checkbox styles */
+        .checkbox-field:checked {
+            background-color: #eab308;
+            border-color: #eab308;
+        }
+
+        .checkbox-field:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3);
+        }
+
+        .checkbox-field {
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-field:hover {
+            border-color: #eab308;
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to checkboxes
+            const checkboxes = document.querySelectorAll('.checkbox-field');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        this.classList.add('animate-pulse');
+                        setTimeout(() => {
+                            this.classList.remove('animate-pulse');
+                        }, 500);
+                    }
+                });
+            });
+        });
+    </script>
 @endpush
