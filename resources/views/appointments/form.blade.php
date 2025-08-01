@@ -283,6 +283,155 @@
             pointer-events: auto;
         }
 
+        /* Enhanced Glassmorphism Checkbox Styles */
+        .glassmorphism-form-container .checkbox-field {
+            /* Dark glassmorphic background */
+            background: rgba(40, 40, 40, 0.8) !important;
+            
+            /* Dark border matching form inputs */
+            border: 1px solid rgba(139, 69, 190, 0.3) !important;
+            
+            /* Smooth transitions */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            
+            /* Enhanced shadow for depth */
+            box-shadow: 
+                0 2px 8px 0 rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            
+            /* Size and border radius */
+            width: 1.25rem !important;
+            height: 1.25rem !important;
+            border-radius: 0.375rem !important;
+            
+            /* Remove default appearance */
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            
+            /* Positioning for custom checkmark */
+            position: relative !important;
+            cursor: pointer !important;
+        }
+
+        .glassmorphism-form-container .checkbox-field:hover {
+            /* Hover state with purple accent */
+            border-color: rgba(168, 85, 247, 0.5) !important;
+            background: rgba(50, 50, 50, 0.9) !important;
+            
+            /* Enhanced hover shadow */
+            box-shadow: 
+                0 4px 12px 0 rgba(139, 69, 190, 0.15),
+                0 2px 8px 0 rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+                
+            /* Subtle transform */
+            transform: translateY(-1px) !important;
+        }
+
+        .glassmorphism-form-container .checkbox-field:focus {
+            /* Focus state */
+            outline: none !important;
+            border-color: rgba(168, 85, 247, 0.6) !important;
+            
+            /* Focus ring with purple accent */
+            box-shadow: 
+                0 0 0 3px rgba(139, 69, 190, 0.2),
+                0 4px 12px 0 rgba(139, 69, 190, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .glassmorphism-form-container .checkbox-field:checked {
+            /* Checked state with gradient */
+            background: linear-gradient(135deg,
+                rgba(139, 69, 190, 0.9) 0%,
+                rgba(168, 85, 247, 0.8) 50%,
+                rgba(139, 69, 190, 0.9) 100%) !important;
+            
+            border-color: rgba(168, 85, 247, 0.8) !important;
+            
+            /* Enhanced checked shadow */
+            box-shadow: 
+                0 6px 16px 0 rgba(139, 69, 190, 0.3),
+                0 3px 8px 0 rgba(168, 85, 247, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Custom checkmark using ::after pseudo-element */
+        .glassmorphism-form-container .checkbox-field:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            
+            /* Checkmark dimensions */
+            width: 0.375rem;
+            height: 0.625rem;
+            
+            /* Checkmark style */
+            border: solid rgba(255, 255, 255, 0.95);
+            border-width: 0 2px 2px 0;
+            border-radius: 0 1px 1px 0;
+            
+            /* Animation */
+            animation: checkmarkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Checkmark animation */
+        @keyframes checkmarkPop {
+            0% {
+                transform: translate(-50%, -50%) rotate(45deg) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(45deg) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(45deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Hover effect on checked state */
+        .glassmorphism-form-container .checkbox-field:checked:hover {
+            background: linear-gradient(135deg,
+                rgba(168, 85, 247, 0.95) 0%,
+                rgba(139, 69, 190, 0.85) 50%,
+                rgba(168, 85, 247, 0.95) 100%) !important;
+                
+            box-shadow: 
+                0 8px 20px 0 rgba(139, 69, 190, 0.4),
+                0 4px 12px 0 rgba(168, 85, 247, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.15) !important;
+                
+            transform: translateY(-2px) !important;
+        }
+
+        /* Disabled state */
+        .glassmorphism-form-container .checkbox-field:disabled {
+            background: rgba(55, 65, 81, 0.5) !important;
+            border-color: rgba(107, 114, 128, 0.3) !important;
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+            
+            box-shadow: 
+                0 1px 4px 0 rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .glassmorphism-form-container .checkbox-field:disabled:checked {
+            background: rgba(107, 114, 128, 0.6) !important;
+        }
+
+        .glassmorphism-form-container .checkbox-field:disabled:checked::after {
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Validation Message Styles */
         .realtime-validation-message {
             font-size: 0.75rem;
             margin-top: 0.25rem;
