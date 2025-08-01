@@ -630,15 +630,16 @@ class AppointmentController extends BaseCrudController
                 'bindings' => $query->getBindings()
             ]);
 
-            $exists = $query->withTrashed()->exists();
+            $exists = $query->exists();
             
             // Debug: Also get the actual records for debugging
-            $records = $query->withTrashed()->get(['uuid', 'email', 'deleted_at']);
+            $records = $query->get(['uuid', 'email', 'deleted_at']);
             
             Log::info('Email check results', [
                 'exists' => $exists,
                 'records_found' => $records->count(),
-                'records' => $records->toArray()
+                'records' => $records->toArray(),
+                'also_checking_deleted' => $query->withTrashed()->exists()
             ]);
 
             return response()->json([
@@ -691,15 +692,16 @@ class AppointmentController extends BaseCrudController
                 'bindings' => $query->getBindings()
             ]);
 
-            $exists = $query->withTrashed()->exists();
+            $exists = $query->exists();
             
             // Debug: Also get the actual records for debugging
-            $records = $query->withTrashed()->get(['uuid', 'phone', 'deleted_at']);
+            $records = $query->get(['uuid', 'phone', 'deleted_at']);
             
             Log::info('Phone check results', [
                 'exists' => $exists,
                 'records_found' => $records->count(),
-                'records' => $records->toArray()
+                'records' => $records->toArray(),
+                'also_checking_deleted' => $query->withTrashed()->exists()
             ]);
 
             return response()->json([
