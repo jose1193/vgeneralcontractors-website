@@ -99,7 +99,7 @@
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
-            position: running(header);
+            /* position: running(header);  Eliminado para que el header principal solo salga en la primera página */
         }
 
         /* Ensure proper spacing for continued content on new pages */
@@ -115,10 +115,7 @@
         /* Header repetition for all pages */
         @page :not(:first) {
             margin-top: 30mm;
-
-            @top-left {
-                content: element(header);
-            }
+            /* Eliminado @top-left para que el header principal no se repita en las siguientes páginas */
         }
 
         /* New dedicated container for logo and company data */
