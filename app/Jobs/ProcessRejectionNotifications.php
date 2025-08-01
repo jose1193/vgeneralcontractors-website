@@ -12,6 +12,7 @@ use App\Models\CompanyData;
 use App\Models\EmailData;
 use App\Notifications\AppointmentRejectionNotification;
 use App\Notifications\AdminRejectionNotification;
+use App\Notifications\InfoRejectionNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -118,6 +119,35 @@ class ProcessRejectionNotifications implements ShouldQueue
                     ]);
                 }
                 
+                // 3. Enviar notificación al correo Info
+                try {
+                    // Use our helper to verify info email
+                    $infoEmailVerification = \App\Helpers\EmailHelper::verifyInfoEmail();
+                    
+                    if ($infoEmailVerification['isValid']) {
+                        Log::info("Enviando notificación de rechazo al correo Info: {$infoEmailVerification['email']}");
+                        
+                        Notification::route('mail', $infoEmailVerification['email'])
+                            ->notify(new InfoRejectionNotification(
+                                $appointment, 
+                                $this->noContact, 
+                                $this->noInsurance, 
+                                $this->otherReason,
+                                $companyData
+                            ));
+                        Log::info("Notificación de rechazo enviada al correo Info para la cita UUID: {$appointmentId}");
+                    } else {
+                        $emailFound = $infoEmailVerification['exists'] ? 'encontrado pero inválido' : 'no encontrado';
+                        $emailValue = $infoEmailVerification['email'] ?? 'No hay email';
+                        Log::warning("Email de Info {$emailFound}. Omitiendo notificación de rechazo al correo Info. Email: {$emailValue}");
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Error al enviar notificación de rechazo al correo Info para la cita UUID: {$appointmentId} - Error: {$e->getMessage()}", [
+                        'exception' => get_class($e),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
+                
                 // Actualizar estado de la cita a rechazada
                 $appointment->status_lead = 'Declined';
                 $appointment->inspection_status = 'Declined';
@@ -138,6 +168,7 @@ class ProcessRejectionNotifications implements ShouldQueue
         
         // Log de resumen al finalizar todas las notificaciones
         $adminEmailVerification = \App\Helpers\EmailHelper::verifyAdminEmail();
+        $infoEmailVerification = \App\Helpers\EmailHelper::verifyInfoEmail();
         
         Log::info("Procesamiento de notificaciones de rechazo completado", [
             'total' => count($this->appointmentIds),
@@ -150,7 +181,10 @@ class ProcessRejectionNotifications implements ShouldQueue
             ],
             'admin_email_found' => $adminEmailVerification['exists'],
             'admin_email' => $adminEmailVerification['email'],
-            'admin_email_valid' => $adminEmailVerification['isValid']
+            'admin_email_valid' => $adminEmailVerification['isValid'],
+            'info_email_found' => $infoEmailVerification['exists'],
+            'info_email' => $infoEmailVerification['email'],
+            'info_email_valid' => $infoEmailVerification['isValid']
         ]);
     }
 } 
