@@ -10,7 +10,7 @@
     <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
         {{-- Enhanced Animated Header Section --}}
         <div class="p-4 sm:p-6">
-            <div class="animated-header-card bg-white rounded-2xl shadow-2xl mb-8 overflow-hidden">
+            <div class="animated-header-card rounded-2xl shadow-2xl mb-8 overflow-hidden">
                 <div class="animated-gradient-header px-8 py-6 relative">
                     {{-- Floating particles background --}}
                     <div class="absolute inset-0 overflow-hidden pointer-events-none">
