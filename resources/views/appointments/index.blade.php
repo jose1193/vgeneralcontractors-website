@@ -6,18 +6,16 @@
         </h2>
     </x-slot> --}}
 
-    {{-- Dark background container with consistent styling --}}
-    <div class="min-h-screen bg-gray-900" style="background-color: #141414;">
-        {{-- Header section with title and subtitle --}}
-        <div class="p-4 sm:p-6">
-            <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
-                <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
-                    {{ __('appointments_management_title') }}</h2>
-                <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
-                    {{ __('appointments_management_subtitle') }}
-                </p>
-            </div>
+    {{-- Header section with title and subtitle --}}
+    <div class="p-4 sm:p-6">
+        <div class="mb-4 sm:mb-8 text-center sm:text-center md:text-left lg:text-left">
+            <h2 class="text-base sm:text-base md:text-2xl lg:text-2xl font-bold text-white mb-2">
+                {{ __('appointments_management_title') }}</h2>
+            <p class="text-base sm:text-base md:text-base lg:text-base text-gray-400">
+                {{ __('appointments_management_subtitle') }}
+            </p>
         </div>
+    </div>
 
         <div class="max-w-7xl mx-auto py-2 sm:py-4 md:py-2 lg:py-2 px-4 sm:px-6 lg:px-8">
             <!-- Success and error messages -->
@@ -1111,5 +1109,4 @@
                 }
             }
         </style>
-    </div>
 </x-app-layout>
