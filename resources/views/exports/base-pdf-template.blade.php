@@ -104,8 +104,8 @@
 
         /* Ensure proper spacing for continued content on new pages */
         .data-table {
-            margin-top: 40px;
-            /* Aumentado para dar espacio entre header principal y tabla */
+            margin-top: 20px;
+            /* Reducido ya que el header reducido ocupa menos espacio */
             width: 90%;
             margin-left: auto;
             margin-right: auto;
@@ -115,12 +115,37 @@
 
         /* Header repetition for all pages */
         @page :not(:first) {
-            margin-top: 60mm;
-            /* Aumentado para dar espacio al header principal */
+            margin-top: 40mm;
+            /* Espacio para header reducido en páginas siguientes */
 
             @top-left {
-                content: element(header);
+                content: element(header-continuation);
             }
+        }
+
+        /* Header reducido para páginas siguientes */
+        .header-continuation {
+            position: running(header-continuation);
+            width: 90%;
+            margin: 5px auto 10px auto;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .header-continuation .mini-logo {
+            max-height: 40px;
+            width: auto;
+        }
+
+        .header-continuation .mini-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-transform: uppercase;
         }
 
         /* New dedicated container for logo and company data */
@@ -605,6 +630,17 @@
             @endif
         </div>
     @endif
+
+    <!-- Header reducido para páginas siguientes (estilo Word) -->
+    <div class="header-continuation">
+        @if (isset($companyInfo['logo_path']) && file_exists($companyInfo['logo_path']))
+            <img src="{{ $companyInfo['logo_path'] }}" alt="Logo" class="mini-logo">
+        @endif
+        <div class="mini-title">{{ $title }}</div>
+        <div style="font-size: 9px; color: var(--text-muted);">
+            Page <span class="page-number"></span>
+        </div>
+    </div>
 
     <!-- Content Section -->
     <div class="content">
