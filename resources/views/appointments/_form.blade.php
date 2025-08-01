@@ -1409,7 +1409,7 @@
                     field.classList.add('border-gray-300');
                 }
 
-                checkFormValidity();
+                // Removed the call to checkFormValidity() to prevent infinite recursion
             }
 
             // Function to show field error
@@ -1439,7 +1439,7 @@
                     field.classList.remove('border-gray-300', 'border-green-500');
                 }
 
-                checkFormValidity();
+                // Removed the call to checkFormValidity() to prevent infinite recursion
             }
 
             // Helper function to capitalize first letter
@@ -1466,7 +1466,18 @@
                             showFieldError(fieldName, '{{ __('first_name_regex') }}');
                             return false;
                         } else {
-                            clearFieldError(fieldName);
+                            // Handle field success without calling clearFieldError
+                            const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
+                            if (errorElement) {
+                                errorElement.textContent = '';
+                                errorElement.classList.add('hidden');
+                            }
+                            
+                            const field = document.querySelector(`[name="${fieldName}"]`);
+                            if (field) {
+                                field.classList.remove('border-red-500', 'border-red-300');
+                                field.classList.add('border-gray-300');
+                            }
                             return true;
                         }
 
@@ -1600,12 +1611,23 @@
                         }
 
                     default:
-                        clearFieldError(fieldName);
+                        // Handle field success without calling clearFieldError
+                        const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
+                        if (errorElement) {
+                            errorElement.textContent = '';
+                            errorElement.classList.add('hidden');
+                        }
+                        
+                        const field = document.querySelector(`[name="${fieldName}"]`);
+                        if (field) {
+                            field.classList.remove('border-red-500', 'border-red-300');
+                            field.classList.add('border-gray-300');
+                        }
                         return true;
                 }
             }
 
-            // Function to check overall form validity
+            // Function to check overall form validity without causing recursion
             function checkFormValidity() {
                 const requiredFields = [
                     'first_name', 'last_name', 'email', 'phone', 'address_map_input',
@@ -1616,18 +1638,17 @@
                 let isValid = true;
                 let allFieldsFilled = true;
 
+                // First pass: just check if all fields are filled without triggering validation
                 requiredFields.forEach(fieldName => {
-                    let value = '';
                     let hasValue = false;
 
                     if (fieldName === 'insurance_property') {
                         const checkedRadio = document.querySelector(
                             'input[name="insurance_property"]:checked');
-                        value = checkedRadio ? checkedRadio.value : '';
                         hasValue = !!checkedRadio;
                     } else {
                         const field = document.querySelector(`[name="${fieldName}"]`);
-                        value = field ? field.value.trim() : '';
+                        const value = field ? field.value.trim() : '';
                         hasValue = value !== '';
                     }
 
@@ -1635,15 +1656,14 @@
                     if (!hasValue) {
                         allFieldsFilled = false;
                     }
-
-                    // Only validate fields that have been touched or have values
-                    const field = document.querySelector(`[name="${fieldName}"]`);
-                    const hasBeenTouched = field && (field.dataset.touched === 'true');
-
-                    if (hasValue || hasBeenTouched) {
-                        if (!validateField(fieldName, value)) {
-                            isValid = false;
-                        }
+                });
+                
+                // Second pass: check field validation state by examining error messages
+                // This avoids calling validateField which would cause recursion
+                requiredFields.forEach(fieldName => {
+                    const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]:not(.hidden)`);
+                    if (errorElement && errorElement.textContent.trim() !== '') {
+                        isValid = false;
                     }
                 });
 
@@ -1651,13 +1671,16 @@
                 const shouldEnable = allFieldsFilled && isValid;
 
                 if (submitButton) {
-                    submitButton.disabled = !shouldEnable;
-                    if (shouldEnable) {
-                        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                        submitButton.classList.add('hover:bg-gray-700');
-                    } else {
-                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                        submitButton.classList.remove('hover:bg-gray-700');
+                    // Update button state only if it's changed to avoid unnecessary DOM operations
+                    if (submitButton.disabled === shouldEnable) {
+                        submitButton.disabled = !shouldEnable;
+                        if (shouldEnable) {
+                            submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                            submitButton.classList.add('hover:bg-gray-700');
+                        } else {
+                            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                            submitButton.classList.remove('hover:bg-gray-700');
+                        }
                     }
                 }
 
@@ -1683,7 +1706,10 @@
                     field.addEventListener('blur', function() {
                         this.dataset.touched = 'true';
                         validateField(fieldName, this.value);
-                        checkFormValidity();
+                        // Call checkFormValidity after a short delay to prevent recursion
+                        setTimeout(() => {
+                            checkFormValidity();
+                        }, 0);
                     });
 
                     // Validate on input for immediate feedback
@@ -1691,9 +1717,21 @@
                         this.dataset.touched = 'true';
                         // Clear errors immediately when user starts typing
                         if (this.value.trim() !== '') {
-                            clearFieldError(fieldName);
+                            // Clear error display without triggering recursion
+                            const errorElement = document.querySelector(`.text-red-500[data-field="${fieldName}"]`);
+                            if (errorElement) {
+                                errorElement.textContent = '';
+                                errorElement.classList.add('hidden');
+                            }
+                            
+                            // Remove red border
+                            field.classList.remove('border-red-500', 'border-red-300');
+                            field.classList.add('border-gray-300');
                         }
-                        checkFormValidity();
+                        // Call checkFormValidity after a short delay to prevent recursion
+                        setTimeout(() => {
+                            checkFormValidity();
+                        }, 0);
                     });
 
                     // For select fields, also listen to change events
@@ -1712,8 +1750,18 @@
                 radio.addEventListener('change', function() {
                     // Mark all radio buttons in the group as touched
                     insuranceRadios.forEach(r => r.dataset.touched = 'true');
-                    validateField('insurance_property', this.value);
-                    checkFormValidity();
+                    
+                    // Clear any validation errors for insurance_property
+                    const errorElement = document.querySelector(`.text-red-500[data-field="insurance_property"]`);
+                    if (errorElement) {
+                        errorElement.textContent = '';
+                        errorElement.classList.add('hidden');
+                    }
+                    
+                    // Call checkFormValidity after a short delay to prevent recursion
+                    setTimeout(() => {
+                        checkFormValidity();
+                    }, 0);
                 });
             });
 
@@ -1731,11 +1779,10 @@
                 submitButton: submitButton
             };
 
-            // Initial form validation check - immediate and with timeout as backup
-            checkFormValidity();
+            // Initial form validation check - after a brief timeout to ensure DOM is fully ready
             setTimeout(() => {
                 checkFormValidity();
-            }, 50);
+            }, 100);
         });
     </script>
 @endpush
