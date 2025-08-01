@@ -15,7 +15,7 @@
             <div class="my-4 overflow-hidden sm:rounded-md">
                 <form id="{{ isset($appointment->uuid) ? 'appointmentEditForm' : 'appointmentCreateForm' }}"
                     action="{{ isset($appointment->uuid) ? secure_url(route('appointments.update', $appointment->uuid, false)) : secure_url(route('appointments.store', [], false)) }}"
-                    method="POST" class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    method="POST" class="glassmorphism-form-container shadow-md rounded-lg p-6">
                     @csrf
                     @if (isset($appointment->uuid))
                         @method('PUT')
@@ -50,6 +50,81 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        /* Premium Glassmorphism Form 2025 with Purple Shadows */
+        .glassmorphism-form-container {
+            position: relative;
+            border-radius: 20px;
+
+            /* Crystal Glass Background with Premium Transparency */
+            background: rgba(0, 0, 0, 0.78);
+
+            /* Premium Purple Box Shadow System */
+            box-shadow:
+                0 8px 32px 0 rgba(138, 43, 226, 0.25),
+                0 16px 64px 0 rgba(128, 0, 255, 0.18),
+                0 4px 16px 0 rgba(75, 0, 130, 0.3),
+                0 2px 8px 0 rgba(147, 51, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+
+            /* Advanced Blur Effects */
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+
+            /* Refined Border for Glass Effect */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+            /* Enhanced Animation */
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glassmorphism-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0.05) 25%,
+                    transparent 50%,
+                    rgba(138, 43, 226, 0.08) 75%,
+                    rgba(128, 0, 255, 0.12) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .glassmorphism-form-container:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 12px 48px 0 rgba(138, 43, 226, 0.35),
+                0 24px 80px 0 rgba(128, 0, 255, 0.25),
+                0 6px 24px 0 rgba(75, 0, 130, 0.4),
+                0 3px 12px 0 rgba(147, 51, 234, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glassmorphism-form-container:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Custom styles for form validation feedback */
         .field-invalid {
             border-color: #ef4444 !important;
