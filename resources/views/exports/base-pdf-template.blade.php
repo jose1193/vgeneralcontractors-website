@@ -104,8 +104,8 @@
 
         /* Ensure proper spacing for continued content on new pages */
         .data-table {
-            margin-top: 20px;
-            /* Reducido ya que el header reducido ocupa menos espacio */
+            margin-top: 60px;
+            /* Aumentado para dar espacio al header reducido */
             width: 90%;
             margin-left: auto;
             margin-right: auto;
@@ -115,8 +115,8 @@
 
         /* Header repetition for all pages */
         @page :not(:first) {
-            margin-top: 40mm;
-            /* Espacio para header reducido en páginas siguientes */
+            margin-top: 50mm;
+            /* Aumentado para acomodar el header reducido */
 
             @top-left {
                 content: element(header-continuation);
@@ -127,8 +127,9 @@
         .header-continuation {
             position: running(header-continuation);
             width: 90%;
-            margin: 5px auto 10px auto;
-            padding: 8px 0;
+            margin: 10px auto 15px auto;
+            /* Más espacio arriba y abajo */
+            padding: 10px 0;
             border-bottom: 1px solid var(--primary-color);
             display: flex;
             justify-content: space-between;
