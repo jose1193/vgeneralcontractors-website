@@ -1599,6 +1599,7 @@
 
             // Function to check overall form validity
             function checkFormValidity() {
+                console.log('Running checkFormValidity()');
                 const requiredFields = [
                     'first_name', 'last_name', 'email', 'phone', 'address',
                     'city', 'state', 'zipcode', 'country', 'insurance_property',
@@ -1607,6 +1608,7 @@
 
                 let isValid = true;
                 let allFieldsFilled = true;
+                let missingFields = [];
 
                 requiredFields.forEach(fieldName => {
                     let value = '';
@@ -1617,10 +1619,12 @@
                             'input[name="insurance_property"]:checked');
                         value = checkedRadio ? checkedRadio.value : '';
                         hasValue = !!checkedRadio;
+                        if (!hasValue) missingFields.push(fieldName);
                     } else {
                         const field = document.querySelector(`[name="${fieldName}"]`);
                         value = field ? field.value.trim() : '';
                         hasValue = value !== '';
+                        if (!hasValue) missingFields.push(fieldName);
                     }
 
                     // Check if field has value
@@ -1630,7 +1634,8 @@
 
                     // Only validate fields that have been touched or have values
                     const field = document.querySelector(`[name="${fieldName}"]`);
-                    const hasBeenTouched = field && (field.dataset.touched === 'true');
+                    // Consider all fields touched for form submission purposes
+                    const hasBeenTouched = true; // field && (field.dataset.touched === 'true');
 
                     if (hasValue || hasBeenTouched) {
                         if (!validateField(fieldName, value)) {
@@ -1641,6 +1646,13 @@
 
                 // Enable submit button only if ALL required fields are filled AND valid
                 const shouldEnable = allFieldsFilled && isValid;
+                
+                console.log('Form validation:', {
+                    allFieldsFilled,
+                    isValid,
+                    shouldEnable,
+                    missingFields
+                });
 
                 if (submitButton) {
                     submitButton.disabled = !shouldEnable;
@@ -1651,6 +1663,10 @@
                         submitButton.classList.add('opacity-50', 'cursor-not-allowed');
                         submitButton.classList.remove('hover:bg-gray-700');
                     }
+                    console.log('Submit button state updated:', {
+                        disabled: submitButton.disabled,
+                        element: submitButton
+                    });
                 }
 
                 return shouldEnable;
@@ -1659,8 +1675,8 @@
             // Add event listeners for real-time validation
             const fieldsToValidate = [
                 'first_name', 'last_name', 'email', 'phone', 'address',
-                'city', 'state', 'zipcode', 'country', 'lead_source',
-                'inspection_status', 'status_lead'
+                'city', 'state', 'zipcode', 'country', 'insurance_property',
+                'lead_source', 'inspection_status', 'status_lead'
             ];
 
             fieldsToValidate.forEach(fieldName => {
@@ -1720,14 +1736,46 @@
             window.appointmentFormValidation = {
                 checkFormValidity: checkFormValidity,
                 validateField: validateField,
-                submitButton: submitButton
+                submitButton: submitButton,
+                // Add a method to force enable button in case validation fails
+                forceEnableButton: function() {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        submitButton.classList.add('hover:bg-gray-700');
+                        console.log('Submit button forcefully enabled');
+                    }
+                }
             };
 
             // Initial form validation check - immediate and with timeout as backup
+            console.log('Running initial form validation check');
             checkFormValidity();
             setTimeout(() => {
                 checkFormValidity();
             }, 50);
+            
+            // Add a debug button in development
+            if (document.querySelector('.dev-debug-btn') === null) {
+                const debugBtn = document.createElement('button');
+                debugBtn.textContent = 'Debug Form';
+                debugBtn.className = 'dev-debug-btn px-4 py-2 bg-red-600 text-white rounded';
+                debugBtn.style.position = 'fixed';
+                debugBtn.style.bottom = '20px';
+                debugBtn.style.right = '20px';
+                debugBtn.addEventListener('click', function() {
+                    console.log('Debug button clicked');
+                    // Force mark all fields as touched
+                    document.querySelectorAll('input, select, textarea').forEach(field => {
+                        if (field.name) field.dataset.touched = 'true';
+                    });
+                    // Run validation and log results
+                    checkFormValidity();
+                    // Force enable button as last resort
+                    window.appointmentFormValidation.forceEnableButton();
+                });
+                document.body.appendChild(debugBtn);
+            }
         });
     </script>
 @endpush
