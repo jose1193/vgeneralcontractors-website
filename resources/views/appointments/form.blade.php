@@ -48,24 +48,24 @@
 @push('scripts')
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         /* Custom styles for form validation feedback */
         .field-invalid {
             border-color: #ef4444 !important;
             box-shadow: 0 0 0 1px #ef4444 !important;
         }
-        
+
         .field-valid {
             border-color: #10b981 !important;
         }
-        
+
         .submit-button-disabled {
             opacity: 0.5 !important;
             cursor: not-allowed !important;
             pointer-events: none;
         }
-        
+
         .submit-button-enabled {
             opacity: 1 !important;
             cursor: pointer !important;
@@ -97,7 +97,7 @@
             function validateForm() {
                 const requiredFields = [
                     'first_name',
-                    'last_name', 
+                    'last_name',
                     'email',
                     'phone',
                     'address_map_input',
@@ -131,11 +131,11 @@
                 const firstName = document.getElementById('first_name');
                 const lastName = document.getElementById('last_name');
                 const namePattern = /^[A-Za-z\s\'-]+$/;
-                
+
                 if (firstName && firstName.value.trim() && !namePattern.test(firstName.value.trim())) {
                     isValid = false;
                 }
-                
+
                 if (lastName && lastName.value.trim() && !namePattern.test(lastName.value.trim())) {
                     isValid = false;
                 }
@@ -151,10 +151,10 @@
                 const inspectionDate = document.getElementById('inspection_date');
                 const inspectionTimeHour = document.getElementById('inspection_time_hour');
                 const inspectionTimeMinute = document.getElementById('inspection_time_minute');
-                
+
                 // If inspection date is selected, both hour and minute must be selected
                 if (inspectionDate && inspectionDate.value) {
-                    if (!inspectionTimeHour || !inspectionTimeHour.value || 
+                    if (!inspectionTimeHour || !inspectionTimeHour.value ||
                         !inspectionTimeMinute || !inspectionTimeMinute.value) {
                         isValid = false;
                     }
@@ -167,7 +167,7 @@
             function updateSubmitButton() {
                 const isFormValid = validateForm();
                 submitButton.disabled = !isFormValid;
-                
+
                 if (isFormValid) {
                     submitButton.classList.remove('submit-button-disabled');
                     submitButton.classList.add('submit-button-enabled');
@@ -180,7 +180,7 @@
             // Function to validate individual field and provide visual feedback
             function validateField(fieldElement, value = null) {
                 if (!fieldElement) return true;
-                
+
                 const fieldValue = value !== null ? value : fieldElement.value.trim();
                 const fieldName = fieldElement.name || fieldElement.id;
                 let isValid = true;
@@ -200,16 +200,16 @@
                         const namePattern = /^[A-Za-z\s\'-]+$/;
                         isValid = fieldValue && namePattern.test(fieldValue);
                         break;
-                    
+
                     case 'email':
                         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         isValid = fieldValue && emailPattern.test(fieldValue);
                         break;
-                    
+
                     case 'phone':
                         isValid = fieldValue && fieldValue.length >= 10;
                         break;
-                    
+
                     default:
                         // For other required fields, just check if they have a value
                         if (fieldElement.hasAttribute('required')) {
@@ -238,12 +238,12 @@
                     validateField(e.target);
                     updateSubmitButton();
                 });
-                
+
                 input.addEventListener('change', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
                 });
-                
+
                 input.addEventListener('blur', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
