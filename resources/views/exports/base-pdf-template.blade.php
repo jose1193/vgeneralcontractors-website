@@ -99,12 +99,13 @@
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary-color);
             page-break-inside: avoid;
-            /* position: running(header);  Eliminado para que el header principal solo salga en la primera página */
+            position: running(header);
         }
 
         /* Ensure proper spacing for continued content on new pages */
         .data-table {
-            margin-top: 20px;
+            margin-top: 40px;
+            /* Aumentado para dar espacio entre header principal y tabla */
             width: 90%;
             margin-left: auto;
             margin-right: auto;
@@ -114,8 +115,12 @@
 
         /* Header repetition for all pages */
         @page :not(:first) {
-            margin-top: 30mm;
-            /* Eliminado @top-left para que el header principal no se repita en las siguientes páginas */
+            margin-top: 60mm;
+            /* Aumentado para dar espacio al header principal */
+
+            @top-left {
+                content: element(header);
+            }
         }
 
         /* New dedicated container for logo and company data */
