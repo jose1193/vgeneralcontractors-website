@@ -129,6 +129,68 @@
             font-weight: 500;
         }
 
+        /* Radio Buttons and Checkboxes Enhancement */
+        .glassmorphism-form-container input[type="radio"],
+        .glassmorphism-form-container input[type="checkbox"] {
+            appearance: none !important;
+            background: rgba(40, 40, 40, 0.8) !important;
+            border: 2px solid rgba(139, 69, 190, 0.3) !important;
+            border-radius: 4px !important;
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            position: relative !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"] {
+            border-radius: 50% !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"]:checked,
+        .glassmorphism-form-container input[type="checkbox"]:checked {
+            background: #fbbf24 !important; /* Yellow background when checked */
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"]:checked::after,
+        .glassmorphism-form-container input[type="checkbox"]:checked::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"]:checked::after {
+            width: 8px !important;
+            height: 8px !important;
+            background: #1f2937 !important;
+            border-radius: 50% !important;
+        }
+
+        .glassmorphism-form-container input[type="checkbox"]:checked::after {
+            content: '✓' !important;
+            color: #1f2937 !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"]:hover,
+        .glassmorphism-form-container input[type="checkbox"]:hover {
+            background: #fbbf24 !important; /* Yellow background on hover */
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15) !important;
+        }
+
+        .glassmorphism-form-container input[type="radio"]:focus,
+        .glassmorphism-form-container input[type="checkbox"]:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3) !important;
+        }
+
         /* Custom styles for form validation feedback */
         .field-invalid {
             border-color: #ef4444 !important;

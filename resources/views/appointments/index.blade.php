@@ -355,6 +355,11 @@
                 /* Table Enhancement */
                 .glassmorphism-container table {
                     background: transparent !important;
+                    box-shadow: 
+                        0 4px 16px rgba(139, 69, 190, 0.2),
+                        0 2px 8px rgba(168, 85, 247, 0.15) !important;
+                    border-radius: 12px !important;
+                    overflow: hidden;
                 }
 
                 .glassmorphism-container table thead th {
