@@ -199,7 +199,7 @@
                 </table>
             </div>
 
-            <div style="text-align: center; margin: 30px 0;">
+            <div style="text-align: center; margin: 30px 0; color:#fff">
                 <a href="{{ url('/appointments/' . $appointment->uuid) }}" class="action-button">
                     Ver en el sistema
                 </a>

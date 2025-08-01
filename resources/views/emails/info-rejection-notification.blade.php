@@ -52,7 +52,7 @@
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border-left: 4px solid #ff9800;
+            border-left: 4px solid #ef4444;
         }
 
         .appointment-details {
@@ -204,7 +204,7 @@
 
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{{ url('/appointments/' . $appointment->uuid) }}" class="action-button"
-                    style="color: white; text-decoration: none;">
+                    style="color: #fff; text-decoration: none;">
                     Ver en el sistema
                 </a>
             </div>
