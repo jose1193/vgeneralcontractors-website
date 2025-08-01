@@ -957,10 +957,10 @@
                                     url: "{{ route('appointments.check-email') }}",
                                     delay: 500,
                                     minLength: 5,
-                                    errorMessage: 'This email is already taken.',
-                                    successMessage: 'Email is available.'
+                                    errorMessage: '{{ __('This email is already taken.') }}',
+                                    successMessage: '{{ __('Email is available') }}'
                                 },
-                                errorMessage: 'Please choose a different email.'
+                                errorMessage: '{{ __('Please choose a different email.') }}'
                             },
                             {
                                 name: 'phone',
