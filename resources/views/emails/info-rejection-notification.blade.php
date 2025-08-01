@@ -79,7 +79,7 @@
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: bold;
-            background-color: #ff9800;
+            background-color: #dc3545;
             color: white;
         }
 
@@ -203,7 +203,8 @@
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-                <a href="{{ url('/appointments/' . $appointment->uuid) }}" class="action-button">
+                <a href="{{ url('/appointments/' . $appointment->uuid) }}" class="action-button"
+                    style="color: white; text-decoration: none;">
                     Ver en el sistema
                 </a>
             </div>
