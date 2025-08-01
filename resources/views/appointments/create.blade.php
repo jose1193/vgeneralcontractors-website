@@ -49,11 +49,20 @@
             const submitButtonText = document.getElementById('submit-button-text');
 
             // Wait for the form validation system to be ready
+            console.log('Waiting for form validation system to be ready...');
+            let attempts = 0;
+            const maxAttempts = 20; // 2 seconds max wait
+            
             const waitForValidation = setInterval(() => {
+                attempts++;
                 if (window.appointmentFormValidation) {
                     clearInterval(waitForValidation);
+                    console.log('Form validation system ready! Running initial check...');
                     // Initial check to ensure button state is correct
                     window.appointmentFormValidation.checkFormValidity();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(waitForValidation);
+                    console.error('Form validation system not available after timeout!');
                 }
             }, 100);
 
