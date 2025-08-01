@@ -449,36 +449,38 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                         onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                         onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
-                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                         </svg>
-                     </div>
+                <div class="relative group">
+                    <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
+                        onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
+                        onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
+                        <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
 
                     <!-- Submenu -->
-                    <div x-show="open" x-transition @mouseenter="open = true" @mouseleave="open = false" class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max" style="background-color: #2C2E36;">
-                         <div class="p-2 space-y-1">
-                             <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
-                                 {{ __('services') }}</div>
-                             @can('READ_EMAIL_DATA')
-                                 <a href="{{ route('email-datas.index') }}"
-                                     class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
-                                     {{ __('emails') }}
-                                 </a>
-                             @endcan
-                             @can('READ_SERVICE_CATEGORY')
-                                 <a href="{{ route('service-categories.index') }}"
-                                     class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('service-categories.*') ? 'bg-gray-700 text-white' : '' }}">
-                                     {{ __('service_categories') }}
-                                 </a>
-                             @endcan
-                         </div>
-                        <div class="absolute left-0 top-4 transform -translate-x-1 w-2 h-2 rotate-45" style="background-color: #2C2E36;"></div>
-                     </div>
+                    <div class="absolute left-12 top-0 rounded-lg shadow-lg z-50 min-w-max opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150"
+                        style="background-color: #2C2E36;">
+                        <div class="p-2 space-y-1">
+                            <div class="text-xs text-yellow-400 px-3 py-1 font-medium uppercase tracking-wide">
+                                {{ __('services') }}</div>
+                            @can('READ_EMAIL_DATA')
+                                <a href="{{ route('email-datas.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('emails') }}
+                                </a>
+                            @endcan
+                            @can('READ_SERVICE_CATEGORY')
+                                <a href="{{ route('service-categories.index') }}"
+                                    class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('service-categories.*') ? 'bg-gray-700 text-white' : '' }}">
+                                    {{ __('service_categories') }}
+                                </a>
+                            @endcan
+                        </div>
+                        <div class="absolute left-0 top-4 transform -translate-x-1 w-2 h-2 rotate-45"
+                            style="background-color: #2C2E36;"></div>
+                    </div>
                 </div>
             @endif
 
@@ -832,11 +834,178 @@ $store.darkMode.updateTheme();" x-effect="sidebarOpen = $store.sidebar.open">
 
             <!-- Services Group -->
             @if (auth()->check() && (auth()->user()->can('READ_EMAIL_DATA') || auth()->user()->can('READ_SERVICE_CATEGORY')))
-                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                     <div class="flex items-center justify-center w-10 h-10 transition-all duration-300 cursor-pointer {{ request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*') ? 'bg-yellow-400 text-gray-900 rounded-full' : 'text-gray-400 hover:text-white border border-gray-600/30 hover:border-yellow-400/50 bg-transparent rounded-full' }}"
-                         onmouseover="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'rgba(44, 46, 54, 0.5)\'' : '' }}"
-                         onmouseout="{{ !(request()->routeIs('email-datas.*') || request()->routeIs('service-categories.*')) ? 'this.style.backgroundColor=\'transparent\'' : '' }}">
-                         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    
+                <div x-data="{ servicesOpen: false }">
+                    <button @click="servicesOpen = !servicesOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="font-medium text-yellow-400">{{ __('services') }}</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform" :class="servicesOpen ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="servicesOpen" x-transition class="ml-9 mt-2 space-y-2">
+                        @can('READ_EMAIL_DATA')
+                            <a href="{{ route('email-datas.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('email-datas.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('emails') }}
+                            </a>
+                        @endcan
+                        @can('READ_SERVICE_CATEGORY')
+                            <a href="{{ route('service-categories.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded {{ request()->routeIs('service-categories.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('service_categories') }}
+                            </a>
+                        @endcan
+                    </div>
+                </div>
+            @endif
+
+            <!-- Appointments Group -->
+            @if (auth()->check() && auth()->user()->can('READ_APPOINTMENT'))
+                <div x-data="{ appointmentsOpen: false }">
+                    <button @click="appointmentsOpen = !appointmentsOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="font-medium text-yellow-400">{{ __('appointments') }}</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform" :class="appointmentsOpen ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="appointmentsOpen" x-transition class="ml-9 mt-2 space-y-2">
+                        <a href="{{ route('appointments.index') }}"
+                            class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointments.index') ? 'bg-gray-700 text-white' : '' }}">
+                            {{ __('manage_appointments') }}
+                        </a>
+                        <a href="{{ route('appointment-calendar') }}"
+                            class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('appointment-calendar') ? 'bg-gray-700 text-white' : '' }}">
+                            {{ __('calendar_view') }}
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Call Records -->
+            @if (auth()->check() && auth()->user()->can('READ_CALL_RECORD'))
+                <a href="{{ route('call-records') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('call-records') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <span class="font-medium">{{ __('call_records_title') }}</span>
+                </a>
+            @endif
+
+            <!-- Invoice Management -->
+            @if (auth()->check() && auth()->user()->can('READ_INVOICE_DEMO'))
+                <a href="{{ route('invoices.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('invoices.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-medium">{{ __('invoices_demo_traduccion_title') }}</span>
+                </a>
+            @endif
+
+            <!-- Blog Management Group -->
+            @if (auth()->check() && (auth()->user()->can('READ_POST') || auth()->user()->can('READ_BLOG_CATEGORY')))
+                <div x-data="{ blogOpen: false }">
+                    <button @click="blogOpen = !blogOpen"
+                        class="w-full flex items-center justify-between p-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                            <span class="font-medium text-yellow-400">{{ __('blog_management') }}</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform" :class="blogOpen ? 'rotate-180' : ''" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="blogOpen" x-transition class="ml-9 mt-2 space-y-2">
+                        @can('READ_POST')
+                            <a href="{{ route('posts-crud.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('posts-crud.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('posts') }}
+                            </a>
+                        @endcan
+                        @can('READ_BLOG_CATEGORY')
+                            <a href="{{ route('blog-categories.index') }}"
+                                class="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded {{ request()->routeIs('blog-categories.*') ? 'bg-gray-700 text-white' : '' }}">
+                                {{ __('blog_categories') }}
+                            </a>
+                        @endcan
+                    </div>
+                </div>
+            @endif
+
+            <!-- Portfolio -->
+            @if (auth()->check() && auth()->user()->can('READ_PORTFOLIO'))
+                <a href="{{ route('portfolios-crud.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('portfolios-crud.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span class="font-medium">{{ __('Portfolios') }}</span>
+                </a>
+            @endif
+
+            <!-- AI Models -->
+            @if (auth()->check() && auth()->user()->can('READ_MODEL_AI'))
+                <a href="{{ route('model-ais.index') }}"
+                    class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('model-ais.*') ? 'bg-yellow-400 text-gray-900' : 'text-gray-400 hover:text-white hover:bg-gray-800' }}">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <span class="font-medium">{{ __('model_ai_title') }}</span>
+                </a>
+            @endif
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleMobileSearch(event) {
+        event.preventDefault();
+        const searchInput = event.target.querySelector('input[type="text"]');
+        const searchTerm = searchInput.value.trim();
+
+        if (searchTerm) {
+            // Aquí puedes agregar la lógica de búsqueda
+            console.log('Searching for:', searchTerm);
+
+            // Ejemplo: redirigir a una página de búsqueda
+            // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+
+            // Por ahora, simplemente mostraremos un mensaje
+            alert(`Buscando: ${searchTerm}`);
+
+            // Cerrar el modal de búsqueda después de buscar
+            // Si usas Alpine.js store para manejar el estado
+            // Alpine.store('mobileSearch', false);
+        }
+    }
+</script>
