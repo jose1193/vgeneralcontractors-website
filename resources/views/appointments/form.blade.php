@@ -79,8 +79,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Loading spinner for real-time validation */
@@ -103,8 +110,13 @@
         }
 
         @keyframes spin {
-            0% { transform: translateY(-50%) rotate(0deg); }
-            100% { transform: translateY(-50%) rotate(360deg); }
+            0% {
+                transform: translateY(-50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-50%) rotate(360deg);
+            }
         }
     </style>
     <script>
@@ -185,11 +197,11 @@
                 // Check for duplicate indicators
                 const emailField = document.getElementById('email');
                 const phoneField = document.getElementById('phone');
-                
+
                 if (emailField && emailField.classList.contains('field-invalid')) {
                     isValid = false;
                 }
-                
+
                 if (phoneField && phoneField.classList.contains('field-invalid')) {
                     isValid = false;
                 }
@@ -287,25 +299,26 @@
                     formData.append('exclude_uuid', excludeUuid);
                 }
 
-                return fetch('{{ route("appointments.check-email") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        return data.exists;
-                    }
-                    return false;
-                })
-                .catch(error => {
-                    console.error('Error checking email:', error);
-                    return false;
-                });
+                return fetch('{{ secure_url(route('appointments.check-email', [], false)) }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            return data.exists;
+                        }
+                        return false;
+                    })
+                    .catch(error => {
+                        console.error('Error checking email:', error);
+                        return false;
+                    });
             }
 
             // Function to check if phone exists in real-time
@@ -318,25 +331,26 @@
                     formData.append('exclude_uuid', excludeUuid);
                 }
 
-                return fetch('{{ route("appointments.check-phone") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        return data.exists;
-                    }
-                    return false;
-                })
-                .catch(error => {
-                    console.error('Error checking phone:', error);
-                    return false;
-                });
+                return fetch('{{ secure_url(route('appointments.check-phone', [], false)) }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            return data.exists;
+                        }
+                        return false;
+                    })
+                    .catch(error => {
+                        console.error('Error checking phone:', error);
+                        return false;
+                    });
             }
 
             // Function to show validation message
@@ -349,7 +363,8 @@
 
                 if (message) {
                     const messageElement = document.createElement('div');
-                    messageElement.className = `realtime-validation-message text-xs mt-1 ${isError ? 'text-red-500' : 'text-green-500'}`;
+                    messageElement.className =
+                        `realtime-validation-message text-xs mt-1 ${isError ? 'text-red-500' : 'text-green-500'}`;
                     messageElement.textContent = message;
                     fieldElement.parentNode.appendChild(messageElement);
                 }
@@ -363,12 +378,12 @@
                     validateField(e.target);
                     updateSubmitButton();
                 });
-                
+
                 input.addEventListener('change', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
                 });
-                
+
                 input.addEventListener('blur', function(e) {
                     validateField(e.target);
                     updateSubmitButton();
@@ -382,27 +397,31 @@
                 emailField.addEventListener('input', function(e) {
                     clearTimeout(emailTimeout);
                     const email = e.target.value.trim();
-                    
+
                     // Clear previous messages
                     showValidationMessage(e.target, '');
                     e.target.classList.remove('validation-loading');
-                    
+
                     if (email && email.includes('@')) {
                         // Show loading indicator
                         e.target.classList.add('validation-loading');
-                        
+
                         emailTimeout = setTimeout(() => {
-                            const excludeUuid = '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
+                            const excludeUuid =
+                                '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
                             checkEmailExists(email, excludeUuid).then(exists => {
                                 e.target.classList.remove('validation-loading');
                                 if (exists) {
-                                    showValidationMessage(e.target, '{{ __('This email is already registered') }}', true);
+                                    showValidationMessage(e.target,
+                                        '{{ __('This email is already registered') }}',
+                                        true);
                                     e.target.classList.add('field-invalid');
                                     e.target.classList.remove('field-valid');
                                 } else {
                                     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                                     if (emailPattern.test(email)) {
-                                        showValidationMessage(e.target, '{{ __('Email is available') }}', false);
+                                        showValidationMessage(e.target,
+                                            '{{ __('Email is available') }}', false);
                                         e.target.classList.add('field-valid');
                                         e.target.classList.remove('field-invalid');
                                     }
@@ -424,25 +443,29 @@
                 phoneField.addEventListener('input', function(e) {
                     clearTimeout(phoneTimeout);
                     const phone = e.target.value.trim();
-                    
+
                     // Clear previous messages
                     showValidationMessage(e.target, '');
                     e.target.classList.remove('validation-loading');
-                    
+
                     if (phone && phone.length >= 10) {
                         // Show loading indicator
                         e.target.classList.add('validation-loading');
-                        
+
                         phoneTimeout = setTimeout(() => {
-                            const excludeUuid = '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
+                            const excludeUuid =
+                                '{{ isset($appointment->uuid) ? $appointment->uuid : null }}';
                             checkPhoneExists(phone, excludeUuid).then(exists => {
                                 e.target.classList.remove('validation-loading');
                                 if (exists) {
-                                    showValidationMessage(e.target, '{{ __('This phone number is already registered') }}', true);
+                                    showValidationMessage(e.target,
+                                        '{{ __('This phone number is already registered') }}',
+                                        true);
                                     e.target.classList.add('field-invalid');
                                     e.target.classList.remove('field-valid');
                                 } else {
-                                    showValidationMessage(e.target, '{{ __('Phone number is available') }}', false);
+                                    showValidationMessage(e.target,
+                                        '{{ __('Phone number is available') }}', false);
                                     e.target.classList.add('field-valid');
                                     e.target.classList.remove('field-invalid');
                                 }
@@ -454,7 +477,7 @@
                         }, 800); // Wait 800ms after user stops typing
                     }
                 });
-            }            // Special handling for radio buttons (insurance_property)
+            } // Special handling for radio buttons (insurance_property)
             const insuranceRadios = document.querySelectorAll('input[name="insurance_property"]');
             insuranceRadios.forEach(radio => {
                 radio.addEventListener('change', updateSubmitButton);
