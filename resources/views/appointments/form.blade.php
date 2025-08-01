@@ -152,6 +152,34 @@
             pointer-events: auto;
         }
 
+        /* Glassmorphic Checkbox and Radio Button Styles */
+        .glassmorphism-form-container input[type="checkbox"],
+        .glassmorphism-form-container input[type="radio"] {
+            background: rgba(40, 40, 40, 0.8) !important;
+            border: 1px solid rgba(139, 69, 190, 0.4) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .glassmorphism-form-container input[type="checkbox"]:checked,
+        .glassmorphism-form-container input[type="radio"]:checked {
+            background: rgba(139, 69, 190, 0.9) !important;
+            border-color: rgba(168, 85, 247, 0.8) !important;
+            box-shadow: 0 0 0 2px rgba(139, 69, 190, 0.3) !important;
+        }
+
+        .glassmorphism-form-container input[type="checkbox"]:hover,
+        .glassmorphism-form-container input[type="radio"]:hover {
+            border-color: rgba(168, 85, 247, 0.6) !important;
+            background: rgba(50, 50, 50, 0.9) !important;
+        }
+
+        .glassmorphism-form-container input[type="checkbox"]:focus,
+        .glassmorphism-form-container input[type="radio"]:focus {
+            outline: none !important;
+            border-color: rgba(168, 85, 247, 0.8) !important;
+            box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.3) !important;
+        }
+
         .realtime-validation-message {
             font-size: 0.75rem;
             margin-top: 0.25rem;
