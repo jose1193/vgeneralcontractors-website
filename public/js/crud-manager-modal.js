@@ -247,18 +247,8 @@ class CrudManagerModal {
             search: this.searchTerm,
             show_deleted: this.showDeleted ? "true" : "false",
         };
-        
-        // Add date filter parameters if they exist
-        if (this.dateStart) {
-            requestData.date_start = this.dateStart;
-        }
-        
-        if (this.dateEnd) {
-            requestData.date_end = this.dateEnd;
-        }
 
         console.log("Making AJAX request with data:", requestData);
-        console.log("Date filters being sent:", { dateStart: this.dateStart, dateEnd: this.dateEnd });
 
         return $.ajax({
             url: this.routes.index,
