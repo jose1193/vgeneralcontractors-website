@@ -625,24 +625,68 @@
                 line-height: 1 !important;
             }
 
-            /* Row click interaction styles */
-            .glassmorphism-container tbody tr {
-                cursor: pointer !important;
-                transition: all 0.3s ease !important;
-            }
+                /* Row click interaction styles */
+                .glassmorphism-container tbody tr {
+                    cursor: pointer !important;
+                    transition: all 0.3s ease !important;
+                    border-radius: 8px !important;
+                    margin: 2px 0 !important;
+                }
 
-            .glassmorphism-container tbody tr:hover {
-                background: rgba(139, 69, 190, 0.1) !important;
-                transform: translateY(-1px) !important;
-                box-shadow: 0 4px 8px rgba(139, 69, 190, 0.2) !important;
-            }
+                .glassmorphism-container tbody tr:hover {
+                    background: rgba(139, 69, 190, 0.1) !important;
+                    transform: translateY(-1px) !important;
+                    box-shadow: 0 4px 8px rgba(139, 69, 190, 0.2) !important;
+                    border-radius: 8px !important;
+                }
 
-            .glassmorphism-container tbody tr.selected {
-                background: linear-gradient(135deg, rgba(139, 69, 190, 0.2), rgba(168, 85, 247, 0.15)) !important;
-                border-left: 4px solid rgba(168, 85, 247, 0.8) !important;
-            }
+                .glassmorphism-container tbody tr:hover td {
+                    background: transparent !important;
+                }
 
-            /* Enhanced Button Styling */
+                .glassmorphism-container tbody tr.selected {
+                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.2), rgba(168, 85, 247, 0.15)) !important;
+                    border-left: 4px solid rgba(168, 85, 247, 0.8) !important;
+                }
+
+                /* Enhanced glassmorphism action buttons */
+                .glassmorphism-container .action-button,
+                .glassmorphism-container a[href*="edit"],
+                .glassmorphism-container .delete-btn,
+                .glassmorphism-container .restore-btn,
+                .glassmorphism-container .share-location {
+                    background: rgba(0, 0, 0, 0.3) !important;
+                    backdrop-filter: blur(12px) !important;
+                    -webkit-backdrop-filter: blur(12px) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    position: relative !important;
+                    overflow: hidden !important;
+                }
+
+                .glassmorphism-container .action-button::before,
+                .glassmorphism-container a[href*="edit"]::before,
+                .glassmorphism-container .delete-btn::before,
+                .glassmorphism-container .restore-btn::before,
+                .glassmorphism-container .share-location::before {
+                    content: '' !important;
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent) !important;
+                    opacity: 0 !important;
+                    transition: opacity 0.3s ease !important;
+                }
+
+                .glassmorphism-container .action-button:hover::before,
+                .glassmorphism-container a[href*="edit"]:hover::before,
+                .glassmorphism-container .delete-btn:hover::before,
+                .glassmorphism-container .restore-btn:hover::before,
+                .glassmorphism-container .share-location:hover::before {
+                    opacity: 1 !important;
+                }            /* Enhanced Button Styling */
             .glassmorphism-container .btn,
             .glassmorphism-container button {
                 border-radius: 8px !important;
@@ -998,6 +1042,27 @@
                 transition: all 0.3s ease !important;
             }
 
+            /* Enhanced Table Cell Styling */
+            .glassmorphism-container table td {
+                padding: 1rem 1.5rem !important;
+                text-align: center !important;
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-size: 0.875rem !important;
+                border-right: none !important;
+                transition: all 0.3s ease !important;
+                background: transparent !important;
+            }
+
+            .glassmorphism-container table td:last-child {
+                border-right: none !important;
+            }
+
+            /* Action buttons container styling */
+            .glassmorphism-container table td div.flex {
+                background: transparent !important;
+                gap: 0.5rem !important;
+            }
+
             .animate-float-slow {
                 animation: float-slow 6s ease-in-out infinite;
             }
@@ -1233,7 +1298,7 @@
 
                                     let actionsHtml = `
                                 <div class="flex justify-center space-x-2">
-                                    <a href="${editUrl}" class="inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Edit Appointment">
+                                    <a href="${editUrl}" class="inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/10 bg-blue-500/40 backdrop-blur-md shadow-lg shadow-blue-500/20 hover:bg-blue-600/60 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-200 transform hover:scale-105" title="Edit Appointment">
                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                          </svg>
@@ -1244,7 +1309,7 @@
                                         const address =
                                             `${appointment.address || ''}, ${appointment.city || ''}`;
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Share Location">
+                                    <button data-id="${appointment.uuid}" data-lat="${appointment.latitude}" data-lng="${appointment.longitude}" data-address="${address}" class="share-location inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/10 bg-green-500/40 backdrop-blur-md shadow-lg shadow-green-500/20 hover:bg-green-600/60 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-200 transform hover:scale-105" title="Share Location">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -1253,7 +1318,7 @@
                                     } else {
                                         // Si no hay coordenadas, aún mostrar el botón pero con un comportamiento diferente
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-lg cursor-not-allowed opacity-60" title="No Location Available">
+                                    <button data-id="${appointment.uuid}" data-no-coords="true" class="share-location inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/20 bg-gray-500/30 backdrop-blur-md shadow-lg shadow-gray-500/10 cursor-not-allowed opacity-60" title="No Location Available">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"/>
                                         </svg>
@@ -1262,14 +1327,14 @@
 
                                     if (appointment.deleted_at) {
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Restore Appointment">
+                                    <button data-id="${appointment.uuid}" class="restore-btn inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/10 bg-emerald-500/40 backdrop-blur-md shadow-lg shadow-emerald-500/20 hover:bg-emerald-600/60 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 transform hover:scale-105" title="Restore Appointment">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
                                     </button>`;
                                     } else {
                                         actionsHtml += `
-                                    <button data-id="${appointment.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105" title="Delete Appointment">
+                                    <button data-id="${appointment.uuid}" class="delete-btn inline-flex items-center justify-center w-9 h-9 text-white rounded-md border border-white/10 bg-red-500/40 backdrop-blur-md shadow-lg shadow-red-500/20 hover:bg-red-600/60 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 transform hover:scale-105" title="Delete Appointment">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
