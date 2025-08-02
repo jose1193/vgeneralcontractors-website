@@ -2278,10 +2278,107 @@
                             0 0 24px rgba(239, 68, 68, 0.6);
                     }
                 }
+
+                /* Fix para Input Search - Separar el texto del icono */
+                #searchInput {
+                    padding-left: 2.75rem !important;
+                    /* Aumentar espacio desde el icono */
+                    height: 2.75rem !important;
+                    /* Altura consistente */
+                    font-size: 0.875rem !important;
+                }
+
+                /* Mejorar espaciado del botón limpiar */
+                #clearDateFilters {
+                    min-height: 2.75rem !important;
+                    /* Altura consistente con otros elementos */
+                    padding-top: 0.625rem !important;
+                    padding-bottom: 0.625rem !important;
+                }
+
+                /* Fix SweetAlert Parpadeo - Optimizar renderizado */
+                .swal2-container {
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                    transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s !important;
+                }
+
+                .swal2-container.swal2-shown {
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    transition: opacity 0.2s ease-in-out !important;
+                }
+
+                .swal2-popup {
+                    transform: scale(0.8) !important;
+                    transition: transform 0.2s ease-in-out !important;
+                }
+
+                .swal2-shown .swal2-popup {
+                    transform: scale(1) !important;
+                }
+
+                /* Acelerar animaciones de SweetAlert */
+                .swal2-container,
+                .swal2-popup,
+                .swal2-backdrop-show,
+                .swal2-noanimation {
+                    animation-duration: 0.2s !important;
+                }
+
+                .swal2-backdrop {
+                    transition: background-color 0.2s ease-in-out !important;
+                }
+
+                /* Mejorar renderizado del input search dentro del glassmorphism */
+                .glassmorphism-container #searchInput {
+                    background: rgba(40, 40, 40, 0.9) !important;
+                    border: 1px solid rgba(139, 69, 190, 0.4) !important;
+                    color: #ffffff !important;
+                    border-radius: 0.5rem !important;
+                    backdrop-filter: blur(8px) !important;
+                    -webkit-backdrop-filter: blur(8px) !important;
+                }
+
+                .glassmorphism-container #searchInput::placeholder {
+                    color: rgba(255, 255, 255, 0.6) !important;
+                }
+
+                .glassmorphism-container #searchInput:focus {
+                    border-color: rgba(168, 85, 247, 0.6) !important;
+                    box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.2) !important;
+                    background: rgba(50, 50, 50, 0.95) !important;
+                }
+
+                /* Mejorar el icono de búsqueda */
+                .glassmorphism-container #searchInput+div svg {
+                    color: rgba(255, 255, 255, 0.7) !important;
+                }
             </style>
         @endpush
 
         <style>
+            /* Optimizar SweetAlert para eliminar parpadeos */
+            .swal2-container {
+                backdrop-filter: blur(4px) !important;
+                -webkit-backdrop-filter: blur(4px) !important;
+                background-color: rgba(0, 0, 0, 0.6) !important;
+                will-change: opacity, visibility !important;
+            }
+
+            .swal2-popup {
+                background: rgba(17, 24, 39, 0.95) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 1rem !important;
+                box-shadow:
+                    0 20px 50px rgba(0, 0, 0, 0.5),
+                    0 8px 32px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                will-change: transform, opacity !important;
+            }
+
             .swal-fullscreen .swal2-container {
                 padding: 1rem !important;
             }
