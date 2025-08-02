@@ -625,68 +625,121 @@
                 line-height: 1 !important;
             }
 
-                /* Row click interaction styles */
-                .glassmorphism-container tbody tr {
-                    cursor: pointer !important;
-                    transition: all 0.3s ease !important;
-                    border-radius: 8px !important;
-                    margin: 2px 0 !important;
-                }
+            /* Row click interaction styles */
+            .glassmorphism-container tbody tr {
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+                border-radius: 8px !important;
+                margin: 2px 0 !important;
+            }
 
-                .glassmorphism-container tbody tr:hover {
-                    background: rgba(139, 69, 190, 0.1) !important;
-                    transform: translateY(-1px) !important;
-                    box-shadow: 0 4px 8px rgba(139, 69, 190, 0.2) !important;
-                    border-radius: 8px !important;
-                }
+            .glassmorphism-container tbody tr:hover {
+                background: rgba(139, 69, 190, 0.1) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(139, 69, 190, 0.2) !important;
+                border-radius: 8px !important;
+            }
 
-                .glassmorphism-container tbody tr:hover td {
-                    background: transparent !important;
-                }
+            .glassmorphism-container tbody tr:hover td {
+                background: transparent !important;
+            }
 
-                .glassmorphism-container tbody tr.selected {
-                    background: linear-gradient(135deg, rgba(139, 69, 190, 0.2), rgba(168, 85, 247, 0.15)) !important;
-                    border-left: 4px solid rgba(168, 85, 247, 0.8) !important;
-                }
+            .glassmorphism-container tbody tr.selected {
+                background: linear-gradient(135deg, rgba(139, 69, 190, 0.2), rgba(168, 85, 247, 0.15)) !important;
+                border-left: 4px solid rgba(168, 85, 247, 0.8) !important;
+            }
 
-                /* Enhanced glassmorphism action buttons */
-                .glassmorphism-container .action-button,
-                .glassmorphism-container a[href*="edit"],
-                .glassmorphism-container .delete-btn,
-                .glassmorphism-container .restore-btn,
-                .glassmorphism-container .share-location {
-                    background: rgba(0, 0, 0, 0.3) !important;
-                    backdrop-filter: blur(12px) !important;
-                    -webkit-backdrop-filter: blur(12px) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                    position: relative !important;
-                    overflow: hidden !important;
-                }
+            /* Enhanced glassmorphism action buttons - Preserve individual colors */
+            .glassmorphism-container .action-button,
+            .glassmorphism-container a[href*="edit"],
+            .glassmorphism-container .delete-btn,
+            .glassmorphism-container .restore-btn,
+            .glassmorphism-container .share-location {
+                /* Don't override background colors - let individual buttons maintain their colors */
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
 
-                .glassmorphism-container .action-button::before,
-                .glassmorphism-container a[href*="edit"]::before,
-                .glassmorphism-container .delete-btn::before,
-                .glassmorphism-container .restore-btn::before,
-                .glassmorphism-container .share-location::before {
-                    content: '' !important;
-                    position: absolute !important;
-                    top: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    bottom: 0 !important;
-                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent) !important;
-                    opacity: 0 !important;
-                    transition: opacity 0.3s ease !important;
-                }
+            /* Preserve specific button colors */
+            .glassmorphism-container a[href*="edit"] {
+                /* Keep blue colors */
+                background: rgba(59, 130, 246, 0.4) !important;
+                box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2) !important;
+            }
 
-                .glassmorphism-container .action-button:hover::before,
-                .glassmorphism-container a[href*="edit"]:hover::before,
-                .glassmorphism-container .delete-btn:hover::before,
-                .glassmorphism-container .restore-btn:hover::before,
-                .glassmorphism-container .share-location:hover::before {
-                    opacity: 1 !important;
-                }            /* Enhanced Button Styling */
+            .glassmorphism-container a[href*="edit"]:hover {
+                background: rgba(59, 130, 246, 0.6) !important;
+                box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4) !important;
+            }
+
+            .glassmorphism-container .share-location:not([data-no-coords]) {
+                /* Keep green colors */
+                background: rgba(34, 197, 94, 0.4) !important;
+                box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2) !important;
+            }
+
+            .glassmorphism-container .share-location:not([data-no-coords]):hover {
+                background: rgba(34, 197, 94, 0.6) !important;
+                box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4) !important;
+            }
+
+            .glassmorphism-container .restore-btn {
+                /* Keep emerald colors */
+                background: rgba(16, 185, 129, 0.4) !important;
+                box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2) !important;
+            }
+
+            .glassmorphism-container .restore-btn:hover {
+                background: rgba(16, 185, 129, 0.6) !important;
+                box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
+            }
+
+            .glassmorphism-container .delete-btn {
+                /* Keep red colors */
+                background: rgba(239, 68, 68, 0.4) !important;
+                box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2) !important;
+            }
+
+            .glassmorphism-container .delete-btn:hover {
+                background: rgba(239, 68, 68, 0.6) !important;
+                box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4) !important;
+            }
+
+            .glassmorphism-container .share-location[data-no-coords] {
+                /* Keep gray colors for disabled */
+                background: rgba(107, 114, 128, 0.3) !important;
+                box-shadow: 0 4px 16px rgba(107, 114, 128, 0.1) !important;
+            }
+
+            .glassmorphism-container .action-button::before,
+            .glassmorphism-container a[href*="edit"]::before,
+            .glassmorphism-container .delete-btn::before,
+            .glassmorphism-container .restore-btn::before,
+            .glassmorphism-container .share-location::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent) !important;
+                opacity: 0 !important;
+                transition: opacity 0.3s ease !important;
+            }
+
+            .glassmorphism-container .action-button:hover::before,
+            .glassmorphism-container a[href*="edit"]:hover::before,
+            .glassmorphism-container .delete-btn:hover::before,
+            .glassmorphism-container .restore-btn:hover::before,
+            .glassmorphism-container .share-location:hover::before {
+                opacity: 1 !important;
+            }
+
+            /* Enhanced Button Styling */
             .glassmorphism-container .btn,
             .glassmorphism-container button {
                 border-radius: 8px !important;
@@ -711,6 +764,23 @@
                 background: rgba(40, 40, 40, 0.8) !important;
                 border-radius: 12px !important;
                 padding: 1rem !important;
+            }
+
+            /* Pagination text styling - ensure white text */
+            .glassmorphism-container #pagination,
+            .glassmorphism-container #pagination *,
+            .glassmorphism-container .pagination-info,
+            .glassmorphism-container .pagination-text {
+                color: rgba(255, 255, 255, 0.95) !important;
+            }
+
+            /* Record count text styling */
+            .glassmorphism-container .record-info,
+            .glassmorphism-container .showing-records,
+            .glassmorphism-container .total-records {
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-weight: 500 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
             }
 
             .glassmorphism-container .pagination button {
@@ -741,7 +811,7 @@
                 margin-bottom: 1.5rem !important;
             }
 
-            /* Enhanced Toggle Styling */
+            /* Enhanced Toggle Styling - Preserve switch appearance */
             .glassmorphism-container .toggle-switch {
                 background: rgba(40, 40, 40, 0.8) !important;
                 border: 1px solid rgba(139, 69, 190, 0.3) !important;
@@ -749,6 +819,43 @@
 
             .glassmorphism-container .toggle-switch:checked {
                 background: linear-gradient(135deg, rgba(139, 69, 190, 0.8), rgba(168, 85, 247, 0.9)) !important;
+            }
+
+            /* Preserve native toggle/switch styling */
+            .glassmorphism-container #showDeleted+div {
+                /* Preserve the switch track styling from component */
+                background: rgba(75, 85, 99, 0.8) !important;
+                border: 1px solid rgba(139, 69, 190, 0.3) !important;
+                backdrop-filter: blur(8px) !important;
+            }
+
+            .glassmorphism-container #showDeleted:checked+div {
+                background: rgba(37, 99, 235, 0.8) !important;
+                border-color: rgba(37, 99, 235, 1) !important;
+                box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+            }
+
+            /* Toggle label styling */
+            .glassmorphism-container label[for="showDeleted"]+span,
+            .glassmorphism-container .toggle-label {
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-weight: 500 !important;
+            }
+
+            /* Override any dark text in toggle area */
+            .glassmorphism-container .flex.items-center span,
+            .glassmorphism-container div:has(#showDeleted) span {
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-weight: 500 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            /* Ensure all pagination and record info text is white */
+            .glassmorphism-container div:contains("Mostrando"),
+            .glassmorphism-container div:contains("Registros"),
+            .glassmorphism-container .pagination-container,
+            .glassmorphism-container .pagination-container * {
+                color: rgba(255, 255, 255, 0.95) !important;
             }
 
             /* Enhanced Modal Styling */
