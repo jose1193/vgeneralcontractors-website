@@ -148,7 +148,8 @@
                             </select>
                         </div>
                         <button id="clearDateFilters" type="button"
-                            class="w-full sm:w-auto px-3 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-400 focus:ring focus:ring-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                            class="w-full sm:w-auto px-4 py-2.5 bg-gray-900/20 hover:bg-gray-800/30 text-white/90 hover:text-white text-sm rounded-lg backdrop-blur-md border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-xl font-medium tracking-wide">
+                            <i class="fas fa-times-circle mr-1 opacity-70"></i>
                             {{ __('clear') }}
                         </button>
                         <div class="w-full sm:ml-auto flex flex-col sm:flex-row gap-2 sm:space-x-2 sm:gap-0">
@@ -1359,9 +1360,9 @@
                                 sortable: true,
                                 getter: (entity) => {
                                     if (entity.insurance_property === true) {
-                                        return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Yes</span>';
+                                        return '<span class="badge status-badge yes">Yes</span>';
                                     } else {
-                                        return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">No</span>';
+                                        return '<span class="badge status-badge no">No</span>';
                                     }
                                 }
                             },
@@ -1371,10 +1372,10 @@
                                 sortable: true,
                                 getter: (entity) => {
                                     const statusMap = {
-                                        'New': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">New</span>',
-                                        'Called': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Called</span>',
-                                        'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
-                                        'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
+                                        'New': '<span class="badge status-badge new">New</span>',
+                                        'Called': '<span class="badge status-badge called">Called</span>',
+                                        'Pending': '<span class="badge status-badge pending">Pending</span>',
+                                        'Declined': '<span class="badge status-badge declined">Declined</span>'
                                     };
                                     return entity.status_lead ? statusMap[entity.status_lead] || entity
                                         .status_lead : 'N/A';
@@ -1386,10 +1387,10 @@
                                 sortable: true,
                                 getter: (entity) => {
                                     const statusMap = {
-                                        'Confirmed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Confirmed</span>',
-                                        'Completed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>',
-                                        'Pending': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Pending</span>',
-                                        'Declined': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Declined</span>'
+                                        'Confirmed': '<span class="badge status-badge called">Confirmed</span>',
+                                        'Completed': '<span class="badge status-badge new">Completed</span>',
+                                        'Pending': '<span class="badge status-badge pending">Pending</span>',
+                                        'Declined': '<span class="badge status-badge declined">Declined</span>'
                                     };
                                     return entity.inspection_status ? statusMap[entity.inspection_status] ||
                                         entity
@@ -1571,7 +1572,7 @@
                             entities.forEach((entity) => {
                                 const isDeleted = entity.deleted_at !== null;
                                 const rowClass = isDeleted ?
-                                    "bg-red-50/20 dark:bg-red-900/30 border-l-4 border-red-400 opacity-75" : "";
+                                    "deleted-row appointment-deleted" : "";
 
                                 html += `<tr class="${rowClass}">`;
 
@@ -2048,6 +2049,202 @@
                     });
                 });
             </script>
+
+            <style>
+                /* Glassmorphic Badge Styles for Status */
+                .glassmorphism-container .badge,
+                .glassmorphism-container .status-badge,
+                .glassmorphism-container .appointment-status {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 0.375rem 0.875rem;
+                    border-radius: 0.5rem;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    border: 1px solid;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+                        0 2px 4px rgba(0, 0, 0, 0.06),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                /* Status-specific badge colors - Glassmorphic */
+                .glassmorphism-container .badge.new,
+                .glassmorphism-container .status-badge.new,
+                .glassmorphism-container .appointment-status.new {
+                    background: rgba(34, 197, 94, 0.2);
+                    border-color: rgba(34, 197, 94, 0.3);
+                    color: rgba(240, 253, 244, 0.95);
+                    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25),
+                        0 2px 6px rgba(34, 197, 94, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .glassmorphism-container .badge.called,
+                .glassmorphism-container .status-badge.called,
+                .glassmorphism-container .appointment-status.called {
+                    background: rgba(59, 130, 246, 0.2);
+                    border-color: rgba(59, 130, 246, 0.3);
+                    color: rgba(239, 246, 255, 0.95);
+                    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25),
+                        0 2px 6px rgba(59, 130, 246, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .glassmorphism-container .badge.pending,
+                .glassmorphism-container .status-badge.pending,
+                .glassmorphism-container .appointment-status.pending {
+                    background: rgba(245, 158, 11, 0.2);
+                    border-color: rgba(245, 158, 11, 0.3);
+                    color: rgba(255, 251, 235, 0.95);
+                    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25),
+                        0 2px 6px rgba(245, 158, 11, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .glassmorphism-container .badge.declined,
+                .glassmorphism-container .status-badge.declined,
+                .glassmorphism-container .appointment-status.declined {
+                    background: rgba(239, 68, 68, 0.2);
+                    border-color: rgba(239, 68, 68, 0.3);
+                    color: rgba(254, 242, 242, 0.95);
+                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25),
+                        0 2px 6px rgba(239, 68, 68, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .glassmorphism-container .badge.yes,
+                .glassmorphism-container .status-badge.yes {
+                    background: rgba(16, 185, 129, 0.2);
+                    border-color: rgba(16, 185, 129, 0.3);
+                    color: rgba(236, 253, 245, 0.95);
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25),
+                        0 2px 6px rgba(16, 185, 129, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .glassmorphism-container .badge.no,
+                .glassmorphism-container .status-badge.no {
+                    background: rgba(156, 163, 175, 0.2);
+                    border-color: rgba(156, 163, 175, 0.3);
+                    color: rgba(249, 250, 251, 0.95);
+                    box-shadow: 0 4px 12px rgba(156, 163, 175, 0.25),
+                        0 2px 6px rgba(156, 163, 175, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                /* Badge hover effects */
+                .glassmorphism-container .badge:hover,
+                .glassmorphism-container .status-badge:hover,
+                .glassmorphism-container .appointment-status:hover {
+                    transform: translateY(-1px) scale(1.02);
+                    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15),
+                        0 4px 8px rgba(0, 0, 0, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                }
+
+                /* Enhanced Deleted/Soft Deleted Row Styles - Premium Red Glass Effect */
+                .glassmorphism-body tr.deleted-row,
+                .glassmorphism-container .appointment-deleted {
+                    position: relative;
+                    background: rgba(220, 38, 38, 0.15) !important;
+                    backdrop-filter: blur(12px) saturate(1.1);
+                    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+                    border: 1px solid rgba(220, 38, 38, 0.25);
+                    border-radius: 8px;
+                    box-shadow:
+                        0 2px 16px rgba(220, 38, 38, 0.2),
+                        0 4px 24px rgba(239, 68, 68, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                    opacity: 0.75;
+                    transform: scale(0.995);
+                    overflow: hidden;
+                }
+
+                .glassmorphism-body tr.deleted-row::before,
+                .glassmorphism-container .appointment-deleted::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(135deg,
+                            rgba(220, 38, 38, 0.1) 0%,
+                            rgba(239, 68, 68, 0.08) 25%,
+                            transparent 50%,
+                            rgba(185, 28, 28, 0.12) 75%,
+                            rgba(220, 38, 38, 0.15) 100%);
+                    pointer-events: none;
+                    border-radius: 8px;
+                }
+
+                .glassmorphism-body tr.deleted-row::after,
+                .glassmorphism-container .appointment-deleted::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 5%;
+                    right: 5%;
+                    height: 2px;
+                    background: linear-gradient(90deg,
+                            transparent 0%,
+                            rgba(220, 38, 38, 0.3) 10%,
+                            rgba(220, 38, 38, 0.8) 20%,
+                            rgba(239, 68, 68, 1) 50%,
+                            rgba(220, 38, 38, 0.8) 80%,
+                            rgba(220, 38, 38, 0.3) 90%,
+                            transparent 100%);
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                    border-radius: 1px;
+                    box-shadow:
+                        0 0 8px rgba(220, 38, 38, 0.6),
+                        0 0 16px rgba(239, 68, 68, 0.4);
+                    z-index: 1;
+                    animation: deletedGlow 2s ease-in-out infinite alternate;
+                }
+
+                .glassmorphism-body tr.deleted-row:hover,
+                .glassmorphism-container .appointment-deleted:hover {
+                    background: rgba(220, 38, 38, 0.2) !important;
+                    transform: scale(0.995) translateY(-1px);
+                    box-shadow:
+                        0 4px 24px rgba(220, 38, 38, 0.3),
+                        0 8px 40px rgba(239, 68, 68, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                    opacity: 0.85;
+                }
+
+                .glassmorphism-body tr.deleted-row td,
+                .glassmorphism-container .appointment-deleted td {
+                    color: rgba(255, 255, 255, 0.7) !important;
+                    text-decoration: line-through;
+                    text-decoration-color: rgba(220, 38, 38, 0.8);
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                }
+
+                /* Animation for deleted row glow effect */
+                @keyframes deletedGlow {
+                    0% {
+                        box-shadow:
+                            0 0 8px rgba(220, 38, 38, 0.6),
+                            0 0 16px rgba(239, 68, 68, 0.4);
+                    }
+
+                    100% {
+                        box-shadow:
+                            0 0 12px rgba(220, 38, 38, 0.8),
+                            0 0 24px rgba(239, 68, 68, 0.6);
+                    }
+                }
+            </style>
         @endpush
 
         <style>
