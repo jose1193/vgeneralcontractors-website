@@ -183,7 +183,7 @@
                         <table id="appointmentsTable"
                             class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 glassmorphism-table"
                             style="border-collapse: separate; border-spacing: 0;">
-                            <thead class="glassmorphism-thead animate-shimmer">
+                            <thead class="glassmorphism-header animate-shimmer">
                                 <tr class="glassmorphism-header-row">
                                     <th
                                         class="px-4 py-3 text-center text-xs font-medium text-purple-300 uppercase tracking-wider glassmorphism-th">
@@ -233,7 +233,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="glassmorphism-tbody divide-y divide-purple-300/20">
+                            <tbody class="glassmorphism-body divide-y divide-purple-300/20">
                                 <tr id="loadingRow">
                                     <td colspan="10" class="px-6 py-4 text-center">
                                         <svg class="animate-spin h-5 w-5 mr-3 text-blue-500 inline-block"
@@ -438,76 +438,110 @@
                 border-spacing: 0 !important;
             }
 
-            /* Estilos específicos para el encabezado de la tabla con glassmorphism */
-            .glassmorphism-thead {
-                background: linear-gradient(135deg,
-                        rgba(30, 30, 40, 0.95) 0%,
-                        rgba(50, 40, 60, 0.92) 50%,
-                        rgba(30, 30, 40, 0.95) 100%) !important;
-                backdrop-filter: blur(15px) !important;
-                -webkit-backdrop-filter: blur(15px) !important;
-                border-bottom: 2px solid rgba(139, 69, 190, 0.5) !important;
+            /* Correct Glassmorphism Header Styles from generic-advanced-table */
+            .glassmorphism-header {
+                /* Premium Glass Header Background */
+                background: rgba(0, 0, 0, 0.85);
+
+                /* Enhanced Purple Shadow for Header */
+                box-shadow:
+                    0 2px 16px 0 rgba(138, 43, 226, 0.15),
+                    0 4px 24px 0 rgba(128, 0, 255, 0.1),
+                    0 1px 6px 0 rgba(75, 0, 130, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+                /* Advanced Blur for Header */
+                backdrop-filter: blur(12px) saturate(1.1);
+                -webkit-backdrop-filter: blur(12px) saturate(1.1);
+
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 16px 16px 0 0;
                 position: relative;
+                transition: all 0.3s ease;
+                /* Mejorado el aislamiento del overflow para el shimmer */
                 overflow: hidden;
+                isolation: isolate;
+                /* Crear nuevo contexto de apilamiento */
             }
 
-            .glassmorphism-thead::before {
+            /* Shimmer animated effect for table header */
+            .glassmorphism-header::after {
                 content: '';
                 position: absolute;
                 top: 0;
-                left: -100%;
-                width: 100%;
+                left: 0;
+                /* Cambiado para usar con transform */
+                width: 40%;
                 height: 100%;
-                background: linear-gradient(90deg,
-                        transparent,
-                        rgba(255, 255, 255, 0.1),
-                        transparent);
-                animation: shimmer 3s infinite;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+                animation: shimmer-header 2.2s infinite;
+                pointer-events: none;
+                z-index: 1;
+                /* Reducido de 2 a 1 para no interferir con scroll */
+                /* Aislamiento del shimmer solo al header */
+                clip-path: inset(0 0 0 0);
+                will-change: transform;
+                transform: translateX(-100%) translateZ(0);
+                /* Force hardware acceleration */
+            }
+
+            .glassmorphism-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg,
+                        rgba(255, 255, 255, 0.12) 0%,
+                        rgba(255, 255, 255, 0.06) 25%,
+                        transparent 50%,
+                        rgba(138, 43, 226, 0.08) 75%,
+                        rgba(128, 0, 255, 0.12) 100%);
+                border-radius: 16px 16px 0 0;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .glassmorphism-header:hover::before {
+                opacity: 1;
             }
 
             .glassmorphism-th {
-                background: transparent !important;
-                border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
-                color: #f8fafc !important;
+                padding: 1rem 1.5rem;
+                text-align: center;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: rgba(255, 255, 255, 0.85);
+                border-right: none;
                 position: relative;
-                overflow: hidden;
                 transition: all 0.3s ease;
             }
 
+            .glassmorphism-th:last-child {
+                border-right: none;
+            }
+
             .glassmorphism-th:hover {
-                background: rgba(139, 69, 190, 0.1) !important;
-                transform: translateY(-1px);
+                background: rgba(255, 255, 255, 0.12);
+                color: rgba(255, 255, 255, 0.98);
+                box-shadow:
+                    0 2px 8px 0 rgba(138, 43, 226, 0.2),
+                    0 4px 16px 0 rgba(128, 0, 255, 0.1);
             }
 
-            .glassmorphism-th::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 1px;
-                background: linear-gradient(90deg,
-                        transparent 0%,
-                        rgba(139, 69, 190, 0.6) 50%,
-                        transparent 100%);
-                animation: glow 2s ease-in-out infinite alternate;
-            }
+            /* Header animations */
+            @keyframes shimmer-header {
+                0% {
+                    transform: translateX(-100%);
+                }
 
-            .glassmorphism-header-row {
-                animation: slideInFromTop 0.8s ease-out;
-            }
-
-            .glassmorphism-container table thead th {
-                background: transparent !important;
-                border-bottom: 1px solid rgba(139, 69, 190, 0.4) !important;
-                color: #f8fafc !important;
-                font-weight: 600;
-                padding: 1rem 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                font-size: 0.875rem;
-                position: relative;
-                z-index: 1;
+                100% {
+                    transform: translateX(100%);
+                }
             }
 
             .glassmorphism-container table tbody tr {
