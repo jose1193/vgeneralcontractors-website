@@ -2296,40 +2296,6 @@
                     padding-bottom: 0.625rem !important;
                 }
 
-                /* Fix SweetAlert Parpadeo - Optimizar renderizado */
-                .swal2-container {
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                    transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s !important;
-                }
-
-                .swal2-container.swal2-shown {
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    transition: opacity 0.2s ease-in-out !important;
-                }
-
-                .swal2-popup {
-                    transform: scale(0.8) !important;
-                    transition: transform 0.2s ease-in-out !important;
-                }
-
-                .swal2-shown .swal2-popup {
-                    transform: scale(1) !important;
-                }
-
-                /* Acelerar animaciones de SweetAlert */
-                .swal2-container,
-                .swal2-popup,
-                .swal2-backdrop-show,
-                .swal2-noanimation {
-                    animation-duration: 0.2s !important;
-                }
-
-                .swal2-backdrop {
-                    transition: background-color 0.2s ease-in-out !important;
-                }
-
                 /* Mejorar renderizado del input search dentro del glassmorphism */
                 .glassmorphism-container #searchInput {
                     background: rgba(40, 40, 40, 0.9) !important;
