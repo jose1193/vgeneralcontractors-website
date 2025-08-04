@@ -2324,12 +2324,12 @@
         @endpush
 
         <style>
-            /* Optimizar SweetAlert para eliminar parpadeos */
+            /* Optimizar SweetAlert para eliminar animaciones errativas */
             .swal2-container {
                 backdrop-filter: blur(4px) !important;
                 -webkit-backdrop-filter: blur(4px) !important;
                 background-color: rgba(0, 0, 0, 0.6) !important;
-                will-change: opacity, visibility !important;
+                /* Eliminar will-change que causa problemas de animación */
             }
 
             .swal2-popup {
@@ -2342,8 +2342,26 @@
                     0 20px 50px rgba(0, 0, 0, 0.5),
                     0 8px 32px rgba(0, 0, 0, 0.3),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-                will-change: transform, opacity !important;
+                /* Eliminar will-change y animaciones problemáticas */
+                animation: none !important;
+                transition: none !important;
             }
+
+            /* Deshabilitar todas las animaciones de SweetAlert para evitar el efecto "bounce" */
+            .swal2-show {
+                animation: none !important;
+            }
+
+            .swal2-show.swal2-popup {
+                animation: none !important;
+                transform: none !important;
+            }
+
+            .swal2-backdrop-show {
+                animation: none !important;
+            }
+
+            /* Estilos para el modal fullscreen */
 
             .swal-fullscreen .swal2-container {
                 padding: 1rem !important;
