@@ -1694,9 +1694,13 @@
 
                             let entityInfo = '';
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
-                                const emailPart = appointment.email ? `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` : '';
-                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` : appointment.email || 'this appointment';
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
+                                    .trim();
+                                const emailPart = appointment.email ?
+                                    `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` :
+                                    '';
+                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` :
+                                    appointment.email || 'this appointment';
                             } else {
                                 entityInfo = 'this appointment';
                             }
@@ -1709,11 +1713,7 @@
                                 confirmButtonColor: "#d33",
                                 cancelButtonColor: "#3085d6",
                                 confirmButtonText: "Yes, delete",
-                                cancelButtonText: "Cancel",
-                                customClass: {
-                                    popup: 'glassmorphism-modal',
-                                    title: 'glassmorphism-title'
-                                }
+                                cancelButtonText: "Cancel"
                             });
 
                             if (result.isConfirmed) {
@@ -1757,9 +1757,13 @@
 
                             let entityInfo = '';
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
-                                const emailPart = appointment.email ? `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` : '';
-                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` : appointment.email || 'this appointment';
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
+                                    .trim();
+                                const emailPart = appointment.email ?
+                                    `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` :
+                                    '';
+                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` :
+                                    appointment.email || 'this appointment';
                             } else {
                                 entityInfo = 'this appointment';
                             }
@@ -1772,11 +1776,7 @@
                                 confirmButtonColor: "#28a745",
                                 cancelButtonColor: "#6c757d",
                                 confirmButtonText: "Yes, restore",
-                                cancelButtonText: "Cancel",
-                                customClass: {
-                                    popup: 'glassmorphism-modal',
-                                    title: 'glassmorphism-title'
-                                }
+                                cancelButtonText: "Cancel"
                             });
 
                             if (result.isConfirmed) {
@@ -2479,90 +2479,36 @@
                 .glassmorphism-container #searchInput+div svg {
                     color: rgba(255, 255, 255, 0.7) !important;
                 }
-
-                /* Custom SweetAlert2 Styles for Glassmorphism */
-                .glassmorphism-modal {
-                    background: rgba(255, 255, 255, 0.95) !important;
-                    backdrop-filter: blur(20px) !important;
-                    -webkit-backdrop-filter: blur(20px) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-                    border-radius: 12px !important;
-                    box-shadow: 
-                        0 20px 40px rgba(0, 0, 0, 0.1),
-                        0 10px 20px rgba(0, 0, 0, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
-                }
-
-                .glassmorphism-title {
-                    color: #1f2937 !important;
-                    font-weight: 700 !important;
-                }
             </style>
         @endpush
 
         <style>
-            /* Optimizar SweetAlert para eliminar animaciones errativas */
-            .swal2-container {
-                backdrop-filter: blur(4px) !important;
-                -webkit-backdrop-filter: blur(4px) !important;
-                background-color: rgba(0, 0, 0, 0.6) !important;
-                /* Eliminar will-change que causa problemas de animación */
-            }
-
+            /* SweetAlert Styles Simplificados - Sin conflictos */
             .swal2-popup {
-                background: rgba(17, 24, 39, 0.95) !important;
+                background: rgba(255, 255, 255, 0.98) !important;
                 backdrop-filter: blur(16px) !important;
                 -webkit-backdrop-filter: blur(16px) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                border-radius: 1rem !important;
-                box-shadow:
-                    0 20px 50px rgba(0, 0, 0, 0.5),
-                    0 8px 32px rgba(0, 0, 0, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-                /* Eliminar will-change y animaciones problemáticas */
-                animation: none !important;
-                transition: none !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
             }
 
-            /* Deshabilitar todas las animaciones de SweetAlert para evitar el efecto "bounce" */
-            .swal2-show {
-                animation: none !important;
-            }
-
-            .swal2-show.swal2-popup {
-                animation: none !important;
-                transform: none !important;
-            }
-
-            .swal2-backdrop-show {
-                animation: none !important;
-            }
-
-            /* Personalizar título de SweetAlert */
             .swal2-title {
                 color: #f59e0b !important;
-                /* Color amarillo/naranja para "Are you sure?" */
                 font-weight: 700 !important;
-                font-size: 1.5rem !important;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
             }
 
-            /* Personalizar texto del contenido */
             .swal2-html-container {
-                color: #e5e7eb !important;
-                /* Color gris claro para el contenido */
-                font-size: 1rem !important;
+                color: #374151 !important;
             }
 
-            /* Destacar emails y elementos importantes en modales de confirmación */
-            .swal2-html-container strong {
-                color: #1e90ff !important;
-                /* Color azul para emails y texto importante */
+            /* Resaltar emails en azul */
+            .swal2-html-container span[style*="color: #3b82f6"] {
+                color: #3b82f6 !important;
                 font-weight: 600 !important;
             }
 
-            /* Estilos para el modal fullscreen */
-
+            /* Estilos para el modal fullscreen de compartir ubicación */
             .swal-fullscreen .swal2-container {
                 padding: 1rem !important;
             }
@@ -2575,34 +2521,6 @@
                 margin: 0 !important;
                 border-radius: 1rem !important;
                 overflow-y: auto;
-            }
-
-            .swal-fullscreen .swal2-popup {
-                width: 95vw !important;
-                max-width: none !important;
-                height: 90vh !important;
-                max-height: none !important;
-                display: flex !important;
-                flex-direction: column !important;
-            }
-
-            .swal-fullscreen .swal2-html-container {
-                flex: 1 !important;
-                overflow-y: auto !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            @media (max-width: 640px) {
-                .swal-fullscreen-popup {
-                    width: 98vw !important;
-                    height: 95vh !important;
-                }
-
-                .swal-fullscreen .swal2-popup {
-                    width: 98vw !important;
-                    height: 95vh !important;
-                }
             }
         </style>
     </div>
