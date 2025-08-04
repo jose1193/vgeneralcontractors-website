@@ -1698,37 +1698,62 @@
                             }
 
                             let entityInfo = '';
+                            let modalTitle = 'Are you sure?';
+                            let modalHtml = '';
+                            
                             if (appointment) {
                                 const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
                                 const email = appointment.email || '';
                                 console.log('DELETE: Full name:', fullName);
                                 console.log('DELETE: Email:', email);
                                 
-                                if (fullName && email) {
-                                    entityInfo = `${fullName} (<span style="color: #60a5fa; font-weight: 600;">${email}</span>)`;
-                                } else if (fullName) {
-                                    entityInfo = fullName;
-                                } else if (email) {
-                                    entityInfo = `<span style="color: #60a5fa; font-weight: 600;">${email}</span>`;
-                                } else {
-                                    entityInfo = 'this appointment';
+                                // Crear contenido HTML más robusto
+                                modalTitle = 'Delete Appointment';
+                                modalHtml = '<div style="text-align: left; padding: 20px 0;">';
+                                modalHtml += '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to delete the following appointment:</p>';
+                                
+                                if (fullName) {
+                                    modalHtml += `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
                                 }
+                                
+                                if (email) {
+                                    modalHtml += `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
+                                }
+                                
+                                modalHtml += '<p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p>';
+                                modalHtml += '</div>';
+                                
+                                entityInfo = fullName + (email ? ` (${email})` : '');
                             } else {
+                                modalHtml = '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to delete this appointment.</p><p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p></div>';
                                 entityInfo = 'this appointment';
                                 console.log('DELETE: No appointment found, using fallback');
                             }
                             
                             console.log('DELETE: Final entityInfo:', entityInfo);
+                            console.log('DELETE: Modal HTML:', modalHtml);
 
                             const result = await Swal.fire({
-                                title: '<span style="color: #f59e0b; font-weight: 700;">Are you sure?</span>',
-                                html: `Do you want to delete the appointment for ${entityInfo}?`,
+                                title: modalTitle,
+                                html: modalHtml,
                                 icon: "warning",
                                 showCancelButton: true,
                                 confirmButtonColor: "#d33",
                                 cancelButtonColor: "#3085d6",
                                 confirmButtonText: "Yes, delete",
-                                cancelButtonText: "Cancel"
+                                cancelButtonText: "Cancel",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                // Prevenir modificaciones del contenido después de mostrar
+                                didOpen: () => {
+                                    console.log('DELETE: Modal opened');
+                                    // Forzar que el HTML se mantenga
+                                    const htmlContainer = document.querySelector('.swal2-html-container');
+                                    if (htmlContainer) {
+                                        htmlContainer.style.textAlign = 'left';
+                                        console.log('DELETE: Modal HTML preserved:', htmlContainer.innerHTML);
+                                    }
+                                }
                             });
 
                             if (result.isConfirmed) {
@@ -1776,37 +1801,61 @@
                             }
 
                             let entityInfo = '';
+                            let modalTitle = 'Restore Appointment';
+                            let modalHtml = '';
+                            
                             if (appointment) {
                                 const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
                                 const email = appointment.email || '';
                                 console.log('RESTORE: Full name:', fullName);
                                 console.log('RESTORE: Email:', email);
                                 
-                                if (fullName && email) {
-                                    entityInfo = `${fullName} (<span style="color: #60a5fa; font-weight: 600;">${email}</span>)`;
-                                } else if (fullName) {
-                                    entityInfo = fullName;
-                                } else if (email) {
-                                    entityInfo = `<span style="color: #60a5fa; font-weight: 600;">${email}</span>`;
-                                } else {
-                                    entityInfo = 'this appointment';
+                                // Crear contenido HTML más robusto
+                                modalHtml = '<div style="text-align: left; padding: 20px 0;">';
+                                modalHtml += '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to restore the following appointment:</p>';
+                                
+                                if (fullName) {
+                                    modalHtml += `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
                                 }
+                                
+                                if (email) {
+                                    modalHtml += `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
+                                }
+                                
+                                modalHtml += '<p style="color: #10b981; font-weight: 600;">This will make the appointment active again.</p>';
+                                modalHtml += '</div>';
+                                
+                                entityInfo = fullName + (email ? ` (${email})` : '');
                             } else {
+                                modalHtml = '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to restore this appointment.</p><p style="color: #10b981; font-weight: 600;">This will make it active again.</p></div>';
                                 entityInfo = 'this appointment';
                                 console.log('RESTORE: No appointment found, using fallback');
                             }
                             
                             console.log('RESTORE: Final entityInfo:', entityInfo);
+                            console.log('RESTORE: Modal HTML:', modalHtml);
 
                             const result = await Swal.fire({
-                                title: '<span style="color: #f59e0b; font-weight: 700;">Restore appointment?</span>',
-                                html: `Do you want to restore the appointment for ${entityInfo}?`,
+                                title: modalTitle,
+                                html: modalHtml,
                                 icon: "question",
                                 showCancelButton: true,
                                 confirmButtonColor: "#28a745",
                                 cancelButtonColor: "#6c757d",
                                 confirmButtonText: "Yes, restore",
-                                cancelButtonText: "Cancel"
+                                cancelButtonText: "Cancel",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                // Prevenir modificaciones del contenido después de mostrar
+                                didOpen: () => {
+                                    console.log('RESTORE: Modal opened');
+                                    // Forzar que el HTML se mantenga
+                                    const htmlContainer = document.querySelector('.swal2-html-container');
+                                    if (htmlContainer) {
+                                        htmlContainer.style.textAlign = 'left';
+                                        console.log('RESTORE: Modal HTML preserved:', htmlContainer.innerHTML);
+                                    }
+                                }
                             });
 
                             if (result.isConfirmed) {
@@ -2537,13 +2586,22 @@
             .swal2-html-container {
                 color: #e5e7eb !important;
                 font-size: 1rem !important;
+                text-align: left !important;
             }
 
-            /* Resaltar emails en azul dentro del modal oscuro */
-            .swal2-html-container span[style*="color: #60a5fa"] {
+            /* Específicamente para emails en modales - FORZAR color y estilo */
+            .swal2-html-container span[style*="color: #60a5fa"],
+            .swal2-html-container span[style*="60a5fa"] {
                 color: #60a5fa !important;
                 font-weight: 600 !important;
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+                display: inline !important;
+            }
+
+            /* Asegurar que todos los elementos de email mantengan su estilo */
+            .swal2-popup [style*="60a5fa"] {
+                color: #60a5fa !important;
+                font-weight: 600 !important;
             }
 
             .swal2-confirm {
