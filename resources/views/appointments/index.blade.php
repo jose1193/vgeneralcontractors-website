@@ -1686,12 +1686,12 @@
                     // Custom delete method for appointments with entity information
                     window.appointmentManager.deleteAppointment = async function(id) {
                         console.log('DELETE: Starting deleteAppointment for ID:', id);
-                        
+
                         try {
                             // Find the appointment in current data
                             let appointment = null;
                             console.log('DELETE: Current data available:', this.currentData);
-                            
+
                             if (this.currentData && this.currentData.data) {
                                 appointment = this.currentData.data.find(item => item[this.idField] === id);
                                 console.log('DELETE: Found appointment:', appointment);
@@ -1700,36 +1700,42 @@
                             let entityInfo = '';
                             let modalTitle = 'Are you sure?';
                             let modalHtml = '';
-                            
+
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
+                                    .trim();
                                 const email = appointment.email || '';
                                 console.log('DELETE: Full name:', fullName);
                                 console.log('DELETE: Email:', email);
-                                
+
                                 // Crear contenido HTML más robusto
                                 modalTitle = 'Delete Appointment';
                                 modalHtml = '<div style="text-align: left; padding: 20px 0;">';
-                                modalHtml += '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to delete the following appointment:</p>';
-                                
+                                modalHtml +=
+                                    '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to delete the following appointment:</p>';
+
                                 if (fullName) {
-                                    modalHtml += `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
+                                    modalHtml +=
+                                        `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
                                 }
-                                
+
                                 if (email) {
-                                    modalHtml += `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
+                                    modalHtml +=
+                                        `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
                                 }
-                                
-                                modalHtml += '<p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p>';
+
+                                modalHtml +=
+                                    '<p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p>';
                                 modalHtml += '</div>';
-                                
+
                                 entityInfo = fullName + (email ? ` (${email})` : '');
                             } else {
-                                modalHtml = '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to delete this appointment.</p><p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p></div>';
+                                modalHtml =
+                                    '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to delete this appointment.</p><p style="color: #ef4444; font-weight: 600;">This action cannot be undone.</p></div>';
                                 entityInfo = 'this appointment';
                                 console.log('DELETE: No appointment found, using fallback');
                             }
-                            
+
                             console.log('DELETE: Final entityInfo:', entityInfo);
                             console.log('DELETE: Modal HTML:', modalHtml);
 
@@ -1748,10 +1754,12 @@
                                 didOpen: () => {
                                     console.log('DELETE: Modal opened');
                                     // Forzar que el HTML se mantenga
-                                    const htmlContainer = document.querySelector('.swal2-html-container');
+                                    const htmlContainer = document.querySelector(
+                                        '.swal2-html-container');
                                     if (htmlContainer) {
                                         htmlContainer.style.textAlign = 'left';
-                                        console.log('DELETE: Modal HTML preserved:', htmlContainer.innerHTML);
+                                        console.log('DELETE: Modal HTML preserved:', htmlContainer
+                                            .innerHTML);
                                     }
                                 }
                             });
@@ -1789,12 +1797,12 @@
                     // Custom restore method for appointments with entity information
                     window.appointmentManager.restoreAppointment = async function(id) {
                         console.log('RESTORE: Starting restoreAppointment for ID:', id);
-                        
+
                         try {
                             // Find the appointment in current data
                             let appointment = null;
                             console.log('RESTORE: Current data available:', this.currentData);
-                            
+
                             if (this.currentData && this.currentData.data) {
                                 appointment = this.currentData.data.find(item => item[this.idField] === id);
                                 console.log('RESTORE: Found appointment:', appointment);
@@ -1803,35 +1811,41 @@
                             let entityInfo = '';
                             let modalTitle = 'Restore Appointment';
                             let modalHtml = '';
-                            
+
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
+                                    .trim();
                                 const email = appointment.email || '';
                                 console.log('RESTORE: Full name:', fullName);
                                 console.log('RESTORE: Email:', email);
-                                
+
                                 // Crear contenido HTML más robusto
                                 modalHtml = '<div style="text-align: left; padding: 20px 0;">';
-                                modalHtml += '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to restore the following appointment:</p>';
-                                
+                                modalHtml +=
+                                    '<p style="margin-bottom: 15px; color: #e5e7eb;">You are about to restore the following appointment:</p>';
+
                                 if (fullName) {
-                                    modalHtml += `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
+                                    modalHtml +=
+                                        `<p style="margin-bottom: 10px;"><strong style="color: #f59e0b;">Name:</strong> <span style="color: #ffffff;">${fullName}</span></p>`;
                                 }
-                                
+
                                 if (email) {
-                                    modalHtml += `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
+                                    modalHtml +=
+                                        `<p style="margin-bottom: 15px;"><strong style="color: #f59e0b;">Email:</strong> <span style="color: #60a5fa !important; font-weight: 600 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">${email}</span></p>`;
                                 }
-                                
-                                modalHtml += '<p style="color: #10b981; font-weight: 600;">This will make the appointment active again.</p>';
+
+                                modalHtml +=
+                                    '<p style="color: #10b981; font-weight: 600;">This will make the appointment active again.</p>';
                                 modalHtml += '</div>';
-                                
+
                                 entityInfo = fullName + (email ? ` (${email})` : '');
                             } else {
-                                modalHtml = '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to restore this appointment.</p><p style="color: #10b981; font-weight: 600;">This will make it active again.</p></div>';
+                                modalHtml =
+                                    '<div style="text-align: center; padding: 20px 0;"><p style="color: #e5e7eb;">You are about to restore this appointment.</p><p style="color: #10b981; font-weight: 600;">This will make it active again.</p></div>';
                                 entityInfo = 'this appointment';
                                 console.log('RESTORE: No appointment found, using fallback');
                             }
-                            
+
                             console.log('RESTORE: Final entityInfo:', entityInfo);
                             console.log('RESTORE: Modal HTML:', modalHtml);
 
@@ -1850,10 +1864,12 @@
                                 didOpen: () => {
                                     console.log('RESTORE: Modal opened');
                                     // Forzar que el HTML se mantenga
-                                    const htmlContainer = document.querySelector('.swal2-html-container');
+                                    const htmlContainer = document.querySelector(
+                                        '.swal2-html-container');
                                     if (htmlContainer) {
                                         htmlContainer.style.textAlign = 'left';
-                                        console.log('RESTORE: Modal HTML preserved:', htmlContainer.innerHTML);
+                                        console.log('RESTORE: Modal HTML preserved:', htmlContainer
+                                            .innerHTML);
                                     }
                                 }
                             });
