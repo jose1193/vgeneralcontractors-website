@@ -1530,10 +1530,30 @@
                             detailFormat: function(entity) {
                                 // Mostrar nombre completo y email para mejor identificación
                                 const fullName = `${entity.first_name || ''} ${entity.last_name || ''}`.trim();
-                                return fullName ? `${fullName} (${entity.email})` : entity.email;
+                                const emailPart = entity.email ? `(${entity.email})` : '';
+                                return fullName ? `${fullName} ${emailPart}` : entity.email || entity
+                                    .first_name || 'this element';
                             }
+                        },
+                        // Configuración de traducciones personalizadas para appointments
+                        translations: {
+                            confirmDelete: "Are you sure?",
+                            deleteMessage: "Do you want to delete this appointment?",
+                            confirmRestore: "Restore appointment?",
+                            restoreMessage: "Do you want to restore this appointment?",
+                            yesDelete: "Yes, delete",
+                            yesRestore: "Yes, restore",
+                            cancel: "Cancel",
+                            deletedSuccessfully: "deleted successfully",
+                            restoredSuccessfully: "restored successfully",
+                            errorDeleting: "Error deleting appointment",
+                            errorRestoring: "Error restoring appointment"
                         }
                     });
+
+                    // Debug: Verificar configuración del entityConfig
+                    console.log('AppointmentManager entityConfig:', window.appointmentManager.entityConfig);
+                    console.log('AppointmentManager translations:', window.appointmentManager.translations);
 
                     // Add statusLeadFilter property to appointmentManager
                     window.appointmentManager.statusLeadFilter = '';
@@ -1666,11 +1686,13 @@
                     // Add event listeners for delete and restore buttons
                     $(document).on('click', '.delete-btn', function() {
                         const id = $(this).data('id');
+                        console.log('Delete button clicked for ID:', id);
                         window.appointmentManager.deleteEntity(id);
                     });
 
                     $(document).on('click', '.restore-btn', function() {
                         const id = $(this).data('id');
+                        console.log('Restore button clicked for ID:', id);
                         window.appointmentManager.restoreEntity(id);
                     });
 
@@ -2374,7 +2396,8 @@
 
             /* Personalizar título de SweetAlert */
             .swal2-title {
-                color: #f59e0b !important; /* Color amarillo/naranja para "Are you sure?" */
+                color: #f59e0b !important;
+                /* Color amarillo/naranja para "Are you sure?" */
                 font-weight: 700 !important;
                 font-size: 1.5rem !important;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
@@ -2382,13 +2405,15 @@
 
             /* Personalizar texto del contenido */
             .swal2-html-container {
-                color: #e5e7eb !important; /* Color gris claro para el contenido */
+                color: #e5e7eb !important;
+                /* Color gris claro para el contenido */
                 font-size: 1rem !important;
             }
 
             /* Destacar emails y elementos importantes en modales de confirmación */
             .swal2-html-container strong {
-                color: #1e90ff !important; /* Color azul para emails y texto importante */
+                color: #1e90ff !important;
+                /* Color azul para emails y texto importante */
                 font-weight: 600 !important;
             }
 

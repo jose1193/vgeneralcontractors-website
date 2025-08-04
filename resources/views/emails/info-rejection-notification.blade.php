@@ -135,7 +135,9 @@
                     </tr>
                     <tr>
                         <td><strong>Email:</strong></td>
-                        <td><a href="mailto:{{ $appointment->email }}" style="color: #1e90ff; text-decoration: none; font-weight: 500;">{{ $appointment->email }}</a></td>
+                        <td><a href="mailto:{{ $appointment->email }}"
+                                style="color: #1e90ff; text-decoration: none; font-weight: 500;">{{ $appointment->email }}</a>
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>Teléfono:</strong></td>
