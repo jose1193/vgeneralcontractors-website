@@ -2361,6 +2361,20 @@
                 animation: none !important;
             }
 
+            /* Personalizar título de SweetAlert */
+            .swal2-title {
+                color: #f59e0b !important; /* Color amarillo/naranja para "Are you sure?" */
+                font-weight: 700 !important;
+                font-size: 1.5rem !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            /* Personalizar texto del contenido */
+            .swal2-html-container {
+                color: #e5e7eb !important; /* Color gris claro para el contenido */
+                font-size: 1rem !important;
+            }
+
             /* Estilos para el modal fullscreen */
 
             .swal-fullscreen .swal2-container {

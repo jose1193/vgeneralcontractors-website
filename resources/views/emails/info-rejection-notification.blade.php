@@ -135,7 +135,7 @@
                     </tr>
                     <tr>
                         <td><strong>Email:</strong></td>
-                        <td><a href="mailto:{{ $appointment->email }}">{{ $appointment->email }}</a></td>
+                        <td><a href="mailto:{{ $appointment->email }}" style="color: #1e90ff; text-decoration: none; font-weight: 500;">{{ $appointment->email }}</a></td>
                     </tr>
                     <tr>
                         <td><strong>Teléfono:</strong></td>
@@ -286,7 +286,7 @@
 
                         @if ($companyData->email)
                             <a href="mailto:{{ $companyData->email }}"
-                                style="color: #666; text-decoration: none;">{{ $companyData->email }}</a>
+                                style="color: #1e90ff; text-decoration: none; font-weight: 500;">{{ $companyData->email }}</a>
                         @endif
                     </p>
                 </div>
