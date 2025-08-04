@@ -1669,31 +1669,157 @@
                         $(self.tableSelector).html(html);
 
                         // Don't attach edit-btn event handlers since we're using direct links
-                        // But still attach delete and restore handlers
+                        // But still attach delete and restore handlers using custom methods
                         $(self.tableSelector + " .delete-btn").off('click').on("click", function(e) {
                             e.preventDefault();
                             const id = $(this).data("id");
-                            self.deleteEntity(id);
+                            self.deleteAppointment(id);
                         });
 
                         $(self.tableSelector + " .restore-btn").off('click').on("click", function(e) {
                             e.preventDefault();
                             const id = $(this).data("id");
-                            self.restoreEntity(id);
+                            self.restoreAppointment(id);
                         });
                     };
 
-                    // Add event listeners for delete and restore buttons
+                    // Custom delete method for appointments with entity information
+                    window.appointmentManager.deleteAppointment = async function(id) {
+                        try {
+                            // Find the appointment in current data
+                            let appointment = null;
+                            if (this.currentData && this.currentData.data) {
+                                appointment = this.currentData.data.find(item => item[this.idField] === id);
+                            }
+
+                            let entityInfo = '';
+                            if (appointment) {
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const emailPart = appointment.email ? `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` : '';
+                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` : appointment.email || 'this appointment';
+                            } else {
+                                entityInfo = 'this appointment';
+                            }
+
+                            const result = await Swal.fire({
+                                title: '<span style="color: #f59e0b; font-weight: 700;">Are you sure?</span>',
+                                html: `Do you want to delete the appointment for ${entityInfo}?`,
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#d33",
+                                cancelButtonColor: "#3085d6",
+                                confirmButtonText: "Yes, delete",
+                                cancelButtonText: "Cancel",
+                                customClass: {
+                                    popup: 'glassmorphism-modal',
+                                    title: 'glassmorphism-title'
+                                }
+                            });
+
+                            if (result.isConfirmed) {
+                                const response = await $.ajax({
+                                    url: this.routes.destroy.replace(':id', id),
+                                    type: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                        'Accept': 'application/json'
+                                    }
+                                });
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Appointment deleted successfully.',
+                                    confirmButtonColor: '#10B981'
+                                });
+
+                                this.loadEntities();
+                            }
+                        } catch (error) {
+                            console.error('Error deleting appointment:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error deleting appointment',
+                                confirmButtonColor: '#EF4444'
+                            });
+                        }
+                    };
+
+                    // Custom restore method for appointments with entity information
+                    window.appointmentManager.restoreAppointment = async function(id) {
+                        try {
+                            // Find the appointment in current data
+                            let appointment = null;
+                            if (this.currentData && this.currentData.data) {
+                                appointment = this.currentData.data.find(item => item[this.idField] === id);
+                            }
+
+                            let entityInfo = '';
+                            if (appointment) {
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const emailPart = appointment.email ? `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` : '';
+                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` : appointment.email || 'this appointment';
+                            } else {
+                                entityInfo = 'this appointment';
+                            }
+
+                            const result = await Swal.fire({
+                                title: '<span style="color: #f59e0b; font-weight: 700;">Restore appointment?</span>',
+                                html: `Do you want to restore the appointment for ${entityInfo}?`,
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonColor: "#28a745",
+                                cancelButtonColor: "#6c757d",
+                                confirmButtonText: "Yes, restore",
+                                cancelButtonText: "Cancel",
+                                customClass: {
+                                    popup: 'glassmorphism-modal',
+                                    title: 'glassmorphism-title'
+                                }
+                            });
+
+                            if (result.isConfirmed) {
+                                const response = await $.ajax({
+                                    url: this.routes.restore.replace(':id', id),
+                                    type: 'PATCH',
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                        'Accept': 'application/json'
+                                    }
+                                });
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Restored!',
+                                    text: 'Appointment restored successfully.',
+                                    confirmButtonColor: '#10B981'
+                                });
+
+                                this.loadEntities();
+                            }
+                        } catch (error) {
+                            console.error('Error restoring appointment:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error restoring appointment',
+                                confirmButtonColor: '#EF4444'
+                            });
+                        }
+                    };
+
+                    // Add event listeners for delete and restore buttons using custom methods
                     $(document).on('click', '.delete-btn', function() {
                         const id = $(this).data('id');
                         console.log('Delete button clicked for ID:', id);
-                        window.appointmentManager.deleteEntity(id);
+                        window.appointmentManager.deleteAppointment(id);
                     });
 
                     $(document).on('click', '.restore-btn', function() {
                         const id = $(this).data('id');
                         console.log('Restore button clicked for ID:', id);
-                        window.appointmentManager.restoreEntity(id);
+                        window.appointmentManager.restoreAppointment(id);
                     });
 
                     // Add event listener for status lead filter
@@ -2352,6 +2478,24 @@
                 /* Mejorar el icono de búsqueda */
                 .glassmorphism-container #searchInput+div svg {
                     color: rgba(255, 255, 255, 0.7) !important;
+                }
+
+                /* Custom SweetAlert2 Styles for Glassmorphism */
+                .glassmorphism-modal {
+                    background: rgba(255, 255, 255, 0.95) !important;
+                    backdrop-filter: blur(20px) !important;
+                    -webkit-backdrop-filter: blur(20px) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                    border-radius: 12px !important;
+                    box-shadow: 
+                        0 20px 40px rgba(0, 0, 0, 0.1),
+                        0 10px 20px rgba(0, 0, 0, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+                }
+
+                .glassmorphism-title {
+                    color: #1f2937 !important;
+                    font-weight: 700 !important;
                 }
             </style>
         @endpush
