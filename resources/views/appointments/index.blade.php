@@ -1685,25 +1685,40 @@
 
                     // Custom delete method for appointments with entity information
                     window.appointmentManager.deleteAppointment = async function(id) {
+                        console.log('DELETE: Starting deleteAppointment for ID:', id);
+                        
                         try {
                             // Find the appointment in current data
                             let appointment = null;
+                            console.log('DELETE: Current data available:', this.currentData);
+                            
                             if (this.currentData && this.currentData.data) {
                                 appointment = this.currentData.data.find(item => item[this.idField] === id);
+                                console.log('DELETE: Found appointment:', appointment);
                             }
 
                             let entityInfo = '';
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
-                                    .trim();
-                                const emailPart = appointment.email ?
-                                    `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` :
-                                    '';
-                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` :
-                                    appointment.email || 'this appointment';
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const email = appointment.email || '';
+                                console.log('DELETE: Full name:', fullName);
+                                console.log('DELETE: Email:', email);
+                                
+                                if (fullName && email) {
+                                    entityInfo = `${fullName} (<span style="color: #60a5fa; font-weight: 600;">${email}</span>)`;
+                                } else if (fullName) {
+                                    entityInfo = fullName;
+                                } else if (email) {
+                                    entityInfo = `<span style="color: #60a5fa; font-weight: 600;">${email}</span>`;
+                                } else {
+                                    entityInfo = 'this appointment';
+                                }
                             } else {
                                 entityInfo = 'this appointment';
+                                console.log('DELETE: No appointment found, using fallback');
                             }
+                            
+                            console.log('DELETE: Final entityInfo:', entityInfo);
 
                             const result = await Swal.fire({
                                 title: '<span style="color: #f59e0b; font-weight: 700;">Are you sure?</span>',
@@ -1748,25 +1763,40 @@
 
                     // Custom restore method for appointments with entity information
                     window.appointmentManager.restoreAppointment = async function(id) {
+                        console.log('RESTORE: Starting restoreAppointment for ID:', id);
+                        
                         try {
                             // Find the appointment in current data
                             let appointment = null;
+                            console.log('RESTORE: Current data available:', this.currentData);
+                            
                             if (this.currentData && this.currentData.data) {
                                 appointment = this.currentData.data.find(item => item[this.idField] === id);
+                                console.log('RESTORE: Found appointment:', appointment);
                             }
 
                             let entityInfo = '';
                             if (appointment) {
-                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`
-                                    .trim();
-                                const emailPart = appointment.email ?
-                                    `<span style="color: #3b82f6; font-weight: 600;">${appointment.email}</span>` :
-                                    '';
-                                entityInfo = fullName ? `${fullName} ${emailPart ? `(${emailPart})` : ''}` :
-                                    appointment.email || 'this appointment';
+                                const fullName = `${appointment.first_name || ''} ${appointment.last_name || ''}`.trim();
+                                const email = appointment.email || '';
+                                console.log('RESTORE: Full name:', fullName);
+                                console.log('RESTORE: Email:', email);
+                                
+                                if (fullName && email) {
+                                    entityInfo = `${fullName} (<span style="color: #60a5fa; font-weight: 600;">${email}</span>)`;
+                                } else if (fullName) {
+                                    entityInfo = fullName;
+                                } else if (email) {
+                                    entityInfo = `<span style="color: #60a5fa; font-weight: 600;">${email}</span>`;
+                                } else {
+                                    entityInfo = 'this appointment';
+                                }
                             } else {
                                 entityInfo = 'this appointment';
+                                console.log('RESTORE: No appointment found, using fallback');
                             }
+                            
+                            console.log('RESTORE: Final entityInfo:', entityInfo);
 
                             const result = await Swal.fire({
                                 title: '<span style="color: #f59e0b; font-weight: 700;">Restore appointment?</span>',
@@ -2483,7 +2513,7 @@
         @endpush
 
         <style>
-            /* SweetAlert Glassmorphic Style - Dark Premium */
+            /* SweetAlert Glassmorphic Style - Dark Premium - ÚNICO */
             .swal2-popup {
                 background: rgba(17, 24, 39, 0.95) !important;
                 backdrop-filter: blur(20px) !important;
@@ -2494,6 +2524,8 @@
                     0 25px 50px rgba(0, 0, 0, 0.5),
                     0 10px 30px rgba(0, 0, 0, 0.3),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                animation: none !important;
+                transition: none !important;
             }
 
             .swal2-title {
@@ -2508,13 +2540,12 @@
             }
 
             /* Resaltar emails en azul dentro del modal oscuro */
-            .swal2-html-container span[style*="color: #3b82f6"] {
+            .swal2-html-container span[style*="color: #60a5fa"] {
                 color: #60a5fa !important;
                 font-weight: 600 !important;
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
             }
 
-            /* Personalizar botones */
             .swal2-confirm {
                 background: linear-gradient(135deg, #ef4444, #dc2626) !important;
                 border: none !important;
@@ -2527,19 +2558,17 @@
                 box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3) !important;
             }
 
-            /* Estilos para el modal fullscreen de compartir ubicación */
-            .swal-fullscreen .swal2-container {
-                padding: 1rem !important;
+            /* Deshabilitar animaciones que causan parpadeo */
+            .swal2-show {
+                animation: none !important;
             }
 
+            .swal2-backdrop-show {
+                animation: none !important;
+            }
+
+            /* Estilos para modal fullscreen */
             .swal-fullscreen-popup {
-                width: 95vw !important;
-                max-width: none !important;
-                height: 90vh !important;
-                max-height: none !important;
-                margin: 0 !important;
-                border-radius: 1rem !important;
-                overflow-y: auto;
                 background: rgba(255, 255, 255, 0.98) !important;
             }
         </style>
