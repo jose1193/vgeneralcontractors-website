@@ -2483,29 +2483,48 @@
         @endpush
 
         <style>
-            /* SweetAlert Styles Simplificados - Sin conflictos */
+            /* SweetAlert Glassmorphic Style - Dark Premium */
             .swal2-popup {
-                background: rgba(255, 255, 255, 0.98) !important;
-                backdrop-filter: blur(16px) !important;
-                -webkit-backdrop-filter: blur(16px) !important;
-                border: 1px solid rgba(255, 255, 255, 0.2) !important;
-                border-radius: 12px !important;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+                background: rgba(17, 24, 39, 0.95) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 16px !important;
+                box-shadow:
+                    0 25px 50px rgba(0, 0, 0, 0.5),
+                    0 10px 30px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
             }
 
             .swal2-title {
                 color: #f59e0b !important;
                 font-weight: 700 !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
             }
 
             .swal2-html-container {
-                color: #374151 !important;
+                color: #e5e7eb !important;
+                font-size: 1rem !important;
             }
 
-            /* Resaltar emails en azul */
+            /* Resaltar emails en azul dentro del modal oscuro */
             .swal2-html-container span[style*="color: #3b82f6"] {
-                color: #3b82f6 !important;
+                color: #60a5fa !important;
                 font-weight: 600 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            /* Personalizar botones */
+            .swal2-confirm {
+                background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important;
+            }
+
+            .swal2-cancel {
+                background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3) !important;
             }
 
             /* Estilos para el modal fullscreen de compartir ubicación */
@@ -2521,6 +2540,7 @@
                 margin: 0 !important;
                 border-radius: 1rem !important;
                 overflow-y: auto;
+                background: rgba(255, 255, 255, 0.98) !important;
             }
         </style>
     </div>
