@@ -1521,7 +1521,18 @@
                             }
                         ],
                         defaultSortField: 'inspection_date',
-                        defaultSortDirection: 'desc'
+                        defaultSortDirection: 'desc',
+                        // Configuración de identificador de entidad para mostrar en modales de confirmación
+                        entityConfig: {
+                            identifierField: 'email',
+                            displayName: 'appointment',
+                            fallbackFields: ['first_name', 'last_name', 'phone'],
+                            detailFormat: function(entity) {
+                                // Mostrar nombre completo y email para mejor identificación
+                                const fullName = `${entity.first_name || ''} ${entity.last_name || ''}`.trim();
+                                return fullName ? `${fullName} (${entity.email})` : entity.email;
+                            }
+                        }
                     });
 
                     // Add statusLeadFilter property to appointmentManager
@@ -2373,6 +2384,12 @@
             .swal2-html-container {
                 color: #e5e7eb !important; /* Color gris claro para el contenido */
                 font-size: 1rem !important;
+            }
+
+            /* Destacar emails y elementos importantes en modales de confirmación */
+            .swal2-html-container strong {
+                color: #1e90ff !important; /* Color azul para emails y texto importante */
+                font-weight: 600 !important;
             }
 
             /* Estilos para el modal fullscreen */
