@@ -2,7 +2,7 @@
 # Alternative to Dockerfile - Railway's preferred method
 
 [phases.build]
-nixPkgs = ["nodejs", "npm", "php84", "php84Packages.composer"]
+nixPkgs = ["nodejs", "npm", "php83", "php83Packages.composer"]
 cmds = [
     "composer install --no-dev --optimize-autoloader",
     "npm ci",
@@ -22,7 +22,7 @@ APP_DEBUG = "false"
 NODE_ENV = "production"
 
 [providers.php]
-version = "8.4"
+version = "8.3"
 
 [providers.node]
 version = "20"
