@@ -1437,28 +1437,23 @@
             text-transform: uppercase;
         }
 
-        /* Checkbox styles - Glassmorphic Theme */
-        .checkbox-field {
-            background: rgba(40, 40, 40, 0.8) !important;
-            border: 1px solid rgba(139, 69, 190, 0.4) !important;
-            transition: all 0.3s ease !important;
-        }
-
+        /* Checkbox styles */
         .checkbox-field:checked {
-            background: rgba(139, 69, 190, 0.9) !important;
-            border-color: rgba(168, 85, 247, 0.8) !important;
-            box-shadow: 0 0 0 2px rgba(139, 69, 190, 0.3) !important;
+            background-color: #eab308;
+            border-color: #eab308;
         }
 
         .checkbox-field:focus {
-            outline: none !important;
-            border-color: rgba(168, 85, 247, 0.8) !important;
-            box-shadow: 0 0 0 3px rgba(139, 69, 190, 0.3) !important;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3);
+        }
+
+        .checkbox-field {
+            transition: all 0.2s ease;
         }
 
         .checkbox-field:hover {
-            border-color: rgba(168, 85, 247, 0.6) !important;
-            background: rgba(50, 50, 50, 0.9) !important;
+            border-color: #eab308;
         }
 
         /* Modal styles */
@@ -1519,15 +1514,11 @@
             }
         }
 
-        /* Insurance Radio Label Styles - Glassmorphic Theme */
+        /* Insurance Radio Label Styles */
         .insurance-label {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(40, 40, 40, 0.8) !important;
-            border: 1px solid rgba(139, 69, 190, 0.4) !important;
-            color: #e5e7eb !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             font-weight: 500;
             position: relative;
             overflow: hidden;
@@ -1540,16 +1531,16 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 69, 190, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
 
         .insurance-label:hover {
-            background: rgba(50, 50, 50, 0.9) !important;
-            color: #ffffff !important;
-            border-color: rgba(168, 85, 247, 0.6) !important;
+            background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+            color: white !important;
+            border-color: #eab308 !important;
             transform: translateY(-1px) !important;
-            box-shadow: 0 6px 20px rgba(139, 69, 190, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+            box-shadow: 0 4px 12px 0 rgba(245, 158, 11, 0.25), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
         }
 
         .insurance-label:hover::before {
@@ -1557,29 +1548,32 @@
         }
 
         .insurance-label.selected {
-            background: rgba(139, 69, 190, 0.9) !important;
-            color: #ffffff !important;
-            border-color: rgba(168, 85, 247, 0.8) !important;
+            background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+            color: white !important;
+            border-color: #d97706 !important;
             transform: translateY(-1px) !important;
-            box-shadow: 0 6px 20px rgba(139, 69, 190, 0.35), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+            box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
         }
 
         .insurance-label:active {
             transform: translateY(0) !important;
-            box-shadow: 0 2px 8px rgba(139, 69, 190, 0.2) !important;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
         }
 
         /* Animation for selected state */
         .insurance-label.selected {
-            animation: pulse-selected-glassmorphic 2s infinite;
+            animation: pulse-selected 2s infinite;
         }
 
-        @keyframes pulse-selected-glassmorphic {
-            0%, 100% {
-                box-shadow: 0 6px 20px rgba(139, 69, 190, 0.35), 0 4px 16px rgba(0, 0, 0, 0.4);
+        @keyframes pulse-selected {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
             }
+
             50% {
-                box-shadow: 0 8px 24px rgba(139, 69, 190, 0.45), 0 6px 20px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 4px 12px 0 rgba(217, 119, 6, 0.5), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
             }
         }
     </style>
