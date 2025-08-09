@@ -13,7 +13,7 @@
 2. **Preparar el Repositorio**
     ```bash
     # Agregar archivos de Railway al repositorio
-    git add railway.toml Dockerfile.railway docker-entrypoint-railway.sh .env.railway
+    git add railway.json Dockerfile.railway docker-entrypoint-railway.sh .env.railway
     git commit -m "Add Railway deployment configuration"
     git push origin master
     ```
