@@ -1,65 +1,16 @@
-# Railway Configuration File
-# Configure multi-service deployment for Laravel + Redis
-
 [build]
-builder = "NIXPACKS"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile.production"
 
-# Main Laravel Application Service
+[deploy]
+startCommand = "/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "always"
+
 [[services]]
 name = "laravel-app"
-port = 8080
 
-[services.env]
-APP_ENV = "production"
-APP_DEBUG = "false"
-APP_KEY = "${{APP_KEY}}"
-APP_URL = "${{RAILWAY_PUBLIC_DOMAIN}}"
-
-# Database Configuration (PostgreSQL)
-DB_CONNECTION = "pgsql"
-DB_HOST = "${{PGHOST}}"
-DB_PORT = "${{PGPORT}}"
-DB_DATABASE = "${{PGDATABASE}}"
-DB_USERNAME = "${{PGUSER}}"
-DB_PASSWORD = "${{PGPASSWORD}}"
-
-# Redis Configuration
-REDIS_HOST = "${{REDIS_HOST}}"
-REDIS_PORT = "${{REDIS_PORT}}"
-REDIS_PASSWORD = "${{REDIS_PASSWORD}}"
-
-# Session Configuration
-SESSION_DRIVER = "redis"
-CACHE_DRIVER = "redis"
-QUEUE_CONNECTION = "redis"
-
-# Mail Configuration
-MAIL_MAILER = "${{MAIL_MAILER}}"
-MAIL_HOST = "${{MAIL_HOST}}"
-MAIL_PORT = "${{MAIL_PORT}}"
-MAIL_USERNAME = "${{MAIL_USERNAME}}"
-MAIL_PASSWORD = "${{MAIL_PASSWORD}}"
-MAIL_ENCRYPTION = "${{MAIL_ENCRYPTION}}"
-
-[services.build]
-command = "php artisan serve --host=0.0.0.0 --port=$PORT"
-
-# Queue Worker Service
 [[services]]
-name = "queue-worker"
-
-[services.env]
-# Same environment variables as main app
-
-[services.build]
-command = "php artisan queue:work --tries=3 --max-time=3600 --sleep=3"
-
-# Cron Job Service  
-[[services]]
-name = "scheduler"
-
-[services.env]
-# Same environment variables as main app
-
-[services.build]
-command = "while true; do php artisan schedule:run && sleep 60; done"
+name = "redis"
+image = "redis:7-alpine"
