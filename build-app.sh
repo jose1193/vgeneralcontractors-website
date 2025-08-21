@@ -2,13 +2,14 @@
 # Make sure this file has executable permissions, run `chmod +x build-app.sh`
 set -e
 
-echo "Building assets with NPM..."
+# Build assets using NPM
 npm run build
 
-echo "Clearing cache without database operations..."
-# Only clear caches that don't require database
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# Clear cache
+php artisan optimize:clear
 
-echo "Build completed successfully!"
+# Cache the various components of the Laravel application
+php artisan config:cache
+php artisan event:cache
+php artisan route:cache
+php artisan view:cache
