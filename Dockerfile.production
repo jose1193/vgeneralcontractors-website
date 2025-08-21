@@ -6,7 +6,6 @@ RUN apk add --no-cache \
     git \
     curl \
     libpng-dev \
-    libonig-dev \
     libxml2-dev \
     zip \
     unzip \
@@ -60,7 +59,13 @@ RUN chmod -R 755 /var/www/bootstrap/cache
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 
 # Configurar Supervisor
-COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Configurar Supervisor
+COPY supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copiar build-app-railway.sh y dar permisos de ejecución
+COPY build-app-railway.sh /build-app-railway.sh
+RUN chmod +x /build-app-railway.sh
 
 # Crear directorio para logs
 RUN mkdir -p /var/log/supervisor
@@ -69,4 +74,4 @@ RUN mkdir -p /var/log/supervisor
 EXPOSE 80
 
 # Comando de inicio
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/bin/sh", "/build-app-railway.sh"]
