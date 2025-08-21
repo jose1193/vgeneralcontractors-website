@@ -81,4 +81,4 @@ RUN mkdir -p /var/log/supervisor
 EXPOSE 80
 
 # Comando de inicio
-CMD ["/bin/sh", "/build-app-railway.sh"]
+#CMD ["/bin/sh", "/build-app-railway.sh"]
